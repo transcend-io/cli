@@ -1,4 +1,4 @@
-import { DataSiloInput, EnricherInput, TranscendInput } from 'src';
+import { DataSiloInput, EnricherInput, TranscendInput } from './codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from './logger';
 import colors from 'colors';
