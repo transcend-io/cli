@@ -1,12 +1,12 @@
 {
   "author": "Transcend Inc.",
-  "name": "@transcend-io/type-utils",
+  "name": "@transcend-io/schema-sync",
   "description": "Small package containing useful typescript utilities.",
-  "version": "1.0.4",
-  "homepage": "https://github.com/transcend-io/type-utils",
+  "version": "1.0.0",
+  "homepage": "https://github.com/transcend-io/schema-sync",
   "repository": {
     "type": "git",
-    "url": "https://github.com/transcend-io/type-utils.git"
+    "url": "https://github.com/transcend-io/schema-sync.git"
   },
   "license": "MIT",
   "main": "build/index",
