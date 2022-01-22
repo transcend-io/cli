@@ -35,8 +35,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
+            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/type-utils", "npm:1.0.4"],
             ["@types/chai", "npm:4.2.22"],
+            ["@types/js-yaml", "npm:4.0.5"],
             ["@types/mocha", "npm:9.0.0"],
+            ["@types/node", "npm:17.0.10"],
             ["@typescript-eslint/eslint-plugin", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:5.1.0"],
             ["@typescript-eslint/parser", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:5.1.0"],
             ["@yarnpkg/pnpify", "npm:3.1.0-rc.2"],
@@ -50,7 +54,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.25.2"],
             ["eslint-plugin-jsdoc", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:36.1.1"],
             ["fp-ts", "npm:2.11.5"],
-            ["io-ts", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.2.16"],
+            ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"],
+            ["js-yaml", "npm:4.1.0"],
             ["mocha", "npm:8.4.0"],
             ["prettier", "npm:2.4.1"],
             ["ts-node", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:10.4.0"],
@@ -391,13 +396,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@transcend-io/privacy-types", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-1.1.0-7ef2b0a43e-6ca9708ad8.zip/node_modules/@transcend-io/privacy-types/",
+          "packageDependencies": [
+            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/type-utils", "npm:1.0.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@transcend-io/schema-sync", [
         ["workspace:.", {
           "packageLocation": "./",
           "packageDependencies": [
             ["@transcend-io/schema-sync", "workspace:."],
+            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/type-utils", "npm:1.0.4"],
             ["@types/chai", "npm:4.2.22"],
+            ["@types/js-yaml", "npm:4.0.5"],
             ["@types/mocha", "npm:9.0.0"],
+            ["@types/node", "npm:17.0.10"],
             ["@typescript-eslint/eslint-plugin", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:5.1.0"],
             ["@typescript-eslint/parser", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:5.1.0"],
             ["@yarnpkg/pnpify", "npm:3.1.0-rc.2"],
@@ -411,13 +430,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.25.2"],
             ["eslint-plugin-jsdoc", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:36.1.1"],
             ["fp-ts", "npm:2.11.5"],
-            ["io-ts", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.2.16"],
+            ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"],
+            ["js-yaml", "npm:4.1.0"],
             ["mocha", "npm:8.4.0"],
             ["prettier", "npm:2.4.1"],
             ["ts-node", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:10.4.0"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
           ],
           "linkType": "SOFT",
+        }]
+      ]],
+      ["@transcend-io/type-utils", [
+        ["npm:1.0.4", {
+          "packageLocation": "./.yarn/cache/@transcend-io-type-utils-npm-1.0.4-208c8e7303-2e73b11679.zip/node_modules/@transcend-io/type-utils/",
+          "packageDependencies": [
+            ["@transcend-io/type-utils", "npm:1.0.4"],
+            ["fp-ts", "npm:2.11.5"],
+            ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@tsconfig/node10", [
@@ -496,6 +527,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/js-yaml", [
+        ["npm:4.0.5", {
+          "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.5-bb64d71397-7dcac8c50f.zip/node_modules/@types/js-yaml/",
+          "packageDependencies": [
+            ["@types/js-yaml", "npm:4.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/json-schema", [
         ["npm:7.0.9", {
           "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.9-361918cff3-259d0e25f1.zip/node_modules/@types/json-schema/",
@@ -554,6 +594,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-16.11.4-f4c998d94a-96e08c0f8b.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:16.11.4"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:17.0.10", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-17.0.10-c0e46c1462-979e83d642.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:17.0.10"]
           ],
           "linkType": "HARD",
         }]
@@ -3141,10 +3188,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.2.16", {
-          "packageLocation": "./.yarn/__virtual__/io-ts-virtual-e91dff5ac7/0/cache/io-ts-npm-2.2.16-b76df10271-1b5855682e.zip/node_modules/io-ts/",
+        ["virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16", {
+          "packageLocation": "./.yarn/__virtual__/io-ts-virtual-f19c082d2b/0/cache/io-ts-npm-2.2.16-b76df10271-1b5855682e.zip/node_modules/io-ts/",
           "packageDependencies": [
-            ["io-ts", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.2.16"],
+            ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"],
             ["@types/fp-ts", null],
             ["fp-ts", "npm:2.11.5"]
           ],
@@ -3422,6 +3469,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/js-yaml-npm-4.0.0-3ac8e950bb-931d6dddb3.zip/node_modules/js-yaml/",
           "packageDependencies": [
             ["js-yaml", "npm:4.0.0"],
+            ["argparse", "npm:2.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/js-yaml-npm-4.1.0-3606f32312-c7830dfd45.zip/node_modules/js-yaml/",
+          "packageDependencies": [
+            ["js-yaml", "npm:4.1.0"],
             ["argparse", "npm:2.0.1"]
           ],
           "linkType": "HARD",
@@ -5245,7 +5300,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.9"],
             ["@tsconfig/node14", "npm:1.0.1"],
             ["@tsconfig/node16", "npm:1.0.2"],
-            ["@types/node", null],
+            ["@types/node", "npm:17.0.10"],
             ["@types/swc__core", null],
             ["@types/swc__wasm", null],
             ["@types/typescript", null],

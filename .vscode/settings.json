@@ -40,6 +40,7 @@
     "camelcase",
     "codomain",
     "compat",
+    "datapoints",
     "depcheck",
     "doctoc",
     "eqeqeq",
