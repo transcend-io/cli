@@ -22,10 +22,10 @@ export async function syncEnricher(
     title: enricher.title,
   });
 
-  console.log({ result });
+  logger.log({ result });
 
-  // FIXME If exists then update
-  // FIXME else create
+  // TODO: https://transcend.height.app/T-10530 - If exists then update
+  // TODO: https://transcend.height.app/T-10530 - else create
   logger.info(
     colors.green(`Successfully synced enricher "${enricher.title}"!`),
   );
@@ -42,9 +42,11 @@ export async function syncDataSilo(
   client: GraphQLClient,
 ): Promise<void> {
   logger.info(colors.magenta(`Syncing data silo "${dataSilo.title}"...`));
-  // FIXME check if data silo exists already
-  // FIXME If exists then update
-  // FIXME else create
+  // TODO: https://transcend.height.app/T-10530 - check if data silo exists already
+  // TODO: https://transcend.height.app/T-10530 - If exists then update
+  // TODO: https://transcend.height.app/T-10530 - else create
+
+  logger.log({ client });
 
   if (objects) {
     logger.info(
@@ -53,9 +55,11 @@ export async function syncDataSilo(
       ),
     );
     await mapSeries(objects, (obj) => {
-      // FIXME check if obj exists already
-      // FIXME If exists then update
-      // FIXME else create
+      logger.log({ obj });
+
+      // TODO: https://transcend.height.app/T-10530 - check if obj exists already
+      // TODO: https://transcend.height.app/T-10530 - If exists then update
+      // TODO: https://transcend.height.app/T-10530 - else create
     });
   }
   logger.info(
