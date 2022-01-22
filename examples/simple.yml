@@ -62,6 +62,7 @@ data-silos:
         # AKA table name
         key: users
         # What is the purpose of processing for this object/table?
+        # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
         #   ESSENTIAL: Provide a service that the user explicitly requests and that is part of the product's basic service or functionality
         #   ADDITIONAL_FUNCTIONALITY: Provide a service that the user explicitly requests but that is not a necessary part of the product's basic service
         #   ADVERTISING: To show ads that are either targeted to the specific user or not targeted
@@ -77,6 +78,7 @@ data-silos:
         #   UNSPECIFIED: The purpose is not explicitly stated or is unclear
         purpose: ESSENTIAL
         # The category of personal data for this object
+        # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
         #   FINANCIAL: Financial information
         #   HEALTH: Health information
         #   CONTACT: Contact information
@@ -94,6 +96,7 @@ data-silos:
         #   UNSPECIFIED: The type of information is not explicitly stated or unclear
         category: USER_PROFILE
         # The types of privacy actions that this object can implement
+        # See: https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
         #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
         #   CONTACT_OPT_OUT: Opt out of all communication
         #   SALE_OPT_OUT: Opt-out of the sale of personal data
