@@ -1,0 +1,51 @@
+{
+  "author": "Transcend Inc.",
+  "name": "@transcend-io/schema-sync",
+  "description": "Small package containing useful typescript utilities.",
+  "version": "1.0.0",
+  "homepage": "https://github.com/transcend-io/schema-sync",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/transcend-io/schema-sync.git"
+  },
+  "license": "MIT",
+  "main": "build/index",
+  "files": [
+    "build/**/*",
+    "package.json"
+  ],
+  "scripts": {
+    "update:sdks": "yarn set version from sources && yarn sdks base",
+    "update:deps": "yarn upgrade-interactive && yarn update:sdks",
+    "build": "yarn pnpify tsc --build",
+    "clean": "yarn pnpify tsc --build --clean",
+    "lint": "yarn pnpify eslint src --ext .ts",
+    "prepublish": "yarn build",
+    "test": "yarn pnpify mocha './src/**/*.test.ts'"
+  },
+  "dependencies": {
+    "fp-ts": "^2.11.5",
+    "io-ts": "^2.2.16"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "@yarnpkg/pnpify": "^3.1.0-rc.2",
+    "@yarnpkg/sdks": "^2.5.0-rc.2",
+    "chai": "^4.3.4",
+    "depcheck": "^1.4.2",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "2.25.2",
+    "eslint-plugin-jsdoc": "^36.1.1",
+    "mocha": "^8.2.1",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "packageManager": "yarn@sources"
+}
