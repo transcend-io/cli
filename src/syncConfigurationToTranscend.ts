@@ -84,6 +84,6 @@ export async function syncConfigurationToTranscend(
   if (dataSilos) {
     logger.info(colors.magenta(`Syncing "${dataSilos.length}" data silos...`));
     await mapSeries(dataSilos, (dataSilo) => syncDataSilo(dataSilo, client));
-    logger.info(colors.green(`Syncing "${dataSilos.length}" data silos!`));
+    logger.info(colors.green(`Synced "${dataSilos.length}" data silos!`));
   }
 }
