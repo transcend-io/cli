@@ -82,11 +82,23 @@ export const ObjectInput = t.intersection([
     description: t.string,
     /** The unique key of the object. When a database, this is the table name. */
     key: t.string,
-    /** What is the purpose of processing for this object/table? */
+    /**
+     * What is the purpose of processing for this object/table?
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
     purpose: valuesOf(ProcessingPurpose),
-    /** The category of personal data for this object */
+    /**
+     * The category of personal data for this object
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
     category: valuesOf(DataCategoryType),
-    /** The types of privacy actions that this object can implement */
+    /**
+     * The types of privacy actions that this object can implement
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+     */
     'privacy-actions': t.array(valuesOf(RequestAction)),
     /**
      * Provide field-level metadata for this object.
