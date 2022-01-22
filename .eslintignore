@@ -1,0 +1,14 @@
+.gitignore
+.git/*
+.yarn/*
+**/docs/*
+**/package.json
+**/node_modules/*
+**/build/*
+**/dist/*
+**/builds/*
+**/coverage/*
+**/.yarn/*
+*.testjs
+*.testts
+LICENSE

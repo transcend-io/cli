@@ -1,0 +1,58 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.nodePath": ".yarn/sdks",
+  "eslint.trace.server": "messages",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "editor.formatOnSave": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "workbench.iconTheme": "vscode-icons",
+  "todohighlight.keywords": [
+    "TODO",
+    "todo",
+    "fixme",
+    "FIXME",
+    "NOT IMPLEMENTED",
+    "NotImplementedError"
+  ],
+  "todohighlight.isEnable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "search.exclude": {
+    "**/tsconfig.tsbuildinfo": true,
+    "**/build": true,
+    "**/builds": true,
+    "**/.yarn": true,
+    "**/.caches": true,
+    "**/.pnp.*": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "cSpell.words": [
+    "camelcase",
+    "codomain",
+    "compat",
+    "depcheck",
+    "doctoc",
+    "eqeqeq",
+    "linebreak",
+    "maxlevel",
+    "Optionalize",
+    "Parens",
+    "pipeable",
+    "pnpify",
+    "preact",
+    "Requirize",
+    "thlorenz",
+    "tsbuildinfo",
+    "yarnpkg"
+  ]
+}

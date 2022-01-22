@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "incremental": true,
+    "target": "es2019",
+    "module": "commonjs",
+    "lib": ["esnext", "es2020", "es2019", "dom"],
+    "allowJs": false,
+    "checkJs": false, // speeds up webpack and tsc
+    "declaration": true,
+    "composite": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "typeRoots": ["@types", "node_modules/@types"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "build",
+    "tsBuildInfoFile": "./build/tsbuildinfo",
+    "rootDir": "src",
+    "types": ["mocha"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build"],
+  "references": []
+}
