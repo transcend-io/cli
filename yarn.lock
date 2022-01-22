@@ -299,12 +299,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@transcend-io/privacy-types@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@transcend-io/privacy-types@npm:1.1.0"
+  dependencies:
+    "@transcend-io/type-utils": ^1.0.4
+  checksum: 6ca9708ad8d92387a3a2185cce9945e8301c910c451d144de567e22d7ef0935fa88a268435a9f6131044c39719f6431e9370851fcf350dabf0240b434587b414
+  languageName: node
+  linkType: hard
+
 "@transcend-io/schema-sync@workspace:.":
   version: 0.0.0-use.local
   resolution: "@transcend-io/schema-sync@workspace:."
   dependencies:
+    "@transcend-io/privacy-types": ^1.1.0
+    "@transcend-io/type-utils": ^1.0.4
     "@types/chai": ^4.2.22
+    "@types/js-yaml": ^4.0.5
     "@types/mocha": ^9.0.0
+    "@types/node": ^17.0.10
     "@typescript-eslint/eslint-plugin": ^5.1.0
     "@typescript-eslint/parser": ^5.1.0
     "@yarnpkg/pnpify": ^3.1.0-rc.2
@@ -319,12 +332,23 @@ __metadata:
     eslint-plugin-jsdoc: ^36.1.1
     fp-ts: ^2.11.5
     io-ts: ^2.2.16
+    js-yaml: ^4.1.0
     mocha: ^8.2.1
     prettier: ^2.4.1
     ts-node: ^10.4.0
     typescript: ^4.4.4
   languageName: unknown
   linkType: soft
+
+"@transcend-io/type-utils@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@transcend-io/type-utils@npm:1.0.4"
+  dependencies:
+    fp-ts: ^2.11.5
+    io-ts: ^2.2.16
+  checksum: 2e73b1167912930c99487ee24f971a997628f0264c692489f7d1de8d21d4e155324f7af747fb8023758908a1582ce9bfe7e382015ad7791db561e8b7dfbd4ecc
+  languageName: node
+  linkType: hard
 
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.8
@@ -387,6 +411,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/js-yaml@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "@types/js-yaml@npm:4.0.5"
+  checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.9":
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
@@ -435,6 +466,13 @@ __metadata:
   version: 13.13.52
   resolution: "@types/node@npm:13.13.52"
   checksum: 8f1afff497ebeba209e2dc340d823284e087a47632afe99a7daa30eaff80893e520f222ad400cd1f2d3b8288e93cf3eaded52a8e64eaefb8aacfe6c35de98f42
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^17.0.10":
+  version: 17.0.10
+  resolution: "@types/node@npm:17.0.10"
+  checksum: 979e83d642a2b4f18fa1a4233f884822c05abc7acd0836024aa964187f8446432b21f7913e72fe2b3927c4a811c27a0b6cd60ac7c4ac6a6762cfbab70782aa6a
   languageName: node
   linkType: hard
 
@@ -2835,6 +2873,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: bef146085f472d44dee30ec34e5cf36bf89164f5d585435a3d3da89e52622dff0b188a580e4ad091c3341889e14cb88cac6e4deb16dc5b1e9623bb0601fc255c
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
   languageName: node
   linkType: hard
 
