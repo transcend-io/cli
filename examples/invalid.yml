@@ -1,0 +1,22 @@
+enrichers:
+  - titlez: Basic Identity Enrichment
+    description: Enrich an email address to the userId and phone number
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+  - title: Fraud Check
+
+data-silos:
+  - titlez: Redshift Data Warehouse
+    deletion-dependencies: Identity Service
+    objects:
+      - description: The centralized user model user
+        fields:
+          - title: First Name
+            description: The first name of the user, inputted during onboarding
+          - key: email
+            title: Email
+            description: The email address of the user
+  - title: Analytics Service
+    disabled: 'dog'
