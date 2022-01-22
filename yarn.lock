@@ -336,6 +336,7 @@ __metadata:
     eslint-plugin-import: 2.25.2
     eslint-plugin-jsdoc: ^36.1.1
     fp-ts: ^2.11.5
+    graphql: ^16.2.0
     graphql-request: ^3.7.0
     io-ts: ^2.2.16
     js-yaml: ^4.1.0
@@ -2519,6 +2520,13 @@ __metadata:
   peerDependencies:
     graphql: 14 - 16
   checksum: db3800cc4ee884cd1514d7d5eafafb9ed27694278fdddd7402345754a7d25e7d713246c72aa510b439b6df2633b74f2cf74fb36864a22a857d5fb2de1cf0b4d8
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "graphql@npm:16.2.0"
+  checksum: 204b5c9991b82561651a28b13dbb2e0e67514171a6a8c045ca4a527b944087344a14519d0426d661b49f2305584b390591abadc82b942f7b65e64e05cb31a584
   languageName: node
   linkType: hard
 

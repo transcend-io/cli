@@ -59,6 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.25.2"],
             ["eslint-plugin-jsdoc", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:36.1.1"],
             ["fp-ts", "npm:2.11.5"],
+            ["graphql", "npm:16.2.0"],
             ["graphql-request", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:3.7.0"],
             ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"],
             ["js-yaml", "npm:4.1.0"],
@@ -442,6 +443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:2.25.2"],
             ["eslint-plugin-jsdoc", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:36.1.1"],
             ["fp-ts", "npm:2.11.5"],
+            ["graphql", "npm:16.2.0"],
             ["graphql-request", "virtual:ab03d87bc1c89f7ecf761dcb5b87466d6d6059165e06b59de6c824388a62f20fd3d08421bc83d54f604a177f81abe931c4e45c5082b4659c9addd4059b80c43a#npm:3.7.0"],
             ["io-ts", "virtual:208c8e7303b6148b6264adda9c15f308ac94cb17b8f0c6fb16932f812f68e63e068e6ea9a6d50af4fa4a7bd7cd4189715d43307586ca407c0ed150943f25d247#npm:2.2.16"],
             ["js-yaml", "npm:4.1.0"],
@@ -3050,6 +3052,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["graphql", [
+        ["npm:16.2.0", {
+          "packageLocation": "./.yarn/cache/graphql-npm-16.2.0-441b615dc9-204b5c9991.zip/node_modules/graphql/",
+          "packageDependencies": [
+            ["graphql", "npm:16.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["graphql-request", [
         ["npm:3.7.0", {
           "packageLocation": "./.yarn/cache/graphql-request-npm-3.7.0-0479d981ec-db3800cc4e.zip/node_modules/graphql-request/",
@@ -3066,7 +3077,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cross-fetch", "npm:3.1.5"],
             ["extract-files", "npm:9.0.0"],
             ["form-data", "npm:3.0.1"],
-            ["graphql", null]
+            ["graphql", "npm:16.2.0"]
           ],
           "packagePeers": [
             "@types/graphql",

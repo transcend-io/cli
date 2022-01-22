@@ -29,6 +29,7 @@
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",
     "fp-ts": "^2.11.5",
+    "graphql": "^16.2.0",
     "graphql-request": "^3.7.0",
     "io-ts": "^2.2.16",
     "js-yaml": "^4.1.0",
