@@ -61,14 +61,32 @@ async function main(): Promise<void> {
   }
 
   // Create a GraphQL client
-  const client = new GraphQLClient(transcendUrl, {
+  const client = new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
       Authorization: `Bearer ${authorization}`,
     },
   });
 
   // Sync to Transcend
-  await syncConfigurationToTranscend(contents, client);
+  try {
+    const encounteredError = await syncConfigurationToTranscend(
+      contents,
+      client,
+    );
+    if (encounteredError) {
+      logger.info(
+        colors.red(
+          `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH}`,
+        ),
+      );
+      process.exit(1);
+    }
+  } catch (err) {
+    logger.error(
+      colors.red(`An error occurred syncing the schema: ${err.message}`),
+    );
+    process.exit(1);
+  }
 
   // Indicate success
   logger.info(

@@ -14,7 +14,9 @@ describe('readTranscendYaml', () => {
 
   it('invalid.yml should fail the codec validation for TranscendInput', () => {
     expect(() => readTranscendYaml(join(EXAMPLE_DIR, 'invalid.yml'))).to
-      .throw(`".enrichers.0.0.title expected type 'string'",
+      .throw(` ".enrichers.0.0.title expected type 'string'",
+  ".enrichers.0.0.url expected type 'string'",
+  ".enrichers.1.0.url expected type 'string'",
   ".enrichers.1.0.input-identifier expected type 'string'",
   ".enrichers.1.0.output-identifiers expected type 'Array<string>'",
   ".data-silos.0.0.title expected type 'string'",

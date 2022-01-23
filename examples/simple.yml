@@ -1,3 +1,4 @@
+# Manage at: https://app.transcend.io/privacy-requests/identifiers
 # See https://docs.transcend.io/docs/identity-enrichment
 # Define enricher or pre-flight check webhooks that will be executed
 # prior to privacy request workflows. Some examples may include:
@@ -8,21 +9,28 @@
 enrichers:
   - title: Basic Identity Enrichment
     description: Enrich an email address to the userId and phone number
+    url: https://example.acme.com/transcend-enrichment-webhook
     input-identifier: email
     output-identifiers:
       - userId
       - phone
   - title: Fraud Check
     description: Ensure the email address is not marked as fraudulent
+    url: https://example.acme.com/transcend-fraud-check
     input-identifier: email
     output-identifiers:
       - email
+    # Only call the webhook on certain action types
+    privacy-actions:
+      - ERASURE
   # Note: description is an optional field
   - title: Analytics Enrichment
+    url: https://analytics.acme.com/transcend-enrichment-webhook
     input-identifier: userId
     output-identifiers:
       - advertisingId
 
+# Manage at: https://app.transcend.io/privacy-requests/connected-services
 # See https://docs.transcend.io/docs/the-data-map#data-silos
 # Define the data silos in your data map. A data silo can be a database,
 # or a web service that may use a collection of different data stores under the hood.
@@ -30,6 +38,8 @@ data-silos:
   # Note: title is the only required top-level field for a data silo
   - title: Redshift Data Warehouse
     description: The mega-warehouse that contains a copy over all SQL backed databases
+    # The webhook URL to notify for data privacy requests
+    url: https://example.acme.com/transcend-webhook
     # Specify which data subjects may have personally-identifiable-information (PII) within this system
     # This field can be omitted, and the default assumption will be that the system may potentially
     # contain PII for any potential data subject type.
