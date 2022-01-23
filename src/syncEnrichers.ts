@@ -9,12 +9,12 @@ import { Identifier } from './fetchIdentifiers';
  *
  * @param enricher - The enricher input
  * @param client - GraphQL client
- * @param identifiersById - Index of identifiers in the organization
+ * @param identifiersByName - Index of identifiers in the organization
  */
 export async function syncEnricher(
   enricher: EnricherInput,
   client: GraphQLClient,
-  identifiersById: { [name in string]: Identifier },
+  identifiersByName: { [name in string]: Identifier },
 ): Promise<void> {
   // Try to fetch an enricher with the same title
   const {
@@ -32,9 +32,9 @@ export async function syncEnricher(
       title: enricher.title,
       url: enricher.url,
       description: enricher.description || '',
-      inputIdentifier: identifiersById[enricher['input-identifier']].id,
+      inputIdentifier: identifiersByName[enricher['input-identifier']].id,
       identifiers: enricher['output-identifiers'].map(
-        (id) => identifiersById[id].id,
+        (id) => identifiersByName[id].id,
       ),
       actions: enricher['privacy-actions'] || Object.values(RequestAction),
     });
@@ -43,9 +43,9 @@ export async function syncEnricher(
       title: enricher.title,
       url: enricher.url,
       description: enricher.description || '',
-      inputIdentifier: identifiersById[enricher['input-identifier']].id,
+      inputIdentifier: identifiersByName[enricher['input-identifier']].id,
       identifiers: enricher['output-identifiers'].map(
-        (id) => identifiersById[id].id,
+        (id) => identifiersByName[id].id,
       ),
       actions: enricher['privacy-actions'] || Object.values(RequestAction),
     });

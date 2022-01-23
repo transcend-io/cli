@@ -14,6 +14,7 @@ enrichers:
     output-identifiers:
       - userId
       - phone
+      - myUniqueIdentifier
   - title: Fraud Check
     description: Ensure the email address is not marked as fraudulent
     url: https://example.acme.com/transcend-fraud-check

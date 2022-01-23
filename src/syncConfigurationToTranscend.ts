@@ -50,8 +50,11 @@ export async function syncConfigurationToTranscend(
 ): Promise<boolean> {
   let encounteredError = false;
 
-  // FIXME create new identifiers
-  const identifiersById = await fetchIdentifiersAndCreateMissing(input, client);
+  // Ensure all identifiers are created and create a map from name -> identifier.id
+  const identifierByName = await fetchIdentifiersAndCreateMissing(
+    input,
+    client,
+  );
 
   const { enrichers, 'data-silos': dataSilos } = input;
 
@@ -61,7 +64,7 @@ export async function syncConfigurationToTranscend(
     await mapSeries(enrichers, async (enricher) => {
       logger.info(colors.magenta(`Syncing enricher "${enricher.title}"...`));
       try {
-        await syncEnricher(enricher, client, identifiersById);
+        await syncEnricher(enricher, client, identifierByName);
         logger.info(
           colors.green(`Successfully synced enricher "${enricher.title}"!`),
         );

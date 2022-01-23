@@ -19,8 +19,7 @@ export interface Identifier {
 const PAGE_SIZE = 20;
 
 /**
- * Read in the contents of a yaml file and validate that the shape
- * of the yaml file matches the codec API
+ * Fetch all identifiers in the organization
  *
  * @param client - GraphQL client
  * @returns The contents of the yaml file, type-checked
