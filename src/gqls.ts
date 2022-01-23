@@ -97,3 +97,60 @@ export const UPDATE_ENRICHER = gql`
     }
   }
 `;
+
+export const DATA_SILOS = gql`
+  query SchemaSyncDataSilos($title: String!) {
+    dataSilos(filterBy: { text: $title }) {
+      nodes {
+        id
+        title
+      }
+    }
+  }
+`;
+
+export const UPDATE_DATA_SILO = gql`
+  mutation SchemaSyncUpdateDataSilo(
+    $id: ID!
+    $title: String!
+    $description: String
+    $url: String
+    $identifiers: [String!]
+  ) {
+    updateDataSilo(
+      input: {
+        id: $id
+        title: $title
+        description: $description
+        url: $url
+        identifiers: $identifiers
+      }
+    ) {
+      clientMutationId
+    }
+  }
+`;
+
+export const CREATE_DATA_SILO = gql`
+  mutation SchemaSyncCreateDataSilo(
+    $title: String!
+    $description: String!
+    $url: String
+    $identifiers: [String!]
+  ) {
+    connectDataSilo(
+      input: {
+        name: "server"
+        title: $title
+        description: $description
+        url: $url
+        identifiers: $identifiers
+      }
+    ) {
+      dataSilo {
+        id
+        title
+      }
+    }
+  }
+`;
