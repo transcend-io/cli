@@ -44,6 +44,7 @@
     "depcheck",
     "doctoc",
     "eqeqeq",
+    "gqls",
     "linebreak",
     "maxlevel",
     "Optionalize",
