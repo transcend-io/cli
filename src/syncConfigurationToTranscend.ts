@@ -1,41 +1,11 @@
-import { DataSiloInput, TranscendInput } from './codecs';
+import { TranscendInput } from './codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from './logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
 import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
 import { syncEnricher } from './syncEnrichers';
-
-/**
- * Sync a data silo configuration
- *
- * @param dataSilo - The data silo input
- * @param client - GraphQL client
- */
-export async function syncDataSilo(
-  { objects, ...dataSilo }: DataSiloInput,
-  client: GraphQLClient,
-): Promise<void> {
-  // TODO: https://transcend.height.app/T-10530 - check if data silo exists already
-  // TODO: https://transcend.height.app/T-10530 - If exists then update
-  // TODO: https://transcend.height.app/T-10530 - else create
-
-  logger.info({ client });
-
-  if (objects) {
-    logger.info(
-      colors.magenta(
-        `Syncing "${objects.length}" objects for data silo ${dataSilo.title}...`,
-      ),
-    );
-    await mapSeries(objects, (obj) => {
-      logger.info({ obj });
-      // TODO: https://transcend.height.app/T-10530 - check if obj exists already
-      // TODO: https://transcend.height.app/T-10530 - If exists then update
-      // TODO: https://transcend.height.app/T-10530 - else create
-    });
-  }
-}
+import { syncDataSilo } from './syncDataSilos';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
