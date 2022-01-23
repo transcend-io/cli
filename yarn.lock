@@ -318,6 +318,7 @@ __metadata:
     "@types/chai": ^4.2.22
     "@types/colors": ^1.2.1
     "@types/js-yaml": ^4.0.5
+    "@types/lodash": ^4.14.178
     "@types/mocha": ^9.0.0
     "@types/node": ^17.0.10
     "@types/yargs-parser": ^20.2.1
@@ -340,6 +341,7 @@ __metadata:
     graphql-request: ^3.7.0
     io-ts: ^2.2.16
     js-yaml: ^4.1.0
+    lodash: ^4.17.21
     mocha: ^8.2.1
     prettier: ^2.4.1
     ts-node: ^10.4.0
@@ -462,6 +464,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: b5f8aa592cc21c16d99e69aec0976f12b893b055e4456d90148a610a6b6088e297b2ba5f38f8c8280cef006cfd8f9ec99e069905020882619dc5fc8aa46f5f27
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.178":
+  version: 4.14.178
+  resolution: "@types/lodash@npm:4.14.178"
+  checksum: a69a04a60bfc5257c3130a554b4efa0c383f0141b7b3db8ab7cf07ad2a46ea085fce66d0242da41da7e5647b133d5dfb2c15add9cbed8d7fef955e4a1e5b3128
   languageName: node
   linkType: hard
 
