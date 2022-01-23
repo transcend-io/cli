@@ -38,13 +38,13 @@ export async function syncDataSilo(
 
   // If data silo exists, update it, else create new
   if (existingDataSilo) {
-    // FIXME convert to block list
+    // TODO: https://transcend.height.app/T-10530 - convert to block list
     //  'data-subjects': t.array(t.string),
 
-    // FIXME convert to user ids
+    // TODO: https://transcend.height.app/T-10530 - convert to user ids
     //  owners: t.array(t.string),
 
-    // FIXME separate route
+    // TODO: https://transcend.height.app/T-10530 - separate route
     //  'deletion-dependencies': t.array(t.string),
 
     await client.request(UPDATE_DATA_SILO, {
@@ -56,13 +56,13 @@ export async function syncDataSilo(
       isLive: !dataSilo.disabled,
     });
   } else {
-    // FIXME convert to block list
+    // TODO: https://transcend.height.app/T-10530 - convert to block list
     //  'data-subjects': t.array(t.string),
 
-    // FIXME convert to user ids
+    // TODO: https://transcend.height.app/T-10530 - convert to user ids
     //  owners: t.array(t.string),
 
-    // FIXME separate route
+    // TODO: https://transcend.height.app/T-10530 - separate route
     //  'deletion-dependencies': t.array(t.string),
 
     await client.request(CREATE_DATA_SILO, {
@@ -82,11 +82,11 @@ export async function syncDataSilo(
     );
     await mapSeries(objects, (obj) => {
       logger.info({ obj });
-      // FIXME: https://transcend.height.app/T-10530 - check if obj exists already
-      // FIXME: https://transcend.height.app/T-10530 - If exists then update
-      // FIXME: https://transcend.height.app/T-10530 - else create
+      // TODO: https://transcend.height.app/T-10530 - check if obj exists already
+      // TODO: https://transcend.height.app/T-10530 - If exists then update
+      // TODO: https://transcend.height.app/T-10530 - else create
 
-      // FIXME fields
+      // TODO: https://transcend.height.app/T-10530 - fields
     });
   }
 }
