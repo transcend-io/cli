@@ -38,11 +38,14 @@ export async function syncDataSilo(
 
   // If data silo exists, update it, else create new
   if (existingDataSilo) {
-    // FIXME
+    // FIXME convert to block list
     //  'data-subjects': t.array(t.string),
-    //  'deletion-dependencies': t.array(t.string),
+
+    // FIXME convert to user ids
     //  owners: t.array(t.string),
-    //  disabled: t.boolean,
+
+    // FIXME separate route
+    //  'deletion-dependencies': t.array(t.string),
 
     await client.request(UPDATE_DATA_SILO, {
       id: existingDataSilo.id,
@@ -50,19 +53,24 @@ export async function syncDataSilo(
       url: dataSilo.url,
       description: dataSilo.description,
       identifiers: dataSilo['identity-keys'],
+      isLive: !dataSilo.disabled,
     });
   } else {
-    // FIXME
+    // FIXME convert to block list
     //  'data-subjects': t.array(t.string),
-    //  'deletion-dependencies': t.array(t.string),
+
+    // FIXME convert to user ids
     //  owners: t.array(t.string),
-    //  disabled: t.boolean,
+
+    // FIXME separate route
+    //  'deletion-dependencies': t.array(t.string),
 
     await client.request(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
+      isLive: !dataSilo.disabled,
     });
   }
 

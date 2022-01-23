@@ -116,6 +116,7 @@ export const UPDATE_DATA_SILO = gql`
     $description: String
     $url: String
     $identifiers: [String!]
+    $isLive: Boolean!
   ) {
     updateDataSilo(
       input: {
@@ -124,6 +125,7 @@ export const UPDATE_DATA_SILO = gql`
         description: $description
         url: $url
         identifiers: $identifiers
+        isLive: $isLive
       }
     ) {
       clientMutationId
@@ -137,6 +139,7 @@ export const CREATE_DATA_SILO = gql`
     $description: String!
     $url: String
     $identifiers: [String!]
+    $isLive: Boolean!
   ) {
     connectDataSilo(
       input: {
@@ -145,6 +148,7 @@ export const CREATE_DATA_SILO = gql`
         description: $description
         url: $url
         identifiers: $identifiers
+        isLive: $isLive
       }
     ) {
       dataSilo {
