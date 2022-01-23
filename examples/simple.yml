@@ -54,7 +54,6 @@ data-silos:
     identity-keys:
       - email
       - userId
-      - myUniqueIdentifier
     # When a data erasure request is being performed, this data silo should not be deleted from
     # until all of the following data silos were deleted first. This list can contain other internal
     # systems defined in this file, as well as any of the SaaS tools connected in your Transcend instance.
