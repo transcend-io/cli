@@ -18,12 +18,34 @@ export async function syncEnricher(
 ): Promise<void> {
   // Try to fetch an enricher with the same title
   const {
+    enrichers: { nodes: matches },
+  } = await client.request<{
+    /** Query response */
     enrichers: {
-      nodes: [existingEnricher],
-    },
-  } = await client.request(ENRICHERS, {
+      /** List of matches */
+      nodes: {
+        /** ID of enricher */
+        id: string;
+        /** Title of enricher */
+        title: string;
+        /** Input identifier */
+        inputIdentifier: {
+          /** Identifier name */
+          name: string;
+        };
+        /** Output identifiers */
+        identifiers: {
+          /** Identifier name */
+          name: string;
+        };
+      }[];
+    };
+  }>(ENRICHERS, {
     title: enricher.title,
   });
+  const existingEnricher = matches.find(
+    ({ title }) => title === enricher.title,
+  );
 
   // If enricher exists, update it, else create new
   if (existingEnricher) {
