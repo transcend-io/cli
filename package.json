@@ -33,6 +33,7 @@
     "graphql-request": "^3.7.0",
     "io-ts": "^2.2.16",
     "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
     "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@types/chai": "^4.2.22",
     "@types/colors": "^1.2.1",
     "@types/js-yaml": "^4.0.5",
+    "@types/lodash": "^4.14.178",
     "@types/mocha": "^9.0.0",
     "@types/node": "^17.0.10",
     "@types/yargs-parser": "^20.2.1",

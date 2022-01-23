@@ -22,6 +22,8 @@ export const EnricherInput = t.intersection([
   t.type({
     /** The display title of the enricher */
     title: t.string,
+    /** The URL of the enricher */
+    url: t.string,
     /**
      * The name of the identifier that will be the input to this enricher.
      * Whenever a privacy request contains this identifier, the webhook will
@@ -37,6 +39,8 @@ export const EnricherInput = t.intersection([
   t.partial({
     /** Internal description for why the enricher is needed */
     description: t.string,
+    /** The privacy actions that the enricher should run against */
+    'privacy-actions': t.array(t.string),
   }),
 ]);
 
@@ -127,6 +131,8 @@ export const DataSiloInput = t.intersection([
   t.partial({
     /** A description for that data silo */
     description: t.string,
+    /** The webhook URL to notify for data privacy requests */
+    url: t.string,
     /**
      * Specify which data subjects may have personally-identifiable-information (PII) within this system
      * This field can be omitted, and the default assumption will be that the system may potentially
