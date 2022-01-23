@@ -22,7 +22,7 @@ const PAGE_SIZE = 20;
  * Fetch all identifiers in the organization
  *
  * @param client - GraphQL client
- * @returns The contents of the yaml file, type-checked
+ * @returns All identifiers in the organization
  */
 export async function fetchAllIdentifiers(
   client: GraphQLClient,

@@ -117,6 +117,7 @@ export const UPDATE_DATA_SILO = gql`
     $url: String
     $identifiers: [String!]
     $isLive: Boolean!
+    $dataSubjectBlockListIds: [ID!]
   ) {
     updateDataSilo(
       input: {
@@ -126,9 +127,30 @@ export const UPDATE_DATA_SILO = gql`
         url: $url
         identifiers: $identifiers
         isLive: $isLive
+        dataSubjectBlockListIds: $dataSubjectBlockListIds
       }
     ) {
       clientMutationId
+    }
+  }
+`;
+
+export const DATA_SUBJECTS = gql`
+  query SchemaDataSubjects {
+    internalSubjects {
+      id
+      type
+    }
+  }
+`;
+
+export const CREATE_DATA_SUBJECT = gql`
+  mutation SchemaSyncCreateDataSubject($type: String!) {
+    createSubject(input: { type: $type, title: $type, subjectClass: OTHER }) {
+      subject {
+        id
+        type
+      }
     }
   }
 `;
@@ -140,6 +162,7 @@ export const CREATE_DATA_SILO = gql`
     $url: String
     $identifiers: [String!]
     $isLive: Boolean!
+    $dataSubjectBlockListIds: [ID!]
   ) {
     connectDataSilo(
       input: {
@@ -149,6 +172,7 @@ export const CREATE_DATA_SILO = gql`
         url: $url
         identifiers: $identifiers
         isLive: $isLive
+        dataSubjectBlockListIds: $dataSubjectBlockListIds
       }
     ) {
       dataSilo {

@@ -6,6 +6,7 @@ import { mapSeries } from 'bluebird';
 import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
 import { syncEnricher } from './syncEnrichers';
 import { syncDataSilo } from './syncDataSilos';
+import { fetchDataSubjects } from './fetchDataSubjects';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
@@ -20,11 +21,12 @@ export async function syncConfigurationToTranscend(
 ): Promise<boolean> {
   let encounteredError = false;
 
-  // Ensure all identifiers are created and create a map from name -> identifier.id
-  const identifierByName = await fetchIdentifiersAndCreateMissing(
-    input,
-    client,
-  );
+  const [identifierByName, dataSubjects] = await Promise.all([
+    // Ensure all identifiers are created and create a map from name -> identifier.id
+    fetchIdentifiersAndCreateMissing(input, client),
+    // Grab all data subjects in the organization
+    fetchDataSubjects(input, client),
+  ]);
 
   const { enrichers, 'data-silos': dataSilos } = input;
 
@@ -56,7 +58,7 @@ export async function syncConfigurationToTranscend(
     await mapSeries(dataSilos, async (dataSilo) => {
       logger.info(colors.magenta(`Syncing data silo "${dataSilo.title}"...`));
       try {
-        await syncDataSilo(dataSilo, client);
+        await syncDataSilo(dataSilo, client, dataSubjects);
         logger.info(
           colors.green(`Successfully synced data silo "${dataSilo.title}"!`),
         );

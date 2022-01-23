@@ -45,10 +45,10 @@ data-silos:
     # This field can be omitted, and the default assumption will be that the system may potentially
     # contain PII for any potential data subject type.
     data-subjects:
-      - User
-      - Employee
-      - Newsletter Subscriber
-      - B2B Contact
+      - customer
+      - employee
+      - newsletter-subscriber
+      - b2b-contact
     # When this data silo implements a privacy request, these are the identifiers
     # that should be looked up within this system.
     identity-keys:
@@ -161,6 +161,8 @@ data-silos:
           - ERASURE
           - CONTACT_OPT_OUT
   - title: Analytics Service
+    data-subjects:
+      - customer
     # Specify this flag if the data silo is under development and should not be included
     # in production privacy request workflows. Will still sync metadata to app.transcend.io.
     disabled: true
