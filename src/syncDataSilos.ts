@@ -47,9 +47,6 @@ export async function syncDataSilo(
     // TODO: https://transcend.height.app/T-10530 - convert to user ids
     //  owners: t.array(t.string),
 
-    // TODO: https://transcend.height.app/T-10530 - separate route
-    //  'deletion-dependencies': t.array(t.string),
-
     await client.request(UPDATE_DATA_SILO, {
       id: existingDataSilo.id,
       title: dataSilo.title,
@@ -57,6 +54,7 @@ export async function syncDataSilo(
       description: dataSilo.description,
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
+      dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(
             dataSilo['data-subjects'],
@@ -68,15 +66,13 @@ export async function syncDataSilo(
     // TODO: https://transcend.height.app/T-10530 - convert to user ids
     //  owners: t.array(t.string),
 
-    // TODO: https://transcend.height.app/T-10530 - separate route
-    //  'deletion-dependencies': t.array(t.string),
-
     await client.request(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
+      dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(
             dataSilo['data-subjects'],
