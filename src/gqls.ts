@@ -28,6 +28,17 @@ export const IDENTIFIERS = gql`
   }
 `;
 
+export const API_KEYS = gql`
+  query SchemaSyncApiKeys($first: Int!, $offset: Int!, $titles: [String!]!) {
+    apiKeys(first: $first, offset: $offset, filterBy: { titles: $titles }) {
+      nodes {
+        id
+        title
+      }
+    }
+  }
+`;
+
 export const NEW_IDENTIFIER_TYPES = gql`
   query SchemaSyncNewIdentifierTypes {
     newIdentifierTypes {
@@ -112,11 +123,15 @@ export const DATA_SILOS = gql`
 export const UPDATE_DATA_SILO = gql`
   mutation SchemaSyncUpdateDataSilo(
     $id: ID!
-    $title: String!
+    $title: String
     $description: String
     $url: String
     $identifiers: [String!]
-    $isLive: Boolean!
+    $isLive: Boolean
+    $dataSubjectBlockListIds: [ID!]
+    $dependedOnDataSiloTitles: [String!]
+    $ownerEmails: [String!]
+    $apiKeyId: ID
   ) {
     updateDataSilo(
       input: {
@@ -126,9 +141,62 @@ export const UPDATE_DATA_SILO = gql`
         url: $url
         identifiers: $identifiers
         isLive: $isLive
+        dataSubjectBlockListIds: $dataSubjectBlockListIds
+        dependedOnDataSiloTitles: $dependedOnDataSiloTitles
+        ownerEmails: $ownerEmails
+        apiKeyId: $apiKeyId
       }
     ) {
       clientMutationId
+    }
+  }
+`;
+
+export const DATA_SUBJECTS = gql`
+  query SchemaDataSubjects {
+    internalSubjects {
+      id
+      type
+    }
+  }
+`;
+
+export const CREATE_DATA_SUBJECT = gql`
+  mutation SchemaSyncCreateDataSubject($type: String!) {
+    createSubject(input: { type: $type, title: $type, subjectClass: OTHER }) {
+      subject {
+        id
+        type
+      }
+    }
+  }
+`;
+
+export const UPDATE_OR_CREATE_DATA_POINT = gql`
+  mutation SchemaSyncUpdateOrCreateDataPoint(
+    $dataSiloId: ID!
+    $name: String!
+    $title: String
+    $description: String
+    $category: DataCategoryType
+    $purpose: ProcessingPurpose
+    $enabledActions: [RequestActionDataPoint!]
+  ) {
+    updateOrCreateDataPoint(
+      input: {
+        dataSiloId: $dataSiloId
+        name: $name
+        title: $title
+        description: $description
+        category: $category
+        purpose: $purpose
+        enabledActions: $enabledActions
+      }
+    ) {
+      dataPoint {
+        id
+        name
+      }
     }
   }
 `;
@@ -140,6 +208,10 @@ export const CREATE_DATA_SILO = gql`
     $url: String
     $identifiers: [String!]
     $isLive: Boolean!
+    $dataSubjectBlockListIds: [ID!]
+    $dependedOnDataSiloTitles: [String!]
+    $ownerEmails: [String!]
+    $apiKeyId: ID
   ) {
     connectDataSilo(
       input: {
@@ -149,14 +221,16 @@ export const CREATE_DATA_SILO = gql`
         url: $url
         identifiers: $identifiers
         isLive: $isLive
+        dataSubjectBlockListIds: $dataSubjectBlockListIds
+        dependedOnDataSiloTitles: $dependedOnDataSiloTitles
+        ownerEmails: $ownerEmails
+        apiKeyId: $apiKeyId
       }
     ) {
       dataSilo {
         id
         title
       }
-    ) {
-      clientMutationId
     }
   }
 `;

@@ -2,9 +2,26 @@ import * as t from 'io-ts';
 import { valuesOf } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
+  InternalDataSiloObjectResolver,
   ProcessingPurpose,
-  RequestAction,
+  RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
+
+/**
+ * Input to define API keys that may be shared across data silos
+ * in the data map. When creating new data silos through the yaml
+ * cli, it is possible to specify which API key should be associated
+ * with the newly created data silo.
+ *
+ * @see https://docs.transcend.io/docs/authentication
+ */
+export const ApiKeyInput = t.type({
+  /** The display title of the enricher */
+  title: t.string,
+});
+
+/** Type override */
+export type ApiKeyInput = t.TypeOf<typeof ApiKeyInput>;
 
 /**
  * Input to define an enricher
@@ -80,12 +97,12 @@ export const ObjectInput = t.intersection([
   t.type({
     /** The display title of the enricher */
     title: t.string,
+    /** The unique key of the object. When a database, this is the table name. */
+    key: t.string,
   }),
   t.partial({
     /** Internal description for why the enricher is needed */
     description: t.string,
-    /** The unique key of the object. When a database, this is the table name. */
-    key: t.string,
     /**
      * What is the purpose of processing for this object/table?
      *
@@ -103,7 +120,7 @@ export const ObjectInput = t.intersection([
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
-    'privacy-actions': t.array(valuesOf(RequestAction)),
+    'privacy-actions': t.array(valuesOf(InternalDataSiloObjectResolver)),
     /**
      * Provide field-level metadata for this object.
      * This is often the column metadata
@@ -129,10 +146,18 @@ export const DataSiloInput = t.intersection([
     title: t.string,
   }),
   t.partial({
+    /**
+     * The types of privacy actions that this webhook can implement
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+     */
+    'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
     url: t.string,
+    /** The title of the API key that will be used to respond to privacy requests */
+    'api-key-title': t.string,
     /**
      * Specify which data subjects may have personally-identifiable-information (PII) within this system
      * This field can be omitted, and the default assumption will be that the system may potentially
@@ -172,6 +197,10 @@ export const DataSiloInput = t.intersection([
 export type DataSiloInput = t.TypeOf<typeof DataSiloInput>;
 
 export const TranscendInput = t.partial({
+  /**
+   * API key definitions
+   */
+  'api-keys': t.array(ApiKeyInput),
   /**
    * Enricher definitions
    */

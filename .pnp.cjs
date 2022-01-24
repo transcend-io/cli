@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
-            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/privacy-types", "npm:1.3.0"],
             ["@transcend-io/type-utils", "npm:1.0.4"],
             ["@types/bluebird", "npm:3.5.36"],
             ["@types/chai", "npm:4.2.22"],
@@ -407,10 +407,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@transcend-io/privacy-types", [
-        ["npm:1.1.0", {
-          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-1.1.0-7ef2b0a43e-6ca9708ad8.zip/node_modules/@transcend-io/privacy-types/",
+        ["npm:1.3.0", {
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-1.3.0-a95b403cbe-33978cab91.zip/node_modules/@transcend-io/privacy-types/",
           "packageDependencies": [
-            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/privacy-types", "npm:1.3.0"],
             ["@transcend-io/type-utils", "npm:1.0.4"]
           ],
           "linkType": "HARD",
@@ -421,7 +421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@transcend-io/schema-sync", "workspace:."],
-            ["@transcend-io/privacy-types", "npm:1.1.0"],
+            ["@transcend-io/privacy-types", "npm:1.3.0"],
             ["@transcend-io/type-utils", "npm:1.0.4"],
             ["@types/bluebird", "npm:3.5.36"],
             ["@types/chai", "npm:4.2.22"],
