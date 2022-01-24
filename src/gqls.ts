@@ -159,6 +159,35 @@ export const CREATE_DATA_SUBJECT = gql`
   }
 `;
 
+export const UPDATE_OR_CREATE_DATA_POINT = gql`
+  mutation SchemaSyncUpdateOrCreateDataPoint(
+    $dataSiloId: ID!
+    $name: String!
+    $title: String!
+    $description: String
+    $category: DataCategoryType
+    $purpose: ProcessingPurpose
+    $enabledActions: [RequestActionDataPoint!]
+  ) {
+    updateOrCreateDataPoint(
+      input: {
+        dataSiloId: $dataSiloId
+        name: $name
+        title: $title
+        description: $description
+        category: $category
+        purpose: $purpose
+        enabledActions: $enabledActions
+      }
+    ) {
+      dataPoint {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const CREATE_DATA_SILO = gql`
   mutation SchemaSyncCreateDataSilo(
     $title: String!

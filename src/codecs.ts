@@ -80,12 +80,12 @@ export const ObjectInput = t.intersection([
   t.type({
     /** The display title of the enricher */
     title: t.string,
+    /** The unique key of the object. When a database, this is the table name. */
+    key: t.string,
   }),
   t.partial({
     /** Internal description for why the enricher is needed */
     description: t.string,
-    /** The unique key of the object. When a database, this is the table name. */
-    key: t.string,
     /**
      * What is the purpose of processing for this object/table?
      *
@@ -129,6 +129,7 @@ export const DataSiloInput = t.intersection([
     title: t.string,
   }),
   t.partial({
+    // TODO: https://transcend.height.app/T-10530 - handle global actions
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */

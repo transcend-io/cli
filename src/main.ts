@@ -61,9 +61,12 @@ async function main(): Promise<void> {
   }
 
   // Create a GraphQL client
+  // eslint-disable-next-line global-require
+  const { version } = require('../package.json');
   const client = new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
       Authorization: `Bearer ${authorization}`,
+      version,
     },
   });
 

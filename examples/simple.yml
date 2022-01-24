@@ -59,6 +59,7 @@ data-silos:
     # systems defined in this file, as well as any of the SaaS tools connected in your Transcend instance.
     deletion-dependencies:
       - Identity Service
+    # TODO: https://transcend.height.app/T-10530 - handle global actions
     # The email addresses of the employees within your company that are the go-to individuals
     # for managing this data silo
     owners:
@@ -108,6 +109,7 @@ data-silos:
         category: USER_PROFILE
         # The types of privacy actions that this object can implement
         # See: https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+        # TODO: https://transcend.height.app/T-10530 - more accurate types
         #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
         #   CONTACT_OPT_OUT: Opt out of all communication
         #   SALE_OPT_OUT: Opt-out of the sale of personal data
@@ -120,8 +122,8 @@ data-silos:
         #   DATA_CHECK: Check for data (after an erasure request)
         privacy-actions:
           - ACCESS
-          - ERASURE
-          - CONTACT_OPT_OUT
+          # - ERASURE
+          # - CONTACT_OPT_OUT
         # Provide field-level metadata for this object.
         fields:
           - key: firstName
@@ -137,8 +139,6 @@ data-silos:
         category: ID
         privacy-actions:
           - ACCESS
-          - ERASURE
-          - CONTACT_OPT_OUT
         fields:
           - key: companyName
             title: Company Name
@@ -146,6 +146,19 @@ data-silos:
           - key: email
             title: Email
             description: The email address to use for coordinating the demo
+      - title: Password
+        key: passwords
+        description: A password for a user
+        purpose: ESSENTIAL
+        category: ID
+        fields:
+          - key: hash
+            title: Password Hash
+            description: Hash of the password
+          - key: email
+            title: Email
+            description: The email address to use for coordinating the demo
+
   # Defined web services in addition or instead of databases.
   # The examples below define a subset of the fields.
   # The remainder of the fields will be managed through the Transcend admin dashboard
@@ -158,8 +171,6 @@ data-silos:
         key: auth
         privacy-actions:
           - ACCESS
-          - ERASURE
-          - CONTACT_OPT_OUT
   - title: Analytics Service
     data-subjects:
       - customer
