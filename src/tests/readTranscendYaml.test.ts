@@ -22,6 +22,7 @@ describe('readTranscendYaml', () => {
   ".data-silos.0.0.title expected type 'string'",
   ".data-silos.0.1.deletion-dependencies expected type 'Array<string>'",
   ".data-silos.0.1.objects.0.0.title expected type 'string'",
+  ".data-silos.0.1.objects.0.0.key expected type 'string'",
   ".data-silos.0.1.objects.0.1.fields.0.0.key expected type 'string'",
   ".data-silos.1.1.disabled expected type 'boolean'"`);
   });
