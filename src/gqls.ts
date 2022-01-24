@@ -216,8 +216,6 @@ export const CREATE_DATA_SILO = gql`
         id
         title
       }
-    ) {
-      clientMutationId
     }
   }
 `;
