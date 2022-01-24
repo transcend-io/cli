@@ -94,6 +94,7 @@ export async function syncConfigurationToTranscend(
     logger.info(colors.green(`Synced "${dataSilos.length}" data silos!`));
   }
 
+  // Dependencies updated at the end after all data silos are created
   if (dependencyUpdates.length > 0) {
     logger.info(
       colors.magenta(
