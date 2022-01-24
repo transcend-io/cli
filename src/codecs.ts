@@ -129,7 +129,7 @@ export const DataSiloInput = t.intersection([
     title: t.string,
   }),
   t.partial({
-    // TODO: https://transcend.height.app/T-10530 - handle global actions
+    // TODO: https://transcend.height.app/T-10774 - handle global actions
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */

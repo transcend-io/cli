@@ -59,7 +59,7 @@ data-silos:
     # systems defined in this file, as well as any of the SaaS tools connected in your Transcend instance.
     deletion-dependencies:
       - Identity Service
-    # TODO: https://transcend.height.app/T-10530 - handle global actions
+    # TODO: https://transcend.height.app/T-10774 - handle global actions
     # The email addresses of the employees within your company that are the go-to individuals
     # for managing this data silo
     owners:
@@ -109,7 +109,7 @@ data-silos:
         category: USER_PROFILE
         # The types of privacy actions that this object can implement
         # See: https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-        # TODO: https://transcend.height.app/T-10530 - more accurate types
+        # TODO: https://transcend.height.app/T-10774 - more accurate types
         #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
         #   CONTACT_OPT_OUT: Opt out of all communication
         #   SALE_OPT_OUT: Opt-out of the sale of personal data

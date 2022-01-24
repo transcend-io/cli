@@ -106,11 +106,11 @@ export async function syncDataSilo(
         description: obj.description,
         category: obj.category,
         purpose: obj.purpose,
-        // TODO: https://transcend.height.app/T-10530 - RequestActionDataPoint, RequestActionServer
+        // TODO: https://transcend.height.app/T-10774 - RequestActionDataPoint, RequestActionServer
         enabledActions: obj['privacy-actions'] || [], // clear out when not specified
       });
 
-      // TODO: https://transcend.height.app/T-10530 - obj.fields
+      // TODO:https://transcend.height.app/T-10773 - obj.fields
 
       logger.info(colors.green(`Synced object "${obj.key}"!`));
     });
