@@ -13,8 +13,9 @@ import {
   convertToDataSubjectBlockList,
   DataSubject,
 } from './fetchDataSubjects';
+import { ApiKey } from './fetchApiKeys';
 
-interface DataSilo {
+export interface DataSilo {
   /** ID of dataSilo */
   id: string;
   /** Title of dataSilo */
@@ -24,15 +25,18 @@ interface DataSilo {
 /**
  * Sync a data silo configuration
  *
- * @param dataSilo - The data silo input
+ * @param input - The transcend input definition
  * @param client - GraphQL client
  * @param dataSubjectsByName - The data subjects in the organization
+ * @param apiKeysByTitle - API key title to API key
+ * @returns Data silo info
  */
 export async function syncDataSilo(
   { objects, ...dataSilo }: DataSiloInput,
   client: GraphQLClient,
   dataSubjectsByName: { [type in string]: DataSubject },
-): Promise<void> {
+  apiKeysByTitle: { [title in string]: ApiKey },
+): Promise<DataSilo> {
   // Try to fetch an dataSilo with the same title
   const {
     dataSilos: { nodes: matches },
@@ -57,7 +61,14 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
+      // clear out if not specified, otherwise the update needs to be applied after
+      // all data silos are created
+      dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
+        ? undefined
+        : [],
+      apiKeyId: dataSilo['api-key-title']
+        ? apiKeysByTitle[dataSilo['api-key-title']].id
+        : undefined,
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(
             dataSilo['data-subjects'],
@@ -79,7 +90,14 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
+      // clear out if not specified, otherwise the update needs to be applied after
+      // all data silos are created
+      dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
+        ? undefined
+        : [],
+      apiKeyId: dataSilo['api-key-title']
+        ? apiKeysByTitle[dataSilo['api-key-title']].id
+        : undefined,
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(
             dataSilo['data-subjects'],
@@ -89,6 +107,19 @@ export async function syncDataSilo(
     });
     existingDataSilo = connectDataSilo.dataSilo;
   }
+
+  // Update Global Actions
+  logger.info(
+    colors.magenta(
+      `Syncing data silo level privacy actions for "${dataSilo.title}"...`,
+    ),
+  );
+  await client.request(UPDATE_OR_CREATE_DATA_POINT, {
+    dataSiloId: existingDataSilo!.id,
+    name: '_global',
+    enabledActions: dataSilo['privacy-actions'] || [],
+  });
+  logger.info(colors.green('Synced global actions!'));
 
   // Sync objects
   if (objects) {
@@ -106,7 +137,6 @@ export async function syncDataSilo(
         description: obj.description,
         category: obj.category,
         purpose: obj.purpose,
-        // TODO: https://transcend.height.app/T-10774 - RequestActionDataPoint, RequestActionServer
         enabledActions: obj['privacy-actions'] || [], // clear out when not specified
       });
 
@@ -115,4 +145,6 @@ export async function syncDataSilo(
       logger.info(colors.green(`Synced object "${obj.key}"!`));
     });
   }
+
+  return existingDataSilo;
 }

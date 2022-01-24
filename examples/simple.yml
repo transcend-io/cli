@@ -1,3 +1,13 @@
+# Manage at: https://app.transcend.io/infrastructure/api-keys
+# See https://docs.transcend.io/docs/authentication
+# Define API keys that may be shared across data silos
+# in the data map. When creating new data silos through the yaml
+# cli, it is possible to specify which API key should be associated
+# with the newly created data silo.
+api-keys:
+  - title: Webhook Key
+  - title: Analytics Key
+
 # Manage at: https://app.transcend.io/privacy-requests/identifiers
 # See https://docs.transcend.io/docs/identity-enrichment
 # Define enricher or pre-flight check webhooks that will be executed
@@ -41,6 +51,23 @@ data-silos:
     description: The mega-warehouse that contains a copy over all SQL backed databases
     # The webhook URL to notify for data privacy requests
     url: https://example.acme.com/transcend-webhook
+    # The title of the API key that will be used to respond to privacy requests
+    api-key-title: Webhook Key
+    # The types of privacy actions that this webhook can implement
+    # See "RequestActionObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+    #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
+    #   CONTACT_OPT_OUT: Opt out of all communication
+    #   SALE_OPT_OUT: Opt-out of the sale of personal data
+    #   TRACKING_OPT_OUT: Opt out of tracking
+    #   ACCESS: Data Download request
+    #   ERASURE: Erase the profile from the system
+    #   ACCOUNT_DELETION: Run an account deletion instead of a fully compliant deletion
+    #   RECTIFICATION: Make an update to an inaccurate record
+    #   RESTRICTION: Restrict processing
+    privacy-actions:
+      - ACCESS
+      - ERASURE
+      - SALE_OPT_OUT
     # Specify which data subjects may have personally-identifiable-information (PII) within this system
     # This field can be omitted, and the default assumption will be that the system may potentially
     # contain PII for any potential data subject type.
@@ -59,7 +86,6 @@ data-silos:
     # systems defined in this file, as well as any of the SaaS tools connected in your Transcend instance.
     deletion-dependencies:
       - Identity Service
-    # TODO: https://transcend.height.app/T-10774 - handle global actions
     # The email addresses of the employees within your company that are the go-to individuals
     # for managing this data silo
     owners:
@@ -108,22 +134,10 @@ data-silos:
         #   UNSPECIFIED: The type of information is not explicitly stated or unclear
         category: USER_PROFILE
         # The types of privacy actions that this object can implement
-        # See: https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-        # TODO: https://transcend.height.app/T-10774 - more accurate types
-        #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
-        #   CONTACT_OPT_OUT: Opt out of all communication
-        #   SALE_OPT_OUT: Opt-out of the sale of personal data
-        #   TRACKING_OPT_OUT: Opt out of tracking
+        # See "InternalDataSiloObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
         #   ACCESS: Data Download request
-        #   ERASURE: Erase the profile from the system
-        #   ACCOUNT_DELETION: Run an account deletion instead of a fully compliant deletion
-        #   RECTIFICATION: Make an update to an inaccurate record
-        #   RESTRICTION: Restrict processing
-        #   DATA_CHECK: Check for data (after an erasure request)
         privacy-actions:
           - ACCESS
-          # - ERASURE
-          # - CONTACT_OPT_OUT
         # Provide field-level metadata for this object.
         fields:
           - key: firstName
@@ -165,6 +179,11 @@ data-silos:
   # at the link: https://app.transcend.io/privacy-requests/connected-services
   - title: Identity Service
     description: Micro-service that stores user metadata
+    # Share the API key between services
+    api-key-title: Webhook Key
+    privacy-actions:
+      - ACCESS
+      - CONTACT_OPT_OUT
     objects:
       - title: Auth User
         description: The centralized authentication object for a user
@@ -174,6 +193,8 @@ data-silos:
   - title: Analytics Service
     data-subjects:
       - customer
+    # The title of the API key that will be used to respond to privacy requests
+    api-key-title: Analytics Key
     # Specify this flag if the data silo is under development and should not be included
     # in production privacy request workflows. Will still sync metadata to app.transcend.io.
     disabled: true
