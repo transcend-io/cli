@@ -44,9 +44,6 @@ export async function syncDataSilo(
 
   // If data silo exists, update it, else create new
   if (existingDataSilo) {
-    // TODO: https://transcend.height.app/T-10530 - convert to user ids
-    //  owners: t.array(t.string),
-
     await client.request(UPDATE_DATA_SILO, {
       id: existingDataSilo.id,
       title: dataSilo.title,
@@ -54,6 +51,7 @@ export async function syncDataSilo(
       description: dataSilo.description,
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
+      ownerEmails: dataSilo.owners,
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(
@@ -63,15 +61,13 @@ export async function syncDataSilo(
         : undefined,
     });
   } else {
-    // TODO: https://transcend.height.app/T-10530 - convert to user ids
-    //  owners: t.array(t.string),
-
     await client.request(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
+      ownerEmails: dataSilo.owners,
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies'] || [], // clear out when not specified
       dataSubjectBlockListIds: dataSilo['data-subjects']
         ? convertToDataSubjectBlockList(

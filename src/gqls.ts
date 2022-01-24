@@ -119,6 +119,7 @@ export const UPDATE_DATA_SILO = gql`
     $isLive: Boolean!
     $dataSubjectBlockListIds: [ID!]
     $dependedOnDataSiloTitles: [String!]
+    $ownerEmails: [String!]
   ) {
     updateDataSilo(
       input: {
@@ -130,6 +131,7 @@ export const UPDATE_DATA_SILO = gql`
         isLive: $isLive
         dataSubjectBlockListIds: $dataSubjectBlockListIds
         dependedOnDataSiloTitles: $dependedOnDataSiloTitles
+        ownerEmails: $ownerEmails
       }
     ) {
       clientMutationId
@@ -166,6 +168,7 @@ export const CREATE_DATA_SILO = gql`
     $isLive: Boolean!
     $dataSubjectBlockListIds: [ID!]
     $dependedOnDataSiloTitles: [String!]
+    $ownerEmails: [String!]
   ) {
     connectDataSilo(
       input: {
@@ -177,6 +180,7 @@ export const CREATE_DATA_SILO = gql`
         isLive: $isLive
         dataSubjectBlockListIds: $dataSubjectBlockListIds
         dependedOnDataSiloTitles: $dependedOnDataSiloTitles
+        ownerEmails: $ownerEmails
       }
     ) {
       dataSilo {
