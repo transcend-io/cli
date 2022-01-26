@@ -1,17 +1,20 @@
 import { gql } from 'graphql-request';
 
 export const ENRICHERS = gql`
-  query SchemaSyncEnrichers($title: String!) {
-    enrichers(filterBy: { text: $title }) {
+  query SchemaSyncEnrichers($title: String, $first: Int!, $offset: Int!) {
+    enrichers(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id
         title
+        url
+        type
         inputIdentifier {
           name
         }
         identifiers {
           name
         }
+        actions
       }
     }
   }
@@ -29,7 +32,7 @@ export const IDENTIFIERS = gql`
 `;
 
 export const API_KEYS = gql`
-  query SchemaSyncApiKeys($first: Int!, $offset: Int!, $titles: [String!]!) {
+  query SchemaSyncApiKeys($first: Int!, $offset: Int!, $titles: [String!]) {
     apiKeys(first: $first, offset: $offset, filterBy: { titles: $titles }) {
       nodes {
         id
@@ -110,12 +113,59 @@ export const UPDATE_ENRICHER = gql`
 `;
 
 export const DATA_SILOS = gql`
-  query SchemaSyncDataSilos($title: String!) {
-    dataSilos(filterBy: { text: $title }) {
+  query SchemaSyncDataSilos($title: String, $first: Int!, $offset: Int!) {
+    dataSilos(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id
         title
       }
+    }
+  }
+`;
+
+export const DATA_SILO = gql`
+  query SchemaSyncDataSilo($id: String!) {
+    dataSilo(id: $id) {
+      id
+      title
+      description
+      url
+      apiKeys {
+        title
+      }
+      subjectBlocklist {
+        type
+      }
+      globalActions {
+        type
+        active
+      }
+      dataPoints {
+        id
+        title {
+          defaultMessage
+        }
+        description {
+          defaultMessage
+        }
+        name
+        purpose
+        category
+        actionSettings {
+          type
+          active
+        }
+      }
+      identifiers {
+        name
+      }
+      dependentDataSilos {
+        title
+      }
+      owners {
+        email
+      }
+      isLive
     }
   }
 `;

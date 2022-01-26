@@ -1,0 +1,26 @@
+api-keys:
+  - title: Webhook Key
+enrichers:
+  - title: Basic Identity Enrichment
+    description: Enrich an email address to the userId and phone number
+    # The data silo webhook URL is the same in each environment,
+    # except for the base domain in the webhook URL.
+    url: https://example.<<parameters.domain>>/transcend-enrichment-webhook
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+      - myUniqueIdentifier
+  - title: Fraud Check
+    description: Ensure the email address is not marked as fraudulent
+    url: https://example.<<parameters.domain>>/transcend-fraud-check
+    input-identifier: email
+    output-identifiers:
+      - email
+    privacy-actions:
+      - ERASURE
+data-silos:
+  - title: Redshift Data Warehouse
+    description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
+    url: https://example.<<parameters.domain>>/transcend-webhook
+    api-key-title: Webhook Key

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import { existsSync } from 'fs';
@@ -7,28 +9,31 @@ import { TranscendInput } from './codecs';
 import { syncConfigurationToTranscend } from './syncConfigurationToTranscend';
 import { GraphQLClient } from 'graphql-request';
 
-const ADMIN_DASH =
-  'https://app.transcend.io/privacy-requests/connected-services';
-
+import { ADMIN_DASH } from './constants';
+import { ObjByString } from '@transcend-io/type-utils';
 /**
- * Main cli
+ * Push the transcend.yml file remotely into a Transcend instance
  *
- * Usage:
- * yarn ts-node ./build/main.js --file=./examples/invalid.yml --authorization=asd123
+ * Dev Usage:
+ * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
+ *
+ * Standard usage
+ * yarn tr-push --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend.yml',
     transcendUrl = 'https://api.transcend.io',
-    authorization,
-  } = yargs(process.argv.slice(2));
+    auth,
+    variables = '',
+  } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
-  // Ensure authorization is passed
-  if (!authorization) {
+  // Ensure auth is passed
+  if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --authorization=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=asd123',
       ),
     );
     process.exit(1);
@@ -48,8 +53,16 @@ async function main(): Promise<void> {
 
   let contents: TranscendInput;
   try {
+    // Parse out the variables
+    const splitVars = variables.split(',').filter((x) => !!x);
+    const vars: ObjByString = {};
+    splitVars.forEach((variable) => {
+      const [k, v] = variable.split(':');
+      vars[k] = v;
+    });
+
     // Read in the yaml file and validate it's shape
-    contents = readTranscendYaml(file);
+    contents = readTranscendYaml(file, vars);
     logger.info(colors.green(`Successfully read in "${file}"`));
   } catch (err) {
     logger.error(
@@ -65,7 +78,7 @@ async function main(): Promise<void> {
   const { version } = require('../package.json');
   const client = new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
-      Authorization: `Bearer ${authorization}`,
+      Authorization: `Bearer ${auth}`,
       version,
     },
   });
