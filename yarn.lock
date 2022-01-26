@@ -348,8 +348,8 @@ __metadata:
     typescript: ^4.4.4
     yargs-parser: ^21.0.0
   bin:
-    "transcend:pull": build/cli-pull
-    "transcend:push": build/cli-push
+    tr-pull: ./build/cli-pull.js
+    tr-push: ./build/cli-push.js
   languageName: unknown
   linkType: soft
 

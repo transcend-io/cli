@@ -1,0 +1,28 @@
+api-keys:
+  - title: Transcend Prod Server Silo Key
+enrichers: []
+data-silos:
+  - title: Customer.io
+    description: >-
+      Customer.io is a behavioral messaging platform for triggering personalized
+      and event-based customer communication.
+    identity-keys:
+      - coreIdentifier
+      - email
+      - segmentId
+    deletion-dependencies: []
+    owners: []
+    disabled: true
+    privacy-actions:
+      - ERASURE
+    objects: []
+  - title: Facebook Ads
+    description: Targeted ad campaigns on Facebook for businesses.
+    identity-keys:
+      - email
+    deletion-dependencies: []
+    owners: []
+    disabled: false
+    privacy-actions:
+      - ERASURE
+    objects: []

@@ -1,4 +1,4 @@
-#!/user/bin/env node
+#!/usr/bin/env node
 
 import yargs from 'yargs-parser';
 import { logger } from './logger';
@@ -17,7 +17,7 @@ import { ADMIN_DASH } from './constants';
  * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123
  *
  * Standard usage
- * yarn transcend:push --file=./examples/invalid.yml --auth=asd123
+ * yarn tr-push --file=./examples/invalid.yml --auth=asd123
  */
 async function main(): Promise<void> {
   // Parse command line arguments

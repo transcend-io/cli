@@ -1,4 +1,4 @@
-#!/user/bin/env node
+#!/usr/bin/env node
 
 import yargs from 'yargs-parser';
 import { logger } from './logger';
@@ -15,7 +15,7 @@ import { ADMIN_DASH } from './constants';
  * yarn ts-node ./src/cli-pull.ts --file=./examples/invalid.yml --auth=asd123
  *
  * Standard usage
- * yarn transcend:push --file=./examples/invalid.yml --auth=asd123
+ * yarn tr-push --file=./examples/invalid.yml --auth=asd123
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
     },
   });
 
-  // Sync to Transcend
+  // Sync to Disk
   try {
     const configuration = await pullTranscendConfiguration(client);
     writeTranscendYaml(file, configuration);
