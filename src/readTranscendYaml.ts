@@ -1,6 +1,6 @@
 import { decodeCodec } from '@transcend-io/type-utils';
 import yaml from 'js-yaml';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { TranscendInput } from './codecs';
 
 /**
@@ -15,4 +15,17 @@ export function readTranscendYaml(filePath: string): TranscendInput {
     TranscendInput,
     yaml.load(readFileSync(filePath, 'utf-8')),
   );
+}
+
+/**
+ * Write a Transcend configuration to disk
+ *
+ * @param filePath - Path to yaml file
+ * @param input - The input to write out
+ */
+export function writeTranscendYaml(
+  filePath: string,
+  input: TranscendInput,
+): void {
+  writeFileSync(filePath, yaml.dump(decodeCodec(TranscendInput, input)));
 }

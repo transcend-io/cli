@@ -4,8 +4,14 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Typescript Build](#typescript-build)
-- [Lint](#lint)
+- [Installation](#installation)
+- [Authentication](#authentication)
+- [Usage](#usage)
+  - [transcend:pull](#transcendpull)
+  - [transcend:push](#transcendpush)
+- [Local Development](#local-development)
+  - [Typescript Build](#typescript-build)
+  - [Lint](#lint)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -13,7 +19,49 @@
 
 A command line interface for programmatically creating data silos on app.transcend.io
 
-## Typescript Build
+## Installation
+
+This package is distributed through npm and github package registries. The simplest way to install would be:
+
+```sh
+yarn add -D @transcend-io/schema-sync
+```
+
+or
+
+```sh
+npm i -D @transcend-io/schema-sync
+```
+
+## Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend admin dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Data Map
+- Manage Request Identity Verification
+- Connect Data Silos
+- Manage Data Subject Request Settings
+- View API Keys
+
+## Usage
+
+### transcend:pull
+
+```sh
+yarn transcend:pull --auth=<api-key>
+```
+
+### transcend:push
+
+```sh
+yarn transcend:push --auth=<api-key>
+```
+
+## Local Development
+
+### Typescript Build
 
 Build this package only:
 
@@ -28,7 +76,7 @@ Create a fresh build:
 yarn clean && yarn run tsc
 ```
 
-## Lint
+### Lint
 
 Lint the typescript files in this package:
 

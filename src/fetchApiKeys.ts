@@ -24,6 +24,7 @@ const ADMIN_LINK = 'https://app.transcend.io/infrastructure/api-keys';
  *
  * @param apiKeyInputs - API keys to fetch metadata on
  * @param client - GraphQL client
+ * @param fetchAll - When true, fetch all API keys
  * @returns A map from apiKey title to Identifier
  */
 export async function fetchApiKeys(
@@ -32,8 +33,13 @@ export async function fetchApiKeys(
     'data-silos': dataSilos = [],
   }: TranscendInput,
   client: GraphQLClient,
+  fetchAll = false,
 ): Promise<{ [k in string]: ApiKey }> {
-  logger.info(colors.magenta(`Fetching ${apiKeyInputs.length} API keys...`));
+  logger.info(
+    colors.magenta(
+      `Fetching ${fetchAll ? 'all' : apiKeyInputs.length} API keys...`,
+    ),
+  );
   const titles = apiKeyInputs.map(({ title }) => title);
   const apiKeys: ApiKey[] = [];
   let offset = 0;
@@ -47,7 +53,7 @@ export async function fetchApiKeys(
     } = await client.request(API_KEYS, {
       first: PAGE_SIZE,
       offset,
-      titles,
+      titles: fetchAll ? undefined : titles,
     });
     apiKeys.push(...nodes);
     offset += PAGE_SIZE;

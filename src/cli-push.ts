@@ -1,3 +1,5 @@
+#!/user/bin/env node
+
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import { existsSync } from 'fs';
@@ -7,28 +9,29 @@ import { TranscendInput } from './codecs';
 import { syncConfigurationToTranscend } from './syncConfigurationToTranscend';
 import { GraphQLClient } from 'graphql-request';
 
-const ADMIN_DASH =
-  'https://app.transcend.io/privacy-requests/connected-services';
-
+import { ADMIN_DASH } from './constants';
 /**
- * Main cli
+ * Push the transcend.yml file remotely into a Transcend instance
  *
- * Usage:
- * yarn ts-node ./build/main.js --file=./examples/invalid.yml --authorization=asd123
+ * Dev Usage:
+ * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123
+ *
+ * Standard usage
+ * yarn transcend:push --file=./examples/invalid.yml --auth=asd123
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend.yml',
     transcendUrl = 'https://api.transcend.io',
-    authorization,
+    auth,
   } = yargs(process.argv.slice(2));
 
-  // Ensure authorization is passed
-  if (!authorization) {
+  // Ensure auth is passed
+  if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --authorization=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=asd123',
       ),
     );
     process.exit(1);
@@ -65,7 +68,7 @@ async function main(): Promise<void> {
   const { version } = require('../package.json');
   const client = new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
-      Authorization: `Bearer ${authorization}`,
+      Authorization: `Bearer ${auth}`,
       version,
     },
   });
