@@ -21,6 +21,6 @@ enrichers:
       - ERASURE
 data-silos:
   - title: Redshift Data Warehouse
-    description: The mega-warehouse that contains a copy over all SQL backed databases
+    description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
     url: https://example.<<parameters.domain>>/transcend-webhook
     api-key-title: Webhook Key

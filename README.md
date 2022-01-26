@@ -10,6 +10,7 @@
 - [Usage](#usage)
   - [tr-pull](#tr-pull)
   - [tr-push](#tr-push)
+    - [Dynamic Variables](#dynamic-variables)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -194,7 +195,7 @@ An alternative file destination can be specified:
 
 ```sh
 # Looks for file at custom location ./custom/location.yml
-tr-pull --auth=<api-key> --file=./custom/location.yml
+tr-push --auth=<api-key> --file=./custom/location.yml
 ```
 
 Some things to note about this sync process:
@@ -207,3 +208,44 @@ Some things to note about this sync process:
 
 - a) Data silo owners: If you assign an email address to a data silo, you must first make sure that user is invited into your Transcend instance (https://app.transcend.io/admin/users).
 - b) API keys: This cli will not create new API keys. You will need to first create the new API keys on the Admin Dashboard (https://app.transcend.io/infrastructure/api-keys). You can then list out the titles of the API keys that you generated in your transcend.yml file, after which the cli is capable of updating that API key to be able to respond to different data silos in your Data Map
+
+#### Dynamic Variables
+
+If you are using this cli to sync your Data Map between multiple Transcend instances, you may find the need to make minor modifications to your configurations between environments. The most notable difference would be the domain where your webhook URLs are hosted on.
+
+The `tr-push` command takes in a parameter `variables`. This is a CSV of `key:value` pairs.
+
+```sh
+tr-push --auth=<api-key> --variables=domain:acme.com,stage:staging
+```
+
+This command could fill out multiple parameters in a yaml file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
+
+```yml
+api-keys:
+  - title: Webhook Key
+enrichers:
+  - title: Basic Identity Enrichment
+    description: Enrich an email address to the userId and phone number
+    # The data silo webhook URL is the same in each environment,
+    # except for the base domain in the webhook URL.
+    url: https://example.<<parameters.domain>>/transcend-enrichment-webhook
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+      - myUniqueIdentifier
+  - title: Fraud Check
+    description: Ensure the email address is not marked as fraudulent
+    url: https://example.<<parameters.domain>>/transcend-fraud-check
+    input-identifier: email
+    output-identifiers:
+      - email
+    privacy-actions:
+      - ERASURE
+data-silos:
+  - title: Redshift Data Warehouse
+    description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
+    url: https://example.<<parameters.domain>>/transcend-webhook
+    api-key-title: Webhook Key
+```

@@ -10,14 +10,15 @@ import { syncConfigurationToTranscend } from './syncConfigurationToTranscend';
 import { GraphQLClient } from 'graphql-request';
 
 import { ADMIN_DASH } from './constants';
+import { ObjByString } from '@transcend-io/type-utils';
 /**
  * Push the transcend.yml file remotely into a Transcend instance
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123
+ * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
  *
  * Standard usage
- * yarn tr-push --file=./examples/invalid.yml --auth=asd123
+ * yarn tr-push --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -25,7 +26,8 @@ async function main(): Promise<void> {
     file = './transcend.yml',
     transcendUrl = 'https://api.transcend.io',
     auth,
-  } = yargs(process.argv.slice(2));
+    variables = '',
+  } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
   if (!auth) {
@@ -51,8 +53,16 @@ async function main(): Promise<void> {
 
   let contents: TranscendInput;
   try {
+    // Parse out the variables
+    const splitVars = variables.split(',').filter((x) => !!x);
+    const vars: ObjByString = {};
+    splitVars.forEach((variable) => {
+      const [k, v] = variable.split(':');
+      vars[k] = v;
+    });
+
     // Read in the yaml file and validate it's shape
-    contents = readTranscendYaml(file);
+    contents = readTranscendYaml(file, vars);
     logger.info(colors.green(`Successfully read in "${file}"`));
   } catch (err) {
     logger.error(
