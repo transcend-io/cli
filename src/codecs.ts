@@ -2,8 +2,8 @@ import * as t from 'io-ts';
 import { valuesOf } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
-  InternalDataSiloObjectResolver,
   ProcessingPurpose,
+  RequestAction,
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
 
@@ -57,7 +57,7 @@ export const EnricherInput = t.intersection([
     /** Internal description for why the enricher is needed */
     description: t.string,
     /** The privacy actions that the enricher should run against */
-    'privacy-actions': t.array(t.string),
+    'privacy-actions': t.array(valuesOf(RequestAction)),
   }),
 ]);
 
@@ -120,7 +120,7 @@ export const ObjectInput = t.intersection([
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
-    'privacy-actions': t.array(valuesOf(InternalDataSiloObjectResolver)),
+    'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
     /**
      * Provide field-level metadata for this object.
      * This is often the column metadata

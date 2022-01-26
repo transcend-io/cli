@@ -8,18 +8,165 @@ import {
   UPDATE_DATA_SILO,
   CREATE_DATA_SILO,
   UPDATE_OR_CREATE_DATA_POINT,
+  DATA_SILO,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
   DataSubject,
 } from './fetchDataSubjects';
 import { ApiKey } from './fetchApiKeys';
+import {
+  DataCategoryType,
+  ProcessingPurpose,
+  RequestActionObjectResolver,
+} from '@transcend-io/privacy-types';
 
 export interface DataSilo {
   /** ID of dataSilo */
   id: string;
   /** Title of dataSilo */
   title: string;
+}
+
+export interface DataSiloEnriched {
+  /** ID of dataSilo */
+  id: string;
+  /** Title of dataSilo */
+  title: string;
+  /** Description of data silo */
+  description: string;
+  /** Webhook URL */
+  url?: string;
+  /** Associated API keys */
+  apiKeys: {
+    /** Title */
+    title: string;
+  }[];
+  /** Data subject block list */
+  subjectBlocklist: {
+    /** Type of data subject */
+    type: string;
+  }[];
+  /** Global actions */
+  globalActions: {
+    /** Whether active */
+    active: boolean;
+    /** Type of action */
+    type: RequestActionObjectResolver;
+  }[];
+  /** Datapoints */
+  dataPoints: {
+    /** ID of dataPoint */
+    id: string;
+    /** Title of dataPoint */
+    title: {
+      /** Default message */
+      defaultMessage: string;
+    };
+    /** Description */
+    description: {
+      /** Default message */
+      defaultMessage: string;
+    };
+    /** Name */
+    name: string;
+    /** Purpose */
+    purpose: ProcessingPurpose;
+    /** Category */
+    category: DataCategoryType;
+    /** Global actions */
+    actionSettings: {
+      /** Action type */
+      type: RequestActionObjectResolver;
+      /** Is enabled */
+      active: boolean;
+    }[];
+  }[];
+  /** Identifiers */
+  identifiers: {
+    /** Name of identifier */
+    name: string;
+  }[];
+  /** Dependent data silos */
+  dependentDataSilos: {
+    /** Title of silo */
+    title: string;
+  }[];
+  /** Silo owners */
+  owners: {
+    /** Email owners */
+    email: string;
+  }[];
+  /** Silo is live */
+  isLive: boolean;
+}
+
+const PAGE_SIZE = 20;
+
+/**
+ * Fetch all dataSilos in the organization
+ *
+ * @param client - GraphQL client
+ * @param title - Filter by title
+ * @returns All dataSilos in the organization
+ */
+export async function fetchAllDataSilos(
+  client: GraphQLClient,
+  title?: string,
+): Promise<DataSilo[]> {
+  const dataSilos: DataSilo[] = [];
+  let offset = 0;
+
+  // Try to fetch an enricher with the same title
+  let shouldContinue = false;
+  do {
+    const {
+      dataSilos: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await client.request<{
+      /** Query response */
+      dataSilos: {
+        /** List of matches */
+        nodes: DataSilo[];
+      };
+    }>(DATA_SILOS, {
+      first: PAGE_SIZE,
+      offset,
+      title,
+    });
+    dataSilos.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return dataSilos;
+}
+
+/**
+ * Fetch all dataSilos with additional metadata
+ *
+ * @param client - GraphQL client
+ * @param title - Filter by title
+ * @returns All dataSilos in the organization
+ */
+export async function fetchEnrichedDataSilos(
+  client: GraphQLClient,
+  title?: string,
+): Promise<DataSiloEnriched[]> {
+  const dataSilos: DataSiloEnriched[] = [];
+
+  const silos = await fetchAllDataSilos(client, title);
+  await mapSeries(silos, async (silo) => {
+    const { dataSilo } = await client.request<{
+      /** Query response */
+      dataSilo: DataSiloEnriched;
+    }>(DATA_SILO, {
+      id: silo.id,
+    });
+    dataSilos.push(dataSilo);
+  });
+
+  return dataSilos;
 }
 
 /**
@@ -38,17 +185,7 @@ export async function syncDataSilo(
   apiKeysByTitle: { [title in string]: ApiKey },
 ): Promise<DataSilo> {
   // Try to fetch an dataSilo with the same title
-  const {
-    dataSilos: { nodes: matches },
-  } = await client.request<{
-    /** Query response */
-    dataSilos: {
-      /** List of matches */
-      nodes: DataSilo[];
-    };
-  }>(DATA_SILOS, {
-    title: dataSilo.title,
-  });
+  const matches = await fetchAllDataSilos(client, dataSilo.title);
   let existingDataSilo = matches.find(({ title }) => title === dataSilo.title);
 
   // If data silo exists, update it, else create new

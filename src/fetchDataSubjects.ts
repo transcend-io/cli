@@ -21,17 +21,19 @@ export interface DataSubject {
  *
  * @param input - Input to fetch
  * @param client - GraphQL client
+ * @param fetchAll - When true, always fetch all subjects
  * @returns The list of data subjects
  */
 export async function fetchDataSubjects(
   { 'data-silos': dataSilos = [] }: TranscendInput,
   client: GraphQLClient,
+  fetchAll = false,
 ): Promise<{ [type in string]: DataSubject }> {
   // Only need to fetch data subjects if specified in config
   const expectedDataSubjects = uniq(
     flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
   );
-  if (expectedDataSubjects.length === 0) {
+  if (expectedDataSubjects.length === 0 && !fetchAll) {
     return {};
   }
 
@@ -89,4 +91,26 @@ export function convertToDataSubjectBlockList(
   return Object.values(allDataSubjects)
     .filter((silo) => !dataSubjectTypes.includes(silo.type))
     .map(({ id }) => id);
+}
+
+/**
+ * Convert a list of data subject types into the allow list of types
+ *
+ * @param dataSubjectTypes - The list of data subject types that the data silo should be for
+ * @param allDataSubjects - All data subjects in the organization
+ * @returns The allow list of data subjects for that silo
+ */
+export function convertToDataSubjectAllowlist(
+  dataSubjectTypes: string[],
+  allDataSubjects: { [type in string]: DataSubject },
+): string[] {
+  dataSubjectTypes.forEach((type) => {
+    if (!allDataSubjects[type]) {
+      throw new Error(`Expected to find data subject definition: ${type}`);
+    }
+  });
+
+  return Object.values(allDataSubjects)
+    .filter((silo) => !dataSubjectTypes.includes(silo.type))
+    .map(({ type }) => type);
 }
