@@ -230,7 +230,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $description: String
     $category: DataCategoryType
     $purpose: ProcessingPurpose
-    $enabledActions: [RequestActionDataPoint!]
+    $enabledActions: [RequestActionObjectResolver!]
   ) {
     updateOrCreateDataPoint(
       input: {
