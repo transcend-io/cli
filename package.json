@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/schema-sync",
   "description": "Small package containing useful typescript utilities.",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "homepage": "https://github.com/transcend-io/schema-sync",
   "repository": {
     "type": "git",
