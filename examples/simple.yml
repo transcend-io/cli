@@ -90,16 +90,16 @@ data-silos:
     # for managing this data silo
     owners:
       - alice@transcend.io
-    # Objects are the different types of data models that existing within your data silo.
+    # Datapoints are the different types of data models that existing within your data silo.
     # If the data silo is a database, these would be your tables.
     # Note: These are currently called "datapoints" in the Transcend UI and documentation.
     # See: https://docs.transcend.io/docs/the-data-map#datapoints
-    objects:
+    datapoints:
       - title: User Model
         description: The centralized user model user
         # AKA table name
         key: users
-        # What is the purpose of processing for this object/table?
+        # What is the purpose of processing for this datapoint/table?
         # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
         #   ESSENTIAL: Provide a service that the user explicitly requests and that is part of the product's basic service or functionality
         #   ADDITIONAL_FUNCTIONALITY: Provide a service that the user explicitly requests but that is not a necessary part of the product's basic service
@@ -115,7 +115,7 @@ data-silos:
         #   OTHER: Other specific purpose not covered above
         #   UNSPECIFIED: The purpose is not explicitly stated or is unclear
         purpose: ESSENTIAL
-        # The category of personal data for this object
+        # The category of personal data for this datapoint
         # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
         #   FINANCIAL: Financial information
         #   HEALTH: Health information
@@ -133,12 +133,12 @@ data-silos:
         #   OTHER: A specific type of information not covered by the above categories
         #   UNSPECIFIED: The type of information is not explicitly stated or unclear
         category: USER_PROFILE
-        # The types of privacy actions that this object can implement
+        # The types of privacy actions that this datapoint can implement
         # See "InternalDataSiloObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
         #   ACCESS: Data Download request
         privacy-actions:
           - ACCESS
-        # Provide field-level metadata for this object.
+        # Provide field-level metadata for this datapoint.
         fields:
           - key: firstName
             title: First Name
@@ -184,7 +184,7 @@ data-silos:
     privacy-actions:
       - ACCESS
       - CONTACT_OPT_OUT
-    objects:
+    datapoints:
       - title: Auth User
         description: The centralized authentication object for a user
         key: auth
