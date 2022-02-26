@@ -179,7 +179,7 @@ export async function fetchEnrichedDataSilos(
  * @returns Data silo info
  */
 export async function syncDataSilo(
-  { objects, ...dataSilo }: DataSiloInput,
+  { datapoints, ...dataSilo }: DataSiloInput,
   client: GraphQLClient,
   dataSubjectsByName: { [type in string]: DataSubject },
   apiKeysByTitle: { [title in string]: ApiKey },
@@ -258,28 +258,28 @@ export async function syncDataSilo(
   });
   logger.info(colors.green('Synced global actions!'));
 
-  // Sync objects
-  if (objects) {
+  // Sync datapoints
+  if (datapoints) {
     logger.info(
       colors.magenta(
-        `Syncing "${objects.length}" objects for data silo ${dataSilo.title}...`,
+        `Syncing "${datapoints.length}" datapoints for data silo ${dataSilo.title}...`,
       ),
     );
-    await mapSeries(objects, async (obj) => {
-      logger.info(colors.magenta(`Syncing object "${obj.key}"...`));
+    await mapSeries(datapoints, async (datapoint) => {
+      logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
       await client.request(UPDATE_OR_CREATE_DATA_POINT, {
         dataSiloId: existingDataSilo!.id,
-        name: obj.key,
-        title: obj.title,
-        description: obj.description,
-        category: obj.category,
-        purpose: obj.purpose,
-        enabledActions: obj['privacy-actions'] || [], // clear out when not specified
+        name: datapoint.key,
+        title: datapoint.title,
+        description: datapoint.description,
+        category: datapoint.category,
+        purpose: datapoint.purpose,
+        enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
       });
 
       // TODO:https://transcend.height.app/T-10773 - obj.fields
 
-      logger.info(colors.green(`Synced object "${obj.key}"!`));
+      logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
     });
   }
 

@@ -15,7 +15,7 @@ data-silos:
     disabled: true
     privacy-actions:
       - ERASURE
-    objects: []
+    datapoints: []
   - title: Facebook Ads
     description: Targeted ad campaigns on Facebook for businesses.
     identity-keys:
@@ -25,4 +25,4 @@ data-silos:
     disabled: false
     privacy-actions:
       - ERASURE
-    objects: []
+    datapoints: []

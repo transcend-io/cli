@@ -108,7 +108,7 @@ export async function pullTranscendConfiguration(
               dataSubjects,
             )
           : undefined,
-      objects: dataPoints.map((dataPoint) => ({
+      datapoints: dataPoints.map((dataPoint) => ({
         title: dataPoint.title.defaultMessage,
         description: dataPoint.description.defaultMessage,
         key: dataPoint.name,
