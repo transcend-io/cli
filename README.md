@@ -140,7 +140,7 @@ data-silos:
       - Identity Service
     owners:
       - alice@transcend.io
-    objects:
+    datapoints:
       - title: User Model
         description: The centralized user model user
         key: users
@@ -202,7 +202,7 @@ Some things to note about this sync process:
 
 1. Any field that is defined in your .yml file will be synced up to app.transcend.io. If any change was made on the admin dashboard, it will be overwritten.
 2. If you omit a field from the yaml file, this field will not be synced. This gives you the ability to define as much or as little configuration in your transcend.yml file as you would like, and let the remainder of fields be labeled through the Admin Dashboard
-3. If you define new data subjects, identifiers, data silos or objects that were not previously defined on the Admin Dashboard, the cli will create these new resources automatically.
+3. If you define new data subjects, identifiers, data silos or datapoints that were not previously defined on the Admin Dashboard, the cli will create these new resources automatically.
 4. Currently, this cli does not handle deleting or renaming of resources. If you need to delete or rename a data silo, identifier, enricher or API key, you should make the change on the Admin Dashboard.
 5. The only resources that this cli will not auto generate are:
 

@@ -65,7 +65,7 @@ export const EnricherInput = t.intersection([
 export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 
 /**
- * Annotate specific fields within an object. These are often database table columns.
+ * Annotate specific fields within a datapoint. These are often database table columns.
  * Fields can also be a JSON object or separate file.
  */
 export const FieldInput = t.intersection([
@@ -76,7 +76,7 @@ export const FieldInput = t.intersection([
   t.partial({
     /** Display title of the field */
     title: t.string,
-    /** The unique key of the object. When a database, this is the table name. */
+    /** The unique key of the datapoint. When a database, this is the table name. */
     key: t.string,
     /** Description of the field */
     description: t.string,
@@ -87,42 +87,42 @@ export const FieldInput = t.intersection([
 export type FieldInput = t.TypeOf<typeof FieldInput>;
 
 /**
- * Objects are the different types of data models that existing within your data silo.
+ * Datapoints are the different types of data models that existing within your data silo.
  * If the data silo is a database, these would be your tables.
  * Note: These are currently called "datapoints" in the Transcend UI and documentation.
  *
  * @see https://docs.transcend.io/docs/the-data-map#datapoints
  */
-export const ObjectInput = t.intersection([
+export const DatapointInput = t.intersection([
   t.type({
     /** The display title of the enricher */
     title: t.string,
-    /** The unique key of the object. When a database, this is the table name. */
+    /** The unique key of the datapoint. When a database, this is the table name. */
     key: t.string,
   }),
   t.partial({
     /** Internal description for why the enricher is needed */
     description: t.string,
     /**
-     * What is the purpose of processing for this object/table?
+     * What is the purpose of processing for this datapoint/table?
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
     purpose: valuesOf(ProcessingPurpose),
     /**
-     * The category of personal data for this object
+     * The category of personal data for this datapoint
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
     category: valuesOf(DataCategoryType),
     /**
-     * The types of privacy actions that this object can implement
+     * The types of privacy actions that this datapoint can implement
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
     'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
     /**
-     * Provide field-level metadata for this object.
+     * Provide field-level metadata for this datapoint.
      * This is often the column metadata
      */
     fields: t.array(FieldInput),
@@ -130,7 +130,7 @@ export const ObjectInput = t.intersection([
 ]);
 
 /** Type override */
-export type ObjectInput = t.TypeOf<typeof ObjectInput>;
+export type DatapointInput = t.TypeOf<typeof DatapointInput>;
 
 /**
  * Input to define a data silo
@@ -186,10 +186,10 @@ export const DataSiloInput = t.intersection([
      */
     disabled: t.boolean,
     /**
-     * Objects defined within this data silo, see comment of `ObjectInput`
+     * Datapoints defined within this data silo, see comment of `DatapointInput`
      * for further details.
      */
-    objects: t.array(ObjectInput),
+    datapoints: t.array(DatapointInput),
   }),
 ]);
 

@@ -39,8 +39,10 @@
   "cSpell.words": [
     "Blocklist",
     "camelcase",
+    "cli",
     "codomain",
     "compat",
+    "Datapoint",
     "datapoints",
     "depcheck",
     "doctoc",
@@ -56,6 +58,7 @@
     "Requirize",
     "thlorenz",
     "tsbuildinfo",
+    "yaml",
     "yarnpkg"
   ]
 }
