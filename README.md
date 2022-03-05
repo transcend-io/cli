@@ -63,7 +63,7 @@ The API key needs the following scopes:
 
 - Manage Data Map
 - Manage Request Identity Verification
-- Connect data silos
+- Connect Data Silos
 - Manage Data Subject Request Settings
 - View API Keys
 

@@ -129,6 +129,7 @@ export const DATA_SILO = gql`
       id
       title
       description
+      type
       url
       apiKeys {
         title
@@ -256,6 +257,7 @@ export const CREATE_DATA_SILO = gql`
     $title: String!
     $description: String!
     $url: String
+    $type: String!
     $identifiers: [String!]
     $isLive: Boolean!
     $dataSubjectBlockListIds: [ID!]
@@ -265,7 +267,7 @@ export const CREATE_DATA_SILO = gql`
   ) {
     connectDataSilo(
       input: {
-        name: "server"
+        name: $type
         title: $title
         description: $description
         url: $url
@@ -280,6 +282,7 @@ export const CREATE_DATA_SILO = gql`
       dataSilo {
         id
         title
+        type
       }
     }
   }

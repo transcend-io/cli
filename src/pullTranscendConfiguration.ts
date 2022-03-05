@@ -18,10 +18,12 @@ import { fetchAllEnrichers } from './syncEnrichers';
  * Pull a yaml configuration from Transcend
  *
  * @param client - GraphQL client
+ * @param dataSiloIds - The data silos to sync. If empty list, pull all.
  * @returns The configuration
  */
 export async function pullTranscendConfiguration(
   client: GraphQLClient,
+  dataSiloIds: string[],
 ): Promise<TranscendInput> {
   const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers] =
     await Promise.all([
@@ -30,7 +32,7 @@ export async function pullTranscendConfiguration(
       // Grab API keys
       fetchApiKeys({}, client, true),
       // Fetch the data silos
-      fetchEnrichedDataSilos(client),
+      fetchEnrichedDataSilos(client, { ids: dataSiloIds }),
       // Fetch enrichers
       fetchAllEnrichers(client),
     ]);
@@ -55,7 +57,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save enrichers
-  if (enrichers.length > 0) {
+  if (enrichers.length > 0 && dataSiloIds.length === 0) {
     result.enrichers = enrichers
       .filter(({ type }) => type === 'SERVER')
       .map(

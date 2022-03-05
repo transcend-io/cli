@@ -26,6 +26,8 @@ export interface DataSilo {
   id: string;
   /** Title of dataSilo */
   title: string;
+  /** Type of silo */
+  type: string;
 }
 
 export interface DataSiloEnriched {
@@ -33,6 +35,8 @@ export interface DataSiloEnriched {
   id: string;
   /** Title of dataSilo */
   title: string;
+  /** Type of silo */
+  type: string;
   /** Description of data silo */
   description: string;
   /** Webhook URL */
@@ -146,12 +150,20 @@ export async function fetchAllDataSilos(
  * Fetch all dataSilos with additional metadata
  *
  * @param client - GraphQL client
- * @param title - Filter by title
+ * @param options - Filter options
  * @returns All dataSilos in the organization
  */
 export async function fetchEnrichedDataSilos(
   client: GraphQLClient,
-  title?: string,
+  {
+    ids,
+    title,
+  }: {
+    /** Filter by IDs */
+    ids?: string[];
+    /** Filter by title */
+    title?: string;
+  } = {},
 ): Promise<DataSiloEnriched[]> {
   const dataSilos: DataSiloEnriched[] = [];
 
@@ -166,7 +178,10 @@ export async function fetchEnrichedDataSilos(
     dataSilos.push(dataSilo);
   });
 
-  return dataSilos;
+  // FIXME filter inside api
+  return ids && ids.length > 0
+    ? dataSilos.filter(({ id }) => ids.includes(id))
+    : dataSilos;
 }
 
 /**
@@ -223,6 +238,7 @@ export async function syncDataSilo(
     }>(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
+      type: dataSilo.integrationName || 'server',
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
@@ -246,17 +262,19 @@ export async function syncDataSilo(
   }
 
   // Update Global Actions
-  logger.info(
-    colors.magenta(
-      `Syncing data silo level privacy actions for "${dataSilo.title}"...`,
-    ),
-  );
-  await client.request(UPDATE_OR_CREATE_DATA_POINT, {
-    dataSiloId: existingDataSilo!.id,
-    name: '_global',
-    enabledActions: dataSilo['privacy-actions'] || [],
-  });
-  logger.info(colors.green('Synced global actions!'));
+  if (!dataSilo.integrationName || dataSilo.integrationName === 'server') {
+    logger.info(
+      colors.magenta(
+        `Syncing data silo level privacy actions for "${dataSilo.title}"...`,
+      ),
+    );
+    await client.request(UPDATE_OR_CREATE_DATA_POINT, {
+      dataSiloId: existingDataSilo!.id,
+      name: '_global',
+      enabledActions: dataSilo['privacy-actions'] || [],
+    });
+    logger.info(colors.green('Synced global actions!'));
+  }
 
   // Sync datapoints
   if (datapoints) {
