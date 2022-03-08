@@ -113,7 +113,12 @@ export const UPDATE_ENRICHER = gql`
 `;
 
 export const DATA_SILOS = gql`
-  query SchemaSyncDataSilos($title: String, $first: Int!, $offset: Int!) {
+  query SchemaSyncDataSilos(
+    $title: String
+    $first: Int!
+    $offset: Int!
+    $filterBy: DataSiloFiltersInput
+  ) {
     dataSilos(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id

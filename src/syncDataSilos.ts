@@ -109,7 +109,15 @@ const PAGE_SIZE = 20;
  */
 export async function fetchAllDataSilos(
   client: GraphQLClient,
-  title?: string,
+  {
+    title,
+    ids,
+  }: {
+    /** Title */
+    title?: string;
+    /** IDs */
+    ids?: string[];
+  },
 ): Promise<DataSilo[]> {
   const dataSilos: DataSilo[] = [];
   let offset = 0;
@@ -128,6 +136,7 @@ export async function fetchAllDataSilos(
       };
     }>(DATA_SILOS, {
       first: PAGE_SIZE,
+      filterBy: ids ? { ids } : {},
       offset,
       title,
     });
@@ -160,7 +169,7 @@ export async function fetchEnrichedDataSilos(
 ): Promise<DataSiloEnriched[]> {
   const dataSilos: DataSiloEnriched[] = [];
 
-  const silos = await fetchAllDataSilos(client, title);
+  const silos = await fetchAllDataSilos(client, { title, ids });
   await mapSeries(silos, async (silo) => {
     const { dataSilo } = await client.request<{
       /** Query response */
@@ -171,10 +180,7 @@ export async function fetchEnrichedDataSilos(
     dataSilos.push(dataSilo);
   });
 
-  // FIXME filter inside api
-  return ids && ids.length > 0
-    ? dataSilos.filter(({ id }) => ids.includes(id))
-    : dataSilos;
+  return dataSilos;
 }
 
 /**
@@ -193,7 +199,7 @@ export async function syncDataSilo(
   apiKeysByTitle: { [title in string]: ApiKey },
 ): Promise<DataSilo> {
   // Try to fetch an dataSilo with the same title
-  const matches = await fetchAllDataSilos(client, dataSilo.title);
+  const matches = await fetchAllDataSilos(client, { title: dataSilo.title });
   let existingDataSilo = matches.find(({ title }) => title === dataSilo.title);
 
   // If data silo exists, update it, else create new
