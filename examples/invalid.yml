@@ -9,6 +9,7 @@ enrichers:
 
 data-silos:
   - titlez: Redshift Data Warehouse
+    integrationName: database
     deletion-dependencies: Identity Service
     datapoints:
       - description: The centralized user model user
@@ -19,4 +20,5 @@ data-silos:
             title: Email
             description: The email address of the user
   - title: Analytics Service
+    integrationName: database
     disabled: 'dog'

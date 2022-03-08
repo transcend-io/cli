@@ -18,10 +18,12 @@ import { fetchAllEnrichers } from './syncEnrichers';
  * Pull a yaml configuration from Transcend
  *
  * @param client - GraphQL client
+ * @param dataSiloIds - The data silos to sync. If empty list, pull all.
  * @returns The configuration
  */
 export async function pullTranscendConfiguration(
   client: GraphQLClient,
+  dataSiloIds: string[],
 ): Promise<TranscendInput> {
   const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers] =
     await Promise.all([
@@ -30,7 +32,7 @@ export async function pullTranscendConfiguration(
       // Grab API keys
       fetchApiKeys({}, client, true),
       // Fetch the data silos
-      fetchEnrichedDataSilos(client),
+      fetchEnrichedDataSilos(client, { ids: dataSiloIds }),
       // Fetch enrichers
       fetchAllEnrichers(client),
     ]);
@@ -39,7 +41,7 @@ export async function pullTranscendConfiguration(
 
   // Save API keys
   const apiKeyTitles = flatten(
-    dataSilos.map(({ apiKeys }) => apiKeys.map(({ title }) => title)),
+    dataSilos.map(([{ apiKeys }]) => apiKeys.map(({ title }) => title)),
   );
   const relevantApiKeys = Object.values(apiKeyTitleMap).filter(({ title }) =>
     apiKeyTitles.includes(title),
@@ -55,7 +57,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save enrichers
-  if (enrichers.length > 0) {
+  if (enrichers.length > 0 && dataSiloIds.length === 0) {
     result.enrichers = enrichers
       .filter(({ type }) => type === 'SERVER')
       .map(
@@ -77,30 +79,30 @@ export async function pullTranscendConfiguration(
 
   // Save data silos
   result['data-silos'] = dataSilos.map(
-    ({
-      title,
-      description,
-      url,
-      apiKeys,
-      identifiers,
-      dependentDataSilos,
-      owners,
+    ([
+      {
+        title,
+        description,
+        url,
+        type,
+        apiKeys,
+        identifiers,
+        dependentDataSilos,
+        owners,
+        subjectBlocklist,
+        isLive,
+      },
       dataPoints,
-      subjectBlocklist,
-      globalActions,
-      isLive,
-    }): DataSiloInput => ({
+    ]): DataSiloInput => ({
       title,
       description,
+      integrationName: type,
       url: url || undefined,
       'api-key-title': apiKeys[0]?.title,
       'identity-keys': identifiers.map(({ name }) => name),
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
-      'privacy-actions': globalActions
-        .filter(({ active }) => active)
-        .map(({ type }) => type),
       'data-subjects':
         subjectBlocklist.length > 0
           ? convertToDataSubjectAllowlist(

@@ -63,7 +63,7 @@ The API key needs the following scopes:
 
 - Manage Data Map
 - Manage Request Identity Verification
-- Connect data silos
+- Connect Data Silos
 - Manage Data Subject Request Settings
 - View API Keys
 
@@ -122,12 +122,9 @@ data-silos:
   # Note: title is the only required top-level field for a data silo
   - title: Redshift Data Warehouse
     description: The mega-warehouse that contains a copy over all SQL backed databases
+    integrationName: server
     url: https://example.acme.com/transcend-webhook
     api-key-title: Webhook Key
-    privacy-actions:
-      - ACCESS
-      - ERASURE
-      - SALE_OPT_OUT
     data-subjects:
       - customer
       - employee
@@ -141,6 +138,12 @@ data-silos:
     owners:
       - alice@transcend.io
     datapoints:
+      - title: Webhook Notification
+        key: _global
+        privacy-actions:
+          - ACCESS
+          - ERASURE
+          - SALE_OPT_OUT
       - title: User Model
         description: The centralized user model user
         key: users
@@ -178,6 +181,12 @@ An alternative file destination can be specified:
 ```sh
 # Writes out file to ./custom/location.yml
 tr-pull --auth=<api-key> --file=./custom/location.yml
+```
+
+Or a specific data silo(s) can be pulled in:
+
+```sh
+tr-pull --auth=<api-key> --dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
 ```
 
 Note: This command will overwrite the existing transcend.yml file that you have locally.
@@ -245,6 +254,7 @@ enrichers:
       - ERASURE
 data-silos:
   - title: Redshift Data Warehouse
+    integrationName: server
     description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
     url: https://example.<<parameters.domain>>/transcend-webhook
     api-key-title: Webhook Key
