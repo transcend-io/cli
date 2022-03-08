@@ -152,17 +152,11 @@ export const DataSiloInput = t.intersection([
      */
     integrationName: t.string,
     /**
-     * The types of privacy actions that this webhook can implement
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-     */
-    'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
-    /**
      * The SQL queries that should be run for that datapoint in a privacy request.
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
-    'privacy-actions-queries': t.partial(
+    'privacy-action-queries': t.partial(
       applyEnum(RequestActionObjectResolver, () => t.string),
     ),
     /** A description for that data silo */

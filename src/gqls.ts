@@ -137,10 +137,6 @@ export const DATA_SILO = gql`
       subjectBlocklist {
         type
       }
-      globalActions {
-        type
-        active
-      }
       dataPoints {
         id
         title {

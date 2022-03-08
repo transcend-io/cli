@@ -89,7 +89,6 @@ export async function pullTranscendConfiguration(
       owners,
       dataPoints,
       subjectBlocklist,
-      globalActions,
       isLive,
     }): DataSiloInput => ({
       title,
@@ -100,9 +99,6 @@ export async function pullTranscendConfiguration(
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
-      'privacy-actions': globalActions
-        .filter(({ active }) => active)
-        .map(({ type }) => type),
       'data-subjects':
         subjectBlocklist.length > 0
           ? convertToDataSubjectAllowlist(

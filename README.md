@@ -124,10 +124,6 @@ data-silos:
     description: The mega-warehouse that contains a copy over all SQL backed databases
     url: https://example.acme.com/transcend-webhook
     api-key-title: Webhook Key
-    privacy-actions:
-      - ACCESS
-      - ERASURE
-      - SALE_OPT_OUT
     data-subjects:
       - customer
       - employee
@@ -141,6 +137,12 @@ data-silos:
     owners:
       - alice@transcend.io
     datapoints:
+      - title: Webhook Notification
+        key: _global
+        privacy-actions:
+          - ACCESS
+          - ERASURE
+          - SALE_OPT_OUT
       - title: User Model
         description: The centralized user model user
         key: users

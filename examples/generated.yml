@@ -13,8 +13,6 @@ data-silos:
     deletion-dependencies: []
     owners: []
     disabled: true
-    privacy-actions:
-      - ERASURE
     datapoints: []
   - title: Facebook Ads
     description: Targeted ad campaigns on Facebook for businesses.
@@ -23,6 +21,4 @@ data-silos:
     deletion-dependencies: []
     owners: []
     disabled: false
-    privacy-actions:
-      - ERASURE
     datapoints: []

@@ -51,13 +51,6 @@ export interface DataSiloEnriched {
     /** Type of data subject */
     type: string;
   }[];
-  /** Global actions */
-  globalActions: {
-    /** Whether active */
-    active: boolean;
-    /** Type of action */
-    type: RequestActionObjectResolver;
-  }[];
   /** Datapoints */
   dataPoints: {
     /** ID of dataPoint */
@@ -259,21 +252,6 @@ export async function syncDataSilo(
         : undefined,
     });
     existingDataSilo = connectDataSilo.dataSilo;
-  }
-
-  // Update Global Actions
-  if (!dataSilo.integrationName || dataSilo.integrationName === 'server') {
-    logger.info(
-      colors.magenta(
-        `Syncing data silo level privacy actions for "${dataSilo.title}"...`,
-      ),
-    );
-    await client.request(UPDATE_OR_CREATE_DATA_POINT, {
-      dataSiloId: existingDataSilo!.id,
-      name: '_global',
-      enabledActions: dataSilo['privacy-actions'] || [],
-    });
-    logger.info(colors.green('Synced global actions!'));
   }
 
   // Sync datapoints
