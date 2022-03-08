@@ -227,6 +227,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $description: String
     $category: DataCategoryType
     $purpose: ProcessingPurpose
+    $querySuggestions: [DbIntegrationQuerySuggestionInput!]
     $enabledActions: [RequestActionObjectResolver!]
   ) {
     updateOrCreateDataPoint(
@@ -235,6 +236,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         name: $name
         title: $title
         description: $description
+        querySuggestions: $querySuggestions
         category: $category
         purpose: $purpose
         enabledActions: $enabledActions

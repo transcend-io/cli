@@ -269,6 +269,14 @@ export async function syncDataSilo(
         title: datapoint.title,
         description: datapoint.description,
         category: datapoint.category,
+        querySuggestions: !datapoint['privacy-action-queries']
+          ? undefined
+          : Object.entries(datapoint['privacy-action-queries']).map(
+              ([key, value]) => ({
+                requestType: key,
+                suggestedQuery: value,
+              }),
+            ),
         purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
       });

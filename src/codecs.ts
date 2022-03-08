@@ -116,6 +116,14 @@ export const DatapointInput = t.intersection([
      */
     category: valuesOf(DataCategoryType),
     /**
+     * The SQL queries that should be run for that datapoint in a privacy request.
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+     */
+    'privacy-action-queries': t.partial(
+      applyEnum(RequestActionObjectResolver, () => t.string),
+    ),
+    /**
      * The types of privacy actions that this datapoint can implement
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
@@ -151,14 +159,6 @@ export const DataSiloInput = t.intersection([
      * server | database | cron  | promptAPerson
      */
     integrationName: t.string,
-    /**
-     * The SQL queries that should be run for that datapoint in a privacy request.
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-     */
-    'privacy-action-queries': t.partial(
-      applyEnum(RequestActionObjectResolver, () => t.string),
-    ),
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
