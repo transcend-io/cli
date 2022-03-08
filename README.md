@@ -122,6 +122,7 @@ data-silos:
   # Note: title is the only required top-level field for a data silo
   - title: Redshift Data Warehouse
     description: The mega-warehouse that contains a copy over all SQL backed databases
+    integrationName: server
     url: https://example.acme.com/transcend-webhook
     api-key-title: Webhook Key
     data-subjects:
@@ -253,6 +254,7 @@ enrichers:
       - ERASURE
 data-silos:
   - title: Redshift Data Warehouse
+    integrationName: server
     description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
     url: https://example.<<parameters.domain>>/transcend-webhook
     api-key-title: Webhook Key

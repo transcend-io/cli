@@ -51,6 +51,7 @@ data-silos:
     description: The mega-warehouse that contains a copy over all SQL backed databases
     # The webhook URL to notify for data privacy requests
     url: https://example.acme.com/transcend-webhook
+    integrationName: server
     # The title of the API key that will be used to respond to privacy requests
     api-key-title: Webhook Key
     # Specify which data subjects may have personally-identifiable-information (PII) within this system
@@ -181,6 +182,7 @@ data-silos:
   # at the link: https://app.transcend.io/privacy-requests/connected-services
   - title: Identity Service
     description: Micro-service that stores user metadata
+    integrationName: server
     # Share the API key between services
     api-key-title: Webhook Key
     datapoints:
@@ -195,6 +197,7 @@ data-silos:
         privacy-actions:
           - ACCESS
   - title: Analytics Service
+    integrationName: server
     data-subjects:
       - customer
     # The title of the API key that will be used to respond to privacy requests

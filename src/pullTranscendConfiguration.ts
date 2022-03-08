@@ -41,7 +41,7 @@ export async function pullTranscendConfiguration(
 
   // Save API keys
   const apiKeyTitles = flatten(
-    dataSilos.map(({ apiKeys }) => apiKeys.map(({ title }) => title)),
+    dataSilos.map(([{ apiKeys }]) => apiKeys.map(({ title }) => title)),
   );
   const relevantApiKeys = Object.values(apiKeyTitleMap).filter(({ title }) =>
     apiKeyTitles.includes(title),
@@ -79,20 +79,24 @@ export async function pullTranscendConfiguration(
 
   // Save data silos
   result['data-silos'] = dataSilos.map(
-    ({
-      title,
-      description,
-      url,
-      apiKeys,
-      identifiers,
-      dependentDataSilos,
-      owners,
+    ([
+      {
+        title,
+        description,
+        url,
+        type,
+        apiKeys,
+        identifiers,
+        dependentDataSilos,
+        owners,
+        subjectBlocklist,
+        isLive,
+      },
       dataPoints,
-      subjectBlocklist,
-      isLive,
-    }): DataSiloInput => ({
+    ]): DataSiloInput => ({
       title,
       description,
+      integrationName: type,
       url: url || undefined,
       'api-key-title': apiKeys[0]?.title,
       'identity-keys': identifiers.map(({ name }) => name),

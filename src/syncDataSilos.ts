@@ -9,6 +9,7 @@ import {
   CREATE_DATA_SILO,
   UPDATE_OR_CREATE_DATA_POINT,
   DATA_SILO,
+  DATA_POINTS,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -28,74 +29,6 @@ export interface DataSilo {
   title: string;
   /** Type of silo */
   type: string;
-}
-
-export interface DataSiloEnriched {
-  /** ID of dataSilo */
-  id: string;
-  /** Title of dataSilo */
-  title: string;
-  /** Type of silo */
-  type: string;
-  /** Description of data silo */
-  description: string;
-  /** Webhook URL */
-  url?: string;
-  /** Associated API keys */
-  apiKeys: {
-    /** Title */
-    title: string;
-  }[];
-  /** Data subject block list */
-  subjectBlocklist: {
-    /** Type of data subject */
-    type: string;
-  }[];
-  /** Datapoints */
-  dataPoints: {
-    /** ID of dataPoint */
-    id: string;
-    /** Title of dataPoint */
-    title: {
-      /** Default message */
-      defaultMessage: string;
-    };
-    /** Description */
-    description: {
-      /** Default message */
-      defaultMessage: string;
-    };
-    /** Name */
-    name: string;
-    /** Purpose */
-    purpose: ProcessingPurpose;
-    /** Category */
-    category: DataCategoryType;
-    /** Global actions */
-    actionSettings: {
-      /** Action type */
-      type: RequestActionObjectResolver;
-      /** Is enabled */
-      active: boolean;
-    }[];
-  }[];
-  /** Identifiers */
-  identifiers: {
-    /** Name of identifier */
-    name: string;
-  }[];
-  /** Dependent data silos */
-  dependentDataSilos: {
-    /** Title of silo */
-    title: string;
-  }[];
-  /** Silo owners */
-  owners: {
-    /** Email owners */
-    email: string;
-  }[];
-  /** Silo is live */
-  isLive: boolean;
 }
 
 const PAGE_SIZE = 20;
@@ -148,6 +81,111 @@ export async function fetchAllDataSilos(
   return dataSilos;
 }
 
+interface DataPoint {
+  /** ID of dataPoint */
+  id: string;
+  /** Title of dataPoint */
+  title: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Description */
+  description: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Name */
+  name: string;
+  /** Purpose */
+  purpose: ProcessingPurpose;
+  /** Category */
+  category: DataCategoryType;
+  /** Global actions */
+  actionSettings: {
+    /** Action type */
+    type: RequestActionObjectResolver;
+    /** Is enabled */
+    active: boolean;
+  }[];
+}
+
+/**
+ * Fetch all datapoints for a data silo
+ *
+ * @param client - GraphQL client
+ * @param dataSiloId - Data silo ID
+ * @returns List of datapoints
+ */
+export async function fetchAllDataPoints(
+  client: GraphQLClient,
+  dataSiloId: string,
+): Promise<DataPoint[]> {
+  const dataPoints: DataPoint[] = [];
+  let offset = 0;
+
+  // Try to fetch an enricher with the same title
+  let shouldContinue = false;
+  do {
+    const {
+      dataSilos: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await client.request<{
+      /** Query response */
+      dataSilos: {
+        /** List of matches */
+        nodes: DataPoint[];
+      };
+    }>(DATA_POINTS, {
+      first: PAGE_SIZE,
+      dataSiloId,
+      offset,
+    });
+    dataPoints.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+  return dataPoints;
+}
+
+export interface DataSiloEnriched {
+  /** ID of dataSilo */
+  id: string;
+  /** Title of dataSilo */
+  title: string;
+  /** Type of silo */
+  type: string;
+  /** Description of data silo */
+  description: string;
+  /** Webhook URL */
+  url?: string;
+  /** Associated API keys */
+  apiKeys: {
+    /** Title */
+    title: string;
+  }[];
+  /** Data subject block list */
+  subjectBlocklist: {
+    /** Type of data subject */
+    type: string;
+  }[];
+  /** Identifiers */
+  identifiers: {
+    /** Name of identifier */
+    name: string;
+  }[];
+  /** Dependent data silos */
+  dependentDataSilos: {
+    /** Title of silo */
+    title: string;
+  }[];
+  /** Silo owners */
+  owners: {
+    /** Email owners */
+    email: string;
+  }[];
+  /** Silo is live */
+  isLive: boolean;
+}
 /**
  * Fetch all dataSilos with additional metadata
  *
@@ -166,8 +204,8 @@ export async function fetchEnrichedDataSilos(
     /** Filter by title */
     title?: string;
   } = {},
-): Promise<DataSiloEnriched[]> {
-  const dataSilos: DataSiloEnriched[] = [];
+): Promise<[DataSiloEnriched, DataPoint[]][]> {
+  const dataSilos: [DataSiloEnriched, DataPoint[]][] = [];
 
   const silos = await fetchAllDataSilos(client, { title, ids });
   await mapSeries(silos, async (silo) => {
@@ -177,7 +215,8 @@ export async function fetchEnrichedDataSilos(
     }>(DATA_SILO, {
       id: silo.id,
     });
-    dataSilos.push(dataSilo);
+    const dataPoints = await fetchAllDataPoints(client, dataSilo.id);
+    dataSilos.push([dataSilo, dataPoints]);
   });
 
   return dataSilos;

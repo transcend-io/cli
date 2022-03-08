@@ -152,13 +152,13 @@ export const DataSiloInput = t.intersection([
   t.type({
     /** The display title of the data silo */
     title: t.string,
-  }),
-  t.partial({
     /**
      * The type of integration. Common internal system types:
      * server | database | cron  | promptAPerson
      */
     integrationName: t.string,
+  }),
+  t.partial({
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */

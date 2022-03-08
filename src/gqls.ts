@@ -172,6 +172,48 @@ export const DATA_SILO = gql`
   }
 `;
 
+export const DATA_POINTS = gql`
+  query SchemaSyncDataPoints(
+    $dataSiloId: String!
+    $first: Int!
+    $offset: Int!
+  ) {
+    dataPoints(
+      filterBy: { dataSiloId: $dataSiloId }
+      first: $first
+      offset: $offset
+    ) {
+      totalCount
+      nodes {
+        id
+        title {
+          defaultMessage
+        }
+        description {
+          defaultMessage
+        }
+        name
+        purpose
+        category
+        actionSettings {
+          type
+          active
+        }
+      }
+      identifiers {
+        name
+      }
+      dependentDataSilos {
+        title
+      }
+      owners {
+        email
+      }
+      isLive
+    }
+  }
+`;
+
 export const UPDATE_DATA_SILO = gql`
   mutation SchemaSyncUpdateDataSilo(
     $id: ID!

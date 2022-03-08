@@ -9,6 +9,7 @@ enrichers:
 
 data-silos:
   - titlez: Redshift Data Warehouse
+    integrationName: database
     deletion-dependencies: Identity Service
     datapoints:
       - description: The centralized user model user
