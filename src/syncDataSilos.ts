@@ -44,7 +44,7 @@ export async function fetchAllDataSilos(
   client: GraphQLClient,
   {
     title,
-    ids,
+    ids = [],
   }: {
     /** Title */
     title?: string;
@@ -52,6 +52,12 @@ export async function fetchAllDataSilos(
     ids?: string[];
   },
 ): Promise<DataSilo[]> {
+  logger.info(
+    colors.magenta(
+      `Fetching ${ids.length === 0 ? 'all' : ids.length} Data Silos...`,
+    ),
+  );
+
   const dataSilos: DataSilo[] = [];
   let offset = 0;
 
@@ -69,7 +75,7 @@ export async function fetchAllDataSilos(
       };
     }>(DATA_SILOS, {
       first: PAGE_SIZE,
-      filterBy: ids ? { ids } : {},
+      ids: ids.length > 0 ? ids : undefined,
       offset,
       title,
     });
@@ -127,17 +133,17 @@ export async function fetchAllDataPoints(
   let shouldContinue = false;
   do {
     const {
-      dataSilos: { nodes },
+      dataPoints: { nodes },
       // eslint-disable-next-line no-await-in-loop
     } = await client.request<{
       /** Query response */
-      dataSilos: {
+      dataPoints: {
         /** List of matches */
         nodes: DataPoint[];
       };
     }>(DATA_POINTS, {
       first: PAGE_SIZE,
-      dataSiloId,
+      dataSiloIds: [dataSiloId],
       offset,
     });
     dataPoints.push(...nodes);
@@ -276,7 +282,7 @@ export async function syncDataSilo(
     }>(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
-      type: dataSilo.integrationName || 'server',
+      type: dataSilo.integrationName,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,

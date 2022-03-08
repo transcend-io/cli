@@ -115,11 +115,15 @@ export const UPDATE_ENRICHER = gql`
 export const DATA_SILOS = gql`
   query SchemaSyncDataSilos(
     $title: String
+    $ids: [ID!]
     $first: Int!
     $offset: Int!
-    $filterBy: DataSiloFiltersInput
   ) {
-    dataSilos(filterBy: { text: $title }, first: $first, offset: $offset) {
+    dataSilos(
+      filterBy: { text: $title, ids: $ids }
+      first: $first
+      offset: $offset
+    ) {
       nodes {
         id
         title
@@ -142,22 +146,6 @@ export const DATA_SILO = gql`
       subjectBlocklist {
         type
       }
-      dataPoints {
-        id
-        title {
-          defaultMessage
-        }
-        description {
-          defaultMessage
-        }
-        name
-        purpose
-        category
-        actionSettings {
-          type
-          active
-        }
-      }
       identifiers {
         name
       }
@@ -173,13 +161,9 @@ export const DATA_SILO = gql`
 `;
 
 export const DATA_POINTS = gql`
-  query SchemaSyncDataPoints(
-    $dataSiloId: String!
-    $first: Int!
-    $offset: Int!
-  ) {
+  query SchemaSyncDataPoints($dataSiloIds: [ID!], $first: Int!, $offset: Int!) {
     dataPoints(
-      filterBy: { dataSiloId: $dataSiloId }
+      filterBy: { dataSilos: $dataSiloIds }
       first: $first
       offset: $offset
     ) {
@@ -200,16 +184,6 @@ export const DATA_POINTS = gql`
           active
         }
       }
-      identifiers {
-        name
-      }
-      dependentDataSilos {
-        title
-      }
-      owners {
-        email
-      }
-      isLive
     }
   }
 `;
