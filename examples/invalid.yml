@@ -20,4 +20,5 @@ data-silos:
             title: Email
             description: The email address of the user
   - title: Analytics Service
+    integrationName: database
     disabled: 'dog'
