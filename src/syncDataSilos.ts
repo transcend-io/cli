@@ -9,6 +9,7 @@ import {
   CREATE_DATA_SILO,
   UPDATE_OR_CREATE_DATA_POINT,
   DATA_SILO,
+  DATA_POINTS,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -26,6 +27,130 @@ export interface DataSilo {
   id: string;
   /** Title of dataSilo */
   title: string;
+  /** Type of silo */
+  type: string;
+}
+
+const PAGE_SIZE = 20;
+
+/**
+ * Fetch all dataSilos in the organization
+ *
+ * @param client - GraphQL client
+ * @param title - Filter by title
+ * @returns All dataSilos in the organization
+ */
+export async function fetchAllDataSilos(
+  client: GraphQLClient,
+  {
+    title,
+    ids = [],
+  }: {
+    /** Title */
+    title?: string;
+    /** IDs */
+    ids?: string[];
+  },
+): Promise<DataSilo[]> {
+  logger.info(
+    colors.magenta(
+      `Fetching ${ids.length === 0 ? 'all' : ids.length} Data Silos...`,
+    ),
+  );
+
+  const dataSilos: DataSilo[] = [];
+  let offset = 0;
+
+  // Try to fetch an enricher with the same title
+  let shouldContinue = false;
+  do {
+    const {
+      dataSilos: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await client.request<{
+      /** Query response */
+      dataSilos: {
+        /** List of matches */
+        nodes: DataSilo[];
+      };
+    }>(DATA_SILOS, {
+      first: PAGE_SIZE,
+      ids: ids.length > 0 ? ids : undefined,
+      offset,
+      title,
+    });
+    dataSilos.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return dataSilos;
+}
+
+interface DataPoint {
+  /** ID of dataPoint */
+  id: string;
+  /** Title of dataPoint */
+  title: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Description */
+  description: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Name */
+  name: string;
+  /** Purpose */
+  purpose: ProcessingPurpose;
+  /** Category */
+  category: DataCategoryType;
+  /** Global actions */
+  actionSettings: {
+    /** Action type */
+    type: RequestActionObjectResolver;
+    /** Is enabled */
+    active: boolean;
+  }[];
+}
+
+/**
+ * Fetch all datapoints for a data silo
+ *
+ * @param client - GraphQL client
+ * @param dataSiloId - Data silo ID
+ * @returns List of datapoints
+ */
+export async function fetchAllDataPoints(
+  client: GraphQLClient,
+  dataSiloId: string,
+): Promise<DataPoint[]> {
+  const dataPoints: DataPoint[] = [];
+  let offset = 0;
+
+  // Try to fetch an enricher with the same title
+  let shouldContinue = false;
+  do {
+    const {
+      dataPoints: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await client.request<{
+      /** Query response */
+      dataPoints: {
+        /** List of matches */
+        nodes: DataPoint[];
+      };
+    }>(DATA_POINTS, {
+      first: PAGE_SIZE,
+      dataSiloIds: [dataSiloId],
+      offset,
+    });
+    dataPoints.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+  return dataPoints;
 }
 
 export interface DataSiloEnriched {
@@ -33,6 +158,8 @@ export interface DataSiloEnriched {
   id: string;
   /** Title of dataSilo */
   title: string;
+  /** Type of silo */
+  type: string;
   /** Description of data silo */
   description: string;
   /** Webhook URL */
@@ -46,41 +173,6 @@ export interface DataSiloEnriched {
   subjectBlocklist: {
     /** Type of data subject */
     type: string;
-  }[];
-  /** Global actions */
-  globalActions: {
-    /** Whether active */
-    active: boolean;
-    /** Type of action */
-    type: RequestActionObjectResolver;
-  }[];
-  /** Datapoints */
-  dataPoints: {
-    /** ID of dataPoint */
-    id: string;
-    /** Title of dataPoint */
-    title: {
-      /** Default message */
-      defaultMessage: string;
-    };
-    /** Description */
-    description: {
-      /** Default message */
-      defaultMessage: string;
-    };
-    /** Name */
-    name: string;
-    /** Purpose */
-    purpose: ProcessingPurpose;
-    /** Category */
-    category: DataCategoryType;
-    /** Global actions */
-    actionSettings: {
-      /** Action type */
-      type: RequestActionObjectResolver;
-      /** Is enabled */
-      active: boolean;
-    }[];
   }[];
   /** Identifiers */
   identifiers: {
@@ -100,62 +192,28 @@ export interface DataSiloEnriched {
   /** Silo is live */
   isLive: boolean;
 }
-
-const PAGE_SIZE = 20;
-
-/**
- * Fetch all dataSilos in the organization
- *
- * @param client - GraphQL client
- * @param title - Filter by title
- * @returns All dataSilos in the organization
- */
-export async function fetchAllDataSilos(
-  client: GraphQLClient,
-  title?: string,
-): Promise<DataSilo[]> {
-  const dataSilos: DataSilo[] = [];
-  let offset = 0;
-
-  // Try to fetch an enricher with the same title
-  let shouldContinue = false;
-  do {
-    const {
-      dataSilos: { nodes },
-      // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
-      /** Query response */
-      dataSilos: {
-        /** List of matches */
-        nodes: DataSilo[];
-      };
-    }>(DATA_SILOS, {
-      first: PAGE_SIZE,
-      offset,
-      title,
-    });
-    dataSilos.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
-  } while (shouldContinue);
-
-  return dataSilos;
-}
-
 /**
  * Fetch all dataSilos with additional metadata
  *
  * @param client - GraphQL client
- * @param title - Filter by title
+ * @param options - Filter options
  * @returns All dataSilos in the organization
  */
 export async function fetchEnrichedDataSilos(
   client: GraphQLClient,
-  title?: string,
-): Promise<DataSiloEnriched[]> {
-  const dataSilos: DataSiloEnriched[] = [];
+  {
+    ids,
+    title,
+  }: {
+    /** Filter by IDs */
+    ids?: string[];
+    /** Filter by title */
+    title?: string;
+  } = {},
+): Promise<[DataSiloEnriched, DataPoint[]][]> {
+  const dataSilos: [DataSiloEnriched, DataPoint[]][] = [];
 
-  const silos = await fetchAllDataSilos(client, title);
+  const silos = await fetchAllDataSilos(client, { title, ids });
   await mapSeries(silos, async (silo) => {
     const { dataSilo } = await client.request<{
       /** Query response */
@@ -163,7 +221,8 @@ export async function fetchEnrichedDataSilos(
     }>(DATA_SILO, {
       id: silo.id,
     });
-    dataSilos.push(dataSilo);
+    const dataPoints = await fetchAllDataPoints(client, dataSilo.id);
+    dataSilos.push([dataSilo, dataPoints]);
   });
 
   return dataSilos;
@@ -185,7 +244,7 @@ export async function syncDataSilo(
   apiKeysByTitle: { [title in string]: ApiKey },
 ): Promise<DataSilo> {
   // Try to fetch an dataSilo with the same title
-  const matches = await fetchAllDataSilos(client, dataSilo.title);
+  const matches = await fetchAllDataSilos(client, { title: dataSilo.title });
   let existingDataSilo = matches.find(({ title }) => title === dataSilo.title);
 
   // If data silo exists, update it, else create new
@@ -223,6 +282,7 @@ export async function syncDataSilo(
     }>(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
+      type: dataSilo.integrationName,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
@@ -245,19 +305,6 @@ export async function syncDataSilo(
     existingDataSilo = connectDataSilo.dataSilo;
   }
 
-  // Update Global Actions
-  logger.info(
-    colors.magenta(
-      `Syncing data silo level privacy actions for "${dataSilo.title}"...`,
-    ),
-  );
-  await client.request(UPDATE_OR_CREATE_DATA_POINT, {
-    dataSiloId: existingDataSilo!.id,
-    name: '_global',
-    enabledActions: dataSilo['privacy-actions'] || [],
-  });
-  logger.info(colors.green('Synced global actions!'));
-
   // Sync datapoints
   if (datapoints) {
     logger.info(
@@ -273,6 +320,14 @@ export async function syncDataSilo(
         title: datapoint.title,
         description: datapoint.description,
         category: datapoint.category,
+        querySuggestions: !datapoint['privacy-action-queries']
+          ? undefined
+          : Object.entries(datapoint['privacy-action-queries']).map(
+              ([key, value]) => ({
+                requestType: key,
+                suggestedQuery: value,
+              }),
+            ),
         purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
       });

@@ -113,8 +113,17 @@ export const UPDATE_ENRICHER = gql`
 `;
 
 export const DATA_SILOS = gql`
-  query SchemaSyncDataSilos($title: String, $first: Int!, $offset: Int!) {
-    dataSilos(filterBy: { text: $title }, first: $first, offset: $offset) {
+  query SchemaSyncDataSilos(
+    $title: String
+    $ids: [ID!]
+    $first: Int!
+    $offset: Int!
+  ) {
+    dataSilos(
+      filterBy: { text: $title, ids: $ids }
+      first: $first
+      offset: $offset
+    ) {
       nodes {
         id
         title
@@ -129,6 +138,7 @@ export const DATA_SILO = gql`
       id
       title
       description
+      type
       url
       apiKeys {
         title
@@ -136,11 +146,29 @@ export const DATA_SILO = gql`
       subjectBlocklist {
         type
       }
-      globalActions {
-        type
-        active
+      identifiers {
+        name
       }
-      dataPoints {
+      dependentDataSilos {
+        title
+      }
+      owners {
+        email
+      }
+      isLive
+    }
+  }
+`;
+
+export const DATA_POINTS = gql`
+  query SchemaSyncDataPoints($dataSiloIds: [ID!], $first: Int!, $offset: Int!) {
+    dataPoints(
+      filterBy: { dataSilos: $dataSiloIds }
+      first: $first
+      offset: $offset
+    ) {
+      totalCount
+      nodes {
         id
         title {
           defaultMessage
@@ -156,16 +184,6 @@ export const DATA_SILO = gql`
           active
         }
       }
-      identifiers {
-        name
-      }
-      dependentDataSilos {
-        title
-      }
-      owners {
-        email
-      }
-      isLive
     }
   }
 `;
@@ -230,6 +248,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $description: String
     $category: DataCategoryType
     $purpose: ProcessingPurpose
+    $querySuggestions: [DbIntegrationQuerySuggestionInput!]
     $enabledActions: [RequestActionObjectResolver!]
   ) {
     updateOrCreateDataPoint(
@@ -238,6 +257,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         name: $name
         title: $title
         description: $description
+        querySuggestions: $querySuggestions
         category: $category
         purpose: $purpose
         enabledActions: $enabledActions
@@ -256,6 +276,7 @@ export const CREATE_DATA_SILO = gql`
     $title: String!
     $description: String!
     $url: String
+    $type: String!
     $identifiers: [String!]
     $isLive: Boolean!
     $dataSubjectBlockListIds: [ID!]
@@ -265,7 +286,7 @@ export const CREATE_DATA_SILO = gql`
   ) {
     connectDataSilo(
       input: {
-        name: "server"
+        name: $type
         title: $title
         description: $description
         url: $url
@@ -280,6 +301,7 @@ export const CREATE_DATA_SILO = gql`
       dataSilo {
         id
         title
+        type
       }
     }
   }

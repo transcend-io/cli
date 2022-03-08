@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import { valuesOf } from '@transcend-io/type-utils';
+import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
   ProcessingPurpose,
@@ -116,6 +116,14 @@ export const DatapointInput = t.intersection([
      */
     category: valuesOf(DataCategoryType),
     /**
+     * The SQL queries that should be run for that datapoint in a privacy request.
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+     */
+    'privacy-action-queries': t.partial(
+      applyEnum(RequestActionObjectResolver, () => t.string),
+    ),
+    /**
      * The types of privacy actions that this datapoint can implement
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
@@ -144,14 +152,13 @@ export const DataSiloInput = t.intersection([
   t.type({
     /** The display title of the data silo */
     title: t.string,
+    /**
+     * The type of integration. Common internal system types:
+     * server | database | cron  | promptAPerson
+     */
+    integrationName: t.string,
   }),
   t.partial({
-    /**
-     * The types of privacy actions that this webhook can implement
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-     */
-    'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */

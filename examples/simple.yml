@@ -51,23 +51,9 @@ data-silos:
     description: The mega-warehouse that contains a copy over all SQL backed databases
     # The webhook URL to notify for data privacy requests
     url: https://example.acme.com/transcend-webhook
+    integrationName: server
     # The title of the API key that will be used to respond to privacy requests
     api-key-title: Webhook Key
-    # The types of privacy actions that this webhook can implement
-    # See "RequestActionObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
-    #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
-    #   CONTACT_OPT_OUT: Opt out of all communication
-    #   SALE_OPT_OUT: Opt-out of the sale of personal data
-    #   TRACKING_OPT_OUT: Opt out of tracking
-    #   ACCESS: Data Download request
-    #   ERASURE: Erase the profile from the system
-    #   ACCOUNT_DELETION: Run an account deletion instead of a fully compliant deletion
-    #   RECTIFICATION: Make an update to an inaccurate record
-    #   RESTRICTION: Restrict processing
-    privacy-actions:
-      - ACCESS
-      - ERASURE
-      - SALE_OPT_OUT
     # Specify which data subjects may have personally-identifiable-information (PII) within this system
     # This field can be omitted, and the default assumption will be that the system may potentially
     # contain PII for any potential data subject type.
@@ -95,6 +81,23 @@ data-silos:
     # Note: These are currently called "datapoints" in the Transcend UI and documentation.
     # See: https://docs.transcend.io/docs/the-data-map#datapoints
     datapoints:
+      - title: Webhook Notification
+        key: _global
+        # The types of privacy actions that this webhook can implement
+        # See "RequestActionObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
+        #   AUTOMATED_DECISION_MAKING_OPT_OUT: Opt out of automated decision making
+        #   CONTACT_OPT_OUT: Opt out of all communication
+        #   SALE_OPT_OUT: Opt-out of the sale of personal data
+        #   TRACKING_OPT_OUT: Opt out of tracking
+        #   ACCESS: Data Download request
+        #   ERASURE: Erase the profile from the system
+        #   ACCOUNT_DELETION: Run an account deletion instead of a fully compliant deletion
+        #   RECTIFICATION: Make an update to an inaccurate record
+        #   RESTRICTION: Restrict processing
+        privacy-actions:
+          - ACCESS
+          - ERASURE
+          - SALE_OPT_OUT
       - title: User Model
         description: The centralized user model user
         # AKA table name
@@ -179,18 +182,22 @@ data-silos:
   # at the link: https://app.transcend.io/privacy-requests/connected-services
   - title: Identity Service
     description: Micro-service that stores user metadata
+    integrationName: server
     # Share the API key between services
     api-key-title: Webhook Key
-    privacy-actions:
-      - ACCESS
-      - CONTACT_OPT_OUT
     datapoints:
+      - title: Webhook Notification
+        key: _global
+        privacy-actions:
+          - ACCESS
+          - CONTACT_OPT_OUT
       - title: Auth User
         description: The centralized authentication object for a user
         key: auth
         privacy-actions:
           - ACCESS
   - title: Analytics Service
+    integrationName: server
     data-subjects:
       - customer
     # The title of the API key that will be used to respond to privacy requests

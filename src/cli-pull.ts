@@ -22,6 +22,7 @@ async function main(): Promise<void> {
   const {
     file = './transcend.yml',
     transcendUrl = 'https://api.transcend.io',
+    dataSiloIds = '',
     auth,
   } = yargs(process.argv.slice(2));
 
@@ -47,7 +48,10 @@ async function main(): Promise<void> {
 
   // Sync to Disk
   try {
-    const configuration = await pullTranscendConfiguration(client);
+    const configuration = await pullTranscendConfiguration(
+      client,
+      (dataSiloIds as string).split(',').filter((x) => !!x),
+    );
     writeTranscendYaml(file, configuration);
   } catch (err) {
     logger.error(

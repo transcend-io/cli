@@ -3,6 +3,7 @@ api-keys:
 enrichers: []
 data-silos:
   - title: Customer.io
+    integrationName: customerIo
     description: >-
       Customer.io is a behavioral messaging platform for triggering personalized
       and event-based customer communication.
@@ -13,16 +14,13 @@ data-silos:
     deletion-dependencies: []
     owners: []
     disabled: true
-    privacy-actions:
-      - ERASURE
     datapoints: []
   - title: Facebook Ads
+    integrationName: facebookAds
     description: Targeted ad campaigns on Facebook for businesses.
     identity-keys:
       - email
     deletion-dependencies: []
     owners: []
     disabled: false
-    privacy-actions:
-      - ERASURE
     datapoints: []
