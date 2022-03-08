@@ -182,6 +182,12 @@ An alternative file destination can be specified:
 tr-pull --auth=<api-key> --file=./custom/location.yml
 ```
 
+Or a specific data silo(s) can be pulled in:
+
+```sh
+tr-pull --auth=<api-key> --dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
+```
+
 Note: This command will overwrite the existing transcend.yml file that you have locally.
 
 ### tr-push
