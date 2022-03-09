@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { DataSiloInput } from './codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from './logger';
@@ -112,6 +113,15 @@ interface DataPoint {
     type: RequestActionObjectResolver;
     /** Is enabled */
     active: boolean;
+  }[];
+  /** Database integration queries */
+  dbIntegrationQueries: {
+    /** Approved query */
+    query: string | null;
+    /** Suggested query */
+    suggestedQuery: string | null;
+    /** Request action */
+    requestType: RequestActionObjectResolver;
   }[];
 }
 
@@ -340,3 +350,4 @@ export async function syncDataSilo(
 
   return existingDataSilo;
 }
+/* eslint-enable max-lines */
