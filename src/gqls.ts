@@ -183,6 +183,11 @@ export const DATA_POINTS = gql`
           type
           active
         }
+        dbIntegrationQueries {
+          query
+          suggestedQuery
+          requestType
+        }
       }
     }
   }

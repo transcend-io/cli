@@ -6,6 +6,8 @@ import {
 } from './codecs';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
+import keyBy from 'lodash/keyBy';
+import mapValues from 'lodash/mapValues';
 import { fetchEnrichedDataSilos } from './syncDataSilos';
 import {
   convertToDataSubjectAllowlist,
@@ -116,6 +118,16 @@ export async function pullTranscendConfiguration(
         key: dataPoint.name,
         purpose: dataPoint.purpose,
         category: dataPoint.category,
+        ...(dataPoint.dbIntegrationQueries.length > 0
+          ? {
+              'privacy-action-queries': mapValues(
+                keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
+                (databaseIntegrationQuery) =>
+                  databaseIntegrationQuery.suggestedQuery ||
+                  databaseIntegrationQuery.query,
+              ),
+            }
+          : {}),
         'privacy-actions': dataPoint.actionSettings
           .filter(({ active }) => active)
           .map(({ type }) => type),
