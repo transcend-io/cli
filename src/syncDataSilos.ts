@@ -188,6 +188,8 @@ export interface DataSiloEnriched {
   identifiers: {
     /** Name of identifier */
     name: string;
+    /** True if identifier is wired */
+    isConnected: boolean;
   }[];
   /** Dependent data silos */
   dependentDataSilos: {

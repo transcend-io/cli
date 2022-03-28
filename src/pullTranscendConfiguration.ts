@@ -101,7 +101,9 @@ export async function pullTranscendConfiguration(
       integrationName: type,
       url: url || undefined,
       'api-key-title': apiKeys[0]?.title,
-      'identity-keys': identifiers.map(({ name }) => name),
+      'identity-keys': identifiers
+        .filter(({ isConnected }) => isConnected)
+        .map(({ name }) => name),
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
