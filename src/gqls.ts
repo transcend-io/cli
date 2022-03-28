@@ -148,6 +148,7 @@ export const DATA_SILO = gql`
       }
       identifiers {
         name
+        isConnected
       }
       dependentDataSilos {
         title
