@@ -10,6 +10,7 @@
 - [Usage](#usage)
   - [tr-pull](#tr-pull)
   - [tr-push](#tr-push)
+    - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -217,6 +218,45 @@ Some things to note about this sync process:
 
 - a) Data silo owners: If you assign an email address to a data silo, you must first make sure that user is invited into your Transcend instance (https://app.transcend.io/admin/users).
 - b) API keys: This cli will not create new API keys. You will need to first create the new API keys on the Admin Dashboard (https://app.transcend.io/infrastructure/api-keys). You can then list out the titles of the API keys that you generated in your transcend.yml file, after which the cli is capable of updating that API key to be able to respond to different data silos in your Data Map
+
+#### CI Integration
+
+Once you have a workflow for creating your transcend.yml file, you will want to integrate your `tr-push` command on your CI.
+
+Below is an example of how to set this up using a Github action:
+
+```yaml
+name: Transcend Data Map Syncing
+# See https://app.transcend.io/privacy-requests/connected-services
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install schema-sync
+        run: npm i -D @transcend-io/schema-sync
+
+      # If you have a script that generates your transcend.yml file from
+      # an ORM or infrastructure configuration, add that step here
+      # Leave this step commented out if you want to manage your transcend.yml manually
+      # - name: Generate transcend.yml
+      #   run: ./scripts/generate_transcend_yml.py
+
+      - name: Push Transcend config
+        run: npx tr-push --auth=${{ secrets.TRANSCEND_API_KEY }}
+```
 
 #### Dynamic Variables
 
