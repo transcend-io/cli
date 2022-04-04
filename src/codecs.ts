@@ -163,6 +163,8 @@ export const DataSiloInput = t.intersection([
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
     url: t.string,
+    /** The email address of the user to notify when a promptAPerson integration */
+    'notify-email-address': t.string,
     /** The title of the API key that will be used to respond to privacy requests */
     'api-key-title': t.string,
     /**
