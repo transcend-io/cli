@@ -271,9 +271,7 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      ...(dataSilo['notify-email-address']
-        ? { notifyEmailAddress: dataSilo['notify-email-address'] }
-        : {}),
+      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
