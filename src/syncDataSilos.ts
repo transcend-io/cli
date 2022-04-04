@@ -174,6 +174,8 @@ export interface DataSiloEnriched {
   description: string;
   /** Webhook URL */
   url?: string;
+  /** Email address of user to notify for prompt a person use case */
+  notifyEmailAddress?: string;
   /** Associated API keys */
   apiKeys: {
     /** Title */
@@ -269,6 +271,7 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
+      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']

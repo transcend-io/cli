@@ -140,6 +140,7 @@ export const DATA_SILO = gql`
       description
       type
       url
+      notifyEmailAddress
       apiKeys {
         title
       }
@@ -200,6 +201,7 @@ export const UPDATE_DATA_SILO = gql`
     $title: String
     $description: String
     $url: String
+    $notifyEmailAddress: String
     $identifiers: [String!]
     $isLive: Boolean
     $dataSubjectBlockListIds: [ID!]
@@ -213,6 +215,7 @@ export const UPDATE_DATA_SILO = gql`
         title: $title
         description: $description
         url: $url
+        notifyEmailAddress: $notifyEmailAddress
         identifiers: $identifiers
         isLive: $isLive
         dataSubjectBlockListIds: $dataSubjectBlockListIds
