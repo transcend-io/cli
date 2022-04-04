@@ -1,5 +1,5 @@
 data-silos:
-  - title: Manually Notification
+  - title: Manually Notify Backend Team
     description: Notify backend team to delete data
     integrationName: promptAPerson
     notify-email-address: test@transcend.io
@@ -8,7 +8,6 @@ data-silos:
         key: _global
         privacy-actions:
           - ERASURE
-          - ACCESS
       - title: File Upload
         description: Use data dump for backend service
         key: upload
