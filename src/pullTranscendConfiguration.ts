@@ -88,6 +88,7 @@ export async function pullTranscendConfiguration(
         url,
         type,
         apiKeys,
+        notifyEmailAddress,
         identifiers,
         dependentDataSilos,
         owners,
@@ -104,6 +105,7 @@ export async function pullTranscendConfiguration(
       'identity-keys': identifiers
         .filter(({ isConnected }) => isConnected)
         .map(({ name }) => name),
+      'notify-email-address': notifyEmailAddress,
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
