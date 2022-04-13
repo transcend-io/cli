@@ -72,7 +72,9 @@ export async function syncConfigurationToTranscend(
           apiKeyTitleMap,
         );
         logger.info(
-          colors.green(`Successfully synced data silo "${dataSilo.title}"!`),
+          colors.green(
+            `Successfully synced data silo "${dataSilo.title}"! View at: ${dataSiloInfo.link}`,
+          ),
         );
 
         // Queue up dependency update
