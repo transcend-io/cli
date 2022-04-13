@@ -30,6 +30,8 @@ export interface DataSilo {
   title: string;
   /** Type of silo */
   type: string;
+  /** The link to the data silo */
+  link: string;
 }
 
 const PAGE_SIZE = 20;

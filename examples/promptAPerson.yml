@@ -2,7 +2,7 @@ data-silos:
   - title: Manually Notify Backend Team
     description: Notify backend team to delete data
     integrationName: promptAPerson
-    notify-email-address: test@transcend.io
+    notify-email-address: test+2@transcend.io
     datapoints:
       - title: Prompt Manual Entry
         key: _global

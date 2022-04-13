@@ -127,6 +127,8 @@ export const DATA_SILOS = gql`
       nodes {
         id
         title
+        link
+        type
       }
     }
   }
