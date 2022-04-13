@@ -30,6 +30,8 @@ export interface DataSilo {
   title: string;
   /** Type of silo */
   type: string;
+  /** The link to the data silo */
+  link: string;
 }
 
 const PAGE_SIZE = 20;
@@ -302,6 +304,7 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
+      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']

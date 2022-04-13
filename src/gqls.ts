@@ -127,6 +127,8 @@ export const DATA_SILOS = gql`
       nodes {
         id
         title
+        link
+        type
       }
     }
   }
@@ -288,6 +290,7 @@ export const CREATE_DATA_SILO = gql`
     $type: String!
     $identifiers: [String!]
     $isLive: Boolean!
+    $notifyEmailAddress: String
     $dataSubjectBlockListIds: [ID!]
     $dependedOnDataSiloTitles: [String!]
     $ownerEmails: [String!]
@@ -299,6 +302,7 @@ export const CREATE_DATA_SILO = gql`
         title: $title
         description: $description
         url: $url
+        notifyEmailAddress: $notifyEmailAddress
         identifiers: $identifiers
         isLive: $isLive
         dataSubjectBlockListIds: $dataSubjectBlockListIds
