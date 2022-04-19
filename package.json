@@ -1,12 +1,12 @@
 {
   "author": "Transcend Inc.",
-  "name": "@transcend-io/schema-sync",
+  "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
   "version": "2.2.2",
-  "homepage": "https://github.com/transcend-io/schema-sync",
+  "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
-    "url": "https://github.com/transcend-io/schema-sync.git"
+    "url": "https://github.com/transcend-io/cli.git"
   },
   "license": "MIT",
   "main": "build/index",

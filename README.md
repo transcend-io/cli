@@ -27,7 +27,7 @@ If your codebase is typescript or javascript based, you can add this package as 
 
 ```sh
 # install locally with yarn
-yarn add -D @transcend-io/schema-sync
+yarn add -D @transcend-io/cli
 
 # cli commands available within package
 yarn tr-pull --auth=xxx
@@ -38,7 +38,7 @@ or
 
 ```sh
 # install locally with npm
-npm i -D @transcend-io/schema-sync
+npm i -D @transcend-io/cli
 
 # cli commands available within package
 tr-pull --auth=xxx
@@ -49,7 +49,7 @@ alternatively, you can install the cli globally on your machine:
 
 ```sh
 # install locally with npm
-npm i -g @transcend-io/schema-sync
+npm i -g @transcend-io/cli
 
 # cli commands available everywhere on machine
 tr-pull --auth=xxx
@@ -245,8 +245,8 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install schema-sync
-        run: npm i -D @transcend-io/schema-sync
+      - name: Install Transcend cli
+        run: npm i -D @transcend-io/cli
 
       # If you have a script that generates your transcend.yml file from
       # an ORM or infrastructure configuration, add that step here
