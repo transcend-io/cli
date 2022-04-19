@@ -38,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/bluebird", "npm:3.5.36"],\
             ["@types/chai", "npm:4.3.0"],\
             ["@types/colors", "npm:1.2.1"],\
+            ["@types/glob", "npm:7.2.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/lodash", "npm:4.14.179"],\
             ["@types/mocha", "npm:9.1.0"],\
@@ -425,6 +426,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/bluebird", "npm:3.5.36"],\
             ["@types/chai", "npm:4.3.0"],\
             ["@types/colors", "npm:1.2.1"],\
+            ["@types/glob", "npm:7.2.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/lodash", "npm:4.14.179"],\
             ["@types/mocha", "npm:9.1.0"],\
@@ -553,6 +555,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-emscripten-npm-1.39.5-ef4c55ba8e-cb92a99148.zip/node_modules/@types/emscripten/",\
           "packageDependencies": [\
             ["@types/emscripten", "npm:1.39.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/glob", [\
+        ["npm:7.2.0", {\
+          "packageLocation": "./.yarn/cache/@types-glob-npm-7.2.0-772334bf9a-6ae717fedf.zip/node_modules/@types/glob/",\
+          "packageDependencies": [\
+            ["@types/glob", "npm:7.2.0"],\
+            ["@types/minimatch", "npm:3.0.5"],\
+            ["@types/node", "npm:16.11.4"]\
           ],\
           "linkType": "HARD"\
         }]\
