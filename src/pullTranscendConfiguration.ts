@@ -105,7 +105,7 @@ export async function pullTranscendConfiguration(
       'identity-keys': identifiers
         .filter(({ isConnected }) => isConnected)
         .map(({ name }) => name),
-      'notify-email-address': notifyEmailAddress,
+      'notify-email-address': notifyEmailAddress || undefined,
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
