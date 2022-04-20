@@ -9,6 +9,7 @@ import { GraphQLClient } from 'graphql-request';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { SILO_DISCOVERY_FUNCTIONS, SupportedPlugin } from './plugins';
 import { isSupportedPlugin } from './plugins/typeguards';
+import { SiloDiscoveryRawResults } from './plugins/types';
 
 const CHUNK_SIZE = 1000;
 
@@ -18,8 +19,8 @@ const CHUNK_SIZE = 1000;
  * Dev Usage:
  * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
  *   --auth=asd123 \
- *   --ignoreDirs=node_modules,serverless-build \
- *   --pluginType="javascriptPackageJson"
+ *   --ignoreDirs=build_directories_to_ignore \
+ *   --pluginType="javascriptPackageJson" \
  *   --pluginId=abcdefgh
  *
  * Standard usage
@@ -47,6 +48,7 @@ async function main(): Promise<void> {
   }
 
   // Create a GraphQL client
+
   // eslint-disable-next-line global-require
   const { version } = require('../package.json');
   const client = new GraphQLClient(`${transcendUrl}/graphql`, {
@@ -61,17 +63,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   const scanFunction = SILO_DISCOVERY_FUNCTIONS[pluginType as SupportedPlugin]; // safe to cast now
-  const rawResults = await scanFunction(scanPath, ignoreDirs);
+  const results = await scanFunction(scanPath, ignoreDirs);
 
   const chunks = [];
-  for (let i = 0; i < rawResults.length; i += CHUNK_SIZE) {
-    chunks.push(rawResults.slice(i, i + CHUNK_SIZE));
-    // do whatever
+  for (let i = 0; i < results.length; i += CHUNK_SIZE) {
+    chunks.push(results.slice(i, i + CHUNK_SIZE));
   }
 
-  mapSeries(
-    chunks,
-    await client.request<{
+  await mapSeries(chunks, (rawResults: SiloDiscoveryRawResults[]) =>
+    client.request<{
       /** Whether we successfully uploaded the results */
       success: boolean;
     }>(ADD_SILO_DISCOVERY_RESULTS, {
@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   // Indicate success
   logger.info(
     colors.green(
-      `Scan found ${rawResults.length} potential data silos at ${scanPath}! View at ${ADMIN_DASH}`,
+      `Scan found ${results.length} potential data silos at ${scanPath}! View at ${ADMIN_DASH}`,
     ),
   );
 }

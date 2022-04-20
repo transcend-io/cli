@@ -4,7 +4,7 @@ import fastGlob from 'fast-glob';
 import { SiloDiscoveryRawResults } from './types';
 
 const SUPPORTED_FILE_SCANS = ['package.json'];
-const IGNORE_DIRS = ['node_modules', 'serverless-build'];
+const IGNORE_DIRS = ['node_modules', 'serverless-build', 'lambda-build'];
 
 /**
  * Helper that will scan a package json and return a list of dependencies
@@ -38,7 +38,9 @@ export async function scanPackageJson(
   scanPath: string,
   ignoreDirs: string,
 ): Promise<SiloDiscoveryRawResults[]> {
-  const dirsToIgnore = [...IGNORE_DIRS, ...ignoreDirs.split(',')];
+  const dirsToIgnore = [...IGNORE_DIRS, ...ignoreDirs.split(',')].filter(
+    (dir) => dir.length > 0,
+  );
   const filesToScan: string[] = await fastGlob(
     `${scanPath}/**/${SUPPORTED_FILE_SCANS.join('|')}`,
     {
