@@ -299,18 +299,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "@transcend-io/privacy-types@npm:1.3.1"
-  dependencies:
-    "@transcend-io/type-utils": ^1.0.5
-  checksum: a9f2258d22f1421098ce8608d6befee16816c9220f5ce2c1267add60f22d28aa785cb1c7595c7b767125350039c01c966834259b75b118ae2e1737164864e42a
-  languageName: node
-  linkType: hard
-
-"@transcend-io/schema-sync@workspace:.":
+"@transcend-io/cli@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@transcend-io/schema-sync@workspace:."
+  resolution: "@transcend-io/cli@workspace:."
   dependencies:
     "@transcend-io/privacy-types": ^1.3.1
     "@transcend-io/type-utils": ^1.0.5
@@ -352,6 +343,15 @@ __metadata:
     tr-push: ./build/cli-push.js
   languageName: unknown
   linkType: soft
+
+"@transcend-io/privacy-types@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@transcend-io/privacy-types@npm:1.3.1"
+  dependencies:
+    "@transcend-io/type-utils": ^1.0.5
+  checksum: a9f2258d22f1421098ce8608d6befee16816c9220f5ce2c1267add60f22d28aa785cb1c7595c7b767125350039c01c966834259b75b118ae2e1737164864e42a
+  languageName: node
+  linkType: hard
 
 "@transcend-io/type-utils@npm:^1.0.5":
   version: 1.0.5
