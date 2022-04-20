@@ -1,1 +1,1 @@
-export * from './scanPackageJson';
+export * from './constants';

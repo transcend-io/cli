@@ -341,9 +341,9 @@ __metadata:
     typescript: ^4.5.5
     yargs-parser: ^21.0.0
   bin:
+    tr-discover-silos: ./build/cli-discover-silos.js
     tr-pull: ./build/cli-pull.js
     tr-push: ./build/cli-push.js
-    tr-scan: ./build/cli-scan.js
   languageName: unknown
   linkType: soft
 

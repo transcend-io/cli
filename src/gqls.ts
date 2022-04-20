@@ -322,8 +322,8 @@ export const CREATE_DATA_SILO = gql`
 
 export const ADD_SILO_DISCOVERY_RESULTS = gql`
   mutation AddSiloDiscoveryResults(
-    $pluginId: String!
-    $rawResults: [AddSiloDiscoveryResultInput!]
+    $pluginId: ID!
+    $rawResults: [SiloDiscoveryRawResultInput!]!
   ) {
     addSiloDiscoveryResults(
       input: { pluginId: $pluginId, rawResults: $rawResults }

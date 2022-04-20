@@ -1,22 +1,26 @@
 #!/usr/bin/env node
 
-import fastGlob from 'fast-glob';
+import { mapSeries } from 'bluebird';
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
 import { ADMIN_DASH } from './constants';
-import { scanPackageJson } from './plugins/scanPackageJson';
 import { GraphQLClient } from 'graphql-request';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
+import { SILO_DISCOVERY_FUNCTIONS, SupportedPlugin } from './plugins';
+import { isSupportedPlugin } from './plugins/typeguards';
 
-const SUPPORTED_FILE_SCANS = ['package.json'];
-const IGNORE_DIRS = ['node_modules', 'serverless-build'];
+const CHUNK_SIZE = 1000;
 
 /**
  * Sync data silo configuration from Transcend down locally to disk
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-scan.ts --scanPath=./myJavascriptProject --auth=asd123 --ignoreDirs=node_modules,serverless-build
+ * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
+ *   --auth=asd123 \
+ *   --ignoreDirs=node_modules,serverless-build \
+ *   --pluginType="javascriptPackageJson"
+ *   --pluginId=abcdefgh
  *
  * Standard usage
  * yarn tr-scan  --scanPath=./myJavascriptProject --auth=asd123
@@ -27,6 +31,7 @@ async function main(): Promise<void> {
     scanPath = '.',
     ignoreDirs = '',
     transcendUrl = 'https://api.transcend.io',
+    pluginType = '',
     pluginId = '',
     auth,
   } = yargs(process.argv.slice(2));
@@ -50,36 +55,35 @@ async function main(): Promise<void> {
       version,
     },
   });
-  const dirsToIgnore = [...IGNORE_DIRS, ...ignoreDirs.split(',')];
-  const filesToScan = await fastGlob(
-    `${scanPath}/**/${SUPPORTED_FILE_SCANS.join('|')}`,
-    {
-      ignore: dirsToIgnore.map((dir: string) => `${scanPath}/**/${dir}`),
-      unique: true,
-      onlyFiles: true,
-    },
-  );
-  const allDeps = filesToScan
-    .map((filePath) => scanPackageJson(filePath))
-    .flat();
-  const uniqueDeps = new Set(allDeps);
+  const resolvedPlugin = isSupportedPlugin(pluginType);
+  if (!resolvedPlugin) {
+    logger.error('Unsupported plugin type');
+    process.exit(1);
+  }
+  const scanFunction = SILO_DISCOVERY_FUNCTIONS[pluginType as SupportedPlugin]; // safe to cast now
+  const rawResults = await scanFunction(scanPath, ignoreDirs);
 
-  // TODO: Chunk up the results by 1000 each
-  client.request<{
-    /** Whether we successfully uploaded the results */
-    success: boolean;
-  }>(ADD_SILO_DISCOVERY_RESULTS, {
-    pluginId,
-    rawResults: [...uniqueDeps].map((dep) => ({
-      name: dep,
-      resourceId: `${scanPath}/**/${dep}`,
-    })),
-  });
+  const chunks = [];
+  for (let i = 0; i < rawResults.length; i += CHUNK_SIZE) {
+    chunks.push(rawResults.slice(i, i + CHUNK_SIZE));
+    // do whatever
+  }
+
+  mapSeries(
+    chunks,
+    await client.request<{
+      /** Whether we successfully uploaded the results */
+      success: boolean;
+    }>(ADD_SILO_DISCOVERY_RESULTS, {
+      pluginId,
+      rawResults,
+    }),
+  );
 
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully scanned ${filesToScan.length} files at ${scanPath}! View at ${ADMIN_DASH}`,
+      `Scan found ${rawResults.length} potential data silos at ${scanPath}! View at ${ADMIN_DASH}`,
     ),
   );
 }

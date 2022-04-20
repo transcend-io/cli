@@ -11,9 +11,9 @@
   "license": "MIT",
   "main": "build/index",
   "bin": {
+    "tr-discover-silos": "./build/cli-discover-silos.js",
     "tr-pull": "./build/cli-pull.js",
-    "tr-push": "./build/cli-push.js",
-    "tr-scan": "./build/cli-scan.js"
+    "tr-push": "./build/cli-push.js"
   },
   "files": [
     "build/**/*",
