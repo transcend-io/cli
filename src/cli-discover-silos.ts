@@ -33,6 +33,7 @@ async function main(): Promise<void> {
     ignoreDirs = '',
     transcendUrl = 'https://api.transcend.io',
     pluginType = '',
+    // TODO: https://transcend.height.app/T-14107 - Remove need to pass in pluginId for silo discovery cli
     pluginId = '',
     auth,
   } = yargs(process.argv.slice(2));
