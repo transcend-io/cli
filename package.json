@@ -12,7 +12,8 @@
   "main": "build/index",
   "bin": {
     "tr-pull": "./build/cli-pull.js",
-    "tr-push": "./build/cli-push.js"
+    "tr-push": "./build/cli-push.js",
+    "tr-scan": "./build/cli-scan.js"
   },
   "files": [
     "build/**/*",
@@ -32,8 +33,9 @@
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",
+    "fast-glob": "^3.2.11",
     "fp-ts": "^2.11.8",
-    "glob": "^8.0.1",
+    "globby": "^13.1.1",
     "graphql": "^16.3.0",
     "graphql-request": "^4.0.0",
     "io-ts": "^2.2.16",
@@ -45,7 +47,6 @@
     "@types/bluebird": "^3.5.36",
     "@types/chai": "^4.3.0",
     "@types/colors": "^1.2.1",
-    "@types/glob": "^7.2.0",
     "@types/js-yaml": "^4.0.5",
     "@types/lodash": "^4.14.179",
     "@types/mocha": "^9.1.0",

@@ -319,3 +319,16 @@ export const CREATE_DATA_SILO = gql`
     }
   }
 `;
+
+export const ADD_SILO_DISCOVERY_RESULTS = gql`
+  mutation AddSiloDiscoveryResults(
+    $pluginId: String!
+    $rawResults: [AddSiloDiscoveryResultInput!]
+  ) {
+    addSiloDiscoveryResults(
+      input: { pluginId: $pluginId, rawResults: $rawResults }
+    ) {
+      success
+    }
+  }
+`;
