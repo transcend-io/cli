@@ -1,6 +1,9 @@
 import { scanPackageJson } from './scanPackageJson';
+import type { SiloDiscoveryFunction } from './types';
 
-export const SILO_DISCOVERY_FUNCTIONS: { [k in string]: SiloDiscoveryFunction }  = {
+export const SILO_DISCOVERY_FUNCTIONS: {
+  [k in string]: SiloDiscoveryFunction;
+} = {
   javascriptPackageJson: scanPackageJson,
 };
 
