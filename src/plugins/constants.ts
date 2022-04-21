@@ -1,6 +1,6 @@
 import { scanPackageJson } from './scanPackageJson';
 
-export const SILO_DISCOVERY_FUNCTIONS = {
+export const SILO_DISCOVERY_FUNCTIONS: { [k in string]: SiloDiscoveryFunction }  = {
   javascriptPackageJson: scanPackageJson,
 };
 
