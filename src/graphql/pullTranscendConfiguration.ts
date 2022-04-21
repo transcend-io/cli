@@ -3,7 +3,7 @@ import {
   ApiKeyInput,
   DataSiloInput,
   EnricherInput,
-} from './codecs';
+} from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';

@@ -11,6 +11,7 @@
   "license": "MIT",
   "main": "build/index",
   "bin": {
+    "tr-discover-silos": "./build/cli-discover-silos.js",
     "tr-pull": "./build/cli-pull.js",
     "tr-push": "./build/cli-push.js"
   },
@@ -32,6 +33,7 @@
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",
+    "fast-glob": "^3.2.11",
     "fp-ts": "^2.11.8",
     "graphql": "^16.3.0",
     "graphql-request": "^4.0.0",

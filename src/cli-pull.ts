@@ -3,7 +3,7 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
-import { pullTranscendConfiguration } from './pullTranscendConfiguration';
+import { pullTranscendConfiguration } from './graphql';
 import { GraphQLClient } from 'graphql-request';
 import { writeTranscendYaml } from './readTranscendYaml';
 import { ADMIN_DASH } from './constants';

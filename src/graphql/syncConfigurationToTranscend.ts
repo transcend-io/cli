@@ -1,6 +1,6 @@
-import { TranscendInput } from './codecs';
+import { TranscendInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { logger } from './logger';
+import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
 import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
