@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
-import { chunk } from 'lodash';
-import { mapSeries } from 'bluebird';
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
 import { ADMIN_DASH } from './constants';
 import { GraphQLClient } from 'graphql-request';
-import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
-import { SILO_DISCOVERY_FUNCTIONS, SiloDiscoveryRawResults } from './plugins';
-import { fetchActiveSiloDiscoPlugin } from './graphql';
-
-const CHUNK_SIZE = 1000;
+import { SILO_DISCOVERY_FUNCTIONS } from './plugins';
+import {
+  fetchActiveSiloDiscoPlugin,
+  uploadSiloDiscoveryResults,
+} from './graphql';
 
 /**
  * Sync data silo configuration from Transcend down locally to disk
@@ -61,17 +59,7 @@ async function main(): Promise<void> {
   const scanFunction = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
   const results = await scanFunction(scanPath, ignoreDirs);
 
-  const chunks = chunk(results, CHUNK_SIZE);
-
-  await mapSeries(chunks, async (rawResults: SiloDiscoveryRawResults[]) => {
-    await client.request<{
-      /** Whether we successfully uploaded the results */
-      success: boolean;
-    }>(ADD_SILO_DISCOVERY_RESULTS, {
-      pluginId: plugin.id,
-      rawResults,
-    });
-  });
+  await uploadSiloDiscoveryResults(client, plugin.id, results);
 
   // Indicate success
   logger.info(

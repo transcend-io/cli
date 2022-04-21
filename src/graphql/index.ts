@@ -6,3 +6,4 @@ export * from './pullTranscendConfiguration';
 export * from './syncConfigurationToTranscend';
 export * from './syncDataSilos';
 export * from './syncEnrichers';
+export * from './uploadSiloDiscoveryResults';
