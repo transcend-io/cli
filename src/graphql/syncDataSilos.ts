@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
-import { DataSiloInput } from './codecs';
+import { DataSiloInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { logger } from './logger';
+import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
 import {

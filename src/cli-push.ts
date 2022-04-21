@@ -6,7 +6,7 @@ import { existsSync } from 'fs';
 import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
 import { TranscendInput } from './codecs';
-import { syncConfigurationToTranscend } from './syncConfigurationToTranscend';
+import { syncConfigurationToTranscend } from './graphql';
 import { GraphQLClient } from 'graphql-request';
 
 import { ADMIN_DASH } from './constants';
