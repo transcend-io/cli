@@ -4,8 +4,8 @@ import keyBy from 'lodash/keyBy';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 import difference from 'lodash/difference';
-import { TranscendInput } from './codecs';
-import { logger } from './logger';
+import { TranscendInput } from '../codecs';
+import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
 

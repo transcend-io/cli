@@ -3,9 +3,9 @@ import { API_KEYS } from './gqls';
 import keyBy from 'lodash/keyBy';
 import uniq from 'lodash/uniq';
 import difference from 'lodash/difference';
-import { logger } from './logger';
+import { logger } from '../logger';
 import colors from 'colors';
-import { TranscendInput } from './codecs';
+import { TranscendInput } from '../codecs';
 
 export interface ApiKey {
   /** ID of APi key */
