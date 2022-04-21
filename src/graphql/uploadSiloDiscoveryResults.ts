@@ -2,7 +2,7 @@ import { chunk } from 'lodash';
 import { mapSeries } from 'bluebird';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
-import { SiloDiscoveryRawResults } from 'src/plugins';
+import { SiloDiscoveryRawResults } from '../plugins';
 
 const CHUNK_SIZE = 1000;
 
