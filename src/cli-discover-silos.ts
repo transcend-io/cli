@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { chunk } from 'lodash';
 import { mapSeries } from 'bluebird';
 import yargs from 'yargs-parser';
 import { logger } from './logger';
@@ -7,9 +8,8 @@ import colors from 'colors';
 import { ADMIN_DASH } from './constants';
 import { GraphQLClient } from 'graphql-request';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
-import { SILO_DISCOVERY_FUNCTIONS, SupportedPlugin } from './plugins';
-import { isSupportedPlugin } from './plugins/typeguards';
-import { SiloDiscoveryRawResults } from './plugins/types';
+import { SILO_DISCOVERY_FUNCTIONS, SiloDiscoveryRawResults } from './plugins';
+import { fetchActiveSiloDiscoPlugin } from './graphql';
 
 const CHUNK_SIZE = 1000;
 
@@ -20,8 +20,9 @@ const CHUNK_SIZE = 1000;
  * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
  *   --auth=asd123 \
  *   --ignoreDirs=build_directories_to_ignore \
- *   --pluginType="javascriptPackageJson" \
- *   --pluginId=abcdefgh
+ *   --dataSiloId=abcdefgh
+ *
+ * Note: the data silo ID has to belong to a data silo that has an active plugin of type SILO_DISCOVERY
  *
  * Standard usage
  * yarn tr-scan  --scanPath=./myJavascriptProject --auth=asd123
@@ -32,9 +33,7 @@ async function main(): Promise<void> {
     scanPath = '.',
     ignoreDirs = '',
     transcendUrl = 'https://api.transcend.io',
-    pluginType = '',
-    // TODO: https://transcend.height.app/T-14107 - Remove need to pass in pluginId for silo discovery cli
-    pluginId = '',
+    dataSiloId = '',
     auth,
   } = yargs(process.argv.slice(2));
 
@@ -49,7 +48,6 @@ async function main(): Promise<void> {
   }
 
   // Create a GraphQL client
-
   // eslint-disable-next-line global-require
   const { version } = require('../package.json');
   const client = new GraphQLClient(`${transcendUrl}/graphql`, {
@@ -58,28 +56,22 @@ async function main(): Promise<void> {
       version,
     },
   });
-  const resolvedPlugin = isSupportedPlugin(pluginType);
-  if (!resolvedPlugin) {
-    logger.error('Unsupported plugin type');
-    process.exit(1);
-  }
-  const scanFunction = SILO_DISCOVERY_FUNCTIONS[pluginType as SupportedPlugin]; // safe to cast now
+
+  const plugin = await fetchActiveSiloDiscoPlugin(client, dataSiloId);
+  const scanFunction = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
   const results = await scanFunction(scanPath, ignoreDirs);
 
-  const chunks = [];
-  for (let i = 0; i < results.length; i += CHUNK_SIZE) {
-    chunks.push(results.slice(i, i + CHUNK_SIZE));
-  }
+  const chunks = chunk(results, CHUNK_SIZE);
 
-  await mapSeries(chunks, (rawResults: SiloDiscoveryRawResults[]) =>
-    client.request<{
+  await mapSeries(chunks, async (rawResults: SiloDiscoveryRawResults[]) => {
+    await client.request<{
       /** Whether we successfully uploaded the results */
       success: boolean;
     }>(ADD_SILO_DISCOVERY_RESULTS, {
-      pluginId,
+      pluginId: plugin.id,
       rawResults,
-    }),
-  );
+    });
+  });
 
   // Indicate success
   logger.info(

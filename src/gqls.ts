@@ -332,3 +332,17 @@ export const ADD_SILO_DISCOVERY_RESULTS = gql`
     }
   }
 `;
+
+export const ENABLED_PLUGINS = gql`
+  query Plugins($dataSiloId: String!, $type: PluginType!) {
+    plugins(filterBy: { dataSiloId: $dataSiloId, type: $type, enabled: true }) {
+      plugins {
+        id
+        dataSilo {
+          type
+        }
+      }
+      totalCount
+    }
+  }
+`;
