@@ -3,9 +3,9 @@ import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
 import keyBy from 'lodash/keyBy';
 import uniq from 'lodash/uniq';
 import flatten from 'lodash/flatten';
-import { TranscendInput } from './codecs';
+import { TranscendInput } from '../codecs';
 import difference from 'lodash/difference';
-import { logger } from './logger';
+import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
 

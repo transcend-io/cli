@@ -1,4 +1,4 @@
-import { EnricherInput } from './codecs';
+import { EnricherInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { ENRICHERS, CREATE_ENRICHER, UPDATE_ENRICHER } from './gqls';
 import { RequestAction } from '@transcend-io/privacy-types';
