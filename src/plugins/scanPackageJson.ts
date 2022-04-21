@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 
 import fastGlob from 'fast-glob';
-import { SiloDiscoveryRawResults } from './types';
+import { SiloDiscoveryFunction } from './types';
 
 const SUPPORTED_FILE_SCANS = ['package.json'];
 const IGNORE_DIRS = ['node_modules', 'serverless-build', 'lambda-build'];
@@ -34,10 +34,10 @@ function scanOneFile(filePath: string): string[] {
  * @param ignoreDirs - The directories to ignore (excludes node_modules and serverless-build)
  * @returns the list of integrations
  */
-export async function scanPackageJson(
-  scanPath: string,
-  ignoreDirs: string,
-): Promise<SiloDiscoveryRawResults[]> {
+export const scanPackageJson: SiloDiscoveryFunction = async (
+  scanPath,
+  ignoreDirs,
+) => {
   const dirsToIgnore = [...IGNORE_DIRS, ...ignoreDirs.split(',')].filter(
     (dir) => dir.length > 0,
   );
@@ -57,4 +57,4 @@ export async function scanPackageJson(
     name: dep,
     resourceId: `${scanPath}/**/${dep}`,
   }));
-}
+};

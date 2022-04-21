@@ -6,3 +6,11 @@ export interface SiloDiscoveryRawResults {
   /** Any hosts associated with the entry */
   host?: string;
 }
+
+/**
+ * The silo discovery function interface
+ */
+export type SiloDiscoveryFunction = (
+  scanPath: string,
+  ignoreDirs: string,
+) => Promise<SiloDiscoveryRawResults[]>;

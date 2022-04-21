@@ -20,7 +20,7 @@ export async function uploadSiloDiscoveryResults(
 ): Promise<void> {
   const chunks = chunk(results, CHUNK_SIZE);
 
-  await mapSeries(chunks, async (rawResults: SiloDiscoveryRawResults[]) => {
+  await mapSeries(chunks, async (rawResults) => {
     await client.request<{
       /** Whether we successfully uploaded the results */
       success: boolean;
