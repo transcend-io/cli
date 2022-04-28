@@ -146,9 +146,19 @@ data-silos:
           - key: firstName
             title: First Name
             description: The first name of the user, inputted during onboarding
+            categories:
+              - category: USER_PROFILE
+            purposes:
+              - purpose: PERSONALIZATION
           - key: email
             title: Email
             description: The email address of the user
+            categories:
+              - category: CONTACT
+              - category: USER_PROFILE
+            purposes:
+              - purpose: ESSENTIAL
+              - purpose: OPERATION_SECURITY
       - title: Demo Request
         key: demos
         description: A demo request by someone that does not have a formal account
@@ -159,10 +169,18 @@ data-silos:
         fields:
           - key: companyName
             title: Company Name
-            description: The first name of the company of the person requesting the demo
+            description: The name of the company of the person requesting the demo
+            categories:
+              - category: CONTACT
+            purposes:
+              - purpose: ESSENTIAL
           - key: email
             title: Email
             description: The email address to use for coordinating the demo
+            categories:
+              - category: CONTACT
+            purposes:
+              - purpose: ESSENTIAL
       - title: Password
         key: passwords
         description: A password for a user
@@ -172,6 +190,10 @@ data-silos:
           - key: hash
             title: Password Hash
             description: Hash of the password
+            categories:
+              - category: OTHER
+            purposes:
+              - purpose: OPERATION_SECURITY
           - key: email
             title: Email
             description: The email address to use for coordinating the demo

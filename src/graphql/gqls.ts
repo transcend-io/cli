@@ -261,6 +261,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $purpose: ProcessingPurpose
     $querySuggestions: [DbIntegrationQuerySuggestionInput!]
     $enabledActions: [RequestActionObjectResolver!]
+    $subDataPoints: [DataPointSubDataPointInput!]
   ) {
     updateOrCreateDataPoint(
       input: {
@@ -272,6 +273,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         category: $category
         purpose: $purpose
         enabledActions: $enabledActions
+        subDataPoints: $subDataPoints
       }
     ) {
       dataPoint {

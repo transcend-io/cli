@@ -332,6 +332,36 @@ export async function syncDataSilo(
     );
     await mapSeries(datapoints, async (datapoint) => {
       logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
+      const fields = datapoint.fields
+        ? datapoint.fields.map((field) => {
+            const categoriesWithFallback = field.categories?.map(
+              (category) => ({
+                name: 'Other',
+                ...category,
+              }),
+            );
+            const purposesWithFallback = field.purposes?.map((purpose) => ({
+              name: 'Other',
+              ...purpose,
+            }));
+            // TODO: Support setting title separately from the 'key/name'
+            return {
+              name: field.key,
+              description: field.description,
+              categories: categoriesWithFallback,
+              purposes: purposesWithFallback,
+            };
+          })
+        : undefined;
+
+      if (fields && fields.length > 0) {
+        logger.info(
+          colors.magenta(
+            `Syncing ${fields.length} fields for datapoint "${datapoint.key}"...`,
+          ),
+        );
+      }
+
       await client.request(UPDATE_OR_CREATE_DATA_POINT, {
         dataSiloId: existingDataSilo!.id,
         name: datapoint.key,
@@ -348,6 +378,7 @@ export async function syncDataSilo(
             ),
         purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
+        fields,
       });
 
       // TODO:https://transcend.height.app/T-10773 - obj.fields
