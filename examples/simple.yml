@@ -197,6 +197,10 @@ data-silos:
           - key: email
             title: Email
             description: The email address to use for coordinating the demo
+            categories:
+              - category: CONTACT
+            purposes:
+              - purpose: OPERATION_SECURITY
 
   # Defined web services in addition or instead of databases.
   # The examples below define a subset of the fields.

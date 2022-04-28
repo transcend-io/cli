@@ -1,5 +1,9 @@
 /* eslint-disable max-lines */
-import { DataSiloInput } from '../codecs';
+import {
+  DataCategoryInput,
+  DataSiloInput,
+  ProcessingPurposeInput,
+} from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -11,6 +15,7 @@ import {
   UPDATE_OR_CREATE_DATA_POINT,
   DATA_SILO,
   DATA_POINTS,
+  SUB_DATA_POINTS,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -90,6 +95,17 @@ export async function fetchAllDataSilos(
   return dataSilos;
 }
 
+interface SubDataPoint {
+  /** Name (or key) of the subdatapoint */
+  name: string;
+  /** The description */
+  description?: string;
+  /** Personal data category */
+  categories: DataCategoryInput[];
+  /** The processing purpose for this sub datapoint */
+  purposes: ProcessingPurposeInput[];
+}
+
 interface DataPoint {
   /** ID of dataPoint */
   id: string;
@@ -127,6 +143,49 @@ interface DataPoint {
   }[];
 }
 
+interface DataPointWithSubDataPoint extends DataPoint {
+  /** The associated subdatapoints */
+  subDataPoints: SubDataPoint[];
+}
+
+/**
+ * Helper to fetch all subdatapoints for a given datapoint
+ *
+ * @param client - The GraphQL client
+ * @param dataPointId - The datapoint ID
+ * @returns The list of subdatapoints
+ */
+export async function fetchAllSubDataPoints(
+  client: GraphQLClient,
+  dataPointId: string,
+): Promise<SubDataPoint[]> {
+  const subDataPoints: SubDataPoint[] = [];
+
+  let offset = 0;
+
+  let shouldContinue = false;
+  do {
+    const {
+      subDataPoints: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await client.request<{
+      /** Query response */
+      subDataPoints: {
+        /** List of matches */
+        nodes: SubDataPoint[];
+      };
+    }>(SUB_DATA_POINTS, {
+      first: PAGE_SIZE,
+      dataPoints: [dataPointId],
+      offset,
+    });
+    subDataPoints.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+  return subDataPoints;
+}
+
 /**
  * Fetch all datapoints for a data silo
  *
@@ -138,7 +197,7 @@ export async function fetchAllDataPoints(
   client: GraphQLClient,
   dataSiloId: string,
 ): Promise<DataPoint[]> {
-  const dataPoints: DataPoint[] = [];
+  const dataPoints: DataPointWithSubDataPoint[] = [];
   let offset = 0;
 
   // Try to fetch an enricher with the same title
@@ -158,7 +217,16 @@ export async function fetchAllDataPoints(
       dataSiloIds: [dataSiloId],
       offset,
     });
-    dataPoints.push(...nodes);
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(
+      nodes.map(async (node) => {
+        const subDataPoints = await fetchAllSubDataPoints(client, node.id);
+        dataPoints.push({
+          ...node,
+          subDataPoints,
+        });
+      }),
+    );
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
@@ -378,7 +446,7 @@ export async function syncDataSilo(
             ),
         purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
-        fields,
+        subDataPoints: fields,
       });
 
       // TODO:https://transcend.height.app/T-10773 - obj.fields

@@ -197,6 +197,29 @@ export const DATA_POINTS = gql`
   }
 `;
 
+export const SUB_DATA_POINTS = gql`
+  query SchemaSyncDataPoints($dataPointIds: [ID!], $first: Int!, $offset: Int!) {
+    subDataPoints(
+      filterBy: { dataPoints: $dataPointIds }
+      first: $first
+      offset: $offset
+    ) {
+      totalCount
+      nodes {
+        id
+        name
+        description
+        purposes {
+          name
+          purpose
+        }
+        categories {
+          name
+          category
+        }
+  }
+`;
+
 export const UPDATE_DATA_SILO = gql`
   mutation SchemaSyncUpdateDataSilo(
     $id: ID!
