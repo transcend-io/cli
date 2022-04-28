@@ -111,7 +111,7 @@ export const FieldInput = t.intersection([
     /** The display title of the field */
     title: t.string,
     /** Description of the field */
-    description: t.string,
+    description: t.union([t.string, t.null]),
     /**
      * What is the purpose of processing for this datapoint/table?
      *

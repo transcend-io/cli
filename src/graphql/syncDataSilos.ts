@@ -196,7 +196,7 @@ export async function fetchAllSubDataPoints(
 export async function fetchAllDataPoints(
   client: GraphQLClient,
   dataSiloId: string,
-): Promise<DataPoint[]> {
+): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
   let offset = 0;
 
@@ -294,8 +294,8 @@ export async function fetchEnrichedDataSilos(
     /** Filter by title */
     title?: string;
   } = {},
-): Promise<[DataSiloEnriched, DataPoint[]][]> {
-  const dataSilos: [DataSiloEnriched, DataPoint[]][] = [];
+): Promise<[DataSiloEnriched, DataPointWithSubDataPoint[]][]> {
+  const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
 
   const silos = await fetchAllDataSilos(client, { title, ids });
   await mapSeries(silos, async (silo) => {

@@ -132,10 +132,10 @@ export async function pullTranscendConfiguration(
               ),
             }
           : {}),
-        ...(dataPoint.fields.length > 0
+        ...(dataPoint.subDataPoints.length > 0
           ? {
-              fields: dataPoint.fields.map((field) => ({
-                title: field.name,
+              fields: dataPoint.subDataPoints.map((field) => ({
+                key: field.name,
                 description: field.description,
                 purposes: field.purposes,
                 categories: field.categories,
