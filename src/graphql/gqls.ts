@@ -198,7 +198,11 @@ export const DATA_POINTS = gql`
 `;
 
 export const SUB_DATA_POINTS = gql`
-  query SchemaSyncDataPoints($dataPointIds: [ID!], $first: Int!, $offset: Int!) {
+  query SchemaSyncDataPoints(
+    $dataPointIds: [ID!]
+    $first: Int!
+    $offset: Int!
+  ) {
     subDataPoints(
       filterBy: { dataPoints: $dataPointIds }
       first: $first
@@ -217,6 +221,8 @@ export const SUB_DATA_POINTS = gql`
           name
           category
         }
+      }
+    }
   }
 `;
 
