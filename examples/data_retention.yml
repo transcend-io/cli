@@ -1,0 +1,217 @@
+# This file outlines an example of how one may define a workflow for deleting data with Transcend.
+# In this example, we want to define a pipeline for deleting a set of video files associated with an account.
+
+# Manage at: https://app.transcend.io/infrastructure/api-keys
+# See https://docs.transcend.io/docs/authentication
+# Define API keys that may be used to integrate into Transcend from a custom
+# web service or script.
+# When creating new data silos through the yaml
+# cli, it is possible to specify which API key should be associated
+# with the newly created data silo.
+api-keys:
+  - title: 'Server Integration: Server Webhook'
+
+# Manage at: https://app.transcend.io/privacy-requests/identifiers
+# See https://docs.transcend.io/docs/identity-enrichment
+# Define enricher or pre-flight check webhooks that will be executed
+# prior to privacy request workflows. Some examples may include:
+#   - identity enrichment: look up additional identifiers for that request.
+#                          i.e. map an email address to a user ID, s3 keys
+#                          or other identifiers required to make the request
+#   - fraud check: auto-cancel requests if account or user flagged for fraudulent behavior
+#   - customer check: auto-cancel request for some custom business criteria
+enrichers:
+  - title: Fetch Identifiers for Video Deletion
+    description: Fetch the collection of identifiers that should be used for the deletion job.
+    url: https://enterprise.acme.com/transcend-enrichment-webhook
+    input-identifier: coreIdentifier
+    output-identifiers:
+      - amazonS3Key
+      - zoomVideoId
+      - email
+      - googleCloudStorageKey
+  - title: Account Freeze Check
+    description: Auto cancel job is account or user is under investigation
+    url: https://identity.acme.com/transcend-fraud-check-webhook
+    input-identifier: email
+    output-identifiers:
+      - email
+
+# Manage at: https://app.transcend.io/privacy-requests/connected-services
+# See https://docs.transcend.io/docs/the-data-map#data-silos
+# Define the data silos in your data map. A data silo can be a database,
+# or a web service that may use a collection of different data stores under the hood.
+# You can manage data silos on the Transcend admin dashboard or in your codebase.
+data-silos:
+  # ################# #
+  # SaaS Integrations #
+  # ################# #
+
+  # We will want to delete data from zoom for both a customer deletion request
+  # as well as an enterprise deletion request
+  - title: Zoom
+    integrationName: zoom
+    identity-keys:
+      - email
+      - zoomVideoId
+    owners:
+      - test@transcend.io
+
+  # ############ #
+  # File Storage #
+  # ############ #
+
+  # For Google Cloud Storage, Amazon S3, or other file services
+  # Object keys can be provided to Transcend, and Transcend will handle
+  # the coordination of deleting those objects.
+  # Transcend can extended the integrations in our catalog as needed to meet your use case.
+  # This can include things like file deletion, folder deletion, unstructured
+  # search for an email address.
+  - title: Google Cloud Storage
+    integrationName: promptAPerson
+    identity-keys:
+      - googleCloudStorageKey
+    owners:
+      - test@transcend.io
+    datapoints:
+      - title: Enterprise Video Bucket
+        description: Bucket containing the video files for enterprise customers.
+        key: _global
+        privacy-actions:
+          - ERASURE
+  - title: Amazon S3
+    description: >-
+      Amazon Simple Storage Service (Amazon S3) is an object storage service
+      that offers industry-leading scalability, data availability, security, and
+      performance.
+    integrationName: promptAPerson
+    identity-keys:
+      - amazonS3Key
+    datapoints:
+      - title: Enterprise Video Backup Bucket
+        description: Bucket containing the backup video files for enterprise customers.
+        key: _global
+        privacy-actions:
+          - ERASURE
+  # If for some reason you needed to do something manually
+  # you could specify a job to manually notify someone to delete from a particular system
+  - title: Manual Deletion from Desktop
+    description: Joe stores a lot of videos on his desktop, remind him to delete them.
+    integrationName: promptAPerson
+    identity-keys:
+      - coreIdentifier
+    deletion-dependencies: []
+    owners: []
+    disabled: false
+    datapoints:
+      - title: Prompt Manual Entry
+        description: Manually entered request data.
+        key: _global
+        purpose: UNSPECIFIED
+        category: UNSPECIFIED
+        privacy-actions:
+          - ERASURE
+
+  # ########### #
+  # Custom Code #
+  # ########### #
+
+  # Integrate in a custom deletion script that is triggered by a webhook
+  - title: Server Webhook
+    description: Notify a server to run a custom deletion script against the primary database.
+    integrationName: server
+    url: https://enterprise.acme.com/transcend-webhook
+    api-key-title: 'Server Integration: Server Webhook'
+    identity-keys:
+      - coreIdentifier
+    # Only delete the metadata from the database after the videos are deleted from the other tools
+    deletion-dependencies:
+      - Google Cloud Storage
+      - Amazon S3
+    owners: []
+    datapoints:
+      - title: Webhook Notification
+        description: >-
+          We will send your server a notification to perform an action for one
+          of your users.
+        key: _global
+        privacy-actions:
+          - ERASURE
+  # Integrate in a custom deletion script that polls for outstanding
+  # files to be deleted on some cadence
+  # see: https://docs.transcend.io/docs/api-reference/GET/v1/data-silo/(id)/pending-requests/(type)
+  - title: Daily Batched Job
+    description: Run a job daily that polls the Transcend API to check outstanding video files that need to be deleted
+    integrationName: cron
+    api-key-title: 'Server Integration: Server Webhook' # re-use the same API key
+    # job will batch over IDs to delete
+    # this is likely not needed if there is a direct connector to file storage
+    # is used instead, but can be used as an example as to how to integrate
+    # in batched deletion jobs
+    identity-keys:
+      - amazonS3Key
+      - zoomVideoId
+      - email
+      - googleCloudStorageKey
+    datapoints:
+      - title: Deletion Job
+        description: Run custom batched deletion job
+        key: _global
+        privacy-actions:
+          - ERASURE
+
+  # ############### #
+  # Direct Database #
+  # ############### #
+
+  # Transcend can connect directly to your database and run SQL statements.
+  # These statements can be managed in your codebase and pushed up to Transcend.
+  # Any changes will require approval on the Transcend dashboard by an administrator
+  # before they get enabled in production workflows.
+  - title: Database - MySQL
+    description: Integrate into the MySQL database to delete any metadata
+    integrationName: database
+    identity-keys:
+      - zoomVideoId
+    deletion-dependencies:
+      - Zoom
+      - Google Cloud Storage
+    datapoints:
+      - title: Video Files
+        key: schema.videos
+        description: 'Video file metadata'
+        privacy-action-queries:
+          ERASURE: DELETE FROM schema.videos WHERE video_id IN (?);
+        privacy-actions:
+          - ERASURE
+      - title: Video Files Backup
+        key: schema.video_backups
+        description: 'Video file metadata'
+        privacy-action-queries:
+          ERASURE: DELETE FROM schema.video_backups WHERE video_id IN (?);
+        privacy-actions:
+          - ERASURE
+  - title: Database - Snowflake
+    description: Integrate with your own databases, such as Amazon Redshift or PostgreSQL.
+    integrationName: database
+    identity-keys:
+      - coreIdentifier
+    deletion-dependencies:
+      - Zoom
+      - Google Cloud Storage
+      - Database - MySQL
+    datapoints:
+      - title: Video Files
+        key: schema.videos
+        description: 'Video file metadata'
+        privacy-action-queries:
+          ERASURE: DELETE FROM schema.videos WHERE video_id IN (?);
+        privacy-actions:
+          - ERASURE
+      - title: Video Files Backup
+        key: schema.video_backups
+        description: 'Video file metadata'
+        privacy-action-queries:
+          ERASURE: DELETE FROM schema.video_backups WHERE video_id IN (?);
+        privacy-actions:
+          - ERASURE
