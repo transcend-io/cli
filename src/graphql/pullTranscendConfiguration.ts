@@ -132,6 +132,16 @@ export async function pullTranscendConfiguration(
               ),
             }
           : {}),
+        ...(dataPoint.subDataPoints.length > 0
+          ? {
+              fields: dataPoint.subDataPoints.map((field) => ({
+                key: field.name,
+                description: field.description,
+                purposes: field.purposes,
+                categories: field.categories,
+              })),
+            }
+          : {}),
         'privacy-actions': dataPoint.actionSettings
           .filter(({ active }) => active)
           .map(({ type }) => type),
