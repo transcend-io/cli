@@ -22,11 +22,7 @@ import {
   DataSubject,
 } from './fetchDataSubjects';
 import { ApiKey } from './fetchApiKeys';
-import {
-  DataCategoryType,
-  ProcessingPurpose,
-  RequestActionObjectResolver,
-} from '@transcend-io/privacy-types';
+import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 
 export interface DataSilo {
   /** ID of dataSilo */
@@ -121,10 +117,6 @@ interface DataPoint {
   };
   /** Name */
   name: string;
-  /** Purpose */
-  purpose: ProcessingPurpose;
-  /** Category */
-  category: DataCategoryType;
   /** Global actions */
   actionSettings: {
     /** Action type */
@@ -435,7 +427,6 @@ export async function syncDataSilo(
         name: datapoint.key,
         title: datapoint.title,
         description: datapoint.description,
-        category: datapoint.category,
         querySuggestions: !datapoint['privacy-action-queries']
           ? undefined
           : Object.entries(datapoint['privacy-action-queries']).map(
@@ -444,7 +435,6 @@ export async function syncDataSilo(
                 suggestedQuery: value,
               }),
             ),
-        purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
         subDataPoints: fields,
       });
