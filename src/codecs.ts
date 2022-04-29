@@ -65,21 +65,65 @@ export const EnricherInput = t.intersection([
 export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 
 /**
+ * The data category for a field
+ */
+export const ProcessingPurposeInput = t.intersection([
+  t.type({
+    /** The parent purpose */
+    purpose: valuesOf(ProcessingPurpose),
+  }),
+  t.partial({
+    /** User-defined name for this processing purpose sub category. If not specified, will fall back to 'Other' */
+    name: t.string,
+  }),
+]);
+
+/** Type override */
+export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
+
+/**
+ * The data category for a field
+ */
+export const DataCategoryInput = t.intersection([
+  t.type({
+    /** The parent category */
+    category: valuesOf(DataCategoryType),
+  }),
+  t.partial({
+    /** User-defined name for this sub category. If not specified, will fall back to 'Other' */
+    name: t.string,
+  }),
+]);
+
+/** Type override */
+export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
+
+/**
  * Annotate specific fields within a datapoint. These are often database table columns.
  * Fields can also be a JSON object or separate file.
  */
 export const FieldInput = t.intersection([
   t.type({
-    /** The unique key of the field */
+    /** The unique key of the field. When a database, this is the column name. */
     key: t.string,
   }),
   t.partial({
-    /** Display title of the field */
+    /** The display title of the field */
     title: t.string,
-    /** The unique key of the datapoint. When a database, this is the table name. */
-    key: t.string,
     /** Description of the field */
-    description: t.string,
+    description: t.union([t.string, t.null]),
+    /**
+     * What is the purpose of processing for this datapoint/table?
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    purposes: t.array(ProcessingPurposeInput),
+    /**
+     * The category of personal data for this datapoint
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    categories: t.array(DataCategoryInput),
   }),
 ]);
 
@@ -107,12 +151,14 @@ export const DatapointInput = t.intersection([
      * What is the purpose of processing for this datapoint/table?
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     * @deprecated - The purpose labels are now associated with fields rather than datapoints to allow for more granularity
      */
     purpose: valuesOf(ProcessingPurpose),
     /**
      * The category of personal data for this datapoint
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     * @deprecated - The category labels are now associated with fields rather than datapoints to allow for more granularity
      */
     category: valuesOf(DataCategoryType),
     /**
