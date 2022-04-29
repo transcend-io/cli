@@ -55,7 +55,7 @@ data-silos:
       - email
       - zoomVideoId
     owners:
-      - olivia.fowora@acme.com
+      - test@transcend.io
 
   # ############ #
   # File Storage #
@@ -72,7 +72,7 @@ data-silos:
     identity-keys:
       - googleCloudStorageKey
     owners:
-      - sandeep.brar@acme.com
+      - test@transcend.io
     datapoints:
       - title: Enterprise Video Bucket
         description: Bucket containing the video files for enterprise customers.
