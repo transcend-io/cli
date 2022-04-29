@@ -148,20 +148,6 @@ export const DatapointInput = t.intersection([
     /** Internal description for why the enricher is needed */
     description: t.string,
     /**
-     * What is the purpose of processing for this datapoint/table?
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-     * @deprecated - The purpose labels are now associated with fields rather than datapoints to allow for more granularity
-     */
-    purpose: valuesOf(ProcessingPurpose),
-    /**
-     * The category of personal data for this datapoint
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-     * @deprecated - The category labels are now associated with fields rather than datapoints to allow for more granularity
-     */
-    category: valuesOf(DataCategoryType),
-    /**
      * The SQL queries that should be run for that datapoint in a privacy request.
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts

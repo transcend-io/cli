@@ -160,8 +160,6 @@ data-silos:
       - title: Demo Request
         key: demos
         description: A demo request by someone that does not have a formal account
-        purpose: SALE
-        category: ID
         privacy-actions:
           - ACCESS
         fields:
@@ -182,8 +180,6 @@ data-silos:
       - title: Password
         key: passwords
         description: A password for a user
-        purpose: ESSENTIAL
-        category: ID
         fields:
           - key: hash
             title: Password Hash
@@ -197,6 +193,7 @@ data-silos:
             description: The email address to use for coordinating the demo
             categories:
               - category: CONTACT
+              - category: ID
             purposes:
               - purpose: OPERATION_SECURITY
 
