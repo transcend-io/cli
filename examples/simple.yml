@@ -148,17 +148,23 @@ data-silos:
             description: The first name of the user, inputted during onboarding
             categories:
               - category: USER_PROFILE
+                name: Name
             purposes:
               - purpose: PERSONALIZATION
+                name: Other
           - key: email
             title: Email
             description: The email address of the user
             categories:
               - category: CONTACT
+                name: Email
               - category: USER_PROFILE
+                name: Name
             purposes:
               - purpose: ESSENTIAL
+                name: Login
               - purpose: OPERATION_SECURITY
+                name: Other
       - title: Demo Request
         key: demos
         description: A demo request by someone that does not have a formal account
@@ -172,15 +178,19 @@ data-silos:
             description: The name of the company of the person requesting the demo
             categories:
               - category: CONTACT
+                name: Other
             purposes:
               - purpose: ESSENTIAL
+                name: Demo
           - key: email
             title: Email
             description: The email address to use for coordinating the demo
             categories:
               - category: CONTACT
+                name: Email
             purposes:
               - purpose: ESSENTIAL
+                name: Demo
       - title: Password
         key: passwords
         description: A password for a user
@@ -192,15 +202,19 @@ data-silos:
             description: Hash of the password
             categories:
               - category: OTHER
+                name: Password
             purposes:
               - purpose: OPERATION_SECURITY
+                name: Other
           - key: email
             title: Email
             description: The email address to use for coordinating the demo
             categories:
               - category: CONTACT
+                name: Email
             purposes:
               - purpose: OPERATION_SECURITY
+                name: Other
 
   # Defined web services in addition or instead of databases.
   # The examples below define a subset of the fields.

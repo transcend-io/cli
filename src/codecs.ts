@@ -67,16 +67,12 @@ export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 /**
  * The data category for a field
  */
-export const ProcessingPurposeInput = t.intersection([
-  t.type({
-    /** The parent purpose */
-    purpose: valuesOf(ProcessingPurpose),
-  }),
-  t.partial({
-    /** User-defined name for this processing purpose sub category. If not specified, will fall back to 'Other' */
-    name: t.string,
-  }),
-]);
+export const ProcessingPurposeInput = t.type({
+  /** The parent purpose */
+  purpose: valuesOf(ProcessingPurpose),
+  /** User-defined name for this processing purpose sub category */
+  name: t.string,
+});
 
 /** Type override */
 export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
@@ -84,16 +80,12 @@ export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
 /**
  * The data category for a field
  */
-export const DataCategoryInput = t.intersection([
-  t.type({
-    /** The parent category */
-    category: valuesOf(DataCategoryType),
-  }),
-  t.partial({
-    /** User-defined name for this sub category. If not specified, will fall back to 'Other' */
-    name: t.string,
-  }),
-]);
+export const DataCategoryInput = t.type({
+  /** The parent category */
+  category: valuesOf(DataCategoryType),
+  /** User-defined name for this sub category */
+  name: t.string,
+});
 
 /** Type override */
 export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
@@ -147,20 +139,6 @@ export const DatapointInput = t.intersection([
   t.partial({
     /** Internal description for why the enricher is needed */
     description: t.string,
-    /**
-     * What is the purpose of processing for this datapoint/table?
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-     * @deprecated - The purpose labels are now associated with fields rather than datapoints to allow for more granularity
-     */
-    purpose: valuesOf(ProcessingPurpose),
-    /**
-     * The category of personal data for this datapoint
-     *
-     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-     * @deprecated - The category labels are now associated with fields rather than datapoints to allow for more granularity
-     */
-    category: valuesOf(DataCategoryType),
     /**
      * The SQL queries that should be run for that datapoint in a privacy request.
      *
