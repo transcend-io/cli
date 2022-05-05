@@ -401,25 +401,15 @@ export async function syncDataSilo(
     await mapSeries(datapoints, async (datapoint) => {
       logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
       const fields = datapoint.fields
-        ? datapoint.fields.map((field) => {
-            const categoriesWithFallback = field.categories?.map(
-              (category) => ({
-                name: 'Other',
-                ...category,
-              }),
-            );
-            const purposesWithFallback = field.purposes?.map((purpose) => ({
-              name: 'Other',
-              ...purpose,
-            }));
+        ? datapoint.fields.map(({ key, description, categories, purposes }) =>
             // TODO: Support setting title separately from the 'key/name'
-            return {
-              name: field.key,
-              description: field.description,
-              categories: categoriesWithFallback,
-              purposes: purposesWithFallback,
-            };
-          })
+            ({
+              name: key,
+              description,
+              categories,
+              purposes,
+            }),
+          )
         : undefined;
 
       if (fields && fields.length > 0) {
@@ -435,7 +425,6 @@ export async function syncDataSilo(
         name: datapoint.key,
         title: datapoint.title,
         description: datapoint.description,
-        category: datapoint.category,
         querySuggestions: !datapoint['privacy-action-queries']
           ? undefined
           : Object.entries(datapoint['privacy-action-queries']).map(
@@ -444,7 +433,6 @@ export async function syncDataSilo(
                 suggestedQuery: value,
               }),
             ),
-        purpose: datapoint.purpose,
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
         subDataPoints: fields,
       });
