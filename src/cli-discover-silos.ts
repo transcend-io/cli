@@ -12,7 +12,7 @@ import {
 } from './graphql';
 
 /**
- * Sync data silo configuration from Transcend down locally to disk
+ * Scan dependency files for new data silos.
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
@@ -64,7 +64,8 @@ async function main(): Promise<void> {
   // Indicate success
   logger.info(
     colors.green(
-      `Scan found ${results.length} potential data silos at ${scanPath}! View at ${ADMIN_DASH}`,
+      `Scan found ${results.length} potential data silos at ${scanPath}! ` +
+        `View at ${ADMIN_DASH}/data-map/data-inventory/silo-discovery/triage`,
     ),
   );
 }
