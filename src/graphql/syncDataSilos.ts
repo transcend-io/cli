@@ -22,11 +22,7 @@ import {
   DataSubject,
 } from './fetchDataSubjects';
 import { ApiKey } from './fetchApiKeys';
-import {
-  DataCategoryType,
-  ProcessingPurpose,
-  RequestActionObjectResolver,
-} from '@transcend-io/privacy-types';
+import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 
 export interface DataSilo {
   /** ID of dataSilo */
@@ -121,10 +117,6 @@ interface DataPoint {
   };
   /** Name */
   name: string;
-  /** Purpose */
-  purpose: ProcessingPurpose;
-  /** Category */
-  category: DataCategoryType;
   /** Global actions */
   actionSettings: {
     /** Action type */

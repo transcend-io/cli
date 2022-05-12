@@ -107,8 +107,6 @@ data-silos:
       - title: Prompt Manual Entry
         description: Manually entered request data.
         key: _global
-        purpose: UNSPECIFIED
-        category: UNSPECIFIED
         privacy-actions:
           - ERASURE
 
