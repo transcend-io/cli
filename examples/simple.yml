@@ -102,40 +102,6 @@ data-silos:
         description: The centralized user model user
         # AKA table name
         key: users
-        # What is the purpose of processing for this datapoint/table?
-        # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-        #   ESSENTIAL: Provide a service that the user explicitly requests and that is part of the product's basic service or functionality
-        #   ADDITIONAL_FUNCTIONALITY: Provide a service that the user explicitly requests but that is not a necessary part of the product's basic service
-        #   ADVERTISING: To show ads that are either targeted to the specific user or not targeted
-        #   MARKETING: To contact the user to offer products, services, or other promotions
-        #   ANALYTICS: For understanding the product’s audience, improving the product, inform company strategy, or general research
-        #   PERSONALIZATION: For providing user with a personalized experience
-        #   OPERATION_SECURITY: For product operation and security, enforcement of terms of service, fraud prevention, protecting users and property, etc.
-        #   LEGAL: For compliance with legal obligations
-        #   TRANSFER: For data that was transferred as part of a change in circumstance (e.g. a merger or acquisition)
-        #   SALE: For selling the data to third parties
-        #   HR: For personnel training, recruitment, payroll, management, etc.
-        #   OTHER: Other specific purpose not covered above
-        #   UNSPECIFIED: The purpose is not explicitly stated or is unclear
-        purpose: ESSENTIAL
-        # The category of personal data for this datapoint
-        # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
-        #   FINANCIAL: Financial information
-        #   HEALTH: Health information
-        #   CONTACT: Contact information
-        #   LOCATION: Geo-location information
-        #   DEMOGRAPHIC: Demographic Information
-        #   ID: Identifiers that uniquely identify a person
-        #   ONLINE_ACTIVITY: The user's online activities on the first party website/app or other websites/apps
-        #   USER_PROFILE: The user’s profile on the first-party website/app and its contents
-        #   SOCIAL_MEDIA: User profile and data from a social media website/app or other third party service
-        #   CONNECTION: Connection information for the current browsing session, e.g. device IDs, MAC addresses, IP addresses, etc.
-        #   TRACKING: Cookies and tracking elements
-        #   DEVICE: Computer or device information
-        #   SURVEY: Any data that is collected through surveys
-        #   OTHER: A specific type of information not covered by the above categories
-        #   UNSPECIFIED: The type of information is not explicitly stated or unclear
-        category: USER_PROFILE
         # The types of privacy actions that this datapoint can implement
         # See "InternalDataSiloObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
         #   ACCESS: Data Download request
@@ -146,9 +112,41 @@ data-silos:
           - key: firstName
             title: First Name
             description: The first name of the user, inputted during onboarding
+            # The category of personal data for this datapoint
+            # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+            #   FINANCIAL: Financial information
+            #   HEALTH: Health information
+            #   CONTACT: Contact information
+            #   LOCATION: Geo-location information
+            #   DEMOGRAPHIC: Demographic Information
+            #   ID: Identifiers that uniquely identify a person
+            #   ONLINE_ACTIVITY: The user's online activities on the first party website/app or other websites/apps
+            #   USER_PROFILE: The user’s profile on the first-party website/app and its contents
+            #   SOCIAL_MEDIA: User profile and data from a social media website/app or other third party service
+            #   CONNECTION: Connection information for the current browsing session, e.g. device IDs, MAC addresses, IP addresses, etc.
+            #   TRACKING: Cookies and tracking elements
+            #   DEVICE: Computer or device information
+            #   SURVEY: Any data that is collected through surveys
+            #   OTHER: A specific type of information not covered by the above categories
+            #   UNSPECIFIED: The type of information is not explicitly stated or unclear
             categories:
               - category: USER_PROFILE
                 name: Name
+            # What is the purpose of processing for this datapoint/table?
+            # See: https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+            #   ESSENTIAL: Provide a service that the user explicitly requests and that is part of the product's basic service or functionality
+            #   ADDITIONAL_FUNCTIONALITY: Provide a service that the user explicitly requests but that is not a necessary part of the product's basic service
+            #   ADVERTISING: To show ads that are either targeted to the specific user or not targeted
+            #   MARKETING: To contact the user to offer products, services, or other promotions
+            #   ANALYTICS: For understanding the product’s audience, improving the product, inform company strategy, or general research
+            #   PERSONALIZATION: For providing user with a personalized experience
+            #   OPERATION_SECURITY: For product operation and security, enforcement of terms of service, fraud prevention, protecting users and property, etc.
+            #   LEGAL: For compliance with legal obligations
+            #   TRANSFER: For data that was transferred as part of a change in circumstance (e.g. a merger or acquisition)
+            #   SALE: For selling the data to third parties
+            #   HR: For personnel training, recruitment, payroll, management, etc.
+            #   OTHER: Other specific purpose not covered above
+            #   UNSPECIFIED: The purpose is not explicitly stated or is unclear
             purposes:
               - purpose: PERSONALIZATION
                 name: Other
@@ -168,8 +166,6 @@ data-silos:
       - title: Demo Request
         key: demos
         description: A demo request by someone that does not have a formal account
-        purpose: SALE
-        category: ID
         privacy-actions:
           - ACCESS
         fields:
@@ -194,8 +190,6 @@ data-silos:
       - title: Password
         key: passwords
         description: A password for a user
-        purpose: ESSENTIAL
-        category: ID
         fields:
           - key: hash
             title: Password Hash

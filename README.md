@@ -152,8 +152,6 @@ data-silos:
       - title: User Model
         description: The centralized user model user
         key: users
-        purpose: ESSENTIAL
-        category: USER_PROFILE
         privacy-actions:
           - ACCESS
         fields:
