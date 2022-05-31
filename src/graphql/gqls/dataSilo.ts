@@ -48,6 +48,11 @@ export const DATA_SILO = gql`
         email
       }
       isLive
+      promptAVendorEmailSendFrequency
+      promptAVendorEmailSendType
+      promptAVendorEmailIncludeIdentifiersAttachment
+      promptAVendorEmailCompletionLinkType
+      manualWorkRetryFrequency
     }
   }
 `;
@@ -130,7 +135,7 @@ export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
     $promptAVendorEmailSendFrequency: Int
     $promptAVendorEmailSendType: PromptAVendorEmailSendType
     $promptAVendorEmailIncludeIdentifiersAttachment: Boolean
-    $promptAVendorEmailIncludeIdentifiersAttachment: PromptAVendorEmailCompletionLinkType
+    $promptAVendorEmailCompletionLinkType: PromptAVendorEmailCompletionLinkType
     $manualWorkRetryFrequency: String
   ) {
     updatePromptAVendorEmailSendSettings(
@@ -139,7 +144,7 @@ export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
         promptAVendorEmailSendFrequency: $promptAVendorEmailSendFrequency
         promptAVendorEmailSendType: $promptAVendorEmailSendType
         promptAVendorEmailIncludeIdentifiersAttachment: $promptAVendorEmailIncludeIdentifiersAttachment
-        promptAVendorEmailIncludeIdentifiersAttachment: $promptAVendorEmailIncludeIdentifiersAttachment
+        promptAVendorEmailCompletionLinkType: $promptAVendorEmailCompletionLinkType
         manualWorkRetryFrequency: $manualWorkRetryFrequency
       }
     ) {

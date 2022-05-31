@@ -94,6 +94,11 @@ export async function pullTranscendConfiguration(
         owners,
         subjectBlocklist,
         isLive,
+        promptAVendorEmailSendFrequency,
+        promptAVendorEmailSendType,
+        promptAVendorEmailIncludeIdentifiersAttachment,
+        promptAVendorEmailCompletionLinkType,
+        manualWorkRetryFrequency,
       },
       dataPoints,
     ]): DataSiloInput => ({
@@ -116,6 +121,14 @@ export async function pullTranscendConfiguration(
               dataSubjects,
             )
           : undefined,
+      'prompt-a-vendor-email-settings': {
+        'send-frequency': promptAVendorEmailSendFrequency,
+        'send-type': promptAVendorEmailSendType,
+        'include-identifiers-attachment':
+          promptAVendorEmailIncludeIdentifiersAttachment,
+        'completion-link-type': promptAVendorEmailCompletionLinkType,
+        'manual-work-retry-frequency': manualWorkRetryFrequency,
+      },
       datapoints: dataPoints.map((dataPoint) => ({
         title: dataPoint.title.defaultMessage,
         description: dataPoint.description.defaultMessage,
