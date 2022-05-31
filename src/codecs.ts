@@ -225,16 +225,35 @@ export const DataSiloInput = t.intersection([
      * for further details.
      */
     datapoints: t.array(DatapointInput),
-    notifyEmailAddress: t.string,
-    promptEmailTemplateId: t.string,
-    promptAVendorEmailSendFrequency: t.number,
-    promptAVendorEmailSendType: valuesOf(PromptAVendorEmailSendType),
-    promptAVendorEmailIncludeIdentifiersAttachment: t.boolean,
-    promptAVendorEmailCompletionLinkType: valuesOf(
+    /**
+     * The template ID of the email template used for notifications.
+     */
+    'prompt-email-template-id': t.string,
+    /**
+     * The frequency with which we should be sending emails for this data silo, in milliseconds.
+     */
+    'prompt-a-vendor-email-send-frequency': t.number,
+    /**
+     * The type of emails to send for this data silo, i.e. send an email for each DSR, across all open DSRs,
+     * or per profile in a DSR.
+     */
+    'prompt-a-vendor-email-send-type': valuesOf(PromptAVendorEmailSendType),
+    /**
+     * Indicates whether prompt-a-vendor emails should include a list of identifiers
+     * in addition to a link to the bulk processing UI.
+     */
+    'prompt-a-vendor-email-include-identifiers-attachment': t.boolean,
+    /**
+     * Indicates what kind of link to generate as part of the emails sent out for this Prompt-a-Vendor silo.
+     */
+    'prompt-a-vendor-email-completion-link-type': valuesOf(
       PromptAVendorEmailCompletionLinkType,
     ),
-    manualWorkRetryFrequency: t.string,
-    manualWorkRetryStartAt: t.string,
+    /**
+     * The updated frequency with which we should retry sending emails for this data silo, in milliseconds.
+     * Needs to be a string because the number can be larger than the MAX_INT
+     */
+    'manual-work-retry-frequency': t.string,
   }),
 ]);
 

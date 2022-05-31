@@ -3,6 +3,12 @@ data-silos:
     description: Notify backend team to delete data
     integrationName: promptAPerson
     notify-email-address: test+2@transcend.io
+    prompt-a-vendor-email-send-frequency: 1000
+    prompt-a-vendor-email-send-type: PER_DSR
+    prompt-a-vendor-email-include-identifiers-attachment: true
+    prompt-a-vendor-email-completion-link-type: UNAUTHENTICATED_EXTERNAL_USER
+    manual-work-retry-frequency: '3600000'
+
     datapoints:
       - title: Prompt Manual Entry
         key: _global
