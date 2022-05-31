@@ -29,7 +29,7 @@
     "test": "yarn pnpify mocha './src/**/*.test.ts'"
   },
   "dependencies": {
-    "@transcend-io/privacy-types": "^1.13.1",
+    "@transcend-io/privacy-types": "^2.0.0",
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",

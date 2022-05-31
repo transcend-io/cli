@@ -303,7 +303,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@transcend-io/cli@workspace:."
   dependencies:
-    "@transcend-io/privacy-types": ^1.13.1
+    "@transcend-io/privacy-types": ^2.0.0
     "@transcend-io/type-utils": ^1.0.5
     "@types/bluebird": ^3.5.36
     "@types/chai": ^4.3.0
@@ -346,12 +346,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@transcend-io/privacy-types@npm:^1.13.1":
-  version: 1.13.1
-  resolution: "@transcend-io/privacy-types@npm:1.13.1"
+"@transcend-io/privacy-types@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@transcend-io/privacy-types@npm:2.0.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: 5f733577694fe93c9414b97a17968cfd7d89c9495c2795021a04edd124763c1165837340886f6b64ad17abd2506e133e4a445560959699e8d179107206203161
+  checksum: 5eda8c7f6938272a694871e2d817793d19362a1375e9ad795feaac6415bfd11ccf8700af9c533f3590ba068f4669618dc6ec1c6040cf07de35b3652423890237
   languageName: node
   linkType: hard
 

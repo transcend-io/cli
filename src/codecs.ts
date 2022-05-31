@@ -5,6 +5,8 @@ import {
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
+  PromptAVendorEmailSendType,
+  PromptAVendorEmailCompletionLinkType,
 } from '@transcend-io/privacy-types';
 
 /**
@@ -223,6 +225,16 @@ export const DataSiloInput = t.intersection([
      * for further details.
      */
     datapoints: t.array(DatapointInput),
+    notifyEmailAddress: t.string,
+    promptEmailTemplateId: t.string,
+    promptAVendorEmailSendFrequency: t.number,
+    promptAVendorEmailSendType: valuesOf(PromptAVendorEmailSendType),
+    promptAVendorEmailIncludeIdentifiersAttachment: t.boolean,
+    promptAVendorEmailCompletionLinkType: valuesOf(
+      PromptAVendorEmailCompletionLinkType,
+    ),
+    manualWorkRetryFrequency: t.string,
+    manualWorkRetryStartAt: t.string,
   }),
 ]);
 
