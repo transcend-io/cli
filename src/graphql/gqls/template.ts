@@ -2,7 +2,7 @@ import { gql } from 'graphql-request';
 
 export const TEMPLATES = gql`
   query SchemaSyncTemplates($title: String, $first: Int!, $offset: Int!) {
-    enrichers(filterBy: { text: $title }, first: $first, offset: $offset) {
+    templates(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id
         title
@@ -13,7 +13,7 @@ export const TEMPLATES = gql`
 
 export const CREATE_TEMPLATE = gql`
   mutation SchemaSyncCreateTemplate($title: String!) {
-    createTemplate(input: { title: $title }) {
+    createTemplate(input: { title: $title, template: "", subject: $title }) {
       clientMutationId
     }
   }
@@ -21,7 +21,7 @@ export const CREATE_TEMPLATE = gql`
 
 export const UPDATE_TEMPLATE = gql`
   mutation SchemaSyncUpdateTemplate($id: ID!, $title: String!) {
-    updateEnricher(input: { id: $id, title: $title }) {
+    updateTemplate(input: { id: $id, title: $title }) {
       clientMutationId
     }
   }

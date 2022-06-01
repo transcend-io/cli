@@ -29,11 +29,11 @@ export async function fetchAllTemplates(
   let shouldContinue = false;
   do {
     const {
-      Templates: { nodes },
+      templates: { nodes },
       // eslint-disable-next-line no-await-in-loop
     } = await client.request<{
       /** Query response */
-      Templates: {
+      templates: {
         /** List of matches */
         nodes: Template[];
       };
