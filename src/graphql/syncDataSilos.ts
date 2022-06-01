@@ -430,9 +430,12 @@ export async function syncDataSilo(
 
   if (promptAVendorEmailSettings) {
     if (!existingDataSilo.catalog.hasAvcFunctionality) {
-      logger.error(
-        `The data silo ${dataSilo.title} does not support setting email-settings.`,
+      logger.info(
+        colors.red(
+          `The data silo ${dataSilo.title} does not support setting email-settings. Please remove this field your yml file.`,
+        ),
       );
+      process.exit(1);
     } else {
       logger.info(
         colors.magenta(
