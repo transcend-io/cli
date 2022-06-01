@@ -5,6 +5,8 @@ import {
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
+  PromptAVendorEmailSendType,
+  PromptAVendorEmailCompletionLinkType,
 } from '@transcend-io/privacy-types';
 
 /**
@@ -164,6 +166,39 @@ export const DatapointInput = t.intersection([
 /** Type override */
 export type DatapointInput = t.TypeOf<typeof DatapointInput>;
 
+export const PromptAVendorEmailSettings = t.partial({
+  /** The email address of the user to notify when a promptAPerson integration */
+  'notify-email-address': t.string,
+  /**
+   * The frequency with which we should be sending emails for this data silo, in milliseconds.
+   */
+  'send-frequency': t.number,
+  /**
+   * The type of emails to send for this data silo, i.e. send an email for each DSR, across all open DSRs,
+   * or per profile in a DSR.
+   */
+  'send-type': valuesOf(PromptAVendorEmailSendType),
+  /**
+   * Indicates whether prompt-a-vendor emails should include a list of identifiers
+   * in addition to a link to the bulk processing UI.
+   */
+  'include-identifiers-attachment': t.boolean,
+  /**
+   * Indicates what kind of link to generate as part of the emails sent out for this Prompt-a-Vendor silo.
+   */
+  'completion-link-type': valuesOf(PromptAVendorEmailCompletionLinkType),
+  /**
+   * The frequency with which we should retry sending emails for this data silo, in milliseconds.
+   * Needs to be a string because the number can be larger than the MAX_INT
+   */
+  'manual-work-retry-frequency': t.string,
+});
+
+/** Type override */
+export type PromptAVendorEmailSettings = t.TypeOf<
+  typeof PromptAVendorEmailSettings
+>;
+
 /**
  * Input to define a data silo
  *
@@ -187,8 +222,6 @@ export const DataSiloInput = t.intersection([
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
     url: t.string,
-    /** The email address of the user to notify when a promptAPerson integration */
-    'notify-email-address': t.string,
     /** The title of the API key that will be used to respond to privacy requests */
     'api-key-title': t.string,
     /**
@@ -223,6 +256,7 @@ export const DataSiloInput = t.intersection([
      * for further details.
      */
     datapoints: t.array(DatapointInput),
+    'email-settings': PromptAVendorEmailSettings,
   }),
 ]);
 

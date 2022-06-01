@@ -17,6 +17,9 @@ export const DATA_SILOS = gql`
         title
         link
         type
+        catalog {
+          hasAvcFunctionality
+        }
       }
     }
   }
@@ -47,7 +50,15 @@ export const DATA_SILO = gql`
       owners {
         email
       }
+      catalog {
+        hasAvcFunctionality
+      }
       isLive
+      promptAVendorEmailSendFrequency
+      promptAVendorEmailSendType
+      promptAVendorEmailIncludeIdentifiersAttachment
+      promptAVendorEmailCompletionLinkType
+      manualWorkRetryFrequency
     }
   }
 `;
@@ -119,7 +130,36 @@ export const CREATE_DATA_SILO = gql`
         id
         title
         type
+        catalog {
+          hasAvcFunctionality
+        }
       }
+    }
+  }
+`;
+
+export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
+  mutation UpdatePromptAVendorEmailSendSettings(
+    $dataSiloId: ID!
+    $notifyEmailAddress: String
+    $promptAVendorEmailSendFrequency: Int
+    $promptAVendorEmailSendType: PromptAVendorEmailSendType
+    $promptAVendorEmailIncludeIdentifiersAttachment: Boolean
+    $promptAVendorEmailCompletionLinkType: PromptAVendorEmailCompletionLinkType
+    $manualWorkRetryFrequency: String
+  ) {
+    updatePromptAVendorEmailSendSettings(
+      input: {
+        dataSiloId: $dataSiloId
+        notifyEmailAddress: $notifyEmailAddress
+        promptAVendorEmailSendFrequency: $promptAVendorEmailSendFrequency
+        promptAVendorEmailSendType: $promptAVendorEmailSendType
+        promptAVendorEmailIncludeIdentifiersAttachment: $promptAVendorEmailIncludeIdentifiersAttachment
+        promptAVendorEmailCompletionLinkType: $promptAVendorEmailCompletionLinkType
+        manualWorkRetryFrequency: $manualWorkRetryFrequency
+      }
+    ) {
+      clientMutationId
     }
   }
 `;

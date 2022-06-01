@@ -2,14 +2,31 @@ data-silos:
   - title: Manually Notify Backend Team
     description: Notify backend team to delete data
     integrationName: promptAPerson
-    notify-email-address: test+2@transcend.io
+    email-settings:
+      notify-email-address: test+2@transcend.io
+      send-frequency: 1000
+      send-type: PER_DSR
+      include-identifiers-attachment: true
+      completion-link-type: UNAUTHENTICATED_EXTERNAL_USER
+      manual-work-retry-frequency: '2592000000'
     datapoints:
       - title: Prompt Manual Entry
+        description: Manually entered request data.
         key: _global
+        fields:
+          - key: Prompt Manual Entry
+            description: Manually entered request data.
+            purposes: []
+            categories: []
         privacy-actions:
           - ERASURE
       - title: File Upload
         description: Use data dump for backend service
         key: upload
+        fields:
+          - key: File Upload
+            description: Use data dump for backend service
+            purposes: []
+            categories: []
         privacy-actions:
           - ACCESS
