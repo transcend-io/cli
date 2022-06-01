@@ -15,6 +15,7 @@ import {
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllEnrichers } from './syncEnrichers';
+import { fetchAllTemplates } from '.';
 
 /**
  * Pull a yaml configuration from Transcend
@@ -27,7 +28,7 @@ export async function pullTranscendConfiguration(
   client: GraphQLClient,
   dataSiloIds: string[],
 ): Promise<TranscendInput> {
-  const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers] =
+  const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers, templates] =
     await Promise.all([
       // Grab all data subjects in the organization
       fetchDataSubjects({}, client, true),
@@ -37,6 +38,8 @@ export async function pullTranscendConfiguration(
       fetchEnrichedDataSilos(client, { ids: dataSiloIds }),
       // Fetch enrichers
       fetchAllEnrichers(client),
+      // Fetch email templates
+      fetchAllTemplates(client),
     ]);
 
   const result: TranscendInput = {};
@@ -57,6 +60,9 @@ export async function pullTranscendConfiguration(
         }),
       );
   }
+
+  // save email templates
+  result.templates = templates;
 
   // Save enrichers
   if (enrichers.length > 0 && dataSiloIds.length === 0) {

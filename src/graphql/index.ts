@@ -7,3 +7,4 @@ export * from './syncConfigurationToTranscend';
 export * from './syncDataSilos';
 export * from './syncEnrichers';
 export * from './uploadSiloDiscoveryResults';
+export * from './syncTemplates';

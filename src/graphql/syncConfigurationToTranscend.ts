@@ -9,6 +9,7 @@ import { syncDataSilo, DataSilo } from './syncDataSilos';
 import { fetchDataSubjects } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { UPDATE_DATA_SILO } from './gqls';
+import { syncTemplate } from '.';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
@@ -32,7 +33,28 @@ export async function syncConfigurationToTranscend(
     fetchApiKeys(input, client),
   ]);
 
-  const { enrichers, 'data-silos': dataSilos } = input;
+  const { templates, enrichers, 'data-silos': dataSilos } = input;
+
+  // Sync email templates
+  if (templates) {
+    logger.info(colors.magenta(`Syncing "${templates.length}" email templates...`));
+    await mapSeries(templates, async (template) => {
+      logger.info(colors.magenta(`Syncing template "${template.title}"...`));
+      try {
+        await syncTemplate(template, client);
+        logger.info(
+          colors.green(`Successfully synced template "${template.title}"!`),
+        );
+      } catch (err) {
+        encounteredError = true;
+        logger.info(
+          colors.red(
+            `Failed to sync template "${template.title}"! - ${err.message}`,
+          ),
+        );
+      }
+    logger.info(colors.green(`Synced "${templates.length}" templates!`));
+  }
 
   // Sync enrichers
   if (enrichers) {
