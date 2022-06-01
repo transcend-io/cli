@@ -344,7 +344,7 @@ export async function fetchEnrichedDataSilos(
 export async function syncDataSilo(
   {
     datapoints,
-    'prompt-a-vendor-email-settings': promptAVendorEmailSettings,
+    'email-settings': promptAVendorEmailSettings,
     ...dataSilo
   }: DataSiloInput,
   client: GraphQLClient,
@@ -396,7 +396,6 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
@@ -424,6 +423,7 @@ export async function syncDataSilo(
 
     await client.request(UPDATE_PROMPT_A_VENDOR_SETTINGS, {
       dataSiloId: existingDataSilo!.id,
+      notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
       promptAVendorEmailSendFrequency:
         promptAVendorEmailSettings['send-frequency'],
       promptAVendorEmailSendType: promptAVendorEmailSettings['send-type'],

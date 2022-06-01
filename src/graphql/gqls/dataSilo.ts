@@ -132,6 +132,7 @@ export const CREATE_DATA_SILO = gql`
 export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
   mutation UpdatePromptAVendorEmailSendSettings(
     $dataSiloId: ID!
+    $notifyEmailAddress: String
     $promptAVendorEmailSendFrequency: Int
     $promptAVendorEmailSendType: PromptAVendorEmailSendType
     $promptAVendorEmailIncludeIdentifiersAttachment: Boolean
@@ -141,6 +142,7 @@ export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
     updatePromptAVendorEmailSendSettings(
       input: {
         dataSiloId: $dataSiloId
+        notifyEmailAddress: $notifyEmailAddress
         promptAVendorEmailSendFrequency: $promptAVendorEmailSendFrequency
         promptAVendorEmailSendType: $promptAVendorEmailSendType
         promptAVendorEmailIncludeIdentifiersAttachment: $promptAVendorEmailIncludeIdentifiersAttachment

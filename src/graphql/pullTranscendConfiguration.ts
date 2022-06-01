@@ -110,7 +110,6 @@ export async function pullTranscendConfiguration(
       'identity-keys': identifiers
         .filter(({ isConnected }) => isConnected)
         .map(({ name }) => name),
-      'notify-email-address': notifyEmailAddress || undefined,
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
       disabled: !isLive,
@@ -121,7 +120,8 @@ export async function pullTranscendConfiguration(
               dataSubjects,
             )
           : undefined,
-      'prompt-a-vendor-email-settings': {
+      'email-settings': {
+        'notify-email-address': notifyEmailAddress || undefined,
         'send-frequency': promptAVendorEmailSendFrequency,
         'send-type': promptAVendorEmailSendType,
         'include-identifiers-attachment':

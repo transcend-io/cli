@@ -167,6 +167,8 @@ export const DatapointInput = t.intersection([
 export type DatapointInput = t.TypeOf<typeof DatapointInput>;
 
 export const PromptAVendorEmailSettings = t.partial({
+  /** The email address of the user to notify when a promptAPerson integration */
+  'notify-email-address': t.string,
   /**
    * The frequency with which we should be sending emails for this data silo, in milliseconds.
    */
@@ -220,8 +222,6 @@ export const DataSiloInput = t.intersection([
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
     url: t.string,
-    /** The email address of the user to notify when a promptAPerson integration */
-    'notify-email-address': t.string,
     /** The title of the API key that will be used to respond to privacy requests */
     'api-key-title': t.string,
     /**
@@ -256,7 +256,7 @@ export const DataSiloInput = t.intersection([
      * for further details.
      */
     datapoints: t.array(DatapointInput),
-    'prompt-a-vendor-email-settings': PromptAVendorEmailSettings,
+    'email-settings': PromptAVendorEmailSettings,
   }),
 ]);
 

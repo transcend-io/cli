@@ -2,8 +2,8 @@ data-silos:
   - title: Manually Notify Backend Team
     description: Notify backend team to delete data
     integrationName: promptAPerson
-    notify-email-address: test+2@transcend.io
-    prompt-a-vendor-email-settings:
+    email-settings:
+      notify-email-address: test+2@transcend.io
       send-frequency: 1000
       send-type: PER_DSR
       include-identifiers-attachment: true
