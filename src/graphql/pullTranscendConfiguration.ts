@@ -99,6 +99,7 @@ export async function pullTranscendConfiguration(
         promptAVendorEmailIncludeIdentifiersAttachment,
         promptAVendorEmailCompletionLinkType,
         manualWorkRetryFrequency,
+        catalog,
       },
       dataPoints,
     ]): DataSiloInput => ({
@@ -120,15 +121,19 @@ export async function pullTranscendConfiguration(
               dataSubjects,
             )
           : undefined,
-      'email-settings': {
-        'notify-email-address': notifyEmailAddress || undefined,
-        'send-frequency': promptAVendorEmailSendFrequency,
-        'send-type': promptAVendorEmailSendType,
-        'include-identifiers-attachment':
-          promptAVendorEmailIncludeIdentifiersAttachment,
-        'completion-link-type': promptAVendorEmailCompletionLinkType,
-        'manual-work-retry-frequency': manualWorkRetryFrequency,
-      },
+      ...(catalog.hasAvcFunctionality
+        ? {
+            'email-settings': {
+              'notify-email-address': notifyEmailAddress || undefined,
+              'send-frequency': promptAVendorEmailSendFrequency,
+              'send-type': promptAVendorEmailSendType,
+              'include-identifiers-attachment':
+                promptAVendorEmailIncludeIdentifiersAttachment,
+              'completion-link-type': promptAVendorEmailCompletionLinkType,
+              'manual-work-retry-frequency': manualWorkRetryFrequency,
+            },
+          }
+        : {}),
       datapoints: dataPoints.map((dataPoint) => ({
         title: dataPoint.title.defaultMessage,
         description: dataPoint.description.defaultMessage,

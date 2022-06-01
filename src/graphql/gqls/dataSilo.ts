@@ -17,6 +17,9 @@ export const DATA_SILOS = gql`
         title
         link
         type
+        catalog {
+          hasAvcFunctionality
+        }
       }
     }
   }
@@ -46,6 +49,9 @@ export const DATA_SILO = gql`
       }
       owners {
         email
+      }
+      catalog {
+        hasAvcFunctionality
       }
       isLive
       promptAVendorEmailSendFrequency
@@ -124,6 +130,9 @@ export const CREATE_DATA_SILO = gql`
         id
         title
         type
+        catalog {
+          hasAvcFunctionality
+        }
       }
     }
   }

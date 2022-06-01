@@ -38,6 +38,11 @@ export interface DataSilo {
   type: string;
   /** The link to the data silo */
   link: string;
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
 }
 
 const PAGE_SIZE = 20;
@@ -129,6 +134,11 @@ interface DataPoint {
     /** Is enabled */
     active: boolean;
   }[];
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
   /** Database integration queries */
   dbIntegrationQueries: {
     /** Approved query */
@@ -270,6 +280,11 @@ export interface DataSiloEnriched {
     /** Email owners */
     email: string;
   }[];
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
   /** Silo is live */
   isLive: boolean;
   /**
@@ -414,31 +429,35 @@ export async function syncDataSilo(
   }
 
   if (promptAVendorEmailSettings) {
-    logger.info(
-      colors.magenta(
-        `Syncing Prompt-a-Vendor email settings for data silo ${dataSilo.title}...`,
-      ),
-    );
+    if (!existingDataSilo.catalog.hasAvcFunctionality) {
+      logger.error(
+        `The data silo ${dataSilo.title} does not support setting email-settings.`,
+      );
+    } else {
+      logger.info(
+        colors.magenta(
+          `Syncing email settings for data silo ${dataSilo.title}...`,
+        ),
+      );
 
-    await client.request(UPDATE_PROMPT_A_VENDOR_SETTINGS, {
-      dataSiloId: existingDataSilo!.id,
-      notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
-      promptAVendorEmailSendFrequency:
-        promptAVendorEmailSettings['send-frequency'],
-      promptAVendorEmailSendType: promptAVendorEmailSettings['send-type'],
-      promptAVendorEmailIncludeIdentifiersAttachment:
-        promptAVendorEmailSettings['include-identifiers-attachment'],
-      promptAVendorEmailCompletionLinkType:
-        promptAVendorEmailSettings['completion-link-type'],
-      promptAVendorEmailManualWorkRetryFrequency:
-        promptAVendorEmailSettings['manual-work-retry-frequency'],
-    });
+      await client.request(UPDATE_PROMPT_A_VENDOR_SETTINGS, {
+        dataSiloId: existingDataSilo!.id,
+        notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
+        promptAVendorEmailSendFrequency:
+          promptAVendorEmailSettings['send-frequency'],
+        promptAVendorEmailSendType: promptAVendorEmailSettings['send-type'],
+        promptAVendorEmailIncludeIdentifiersAttachment:
+          promptAVendorEmailSettings['include-identifiers-attachment'],
+        promptAVendorEmailCompletionLinkType:
+          promptAVendorEmailSettings['completion-link-type'],
+        promptAVendorEmailManualWorkRetryFrequency:
+          promptAVendorEmailSettings['manual-work-retry-frequency'],
+      });
 
-    logger.info(
-      colors.green(
-        `Synced Prompt-a-Vendor email settings for data silo ${dataSilo.title}!`,
-      ),
-    );
+      logger.info(
+        colors.green(`Synced email-settings for data silo ${dataSilo.title}!`),
+      );
+    }
   }
 
   // Sync datapoints
