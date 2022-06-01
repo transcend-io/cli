@@ -16,13 +16,18 @@ import {
   DATA_SILO,
   DATA_POINTS,
   SUB_DATA_POINTS,
+  UPDATE_PROMPT_A_VENDOR_SETTINGS,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
   DataSubject,
 } from './fetchDataSubjects';
 import { ApiKey } from './fetchApiKeys';
-import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
+import {
+  PromptAVendorEmailCompletionLinkType,
+  PromptAVendorEmailSendType,
+  RequestActionObjectResolver,
+} from '@transcend-io/privacy-types';
 
 export interface DataSilo {
   /** ID of dataSilo */
@@ -33,6 +38,11 @@ export interface DataSilo {
   type: string;
   /** The link to the data silo */
   link: string;
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
 }
 
 const PAGE_SIZE = 20;
@@ -124,6 +134,11 @@ interface DataPoint {
     /** Is enabled */
     active: boolean;
   }[];
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
   /** Database integration queries */
   dbIntegrationQueries: {
     /** Approved query */
@@ -168,7 +183,7 @@ export async function fetchAllSubDataPoints(
       };
     }>(SUB_DATA_POINTS, {
       first: PAGE_SIZE,
-      dataPoints: [dataPointId],
+      dataPointIds: [dataPointId],
       offset,
     });
     subDataPoints.push(...nodes);
@@ -265,8 +280,36 @@ export interface DataSiloEnriched {
     /** Email owners */
     email: string;
   }[];
+  /** Metadata for this data silo */
+  catalog: {
+    /** Whether the data silo supports automated vendor coordination */
+    hasAvcFunctionality: boolean;
+  };
   /** Silo is live */
   isLive: boolean;
+  /**
+   * The frequency with which we should be sending emails for this data silo, in milliseconds.
+   */
+  promptAVendorEmailSendFrequency: number;
+  /**
+   * The type of emails to send for this data silo, i.e. send an email for each DSR, across all open DSRs,
+   * or per profile in a DSR.
+   */
+  promptAVendorEmailSendType: PromptAVendorEmailSendType;
+  /**
+   * Indicates whether prompt-a-vendor emails should include a list of identifiers
+   * in addition to a link to the bulk processing UI.
+   */
+  promptAVendorEmailIncludeIdentifiersAttachment: boolean;
+  /**
+   * Indicates what kind of link to generate as part of the emails sent out for this Prompt-a-Vendor silo.
+   */
+  promptAVendorEmailCompletionLinkType: PromptAVendorEmailCompletionLinkType;
+  /**
+   * The frequency with which we should retry sending emails for this data silo, in milliseconds.
+   * Needs to be a string because the number can be larger than the MAX_INT
+   */
+  manualWorkRetryFrequency: string;
 }
 /**
  * Fetch all dataSilos with additional metadata
@@ -314,7 +357,11 @@ export async function fetchEnrichedDataSilos(
  * @returns Data silo info
  */
 export async function syncDataSilo(
-  { datapoints, ...dataSilo }: DataSiloInput,
+  {
+    datapoints,
+    'email-settings': promptAVendorEmailSettings,
+    ...dataSilo
+  }: DataSiloInput,
   client: GraphQLClient,
   dataSubjectsByName: { [type in string]: DataSubject },
   apiKeysByTitle: { [title in string]: ApiKey },
@@ -333,7 +380,6 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
@@ -364,7 +410,6 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
-      notifyEmailAddress: dataSilo['notify-email-address'],
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
@@ -381,6 +426,41 @@ export async function syncDataSilo(
         : undefined,
     });
     existingDataSilo = connectDataSilo.dataSilo;
+  }
+
+  if (promptAVendorEmailSettings) {
+    if (!existingDataSilo.catalog.hasAvcFunctionality) {
+      logger.info(
+        colors.red(
+          `The data silo ${dataSilo.title} does not support setting email-settings. Please remove this field your yml file.`,
+        ),
+      );
+      process.exit(1);
+    } else {
+      logger.info(
+        colors.magenta(
+          `Syncing email settings for data silo ${dataSilo.title}...`,
+        ),
+      );
+
+      await client.request(UPDATE_PROMPT_A_VENDOR_SETTINGS, {
+        dataSiloId: existingDataSilo!.id,
+        notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
+        promptAVendorEmailSendFrequency:
+          promptAVendorEmailSettings['send-frequency'],
+        promptAVendorEmailSendType: promptAVendorEmailSettings['send-type'],
+        promptAVendorEmailIncludeIdentifiersAttachment:
+          promptAVendorEmailSettings['include-identifiers-attachment'],
+        promptAVendorEmailCompletionLinkType:
+          promptAVendorEmailSettings['completion-link-type'],
+        promptAVendorEmailManualWorkRetryFrequency:
+          promptAVendorEmailSettings['manual-work-retry-frequency'],
+      });
+
+      logger.info(
+        colors.green(`Synced email-settings for data silo ${dataSilo.title}!`),
+      );
+    }
   }
 
   // Sync datapoints
@@ -434,7 +514,6 @@ export async function syncDataSilo(
       logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
     });
   }
-
   return existingDataSilo;
 }
 /* eslint-enable max-lines */
