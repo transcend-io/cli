@@ -37,7 +37,9 @@ export async function syncConfigurationToTranscend(
 
   // Sync email templates
   if (templates) {
-    logger.info(colors.magenta(`Syncing "${templates.length}" email templates...`));
+    logger.info(
+      colors.magenta(`Syncing "${templates.length}" email templates...`),
+    );
     await mapSeries(templates, async (template) => {
       logger.info(colors.magenta(`Syncing template "${template.title}"...`));
       try {
@@ -53,7 +55,8 @@ export async function syncConfigurationToTranscend(
           ),
         );
       }
-    logger.info(colors.green(`Synced "${templates.length}" templates!`));
+      logger.info(colors.green(`Synced "${templates.length}" templates!`));
+    });
   }
 
   // Sync enrichers
