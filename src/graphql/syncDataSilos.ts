@@ -173,7 +173,7 @@ export async function fetchAllSubDataPoints(
       };
     }>(SUB_DATA_POINTS, {
       first: PAGE_SIZE,
-      dataPoints: [dataPointId],
+      dataPointIds: [dataPointId],
       offset,
     });
     subDataPoints.push(...nodes);
