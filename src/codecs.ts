@@ -10,6 +10,20 @@ import {
 } from '@transcend-io/privacy-types';
 
 /**
+ * Input to define email templates that can be used to communicate to end-users
+ * about the status of their requests
+ *
+ * @see https://docs.transcend.io/docs/privacy-requests/configuring-requests/email-templates
+ */
+export const TemplateInput = t.type({
+  /** The title of the template */
+  title: t.string,
+});
+
+/** Type override */
+export type TemplateInput = t.TypeOf<typeof TemplateInput>;
+
+/**
  * Input to define API keys that may be shared across data silos
  * in the data map. When creating new data silos through the yaml
  * cli, it is possible to specify which API key should be associated
@@ -268,6 +282,10 @@ export const TranscendInput = t.partial({
    * API key definitions
    */
   'api-keys': t.array(ApiKeyInput),
+  /**
+   * Email template definitions
+   */
+  templates: t.array(TemplateInput),
   /**
    * Enricher definitions
    */

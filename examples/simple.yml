@@ -8,6 +8,13 @@ api-keys:
   - title: Webhook Key
   - title: Analytics Key
 
+# Manage at: https://app.transcend.io/privacy-requests/email-templates
+# See https://docs.transcend.io/docs/privacy-requests/configuring-requests/email-templates
+# Define email templates here.
+templates:
+  - title: Your Data Report is Ready
+  - title: We Love Data Rights And You Do Too
+
 # Manage at: https://app.transcend.io/privacy-requests/identifiers
 # See https://docs.transcend.io/docs/identity-enrichment
 # Define enricher or pre-flight check webhooks that will be executed
