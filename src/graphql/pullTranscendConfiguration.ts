@@ -62,7 +62,7 @@ export async function pullTranscendConfiguration(
   }
 
   // save email templates
-  result.templates = templates;
+  result.templates = templates.map(({ title }) => ({ title }));
 
   // Save enrichers
   if (enrichers.length > 0 && dataSiloIds.length === 0) {
