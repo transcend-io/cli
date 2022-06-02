@@ -8,7 +8,7 @@ api-keys:
   - title: Webhook Key
   - title: Analytics Key
 
-# Manage at: https://app.dev.trancsend.com/privacy-requests/email-templates
+# Manage at: https://app.transcend.io/privacy-requests/email-templates
 # See https://docs.transcend.io/docs/privacy-requests/configuring-requests/email-templates
 # Define email templates here.
 templates:
