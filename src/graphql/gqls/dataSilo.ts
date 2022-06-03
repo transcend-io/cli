@@ -50,6 +50,10 @@ export const DATA_SILO = gql`
       owners {
         email
       }
+      teams {
+        id
+        name
+      }
       catalog {
         hasAvcFunctionality
       }
@@ -75,6 +79,7 @@ export const UPDATE_DATA_SILO = gql`
     $dataSubjectBlockListIds: [ID!]
     $dependedOnDataSiloTitles: [String!]
     $ownerEmails: [String!]
+    $teamIds: [ID!]
     $apiKeyId: ID
   ) {
     updateDataSilo(
@@ -89,6 +94,7 @@ export const UPDATE_DATA_SILO = gql`
         dataSubjectBlockListIds: $dataSubjectBlockListIds
         dependedOnDataSiloTitles: $dependedOnDataSiloTitles
         ownerEmails: $ownerEmails
+        teams: $teamIds
         apiKeyId: $apiKeyId
       }
     ) {

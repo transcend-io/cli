@@ -280,6 +280,11 @@ export interface DataSiloEnriched {
     /** Email owners */
     email: string;
   }[];
+  /** The teams assigned to this data silo */
+  teams: {
+    /** Name of the team assigned to this data silo */
+    name: string;
+  };
   /** Metadata for this data silo */
   catalog: {
     /** Whether the data silo supports automated vendor coordination */
