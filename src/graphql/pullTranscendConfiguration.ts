@@ -118,9 +118,17 @@ export async function pullTranscendConfiguration(
       'identity-keys': identifiers
         .filter(({ isConnected }) => isConnected)
         .map(({ name }) => name),
-      'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
-      owners: owners.map(({ email }) => email),
-      teams: teams.map(({ name }) => name),
+      ...(dependentDataSilos.length > 0
+        ? {
+            'deletion-dependencies': dependentDataSilos.map(
+              ({ title }) => title,
+            ),
+          }
+        : {}),
+      ...(owners.length > 0
+        ? { owners: owners.map(({ email }) => email) }
+        : {}),
+      ...(teams.length > 0 ? { teams: teams.map(({ name }) => name) } : {}),
       disabled: !isLive,
       'data-subjects':
         subjectBlocklist.length > 0
