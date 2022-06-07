@@ -280,6 +280,11 @@ export interface DataSiloEnriched {
     /** Email owners */
     email: string;
   }[];
+  /** The teams assigned to this data silo */
+  teams: {
+    /** Name of the team assigned to this data silo */
+    name: string;
+  }[];
   /** Metadata for this data silo */
   catalog: {
     /** Whether the data silo supports automated vendor coordination */
@@ -380,6 +385,7 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
+      teamNames: dataSilo.teams,
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
@@ -410,6 +416,7 @@ export async function syncDataSilo(
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
       ownerEmails: dataSilo.owners,
+      teamNames: dataSilo.teams,
       // clear out if not specified, otherwise the update needs to be applied after
       // all data silos are created
       dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
