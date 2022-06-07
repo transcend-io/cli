@@ -21,6 +21,11 @@ export const DATA_POINTS = gql`
           type
           active
         }
+        dataCollection {
+          title {
+            defaultMessage
+          }
+        }
         dbIntegrationQueries {
           query
           suggestedQuery
