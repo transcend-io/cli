@@ -284,7 +284,7 @@ export interface DataSiloEnriched {
   teams: {
     /** Name of the team assigned to this data silo */
     name: string;
-  };
+  }[];
   /** Metadata for this data silo */
   catalog: {
     /** Whether the data silo supports automated vendor coordination */

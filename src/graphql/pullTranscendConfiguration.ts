@@ -98,6 +98,7 @@ export async function pullTranscendConfiguration(
         identifiers,
         dependentDataSilos,
         owners,
+        teams,
         subjectBlocklist,
         isLive,
         promptAVendorEmailSendFrequency,
@@ -119,6 +120,7 @@ export async function pullTranscendConfiguration(
         .map(({ name }) => name),
       'deletion-dependencies': dependentDataSilos.map(({ title }) => title),
       owners: owners.map(({ email }) => email),
+      teams: teams.map(({ name }) => name),
       disabled: !isLive,
       'data-subjects':
         subjectBlocklist.length > 0
