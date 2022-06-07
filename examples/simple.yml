@@ -83,6 +83,9 @@ data-silos:
     # for managing this data silo
     owners:
       - alice@transcend.io
+    teams:
+      - Developer
+      - Request Management
     # Datapoints are the different types of data models that existing within your data silo.
     # If the data silo is a database, these would be your tables.
     # Note: These are currently called "datapoints" in the Transcend UI and documentation.
@@ -226,6 +229,8 @@ data-silos:
     integrationName: server
     # Share the API key between services
     api-key-title: Webhook Key
+    teams:
+      - Developer
     datapoints:
       - title: Webhook Notification
         key: _global
