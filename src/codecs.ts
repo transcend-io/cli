@@ -267,6 +267,14 @@ export const DataSiloInput = t.intersection([
      */
     owners: t.array(t.string),
     /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
      * Specify this flag if the data silo is under development and should not be included
      * in production privacy request workflows. Will still sync metadata to app.transcend.io.
      */
