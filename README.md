@@ -71,6 +71,7 @@ The API key needs the following scopes:
 - Connect Data Silos
 - Manage Data Subject Request Settings
 - View API Keys
+- Manage Email Templates
 
 ## transcend.yml
 

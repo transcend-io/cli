@@ -55,8 +55,8 @@ export async function syncConfigurationToTranscend(
           ),
         );
       }
-      logger.info(colors.green(`Synced "${templates.length}" templates!`));
     });
+    logger.info(colors.green(`Synced "${templates.length}" email templates!`));
   }
 
   // Sync enrichers
