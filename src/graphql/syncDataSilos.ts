@@ -532,6 +532,9 @@ export async function syncDataSilo(
         name: datapoint.key,
         title: datapoint.title,
         description: datapoint.description,
+        ...(datapoint['data-collection-tag']
+          ? { dataCollectionTag: datapoint['data-collection-tag'] }
+          : {}),
         querySuggestions: !datapoint['privacy-action-queries']
           ? undefined
           : Object.entries(datapoint['privacy-action-queries']).map(

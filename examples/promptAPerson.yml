@@ -10,11 +10,11 @@ data-silos:
       completion-link-type: UNAUTHENTICATED_EXTERNAL_USER
       manual-work-retry-frequency: '2592000000'
     datapoints:
-      - title: Prompt Manual Entry
+      - title: Global Profile
         description: Manually entered request data.
         key: _global
         fields:
-          - key: Prompt Manual Entry
+          - key: Global Profile
             description: Manually entered request data.
             purposes: []
             categories: []

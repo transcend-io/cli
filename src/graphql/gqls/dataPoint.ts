@@ -71,6 +71,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $name: String!
     $title: String
     $description: String
+    $dataCollectionTag: String
     $querySuggestions: [DbIntegrationQuerySuggestionInput!]
     $enabledActions: [RequestActionObjectResolver!]
     $subDataPoints: [DataPointSubDataPointInput!]
@@ -80,6 +81,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         dataSiloId: $dataSiloId
         name: $name
         title: $title
+        dataCollectionTag: $dataCollectionTag
         description: $description
         querySuggestions: $querySuggestions
         enabledActions: $enabledActions

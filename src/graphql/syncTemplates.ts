@@ -1,6 +1,6 @@
 import { TemplateInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { TEMPLATES, CREATE_TEMPLATE, UPDATE_TEMPLATE } from './gqls';
+import { TEMPLATES, CREATE_TEMPLATE } from './gqls';
 
 export interface Template {
   /** ID of Template */
@@ -67,12 +67,7 @@ export async function syncTemplate(
   );
 
   // If Template exists, update it, else create new
-  if (existingTemplate) {
-    await client.request(UPDATE_TEMPLATE, {
-      id: existingTemplate.id,
-      title: template.title,
-    });
-  } else {
+  if (!existingTemplate) {
     await client.request(CREATE_TEMPLATE, {
       title: template.title,
     });
