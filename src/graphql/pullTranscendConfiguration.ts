@@ -154,6 +154,12 @@ export async function pullTranscendConfiguration(
         title: dataPoint.title.defaultMessage,
         description: dataPoint.description.defaultMessage,
         key: dataPoint.name,
+        ...(dataPoint.dataCollection
+          ? {
+              'data-collection-tag':
+                dataPoint.dataCollection.title.defaultMessage,
+            }
+          : {}),
         ...(dataPoint.dbIntegrationQueries.length > 0
           ? {
               'privacy-action-queries': mapValues(

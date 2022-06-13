@@ -156,6 +156,12 @@ export const DatapointInput = t.intersection([
     /** Internal description for why the enricher is needed */
     description: t.string,
     /**
+     * Configure the category of data that this datapoint should be grouped by in a data access request.
+     *
+     * @see https://docs.transcend.io/docs/privacy-requests/connecting-data-silos/saas-tools#configuring-an-integration
+     */
+    'data-collection-tag': t.string,
+    /**
      * The SQL queries that should be run for that datapoint in a privacy request.
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
@@ -278,6 +284,9 @@ export const DataSiloInput = t.intersection([
      * for further details.
      */
     datapoints: t.array(DatapointInput),
+    /**
+     * Configure email notification settings for privacy requests
+     */
     'email-settings': PromptAVendorEmailSettings,
   }),
 ]);

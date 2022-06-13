@@ -45,7 +45,7 @@ export interface DataSilo {
   };
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 100;
 
 /**
  * Fetch all dataSilos in the organization
@@ -97,6 +97,7 @@ export async function fetchAllDataSilos(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
+  logger.info(colors.green(`Found a total of ${dataSilos.length} data silos`));
 
   return dataSilos;
 }
@@ -134,6 +135,14 @@ interface DataPoint {
     /** Is enabled */
     active: boolean;
   }[];
+  /** Data collection tag for privacy request download zip labeling */
+  dataCollection?: {
+    /** Title of data collection */
+    title: {
+      /** Default message (since message can be translated) */
+      defaultMessage: string;
+    };
+  };
   /** Metadata for this data silo */
   catalog: {
     /** Whether the data silo supports automated vendor coordination */
@@ -316,6 +325,9 @@ export interface DataSiloEnriched {
    */
   manualWorkRetryFrequency: string;
 }
+
+const LOG_FREQUENCY = 10;
+
 /**
  * Fetch all dataSilos with additional metadata
  *
@@ -338,7 +350,7 @@ export async function fetchEnrichedDataSilos(
   const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
 
   const silos = await fetchAllDataSilos(client, { title, ids });
-  await mapSeries(silos, async (silo) => {
+  await mapSeries(silos, async (silo, index) => {
     const { dataSilo } = await client.request<{
       /** Query response */
       dataSilo: DataSiloEnriched;
@@ -347,7 +359,23 @@ export async function fetchEnrichedDataSilos(
     });
     const dataPoints = await fetchAllDataPoints(client, dataSilo.id);
     dataSilos.push([dataSilo, dataPoints]);
+
+    if (index % LOG_FREQUENCY === 0) {
+      logger.info(
+        colors.magenta(
+          `Successfully fetched ${index + 1}/${
+            silos.length
+          } data silo configurations`,
+        ),
+      );
+    }
   });
+
+  logger.info(
+    colors.green(
+      `Successfully fetched all ${silos.length} data silo configurations`,
+    ),
+  );
 
   return dataSilos;
 }
@@ -504,6 +532,9 @@ export async function syncDataSilo(
         name: datapoint.key,
         title: datapoint.title,
         description: datapoint.description,
+        ...(datapoint['data-collection-tag']
+          ? { dataCollectionTag: datapoint['data-collection-tag'] }
+          : {}),
         querySuggestions: !datapoint['privacy-action-queries']
           ? undefined
           : Object.entries(datapoint['privacy-action-queries']).map(
@@ -515,8 +546,6 @@ export async function syncDataSilo(
         enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
         subDataPoints: fields,
       });
-
-      // TODO:https://transcend.height.app/T-10773 - obj.fields
 
       logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
     });
