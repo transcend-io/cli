@@ -18,11 +18,3 @@ export const CREATE_TEMPLATE = gql`
     }
   }
 `;
-
-export const UPDATE_TEMPLATE = gql`
-  mutation SchemaSyncUpdateTemplate($id: ID!, $title: String!) {
-    updateTemplate(input: { id: $id, title: $title }) {
-      clientMutationId
-    }
-  }
-`;
