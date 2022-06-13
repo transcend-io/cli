@@ -66,7 +66,7 @@ export async function syncTemplate(
     ({ title }) => title === template.title,
   );
 
-  // If Template exists, update it, else create new
+  // If Template exists, update it
   if (!existingTemplate) {
     await client.request(CREATE_TEMPLATE, {
       title: template.title,
