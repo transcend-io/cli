@@ -147,12 +147,12 @@ export type FieldInput = t.TypeOf<typeof FieldInput>;
  */
 export const DatapointInput = t.intersection([
   t.type({
-    /** The display title of the enricher */
-    title: t.string,
     /** The unique key of the datapoint. When a database, this is the table name. */
     key: t.string,
   }),
   t.partial({
+    /** The display title of the enricher */
+    title: t.string,
     /** Internal description for why the enricher is needed */
     description: t.string,
     /**
