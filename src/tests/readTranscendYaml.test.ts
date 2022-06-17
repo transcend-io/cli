@@ -21,7 +21,6 @@ describe('readTranscendYaml', () => {
   ".enrichers.1.0.output-identifiers expected type 'Array<string>'",
   ".data-silos.0.0.title expected type 'string'",
   ".data-silos.0.1.deletion-dependencies expected type 'Array<string>'",
-  ".data-silos.0.1.datapoints.0.0.title expected type 'string'",
   ".data-silos.0.1.datapoints.0.0.key expected type 'string'",
   ".data-silos.0.1.datapoints.0.1.fields.0.0.key expected type 'string'",
   ".data-silos.1.1.disabled expected type 'boolean'"`);
