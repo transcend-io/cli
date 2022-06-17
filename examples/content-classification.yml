@@ -1,0 +1,111 @@
+data-silos:
+  - title: PostgreSQL database
+    description: Integrate with your own databases, such as Amazon Redshift or PostgreSQL.
+    integrationName: database
+    identity-keys:
+      - coreIdentifier
+    disabled: false
+    datapoints:
+      - key: users
+        fields:
+          - key: createdAt
+            description: null
+            purposes: []
+            categories: []
+          - key: email
+            description: null
+            purposes: []
+            categories:
+              - name: Email
+                category: CONTACT
+          - key: id
+            description: null
+            purposes: []
+            categories:
+              - name: Other
+                category: ID
+          - key: name
+            description: null
+            purposes: []
+            categories:
+              - name: Name
+                category: ID
+          - key: updatedAt
+            description: null
+            purposes: []
+            categories: []
+        privacy-actions: []
+      - key: test
+        fields:
+          - key: createdAt
+            description: null
+            purposes: []
+            categories: []
+          - key: email
+            description: null
+            purposes: []
+            categories:
+              - name: Email
+                category: CONTACT
+          - key: id
+            description: null
+            purposes: []
+            categories:
+              - name: Other
+                category: ID
+          - key: isTest
+            description: null
+            purposes: []
+            categories: []
+          - key: 'n'
+            description: null
+            purposes: []
+            categories: []
+          - key: name
+            description: null
+            purposes: []
+            categories:
+              - name: Name
+                category: ID
+          - key: rand
+            description: null
+            purposes: []
+            categories:
+              - name: Passport Number
+                category: ID
+              - name: Other
+                category: ID
+          - key: updatedAt
+            description: null
+            purposes: []
+            categories: []
+          - key: void
+            description: null
+            purposes: []
+            categories: []
+        privacy-actions: []
+      - key: rel
+        fields:
+          - key: email
+            description: null
+            purposes: []
+            categories:
+              - name: Email
+                category: CONTACT
+          - key: id
+            description: null
+            purposes: []
+            categories:
+              - name: Other
+                category: ID
+          - key: name
+            description: null
+            purposes: []
+            categories:
+              - name: Name
+                category: ID
+          - key: testId
+            description: null
+            purposes: []
+            categories: []
+        privacy-actions: []

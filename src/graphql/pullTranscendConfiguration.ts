@@ -62,7 +62,9 @@ export async function pullTranscendConfiguration(
   }
 
   // save email templates
-  result.templates = templates.map(({ title }) => ({ title }));
+  if (dataSiloIds.length === 0) {
+    result.templates = templates.map(({ title }) => ({ title }));
+  }
 
   // Save enrichers
   if (enrichers.length > 0 && dataSiloIds.length === 0) {
@@ -151,10 +153,10 @@ export async function pullTranscendConfiguration(
           }
         : {}),
       datapoints: dataPoints.map((dataPoint) => ({
-        title: dataPoint.title.defaultMessage,
-        description: dataPoint.description.defaultMessage,
+        title: dataPoint.title?.defaultMessage,
+        description: dataPoint.description?.defaultMessage,
         key: dataPoint.name,
-        ...(dataPoint.dataCollection
+        ...(dataPoint.dataCollection?.title
           ? {
               'data-collection-tag':
                 dataPoint.dataCollection.title.defaultMessage,
