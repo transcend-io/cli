@@ -10,6 +10,7 @@ import {
   fetchActiveSiloDiscoPlugin,
   uploadSiloDiscoveryResults,
 } from './graphql';
+import { findFilesToScan } from './plugins/findFilesToScan';
 
 /**
  * Scan dependency files for new data silos.
@@ -29,7 +30,6 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     scanPath = '.',
-    ignoreDirs = '',
     transcendUrl = 'https://api.transcend.io',
     dataSiloId = '',
     auth,
@@ -56,8 +56,8 @@ async function main(): Promise<void> {
   });
 
   const plugin = await fetchActiveSiloDiscoPlugin(client, dataSiloId);
-  const scanFunction = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
-  const results = await scanFunction(scanPath, ignoreDirs);
+  const config = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
+  const results = await findFilesToScan(scanPath, config);
 
   await uploadSiloDiscoveryResults(client, plugin.id, results);
 
