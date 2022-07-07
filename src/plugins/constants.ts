@@ -1,11 +1,11 @@
 import { SiloDiscoveryConfig } from './types';
-import { javascriptPackageJson, cocopods } from './integrations';
+import { javascriptPackageJson, cocoapods } from './integrations';
 
 export const SILO_DISCOVERY_FUNCTIONS: {
   [k in string]: SiloDiscoveryConfig;
 } = {
   javascriptPackageJson,
-  cocopods,
+  cocoapods,
 };
 
 /**

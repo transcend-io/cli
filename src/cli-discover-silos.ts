@@ -30,6 +30,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     scanPath = '.',
+    ignoreDirs = '',
     transcendUrl = 'https://api.transcend.io',
     dataSiloId = '',
     auth,
@@ -57,7 +58,7 @@ async function main(): Promise<void> {
 
   const plugin = await fetchActiveSiloDiscoPlugin(client, dataSiloId);
   const config = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
-  const results = await findFilesToScan(scanPath, config);
+  const results = await findFilesToScan(scanPath, ignoreDirs, config);
 
   await uploadSiloDiscoveryResults(client, plugin.id, results);
 

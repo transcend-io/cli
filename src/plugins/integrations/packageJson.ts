@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
 export const javascriptPackageJson: SiloDiscoveryConfig = {

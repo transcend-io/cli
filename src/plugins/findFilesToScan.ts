@@ -1,3 +1,4 @@
+import fastGlob from 'fast-glob';
 import { SiloDiscoveryConfig, SiloDiscoveryRawResults } from '.';
 
 /**
@@ -5,13 +6,16 @@ import { SiloDiscoveryConfig, SiloDiscoveryRawResults } from '.';
  *
  * @param scanPath - Where to look for package.json files
  * @param ignoreDirs - The directories to ignore (excludes node_modules and serverless-build)
+ * @param config - Silo Discovery configuration
  * @returns the list of integrations
  */
 export const findFilesToScan = async (
   scanPath: string,
-  { ignoreDirs, supportedFiles, scanFunction }: SiloDiscoveryConfig,
+  ignoreDirs: string,
+  config: SiloDiscoveryConfig,
 ): Promise<SiloDiscoveryRawResults[]> => {
-  const dirsToIgnore = [...ignoreDirs.split(',')].filter(
+  const { ignoreDirs: IGNORE_DIRS, supportedFiles, scanFunction } = config;
+  const dirsToIgnore = [...ignoreDirs.split(','), ...IGNORE_DIRS].filter(
     (dir) => dir.length > 0,
   );
   const filesToScan: string[] = await fastGlob(

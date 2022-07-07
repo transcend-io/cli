@@ -1,2 +1,2 @@
-export * from './cocopods';
+export * from './cocoapods';
 export * from './packageJson';
