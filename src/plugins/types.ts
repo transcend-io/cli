@@ -7,10 +7,16 @@ export interface SiloDiscoveryRawResults {
   host?: string;
 }
 
+export interface SiloDiscoveryConfig {
+  /** Directories to ignore when traversing */
+  ignoreDirs: string[];
+  /** Types of file that are supported */
+  supportedFiles: string[];
+  /** Scanning file depends on their type */
+  scanFunction: SiloDiscoveryFunction;
+}
+
 /**
  * The silo discovery function interface
  */
-export type SiloDiscoveryFunction = (
-  scanPath: string,
-  ignoreDirs: string,
-) => Promise<SiloDiscoveryRawResults[]>;
+export type SiloDiscoveryFunction = (filePath: string) => string[];
