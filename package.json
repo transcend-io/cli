@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "test": "yarn pnpify mocha './src/**/*.test.ts'"
   },
   "dependencies": {
-    "@transcend-io/privacy-types": "^2.0.1",
+    "@transcend-io/privacy-types": "^3.0.0",
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",
