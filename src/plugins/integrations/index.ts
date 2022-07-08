@@ -1,2 +1,3 @@
 export * from './cocoapods';
-export * from './packageJson';
+export * from './javascriptPackageJson';
+export * from './pythonRequirementsTxt';
