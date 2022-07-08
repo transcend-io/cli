@@ -1,0 +1,29 @@
+data-silos:
+  - title: Database
+    description: Integrate with your own databases, such as Amazon Redshift or PostgreSQL.
+    integrationName: database
+    identity-keys:
+      - coreIdentifier
+    disabled: true
+    datapoints:
+      - key: rel
+        privacy-actions: []
+      - title: users
+        description: users
+        key: users
+        data-collection-tag: Support Tickets
+        privacy-action-queries:
+          ACCESS: SELECT * FROM "users" WHERE "email" = ? AND "isAdmin"=false
+          ERASURE: UPDATE "test" SET email='masked@email.com'  WHERE "email"=?
+        privacy-actions:
+          - ACCESS
+      - title: test
+        description: test
+        key: test
+        data-collection-tag: Support Tickets
+        privacy-action-queries:
+          ACCESS: SELECT * FROM "test" WHERE "email"=?
+          ERASURE: DELETE  FROM "test" WHERE "email"=?
+        privacy-actions:
+          - ACCESS
+          - ERASURE
