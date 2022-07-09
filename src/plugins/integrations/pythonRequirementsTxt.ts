@@ -15,9 +15,7 @@ export const pythonRequirementsTxt: SiloDiscoveryConfig = {
     lines.map((line) => {
       if (line.includes('==')) {
         const dep = line.split('==')[0];
-        if (!dep.includes('#')) {
-          deps.push(dep);
-        }
+        deps.push(dep);
       }
       return deps;
     });
