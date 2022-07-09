@@ -2,14 +2,13 @@ name: Require package.json Bump
 on: push
 
 jobs:
-  publish:
-    name: Publish to NPM & GitHub Package Registry
+  require-package-json-version-bump:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
       - name: Check version changes
         uses: EndBug/version-check@v1
         id: check
