@@ -1,0 +1,18 @@
+name: Require package.json Bump
+on: push
+
+jobs:
+  publish:
+    name: Publish to NPM & GitHub Package Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Check version changes
+        uses: EndBug/version-check@v1
+        id: check
+      - name: Version update detected
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
