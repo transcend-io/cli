@@ -8,9 +8,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
-      - name: Install and build
-        run: yarn && yarn build
       - name: Check version changes
         uses: EndBug/version-check@v1
         id: check
