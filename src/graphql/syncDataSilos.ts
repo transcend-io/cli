@@ -409,6 +409,7 @@ export async function syncDataSilo(
       id: existingDataSilo.id,
       title: dataSilo.title,
       url: dataSilo.url,
+      headers: dataSilo['webhook-headers'],
       description: dataSilo.description,
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
@@ -439,6 +440,7 @@ export async function syncDataSilo(
     }>(CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
+      headers: dataSilo['webhook-headers'],
       type: dataSilo.integrationName,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
