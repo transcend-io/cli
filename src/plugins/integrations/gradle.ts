@@ -26,15 +26,7 @@ export const gradle: SiloDiscoveryConfig = {
 
     const deps: string[] = [];
     lines.map((line) => {
-      let rExp = null;
-      // eslint-disable-next-line no-restricted-syntax
-      for (const reg of regex) {
-        const check = new RegExp(reg, 'g');
-        if (check.test(line)) {
-          rExp = reg;
-          break;
-        }
-      }
+      const rExp = regex.find((reg) => new RegExp(reg, 'g').test(line));
       if (rExp != null) {
         const dep = rExp.exec(line) as RegExpExecArray;
         deps.push(dep[1]);
