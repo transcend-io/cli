@@ -261,7 +261,7 @@ export const DataSiloInput = t.intersection([
     /** The title of the API key that will be used to respond to privacy requests */
     'api-key-title': t.string,
     /** Custom headers to include in outbound webhook */
-    'webhook-headers': t.array(WebhookHeader),
+    headers: t.array(WebhookHeader),
     /**
      * Specify which data subjects may have personally-identifiable-information (PII) within this system
      * This field can be omitted, and the default assumption will be that the system may potentially
