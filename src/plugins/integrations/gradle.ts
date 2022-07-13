@@ -1,6 +1,14 @@
 import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
+/**
+ * So far, there is two ways of defining dependancies that is supported
+ * implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.28.0'
+ * or
+ * "org.eclipse.jgit:org.eclipse.jgit:4.9.2.201712150930-r"
+ * where the middle is the name of the dependency
+ *
+ */
 const regex = [/:(.\S*):/, /name: ?'(.*?)'/];
 
 export const gradle: SiloDiscoveryConfig = {
