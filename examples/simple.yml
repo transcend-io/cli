@@ -58,6 +58,13 @@ data-silos:
     description: The mega-warehouse that contains a copy over all SQL backed databases
     # The webhook URL to notify for data privacy requests
     url: https://example.acme.com/transcend-webhook
+    headers:
+      - name: test
+        value: value
+        isSecret: true
+      - name: dummy
+        value: dummy
+        isSecret: false
     integrationName: server
     # The title of the API key that will be used to respond to privacy requests
     api-key-title: Webhook Key

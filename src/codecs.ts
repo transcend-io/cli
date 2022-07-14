@@ -219,6 +219,22 @@ export type PromptAVendorEmailSettings = t.TypeOf<
   typeof PromptAVendorEmailSettings
 >;
 
+export const WebhookHeader = t.intersection([
+  t.type({
+    /** The name of the header to set. */
+    name: t.string,
+    /** The value of the header. */
+    value: t.string,
+  }),
+  t.partial({
+    /** The header contains a secret */
+    isSecret: t.boolean,
+  }),
+]);
+
+/** Type override */
+export type WebhookHeader = t.TypeOf<typeof WebhookHeader>;
+
 /**
  * Input to define a data silo
  *
@@ -244,6 +260,8 @@ export const DataSiloInput = t.intersection([
     url: t.string,
     /** The title of the API key that will be used to respond to privacy requests */
     'api-key-title': t.string,
+    /** Custom headers to include in outbound webhook */
+    headers: t.array(WebhookHeader),
     /**
      * Specify which data subjects may have personally-identifiable-information (PII) within this system
      * This field can be omitted, and the default assumption will be that the system may potentially
