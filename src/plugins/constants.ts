@@ -1,6 +1,6 @@
 import { SiloDiscoveryConfig } from './types';
 import {
-  cocoapods,
+  cocoaPods,
   gradle,
   javascriptPackageJson,
   pythonRequirementsTxt,
@@ -9,7 +9,7 @@ import {
 export const SILO_DISCOVERY_FUNCTIONS: {
   [k in string]: SiloDiscoveryConfig;
 } = {
-  cocoapods,
+  cocoaPods,
   gradle,
   javascriptPackageJson,
   pythonRequirementsTxt,
