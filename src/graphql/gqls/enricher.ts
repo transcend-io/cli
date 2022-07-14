@@ -26,6 +26,7 @@ export const CREATE_ENRICHER = gql`
     $description: String!
     $url: String!
     $inputIdentifier: ID!
+    $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!
     $actions: [RequestAction!]!
   ) {
@@ -36,6 +37,7 @@ export const CREATE_ENRICHER = gql`
         description: $description
         url: $url
         inputIdentifier: $inputIdentifier
+        headers: $headers
         identifiers: $identifiers
         actions: $actions
       }
@@ -52,6 +54,7 @@ export const UPDATE_ENRICHER = gql`
     $description: String!
     $url: String!
     $inputIdentifier: ID!
+    $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!
     $actions: [RequestAction!]!
   ) {
@@ -62,6 +65,7 @@ export const UPDATE_ENRICHER = gql`
         description: $description
         url: $url
         inputIdentifier: $inputIdentifier
+        headers: $headers
         identifiers: $identifiers
         actions: $actions
       }
