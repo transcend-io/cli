@@ -23,6 +23,21 @@ export const TemplateInput = t.type({
 /** Type override */
 export type TemplateInput = t.TypeOf<typeof TemplateInput>;
 
+export const WebhookHeader = t.intersection([
+  t.type({
+    /** The name of the header to set. */
+    name: t.string,
+    /** The value of the header. */
+    value: t.string,
+  }),
+  t.partial({
+    /** The header contains a secret */
+    isSecret: t.boolean,
+  }),
+]);
+
+/** Type override */
+export type WebhookHeader = t.TypeOf<typeof WebhookHeader>;
 /**
  * Input to define API keys that may be shared across data silos
  * in the data map. When creating new data silos through the yaml
@@ -70,6 +85,7 @@ export const EnricherInput = t.intersection([
     'output-identifiers': t.array(t.string),
   }),
   t.partial({
+    headers: t.array(WebhookHeader),
     /** Internal description for why the enricher is needed */
     description: t.string,
     /** The privacy actions that the enricher should run against */
@@ -218,22 +234,6 @@ export const PromptAVendorEmailSettings = t.partial({
 export type PromptAVendorEmailSettings = t.TypeOf<
   typeof PromptAVendorEmailSettings
 >;
-
-export const WebhookHeader = t.intersection([
-  t.type({
-    /** The name of the header to set. */
-    name: t.string,
-    /** The value of the header. */
-    value: t.string,
-  }),
-  t.partial({
-    /** The header contains a secret */
-    isSecret: t.boolean,
-  }),
-]);
-
-/** Type override */
-export type WebhookHeader = t.TypeOf<typeof WebhookHeader>;
 
 /**
  * Input to define a data silo
