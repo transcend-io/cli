@@ -73,6 +73,7 @@ export const UPDATE_DATA_SILO = gql`
     $title: String
     $description: String
     $url: String
+    $headers: [CustomHeaderInput!]
     $notifyEmailAddress: String
     $identifiers: [String!]
     $isLive: Boolean
@@ -88,6 +89,7 @@ export const UPDATE_DATA_SILO = gql`
         title: $title
         description: $description
         url: $url
+        headers: $headers
         notifyEmailAddress: $notifyEmailAddress
         identifiers: $identifiers
         isLive: $isLive
@@ -108,6 +110,7 @@ export const CREATE_DATA_SILO = gql`
     $title: String!
     $description: String!
     $url: String
+    $headers: [CustomHeaderInput!]
     $type: String!
     $identifiers: [String!]
     $isLive: Boolean!
@@ -124,6 +127,7 @@ export const CREATE_DATA_SILO = gql`
         title: $title
         description: $description
         url: $url
+        headers: $headers
         notifyEmailAddress: $notifyEmailAddress
         identifiers: $identifiers
         isLive: $isLive
