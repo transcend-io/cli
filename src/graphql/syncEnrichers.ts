@@ -92,6 +92,7 @@ export async function syncEnricher(
       id: existingEnricher.id,
       title: enricher.title,
       url: enricher.url,
+      headers: enricher.headers,
       description: enricher.description || '',
       inputIdentifier: identifiersByName[enricher['input-identifier']].id,
       identifiers: enricher['output-identifiers'].map(
@@ -103,6 +104,7 @@ export async function syncEnricher(
     await client.request(CREATE_ENRICHER, {
       title: enricher.title,
       url: enricher.url,
+      headers: enricher.headers,
       description: enricher.description || '',
       inputIdentifier: identifiersByName[enricher['input-identifier']].id,
       identifiers: enricher['output-identifiers'].map(
