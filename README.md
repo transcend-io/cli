@@ -12,7 +12,7 @@
   - [tr-push](#tr-push)
     - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
-  - [tr-scan](#tr-scan)
+  - [tr-discover-silos](#tr-discover-silos)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -33,7 +33,7 @@ yarn add -D @transcend-io/cli
 # cli commands available within package
 yarn tr-pull --auth=xxx
 yarn tr-push --auth=xxx
-yarn tr-scan --auth=xxx
+yarn tr-discover-silos --auth=xxx
 ```
 
 or
@@ -45,7 +45,7 @@ npm i -D @transcend-io/cli
 # cli commands available within package
 tr-pull --auth=xxx
 tr-push --auth=xxx
-tr-scan --auth=xxx
+tr-discover-silos --auth=xxx
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -57,7 +57,7 @@ npm i -g @transcend-io/cli
 # cli commands available everywhere on machine
 tr-pull --auth=xxx
 tr-push --auth=xxx
-tr-scan --auth=xxx
+tr-discover-silos --auth=xxx
 ```
 
 ## Authentication
@@ -303,7 +303,7 @@ data-silos:
     api-key-title: Webhook Key
 ```
 
-### tr-scan
+### tr-discover-silos
 
 Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data. Currently we support scanning for new data silos in package.json, but soon we will be adding more!
 
@@ -313,7 +313,7 @@ Then, you'll need to grab that `dataSiloId` and pass it to the CLI:
 
 ```sh
 # Scan a javascript project (package.json files) to look for new data silos
-yarn tr-scan --scanPath=./myJavascriptProject --auth=asd123 --dataSiloId=abcdefg
+yarn tr-discover-silos --scanPath=./myJavascriptProject --auth=asd123 --dataSiloId=abcdefg
 ```
 
 This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage).
