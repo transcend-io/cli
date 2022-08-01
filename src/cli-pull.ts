@@ -6,7 +6,7 @@ import colors from 'colors';
 import { pullTranscendConfiguration } from './graphql';
 import { GraphQLClient } from 'graphql-request';
 import { writeTranscendYaml } from './readTranscendYaml';
-import { ADMIN_DASH } from './constants';
+import { ADMIN_DASH_INTEGRATIONS } from './constants';
 
 /**
  * Sync data silo configuration from Transcend down locally to disk
@@ -63,7 +63,7 @@ async function main(): Promise<void> {
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH}`,
+      `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH_INTEGRATIONS}`,
     ),
   );
 }

@@ -9,7 +9,7 @@ import { TranscendInput } from './codecs';
 import { syncConfigurationToTranscend } from './graphql';
 import { GraphQLClient } from 'graphql-request';
 
-import { ADMIN_DASH } from './constants';
+import { ADMIN_DASH_INTEGRATIONS } from './constants';
 import { ObjByString } from '@transcend-io/type-utils';
 /**
  * Push the transcend.yml file remotely into a Transcend instance
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
     if (encounteredError) {
       logger.info(
         colors.red(
-          `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH}`,
+          `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
         ),
       );
       process.exit(1);
@@ -107,7 +107,7 @@ async function main(): Promise<void> {
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced yaml file to Transcend! View at ${ADMIN_DASH}`,
+      `Successfully synced yaml file to Transcend! View at ${ADMIN_DASH_INTEGRATIONS}`,
     ),
   );
 }
