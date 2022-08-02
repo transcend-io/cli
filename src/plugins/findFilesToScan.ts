@@ -17,10 +17,10 @@ export const findFilesToScan = async (
   config: SiloDiscoveryConfig,
 ): Promise<SiloDiscoveryRawResults[]> => {
   const { ignoreDirs: IGNORE_DIRS, supportedFiles, scanFunction } = config;
-  const globsToSupport = supportedFiles;
-  if (fileGlobs !== '') {
-    globsToSupport.push(...fileGlobs.split(','));
-  }
+  const globsToSupport =
+    fileGlobs === ''
+      ? supportedFiles
+      : supportedFiles.concat(fileGlobs.split(','));
   const dirsToIgnore = [...ignoreDirs.split(','), ...IGNORE_DIRS].filter(
     (dir) => dir.length > 0,
   );
@@ -42,6 +42,8 @@ export const findFilesToScan = async (
       resourceId: `${scanPath}/**/${dep}`,
     }));
   } catch (error) {
-    throw new Error(`Error scanning globs ${findFilesToScan}`);
+    throw new Error(
+      `Error scanning globs ${findFilesToScan} with error: ${error}`,
+    );
   }
 };
