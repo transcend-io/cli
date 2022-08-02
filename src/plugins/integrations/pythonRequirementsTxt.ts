@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
 export const pythonRequirementsTxt: SiloDiscoveryConfig = {
-  supportedFiles: ['**.txt'],
+  supportedFiles: ['requirements.txt'],
   ignoreDirs: ['build', 'lib', 'lib64'],
   scanFunction: (filePath) => {
     const lines = readFileSync(filePath)
