@@ -11,6 +11,8 @@ import { SiloDiscoveryConfig } from '../types';
  */
 const regex = [/:(.\S*):/, /name: ?'(.*?)'/];
 
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
+
 export const gradle: SiloDiscoveryConfig = {
   supportedFiles: ['build.gradle', 'build.gradle.kts'],
   ignoreDirs: [
@@ -29,7 +31,11 @@ export const gradle: SiloDiscoveryConfig = {
       const rExp = regex.find((reg) => new RegExp(reg, 'g').test(line));
       if (rExp != null) {
         const dep = rExp.exec(line) as RegExpExecArray;
-        deps.push(dep[1]);
+        deps.push(
+          SPECIAL_CASE_MAP[dep[1]] === undefined
+            ? dep[1]
+            : (SPECIAL_CASE_MAP[dep[1]] as string),
+        );
       }
       return line;
     });

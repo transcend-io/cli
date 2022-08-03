@@ -1,6 +1,11 @@
 import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {
+  boto: 'amazonWebServices',
+  boto3: 'amazonWebServices',
+};
+
 export const pythonRequirementsTxt: SiloDiscoveryConfig = {
   supportedFiles: ['requirements.txt'],
   ignoreDirs: ['build', 'lib', 'lib64'],
@@ -15,7 +20,11 @@ export const pythonRequirementsTxt: SiloDiscoveryConfig = {
     lines.map((line) => {
       if (line.includes('==')) {
         const dep = line.split('==')[0];
-        deps.push(dep);
+        deps.push(
+          SPECIAL_CASE_MAP[dep] === undefined
+            ? dep
+            : (SPECIAL_CASE_MAP[dep] as string),
+        );
       }
       return deps;
     });
