@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { SiloDiscoveryRawInput } from '..';
 import { SiloDiscoveryConfig } from '../types';
 
 /**
@@ -10,6 +11,8 @@ import { SiloDiscoveryConfig } from '../types';
  *
  */
 const regex = [/:(.\S*):/, /name: ?'(.*?)'/];
+
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
 
 export const gradle: SiloDiscoveryConfig = {
   supportedFiles: ['build.gradle', 'build.gradle.kts'],
@@ -24,12 +27,15 @@ export const gradle: SiloDiscoveryConfig = {
       // split on new line character
       .split(String.fromCharCode(10));
 
-    const deps: string[] = [];
+    const deps: SiloDiscoveryRawInput[] = [];
     lines.map((line) => {
       const rExp = regex.find((reg) => new RegExp(reg, 'g').test(line));
       if (rExp != null) {
         const dep = rExp.exec(line) as RegExpExecArray;
-        deps.push(dep[1]);
+        deps.push({
+          name: dep[1],
+          type: SPECIAL_CASE_MAP[dep[1]],
+        });
       }
       return line;
     });

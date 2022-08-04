@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
+
 export const javascriptPackageJson: SiloDiscoveryConfig = {
   supportedFiles: ['package.json'],
   ignoreDirs: ['node_modules', 'serverless-build', 'lambda-build'],
@@ -13,9 +15,18 @@ export const javascriptPackageJson: SiloDiscoveryConfig = {
       optionalDependencies = {},
     } = asJson;
     return [
-      ...Object.keys(dependencies),
-      ...Object.keys(devDependencies),
-      ...Object.keys(optionalDependencies),
+      ...dependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
+      ...devDependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
+      ...optionalDependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
     ];
   },
 };
