@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { SiloDiscoveryConfig } from '../types';
+import { SiloDiscoveryConfig, SiloDiscoveryRawInput } from '../types';
 
 const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
 
@@ -14,16 +14,15 @@ export const cocoaPods: SiloDiscoveryConfig = {
       // split on new line character
       .split(String.fromCharCode(10));
 
-    const deps: string[] = [];
+    const deps: SiloDiscoveryRawInput[] = [];
 
     lines.map((line) => {
       if (regex.test(line)) {
         const dep = podRegex.exec(line) as RegExpExecArray;
-        deps.push(
-          SPECIAL_CASE_MAP[dep[1]] === undefined
-            ? dep[1]
-            : (SPECIAL_CASE_MAP[dep[1]] as string),
-        );
+        deps.push({
+          name: dep[1],
+          type: SPECIAL_CASE_MAP[dep[1]],
+        });
       }
       return deps;
     });

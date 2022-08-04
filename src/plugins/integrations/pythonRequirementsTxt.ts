@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { SiloDiscoveryRawInput } from '..';
 import { SiloDiscoveryConfig } from '../types';
 
 const SPECIAL_CASE_MAP: Record<string, string | undefined> = {
@@ -15,16 +16,15 @@ export const pythonRequirementsTxt: SiloDiscoveryConfig = {
       // split on new line character
       .split(String.fromCharCode(10));
 
-    const deps: string[] = [];
+    const deps: SiloDiscoveryRawInput[] = [];
 
     lines.map((line) => {
       if (line.includes('==')) {
         const dep = line.split('==')[0];
-        deps.push(
-          SPECIAL_CASE_MAP[dep] === undefined
-            ? dep
-            : (SPECIAL_CASE_MAP[dep] as string),
-        );
+        deps.push({
+          name: dep,
+          type: SPECIAL_CASE_MAP[dep],
+        });
       }
       return deps;
     });

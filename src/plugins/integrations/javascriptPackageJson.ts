@@ -15,27 +15,18 @@ export const javascriptPackageJson: SiloDiscoveryConfig = {
       optionalDependencies = {},
     } = asJson;
     return [
-      ...Object.keys(
-        dependencies.map((dep: string) =>
-          SPECIAL_CASE_MAP[dep] === undefined
-            ? dep
-            : (SPECIAL_CASE_MAP[dep] as string),
-        ),
-      ),
-      ...Object.keys(
-        devDependencies.map((dep: string) =>
-          SPECIAL_CASE_MAP[dep] === undefined
-            ? dep
-            : (SPECIAL_CASE_MAP[dep] as string),
-        ),
-      ),
-      ...Object.keys(
-        optionalDependencies.map((dep: string) =>
-          SPECIAL_CASE_MAP[dep] === undefined
-            ? dep
-            : (SPECIAL_CASE_MAP[dep] as string),
-        ),
-      ),
+      ...dependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
+      ...devDependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
+      ...optionalDependencies.map((dep: string) => ({
+        name: dep,
+        type: SPECIAL_CASE_MAP[dep],
+      })),
     ];
   },
 };
