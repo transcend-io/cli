@@ -1,5 +1,11 @@
-import { Attributes } from 'src/codecs';
 import { AttributeValue } from '.';
+
+export interface FormattedAttribute {
+  /** Attribute key */
+  key: string;
+  /** Attribute values */
+  values: string[];
+}
 
 /**
  * Format attribute value objects to key-pair values
@@ -7,8 +13,10 @@ import { AttributeValue } from '.';
  * @param vals - Attribute values
  * @returns formatted attributes
  */
-export function formatAttributeValues(vals: AttributeValue[]): Attributes[] {
-  const attributes: Attributes[] = [];
+export function formatAttributeValues(
+  vals: AttributeValue[],
+): FormattedAttribute[] {
+  const attributes: FormattedAttribute[] = [];
 
   vals.map((val) => {
     let foundKey = attributes.find((att) => att.key === val.attributeKey.name);
