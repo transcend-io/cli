@@ -16,11 +16,11 @@ export function formatAttributeValues(vals: AttributeValue[]): Attributes[] {
     if (foundKey === undefined) {
       foundKey = {
         key: val.attributeKey.name,
-        value: [val.name],
+        values: [val.name],
       };
       attributes.push(foundKey);
     } else {
-      foundKey.value.push(val.name);
+      foundKey.values.push(val.name);
     }
     return attributes;
   });

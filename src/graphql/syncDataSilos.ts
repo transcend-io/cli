@@ -458,6 +458,7 @@ export async function syncDataSilo(
             dataSubjectsByName,
           )
         : undefined,
+      attributes: dataSilo.attributes,
     });
   } else {
     const { connectDataSilo } = await client.request<{

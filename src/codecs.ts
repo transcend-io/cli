@@ -123,7 +123,7 @@ export const DataCategoryInput = t.type({
 
 export const Attributes = t.type({
   key: t.string,
-  value: t.array(t.string),
+  values: t.array(t.string),
 });
 
 /** Type override */

@@ -88,6 +88,7 @@ export const UPDATE_DATA_SILO = gql`
     $ownerEmails: [String!]
     $teamNames: [String!]
     $apiKeyId: ID
+    $attributes: [AttributeInput!]
   ) {
     updateDataSilo(
       input: {
@@ -104,6 +105,7 @@ export const UPDATE_DATA_SILO = gql`
         ownerEmails: $ownerEmails
         teamNames: $teamNames
         apiKeyId: $apiKeyId
+        attributes: $attributes
       }
     ) {
       clientMutationId
@@ -126,6 +128,7 @@ export const CREATE_DATA_SILO = gql`
     $ownerEmails: [String!]
     $teamNames: [String!]
     $apiKeyId: ID
+    $attributes: [AttributeInput!]
   ) {
     connectDataSilo(
       input: {
@@ -142,6 +145,7 @@ export const CREATE_DATA_SILO = gql`
         ownerEmails: $ownerEmails
         apiKeyId: $apiKeyId
         teamNames: $teamNames
+        attributes: $attributes
       }
     ) {
       dataSilo {
