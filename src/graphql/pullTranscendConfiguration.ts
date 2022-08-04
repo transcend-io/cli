@@ -16,6 +16,7 @@ import {
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllTemplates } from '.';
+import { formatAttributeValues } from './formatAttributeValues';
 
 /**
  * Pull a yaml configuration from Transcend
@@ -155,10 +156,7 @@ export async function pullTranscendConfiguration(
         : {}),
       attributes:
         attributeValues !== undefined && attributeValues.length > 0
-          ? attributeValues.map(({ attributeKey, name }) => ({
-              key: attributeKey.name,
-              value: name,
-            }))
+          ? formatAttributeValues(attributeValues)
           : undefined,
 
       datapoints: dataPoints
@@ -197,12 +195,7 @@ export async function pullTranscendConfiguration(
                     attributes:
                       field.attributeValues !== undefined &&
                       field.attributeValues.length > 0
-                        ? field.attributeValues.map(
-                            ({ attributeKey, name }) => ({
-                              key: attributeKey.name,
-                              value: name,
-                            }),
-                          )
+                        ? formatAttributeValues(field.attributeValues)
                         : undefined,
                   }))
                   .sort((a, b) => a.key.localeCompare(b.key)),
