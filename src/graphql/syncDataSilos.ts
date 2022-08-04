@@ -111,6 +111,18 @@ interface SubDataPoint {
   categories: DataCategoryInput[];
   /** The processing purpose for this sub datapoint */
   purposes: ProcessingPurposeInput[];
+  /**
+   * When true, this subdatapoint should be revealed in a data access request.
+   * When false, this field should be redacted
+   */
+  accessRequestVisibilityEnabled: boolean;
+  /**
+   * When true, this subdatapoint should be redacted during an erasure request.
+   * There normally is a choice of enabling hard deletion or redaction at the
+   * datapoint level, but if redaction is enabled, this column can be used
+   * to define which fields should be redacted.
+   */
+  erasureRequestRedactionEnabled: boolean;
 }
 
 interface DataPoint {
@@ -510,14 +522,19 @@ export async function syncDataSilo(
     await mapSeries(datapoints, async (datapoint) => {
       logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
       const fields = datapoint.fields
-        ? datapoint.fields.map(({ key, description, categories, purposes }) =>
-            // TODO: Support setting title separately from the 'key/name'
-            ({
-              name: key,
-              description,
-              categories,
-              purposes,
-            }),
+        ? datapoint.fields.map(
+            ({ key, description, categories, purposes, ...rest }) =>
+              // TODO: Support setting title separately from the 'key/name'
+              ({
+                name: key,
+                description,
+                categories,
+                purposes,
+                accessRequestVisibilityEnabled:
+                  rest['access-request-visibility-enabled'],
+                erasureRequestRedactionEnabled:
+                  rest['erasure-request-redaction-enabled'],
+              }),
           )
         : undefined;
 

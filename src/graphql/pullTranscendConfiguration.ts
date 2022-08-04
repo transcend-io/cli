@@ -179,6 +179,10 @@ export async function pullTranscendConfiguration(
                 description: field.description,
                 purposes: field.purposes,
                 categories: field.categories,
+                'access-request-visibility-enabled':
+                  field.accessRequestVisibilityEnabled,
+                'erasure-request-redaction-enabled':
+                  field.erasureRequestRedactionEnabled,
               })),
             }
           : {}),
