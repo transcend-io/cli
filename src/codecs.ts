@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
 import * as t from 'io-ts';
 import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import {
@@ -119,6 +121,14 @@ export const DataCategoryInput = t.type({
   name: t.string,
 });
 
+export const Attributes = t.type({
+  key: t.string,
+  value: t.string,
+});
+
+/** Type override */
+export type Attributes = t.TypeOf<typeof Attributes>;
+
 /** Type override */
 export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
 
@@ -160,6 +170,8 @@ export const FieldInput = t.intersection([
      * to define which fields should be redacted.
      */
     'erasure-request-redaction-enabled': t.boolean,
+    /** Attributes tagged to subdatapoint */
+    attributes: t.array(Attributes),
   }),
 ]);
 
@@ -318,6 +330,10 @@ export const DataSiloInput = t.intersection([
      * Configure email notification settings for privacy requests
      */
     'email-settings': PromptAVendorEmailSettings,
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
   }),
 ]);
 

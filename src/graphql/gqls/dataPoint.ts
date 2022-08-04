@@ -62,6 +62,12 @@ export const SUB_DATA_POINTS = gql`
         }
         accessRequestVisibilityEnabled
         erasureRequestRedactionEnabled
+        attributeValues {
+          attributeKey {
+            name
+          }
+          name
+        }
       }
     }
   }

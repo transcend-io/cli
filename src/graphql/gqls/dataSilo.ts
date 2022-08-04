@@ -34,6 +34,12 @@ export const DATA_SILO = gql`
       type
       url
       notifyEmailAddress
+      attributeValues {
+        attributeKey {
+          name
+        }
+        name
+      }
       apiKeys {
         title
       }
