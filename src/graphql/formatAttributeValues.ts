@@ -1,4 +1,4 @@
-import { Attributes } from 'src';
+import { Attributes } from 'src/codecs';
 import { AttributeValue } from '.';
 
 /**
