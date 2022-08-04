@@ -60,6 +60,8 @@ export const SUB_DATA_POINTS = gql`
           name
           category
         }
+        accessRequestVisibilityEnabled
+        erasureRequestRedactionEnabled
       }
     }
   }

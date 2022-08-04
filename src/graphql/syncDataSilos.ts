@@ -7,7 +7,7 @@ import {
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries, map } from 'bluebird';
 import {
   DATA_SILOS,
   UPDATE_DATA_SILO,
@@ -111,6 +111,18 @@ interface SubDataPoint {
   categories: DataCategoryInput[];
   /** The processing purpose for this sub datapoint */
   purposes: ProcessingPurposeInput[];
+  /**
+   * When true, this subdatapoint should be revealed in a data access request.
+   * When false, this field should be redacted
+   */
+  accessRequestVisibilityEnabled: boolean;
+  /**
+   * When true, this subdatapoint should be redacted during an erasure request.
+   * There normally is a choice of enabling hard deletion or redaction at the
+   * datapoint level, but if redaction is enabled, this column can be used
+   * to define which fields should be redacted.
+   */
+  erasureRequestRedactionEnabled: boolean;
 }
 
 interface DataPoint {
@@ -507,50 +519,61 @@ export async function syncDataSilo(
         `Syncing "${datapoints.length}" datapoints for data silo ${dataSilo.title}...`,
       ),
     );
-    await mapSeries(datapoints, async (datapoint) => {
-      logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
-      const fields = datapoint.fields
-        ? datapoint.fields.map(({ key, description, categories, purposes }) =>
-            // TODO: Support setting title separately from the 'key/name'
-            ({
-              name: key,
-              description,
-              categories,
-              purposes,
-            }),
-          )
-        : undefined;
+    await map(
+      datapoints,
+      async (datapoint) => {
+        logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
+        const fields = datapoint.fields
+          ? datapoint.fields.map(
+              ({ key, description, categories, purposes, ...rest }) =>
+                // TODO: Support setting title separately from the 'key/name'
+                ({
+                  name: key,
+                  description,
+                  categories,
+                  purposes,
+                  accessRequestVisibilityEnabled:
+                    rest['access-request-visibility-enabled'],
+                  erasureRequestRedactionEnabled:
+                    rest['erasure-request-redaction-enabled'],
+                }),
+            )
+          : undefined;
 
-      if (fields && fields.length > 0) {
-        logger.info(
-          colors.magenta(
-            `Syncing ${fields.length} fields for datapoint "${datapoint.key}"...`,
-          ),
-        );
-      }
-
-      await client.request(UPDATE_OR_CREATE_DATA_POINT, {
-        dataSiloId: existingDataSilo!.id,
-        name: datapoint.key,
-        title: datapoint.title,
-        description: datapoint.description,
-        ...(datapoint['data-collection-tag']
-          ? { dataCollectionTag: datapoint['data-collection-tag'] }
-          : {}),
-        querySuggestions: !datapoint['privacy-action-queries']
-          ? undefined
-          : Object.entries(datapoint['privacy-action-queries']).map(
-              ([key, value]) => ({
-                requestType: key,
-                suggestedQuery: value,
-              }),
+        if (fields && fields.length > 0) {
+          logger.info(
+            colors.magenta(
+              `Syncing ${fields.length} fields for datapoint "${datapoint.key}"...`,
             ),
-        enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
-        subDataPoints: fields,
-      });
+          );
+        }
 
-      logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
-    });
+        await client.request(UPDATE_OR_CREATE_DATA_POINT, {
+          dataSiloId: existingDataSilo!.id,
+          name: datapoint.key,
+          title: datapoint.title,
+          description: datapoint.description,
+          ...(datapoint['data-collection-tag']
+            ? { dataCollectionTag: datapoint['data-collection-tag'] }
+            : {}),
+          querySuggestions: !datapoint['privacy-action-queries']
+            ? undefined
+            : Object.entries(datapoint['privacy-action-queries']).map(
+                ([key, value]) => ({
+                  requestType: key,
+                  suggestedQuery: value,
+                }),
+              ),
+          enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
+          subDataPoints: fields,
+        });
+
+        logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
+      },
+      {
+        concurrency: 5,
+      },
+    );
   }
   return existingDataSilo;
 }

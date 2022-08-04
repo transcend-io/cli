@@ -148,6 +148,18 @@ export const FieldInput = t.intersection([
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
     categories: t.array(DataCategoryInput),
+    /**
+     * When true, this subdatapoint should be revealed in a data access request.
+     * When false, this field should be redacted
+     */
+    'access-request-visibility-enabled': t.boolean,
+    /**
+     * When true, this subdatapoint should be redacted during an erasure request.
+     * There normally is a choice of enabling hard deletion or redaction at the
+     * datapoint level, but if redaction is enabled, this column can be used
+     * to define which fields should be redacted.
+     */
+    'erasure-request-redaction-enabled': t.boolean,
   }),
 ]);
 
