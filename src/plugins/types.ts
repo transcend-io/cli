@@ -5,6 +5,8 @@ export interface SiloDiscoveryRawResults {
   resourceId: string;
   /** Any hosts associated with the entry */
   host?: string;
+  /** Type of data silo */
+  type?: string | undefined;
 }
 
 export interface SiloDiscoveryConfig {
@@ -16,7 +18,16 @@ export interface SiloDiscoveryConfig {
   scanFunction: SiloDiscoveryFunction;
 }
 
+export interface SiloDiscoveryRawInput {
+  /** name of dependency */
+  name: string;
+  /** type of dependency, if applicable */
+  type: string | undefined;
+}
+
 /**
  * The silo discovery function interface
  */
-export type SiloDiscoveryFunction = (filePath: string) => string[];
+export type SiloDiscoveryFunction = (
+  filePath: string,
+) => SiloDiscoveryRawInput[];
