@@ -152,40 +152,48 @@ export async function pullTranscendConfiguration(
             },
           }
         : {}),
-      datapoints: dataPoints.map((dataPoint) => ({
-        title: dataPoint.title?.defaultMessage,
-        description: dataPoint.description?.defaultMessage,
-        key: dataPoint.name,
-        ...(dataPoint.dataCollection?.title
-          ? {
-              'data-collection-tag':
-                dataPoint.dataCollection.title.defaultMessage,
-            }
-          : {}),
-        ...(dataPoint.dbIntegrationQueries.length > 0
-          ? {
-              'privacy-action-queries': mapValues(
-                keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
-                (databaseIntegrationQuery) =>
-                  databaseIntegrationQuery.suggestedQuery ||
-                  databaseIntegrationQuery.query,
-              ),
-            }
-          : {}),
-        ...(dataPoint.subDataPoints.length > 0
-          ? {
-              fields: dataPoint.subDataPoints.map((field) => ({
-                key: field.name,
-                description: field.description,
-                purposes: field.purposes,
-                categories: field.categories,
-              })),
-            }
-          : {}),
-        'privacy-actions': dataPoint.actionSettings
-          .filter(({ active }) => active)
-          .map(({ type }) => type),
-      })),
+      datapoints: dataPoints
+        .map((dataPoint) => ({
+          title: dataPoint.title?.defaultMessage,
+          description: dataPoint.description?.defaultMessage,
+          key: dataPoint.name,
+          ...(dataPoint.dataCollection?.title
+            ? {
+                'data-collection-tag':
+                  dataPoint.dataCollection.title.defaultMessage,
+              }
+            : {}),
+          ...(dataPoint.dbIntegrationQueries.length > 0
+            ? {
+                'privacy-action-queries': mapValues(
+                  keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
+                  (databaseIntegrationQuery) =>
+                    databaseIntegrationQuery.suggestedQuery ||
+                    databaseIntegrationQuery.query,
+                ),
+              }
+            : {}),
+          ...(dataPoint.subDataPoints.length > 0
+            ? {
+                fields: dataPoint.subDataPoints
+                  .map((field) => ({
+                    key: field.name,
+                    description: field.description,
+                    purposes: field.purposes,
+                    categories: field.categories,
+                    'access-request-visibility-enabled':
+                      field.accessRequestVisibilityEnabled,
+                    'erasure-request-redaction-enabled':
+                      field.erasureRequestRedactionEnabled,
+                  }))
+                  .sort((a, b) => a.key.localeCompare(b.key)),
+              }
+            : {}),
+          'privacy-actions': dataPoint.actionSettings
+            .filter(({ active }) => active)
+            .map(({ type }) => type),
+        }))
+        .sort((a, b) => a.key.localeCompare(b.key)),
     }),
   );
 
