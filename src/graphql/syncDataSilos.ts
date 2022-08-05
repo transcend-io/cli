@@ -29,6 +29,15 @@ import {
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
 
+export interface AttributeValue {
+  /** Key associated to value */
+  attributeKey: {
+    /** Name of key */
+    name: string;
+  };
+  /** Name of value */
+  name: string;
+}
 export interface DataSilo {
   /** ID of dataSilo */
   id: string;
@@ -38,6 +47,10 @@ export interface DataSilo {
   type: string;
   /** The link to the data silo */
   link: string;
+  /** Attibute labels */
+  attributeValues: AttributeValue[];
+  /** description */
+  description: string;
   /** Metadata for this data silo */
   catalog: {
     /** Whether the data silo supports automated vendor coordination */
@@ -123,6 +136,8 @@ interface SubDataPoint {
    * to define which fields should be redacted.
    */
   erasureRequestRedactionEnabled: boolean;
+  /** Attribute attached to subdatapoint */
+  attributeValues: AttributeValue[];
 }
 
 interface DataPoint {
@@ -336,6 +351,8 @@ export interface DataSiloEnriched {
    * Needs to be a string because the number can be larger than the MAX_INT
    */
   manualWorkRetryFrequency: string;
+  /** Attribute values tagged to data silo */
+  attributeValues: AttributeValue[];
 }
 
 const LOG_FREQUENCY = 10;
@@ -441,6 +458,7 @@ export async function syncDataSilo(
             dataSubjectsByName,
           )
         : undefined,
+      attributes: dataSilo.attributes,
     });
   } else {
     const { connectDataSilo } = await client.request<{

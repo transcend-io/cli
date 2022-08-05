@@ -16,6 +16,7 @@ import {
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllTemplates } from '.';
+import { formatAttributeValues } from './formatAttributeValues';
 
 /**
  * Pull a yaml configuration from Transcend
@@ -109,6 +110,7 @@ export async function pullTranscendConfiguration(
         promptAVendorEmailCompletionLinkType,
         manualWorkRetryFrequency,
         catalog,
+        attributeValues,
       },
       dataPoints,
     ]): DataSiloInput => ({
@@ -152,6 +154,11 @@ export async function pullTranscendConfiguration(
             },
           }
         : {}),
+      attributes:
+        attributeValues !== undefined && attributeValues.length > 0
+          ? formatAttributeValues(attributeValues)
+          : undefined,
+
       datapoints: dataPoints
         .map((dataPoint) => ({
           title: dataPoint.title?.defaultMessage,
@@ -185,6 +192,11 @@ export async function pullTranscendConfiguration(
                       field.accessRequestVisibilityEnabled,
                     'erasure-request-redaction-enabled':
                       field.erasureRequestRedactionEnabled,
+                    attributes:
+                      field.attributeValues !== undefined &&
+                      field.attributeValues.length > 0
+                        ? formatAttributeValues(field.attributeValues)
+                        : undefined,
                   }))
                   .sort((a, b) => a.key.localeCompare(b.key)),
               }
@@ -196,6 +208,5 @@ export async function pullTranscendConfiguration(
         .sort((a, b) => a.key.localeCompare(b.key)),
     }),
   );
-
   return result;
 }
