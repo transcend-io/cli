@@ -305,15 +305,24 @@ data-silos:
 
 ### tr-discover-silos
 
-Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data. Currently we support scanning for new data silos in package.json, but soon we will be adding more!
+Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data. Currently we support scanning for new data silos in Javascript, Python, Gradle and CocoaPods projects.
 
-To get started, you'll need to add a data silo with "silo discovery" plugin enabled. You can do this in the Transcend admin-dashboard (or via this CLI tooling).
+To get started, you'll need to add a data silo for the corresponding project type with "silo discovery" plugin enabled. For example, if you want to scan a JavaScript project, add a JavaScript package.json data silo. You can do this in the Transcend admin-dashboard (or via this CLI tooling).
 
-Then, you'll need to grab that `dataSiloId` and pass it to the CLI:
+Then, you'll need to grab that `dataSiloId` and a Transcend API key and pass it to the CLI. Using JavaScript package.json as an example:
 
 ```sh
 # Scan a javascript project (package.json files) to look for new data silos
-yarn tr-discover-silos --scanPath=./myJavascriptProject --auth=asd123 --dataSiloId=abcdefg
+yarn tr-discover-silos --scanPath=./myJavascriptProject --auth={{api_key}} --dataSiloId=abcdefg
 ```
 
-This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage).
+This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
+
+You can include additional arguments as well:
+
+| Argument   | Description                                                                                                                                                          |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| scanPath   | File path in the project to scan.                                                                                                                                    |
+| dataSiloID | The UUID of the corresponding data silo.                                                                                                                             |
+| auth       | Transcend API key.                                                                                                                                                   |
+| fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). |
