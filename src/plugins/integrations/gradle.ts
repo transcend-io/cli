@@ -15,7 +15,7 @@ const regex = [/:(.\S*):/, /name: ?'(.*?)'/];
 const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
 
 export const gradle: SiloDiscoveryConfig = {
-  supportedFiles: ['build.gradle', 'build.gradle.kts'],
+  supportedFiles: ['build.gradle**'],
   ignoreDirs: [
     'gradle-app.setting',
     'gradle-wrapper.jar',
