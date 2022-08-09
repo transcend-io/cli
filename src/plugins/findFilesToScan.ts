@@ -40,7 +40,7 @@ export const findFilesToScan = async (
     return [...uniqueDeps].map((dep) => ({
       name: dep.name,
       type: dep.type,
-      resourceId: `${scanPath}/**/${dep}`,
+      resourceId: `${scanPath}/**/${dep.name}`,
     }));
   } catch (error) {
     throw new Error(
