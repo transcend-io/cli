@@ -10,7 +10,12 @@ import { SiloDiscoveryConfig } from '../types';
  * where the middle is the name of the dependency
  *
  */
-const regex = [/:(.\S*):/, /name: ?'(.*?)'/];
+const regex = [
+  /:(.\S*):/,
+  /name: ?[",'](.*?)[",']/,
+  /id [",'](.*?)[",'] version/,
+  /id ?\([",'](.*?)[",']\)/,
+];
 
 const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
 
