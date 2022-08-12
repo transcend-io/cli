@@ -5,6 +5,8 @@ import { SiloDiscoveryConfig } from '../types';
 const SPECIAL_CASE_MAP: Record<string, string | undefined> = {
   boto: 'amazonWebServices',
   boto3: 'amazonWebServices',
+  heapapi: 'heap',
+  awstools: 'amazonWebServices',
 };
 
 export const pythonRequirementsTxt: SiloDiscoveryConfig = {

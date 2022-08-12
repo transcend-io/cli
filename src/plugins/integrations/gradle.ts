@@ -17,7 +17,13 @@ const regex = [
   /id ?\([",'](.*?)[",']\)/,
 ];
 
-const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {
+  'dd-sdk-android-gradle-plugin': 'datadog',
+  'gradle-sfdc-build-tools': 'salesforce',
+  'gradle-aws-plugin-reboot': 'amazonWebServices',
+  'azure-storage': 'azureStorageAccount',
+  'appengine-api-1.0-sdk': 'googleCloud',
+};
 
 export const gradle: SiloDiscoveryConfig = {
   supportedFiles: ['build.gradle**'],
@@ -38,7 +44,7 @@ export const gradle: SiloDiscoveryConfig = {
       if (rExp != null) {
         const dep = rExp.exec(line) as RegExpExecArray;
         deps.push({
-          name: dep[1],
+          name: dep[1].replace('gradle', ''),
           type: SPECIAL_CASE_MAP[dep[1]],
         });
       }

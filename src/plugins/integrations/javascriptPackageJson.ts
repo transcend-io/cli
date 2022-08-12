@@ -1,7 +1,10 @@
 import { readFileSync } from 'fs';
 import { SiloDiscoveryConfig } from '../types';
 
-const SPECIAL_CASE_MAP: Record<string, string | undefined> = {};
+const SPECIAL_CASE_MAP: Record<string, string | undefined> = {
+  dogapi: 'datadog',
+  'dd-trace': 'datadog',
+};
 
 export const javascriptPackageJson: SiloDiscoveryConfig = {
   supportedFiles: ['package.json'],
