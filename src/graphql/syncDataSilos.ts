@@ -227,7 +227,7 @@ export async function fetchAllSubDataPoints(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return sortBy(subDataPoints, 'createdAt');
+  return sortBy(subDataPoints, 'name');
 }
 
 /**
@@ -274,7 +274,7 @@ export async function fetchAllDataPoints(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return sortBy(dataPoints, 'createdAt');
+  return sortBy(dataPoints, 'name');
 }
 
 export interface DataSiloEnriched {
