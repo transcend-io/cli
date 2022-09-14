@@ -1,0 +1,285 @@
+api-keys:
+  - title: Analytics Key
+  - title: Webhook Key
+templates:
+  - title: Your Data Report is Ready
+  - title: We Love Data Rights And You Do Too
+  - title: We Love Data Rights
+  - title: Restriction Report Ready
+  - title: Request Canceled
+  - title: Rectification Report Ready
+  - title: Privacy Center Email Login
+  - title: Phone message verification
+  - title: Opt Out of Tracking Report Ready
+  - title: Opt Out of Sale Report Ready
+  - title: Opt Out of Automated Decision-Making Report Ready
+  - title: No Report
+  - title: New Request Receipt
+  - title: Erasure Report Ready
+  - title: Erasure Completed
+  - title: Email Verification
+  - title: Data Subject Canceled Request
+  - title: Communication Opt-Out Report Ready
+  - title: Business Purpose Report Ready
+  - title: Automated Vendor Coordination
+  - title: Additional Time Needed
+  - title: Account Deletion Report Ready
+  - title: Access Report Ready
+enrichers:
+  - title: Analytics Enrichment
+    url: https://analytics.acme.com/transcend-enrichment-webhook
+    input-identifier: userId
+    output-identifiers:
+      - advertisingId
+    privacy-actions:
+      - ACCESS
+      - AUTOMATED_DECISION_MAKING_OPT_OUT
+      - RECTIFICATION
+      - RESTRICTION
+      - ERASURE
+      - CONTACT_OPT_OUT
+      - SALE_OPT_OUT
+      - TRACKING_OPT_OUT
+  - title: Basic Identity Enrichment
+    url: https://example.acme.com/transcend-enrichment-webhook
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+      - myUniqueIdentifier
+    privacy-actions:
+      - ACCESS
+      - AUTOMATED_DECISION_MAKING_OPT_OUT
+      - RECTIFICATION
+      - RESTRICTION
+      - ERASURE
+      - CONTACT_OPT_OUT
+      - SALE_OPT_OUT
+      - TRACKING_OPT_OUT
+  - title: Fraud Check
+    url: https://example.acme.com/transcend-fraud-check
+    input-identifier: email
+    output-identifiers:
+      - email
+    privacy-actions:
+      - ERASURE
+data-silos:
+  - title: Identity Service
+    description: Micro-service that stores user metadata
+    integrationName: server
+    api-key-title: Webhook Key
+    identity-keys:
+      - coreIdentifier
+    teams:
+      - Developer
+    disabled: false
+    datapoints:
+      - title: Webhook Notification
+        description: >-
+          We will send your server a notification to perform an action for one
+          of your users.
+        key: _global
+        fields:
+          - key: Webhook Notification
+            description: >-
+              We will send your server a notification to perform an action for
+              one of your users.
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+          - CONTACT_OPT_OUT
+      - title: Auth User
+        description: The centralized authentication object for a user
+        key: auth
+        fields:
+          - key: Auth User
+            description: The centralized authentication object for a user
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+  - title: Redshift Data Warehouse
+    description: The mega-warehouse that contains a copy over all SQL backed databases
+    integrationName: server
+    url: https://example.acme.com/transcend-webhook
+    api-key-title: Webhook Key
+    identity-keys:
+      - email
+      - userId
+    deletion-dependencies:
+      - Identity Service
+    teams:
+      - Developer
+      - Request Management
+    disabled: false
+    data-subjects:
+      - customer
+      - employee
+      - newsletter-subscriber
+      - b2b-contact
+    datapoints:
+      - title: Webhook Notification
+        description: >-
+          We will send your server a notification to perform an action for one
+          of your users.
+        key: _global
+        fields:
+          - key: Webhook Notification
+            description: >-
+              We will send your server a notification to perform an action for
+              one of your users.
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+          - ERASURE
+          - SALE_OPT_OUT
+      - title: Demo Request
+        description: A demo request by someone that does not have a formal account
+        key: demos
+        data-collection-tag: Contact Info
+        fields:
+          - key: companyName
+            description: The name of the company of the person requesting the demo
+            purposes: []
+            categories:
+              - name: Other
+                category: CONTACT
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+          - key: email
+            description: The email address to use for coordinating the demo
+            purposes: []
+            categories:
+              - name: Email
+                category: CONTACT
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+      - title: Password
+        description: A password for a user
+        key: passwords
+        data-collection-tag: Contact Info
+        fields:
+          - key: email
+            description: The email address to use for coordinating the demo
+            purposes:
+              - name: Other
+                purpose: OPERATION_SECURITY
+            categories:
+              - name: Email
+                category: CONTACT
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+          - key: hash
+            description: Hash of the password
+            purposes:
+              - name: Other
+                purpose: OPERATION_SECURITY
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions: []
+      - title: User Model
+        description: The centralized user model user
+        key: users
+        data-collection-tag: Contact Info
+        fields:
+          - key: email
+            description: The email address of the user
+            purposes:
+              - name: Other
+                purpose: OPERATION_SECURITY
+            categories:
+              - name: Email
+                category: CONTACT
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+          - key: firstName
+            description: The first name of the user, inputted during onboarding
+            purposes:
+              - name: Other
+                purpose: PERSONALIZATION
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+  - title: Analytics Service
+    description: Send a webhook to a server and POST back through our API.
+    integrationName: server
+    api-key-title: Analytics Key
+    identity-keys:
+      - coreIdentifier
+    teams:
+      - Request Management
+    disabled: true
+    data-subjects:
+      - customer
+    datapoints:
+      - title: Webhook Notification
+        description: >-
+          We will send your server a notification to perform an action for one
+          of your users.
+        key: _global
+        fields:
+          - key: Webhook Notification
+            description: >-
+              We will send your server a notification to perform an action for
+              one of your users.
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
+          - ERASURE
+  - title: Manually Notify Backend Team
+    description: Notify backend team to delete data
+    integrationName: promptAPerson
+    identity-keys:
+      - coreIdentifier
+    teams:
+      - Developer
+      - Legal
+    disabled: false
+    email-settings:
+      notify-email-address: test+2@transcend.io
+      send-frequency: 1000
+      send-type: PER_DSR
+      include-identifiers-attachment: true
+      completion-link-type: UNAUTHENTICATED_EXTERNAL_USER
+      manual-work-retry-frequency: '2592000000'
+    datapoints:
+      - title: Prompt Manual Entry
+        description: Manually entered request data.
+        key: _global
+        fields:
+          - key: Prompt Manual Entry
+            description: Manually entered request data.
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ERASURE
+      - title: File Upload
+        description: Use data dump for backend service
+        key: upload
+        fields:
+          - key: File Upload
+            description: Use data dump for backend service
+            purposes: []
+            categories: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: false
+        privacy-actions:
+          - ACCESS
