@@ -28,6 +28,7 @@ import {
   PromptAVendorEmailSendType,
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
+import sortBy from 'lodash/sortBy';
 
 export interface AttributeValue {
   /** Key associated to value */
@@ -47,7 +48,7 @@ export interface DataSilo {
   type: string;
   /** The link to the data silo */
   link: string;
-  /** Attibute labels */
+  /** Attribute labels */
   attributeValues: AttributeValue[];
   /** description */
   description: string;
@@ -226,7 +227,7 @@ export async function fetchAllSubDataPoints(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return subDataPoints;
+  return sortBy(subDataPoints, 'name');
 }
 
 /**
@@ -273,7 +274,7 @@ export async function fetchAllDataPoints(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return dataPoints;
+  return sortBy(dataPoints, 'name');
 }
 
 export interface DataSiloEnriched {
