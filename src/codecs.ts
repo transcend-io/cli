@@ -187,10 +187,19 @@ export type FieldInput = t.TypeOf<typeof FieldInput>;
  */
 export const DatapointInput = t.intersection([
   t.type({
-    /** The unique key of the datapoint. When a database, this is the table name. */
-    key: t.string,
+    /**
+     * The unique key of the data point. For a database, this field should include any schema information for that given silo.
+     *
+     * Examples:
+     * - public.users
+     * - ANALYTICS.public.click_events
+     */
+    fullyQualifiedName: t.string,
   }),
   t.partial({
+    path: t.string,
+    /** (DEPRECATED) The unique key of the datapoint. For a database, this is the table name. */
+    key: t.string,
     /** The display title of the enricher */
     title: t.string,
     /** Internal description for why the enricher is needed */

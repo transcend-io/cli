@@ -161,6 +161,10 @@ export async function pullTranscendConfiguration(
 
       datapoints: dataPoints
         .map((dataPoint) => ({
+          fullyQualifiedName:
+            dataPoint.path.length > 0
+              ? [...dataPoint.path, dataPoint.name].join('.')
+              : dataPoint.name,
           title: dataPoint.title?.defaultMessage,
           description: dataPoint.description?.defaultMessage,
           key: dataPoint.name,

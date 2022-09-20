@@ -17,6 +17,7 @@ import {
   DATA_POINTS,
   SUB_DATA_POINTS,
   UPDATE_PROMPT_A_VENDOR_SETTINGS,
+  DEPRECATED_UPDATE_OR_CREATE_DATA_POINT,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -149,6 +150,8 @@ interface DataPoint {
     /** Default message */
     defaultMessage: string;
   };
+  /** The path to this data point */
+  path: string[];
   /** Description */
   description: {
     /** Default message */
@@ -566,9 +569,9 @@ export async function syncDataSilo(
             ),
           );
         }
-
-        await client.request(UPDATE_OR_CREATE_DATA_POINT, {
+        const payload = {
           dataSiloId: existingDataSilo!.id,
+          fullyQualifiedName: datapoint.fullyQualifiedName,
           name: datapoint.key,
           title: datapoint.title,
           description: datapoint.description,
@@ -585,7 +588,11 @@ export async function syncDataSilo(
               ),
           enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
           subDataPoints: fields,
-        });
+        };
+
+        datapoint.fullyQualifiedName
+          ? await client.request(UPDATE_OR_CREATE_DATA_POINT, payload)
+          : await client.request(DEPRECATED_UPDATE_OR_CREATE_DATA_POINT);
 
         logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
       },
