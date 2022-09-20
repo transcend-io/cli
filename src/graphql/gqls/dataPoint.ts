@@ -17,6 +17,7 @@ export const DATA_POINTS = gql`
           defaultMessage
         }
         name
+        path
         actionSettings {
           type
           active

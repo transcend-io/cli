@@ -167,7 +167,6 @@ export async function pullTranscendConfiguration(
               : dataPoint.name,
           title: dataPoint.title?.defaultMessage,
           description: dataPoint.description?.defaultMessage,
-          key: dataPoint.name,
           ...(dataPoint.dataCollection?.title
             ? {
                 'data-collection-tag':
@@ -209,7 +208,9 @@ export async function pullTranscendConfiguration(
             .filter(({ active }) => active)
             .map(({ type }) => type),
         }))
-        .sort((a, b) => a.key.localeCompare(b.key)),
+        .sort((a, b) =>
+          a.fullyQualifiedName.localeCompare(b.fullyQualifiedName),
+        ),
     }),
   );
   return result;
