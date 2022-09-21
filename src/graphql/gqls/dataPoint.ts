@@ -78,6 +78,7 @@ export const DEPRECATED_UPDATE_OR_CREATE_DATA_POINT = gql`
   mutation SchemaSyncUpdateOrCreateDataPoint(
     $dataSiloId: ID!
     $name: String!
+    $path: [String!]
     $title: String
     $description: String
     $dataCollectionTag: String
@@ -108,7 +109,6 @@ export const DEPRECATED_UPDATE_OR_CREATE_DATA_POINT = gql`
 export const UPDATE_OR_CREATE_DATA_POINT = gql`
   mutation SchemaSyncUpdateOrCreateDataPoint(
     $dataSiloId: ID!
-    $fullyQualifiedName: String!
     $title: String
     $description: String
     $dataCollectionTag: String

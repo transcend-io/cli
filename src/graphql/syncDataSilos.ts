@@ -571,7 +571,7 @@ export async function syncDataSilo(
         }
         const payload = {
           dataSiloId: existingDataSilo!.id,
-          fullyQualifiedName: datapoint.fullyQualifiedName,
+          fullyQualifiedName: datapoint['path'],
           name: datapoint.key,
           title: datapoint.title,
           description: datapoint.description,
@@ -590,7 +590,7 @@ export async function syncDataSilo(
           subDataPoints: fields,
         };
 
-        datapoint.fullyQualifiedName
+        datapoint['path']
           ? await client.request(UPDATE_OR_CREATE_DATA_POINT, payload)
           : await client.request(DEPRECATED_UPDATE_OR_CREATE_DATA_POINT);
 
