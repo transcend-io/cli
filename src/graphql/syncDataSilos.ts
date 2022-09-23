@@ -17,7 +17,6 @@ import {
   DATA_POINTS,
   SUB_DATA_POINTS,
   UPDATE_PROMPT_A_VENDOR_SETTINGS,
-  DEPRECATED_UPDATE_OR_CREATE_DATA_POINT,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -571,7 +570,7 @@ export async function syncDataSilo(
         }
         const payload = {
           dataSiloId: existingDataSilo!.id,
-          fullyQualifiedName: datapoint['path'],
+          path: datapoint['path'],
           name: datapoint.key,
           title: datapoint.title,
           description: datapoint.description,
@@ -590,9 +589,7 @@ export async function syncDataSilo(
           subDataPoints: fields,
         };
 
-        datapoint['path']
-          ? await client.request(UPDATE_OR_CREATE_DATA_POINT, payload)
-          : await client.request(DEPRECATED_UPDATE_OR_CREATE_DATA_POINT);
+        await client.request(UPDATE_OR_CREATE_DATA_POINT, payload);
 
         logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
       },

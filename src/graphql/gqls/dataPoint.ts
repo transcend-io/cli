@@ -74,7 +74,7 @@ export const SUB_DATA_POINTS = gql`
   }
 `;
 
-export const DEPRECATED_UPDATE_OR_CREATE_DATA_POINT = gql`
+export const UPDATE_OR_CREATE_DATA_POINT = gql`
   mutation SchemaSyncUpdateOrCreateDataPoint(
     $dataSiloId: ID!
     $name: String!
@@ -90,36 +90,7 @@ export const DEPRECATED_UPDATE_OR_CREATE_DATA_POINT = gql`
       input: {
         dataSiloId: $dataSiloId
         name: $name
-        title: $title
-        dataCollectionTag: $dataCollectionTag
-        description: $description
-        querySuggestions: $querySuggestions
-        enabledActions: $enabledActions
-        subDataPoints: $subDataPoints
-      }
-    ) {
-      dataPoint {
-        id
-        name
-      }
-    }
-  }
-`;
-
-export const UPDATE_OR_CREATE_DATA_POINT = gql`
-  mutation SchemaSyncUpdateOrCreateDataPoint(
-    $dataSiloId: ID!
-    $title: String
-    $description: String
-    $dataCollectionTag: String
-    $querySuggestions: [DbIntegrationQuerySuggestionInput!]
-    $enabledActions: [RequestActionObjectResolver!]
-    $subDataPoints: [DataPointSubDataPointInput!]
-  ) {
-    updateOrCreateDataPoint(
-      input: {
-        dataSiloId: $dataSiloId
-        fullyQualifiedName: $fullyQualifiedName
+        path: $path
         title: $title
         dataCollectionTag: $dataCollectionTag
         description: $description
