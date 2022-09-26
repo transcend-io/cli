@@ -149,6 +149,8 @@ interface DataPoint {
     /** Default message */
     defaultMessage: string;
   };
+  /** The path to this data point */
+  path: string[];
   /** Description */
   description: {
     /** Default message */
@@ -566,9 +568,9 @@ export async function syncDataSilo(
             ),
           );
         }
-
-        await client.request(UPDATE_OR_CREATE_DATA_POINT, {
+        const payload = {
           dataSiloId: existingDataSilo!.id,
+          path: datapoint['path'],
           name: datapoint.key,
           title: datapoint.title,
           description: datapoint.description,
@@ -585,7 +587,9 @@ export async function syncDataSilo(
               ),
           enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
           subDataPoints: fields,
-        });
+        };
+
+        await client.request(UPDATE_OR_CREATE_DATA_POINT, payload);
 
         logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
       },

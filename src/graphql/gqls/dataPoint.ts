@@ -17,6 +17,7 @@ export const DATA_POINTS = gql`
           defaultMessage
         }
         name
+        path
         actionSettings {
           type
           active
@@ -77,6 +78,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
   mutation SchemaSyncUpdateOrCreateDataPoint(
     $dataSiloId: ID!
     $name: String!
+    $path: [String!]
     $title: String
     $description: String
     $dataCollectionTag: String
@@ -88,6 +90,7 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
       input: {
         dataSiloId: $dataSiloId
         name: $name
+        path: $path
         title: $title
         dataCollectionTag: $dataCollectionTag
         description: $description
