@@ -570,7 +570,7 @@ export async function syncDataSilo(
         }
         const payload = {
           dataSiloId: existingDataSilo!.id,
-          path: datapoint['path'],
+          path: datapoint.path,
           name: datapoint.key,
           title: datapoint.title,
           description: datapoint.description,
