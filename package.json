@@ -2,7 +2,11 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
+<<<<<<< HEAD
   "version": "4.5.2",
+=======
+  "version": "4.5.1",
+>>>>>>> main
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
