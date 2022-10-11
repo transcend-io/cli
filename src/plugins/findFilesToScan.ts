@@ -41,6 +41,7 @@ export const findFilesToScan = async (
       name: dep.name,
       type: dep.type,
       resourceId: `${scanPath}/**/${dep.name}`,
+      useStrictClassifier: true,
     }));
   } catch (error) {
     throw new Error(
