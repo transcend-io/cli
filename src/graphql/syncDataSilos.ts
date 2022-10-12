@@ -59,7 +59,7 @@ export interface DataSilo {
   };
 }
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 
 /**
  * Fetch all dataSilos in the organization
@@ -73,11 +73,14 @@ export async function fetchAllDataSilos(
   {
     title,
     ids = [],
+    integrationNames = [],
   }: {
     /** Title */
     title?: string;
     /** IDs */
     ids?: string[];
+    /** Set of integration names to fetch */
+    integrationNames?: string[];
   },
 ): Promise<DataSilo[]> {
   logger.info(
@@ -104,6 +107,7 @@ export async function fetchAllDataSilos(
     }>(DATA_SILOS, {
       first: PAGE_SIZE,
       ids: ids.length > 0 ? ids : undefined,
+      types: integrationNames.length > 0 ? integrationNames : undefined,
       offset,
       title,
     });
@@ -111,7 +115,17 @@ export async function fetchAllDataSilos(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  logger.info(colors.green(`Found a total of ${dataSilos.length} data silos`));
+  logger.info(
+    colors.green(
+      `Found a total of ${dataSilos.length} data silos${
+        ids.length > 0 ? ` matching IDs ${ids.join(',')}` : ''
+      }s${
+        integrationNames.length > 0
+          ? ` matching integrationNames ${integrationNames.join(',')}`
+          : ''
+      }`,
+    ),
+  );
 
   return dataSilos;
 }
@@ -358,8 +372,6 @@ export interface DataSiloEnriched {
   attributeValues: AttributeValue[];
 }
 
-const LOG_FREQUENCY = 10;
-
 /**
  * Fetch all dataSilos with additional metadata
  *
@@ -372,17 +384,29 @@ export async function fetchEnrichedDataSilos(
   {
     ids,
     title,
+    integrationNames,
   }: {
     /** Filter by IDs */
     ids?: string[];
     /** Filter by title */
     title?: string;
+    /** Integration names */
+    integrationNames?: string[];
   } = {},
 ): Promise<[DataSiloEnriched, DataPointWithSubDataPoint[]][]> {
   const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
 
-  const silos = await fetchAllDataSilos(client, { title, ids });
+  const silos = await fetchAllDataSilos(client, {
+    title,
+    ids,
+    integrationNames,
+  });
   await mapSeries(silos, async (silo, index) => {
+    logger.info(
+      colors.magenta(
+        `[${index + 1}/${silos.length}] Fetching data silo - ${silo.title}`,
+      ),
+    );
     const { dataSilo } = await client.request<{
       /** Query response */
       dataSilo: DataSiloEnriched;
@@ -391,16 +415,6 @@ export async function fetchEnrichedDataSilos(
     });
     const dataPoints = await fetchAllDataPoints(client, dataSilo.id);
     dataSilos.push([dataSilo, dataPoints]);
-
-    if (index % LOG_FREQUENCY === 0) {
-      logger.info(
-        colors.magenta(
-          `Successfully fetched ${index + 1}/${
-            silos.length
-          } data silo configurations`,
-        ),
-      );
-    }
   });
 
   logger.info(

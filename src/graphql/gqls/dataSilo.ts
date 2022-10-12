@@ -4,11 +4,12 @@ export const DATA_SILOS = gql`
   query SchemaSyncDataSilos(
     $title: String
     $ids: [ID!]
+    $types: [String!]
     $first: Int!
     $offset: Int!
   ) {
     dataSilos(
-      filterBy: { text: $title, ids: $ids }
+      filterBy: { text: $title, ids: $ids, type: $types }
       first: $first
       offset: $offset
     ) {

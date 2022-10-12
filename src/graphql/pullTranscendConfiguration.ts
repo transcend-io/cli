@@ -27,8 +27,22 @@ import { formatAttributeValues } from './formatAttributeValues';
  */
 export async function pullTranscendConfiguration(
   client: GraphQLClient,
-  dataSiloIds: string[],
+  {
+    dataSiloIds,
+    integrationNames,
+  }: {
+    /** The data silo IDs to sync. If empty list, pull all. */
+    dataSiloIds: string[];
+    /** The data silo types to sync.If empty list, pull all.  */
+    integrationNames: string[];
+  },
 ): Promise<TranscendInput> {
+  if (dataSiloIds.length > 0 && integrationNames.length > 0) {
+    throw new Error(
+      'Only 1 of integrationNames OR dataSiloIds can be provided',
+    );
+  }
+
   const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers, templates] =
     await Promise.all([
       // Grab all data subjects in the organization
@@ -36,7 +50,10 @@ export async function pullTranscendConfiguration(
       // Grab API keys
       fetchApiKeys({}, client, true),
       // Fetch the data silos
-      fetchEnrichedDataSilos(client, { ids: dataSiloIds }),
+      fetchEnrichedDataSilos(client, {
+        ids: dataSiloIds,
+        integrationNames,
+      }),
       // Fetch enrichers
       fetchAllEnrichers(client),
       // Fetch email templates
