@@ -55,6 +55,8 @@ async function main(): Promise<void> {
         .split(',')
         .filter((x) => !!x),
     });
+
+    logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
     writeTranscendYaml(file, configuration);
   } catch (err) {
     logger.error(
