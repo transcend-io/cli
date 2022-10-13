@@ -205,6 +205,12 @@ Or with a specific page size (max 100)
 tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake --pageSize=30
 ```
 
+Or with debug logs
+
+```sh
+tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake --debug=true
+```
+
 Note: This command will overwrite the existing transcend.yml file that you have locally.
 
 ### tr-push

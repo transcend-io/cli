@@ -32,10 +32,13 @@ export async function pullTranscendConfiguration(
   {
     dataSiloIds,
     integrationNames,
+    debug,
     pageSize,
   }: {
     /** Page size */
     pageSize: number;
+    /** Enable debug logs */
+    debug: boolean;
     /** The data silo IDs to sync. If empty list, pull all. */
     dataSiloIds: string[];
     /** The data silo types to sync.If empty list, pull all.  */
@@ -61,6 +64,7 @@ export async function pullTranscendConfiguration(
         ids: dataSiloIds,
         integrationNames,
         pageSize,
+        debug,
       }),
       // Fetch enrichers
       fetchAllEnrichers(client),
