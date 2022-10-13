@@ -24,6 +24,7 @@ async function main(): Promise<void> {
     transcendUrl = 'https://api.transcend.io',
     dataSiloIds = '',
     integrationNames = '',
+    pageSize = '',
     auth,
   } = yargs(process.argv.slice(2));
 
@@ -54,6 +55,7 @@ async function main(): Promise<void> {
       integrationNames: (integrationNames as string)
         .split(',')
         .filter((x) => !!x),
+      pageSize: pageSize ? parseInt(pageSize, 10) : 50,
     });
 
     logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
