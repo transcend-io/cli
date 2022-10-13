@@ -27,6 +27,7 @@ async function main(): Promise<void> {
     transcendUrl = 'https://api.transcend.io',
     auth,
     variables = '',
+    pageSize = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -88,6 +89,7 @@ async function main(): Promise<void> {
     const encounteredError = await syncConfigurationToTranscend(
       contents,
       client,
+      pageSize ? parseInt(pageSize, 10) : 50,
     );
     if (encounteredError) {
       logger.info(

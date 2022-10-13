@@ -199,6 +199,12 @@ Or a specific types of data silo(s) can be pulled in:
 tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake
 ```
 
+Or with a specific page size (max 100)
+
+```sh
+tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake --pageSize=30
+```
+
 Note: This command will overwrite the existing transcend.yml file that you have locally.
 
 ### tr-push
