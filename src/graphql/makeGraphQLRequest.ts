@@ -13,7 +13,7 @@ const MAX_RETRIES = 3;
  * @param requestHeaders - Headers
  * @returns Response
  */
-export function makeGraphQLRequest<T, V = Variables>(
+export async function makeGraphQLRequest<T, V = Variables>(
   client: GraphQLClient,
   document: RequestDocument,
   variables?: V,
@@ -23,7 +23,9 @@ export function makeGraphQLRequest<T, V = Variables>(
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
-      return client.request(document, variables, requestHeaders);
+      // eslint-disable-next-line no-await-in-loop
+      const result = await client.request(document, variables, requestHeaders);
+      return result;
     } catch (err) {
       if (retryCount > MAX_RETRIES) {
         throw err;
