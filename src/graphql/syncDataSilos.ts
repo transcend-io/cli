@@ -254,13 +254,21 @@ export async function fetchAllSubDataPoints(
  *
  * @param client - GraphQL client
  * @param dataSiloId - Data silo ID
- * @param pageSize - Page size
+ * @param options - Options
  * @returns List of datapoints
  */
 export async function fetchAllDataPoints(
   client: GraphQLClient,
   dataSiloId: string,
-  pageSize: number,
+  {
+    debug,
+    pageSize,
+  }: {
+    /** Debug logs */
+    debug: boolean;
+    /** Page size */
+    pageSize: number;
+  },
 ): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
   let offset = 0;
@@ -268,6 +276,10 @@ export async function fetchAllDataPoints(
   // Try to fetch an enricher with the same title
   let shouldContinue = false;
   do {
+    if (debug) {
+      logger.info(colors.magenta(`Fetching datapoints with offset: ${offset}`));
+    }
+
     const {
       dataPoints: { nodes },
       // eslint-disable-next-line no-await-in-loop
@@ -282,9 +294,25 @@ export async function fetchAllDataPoints(
       dataSiloIds: [dataSiloId],
       offset,
     });
+
+    if (debug) {
+      logger.info(
+        colors.magenta(
+          `Fetched ${nodes.length} datapoints at offset: ${offset}`,
+        ),
+      );
+    }
+
     // eslint-disable-next-line no-await-in-loop
-    await Promise.all(
-      nodes.map(async (node) => {
+    await map(
+      nodes,
+      async (node) => {
+        if (debug) {
+          logger.info(
+            colors.magenta(`Fetching subdatapoints for ${node.name}`),
+          );
+        }
+
         const subDataPoints = await fetchAllSubDataPoints(
           client,
           node.id,
@@ -294,8 +322,26 @@ export async function fetchAllDataPoints(
           ...node,
           subDataPoints,
         });
-      }),
+
+        if (debug) {
+          logger.info(
+            colors.green(`Successfully fetched subdatapoints for ${node.name}`),
+          );
+        }
+      },
+      {
+        concurrency: 10,
+      },
     );
+
+    if (debug) {
+      logger.info(
+        colors.green(
+          `Fetched all subdatapoints for page of datapoints at offset: ${offset}`,
+        ),
+      );
+    }
+
     offset += pageSize;
     shouldContinue = nodes.length === pageSize;
   } while (shouldContinue);
@@ -394,12 +440,15 @@ export async function fetchEnrichedDataSilos(
     ids,
     pageSize,
     title,
+    debug,
     integrationNames,
   }: {
     /** Page size */
     pageSize: number;
     /** Filter by IDs */
     ids?: string[];
+    /** Enable debug logs */
+    debug: boolean;
     /** Filter by title */
     title?: string;
     /** Integration names */
@@ -426,7 +475,32 @@ export async function fetchEnrichedDataSilos(
     }>(DATA_SILO, {
       id: silo.id,
     });
-    const dataPoints = await fetchAllDataPoints(client, dataSilo.id, pageSize);
+
+    if (debug) {
+      logger.info(
+        colors.magenta(
+          `[${index + 1}/${
+            silos.length
+          }] Successfully fetched data silo metadata for - ${silo.title}`,
+        ),
+      );
+    }
+
+    const dataPoints = await fetchAllDataPoints(client, dataSilo.id, {
+      debug,
+      pageSize,
+    });
+
+    if (debug) {
+      logger.info(
+        colors.green(
+          `[${index + 1}/${
+            silos.length
+          }] Successfully fetched datapoint for - ${silo.title}`,
+        ),
+      );
+    }
+
     dataSilos.push([dataSilo, dataPoints]);
   });
 

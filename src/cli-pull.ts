@@ -25,6 +25,7 @@ async function main(): Promise<void> {
     dataSiloIds = '',
     integrationNames = '',
     pageSize = '',
+    debug = '',
     auth,
   } = yargs(process.argv.slice(2));
 
@@ -56,6 +57,7 @@ async function main(): Promise<void> {
         .split(',')
         .filter((x) => !!x),
       pageSize: pageSize ? parseInt(pageSize, 10) : 50,
+      debug: debug === 'true',
     });
 
     logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
