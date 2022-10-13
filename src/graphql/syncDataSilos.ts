@@ -214,13 +214,21 @@ interface DataPointWithSubDataPoint extends DataPoint {
  *
  * @param client - The GraphQL client
  * @param dataPointId - The datapoint ID
- * @param pageSize - Page size for fetching
+ * @param options - Options
  * @returns The list of subdatapoints
  */
 export async function fetchAllSubDataPoints(
   client: GraphQLClient,
   dataPointId: string,
-  pageSize: number,
+  {
+    debug,
+    pageSize,
+  }: {
+    /** Debug logs */
+    debug: boolean;
+    /** Page size */
+    pageSize: number;
+  },
 ): Promise<SubDataPoint[]> {
   const subDataPoints: SubDataPoint[] = [];
 
@@ -228,23 +236,46 @@ export async function fetchAllSubDataPoints(
 
   let shouldContinue = false;
   do {
-    const {
-      subDataPoints: { nodes },
-      // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
-      /** Query response */
-      subDataPoints: {
-        /** List of matches */
-        nodes: SubDataPoint[];
-      };
-    }>(SUB_DATA_POINTS, {
-      first: pageSize,
-      dataPointIds: [dataPointId],
-      offset,
-    });
-    subDataPoints.push(...nodes);
-    offset += pageSize;
-    shouldContinue = nodes.length === pageSize;
+    try {
+      if (debug) {
+        logger.log(
+          colors.magenta(`Pulling in subdatapoints for offset ${offset}`),
+        );
+      }
+
+      const {
+        subDataPoints: { nodes },
+        // eslint-disable-next-line no-await-in-loop
+      } = await client.request<{
+        /** Query response */
+        subDataPoints: {
+          /** List of matches */
+          nodes: SubDataPoint[];
+        };
+      }>(SUB_DATA_POINTS, {
+        first: pageSize,
+        dataPointIds: [dataPointId],
+        offset,
+      });
+      subDataPoints.push(...nodes);
+      offset += pageSize;
+      shouldContinue = nodes.length === pageSize;
+
+      if (debug) {
+        logger.log(
+          colors.green(
+            `Pulled in subdatapoints for offset ${offset} for dataPointId=${dataPointId}`,
+          ),
+        );
+      }
+    } catch (err) {
+      logger.error(
+        colors.red(
+          `An error fetching subdatapoints for offset ${offset} for dataPointId=${dataPointId}`,
+        ),
+      );
+      throw err;
+    }
   } while (shouldContinue);
   return sortBy(subDataPoints, 'name');
 }
@@ -306,29 +337,43 @@ export async function fetchAllDataPoints(
     // eslint-disable-next-line no-await-in-loop
     await map(
       nodes,
+      /* eslint-disable no-loop-func */
       async (node) => {
-        if (debug) {
-          logger.info(
-            colors.magenta(`Fetching subdatapoints for ${node.name}`),
-          );
-        }
+        try {
+          if (debug) {
+            logger.info(
+              colors.magenta(
+                `Fetching subdatapoints for ${node.name} for datapoint offset ${offset}`,
+              ),
+            );
+          }
 
-        const subDataPoints = await fetchAllSubDataPoints(
-          client,
-          node.id,
-          pageSize,
-        );
-        dataPoints.push({
-          ...node,
-          subDataPoints,
-        });
+          const subDataPoints = await fetchAllSubDataPoints(client, node.id, {
+            pageSize,
+            debug,
+          });
+          dataPoints.push({
+            ...node,
+            subDataPoints,
+          });
 
-        if (debug) {
-          logger.info(
-            colors.green(`Successfully fetched subdatapoints for ${node.name}`),
+          if (debug) {
+            logger.info(
+              colors.green(
+                `Successfully fetched subdatapoints for ${node.name}`,
+              ),
+            );
+          }
+        } catch (err) {
+          logger.error(
+            colors.red(
+              `An error fetching subdatapoints for ${node.name} datapoint offset ${offset}`,
+            ),
           );
+          throw err;
         }
       },
+      /* eslint-enable no-loop-func */
       {
         concurrency: 10,
       },
