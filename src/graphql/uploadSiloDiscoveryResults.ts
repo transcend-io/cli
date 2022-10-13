@@ -3,6 +3,7 @@ import { mapSeries } from 'bluebird';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
 import { SiloDiscoveryRawResults } from '../plugins';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const CHUNK_SIZE = 1000;
 
@@ -21,10 +22,10 @@ export async function uploadSiloDiscoveryResults(
   const chunks = chunk(results, CHUNK_SIZE);
 
   await mapSeries(chunks, async (rawResults) => {
-    await client.request<{
+    await makeGraphQLRequest<{
       /** Whether we successfully uploaded the results */
       success: boolean;
-    }>(ADD_SILO_DISCOVERY_RESULTS, {
+    }>(client, ADD_SILO_DISCOVERY_RESULTS, {
       pluginId,
       rawResults,
     });

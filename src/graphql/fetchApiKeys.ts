@@ -6,6 +6,7 @@ import difference from 'lodash/difference';
 import { logger } from '../logger';
 import colors from 'colors';
 import { TranscendInput } from '../codecs';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface ApiKey {
   /** ID of APi key */
@@ -50,7 +51,7 @@ export async function fetchApiKeys(
     const {
       apiKeys: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request(API_KEYS, {
+    } = await makeGraphQLRequest(client, API_KEYS, {
       first: PAGE_SIZE,
       offset,
       titles: fetchAll ? undefined : titles,
