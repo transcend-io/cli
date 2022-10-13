@@ -8,6 +8,7 @@ import { TranscendInput } from '../codecs';
 import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
+import { makeGraphQLRequest } from '.';
 
 export interface DataSubject {
   /** ID of data subject */
@@ -38,10 +39,10 @@ export async function fetchDataSubjects(
   }
 
   // Fetch all data subjects in the organization
-  const { internalSubjects } = await client.request<{
+  const { internalSubjects } = await makeGraphQLRequest<{
     /** Query response */
     internalSubjects: DataSubject[];
-  }>(DATA_SUBJECTS);
+  }>(client, DATA_SUBJECTS);
   const dataSubjectByName = keyBy(internalSubjects, 'type');
 
   // Determine expected set of data subjects to create
@@ -59,9 +60,13 @@ export async function fetchDataSubjects(
     );
     await mapSeries(missingDataSubjects, async (dataSubject) => {
       logger.info(colors.magenta(`Creating data subject ${dataSubject}...`));
-      const { createSubject } = await client.request(CREATE_DATA_SUBJECT, {
-        type: dataSubject,
-      });
+      const { createSubject } = await makeGraphQLRequest(
+        client,
+        CREATE_DATA_SUBJECT,
+        {
+          type: dataSubject,
+        },
+      );
       logger.info(colors.green(`Created data subject ${dataSubject}!`));
 
       dataSubjectByName[dataSubject] = createSubject.subject;

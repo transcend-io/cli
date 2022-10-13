@@ -29,6 +29,7 @@ import {
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
 import sortBy from 'lodash/sortBy';
+import { makeGraphQLRequest } from '.';
 
 export interface AttributeValue {
   /** Key associated to value */
@@ -99,13 +100,13 @@ export async function fetchAllDataSilos(
     const {
       dataSilos: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
+    } = await makeGraphQLRequest<{
       /** Query response */
       dataSilos: {
         /** List of matches */
         nodes: DataSilo[];
       };
-    }>(DATA_SILOS, {
+    }>(client, DATA_SILOS, {
       first: pageSize,
       ids: ids.length > 0 ? ids : undefined,
       types: integrationNames.length > 0 ? integrationNames : undefined,
@@ -246,13 +247,13 @@ export async function fetchAllSubDataPoints(
       const {
         subDataPoints: { nodes },
         // eslint-disable-next-line no-await-in-loop
-      } = await client.request<{
+      } = await makeGraphQLRequest<{
         /** Query response */
         subDataPoints: {
           /** List of matches */
           nodes: SubDataPoint[];
         };
-      }>(SUB_DATA_POINTS, {
+      }>(client, SUB_DATA_POINTS, {
         first: pageSize,
         dataPointIds: [dataPointId],
         offset,
@@ -314,13 +315,13 @@ export async function fetchAllDataPoints(
     const {
       dataPoints: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
+    } = await makeGraphQLRequest<{
       /** Query response */
       dataPoints: {
         /** List of matches */
         nodes: DataPoint[];
       };
-    }>(DATA_POINTS, {
+    }>(client, DATA_POINTS, {
       first: pageSize,
       dataSiloIds: [dataSiloId],
       offset,
@@ -514,10 +515,10 @@ export async function fetchEnrichedDataSilos(
         `[${index + 1}/${silos.length}] Fetching data silo - ${silo.title}`,
       ),
     );
-    const { dataSilo } = await client.request<{
+    const { dataSilo } = await makeGraphQLRequest<{
       /** Query response */
       dataSilo: DataSiloEnriched;
-    }>(DATA_SILO, {
+    }>(client, DATA_SILO, {
       id: silo.id,
     });
 
@@ -595,7 +596,7 @@ export async function syncDataSilo(
 
   // If data silo exists, update it, else create new
   if (existingDataSilo) {
-    await client.request(UPDATE_DATA_SILO, {
+    await makeGraphQLRequest(client, UPDATE_DATA_SILO, {
       id: existingDataSilo.id,
       title: dataSilo.title,
       url: dataSilo.url,
@@ -622,13 +623,13 @@ export async function syncDataSilo(
       attributes: dataSilo.attributes,
     });
   } else {
-    const { connectDataSilo } = await client.request<{
+    const { connectDataSilo } = await makeGraphQLRequest<{
       /** Mutation result */
       connectDataSilo: {
         /** Created data silo */
         dataSilo: DataSilo;
       };
-    }>(CREATE_DATA_SILO, {
+    }>(client, CREATE_DATA_SILO, {
       title: dataSilo.title,
       url: dataSilo.url,
       headers: dataSilo.headers,
@@ -671,7 +672,7 @@ export async function syncDataSilo(
         ),
       );
 
-      await client.request(UPDATE_PROMPT_A_VENDOR_SETTINGS, {
+      await makeGraphQLRequest(client, UPDATE_PROMPT_A_VENDOR_SETTINGS, {
         dataSiloId: existingDataSilo!.id,
         notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
         promptAVendorEmailSendFrequency:
@@ -747,7 +748,7 @@ export async function syncDataSilo(
           subDataPoints: fields,
         };
 
-        await client.request(UPDATE_OR_CREATE_DATA_POINT, payload);
+        await makeGraphQLRequest(client, UPDATE_OR_CREATE_DATA_POINT, payload);
 
         logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
       },

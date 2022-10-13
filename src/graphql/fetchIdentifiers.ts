@@ -8,6 +8,7 @@ import difference from 'lodash/difference';
 import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
+import { makeGraphQLRequest } from '.';
 
 export interface Identifier {
   /** ID of identifier */
@@ -36,7 +37,7 @@ export async function fetchAllIdentifiers(
     const {
       identifiers: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request(IDENTIFIERS, {
+    } = await makeGraphQLRequest(client, IDENTIFIERS, {
       first: PAGE_SIZE,
       offset,
     });
@@ -88,22 +89,26 @@ export async function fetchIdentifiersAndCreateMissing(
         `Creating ${missingIdentifiers.length} new identifiers...`,
       ),
     );
-    const { newIdentifierTypes } = await client.request<{
+    const { newIdentifierTypes } = await makeGraphQLRequest<{
       /** Query response */
       newIdentifierTypes: {
         /** Name of identifier type remaining */
         name: string;
       }[];
-    }>(NEW_IDENTIFIER_TYPES);
+    }>(client, NEW_IDENTIFIER_TYPES);
     const nativeTypesRemaining = newIdentifierTypes.map(({ name }) => name);
     await mapSeries(missingIdentifiers, async (identifier) => {
       logger.info(colors.magenta(`Creating identifier ${identifier}...`));
-      const { createIdentifier } = await client.request(CREATE_IDENTIFIER, {
-        name: identifier,
-        type: nativeTypesRemaining.includes(identifier!)
-          ? identifier
-          : 'custom',
-      });
+      const { createIdentifier } = await makeGraphQLRequest(
+        client,
+        CREATE_IDENTIFIER,
+        {
+          name: identifier,
+          type: nativeTypesRemaining.includes(identifier!)
+            ? identifier
+            : 'custom',
+        },
+      );
       logger.info(colors.green(`Created identifier ${identifier}!`));
 
       identifiersByName[identifier!] = createIdentifier.identifier;

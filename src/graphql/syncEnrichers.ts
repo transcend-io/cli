@@ -3,6 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { ENRICHERS, CREATE_ENRICHER, UPDATE_ENRICHER } from './gqls';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { Identifier } from './fetchIdentifiers';
+import { makeGraphQLRequest } from '.';
 
 export interface Enricher {
   /** ID of enricher */
@@ -49,13 +50,13 @@ export async function fetchAllEnrichers(
     const {
       enrichers: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
+    } = await makeGraphQLRequest<{
       /** Query response */
       enrichers: {
         /** List of matches */
         nodes: Enricher[];
       };
-    }>(ENRICHERS, {
+    }>(client, ENRICHERS, {
       first: PAGE_SIZE,
       offset,
       title,
@@ -88,7 +89,7 @@ export async function syncEnricher(
 
   // If enricher exists, update it, else create new
   if (existingEnricher) {
-    await client.request(UPDATE_ENRICHER, {
+    await makeGraphQLRequest(client, UPDATE_ENRICHER, {
       id: existingEnricher.id,
       title: enricher.title,
       url: enricher.url,
@@ -101,7 +102,7 @@ export async function syncEnricher(
       actions: enricher['privacy-actions'] || Object.values(RequestAction),
     });
   } else {
-    await client.request(CREATE_ENRICHER, {
+    await makeGraphQLRequest(client, CREATE_ENRICHER, {
       title: enricher.title,
       url: enricher.url,
       headers: enricher.headers,

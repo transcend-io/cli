@@ -9,7 +9,7 @@ import { syncDataSilo, DataSilo } from './syncDataSilos';
 import { fetchDataSubjects } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { UPDATE_DATA_SILO } from './gqls';
-import { syncTemplate } from '.';
+import { makeGraphQLRequest, syncTemplate } from '.';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
@@ -138,7 +138,7 @@ export async function syncConfigurationToTranscend(
         ),
       );
       try {
-        await client.request(UPDATE_DATA_SILO, {
+        await makeGraphQLRequest(client, UPDATE_DATA_SILO, {
           id: dataSilo.id,
           dependedOnDataSiloTitles: dependencyTitles,
         });

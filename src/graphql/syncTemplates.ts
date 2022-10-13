@@ -1,6 +1,7 @@
 import { TemplateInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { TEMPLATES, CREATE_TEMPLATE } from './gqls';
+import { makeGraphQLRequest } from '.';
 
 export interface Template {
   /** ID of Template */
@@ -31,13 +32,13 @@ export async function fetchAllTemplates(
     const {
       templates: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await client.request<{
+    } = await makeGraphQLRequest<{
       /** Query response */
       templates: {
         /** List of matches */
         nodes: Template[];
       };
-    }>(TEMPLATES, {
+    }>(client, TEMPLATES, {
       first: PAGE_SIZE,
       offset,
       title,
@@ -68,7 +69,7 @@ export async function syncTemplate(
 
   // If Template exists, update it
   if (!existingTemplate) {
-    await client.request(CREATE_TEMPLATE, {
+    await makeGraphQLRequest(client, CREATE_TEMPLATE, {
       title: template.title,
     });
   }

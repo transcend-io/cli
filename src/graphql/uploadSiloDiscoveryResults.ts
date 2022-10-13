@@ -21,10 +21,10 @@ export async function uploadSiloDiscoveryResults(
   const chunks = chunk(results, CHUNK_SIZE);
 
   await mapSeries(chunks, async (rawResults) => {
-    await client.request<{
+    await makeGraphQLRequest<{
       /** Whether we successfully uploaded the results */
       success: boolean;
-    }>(ADD_SILO_DISCOVERY_RESULTS, {
+    }>(client, ADD_SILO_DISCOVERY_RESULTS, {
       pluginId,
       rawResults,
     });

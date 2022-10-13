@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import { isSupportedPlugin, SupportedPlugin } from '../plugins';
 import { logger } from '../logger';
 import { ENABLED_PLUGINS } from './gqls';
+import { makeGraphQLRequest } from '.';
 
 export interface Plugin {
   /** Associated data silo */
@@ -34,10 +35,14 @@ export async function fetchActiveSiloDiscoPlugin(
   client: GraphQLClient,
   dataSiloId: string,
 ): Promise<Plugin> {
-  const response = await client.request<PluginResponse>(ENABLED_PLUGINS, {
-    dataSiloId,
-    type: 'DATA_SILO_DISCOVERY',
-  });
+  const response = await makeGraphQLRequest<PluginResponse>(
+    client,
+    ENABLED_PLUGINS,
+    {
+      dataSiloId,
+      type: 'DATA_SILO_DISCOVERY',
+    },
+  );
 
   const { plugins, totalCount } = response.plugins;
   if (totalCount === 0) {
