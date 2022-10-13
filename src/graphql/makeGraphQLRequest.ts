@@ -1,5 +1,5 @@
 import { GraphQLClient, RequestDocument, Variables } from 'graphql-request';
-import { logger } from 'src/logger';
+import { logger } from '../logger';
 import colors from 'colors';
 
 const MAX_RETRIES = 3;

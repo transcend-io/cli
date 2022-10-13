@@ -3,6 +3,7 @@ import { mapSeries } from 'bluebird';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
 import { SiloDiscoveryRawResults } from '../plugins';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const CHUNK_SIZE = 1000;
 
