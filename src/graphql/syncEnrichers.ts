@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { ENRICHERS, CREATE_ENRICHER, UPDATE_ENRICHER } from './gqls';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { Identifier } from './fetchIdentifiers';
-import { makeGraphQLRequest } from '.';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Enricher {
   /** ID of enricher */

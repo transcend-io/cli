@@ -6,7 +6,7 @@ import difference from 'lodash/difference';
 import { logger } from '../logger';
 import colors from 'colors';
 import { TranscendInput } from '../codecs';
-import { makeGraphQLRequest } from '.';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface ApiKey {
   /** ID of APi key */

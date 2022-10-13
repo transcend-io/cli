@@ -29,7 +29,7 @@ import {
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
 import sortBy from 'lodash/sortBy';
-import { makeGraphQLRequest } from '.';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface AttributeValue {
   /** Key associated to value */

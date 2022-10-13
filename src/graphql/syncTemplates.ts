@@ -1,7 +1,7 @@
 import { TemplateInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { TEMPLATES, CREATE_TEMPLATE } from './gqls';
-import { makeGraphQLRequest } from '.';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Template {
   /** ID of Template */

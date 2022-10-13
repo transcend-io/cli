@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import { isSupportedPlugin, SupportedPlugin } from '../plugins';
 import { logger } from '../logger';
 import { ENABLED_PLUGINS } from './gqls';
-import { makeGraphQLRequest } from '.';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Plugin {
   /** Associated data silo */
