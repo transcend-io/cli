@@ -16,13 +16,17 @@ import { syncTemplate } from '.';
  *
  * @param input - The yml input
  * @param client - GraphQL client
+ * @param pageSize - Page size
  * @returns True if an error was encountered
  */
 export async function syncConfigurationToTranscend(
   input: TranscendInput,
   client: GraphQLClient,
+  pageSize: number,
 ): Promise<boolean> {
   let encounteredError = false;
+
+  logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
   const [identifierByName, dataSubjects, apiKeyTitleMap] = await Promise.all([
     // Ensure all identifiers are created and create a map from name -> identifier.id
@@ -90,12 +94,11 @@ export async function syncConfigurationToTranscend(
     await mapSeries(dataSilos, async (dataSilo) => {
       logger.info(colors.magenta(`Syncing data silo "${dataSilo.title}"...`));
       try {
-        const dataSiloInfo = await syncDataSilo(
-          dataSilo,
-          client,
-          dataSubjects,
-          apiKeyTitleMap,
-        );
+        const dataSiloInfo = await syncDataSilo(dataSilo, client, {
+          dataSubjectsByName: dataSubjects,
+          apiKeysByTitle: apiKeyTitleMap,
+          pageSize,
+        });
         logger.info(
           colors.green(
             `Successfully synced data silo "${dataSilo.title}"! View at: ${dataSiloInfo.link}`,

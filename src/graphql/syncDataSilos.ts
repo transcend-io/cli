@@ -59,8 +59,6 @@ export interface DataSilo {
   };
 }
 
-const PAGE_SIZE = 50;
-
 /**
  * Fetch all dataSilos in the organization
  *
@@ -72,9 +70,12 @@ export async function fetchAllDataSilos(
   client: GraphQLClient,
   {
     title,
+    pageSize,
     ids = [],
     integrationNames = [],
   }: {
+    /** Page size to fetch datapoints in */
+    pageSize: number;
     /** Title */
     title?: string;
     /** IDs */
@@ -105,19 +106,19 @@ export async function fetchAllDataSilos(
         nodes: DataSilo[];
       };
     }>(DATA_SILOS, {
-      first: PAGE_SIZE,
+      first: pageSize,
       ids: ids.length > 0 ? ids : undefined,
       types: integrationNames.length > 0 ? integrationNames : undefined,
       offset,
       title,
     });
     dataSilos.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
+    offset += pageSize;
+    shouldContinue = nodes.length === pageSize;
   } while (shouldContinue);
   logger.info(
     colors.green(
-      `Found a total of ${dataSilos.length} data silos${
+      `Found a total of ${dataSilos.length} data silo${
         ids.length > 0 ? ` matching IDs ${ids.join(',')}` : ''
       }s${
         integrationNames.length > 0
@@ -213,11 +214,13 @@ interface DataPointWithSubDataPoint extends DataPoint {
  *
  * @param client - The GraphQL client
  * @param dataPointId - The datapoint ID
+ * @param pageSize - Page size for fetching
  * @returns The list of subdatapoints
  */
 export async function fetchAllSubDataPoints(
   client: GraphQLClient,
   dataPointId: string,
+  pageSize: number,
 ): Promise<SubDataPoint[]> {
   const subDataPoints: SubDataPoint[] = [];
 
@@ -235,13 +238,13 @@ export async function fetchAllSubDataPoints(
         nodes: SubDataPoint[];
       };
     }>(SUB_DATA_POINTS, {
-      first: PAGE_SIZE,
+      first: pageSize,
       dataPointIds: [dataPointId],
       offset,
     });
     subDataPoints.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
+    offset += pageSize;
+    shouldContinue = nodes.length === pageSize;
   } while (shouldContinue);
   return sortBy(subDataPoints, 'name');
 }
@@ -251,11 +254,13 @@ export async function fetchAllSubDataPoints(
  *
  * @param client - GraphQL client
  * @param dataSiloId - Data silo ID
+ * @param pageSize - Page size
  * @returns List of datapoints
  */
 export async function fetchAllDataPoints(
   client: GraphQLClient,
   dataSiloId: string,
+  pageSize: number,
 ): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
   let offset = 0;
@@ -273,22 +278,26 @@ export async function fetchAllDataPoints(
         nodes: DataPoint[];
       };
     }>(DATA_POINTS, {
-      first: PAGE_SIZE,
+      first: pageSize,
       dataSiloIds: [dataSiloId],
       offset,
     });
     // eslint-disable-next-line no-await-in-loop
     await Promise.all(
       nodes.map(async (node) => {
-        const subDataPoints = await fetchAllSubDataPoints(client, node.id);
+        const subDataPoints = await fetchAllSubDataPoints(
+          client,
+          node.id,
+          pageSize,
+        );
         dataPoints.push({
           ...node,
           subDataPoints,
         });
       }),
     );
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
+    offset += pageSize;
+    shouldContinue = nodes.length === pageSize;
   } while (shouldContinue);
   return sortBy(dataPoints, 'name');
 }
@@ -383,16 +392,19 @@ export async function fetchEnrichedDataSilos(
   client: GraphQLClient,
   {
     ids,
+    pageSize,
     title,
     integrationNames,
   }: {
+    /** Page size */
+    pageSize: number;
     /** Filter by IDs */
     ids?: string[];
     /** Filter by title */
     title?: string;
     /** Integration names */
     integrationNames?: string[];
-  } = {},
+  },
 ): Promise<[DataSiloEnriched, DataPointWithSubDataPoint[]][]> {
   const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
 
@@ -400,6 +412,7 @@ export async function fetchEnrichedDataSilos(
     title,
     ids,
     integrationNames,
+    pageSize,
   });
   await mapSeries(silos, async (silo, index) => {
     logger.info(
@@ -413,7 +426,7 @@ export async function fetchEnrichedDataSilos(
     }>(DATA_SILO, {
       id: silo.id,
     });
-    const dataPoints = await fetchAllDataPoints(client, dataSilo.id);
+    const dataPoints = await fetchAllDataPoints(client, dataSilo.id, pageSize);
     dataSilos.push([dataSilo, dataPoints]);
   });
 
@@ -431,8 +444,7 @@ export async function fetchEnrichedDataSilos(
  *
  * @param input - The transcend input definition
  * @param client - GraphQL client
- * @param dataSubjectsByName - The data subjects in the organization
- * @param apiKeysByTitle - API key title to API key
+ * @param options - Options
  * @returns Data silo info
  */
 export async function syncDataSilo(
@@ -442,11 +454,24 @@ export async function syncDataSilo(
     ...dataSilo
   }: DataSiloInput,
   client: GraphQLClient,
-  dataSubjectsByName: { [type in string]: DataSubject },
-  apiKeysByTitle: { [title in string]: ApiKey },
+  {
+    pageSize,
+    dataSubjectsByName,
+    apiKeysByTitle,
+  }: {
+    /** Page size */
+    pageSize: number;
+    /** The data subjects in the organization */
+    dataSubjectsByName: { [type in string]: DataSubject };
+    /** API key title to API key */
+    apiKeysByTitle: { [title in string]: ApiKey };
+  },
 ): Promise<DataSilo> {
   // Try to fetch an dataSilo with the same title
-  const matches = await fetchAllDataSilos(client, { title: dataSilo.title });
+  const matches = await fetchAllDataSilos(client, {
+    title: dataSilo.title,
+    pageSize,
+  });
   let existingDataSilo = matches.find(({ title }) => title === dataSilo.title);
 
   // If data silo exists, update it, else create new

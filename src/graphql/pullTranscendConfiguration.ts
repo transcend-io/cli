@@ -15,8 +15,10 @@ import {
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllEnrichers } from './syncEnrichers';
-import { fetchAllTemplates } from '.';
+import { fetchAllTemplates } from './syncTemplates';
 import { formatAttributeValues } from './formatAttributeValues';
+import { logger } from '../logger';
+import colors from 'colors';
 
 /**
  * Pull a yaml configuration from Transcend
@@ -30,7 +32,10 @@ export async function pullTranscendConfiguration(
   {
     dataSiloIds,
     integrationNames,
+    pageSize,
   }: {
+    /** Page size */
+    pageSize: number;
     /** The data silo IDs to sync. If empty list, pull all. */
     dataSiloIds: string[];
     /** The data silo types to sync.If empty list, pull all.  */
@@ -43,6 +48,8 @@ export async function pullTranscendConfiguration(
     );
   }
 
+  logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
+
   const [dataSubjects, apiKeyTitleMap, dataSilos, enrichers, templates] =
     await Promise.all([
       // Grab all data subjects in the organization
@@ -53,6 +60,7 @@ export async function pullTranscendConfiguration(
       fetchEnrichedDataSilos(client, {
         ids: dataSiloIds,
         integrationNames,
+        pageSize,
       }),
       // Fetch enrichers
       fetchAllEnrichers(client),
