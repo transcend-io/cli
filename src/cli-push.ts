@@ -40,39 +40,48 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Ensure yaml file exists on disk
-  if (!existsSync(file)) {
-    logger.error(
-      colors.red(
-        `The file path does not exist on disk: ${file}. You can specify the filepath using --file=./examples/transcend.yml`,
-      ),
-    );
-    process.exit(1);
-  } else {
-    logger.info(colors.magenta(`Reading file "${file}"...`));
-  }
+  // Parse out the variables
+  const splitVars = variables.split(',').filter((x) => !!x);
+  const vars: ObjByString = {};
+  splitVars.forEach((variable) => {
+    const [k, v] = variable.split(':');
+    vars[k] = v;
+  });
 
-  let contents: TranscendInput;
-  try {
-    // Parse out the variables
-    const splitVars = variables.split(',').filter((x) => !!x);
-    const vars: ObjByString = {};
-    splitVars.forEach((variable) => {
-      const [k, v] = variable.split(':');
-      vars[k] = v;
-    });
+  // If file list is a CSV
+  const fileList = file.split(',');
+  let contents: TranscendInput = {};
 
-    // Read in the yaml file and validate it's shape
-    contents = readTranscendYaml(file, vars);
-    logger.info(colors.green(`Successfully read in "${file}"`));
-  } catch (err) {
-    logger.error(
-      colors.red(
-        `The shape of your yaml file is invalid with the following errors: ${err.message}`,
-      ),
-    );
-    process.exit(1);
-  }
+  fileList.forEach((filePath) => {
+    // Ensure yaml file exists on disk
+    if (!existsSync(filePath)) {
+      logger.error(
+        colors.red(
+          // eslint-disable-next-line max-len
+          `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`,
+        ),
+      );
+      process.exit(1);
+    } else {
+      logger.info(colors.magenta(`Reading file "${filePath}"...`));
+    }
+
+    try {
+      // Read in the yaml file and validate it's shape
+      contents = {
+        ...contents,
+        ...readTranscendYaml(filePath, vars),
+      };
+      logger.info(colors.green(`Successfully read in "${filePath}"`));
+    } catch (err) {
+      logger.error(
+        colors.red(
+          `The shape of your yaml file is invalid with the following errors: ${err.message}`,
+        ),
+      );
+      process.exit(1);
+    }
+  });
 
   // Create a GraphQL client
   // eslint-disable-next-line global-require
