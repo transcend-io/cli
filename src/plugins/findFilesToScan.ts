@@ -1,4 +1,5 @@
 import fastGlob from 'fast-glob';
+import { logger } from '../logger';
 import { SiloDiscoveryConfig, SiloDiscoveryRawResults } from '.';
 
 /**
@@ -33,11 +34,14 @@ export const findFilesToScan = async (
         onlyFiles: true,
       },
     );
+    logger.info(`Scanning: ${filesToScan.length} files`);
     const allDeps = filesToScan
       .map((filePath: string) => scanFunction(filePath))
       .flat();
     const uniqueDeps = new Set(allDeps);
-    return [...uniqueDeps].map((dep) => ({
+    const deps = [...uniqueDeps];
+    logger.info(`Found: ${deps.length} unique dependencies`);
+    return deps.map((dep) => ({
       name: dep.name,
       type: dep.type,
       resourceId: `${scanPath}/**/${dep.name}`,
