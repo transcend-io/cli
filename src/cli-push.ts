@@ -5,12 +5,13 @@ import { logger } from './logger';
 import { existsSync } from 'fs';
 import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
-import { TranscendInput } from './codecs';
 import { syncConfigurationToTranscend } from './graphql';
 import { GraphQLClient } from 'graphql-request';
 
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
 import { ObjByString } from '@transcend-io/type-utils';
+import { mergeTranscendInputs } from './mergeTranscendInputs';
+
 /**
  * Push the transcend.yml file remotely into a Transcend instance
  *
@@ -50,9 +51,11 @@ async function main(): Promise<void> {
 
   // If file list is a CSV
   const fileList = file.split(',');
-  let contents: TranscendInput = {};
+  if (fileList.length < 1) {
+    throw new Error('No file specified!');
+  }
 
-  fileList.forEach((filePath) => {
+  const transcendInputs = fileList.map((filePath) => {
     // Ensure yaml file exists on disk
     if (!existsSync(filePath)) {
       logger.error(
@@ -68,11 +71,9 @@ async function main(): Promise<void> {
 
     try {
       // Read in the yaml file and validate it's shape
-      contents = {
-        ...contents,
-        ...readTranscendYaml(filePath, vars),
-      };
+      const newContents = readTranscendYaml(filePath, vars);
       logger.info(colors.green(`Successfully read in "${filePath}"`));
+      return newContents;
     } catch (err) {
       logger.error(
         colors.red(
@@ -80,8 +81,11 @@ async function main(): Promise<void> {
         ),
       );
       process.exit(1);
+      throw err;
     }
   });
+  const [base, ...rest] = transcendInputs;
+  const contents = mergeTranscendInputs(base, ...rest);
 
   // Create a GraphQL client
   // eslint-disable-next-line global-require
