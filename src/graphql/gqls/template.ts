@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const TEMPLATES = gql`
-  query SchemaSyncTemplates($title: String, $first: Int!, $offset: Int!) {
+  query TranscendCliTemplates($title: String, $first: Int!, $offset: Int!) {
     templates(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id
@@ -12,7 +12,7 @@ export const TEMPLATES = gql`
 `;
 
 export const CREATE_TEMPLATE = gql`
-  mutation SchemaSyncCreateTemplate($title: String!) {
+  mutation TranscendCliCreateTemplate($title: String!) {
     createTemplate(input: { title: $title, template: "", subject: $title }) {
       clientMutationId
     }

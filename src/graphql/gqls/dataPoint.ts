@@ -1,7 +1,11 @@
 import { gql } from 'graphql-request';
 
 export const DATA_POINTS = gql`
-  query SchemaSyncDataPoints($dataSiloIds: [ID!], $first: Int!, $offset: Int!) {
+  query TranscendCliDataPoints(
+    $dataSiloIds: [ID!]
+    $first: Int!
+    $offset: Int!
+  ) {
     dataPoints(
       filterBy: { dataSilos: $dataSiloIds }
       first: $first
@@ -38,7 +42,7 @@ export const DATA_POINTS = gql`
 `;
 
 export const SUB_DATA_POINTS = gql`
-  query SchemaSyncDataPoints(
+  query TranscendCliDataPoints(
     $dataPointIds: [ID!]
     $first: Int!
     $offset: Int!
@@ -75,7 +79,7 @@ export const SUB_DATA_POINTS = gql`
 `;
 
 export const UPDATE_OR_CREATE_DATA_POINT = gql`
-  mutation SchemaSyncUpdateOrCreateDataPoint(
+  mutation TranscendCliUpdateOrCreateDataPoint(
     $dataSiloId: ID!
     $name: String!
     $path: [String!]

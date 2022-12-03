@@ -5,14 +5,22 @@
 
 - [Overview](#overview)
 - [Installation](#installation)
-- [Authentication](#authentication)
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
   - [tr-pull](#tr-pull)
+    - [Authentication](#authentication)
+    - [Usage](#usage-1)
   - [tr-push](#tr-push)
+    - [Authentication](#authentication-1)
+    - [Usage](#usage-2)
     - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
   - [tr-discover-silos](#tr-discover-silos)
+    - [Authentication](#authentication-2)
+    - [Usage](#usage-3)
+  - [tr-request-upload](#tr-request-upload)
+    - [Authentication](#authentication-3)
+  - [Usage](#usage-4)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -34,6 +42,7 @@ yarn add -D @transcend-io/cli
 yarn tr-pull --auth=xxx
 yarn tr-push --auth=xxx
 yarn tr-discover-silos --auth=xxx
+yarn tr-request-upload --auth=xxx
 ```
 
 or
@@ -46,6 +55,7 @@ npm i -D @transcend-io/cli
 tr-pull --auth=xxx
 tr-push --auth=xxx
 tr-discover-silos --auth=xxx
+tr-request-upload --auth=xxx
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -58,20 +68,8 @@ npm i -g @transcend-io/cli
 tr-pull --auth=xxx
 tr-push --auth=xxx
 tr-discover-silos --auth=xxx
+tr-request-upload --auth=xxx
 ```
-
-## Authentication
-
-In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
-
-The API key needs the following scopes:
-
-- Manage Data Map
-- Manage Request Identity Verification
-- Connect Data Silos
-- Manage Data Subject Request Settings
-- View API Keys
-- Manage Email Templates
 
 ## transcend.yml
 
@@ -175,6 +173,22 @@ This command can be helpful if you are looking to:
 - Copy parts of your Data Map from one Transcend instance into another instance
 - Generate a transcend.yml file as a starting point to maintain parts of your Data Map in code
 
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- View Data Map
+- View Identity Verification Settings
+- View Data Subject Request Settings
+- View API Keys
+- View Email Templates
+
+_Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
+
+#### Usage
+
 ```sh
 # Writes out file to ./transcend.yml
 tr-pull --auth=<api-key>
@@ -216,6 +230,21 @@ Note: This command will overwrite the existing transcend.yml file that you have 
 ### tr-push
 
 Given a transcend.yml file, sync the contents up to your connected services view (https://app.transcend.io/privacy-requests/connected-services).
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Data Map
+- Manage Request Identity Verification
+- Connect Data Silos
+- Manage Data Subject Request Settings
+- View API Keys
+- Manage Email Templates
+
+#### Usage
 
 ```sh
 # Looks for file at ./transcend.yml
@@ -327,6 +356,17 @@ Transcend can help scan dependency management files to help detect new data silo
 
 To get started, you'll need to add a data silo for the corresponding project type with "silo discovery" plugin enabled. For example, if you want to scan a JavaScript project, add a JavaScript package.json data silo. You can do this in the Transcend admin-dashboard (or via this CLI tooling).
 
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Assigned Data Inventory
+- [Data Silo for Scanner]
+
+#### Usage
+
 Then, you'll need to grab that `dataSiloId` and a Transcend API key and pass it to the CLI. Using JavaScript package.json as an example:
 
 ```sh
@@ -344,3 +384,21 @@ You can include additional arguments as well:
 | dataSiloID | The UUID of the corresponding data silo.                                                                                                                             |
 | auth       | Transcend API key.                                                                                                                                                   |
 | fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). |
+
+### tr-request-upload
+
+FIXME
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Submit New Data Subject Request
+- View Identity Verification Settings
+- View Global Attributes
+
+### Usage
+
+FIXME

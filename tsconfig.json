@@ -27,6 +27,7 @@
     "typeRoots": ["@types", "node_modules/@types"],
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "build",
     "tsBuildInfoFile": "./build/tsbuildinfo",

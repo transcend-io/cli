@@ -4,10 +4,10 @@ import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
 import { ADMIN_DASH } from './constants';
-import { GraphQLClient } from 'graphql-request';
 import { SILO_DISCOVERY_FUNCTIONS } from './plugins';
 import {
   fetchActiveSiloDiscoPlugin,
+  buildTranscendGraphQLClient,
   uploadSiloDiscoveryResults,
 } from './graphql';
 import { findFilesToScan } from './plugins/findFilesToScan';
@@ -47,14 +47,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   // Create a GraphQL client
-  // eslint-disable-next-line global-require
-  const { version } = require('../package.json');
-  const client = new GraphQLClient(`${transcendUrl}/graphql`, {
-    headers: {
-      Authorization: `Bearer ${auth}`,
-      version,
-    },
-  });
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   const plugin = await fetchActiveSiloDiscoPlugin(client, dataSiloId);
   const config = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
