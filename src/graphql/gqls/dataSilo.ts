@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const DATA_SILOS = gql`
-  query SchemaSyncDataSilos(
+  query TranscendCliDataSilos(
     $title: String
     $ids: [ID!]
     $types: [String!]
@@ -27,7 +27,7 @@ export const DATA_SILOS = gql`
 `;
 
 export const DATA_SILO = gql`
-  query SchemaSyncDataSilo($id: String!) {
+  query TranscendCliDataSilo($id: String!) {
     dataSilo(id: $id) {
       id
       title
@@ -75,7 +75,7 @@ export const DATA_SILO = gql`
 `;
 
 export const UPDATE_DATA_SILO = gql`
-  mutation SchemaSyncUpdateDataSilo(
+  mutation TranscendCliUpdateDataSilo(
     $id: ID!
     $title: String
     $description: String
@@ -115,7 +115,7 @@ export const UPDATE_DATA_SILO = gql`
 `;
 
 export const CREATE_DATA_SILO = gql`
-  mutation SchemaSyncCreateDataSilo(
+  mutation TranscendCliCreateDataSilo(
     $title: String!
     $description: String!
     $url: String

@@ -3,8 +3,10 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
-import { pullTranscendConfiguration } from './graphql';
-import { GraphQLClient } from 'graphql-request';
+import {
+  buildTranscendGraphQLClient,
+  pullTranscendConfiguration,
+} from './graphql';
 import { writeTranscendYaml } from './readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
 
@@ -40,14 +42,7 @@ async function main(): Promise<void> {
   }
 
   // Create a GraphQL client
-  // eslint-disable-next-line global-require
-  const { version } = require('../package.json');
-  const client = new GraphQLClient(`${transcendUrl}/graphql`, {
-    headers: {
-      Authorization: `Bearer ${auth}`,
-      version,
-    },
-  });
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Sync to Disk
   try {
