@@ -33,6 +33,7 @@
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
     "colors": "^1.4.0",
+    "csv-parse": "=4.9.1",
     "fast-glob": "^3.2.12",
     "fp-ts": "=2.11.8",
     "graphql": "^16.6.0",

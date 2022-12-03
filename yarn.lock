@@ -367,6 +367,7 @@ __metadata:
     bluebird: ^3.7.2
     chai: ^4.3.6
     colors: ^1.4.0
+    csv-parse: =4.9.1
     depcheck: ^1.4.3
     eslint: ^8.25.0
     eslint-config-airbnb-base: ^15.0.0
@@ -1640,6 +1641,13 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
+  languageName: node
+  linkType: hard
+
+"csv-parse@npm:=4.9.1":
+  version: 4.9.1
+  resolution: "csv-parse@npm:4.9.1"
+  checksum: 2bb839d259d812d7bb3dfb57aa6ff6ec832503916ea5666f5a90188bec899b6af87406c579e05c58004180a4481e6c2473479ef3c17430fd9ed5246bd876904a
   languageName: node
   linkType: hard
 
