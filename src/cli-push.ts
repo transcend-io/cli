@@ -5,8 +5,10 @@ import { logger } from './logger';
 import { existsSync } from 'fs';
 import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
-import { syncConfigurationToTranscend } from './graphql';
-import { GraphQLClient } from 'graphql-request';
+import {
+  buildTranscendGraphQLClient,
+  syncConfigurationToTranscend,
+} from './graphql';
 
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
 import { ObjByString } from '@transcend-io/type-utils';
@@ -88,14 +90,7 @@ async function main(): Promise<void> {
   const contents = mergeTranscendInputs(base, ...rest);
 
   // Create a GraphQL client
-  // eslint-disable-next-line global-require
-  const { version } = require('../package.json');
-  const client = new GraphQLClient(`${transcendUrl}/graphql`, {
-    headers: {
-      Authorization: `Bearer ${auth}`,
-      version,
-    },
-  });
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Sync to Transcend
   try {
