@@ -9,3 +9,6 @@ export * from './syncEnrichers';
 export * from './uploadSiloDiscoveryResults';
 export * from './syncTemplates';
 export * from './makeGraphQLRequest';
+export * from './createSombraGotInstance';
+export * from './buildTranscendGraphQLClient';
+export * from './gqls';

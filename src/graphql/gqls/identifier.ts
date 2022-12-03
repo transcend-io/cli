@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const IDENTIFIERS = gql`
-  query SchemaSyncIdentifiers($first: Int!, $offset: Int!) {
+  query TranscendCliIdentifiers($first: Int!, $offset: Int!) {
     identifiers(first: $first, offset: $offset) {
       nodes {
         id
@@ -12,7 +12,7 @@ export const IDENTIFIERS = gql`
 `;
 
 export const NEW_IDENTIFIER_TYPES = gql`
-  query SchemaSyncNewIdentifierTypes {
+  query TranscendCliNewIdentifierTypes {
     newIdentifierTypes {
       name
     }
@@ -20,7 +20,10 @@ export const NEW_IDENTIFIER_TYPES = gql`
 `;
 
 export const CREATE_IDENTIFIER = gql`
-  mutation SchemaSyncCreateIdentifier($name: String!, $type: IdentifierType!) {
+  mutation TranscendCliCreateIdentifier(
+    $name: String!
+    $type: IdentifierType!
+  ) {
     createIdentifier(input: { name: $name, type: $type }) {
       identifier {
         id
