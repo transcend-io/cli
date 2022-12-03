@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const ENRICHERS = gql`
-  query SchemaSyncEnrichers($title: String, $first: Int!, $offset: Int!) {
+  query TranscendCliEnrichers($title: String, $first: Int!, $offset: Int!) {
     enrichers(filterBy: { text: $title }, first: $first, offset: $offset) {
       nodes {
         id
@@ -21,7 +21,7 @@ export const ENRICHERS = gql`
 `;
 
 export const CREATE_ENRICHER = gql`
-  mutation SchemaSyncCreateEnricher(
+  mutation TranscendCliCreateEnricher(
     $title: String!
     $description: String!
     $url: String!
@@ -48,7 +48,7 @@ export const CREATE_ENRICHER = gql`
 `;
 
 export const UPDATE_ENRICHER = gql`
-  mutation SchemaSyncUpdateEnricher(
+  mutation TranscendCliUpdateEnricher(
     $id: ID!
     $title: String!
     $description: String!

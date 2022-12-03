@@ -6,3 +6,4 @@ export * from './dataSubject';
 export * from './apiKey';
 export * from './siloDiscovery';
 export * from './template';
+export * from './organization';

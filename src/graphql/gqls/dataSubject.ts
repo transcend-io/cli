@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const DATA_SUBJECTS = gql`
-  query SchemaDataSubjects {
+  query TranscendCliDataSubjects {
     internalSubjects {
       id
       type
@@ -10,7 +10,7 @@ export const DATA_SUBJECTS = gql`
 `;
 
 export const CREATE_DATA_SUBJECT = gql`
-  mutation SchemaSyncCreateDataSubject($type: String!) {
+  mutation TranscendCliCreateDataSubject($type: String!) {
     createSubject(input: { type: $type, title: $type, subjectClass: OTHER }) {
       subject {
         id
