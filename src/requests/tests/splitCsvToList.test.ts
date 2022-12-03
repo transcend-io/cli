@@ -1,17 +1,17 @@
 import { expect } from 'chai';
 
-import { splitToCsv } from '../index';
+import { splitCsvToList } from '../index';
 
-describe('splitToCsv', () => {
+describe('splitCsvToList', () => {
   it('should successfully split a single string to length 1', () => {
-    expect(splitToCsv('Dog')).to.deep.equal(['Dog']);
+    expect(splitCsvToList('Dog')).to.deep.equal(['Dog']);
   });
 
   it('should successfully split a string with commas to length 2', () => {
-    expect(splitToCsv('Dog,Cat')).to.deep.equal(['Dog', 'Cat']);
+    expect(splitCsvToList('Dog,Cat')).to.deep.equal(['Dog', 'Cat']);
   });
 
   it('should successfully split a string with commas to length 2 and spaces', () => {
-    expect(splitToCsv('Dog, Cat, ')).to.deep.equal(['Dog', 'Cat']);
+    expect(splitCsvToList('Dog, Cat, ')).to.deep.equal(['Dog', 'Cat']);
   });
 });
