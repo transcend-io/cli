@@ -50,6 +50,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.6"],\
             ["colors", "npm:1.4.0"],\
+            ["csv-parse", "npm:4.9.1"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.25.0"],\
             ["eslint-config-airbnb-base", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:15.0.0"],\
@@ -494,6 +495,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.6"],\
             ["colors", "npm:1.4.0"],\
+            ["csv-parse", "npm:4.9.1"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.25.0"],\
             ["eslint-config-airbnb-base", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:15.0.0"],\
@@ -2008,6 +2010,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["path-key", "npm:3.1.1"],\
             ["shebang-command", "npm:2.0.0"],\
             ["which", "npm:2.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["csv-parse", [\
+        ["npm:4.9.1", {\
+          "packageLocation": "./.yarn/cache/csv-parse-npm-4.9.1-89fbef128e-2bb839d259.zip/node_modules/csv-parse/",\
+          "packageDependencies": [\
+            ["csv-parse", "npm:4.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
