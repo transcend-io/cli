@@ -29,6 +29,8 @@
     "test": "yarn pnpify mocha './src/**/*.test.ts'"
   },
   "dependencies": {
+    "@transcend-io/internationalization": "^1.5.0",
+    "@transcend-io/persisted-state": "^1.0.0",
     "@transcend-io/privacy-types": "^4.11.1",
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",

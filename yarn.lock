@@ -350,6 +350,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@transcend-io/cli@workspace:."
   dependencies:
+    "@transcend-io/internationalization": ^1.5.0
+    "@transcend-io/persisted-state": ^1.0.0
     "@transcend-io/privacy-types": ^4.11.1
     "@transcend-io/type-utils": ^1.0.5
     "@types/bluebird": ^3.5.37
@@ -397,6 +399,28 @@ __metadata:
     tr-push: ./build/cli-push.js
   languageName: unknown
   linkType: soft
+
+"@transcend-io/internationalization@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@transcend-io/internationalization@npm:1.5.0"
+  dependencies:
+    "@transcend-io/type-utils": ^1.0.5
+  checksum: 155a36c809a175e6486adb35fab18b8c95f99f5d630312fb3bec1df2e04903999ccf8b0b593ae6b97efab6f98302803176752298481377e0afda7595c49aa43f
+  languageName: node
+  linkType: hard
+
+"@transcend-io/persisted-state@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@transcend-io/persisted-state@npm:1.0.0"
+  dependencies:
+    "@transcend-io/type-utils": ^1.0.5
+    "@types/node": ^18.11.0
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    mkdirp: ^1.0.4
+  checksum: 6becafb573d860ada0950e6335b7cc7de023a528f017a2229317d5ad72129bd9e84fc691e5fadeb623956c3e74bc8d8459a4968308d7eac960ed40e95ed33f75
+  languageName: node
+  linkType: hard
 
 "@transcend-io/privacy-types@npm:^4.11.1":
   version: 4.11.1
@@ -566,6 +590,13 @@ __metadata:
   version: 13.13.52
   resolution: "@types/node@npm:13.13.52"
   checksum: 8f1afff497ebeba209e2dc340d823284e087a47632afe99a7daa30eaff80893e520f222ad400cd1f2d3b8288e93cf3eaded52a8e64eaefb8aacfe6c35de98f42
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.11.0":
+  version: 18.11.10
+  resolution: "@types/node@npm:18.11.10"
+  checksum: 0f60cb090b2ee91fcd3dc4311bc1ed7889b92f14644c0069f100776f86474c12eebbcc6c75bc0d7d96b975a103b4d5d6b3c22b4e88bea6e7f4e2b1bb0daf5ea8
   languageName: node
   linkType: hard
 
