@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@transcend-io/internationalization", "npm:1.5.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.0"],\
-            ["@transcend-io/privacy-types", "npm:4.11.1"],\
+            ["@transcend-io/privacy-types", "npm:4.18.0"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
@@ -68,6 +68,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
             ["inquirer", "npm:7.3.3"],\
+            ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
@@ -485,7 +486,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/cli", "workspace:."],\
             ["@transcend-io/internationalization", "npm:1.5.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.0"],\
-            ["@transcend-io/privacy-types", "npm:4.11.1"],\
+            ["@transcend-io/privacy-types", "npm:4.18.0"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
@@ -518,6 +519,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
             ["inquirer", "npm:7.3.3"],\
+            ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
@@ -555,10 +557,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@transcend-io/privacy-types", [\
-        ["npm:4.11.1", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.11.1-545c053f69-05c66173ac.zip/node_modules/@transcend-io/privacy-types/",\
+        ["npm:4.18.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.18.0-4331060314-ca385eaa56.zip/node_modules/@transcend-io/privacy-types/",\
           "packageDependencies": [\
-            ["@transcend-io/privacy-types", "npm:4.11.1"],\
+            ["@transcend-io/privacy-types", "npm:4.18.0"],\
             ["@transcend-io/type-utils", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
@@ -3672,6 +3674,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.3"],\
             ["strip-ansi", "npm:6.0.1"],\
             ["through", "npm:2.3.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["inquirer-autocomplete-prompt", [\
+        ["npm:1.3.0", {\
+          "packageLocation": "./.yarn/cache/inquirer-autocomplete-prompt-npm-1.3.0-f725e67565-355f0ad3bd.zip/node_modules/inquirer-autocomplete-prompt/",\
+          "packageDependencies": [\
+            ["inquirer-autocomplete-prompt", "npm:1.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/inquirer-autocomplete-prompt-virtual-eab38b4a2e/0/cache/inquirer-autocomplete-prompt-npm-1.3.0-f725e67565-355f0ad3bd.zip/node_modules/inquirer-autocomplete-prompt/",\
+          "packageDependencies": [\
+            ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
+            ["@types/inquirer", "npm:7.3.3"],\
+            ["ansi-escapes", "npm:4.3.2"],\
+            ["chalk", "npm:4.1.2"],\
+            ["figures", "npm:3.2.0"],\
+            ["inquirer", "npm:7.3.3"],\
+            ["run-async", "npm:2.4.1"],\
+            ["rxjs", "npm:6.6.7"]\
+          ],\
+          "packagePeers": [\
+            "@types/inquirer",\
+            "inquirer"\
           ],\
           "linkType": "HARD"\
         }]\

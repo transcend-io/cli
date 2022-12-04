@@ -352,7 +352,7 @@ __metadata:
   dependencies:
     "@transcend-io/internationalization": ^1.5.0
     "@transcend-io/persisted-state": ^1.0.0
-    "@transcend-io/privacy-types": ^4.11.1
+    "@transcend-io/privacy-types": ^4.18.0
     "@transcend-io/type-utils": ^1.0.5
     "@types/bluebird": ^3.5.37
     "@types/chai": ^4.3.3
@@ -385,6 +385,7 @@ __metadata:
     graphql: ^16.6.0
     graphql-request: ^5.0.0
     inquirer: =7.3.3
+    inquirer-autocomplete-prompt: =1.3.0
     io-ts: =2.2.16
     js-yaml: ^4.1.0
     lodash: ^4.17.21
@@ -422,12 +423,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.11.1":
-  version: 4.11.1
-  resolution: "@transcend-io/privacy-types@npm:4.11.1"
+"@transcend-io/privacy-types@npm:^4.18.0":
+  version: 4.18.0
+  resolution: "@transcend-io/privacy-types@npm:4.18.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: 05c66173ac08908063e47ecf7bfc9167642aec72fa9d076545f75fe4c43c3e7ccacddc8d264393bea739c15364cd7137e70ed2247cb07bbcca0551945d679a98
+  checksum: ca385eaa566f92712a3f013b15d36c7e01393808cd6a29ce94414c6c7e20e5f889375cc483731bde7a1046a916452bbc7d018b2f814d10ac9d8bbe9f0bc54ab5
   languageName: node
   linkType: hard
 
@@ -1112,7 +1113,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-escapes@npm:^4.2.1":
+"ansi-escapes@npm:^4.2.1, ansi-escapes@npm:^4.3.1":
   version: 4.3.2
   resolution: "ansi-escapes@npm:4.3.2"
   dependencies:
@@ -2417,7 +2418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"figures@npm:^3.0.0":
+"figures@npm:^3.0.0, figures@npm:^3.2.0":
   version: 3.2.0
   resolution: "figures@npm:3.2.0"
   dependencies:
@@ -2971,6 +2972,21 @@ fsevents@~2.3.2:
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 4a48a733847879d6cf6691860a6b1e3f0f4754176e4d71494c41f3475553768b10f84b5ce1d40fbd0e34e6bfbb864ee35858ad4dd2cf31e02fc4a154b724d7f1
+  languageName: node
+  linkType: hard
+
+"inquirer-autocomplete-prompt@npm:=1.3.0":
+  version: 1.3.0
+  resolution: "inquirer-autocomplete-prompt@npm:1.3.0"
+  dependencies:
+    ansi-escapes: ^4.3.1
+    chalk: ^4.0.0
+    figures: ^3.2.0
+    run-async: ^2.4.0
+    rxjs: ^6.6.2
+  peerDependencies:
+    inquirer: ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 355f0ad3bd88b72046466a166e59634165545b5ff45f69dfde2915466ece215398eea99e8782e4801e0788509b73064825ad5a8255a9156492db11ad62e63d6d
   languageName: node
   linkType: hard
 
@@ -4434,7 +4450,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^6.4.0, rxjs@npm:^6.6.0":
+"rxjs@npm:^6.4.0, rxjs@npm:^6.6.0, rxjs@npm:^6.6.2":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:
