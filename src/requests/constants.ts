@@ -71,6 +71,22 @@ export const CachedFileState = t.type({
   ),
   /** Set of privacy requests that failed to upload */
   failingRequests: t.array(t.record(t.string, t.any)),
+  /** Successfully uploaded requests */
+  successfulRequests: t.array(
+    t.type({
+      id: t.string,
+      link: t.string,
+      coreIdentifier: t.string,
+      attemptedAt: t.string,
+    }),
+  ),
+  /** Duplicate requests */
+  duplicateRequests: t.array(
+    t.type({
+      coreIdentifier: t.string,
+      attemptedAt: t.string,
+    }),
+  ),
 });
 
 /** Type override */

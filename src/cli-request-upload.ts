@@ -6,6 +6,10 @@ import colors from 'colors';
 import { logger } from './logger';
 import { splitCsvToList, uploadPrivacyRequestsFromCsv } from './requests';
 
+// FIXME multi email
+// FIXME retry failed requests
+// FIXME PROGRESS
+
 /**
  * Upload a CSV of Privacy Requests.
  *
@@ -38,10 +42,15 @@ async function main(): Promise<void> {
     concurrency = '20',
     isTest = 'false',
     isSilent = 'true',
+    defaultPhoneCountryCode = '1', // USA
     emailIsVerified = 'true',
+    ignoreDuplicates = 'false',
+    clearSuccessfulRequests = 'false',
     dryRun = 'false',
+    debug = 'false',
     skipFilterStep = 'false',
-    attributes = 'Tags:transcend-bulk-upload',
+    clearFailingRequests = 'false',
+    attributes = 'Tags:transcend-cli',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -60,9 +69,14 @@ async function main(): Promise<void> {
     file,
     auth,
     sombraAuth,
+    clearFailingRequests: clearFailingRequests === 'true',
     concurrency: parseInt(concurrency, 10),
     transcendApiUrl,
+    defaultPhoneCountryCode,
     attributes: splitCsvToList(attributes),
+    clearSuccessfulRequests: clearSuccessfulRequests === 'true',
+    debug: debug === 'true',
+    ignoreDuplicates: ignoreDuplicates === 'true',
     skipFilterStep: skipFilterStep === 'true',
     isSilent: isSilent === 'true',
     emailIsVerified: emailIsVerified === 'true',

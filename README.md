@@ -465,5 +465,30 @@ Tag all uploaded requests with an attribute
 
 ```sh
 yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
-  --attributes=Tags:transcend-bulk-upload;my-customer-tag,Customer:acme-corp
+  --attributes=Tags:transcend-cli;my-customer-tag,Customer:acme-corp
+```
+
+Clear out the cache of failed and successful requests
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+ --clearFailingRequests=true --clearSuccessfulRequests=true --clearDuplicateRequests=true
+```
+
+Specify default country code for phone numbers
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --defaultPhoneCountryCode=44
+```
+
+Gracefully handle requests that are duplicate, do not consider them errors.
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --ignoreDuplicates=true
+```
+
+Include debug logs - warning, this logs out personal data.
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --debug=true
 ```

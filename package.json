@@ -35,6 +35,7 @@
     "@transcend-io/privacy-types": "^4.18.0",
     "@transcend-io/type-utils": "^1.0.5",
     "bluebird": "^3.7.2",
+    "cli-progress": "^3.11.2",
     "colors": "^1.4.0",
     "csv-parse": "=4.9.1",
     "fast-glob": "^3.2.12",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.37",
     "@types/chai": "^4.3.3",
+    "@types/cli-progress": "^3",
     "@types/colors": "^1.2.1",
     "@types/inquirer": "^7.3.1",
     "@types/js-yaml": "^4.0.5",

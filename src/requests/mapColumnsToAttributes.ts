@@ -1,6 +1,6 @@
 import type { GraphQLClient } from 'graphql-request';
 import inquirer from 'inquirer';
-import { fetchAllRequestAttributeKeys } from '../graphql';
+import { AttributeKey } from '../graphql';
 import { CachedFileState } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
 
@@ -19,16 +19,15 @@ export type AttributeNameMap = {
  * @param client - GraphQL client
  * @param columnNames - The set of all column names
  * @param cached - Cached state of this mapping
+ * @param requestAttributeKeys - Attribute keys to map
  * @returns Mapping from attributes name to column name
  */
 export async function mapColumnsToAttributes(
   client: GraphQLClient,
   columnNames: string[],
   cached: CachedFileState,
+  requestAttributeKeys: AttributeKey[],
 ): Promise<AttributeNameMap> {
-  // Grab the initializer
-  const requestAttributeKeys = await fetchAllRequestAttributeKeys(client);
-
   // Determine the columns that should be mapped
   const columnQuestions = requestAttributeKeys.filter(
     ({ name }) => !cached.attributeNames[name],
@@ -60,5 +59,8 @@ export async function mapColumnsToAttributes(
     cached.attributeNames[k] = v;
   });
 
-  return attributeNameMap;
+  return {
+    ...cached.attributeNames,
+    ...attributeNameMap,
+  };
 }

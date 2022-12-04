@@ -31,7 +31,7 @@ export function parseAttributesFromString(
       values: attributeValues,
     };
   });
-  logger.info(colors.magenta('Attributes:'));
+  logger.info(colors.magenta('Attributes to apply to all requests:'));
   logger.info(colors.magenta(JSON.stringify(parsedAttributes, null, 2)));
   return parsedAttributes;
 }
