@@ -78,7 +78,7 @@ export async function mapRequestEnumValues(
   logger.info('Determine mapping for request status');
   const requestStatusColumn = getMappedName(ColumnName.RequestStatus);
   const statusToRequestStatus: {
-    [k in string]: CompletedRequestStatus | 'NONE';
+    [k in string]: CompletedRequestStatus | typeof NONE;
   } =
     requestStatusColumn === NONE
       ? {}
