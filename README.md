@@ -9,20 +9,25 @@
 - [Usage](#usage)
   - [tr-pull](#tr-pull)
     - [Authentication](#authentication)
+    - [Arguments](#arguments)
     - [Usage](#usage-1)
   - [tr-push](#tr-push)
     - [Authentication](#authentication-1)
+    - [Arguments](#arguments-1)
     - [Usage](#usage-2)
     - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
   - [tr-discover-silos](#tr-discover-silos)
     - [Authentication](#authentication-2)
     - [Usage](#usage-3)
+    - [Arguments](#arguments-2)
   - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-3)
+    - [Arguments](#arguments-3)
   - [Usage](#usage-4)
   - [tr-pull-cron-identifiers](#tr-pull-cron-identifiers)
     - [Authentication](#authentication-4)
+    - [Arguments](#arguments-4)
   - [Usage](#usage-5)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -76,13 +81,17 @@ tr-discover-silos --auth=xxx
 tr-request-upload --auth=xxx
 ```
 
+Note:
+
+_The cli-commands default to using the EU Transcend backend. To use these commands with the US backend, you will need to use the flag --transcendUrl=https://api.us.transend.io._
+
 ## transcend.yml
 
 Within your git repositories, you can define a file `transcend.yml`. This file allows you define part of your Data Map in code. Using the cli, you can sync that configuration back to the Transcend Admin Dashboard (https://app.transcend.io/privacy-requests/connected-services).
 
 You can find various examples for your `transcend.yml` file in the [examples/](./examples/) folder. If you are looking for a starting point to copy and paste, [simple.yml](./examples/simple.yml) is a good place to start. This file is annotated with links and documentations that new members of your team can use if they come across the file.
 
-The API for this YAML file can be found in [./src/codecs.ts](./src/codecs.ts) under the variable named "TranscendInput". The shape of the yaml file will be type-checked every time a command is run.
+The API for this YAML file can be found in [./src/codecs.ts](./src/codecs.ts) under the variable named "TranscendInput". The shape of the YAML file will be type-checked every time a command is run.
 
 The structure of the file looks something like the following:
 
@@ -90,7 +99,7 @@ The structure of the file looks something like the following:
 # Manage at: https://app.transcend.io/infrastructure/api-keys
 # See https://docs.transcend.io/docs/authentication
 # Define API keys that may be shared across data silos
-# in the data map. When creating new data silos through the yaml
+# in the data map. When creating new data silos through the YAML
 # cli, it is possible to specify which API key should be associated
 # with the newly created data silo.
 api-keys:
@@ -192,6 +201,17 @@ The API key needs the following scopes:
 
 _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
+#### Arguments
+
+| Argument     | Description                                                                   | Type                | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------- | ------------------- | ------------------------ | -------- |
+| auth         | The Transcend API capable of fetching the configuration                       | string              | N/A                      | true     |
+| file         | Path to the YAML file to pull into                                            | string - file-path  | ./transcend.yml          | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL        | https://api.transcend.io | false    |
+| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.         | list(string - UUID) | N/A                      | false    |
+| pageSize     | The page size to use when paginating over the API                             | number              | 50                       | false    |
+| debug        | Set to true to include debug logs while pulling the configuration             | boolean             | false                    | false    |
+
 #### Usage
 
 ```sh
@@ -249,6 +269,16 @@ The API key needs the following scopes:
 - View API Keys
 - Manage Email Templates
 
+#### Arguments
+
+| Argument     | Description                                                                                                 | Type               | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ | -------- |
+| auth         | The Transcend API capable of pushing the configuration                                                      | string             | N/A                      | true     |
+| file         | Path to the YAML file to push from                                                                          | string - file-path | ./transcend.yml          | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL       | https://api.transcend.io | false    |
+| pageSize     | The page size to use when paginating over the API                                                           | number             | 50                       | false    |
+| variables    | The variables to template into the YAML file when pushing configuration. e.g. domain:acme.com,stage:staging | string             | N/A                      | false    |
+
 #### Usage
 
 ```sh
@@ -266,7 +296,7 @@ tr-push --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
 Some things to note about this sync process:
 
 1. Any field that is defined in your .yml file will be synced up to app.transcend.io. If any change was made on the admin dashboard, it will be overwritten.
-2. If you omit a field from the yaml file, this field will not be synced. This gives you the ability to define as much or as little configuration in your transcend.yml file as you would like, and let the remainder of fields be labeled through the Admin Dashboard
+2. If you omit a field from the YAML file, this field will not be synced. This gives you the ability to define as much or as little configuration in your transcend.yml file as you would like, and let the remainder of fields be labeled through the Admin Dashboard
 3. If you define new data subjects, identifiers, data silos or datapoints that were not previously defined on the Admin Dashboard, the cli will create these new resources automatically.
 4. Currently, this cli does not handle deleting or renaming of resources. If you need to delete or rename a data silo, identifier, enricher or API key, you should make the change on the Admin Dashboard.
 5. The only resources that this cli will not auto generate are:
@@ -323,7 +353,7 @@ The `tr-push` command takes in a parameter `variables`. This is a CSV of `key:va
 tr-push --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
 ```
 
-This command could fill out multiple parameters in a yaml file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
+This command could fill out multiple parameters in a YAML file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
 
 ```yml
 api-keys:
@@ -383,12 +413,14 @@ This call will look for all the package.json files that in the scan path `./myJa
 
 You can include additional arguments as well:
 
-| Argument   | Description                                                                                                                                                          |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| scanPath   | File path in the project to scan.                                                                                                                                    |
-| dataSiloID | The UUID of the corresponding data silo.                                                                                                                             |
-| auth       | Transcend API key.                                                                                                                                                   |
-| fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). |
+#### Arguments
+
+| Argument   | Description                                                                                                                                                          | Type   | Default | Required |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- | -------- |
+| scanPath   | File path in the project to scan.                                                                                                                                    | string | N/A     | true     |
+| dataSiloID | The UUID of the corresponding data silo.                                                                                                                             | string | N/A     | true     |
+| auth       | Transcend API key.                                                                                                                                                   | string | N/A     | true     |
+| fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). | string | N/A     | false    |
 
 ### tr-request-upload
 
@@ -417,6 +449,26 @@ The API key needs the following scopes:
 - View Identity Verification Settings
 - View Global Attributes
 
+#### Arguments
+
+| Argument                | Description                                                                                                             | Type               | Default                                 | Required |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------- | -------- |
+| auth                    | The Transcend API capable of submitting privacy requests.                                                               | string             | N/A                                     | true     |
+| file                    | Path to the CSV file of requests to tupload.                                                                            | string - file-path | ./requests.csv                          | false    |
+| transcendUrl            | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                           | string - URL       | https://api.transcend.io                | false    |
+| cacheFilepath           | The path to the JSON file encoding the metadata used to map the CSV shape to Transcend API.                             | string             | ./transcend-privacy-requests-cache.json | false    |
+| requestReceiptFolder    | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                   | string             | ./privacy-request-upload-receipts       | false    |
+| sombraAuth              | The sombra internal key, use for additional authentication when self-hosting sombra.                                    | string             | N/A                                     | false    |
+| concurrency             | The concurrency to use when uploading requests in parallel.                                                             | number             | 100                                     | false    |
+| attributes              | Tag all of the requests with the following attributes. Format: key1:value1;value2,key2:value3;value4                    | string             | Tags:transcend-cli                      | false    |
+| isTest                  | Flag whether the requests being uploaded are test requests or regular requests.                                         | boolean            | false                                   | false    |
+| isSilent                | Flag whether the requests being uploaded should be submitted in silent mode.                                            | boolean            | true                                    | false    |
+| emailIsVerified         | Indicate whether the email address being uploaded is pre-verified. Set to false to send a verification email.           | boolean            | true                                    | false    |
+| skipFilterStep          | When true, skip the interactive step to filter down the CSV.                                                            | boolean            | false                                   | false    |
+| dryRun                  | When true, perform a dry run of the upload instead of calling the API to submit the requests.                           | boolean            | false                                   | false    |
+| debug                   | Debug logging.                                                                                                          | boolean            | false                                   | false    |
+| defaultPhoneCountryCode | When uploading phone numbers, if the phone number is missing a country code, assume this country code. Defaults to USA. | string             | 1                                       | false    |
+
 ### Usage
 
 ```sh
@@ -433,7 +485,7 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
- --transcendApiUrl=https://api.us.transcend.io
+ --transcendUrl=https://api.us.transcend.io
 ```
 
 Run without being prompted to filter requests
@@ -480,13 +532,6 @@ yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop
   --attributes=Tags:transcend-cli;my-customer-tag,Customer:acme-corp
 ```
 
-Clear out the cache of failed and successful requests
-
-```sh
-yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv \
- --clearFailingRequests=true --clearSuccessfulRequests=true --clearDuplicateRequests=true
-```
-
 Specify default country code for phone numbers
 
 ```sh
@@ -514,6 +559,18 @@ In order to use this cli, you will first need to generate an API key on the Tran
 
 The API key must be associated to the ID of the integration/data silo that is being operated on.
 
+#### Arguments
+
+| Argument     | Description                                                                                                                             | Type                   | Default                  | Required |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------ | -------- |
+| auth         | The Transcend API capable of pulling the cron identifiers.                                                                              | string                 | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to pull in.                                                                                                     | string - UUID          | N/A                      | true     |
+| requestType  | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to fetch. | string - RequestAction | N/A                      | true     |
+| file         | Path to the CSV file where identifiers will be written to.                                                                              | string - file-path     | ./cron-identifiers.csv   | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                           | string - URL           | https://api.transcend.io | false    |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra.                                                    | string                 | N/A                      | false    |
+| pageLimit    | The page limit to use when pulling in pages of identifiers.                                                                             | number                 | 100                      | false    |
+
 ### Usage
 
 ```sh
@@ -539,7 +596,7 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
- --transcendApiUrl=https://api.us.transcend.io
+ --transcendUrl=https://api.us.transcend.io
 ```
 
 Specifying the page limit, defaults to 100.

@@ -28,7 +28,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './cron-identifiers.csv',
-    transcendApiUrl = 'https://api.transcend.io',
+    transcendUrl = 'https://api.transcend.io',
     auth,
     sombraAuth,
     dataSiloId,
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
   // Upload privacy requests
   await pullCronIdentifiersToCsv({
     file,
-    transcendApiUrl,
+    transcendUrl,
     pageLimit: parseInt(pageLimit, 10),
     requestType: requestType as RequestAction,
     auth,

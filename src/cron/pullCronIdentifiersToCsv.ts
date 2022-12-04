@@ -20,7 +20,7 @@ export async function pullCronIdentifiersToCsv({
   sombraAuth,
   requestType,
   pageLimit = 100,
-  transcendApiUrl = 'https://api.transcend.io',
+  transcendUrl = 'https://api.transcend.io',
 }: {
   /** CSV file path */
   file: string;
@@ -33,16 +33,12 @@ export async function pullCronIdentifiersToCsv({
   /** Page limit when fetching identifiers */
   pageLimit?: number;
   /** API URL for Transcend backend */
-  transcendApiUrl?: string;
+  transcendUrl?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
 }): Promise<CronIdentifier[]> {
   // Create sombra instance to communicate with
-  const sombra = await createSombraGotInstance(
-    transcendApiUrl,
-    auth,
-    sombraAuth,
-  );
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   logger.info(
     colors.magenta(
