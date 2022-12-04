@@ -44,7 +44,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/mocha", "npm:10.0.1"],\
-            ["@types/node", "npm:18.11.10"],\
+            ["@types/node", "npm:18.11.2"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.45.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.45.0"],\
@@ -495,7 +495,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/mocha", "npm:10.0.1"],\
-            ["@types/node", "npm:18.11.10"],\
+            ["@types/node", "npm:18.11.2"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.45.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.45.0"],\
@@ -766,6 +766,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-18.11.10-cca0d46cb2-0f60cb090b.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:18.11.10"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.11.2", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.11.2-c7d12dbe39-0ff5c90fb9.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.11.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5927,7 +5934,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.9"],\
             ["@tsconfig/node14", "npm:1.0.1"],\
             ["@tsconfig/node16", "npm:1.0.2"],\
-            ["@types/node", "npm:18.11.10"],\
+            ["@types/node", "npm:18.11.2"],\
             ["@types/swc__core", null],\
             ["@types/swc__wasm", null],\
             ["@types/typescript", null],\

@@ -26,16 +26,12 @@ export async function mapEnumValues<TValue extends string>(
       name: value,
       message: `Map value of: ${value}`,
       type: 'autocomplete',
-      default: expectedOutputs.find((x) =>
-        fuzzySearch(value.toLowerCase(), x.toLowerCase()),
-      ),
+      default: expectedOutputs.find((x) => fuzzySearch(value, x)),
       source: (answersSoFar: ObjByString, input: string) =>
         !input
           ? expectedOutputs
           : expectedOutputs.filter(
-              (x) =>
-                typeof x === 'string' &&
-                fuzzySearch(input.toLowerCase(), x.toLowerCase()),
+              (x) => typeof x === 'string' && fuzzySearch(input, x),
             ),
     })),
   );
