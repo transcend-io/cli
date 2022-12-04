@@ -35,7 +35,7 @@ async function main(): Promise<void> {
     cacheFilepath = './transcend-privacy-requests-cache.json',
     auth,
     sombraAuth,
-    concurrency = '20',
+    concurrency = '100',
     isTest = 'false',
     isSilent = 'true',
     defaultPhoneCountryCode = '1', // USA
