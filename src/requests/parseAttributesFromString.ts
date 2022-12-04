@@ -11,14 +11,14 @@ export interface AttributeInput {
 /**
  * Parse out the extra attributes to apply to all requests uploaded
  *
- * @param attributes - input as string, e.g. key:value1;value2,key2:value3;value4
+ * @param attributes - input as string, e.g. ['key:value1;value2','key2:value3;value4']
  * @returns The parsed attributes
  */
 export function parseAttributesFromString(
-  attributes: string,
+  attributes: string[],
 ): AttributeInput[] {
   // Parse out the extra attributes to apply to all requests uploaded
-  const parsedAttributes = attributes.split(',').map((attribute) => {
+  const parsedAttributes = attributes.map((attribute) => {
     const [attributeKey, attributeValuesRaw] = attribute.trim().split(':');
     if (!attributeValuesRaw) {
       throw new Error(

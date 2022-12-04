@@ -26,7 +26,7 @@ import {
   mapRequestEnumValues,
   CachedState,
   mapCsvColumnsToApi,
-  splitToCSV,
+  splitCsvToList,
   parseAttributesFromString,
   readCsv,
   filterRows,
@@ -99,7 +99,7 @@ async function main(): Promise<void> {
   }
 
   // Parse out the extra attributes to apply to all requests uploaded
-  const parsedAttributes = parseAttributesFromString(attributes);
+  const parsedAttributes = parseAttributesFromString(attributes.split(','));
 
   // Create a new state to persist the metadata that
   // maps the request inputs to the Transcend API shape
@@ -203,7 +203,7 @@ async function main(): Promise<void> {
         ...(getMappedName(ColumnName.DataSiloIds) !== NONE &&
         input[getMappedName(ColumnName.DataSiloIds)]
           ? {
-              dataSiloIds: splitToCSV(
+              dataSiloIds: splitCsvToList(
                 input[getMappedName(ColumnName.DataSiloIds)],
               ),
             }

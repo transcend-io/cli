@@ -47,6 +47,7 @@ export const CachedFileState = t.type({
   requestTypeToRequestAction: t.record(t.string, valuesOf(RequestAction)),
   subjectTypeToSubjectName: t.record(t.string, t.string),
   languageToLocale: t.record(t.string, valuesOf(LanguageKey)),
+  failingRequests: t.array(t.record(t.string, t.any)),
   statusToRequestStatus: t.record(
     t.string,
     valuesOf({ ...CompletedRequestStatus, [NONE]: NONE }),

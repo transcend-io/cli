@@ -12,7 +12,10 @@ import fuzzysearch from 'fuzzysearch';
  * @returns True if words are fuzzy match
  */
 export function fuzzySearch(word1: string, word2: string): boolean {
-  return fuzzysearch(word1, word2) || fuzzysearch(word2, word1);
+  return (
+    fuzzysearch(word1.toLowerCase(), word2.toLowerCase()) ||
+    fuzzysearch(word2.toLowerCase(), word1.toLowerCase())
+  );
 }
 
 /**
