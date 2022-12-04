@@ -8,3 +8,5 @@ export * from './getUniqueValuesForColumn';
 export * from './filterRows';
 export * from './mapCsvColumnsToApi';
 export * from './mapRequestEnumValues';
+export * from './mapCsvRowsToRequestInputs';
+export * from './submitPrivacyRequest';
