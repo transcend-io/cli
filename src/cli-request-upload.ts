@@ -8,14 +8,7 @@ import * as t from 'io-ts';
 import uniq from 'lodash/uniq';
 import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 
-import {
-  CompletedRequestStatus,
-  RequestAction,
-  NORMALIZE_PHONE_NUMBER,
-  IdentifierType,
-} from '@transcend-io/privacy-types';
-import { decodeCodec } from '@transcend-io/type-utils';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { NORMALIZE_PHONE_NUMBER } from '@transcend-io/privacy-types';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { logger } from './logger';
 import {
@@ -26,32 +19,13 @@ import {
   mapRequestEnumValues,
   CachedState,
   mapCsvColumnsToApi,
-  splitCsvToList,
   parseAttributesFromString,
   readCsv,
+  AttestedExtraIdentifiers,
+  submitPrivacyRequest,
   filterRows,
-  NONE,
-  ColumnName,
+  mapCsvRowsToRequestInputs,
 } from './requests';
-
-interface PrivacyRequestInput {
-  /** Email of user */
-  email: string;
-  /** Core identifier for user */
-  coreIdentifier: string;
-  /** Action type being submitted  */
-  requestType: RequestAction;
-  /** Type of data subject */
-  subjectType: string;
-  /** The status that the request should be created as */
-  status?: CompletedRequestStatus;
-  /** The time that the request was created */
-  createdAt?: Date;
-  /** Data silo IDs to submit for */
-  dataSiloIds?: string[];
-  /** Language key to map to */
-  locale?: LanguageKey;
-}
 
 // Allow for autocomplete functionality
 inquirer.registerPrompt('autocomplete', autoCompletePrompt);
@@ -146,8 +120,6 @@ async function main(): Promise<void> {
   // Determine the columns that should be mapped
   const columnNameMap = await mapCsvColumnsToApi(columnNames, cached);
   state.setValue(cached, file);
-  const getMappedName = (attribute: ColumnName): string =>
-    cached.columnNames[attribute] || columnNameMap[attribute]!;
   await mapRequestEnumValues(
     buildTranscendGraphQLClient(transcendApiUrl, auth),
     filteredRequestList,
@@ -160,56 +132,10 @@ async function main(): Promise<void> {
   cached = state.getValue(file);
 
   // map the CSV to request input
-  const requestInputs = filteredRequestList.map(
-    (input): [Record<string, string>, PrivacyRequestInput] => [
-      input,
-      {
-        email: input[getMappedName(ColumnName.Email)],
-        coreIdentifier: input[getMappedName(ColumnName.CoreIdentifier)],
-        requestType:
-          cached.requestTypeToRequestAction[
-            input[getMappedName(ColumnName.RequestType)]
-          ],
-        subjectType:
-          cached.subjectTypeToSubjectName[
-            input[getMappedName(ColumnName.SubjectType)]
-          ] || 'Customer',
-        ...(getMappedName(ColumnName.Locale) !== NONE &&
-        input[getMappedName(ColumnName.Locale)]
-          ? {
-              locale:
-                cached.languageToLocale[
-                  input[getMappedName(ColumnName.Locale)]
-                ],
-            }
-          : {}),
-        ...(getMappedName(ColumnName.RequestStatus) !== NONE &&
-        cached.statusToRequestStatus[
-          input[getMappedName(ColumnName.RequestStatus)]
-        ] !== NONE &&
-        input[getMappedName(ColumnName.RequestStatus)]
-          ? {
-              status: cached.statusToRequestStatus[
-                input[getMappedName(ColumnName.RequestStatus)]
-              ] as CompletedRequestStatus,
-            }
-          : {}),
-        ...(getMappedName(ColumnName.CreatedAt) !== NONE &&
-        input[getMappedName(ColumnName.CreatedAt)]
-          ? {
-              createdAt: new Date(input[getMappedName(ColumnName.CreatedAt)]),
-            }
-          : {}),
-        ...(getMappedName(ColumnName.DataSiloIds) !== NONE &&
-        input[getMappedName(ColumnName.DataSiloIds)]
-          ? {
-              dataSiloIds: splitCsvToList(
-                input[getMappedName(ColumnName.DataSiloIds)],
-              ),
-            }
-          : {}),
-      },
-    ],
+  const requestInputs = mapCsvRowsToRequestInputs(
+    filteredRequestList,
+    cached,
+    columnNameMap,
   );
 
   // Submit each request
@@ -225,14 +151,7 @@ async function main(): Promise<void> {
       ),
     );
 
-    const attestedExtraIdentifiers: {
-      [k in IdentifierType]?: {
-        /** Name of identifier */
-        name?: string;
-        /** Value of identifier */
-        value: string;
-      }[];
-    } = {};
+    const attestedExtraIdentifiers: AttestedExtraIdentifiers = {};
 
     // add phone number
     if (rawRow['Phone Number']) {
@@ -297,48 +216,16 @@ async function main(): Promise<void> {
     }
 
     try {
-      // Make the GraphQL request
-      const response = await sombra
-        .post('v1/data-subject-request', {
-          json: {
-            type: requestInput.requestType,
-            subject: {
-              coreIdentifier: requestInput.coreIdentifier,
-              email: requestInput.email,
-              emailIsVerified: true,
-              attestedExtraIdentifiers,
-            },
-            subjectType: requestInput.subjectType,
-            isSilent: true,
-            isTest: isTest === 'true',
-            ...(requestInput.locale ? { locale: requestInput.locale } : {}),
-            details: `Uploaded by Transcend script: "bulk_upload_requests" : ${JSON.stringify(
-              rawRow,
-              null,
-              2,
-            )}`,
-            attributes: parsedAttributes,
-            ...(requestInput.createdAt
-              ? { createdAt: requestInput.createdAt }
-              : {}),
-            ...(requestInput.dataSiloIds
-              ? { dataSiloIds: requestInput.dataSiloIds }
-              : {}),
-            ...(requestInput.status
-              ? { completedRequestStatus: requestInput.status }
-              : {}),
-          },
-        })
-        .json();
-
-      const { request: requestResponse } = decodeCodec(
-        t.type({
-          request: t.type({
-            link: t.string,
-          }),
-        }),
-        response,
-      );
+      // Make the GraphQL request to submit the privacy request
+      const requestResponse = await submitPrivacyRequest(sombra, requestInput, {
+        details: `Uploaded by Transcend script: "bulk_upload_requests" : ${JSON.stringify(
+          rawRow,
+          null,
+          2,
+        )}`,
+        isTest: isTest === 'true',
+        additionalAttributes: parsedAttributes,
+      });
 
       logger.info(
         colors.green(
