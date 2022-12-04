@@ -116,19 +116,16 @@ async function main(): Promise<void> {
     skipFilterStep === 'true' ? requestsList : await filterRows(requestsList);
 
   // FIXME map over ALL columns for attributes
+  const client = buildTranscendGraphQLClient(transcendApiUrl, auth);
 
   // Determine the columns that should be mapped
   const columnNameMap = await mapCsvColumnsToApi(columnNames, cached);
   state.setValue(cached, file);
-  await mapRequestEnumValues(
-    buildTranscendGraphQLClient(transcendApiUrl, auth),
-    filteredRequestList,
-    {
-      fileName: file,
-      state,
-      columnNameMap,
-    },
-  );
+  await mapRequestEnumValues(client, filteredRequestList, {
+    fileName: file,
+    state,
+    columnNameMap,
+  });
   cached = state.getValue(file);
 
   // map the CSV to request input

@@ -43,15 +43,23 @@ export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
 
 // Cache state
 export const CachedFileState = t.type({
+  /** Mapping between the default request input column names and the CSV column name for that input */
   columnNames: t.partial(applyEnum(ColumnName, () => t.string)),
+  /** Mapping between the identifier names and the CSV column name for that input */
+  identifierNames: t.record(t.string, t.string),
+  /** Mapping between CSV request type and Transcend Request Action */
   requestTypeToRequestAction: t.record(t.string, valuesOf(RequestAction)),
+  /** Mapping between CSV data subject type and the name of the data subject in Transcend */
   subjectTypeToSubjectName: t.record(t.string, t.string),
+  /** Mapping between language imported and Transcend locale code */
   languageToLocale: t.record(t.string, valuesOf(LanguageKey)),
-  failingRequests: t.array(t.record(t.string, t.any)),
+  /** Mapping between request status in import to Transcend request status */
   statusToRequestStatus: t.record(
     t.string,
     valuesOf({ ...CompletedRequestStatus, [NONE]: NONE }),
   ),
+  /** Set of privacy requests that failed to upload */
+  failingRequests: t.array(t.record(t.string, t.any)),
 });
 
 /** Type override */
