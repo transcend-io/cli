@@ -33,6 +33,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@transcend-io/internationalization", "npm:1.5.0"],\
+            ["@transcend-io/persisted-state", "npm:1.0.0"],\
             ["@transcend-io/privacy-types", "npm:4.11.1"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
@@ -481,6 +483,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@transcend-io/cli", "workspace:."],\
+            ["@transcend-io/internationalization", "npm:1.5.0"],\
+            ["@transcend-io/persisted-state", "npm:1.0.0"],\
             ["@transcend-io/privacy-types", "npm:4.11.1"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
@@ -524,6 +528,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs-parser", "npm:21.1.1"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@transcend-io/internationalization", [\
+        ["npm:1.5.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-internationalization-npm-1.5.0-e23d3e9e5e-155a36c809.zip/node_modules/@transcend-io/internationalization/",\
+          "packageDependencies": [\
+            ["@transcend-io/internationalization", "npm:1.5.0"],\
+            ["@transcend-io/type-utils", "npm:1.0.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@transcend-io/persisted-state", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-persisted-state-npm-1.0.0-c4a91052ec-6becafb573.zip/node_modules/@transcend-io/persisted-state/",\
+          "packageDependencies": [\
+            ["@transcend-io/persisted-state", "npm:1.0.0"],\
+            ["@transcend-io/type-utils", "npm:1.0.5"],\
+            ["@types/node", "npm:18.11.10"],\
+            ["fp-ts", "npm:2.11.8"],\
+            ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
+            ["mkdirp", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@transcend-io/privacy-types", [\
@@ -729,6 +757,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-16.11.4-f4c998d94a-96e08c0f8b.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:16.11.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.11.10", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.11.10-cca0d46cb2-0f60cb090b.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.11.10"]\
           ],\
           "linkType": "HARD"\
         }],\
