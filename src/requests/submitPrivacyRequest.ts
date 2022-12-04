@@ -48,10 +48,16 @@ export async function submitPrivacyRequest(
   {
     details = '',
     isTest = false,
+    emailIsVerified = true,
+    isSilent = true,
     additionalAttributes = [],
   }: {
     /** Whether or not the request is a test request */
     isTest?: boolean;
+    /** Whether or not the request is in silent mode */
+    isSilent?: boolean;
+    /** Whether the email is verified up front */
+    emailIsVerified?: boolean;
     /** Request details */
     details?: string;
     /** Additional attributes to tag the requests with */
@@ -81,11 +87,11 @@ export async function submitPrivacyRequest(
         subject: {
           coreIdentifier: input.coreIdentifier,
           email: input.email,
-          emailIsVerified: input.emailIsVerified,
+          emailIsVerified,
           attestedExtraIdentifiers: input.attestedExtraIdentifiers,
         },
         subjectType: input.subjectType,
-        isSilent: input.isSilent,
+        isSilent,
         isTest,
         ...(input.locale ? { locale: input.locale } : {}),
         details,

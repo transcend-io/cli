@@ -440,6 +440,19 @@ Mark the uploaded requests as test requests
 yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --isTest=true
 ```
 
+Send email communications to the users throughout the request lifecycle.
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --isSilent=false
+```
+
+Send email verification to user before request continues.
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+   --isSilent=false --emailIsVerified=false
+```
+
 Increase the concurrency (defaults to 20)
 
 ```sh

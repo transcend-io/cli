@@ -37,6 +37,8 @@ async function main(): Promise<void> {
     sombraAuth,
     concurrency = '20',
     isTest = 'false',
+    isSilent = 'true',
+    emailIsVerified = 'true',
     dryRun = 'false',
     skipFilterStep = 'false',
     attributes = 'Tags:transcend-bulk-upload',
@@ -62,6 +64,8 @@ async function main(): Promise<void> {
     transcendApiUrl,
     attributes: splitCsvToList(attributes),
     skipFilterStep: skipFilterStep === 'true',
+    isSilent: isSilent === 'true',
+    emailIsVerified: emailIsVerified === 'true',
     isTest: isTest === 'true',
     dryRun: dryRun === 'true',
   });

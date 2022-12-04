@@ -33,8 +33,10 @@ export async function uploadPrivacyRequestsFromCsv({
   concurrency = 20,
   transcendApiUrl = 'https://api.transcend.io',
   attributes = [],
+  emailIsVerified = true,
   skipFilterStep = false,
   isTest = false,
+  isSilent = true,
   dryRun = false,
 }: {
   /** File to cache metadata about mapping of CSV shape to script */
@@ -53,6 +55,10 @@ export async function uploadPrivacyRequestsFromCsv({
   skipFilterStep?: boolean;
   /** Whether test requests are being uploaded */
   isTest?: boolean;
+  /** Whether requests are uploaded in silent mode */
+  isSilent?: boolean;
+  /** Whether the email was verified up front */
+  emailIsVerified?: boolean;
   /** Attributes string pre-parse */
   attributes?: string[];
   /** Whether a dry run is happening */
@@ -167,6 +173,8 @@ export async function uploadPrivacyRequestsFromCsv({
               2,
             )}`,
             isTest,
+            emailIsVerified,
+            isSilent,
             additionalAttributes: parsedAttributes,
           },
         );

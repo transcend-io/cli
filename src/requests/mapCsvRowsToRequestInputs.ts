@@ -31,8 +31,6 @@ export interface PrivacyRequestInput {
   email: string;
   /** Extra identifiers */
   attestedExtraIdentifiers: AttestedExtraIdentifiers;
-  /** Email is verified */
-  emailIsVerified: boolean;
   /** Core identifier for user */
   coreIdentifier: string;
   /** Action type being submitted  */
@@ -45,8 +43,6 @@ export interface PrivacyRequestInput {
   status?: CompletedRequestStatus;
   /** The time that the request was created */
   createdAt?: Date;
-  /** Whether in silent mode */
-  isSilent: boolean;
   /** Data silo IDs to submit for */
   dataSiloIds?: string[];
   /** Language key to map to */
@@ -161,8 +157,6 @@ export function mapCsvRowsToRequestInputs(
           email: input[getMappedName(ColumnName.Email)],
           attestedExtraIdentifiers,
           attributes,
-          emailIsVerified: true,
-          isSilent: true,
           coreIdentifier: input[getMappedName(ColumnName.CoreIdentifier)],
           requestType:
             cached.requestTypeToRequestAction[
