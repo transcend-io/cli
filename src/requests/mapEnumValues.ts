@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 import { apply, ObjByString } from '@transcend-io/type-utils';
 import { fuzzySearch } from './fuzzyMatchColumns';
 
@@ -15,6 +16,8 @@ export async function mapEnumValues<TValue extends string>(
   expectedOutputs: TValue[],
   cache: { [k in string]: TValue },
 ): Promise<{ [k in string]: TValue }> {
+  inquirer.registerPrompt('autocomplete', autoCompletePrompt);
+
   const inputs = csvInputs
     .map((item) => item || '<blank>')
     .filter((value) => !cache[value]);
