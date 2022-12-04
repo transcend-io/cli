@@ -2,33 +2,9 @@
 
 import yargs from 'yargs-parser';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
-import inquirer from 'inquirer';
-import * as t from 'io-ts';
-import uniq from 'lodash/uniq';
-import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 
-import { PersistedState } from '@transcend-io/persisted-state';
 import { logger } from './logger';
-import {
-  createSombraGotInstance,
-  buildTranscendGraphQLClient,
-} from './graphql';
-import {
-  mapRequestEnumValues,
-  CachedState,
-  mapCsvColumnsToApi,
-  parseAttributesFromString,
-  readCsv,
-  submitPrivacyRequest,
-  mapColumnsToAttributes,
-  mapColumnsToIdentifiers,
-  filterRows,
-  mapCsvRowsToRequestInputs,
-} from './requests';
-
-// Allow for autocomplete functionality
-inquirer.registerPrompt('autocomplete', autoCompletePrompt);
+import { splitCsvToList, uploadPrivacyRequestsFromCsv } from './requests';
 
 /**
  * Upload a CSV of Privacy Requests.
@@ -38,15 +14,18 @@ inquirer.registerPrompt('autocomplete', autoCompletePrompt);
  * 1. Create API key with follow scopes: https://app.transcend.io/infrastructure/api-keys
  *    - "Submit New Data Subject Request"
  *    - "View Identity Verification Settings"
+ *    - "View Global Attributes"
  * 2. Invite a new user into the dashboard with no scopes but email/password login (needed for diffie hellman channel)
  *
- * Dev Usage: FIXME
- * yarn ts-node ./src/cli-discover-silos.ts --auth=asd123 \
+ * Dev Usage:
+ * yarn ts-node ./src/cli-request-upload.ts --auth=asd123 \
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --skipFilterStep=true --isTest=true
  *
- * Standard usage: FIXME
- * CSV_FILE_PATH="/Users/michaelfarrell/Desktop/test.csv" \
- *   yarn script new-features/bulk_upload_requests --auth=abcdefg --dryRun=true
+ * Standard usage:
+ * yarn tr-request-upload --auth=asd123 \
+ *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --skipFilterStep=true --isTest=true
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -56,6 +35,7 @@ async function main(): Promise<void> {
     cacheFilepath = './transcend-privacy-requests-cache.json',
     auth,
     sombraAuth,
+    concurrency = '20',
     isTest = 'false',
     dryRun = 'false',
     skipFilterStep = 'false',
@@ -72,143 +52,18 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Parse out the extra attributes to apply to all requests uploaded
-  const parsedAttributes = parseAttributesFromString(attributes.split(','));
-
-  // Create a new state to persist the metadata that
-  // maps the request inputs to the Transcend API shape
-  const state = new PersistedState(cacheFilepath, CachedState, {});
-  let cached = state.getValue(file) || {
-    columnNames: {},
-    requestTypeToRequestAction: {},
-    subjectTypeToSubjectName: {},
-    languageToLocale: {},
-    statusToRequestStatus: {},
-    failingRequests: [],
-  };
-
-  // Create sombra instance to communicate with
-  const sombra = await createSombraGotInstance(
-    transcendApiUrl,
+  // Upload privacy requests
+  await uploadPrivacyRequestsFromCsv({
+    cacheFilepath,
+    file,
     auth,
     sombraAuth,
-  );
-
-  // Read in the list of integration requests
-  const requestsList = readCsv(file, t.record(t.string, t.string));
-  const columnNames = uniq(requestsList.map((x) => Object.keys(x)).flat());
-
-  // Log out an example request
-  if (requestsList.length === 0) {
-    throw new Error(
-      'No Requests found in list! Ensure the first row of the CSV is a header and the rest are requests.',
-    );
-  }
-  const firstRequest = requestsList[0];
-
-  logger.info(
-    colors.magenta(`First request: ${JSON.stringify(firstRequest, null, 2)}`),
-  );
-
-  // Determine what rows in the CSV should be imported
-  // Choose columns that contain metadata to filter the requests
-  const filteredRequestList =
-    skipFilterStep === 'true' ? requestsList : await filterRows(requestsList);
-
-  // Build a GraphQL client
-  const client = buildTranscendGraphQLClient(transcendApiUrl, auth);
-
-  // Determine the columns that should be mapped
-  const columnNameMap = await mapCsvColumnsToApi(columnNames, cached);
-  state.setValue(cached, file);
-  const identifierNameMap = await mapColumnsToIdentifiers(
-    client,
-    columnNames,
-    cached,
-  );
-  state.setValue(cached, file);
-  const attributeNameMap = await mapColumnsToAttributes(
-    client,
-    columnNames,
-    cached,
-  );
-  await mapRequestEnumValues(client, filteredRequestList, {
-    fileName: file,
-    state,
-    columnNameMap,
-  });
-  cached = state.getValue(file);
-
-  // map the CSV to request input
-  const requestInputs = mapCsvRowsToRequestInputs(filteredRequestList, cached, {
-    columnNameMap,
-    identifierNameMap,
-    attributeNameMap,
-  });
-
-  // Submit each request
-  // FIXME parallelism
-  await mapSeries(requestInputs, async ([rawRow, requestInput], ind) => {
-    logger.info(
-      colors.magenta(
-        `[${ind}/${requestInputs.length}] Importing: ${JSON.stringify(
-          requestInput,
-          null,
-          2,
-        )}`,
-      ),
-    );
-
-    // Skip on dry run
-    if (dryRun === 'true') {
-      logger.info(
-        colors.magenta('Bailing out on dry run because dryRun is set'),
-      );
-      return;
-    }
-
-    try {
-      // Make the GraphQL request to submit the privacy request
-      const requestResponse = await submitPrivacyRequest(sombra, requestInput, {
-        details: `Uploaded by Transcend script: "bulk_upload_requests" : ${JSON.stringify(
-          rawRow,
-          null,
-          2,
-        )}`,
-        isTest: isTest === 'true',
-        additionalAttributes: parsedAttributes,
-      });
-
-      logger.info(
-        colors.green(
-          // eslint-disable-next-line max-len
-          `[${ind}/${requestInputs.length}] Successfully submitted the test data subject request for email: "${requestInput.email}"`,
-        ),
-      );
-      logger.info(
-        colors.green(
-          `[${ind}/${requestInputs.length}] View it at: "${requestResponse.link}"`,
-        ),
-      );
-    } catch (err) {
-      const msg = `${err.message} - ${JSON.stringify(
-        err.response?.body,
-        null,
-        2,
-      )}`;
-      cached.failingRequests.push({
-        ...requestInput,
-        error: msg,
-        attemptedAt: new Date().toISOString(),
-      });
-      state.setValue(cached, file);
-      logger.error(colors.red(msg));
-      logger.error(
-        colors.red(
-          `[${ind}/${requestInputs.length}] Failed to submit request for: "${requestInput.email}"`,
-        ),
-      );
-    }
+    concurrency: parseInt(concurrency, 10),
+    transcendApiUrl,
+    attributes: splitCsvToList(attributes),
+    skipFilterStep: skipFilterStep === 'true',
+    isTest: isTest === 'true',
+    dryRun: dryRun === 'true',
   });
 }
 
