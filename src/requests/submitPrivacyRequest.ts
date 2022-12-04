@@ -96,6 +96,22 @@ export async function submitPrivacyRequest(
         ...(input.locale ? { locale: input.locale } : {}),
         details,
         attributes: mergedAttributes,
+        ...(input.country || input.countrySubDivision
+          ? {
+              region: {
+                ...(input.country
+                  ? {
+                      country: input.country,
+                    }
+                  : input.countrySubDivision
+                  ? { country: input.countrySubDivision.split('-')[0] }
+                  : {}),
+                ...(input.countrySubDivision
+                  ? { countrySubDivision: input.countrySubDivision }
+                  : {}),
+              },
+            }
+          : {}),
         ...(input.createdAt ? { createdAt: input.createdAt } : {}),
         ...(input.dataSiloIds ? { dataSiloIds: input.dataSiloIds } : {}),
         ...(input.status ? { completedRequestStatus: input.status } : {}),
