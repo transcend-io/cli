@@ -10,6 +10,7 @@ export const ATTRIBUTE_KEYS_REQUESTS = gql`
       nodes {
         id
         name
+        type
       }
     }
   }

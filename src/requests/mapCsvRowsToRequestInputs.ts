@@ -14,6 +14,7 @@ import {
   ColumnName,
   NONE,
 } from './constants';
+import { AttributeKey } from '../graphql';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { splitCsvToList } from './splitCsvToList';
 import type { AttributeInput } from './parseAttributesFromString';
@@ -60,11 +61,13 @@ export interface PrivacyRequestInput {
  *
  * @param identifierValue - Value of identifier
  * @param identifierType - Type of identifier
+ * @param defaultPhoneCountryCode - Default country code for phone numbers
  * @returns Post-processed identifier
  */
 export function normalizeIdentifierValue(
   identifierValue: string,
   identifierType: IdentifierType,
+  defaultPhoneCountryCode: string,
 ): string {
   // Lowercase email
   if (identifierType === IdentifierType.Email) {
@@ -73,9 +76,16 @@ export function normalizeIdentifierValue(
 
   // Normalize phone number
   if (identifierType === IdentifierType.Phone) {
-    return identifierValue
+    const normalized = identifierValue
       .replace(NORMALIZE_PHONE_NUMBER, '')
+      .replace(/[()]/g, '')
+      .replace(/[–]/g, '')
+      .replace(/[:]/g, '')
+      .replace(/[‭‬]/g, '')
       .replace(/[A-Za-z]/g, '');
+    return normalized.startsWith('+')
+      ? normalized
+      : `+${defaultPhoneCountryCode}${normalized}`;
   }
   return identifierValue;
 }
@@ -97,13 +107,19 @@ export function mapCsvRowsToRequestInputs(
     columnNameMap,
     identifierNameMap,
     attributeNameMap,
+    requestAttributeKeys,
+    defaultPhoneCountryCode = '1', // US
   }: {
+    /** Default country code */
+    defaultPhoneCountryCode?: string;
     /** Mapping of column names */
     columnNameMap: ColumnNameMap;
     /** Mapping of identifier names */
     identifierNameMap: IdentifierNameMap;
     /** Mapping of attribute names */
     attributeNameMap: AttributeNameMap;
+    /** Request attribute keys */
+    requestAttributeKeys: AttributeKey[];
   },
 ): [Record<string, string>, PrivacyRequestInput][] {
   // map the CSV to request input
@@ -134,7 +150,11 @@ export function mapCsvRowsToRequestInputs(
 
             // Add the identifier
             attestedExtraIdentifiers[identifierType]!.push({
-              value: normalizeIdentifierValue(identifierValue, identifierType),
+              value: normalizeIdentifierValue(
+                identifierValue,
+                identifierType,
+                defaultPhoneCountryCode,
+              ),
               name: identifierName,
             });
           }
@@ -150,8 +170,13 @@ export function mapCsvRowsToRequestInputs(
           const attributeValueString = input[columnName];
           if (attributeValueString) {
             // Add the attribute
+            const isMulti =
+              requestAttributeKeys.find((attr) => attr.name === attributeName)
+                ?.type === 'MULTI_SELECT';
             attributes.push({
-              values: splitCsvToList(attributeValueString),
+              values: isMulti
+                ? splitCsvToList(attributeValueString)
+                : attributeValueString,
               key: attributeName,
             });
           }

@@ -67,5 +67,8 @@ export async function mapColumnsToIdentifiers(
     cached.identifierNames[k] = v;
   });
 
-  return identifierNameMap;
+  return {
+    ...cached.identifierNames,
+    ...identifierNameMap,
+  };
 }

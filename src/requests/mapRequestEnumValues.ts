@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
+import colors from 'colors';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   CompletedRequestStatus,
@@ -49,7 +50,9 @@ export async function mapRequestEnumValues(
     internalSubjects: DataSubject[];
   }>(client, DATA_SUBJECTS);
 
-  logger.info('Determine mapping for request action');
+  logger.info(
+    colors.magenta('Determining mapping of columns for request action'),
+  );
   const requestTypeToRequestAction: { [k in string]: RequestAction } =
     await mapEnumValues(
       getUniqueValuesForColumn(requests, getMappedName(ColumnName.RequestType)),
@@ -58,7 +61,7 @@ export async function mapRequestEnumValues(
     );
   cached.requestTypeToRequestAction = requestTypeToRequestAction;
   state.setValue(cached, fileName);
-  logger.info('Determine mapping for subject');
+  logger.info(colors.magenta('Determining mapping of columns for subject'));
   const subjectTypeToSubjectName: { [k in string]: string } =
     await mapEnumValues(
       getUniqueValuesForColumn(requests, getMappedName(ColumnName.SubjectType)),
@@ -67,7 +70,7 @@ export async function mapRequestEnumValues(
     );
   cached.subjectTypeToSubjectName = subjectTypeToSubjectName;
   state.setValue(cached, fileName);
-  logger.info('Determine mapping for locale');
+  logger.info(colors.magenta('Determining mapping of columns for locale'));
   const languageToLocale: { [k in string]: LanguageKey } = await mapEnumValues(
     getUniqueValuesForColumn(requests, getMappedName(ColumnName.Locale)),
     Object.values(LanguageKey),
@@ -75,7 +78,9 @@ export async function mapRequestEnumValues(
   );
   cached.languageToLocale = languageToLocale;
   state.setValue(cached, fileName);
-  logger.info('Determine mapping for request status');
+  logger.info(
+    colors.magenta('Determining mapping of columns for request status'),
+  );
   const requestStatusColumn = getMappedName(ColumnName.RequestStatus);
   const statusToRequestStatus: {
     [k in string]: CompletedRequestStatus | typeof NONE;

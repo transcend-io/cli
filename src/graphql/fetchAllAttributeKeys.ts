@@ -7,6 +7,8 @@ export interface AttributeKey {
   id: string;
   /** Name of attribute key */
   name: string;
+  /** Attribute key type */
+  type: string;
 }
 
 const PAGE_SIZE = 20;
