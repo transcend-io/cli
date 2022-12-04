@@ -10,3 +10,5 @@ export * from './mapCsvColumnsToApi';
 export * from './mapRequestEnumValues';
 export * from './mapCsvRowsToRequestInputs';
 export * from './submitPrivacyRequest';
+export * from './mapColumnsToIdentifiers';
+export * from './mapColumnsToAttributes';

@@ -7,3 +7,4 @@ export * from './apiKey';
 export * from './siloDiscovery';
 export * from './template';
 export * from './organization';
+export * from './attributeKey';
