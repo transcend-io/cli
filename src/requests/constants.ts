@@ -6,9 +6,9 @@ import {
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
 
-export const NONE = '[NONE]';
-export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]';
-export const BLANK = '<blank>';
+export const NONE = '[NONE]' as const;
+export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]' as const;
+export const BLANK = '<blank>' as const;
 
 /**
  * Column names to map
