@@ -47,6 +47,7 @@
     "depcheck",
     "doctoc",
     "eqeqeq",
+    "fastcsv",
     "fuzzysearch",
     "gqls",
     "linebreak",
