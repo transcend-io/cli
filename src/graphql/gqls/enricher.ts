@@ -20,6 +20,27 @@ export const ENRICHERS = gql`
   }
 `;
 
+export interface Initializer {
+  /** ID of enricher */
+  id: string;
+  /** Identifiers */
+  identifiers: {
+    /** Name of identifier */
+    name: string;
+  }[];
+}
+
+export const INITIALIZER = gql`
+  query TranscendCliInitializer {
+    initializer {
+      id
+      identifiers {
+        name
+      }
+    }
+  }
+`;
+
 export const CREATE_ENRICHER = gql`
   mutation TranscendCliCreateEnricher(
     $title: String!
