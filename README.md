@@ -400,6 +400,8 @@ Additionally, the JSON cache file will store the result of any privacy requests 
 This allows for the script to continue uploading requests even if some requests error out. The script
 user can then inspect the errors, and decide whether it is necessary to re-run those requests.
 
+https://user-images.githubusercontent.com/10264973/205434290-85cd3ce7-cc6f-44fc-83ca-3bb8fde4d589.mov
+
 #### Authentication
 
 In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
