@@ -2,6 +2,7 @@ transcend.yml
 transcend-privacy-requests-cache.json
 cron-identifiers.csv
 build/
+privacy-request-upload-receipts/
 
 # Secrets
 *.env.secret

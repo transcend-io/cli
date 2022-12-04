@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import { AttributeKey } from '../graphql';
 import { CachedFileState } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
+import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Mapping from attribute name to request input parameter
@@ -18,19 +19,19 @@ export type AttributeNameMap = {
  *
  * @param client - GraphQL client
  * @param columnNames - The set of all column names
- * @param cached - Cached state of this mapping
+ * @param state - Cached state of this mapping
  * @param requestAttributeKeys - Attribute keys to map
  * @returns Mapping from attributes name to column name
  */
 export async function mapColumnsToAttributes(
   client: GraphQLClient,
   columnNames: string[],
-  cached: CachedFileState,
+  state: PersistedState<typeof CachedFileState>,
   requestAttributeKeys: AttributeKey[],
 ): Promise<AttributeNameMap> {
   // Determine the columns that should be mapped
   const columnQuestions = requestAttributeKeys.filter(
-    ({ name }) => !cached.attributeNames[name],
+    ({ name }) => !state.getValue('attributeNames', name),
   );
 
   // Skip mapping when everything is mapped
@@ -55,12 +56,11 @@ export async function mapColumnsToAttributes(
           }),
         );
   Object.entries(attributeNameMap).forEach(([k, v]) => {
-    // eslint-disable-next-line no-param-reassign
-    cached.attributeNames[k] = v;
+    state.setValue(v, 'attributeNames', k);
   });
 
   return {
-    ...cached.attributeNames,
+    ...state.getValue('attributeNames'),
     ...attributeNameMap,
   };
 }

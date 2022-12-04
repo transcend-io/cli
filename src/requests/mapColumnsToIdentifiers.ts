@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import { INITIALIZER, makeGraphQLRequest, Initializer } from '../graphql';
 import { CachedFileState } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
+import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Mapping from identifier name to request input parameter
@@ -21,13 +22,13 @@ const IDENTIFIER_BLOCK_LIST = ['email', 'coreIdentifier'];
  *
  * @param client - GraphQL client
  * @param columnNames - The set of all column names
- * @param cached - Cached state of this mapping
+ * @param state - Cached state of this mapping
  * @returns Mapping from identifier name to column name
  */
 export async function mapColumnsToIdentifiers(
   client: GraphQLClient,
   columnNames: string[],
-  cached: CachedFileState,
+  state: PersistedState<typeof CachedFileState>,
 ): Promise<IdentifierNameMap> {
   // Grab the initializer
   const { initializer } = await makeGraphQLRequest<{
@@ -38,7 +39,8 @@ export async function mapColumnsToIdentifiers(
   // Determine the columns that should be mapped
   const columnQuestions = initializer.identifiers.filter(
     ({ name }) =>
-      !cached.identifierNames[name] && !IDENTIFIER_BLOCK_LIST.includes(name),
+      !state.getValue('identifierNames', name) &&
+      !IDENTIFIER_BLOCK_LIST.includes(name),
   );
 
   // Skip mapping when everything is mapped
@@ -63,12 +65,11 @@ export async function mapColumnsToIdentifiers(
           }),
         );
   Object.entries(identifierNameMap).forEach(([k, v]) => {
-    // eslint-disable-next-line no-param-reassign
-    cached.identifierNames[k] = v;
+    state.setValue(v, 'identifierNames', k);
   });
 
   return {
-    ...cached.identifierNames,
+    ...state.getValue('identifierNames'),
     ...identifierNameMap,
   };
 }

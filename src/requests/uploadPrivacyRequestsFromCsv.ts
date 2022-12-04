@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 import colors from 'colors';
 import { map } from 'bluebird';
 import * as t from 'io-ts';
 import uniq from 'lodash/uniq';
 import cliProgress from 'cli-progress';
-
+import { join } from 'path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { logger } from '../logger';
 import {
@@ -12,7 +13,7 @@ import {
   fetchAllRequestAttributeKeys,
 } from '../graphql';
 import { mapRequestEnumValues } from './mapRequestEnumValues';
-import { CachedState } from './constants';
+import { CachedRequestState, CachedFileState } from './constants';
 import { mapCsvColumnsToApi } from './mapCsvColumnsToApi';
 import { parseAttributesFromString } from './parseAttributesFromString';
 import { readCsv } from './readCsv';
@@ -30,6 +31,7 @@ import { extractClientError } from './extractClientError';
  */
 export async function uploadPrivacyRequestsFromCsv({
   cacheFilepath,
+  requestReceiptFolder,
   file,
   auth,
   sombraAuth,
@@ -49,6 +51,8 @@ export async function uploadPrivacyRequestsFromCsv({
 }: {
   /** File to cache metadata about mapping of CSV shape to script */
   cacheFilepath: string;
+  /** File where request receipts are stored */
+  requestReceiptFolder: string;
   /** CSV file path */
   file: string;
   /** Transcend API key authentication */
@@ -95,8 +99,7 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Create a new state to persist the metadata that
   // maps the request inputs to the Transcend API shape
-  const state = new PersistedState(cacheFilepath, CachedState, {});
-  let cached = state.getValue(file) || {
+  const state = new PersistedState(cacheFilepath, CachedFileState, {
     columnNames: {},
     requestTypeToRequestAction: {},
     subjectTypeToSubjectName: {},
@@ -104,21 +107,30 @@ export async function uploadPrivacyRequestsFromCsv({
     statusToRequestStatus: {},
     identifierNames: {},
     attributeNames: {},
-    successfulRequests: [],
-    duplicateRequests: [],
-    failingRequests: [],
-  };
+  });
 
+  // Create a new state file to store the requests from this run
+  const requestState = new PersistedState(
+    join(
+      requestReceiptFolder,
+      `tr-request-upload-${new Date().toISOString()}-${file.split('/').pop()}`,
+    ),
+    CachedRequestState,
+    {
+      successfulRequests: [],
+      duplicateRequests: [],
+      failingRequests: [],
+    },
+  );
   if (clearFailingRequests) {
-    cached.failingRequests = [];
+    requestState.setValue([], 'failingRequests');
   }
   if (clearSuccessfulRequests) {
-    cached.successfulRequests = [];
+    requestState.setValue([], 'successfulRequests');
   }
   if (clearDuplicateRequests) {
-    cached.duplicateRequests = [];
+    requestState.setValue([], 'duplicateRequests');
   }
-  state.setValue(cached, file);
 
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(
@@ -157,30 +169,25 @@ export async function uploadPrivacyRequestsFromCsv({
   const requestAttributeKeys = await fetchAllRequestAttributeKeys(client);
 
   // Determine the columns that should be mapped
-  const columnNameMap = await mapCsvColumnsToApi(columnNames, cached);
-  state.setValue(cached, file);
+  const columnNameMap = await mapCsvColumnsToApi(columnNames, state);
   const identifierNameMap = await mapColumnsToIdentifiers(
     client,
     columnNames,
-    cached,
+    state,
   );
-  state.setValue(cached, file);
   const attributeNameMap = await mapColumnsToAttributes(
     client,
     columnNames,
-    cached,
+    state,
     requestAttributeKeys,
   );
-  state.setValue(cached, file);
   await mapRequestEnumValues(client, filteredRequestList, {
-    fileName: file,
     state,
     columnNameMap,
   });
-  cached = state.getValue(file);
 
   // map the CSV to request input
-  const requestInputs = mapCsvRowsToRequestInputs(filteredRequestList, cached, {
+  const requestInputs = mapCsvRowsToRequestInputs(filteredRequestList, state, {
     defaultPhoneCountryCode,
     columnNameMap,
     identifierNameMap,
@@ -255,13 +262,14 @@ export async function uploadPrivacyRequestsFromCsv({
         }
 
         // Cache successful upload
-        cached.successfulRequests.push({
+        const successfulRequests = requestState.getValue('successfulRequests');
+        successfulRequests.push({
           id: requestResponse.id,
           link: requestResponse.link,
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
-        state.setValue(cached, file);
+        requestState.setValue(successfulRequests, 'successfulRequests');
       } catch (err) {
         const msg = `${err.message} - ${JSON.stringify(
           err.response?.body,
@@ -280,18 +288,20 @@ export async function uploadPrivacyRequestsFromCsv({
               ),
             );
           }
-          cached.duplicateRequests.push({
+          const duplicateRequests = requestState.getValue('duplicateRequests');
+          duplicateRequests.push({
             coreIdentifier: requestInput.coreIdentifier,
             attemptedAt: new Date().toISOString(),
           });
-          state.setValue(cached, file);
+          requestState.setValue(duplicateRequests, 'duplicateRequests');
         } else {
-          cached.failingRequests.push({
+          const failingRequests = requestState.getValue('failingRequests');
+          failingRequests.push({
             ...requestInput,
             error: clientError || msg,
             attemptedAt: new Date().toISOString(),
           });
-          state.setValue(cached, file);
+          requestState.setValue(failingRequests, 'failingRequests');
           if (debug) {
             logger.error(colors.red(clientError || msg));
             logger.error(
@@ -323,23 +333,28 @@ export async function uploadPrivacyRequestsFromCsv({
   );
 
   // Log duplicates
-  if (cached.duplicateRequests.length > 0) {
+  if (requestState.getValue('duplicateRequests').length > 0) {
     logger.info(
       colors.magenta(
-        `Encountered "${cached.duplicateRequests.length}" duplicate requests. ` +
+        `Encountered "${
+          requestState.getValue('duplicateRequests').length
+        }" duplicate requests. ` +
           `See "${cacheFilepath}" to review the core identifiers for these requests.`,
       ),
     );
   }
 
   // Log errors
-  if (cached.failingRequests.length > 0) {
+  if (requestState.getValue('failingRequests').length > 0) {
     logger.error(
       colors.red(
-        `Encountered "${cached.failingRequests.length}" errors. ` +
+        `Encountered "${
+          requestState.getValue('failingRequests').length
+        }" errors. ` +
           `See "${cacheFilepath}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);
   }
 }
+/* eslint-enable max-lines */
