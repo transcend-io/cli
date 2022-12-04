@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
+            ["@types/cli-progress", "npm:3.11.0"],\
             ["@types/colors", "npm:1.2.1"],\
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/js-yaml", "npm:4.0.5"],\
@@ -52,6 +53,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:2.6.0"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.6"],\
+            ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
             ["depcheck", "npm:1.4.3"],\
@@ -490,6 +492,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
+            ["@types/cli-progress", "npm:3.11.0"],\
             ["@types/colors", "npm:1.2.1"],\
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/js-yaml", "npm:4.0.5"],\
@@ -503,6 +506,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:2.6.0"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.6"],\
+            ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
             ["depcheck", "npm:1.4.3"],\
@@ -640,6 +644,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-chai-npm-4.3.3-b99652dfb5-20cd094753.zip/node_modules/@types/chai/",\
           "packageDependencies": [\
             ["@types/chai", "npm:4.3.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/cli-progress", [\
+        ["npm:3.11.0", {\
+          "packageLocation": "./.yarn/cache/@types-cli-progress-npm-3.11.0-889a906352-d440162233.zip/node_modules/@types/cli-progress/",\
+          "packageDependencies": [\
+            ["@types/cli-progress", "npm:3.11.0"],\
+            ["@types/node", "npm:16.11.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1895,6 +1909,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["cli-cursor", "npm:3.1.0"],\
             ["restore-cursor", "npm:3.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["cli-progress", [\
+        ["npm:3.11.2", {\
+          "packageLocation": "./.yarn/cache/cli-progress-npm-3.11.2-6cecb7043d-147d26b80c.zip/node_modules/cli-progress/",\
+          "packageDependencies": [\
+            ["cli-progress", "npm:3.11.2"],\
+            ["string-width", "npm:4.2.3"]\
           ],\
           "linkType": "HARD"\
         }]\

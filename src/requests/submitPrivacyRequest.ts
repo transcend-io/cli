@@ -17,7 +17,7 @@ export const PrivacyRequestResponse = t.type({
   status: valuesOf(RequestStatus),
   type: valuesOf(RequestAction),
   subjectType: t.string,
-  email: t.string,
+  email: t.union([t.null, t.string]),
   coreIdentifier: t.string,
   isSilent: t.boolean,
   isTest: t.boolean,
