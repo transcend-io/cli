@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import colors from 'colors';
 import { map } from 'bluebird';
 import * as t from 'io-ts';
@@ -37,12 +36,9 @@ export async function uploadPrivacyRequestsFromCsv({
   sombraAuth,
   concurrency = 20,
   defaultPhoneCountryCode = '1', // USA
-  transcendApiUrl = 'https://api.transcend.io',
+  transcendUrl = 'https://api.transcend.io',
   attributes = [],
   emailIsVerified = true,
-  clearSuccessfulRequests = false,
-  clearFailingRequests = false,
-  clearDuplicateRequests = false,
   skipFilterStep = false,
   isTest = false,
   isSilent = true,
@@ -62,7 +58,7 @@ export async function uploadPrivacyRequestsFromCsv({
   /** Concurrency to upload in */
   concurrency?: number;
   /** API URL for Transcend backend */
-  transcendApiUrl?: string;
+  transcendUrl?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
   /** Include debug logs */
@@ -71,12 +67,6 @@ export async function uploadPrivacyRequestsFromCsv({
   skipFilterStep?: boolean;
   /** Whether test requests are being uploaded */
   isTest?: boolean;
-  /** When true, clear out the failed requests from cache */
-  clearFailingRequests?: boolean;
-  /** When true, clear out the successful requests from cache */
-  clearSuccessfulRequests?: boolean;
-  /** When true, clear out duplicate requests from cache */
-  clearDuplicateRequests?: boolean;
   /** Whether requests are uploaded in silent mode */
   isSilent?: boolean;
   /** Whether the email was verified up front */
@@ -122,22 +112,9 @@ export async function uploadPrivacyRequestsFromCsv({
       failingRequests: [],
     },
   );
-  if (clearFailingRequests) {
-    requestState.setValue([], 'failingRequests');
-  }
-  if (clearSuccessfulRequests) {
-    requestState.setValue([], 'successfulRequests');
-  }
-  if (clearDuplicateRequests) {
-    requestState.setValue([], 'duplicateRequests');
-  }
 
   // Create sombra instance to communicate with
-  const sombra = await createSombraGotInstance(
-    transcendApiUrl,
-    auth,
-    sombraAuth,
-  );
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   // Read in the list of integration requests
   const requestsList = readCsv(file, t.record(t.string, t.string));
@@ -163,7 +140,7 @@ export async function uploadPrivacyRequestsFromCsv({
     : await filterRows(requestsList);
 
   // Build a GraphQL client
-  const client = buildTranscendGraphQLClient(transcendApiUrl, auth);
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Grab the request attributes
   const requestAttributeKeys = await fetchAllRequestAttributeKeys(client);
@@ -266,6 +243,7 @@ export async function uploadPrivacyRequestsFromCsv({
         successfulRequests.push({
           id: requestResponse.id,
           link: requestResponse.link,
+          rowIndex: ind,
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
@@ -291,6 +269,7 @@ export async function uploadPrivacyRequestsFromCsv({
           const duplicateRequests = requestState.getValue('duplicateRequests');
           duplicateRequests.push({
             coreIdentifier: requestInput.coreIdentifier,
+            rowIndex: ind,
             attemptedAt: new Date().toISOString(),
           });
           requestState.setValue(duplicateRequests, 'duplicateRequests');
@@ -298,6 +277,7 @@ export async function uploadPrivacyRequestsFromCsv({
           const failingRequests = requestState.getValue('failingRequests');
           failingRequests.push({
             ...requestInput,
+            rowIndex: ind,
             error: clientError || msg,
             attemptedAt: new Date().toISOString(),
           });
@@ -357,4 +337,3 @@ export async function uploadPrivacyRequestsFromCsv({
     process.exit(1);
   }
 }
-/* eslint-enable max-lines */

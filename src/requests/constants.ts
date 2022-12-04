@@ -83,6 +83,7 @@ export const CachedRequestState = t.type({
     t.type({
       id: t.string,
       link: t.string,
+      rowIndex: t.number,
       coreIdentifier: t.string,
       attemptedAt: t.string,
     }),
@@ -90,6 +91,7 @@ export const CachedRequestState = t.type({
   /** Duplicate requests */
   duplicateRequests: t.array(
     t.type({
+      rowIndex: t.number,
       coreIdentifier: t.string,
       attemptedAt: t.string,
     }),
