@@ -21,6 +21,9 @@
   - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-3)
   - [Usage](#usage-4)
+  - [tr-pull-cron-identifiers](#tr-pull-cron-identifiers)
+    - [Authentication](#authentication-4)
+  - [Usage](#usage-5)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -43,6 +46,7 @@ yarn tr-pull --auth=xxx
 yarn tr-push --auth=xxx
 yarn tr-discover-silos --auth=xxx
 yarn tr-request-upload --auth=xxx
+yarn tr-pull-cron-identifiers --auth=xxx
 ```
 
 or
@@ -56,6 +60,7 @@ tr-pull --auth=xxx
 tr-push --auth=xxx
 tr-discover-silos --auth=xxx
 tr-request-upload --auth=xxx
+tr-pull-cron-identifiers --auth=xxx
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -191,38 +196,38 @@ _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 ```sh
 # Writes out file to ./transcend.yml
-tr-pull --auth=<api-key>
+tr-pull --auth=$TRANSCEND_API_KEY
 ```
 
 An alternative file destination can be specified:
 
 ```sh
 # Writes out file to ./custom/location.yml
-tr-pull --auth=<api-key> --file=./custom/location.yml
+tr-pull --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
 ```
 
 Or a specific data silo(s) can be pulled in:
 
 ```sh
-tr-pull --auth=<api-key> --dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
+tr-pull --auth=$TRANSCEND_API_KEY --dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
 ```
 
 Or a specific types of data silo(s) can be pulled in:
 
 ```sh
-tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake
+tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake
 ```
 
 Or with a specific page size (max 100)
 
 ```sh
-tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake --pageSize=30
+tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake --pageSize=30
 ```
 
 Or with debug logs
 
 ```sh
-tr-pull --auth=<api-key> --integrationNames=salesforce,snowflake --debug=true
+tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake --debug=true
 ```
 
 Note: This command will overwrite the existing transcend.yml file that you have locally.
@@ -248,14 +253,14 @@ The API key needs the following scopes:
 
 ```sh
 # Looks for file at ./transcend.yml
-tr-push --auth=<api-key>
+tr-push --auth=$TRANSCEND_API_KEY
 ```
 
 An alternative file destination can be specified:
 
 ```sh
 # Looks for file at custom location ./custom/location.yml
-tr-push --auth=<api-key> --file=./custom/location.yml
+tr-push --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
 ```
 
 Some things to note about this sync process:
@@ -315,7 +320,7 @@ If you are using this cli to sync your Data Map between multiple Transcend insta
 The `tr-push` command takes in a parameter `variables`. This is a CSV of `key:value` pairs.
 
 ```sh
-tr-push --auth=<api-key> --variables=domain:acme.com,stage:staging
+tr-push --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
 ```
 
 This command could fill out multiple parameters in a yaml file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
@@ -415,74 +420,131 @@ The API key needs the following scopes:
 ### Usage
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
 ```
 
 For self-hosted sombras that use an internal key:
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --sombraAuth=<sombra-internal-key> --file=/Users/michaelfarrell/Desktop/test.csv
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
+ --transcendApiUrl=https://api.us.transcend.io
 ```
 
 Run without being prompted to filter requests
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --skipFilterStep=true
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --skipFilterStep=true
 ```
 
 Perform a dry run to see what will be uploaded, without calling the Transcend API to upload the request
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --dryRun=true
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --dryRun=true
 ```
 
 Mark the uploaded requests as test requests
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --isTest=true
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --isTest=true
 ```
 
 Send email communications to the users throughout the request lifecycle.
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --isSilent=false
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --isSilent=false
 ```
 
 Send email verification to user before request continues.
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv \
    --isSilent=false --emailIsVerified=false
 ```
 
 Increase the concurrency (defaults to 20)
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --concurrency=20
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --concurrency=20
 ```
 
 Tag all uploaded requests with an attribute
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv \
   --attributes=Tags:transcend-cli;my-customer-tag,Customer:acme-corp
 ```
 
 Clear out the cache of failed and successful requests
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv \
  --clearFailingRequests=true --clearSuccessfulRequests=true --clearDuplicateRequests=true
 ```
 
 Specify default country code for phone numbers
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --defaultPhoneCountryCode=44
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --defaultPhoneCountryCode=44
 ```
 
 Include debug logs - warning, this logs out personal data.
 
 ```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --debug=true
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --debug=true
+```
+
+### tr-pull-cron-identifiers
+
+If you are using the cron job integration, you can run this command to pull the outstanding identifiers
+for the data silo to a CSV.
+
+Read more at https://docs.transcend.io/docs/integrations/cron-job-integration.
+
+https://user-images.githubusercontent.com/10264973/205483055-f4050645-bdf5-4ea2-8464-3183abd63074.mov
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must be associated to the ID of the integration/data silo that is being operated on.
+
+### Usage
+
+```sh
+yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+   --requestType=ERASURE
+```
+
+Pull to a specific file location
+
+```sh
+yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
+   --file=/Users/transcend/Desktop/test.csv
+```
+
+For self-hosted sombras that use an internal key:
+
+```sh
+yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+   --requestType=ERASURE --sombraAuth=$SOMBRA_INTERNAL_KEY
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
+ --transcendApiUrl=https://api.us.transcend.io
+```
+
+Specifying the page limit, defaults to 100.
+
+```sh
+yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
+ --pageLimit=300
 ```

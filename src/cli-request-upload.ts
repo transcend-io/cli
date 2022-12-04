@@ -9,13 +9,10 @@ import { splitCsvToList, uploadPrivacyRequestsFromCsv } from './requests';
 /**
  * Upload a CSV of Privacy Requests.
  *
- * Requirements:
- *
- * 1. Create API key with follow scopes: https://app.transcend.io/infrastructure/api-keys
+ * Requires an API key with follow scopes: https://app.transcend.io/infrastructure/api-keys
  *    - "Submit New Data Subject Request"
  *    - "View Identity Verification Settings"
  *    - "View Global Attributes"
- * 2. Invite a new user into the dashboard with no scopes but email/password login (needed for diffie hellman channel)
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-request-upload.ts --auth=asd123 \

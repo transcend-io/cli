@@ -1,5 +1,6 @@
 transcend.yml
 transcend-privacy-requests-cache.json
+cron-identifiers.csv
 build/
 
 # Secrets
