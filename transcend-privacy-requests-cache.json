@@ -1,0 +1,48 @@
+{
+  "/Users/michaelfarrell/Desktop/test.csv": {
+    "columnNames": {
+      "email": "PERSONAL_EMAIL",
+      "coreIdentifier": "CONTACT_ID",
+      "requestType": "[APPLY VALUE TO ALL ROWS]",
+      "subjectType": "[APPLY VALUE TO ALL ROWS]",
+      "locale": "[NONE]",
+      "requestStatus": "[NONE]",
+      "createdAt": "[NONE]",
+      "dataSiloIds": "[NONE]"
+    },
+    "requestTypeToRequestAction": {
+      "<blank>": "CONTACT_OPT_IN"
+    },
+    "subjectTypeToSubjectName": {
+      "<blank>": "candidate"
+    },
+    "languageToLocale": {
+      "<blank>": "en"
+    },
+    "statusToRequestStatus": {},
+    "identifierNames": {
+      "userId": "CONTACT_ID",
+      "ethnicity": "[NONE]",
+      "phone": "PHONE",
+      "LAST_NAME": "LAST_NAME",
+      "CONTACT_ID": "CONTACT_ID",
+      "FIRST_NAME": "FIRST_NAME",
+      "Lead Recruiter": "LEAD_RECRUITER",
+      "Search EC": "SEARCH_TEAM",
+      "Tags": "[NONE]"
+    },
+    "attributeNames": {},
+    "failingRequests": [
+      {
+        "email": "mike@transcend.io",
+        "attestedExtraIdentifiers": {},
+        "attributes": [],
+        "coreIdentifier": "949858",
+        "requestType": "CONTACT_OPT_IN",
+        "subjectType": "candidate",
+        "error": "Response code 400 (Bad Request) - \"{\\\"message\\\":\\\"Client error: You have already made this request.\\\",\\\"locations\\\":[{\\\"line\\\":22,\\\"column\\\":5}],\\\"path\\\":[\\\"employeeMakeDataSubjectRequest\\\"]}\"",
+        "attemptedAt": "2022-12-04T03:32:16.633Z"
+      }
+    ]
+  }
+}

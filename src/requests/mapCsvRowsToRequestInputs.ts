@@ -7,7 +7,13 @@ import {
 } from '@transcend-io/privacy-types';
 import { ObjByString } from '@transcend-io/type-utils';
 
-import { CachedFileState, ColumnName, NONE } from './constants';
+import {
+  CachedFileState,
+  BLANK,
+  BULK_APPLY,
+  ColumnName,
+  NONE,
+} from './constants';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { splitCsvToList } from './splitCsvToList';
 import type { AttributeInput } from './parseAttributesFromString';
@@ -151,6 +157,8 @@ export function mapCsvRowsToRequestInputs(
           }
         });
 
+      const requestTypeColumn = getMappedName(ColumnName.RequestType);
+      const dataSubjectTypeColumn = getMappedName(ColumnName.SubjectType);
       return [
         input,
         {
@@ -159,13 +167,13 @@ export function mapCsvRowsToRequestInputs(
           attributes,
           coreIdentifier: input[getMappedName(ColumnName.CoreIdentifier)],
           requestType:
-            cached.requestTypeToRequestAction[
-              input[getMappedName(ColumnName.RequestType)]
-            ],
+            requestTypeColumn === BULK_APPLY
+              ? cached.requestTypeToRequestAction[BLANK]
+              : cached.requestTypeToRequestAction[input[requestTypeColumn]],
           subjectType:
-            cached.subjectTypeToSubjectName[
-              input[getMappedName(ColumnName.SubjectType)]
-            ] || 'Customer',
+            dataSubjectTypeColumn === BULK_APPLY
+              ? cached.subjectTypeToSubjectName[BLANK]
+              : cached.subjectTypeToSubjectName[input[dataSubjectTypeColumn]],
           ...(getMappedName(ColumnName.Locale) !== NONE &&
           input[getMappedName(ColumnName.Locale)]
             ? {

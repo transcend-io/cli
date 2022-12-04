@@ -1,7 +1,12 @@
 import { getValues, getEntries } from '@transcend-io/type-utils';
 import inquirer from 'inquirer';
 import titleCase from 'lodash/startCase';
-import { ColumnName, CachedFileState, IS_REQUIRED } from './constants';
+import {
+  ColumnName,
+  CachedFileState,
+  IS_REQUIRED,
+  CAN_APPLY_IN_BULK,
+} from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
 
 /**
@@ -43,6 +48,7 @@ export async function mapCsvColumnsToApi(
               columnNames,
               field,
               IS_REQUIRED[name],
+              !!CAN_APPLY_IN_BULK[name],
             );
             return {
               name,
@@ -53,6 +59,7 @@ export async function mapCsvColumnsToApi(
             };
           }),
         );
+
   getEntries(columnNameMap).forEach(([k, v]) => {
     // eslint-disable-next-line no-param-reassign
     cached.columnNames[k] = v;

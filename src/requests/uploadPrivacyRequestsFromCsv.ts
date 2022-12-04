@@ -76,6 +76,8 @@ export async function uploadPrivacyRequestsFromCsv({
     subjectTypeToSubjectName: {},
     languageToLocale: {},
     statusToRequestStatus: {},
+    identifierNames: {},
+    attributeNames: {},
     failingRequests: [],
   };
 

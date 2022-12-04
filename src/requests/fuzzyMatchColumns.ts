@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { NONE } from './constants';
+import { NONE, BULK_APPLY } from './constants';
 
 import fuzzysearch from 'fuzzysearch';
 
@@ -23,13 +23,15 @@ export function fuzzySearch(word1: string, word2: string): boolean {
  *
  * @param allColumnNames - List of all column names
  * @param fuzzyMapName - The name of field being mapped to
- * @param isRequired - When require, don't show NONE
+ * @param isRequired - When true, don't include "NONE" as an option
+ * @param canApplyAll - When true, include an option to specify the value in bulk
  * @returns The list of suggestions for inquirer
  */
 export function fuzzyMatchColumns(
   allColumnNames: string[],
   fuzzyMapName: string,
   isRequired: boolean,
+  canApplyAll?: boolean,
 ): (string | InstanceType<typeof inquirer.Separator>)[] {
   const matchingColumnNames = allColumnNames.filter((x) =>
     fuzzySearch(fuzzyMapName.toLowerCase(), x.toLowerCase()),
@@ -38,6 +40,7 @@ export function fuzzyMatchColumns(
     ...matchingColumnNames,
     new inquirer.Separator(),
     ...(isRequired ? [] : [NONE]),
+    ...(canApplyAll ? [BULK_APPLY] : []),
     ...allColumnNames.filter((x) => !matchingColumnNames.includes(x)),
   ];
 }

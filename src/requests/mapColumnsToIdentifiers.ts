@@ -38,7 +38,7 @@ export async function mapColumnsToIdentifiers(
   // Determine the columns that should be mapped
   const columnQuestions = initializer.identifiers.filter(
     ({ name }) =>
-      !cached.identifierNames[name] && IDENTIFIER_BLOCK_LIST.includes(name),
+      !cached.identifierNames[name] && !IDENTIFIER_BLOCK_LIST.includes(name),
   );
 
   // Skip mapping when everything is mapped
