@@ -387,7 +387,18 @@ You can include additional arguments as well:
 
 ### tr-request-upload
 
-FIXME
+If you need to upload a set of requests from a CSV, you can run this command.
+This command uses [inquirer](https://github.com/SBoudrias/Inquirer.js/) to prompt the user to
+map the shape of the CSV to the shape of the Transcend API. There is no requirement for the
+shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file, that allows for the mappings to be preserved between runs.
+This can be useful if you have the same CSV shape that needs to be imported multiple times.
+Once the mapping process is done once, it does not need to be done again.
+
+Additionally, the JSON cache file will store the result of any privacy requests that fail to be uploaded.
+This allows for the script to continue uploading requests even if some requests error out. The script
+user can then inspect the errors, and decide whether it is necessary to re-run those requests.
 
 #### Authentication
 
@@ -401,4 +412,43 @@ The API key needs the following scopes:
 
 ### Usage
 
-FIXME
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv
+```
+
+For self-hosted sombras that use an internal key:
+
+```sh
+yarn tr-request-upload --auth=<api-key> --sombraAuth=<sombra-internal-key> --file=/Users/michaelfarrell/Desktop/test.csv
+```
+
+Run without being prompted to filter requests
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --skipFilterStep=true
+```
+
+Perform a dry run to see what will be uploaded, without calling the Transcend API to upload the request
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --dryRun=true
+```
+
+Mark the uploaded requests as test requests
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --isTest=true
+```
+
+Increase the concurrency (defaults to 20)
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --concurrency=20
+```
+
+Tag all uploaded requests with an attribute
+
+```sh
+yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv \
+  --attributes=Tags:transcend-bulk-upload;my-customer-tag,Customer:acme-corp
+```
