@@ -31,11 +31,11 @@ export async function mapColumnsToAttributes(
 
   // Determine the columns that should be mapped
   const columnQuestions = requestAttributeKeys.filter(
-    ({ name }) => !cached.identifierNames[name],
+    ({ name }) => !cached.attributeNames[name],
   );
 
   // Skip mapping when everything is mapped
-  const identifierNameMap =
+  const attributeNameMap =
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
@@ -55,10 +55,10 @@ export async function mapColumnsToAttributes(
             };
           }),
         );
-  Object.entries(identifierNameMap).forEach(([k, v]) => {
+  Object.entries(attributeNameMap).forEach(([k, v]) => {
     // eslint-disable-next-line no-param-reassign
-    cached.identifierNames[k] = v;
+    cached.attributeNames[k] = v;
   });
 
-  return identifierNameMap;
+  return attributeNameMap;
 }
