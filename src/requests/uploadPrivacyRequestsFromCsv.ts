@@ -21,11 +21,7 @@ import { mapColumnsToAttributes } from './mapColumnsToAttributes';
 import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
 import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
 import { filterRows } from './filterRows';
-
-// FIXME move
-const CLIENT_ERROR = /{\\"message\\":\\"(.+?)\\",/;
-const extractClientError = (err: string): string | null =>
-  CLIENT_ERROR.test(err) ? CLIENT_ERROR.exec(err)[1] : null;
+import { extractClientError } from './extractClientError';
 
 /**
  * Upload a set of privacy requests from CSV
@@ -42,9 +38,9 @@ export async function uploadPrivacyRequestsFromCsv({
   transcendApiUrl = 'https://api.transcend.io',
   attributes = [],
   emailIsVerified = true,
-  ignoreDuplicates = false,
   clearSuccessfulRequests = false,
   clearFailingRequests = false,
+  clearDuplicateRequests = false,
   skipFilterStep = false,
   isTest = false,
   isSilent = true,
@@ -71,12 +67,12 @@ export async function uploadPrivacyRequestsFromCsv({
   skipFilterStep?: boolean;
   /** Whether test requests are being uploaded */
   isTest?: boolean;
-  /** When true, do not log duplicate requests as errors */
-  ignoreDuplicates?: boolean;
-  /** When true, clear out the failed requests */
+  /** When true, clear out the failed requests from cache */
   clearFailingRequests?: boolean;
-  /** When true, clear out the successful requests */
+  /** When true, clear out the successful requests from cache */
   clearSuccessfulRequests?: boolean;
+  /** When true, clear out duplicate requests from cache */
+  clearDuplicateRequests?: boolean;
   /** Whether requests are uploaded in silent mode */
   isSilent?: boolean;
   /** Whether the email was verified up front */
@@ -115,12 +111,14 @@ export async function uploadPrivacyRequestsFromCsv({
 
   if (clearFailingRequests) {
     cached.failingRequests = [];
-    state.setValue(cached, file);
   }
   if (clearSuccessfulRequests) {
     cached.successfulRequests = [];
-    state.setValue(cached, file);
   }
+  if (clearDuplicateRequests) {
+    cached.duplicateRequests = [];
+  }
+  state.setValue(cached, file);
 
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(
@@ -139,9 +137,8 @@ export async function uploadPrivacyRequestsFromCsv({
       'No Requests found in list! Ensure the first row of the CSV is a header and the rest are requests.',
     );
   }
-  const firstRequest = requestsList[0];
-
   if (debug) {
+    const firstRequest = requestsList[0];
     logger.info(
       colors.magenta(`First request: ${JSON.stringify(firstRequest, null, 2)}`),
     );
@@ -274,7 +271,6 @@ export async function uploadPrivacyRequestsFromCsv({
         const clientError = extractClientError(msg);
 
         if (
-          ignoreDuplicates &&
           clientError === 'Client error: You have already made this request.'
         ) {
           if (debug) {

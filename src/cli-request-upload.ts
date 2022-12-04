@@ -8,7 +8,6 @@ import { splitCsvToList, uploadPrivacyRequestsFromCsv } from './requests';
 
 // FIXME multi email
 // FIXME retry failed requests
-// FIXME PROGRESS
 
 /**
  * Upload a CSV of Privacy Requests.
@@ -44,12 +43,12 @@ async function main(): Promise<void> {
     isSilent = 'true',
     defaultPhoneCountryCode = '1', // USA
     emailIsVerified = 'true',
-    ignoreDuplicates = 'false',
+    clearDuplicateRequests = 'false',
     clearSuccessfulRequests = 'false',
+    clearFailingRequests = 'false',
     dryRun = 'false',
     debug = 'false',
     skipFilterStep = 'false',
-    clearFailingRequests = 'false',
     attributes = 'Tags:transcend-cli',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -74,9 +73,9 @@ async function main(): Promise<void> {
     transcendApiUrl,
     defaultPhoneCountryCode,
     attributes: splitCsvToList(attributes),
+    clearDuplicateRequests: clearDuplicateRequests === 'true',
     clearSuccessfulRequests: clearSuccessfulRequests === 'true',
     debug: debug === 'true',
-    ignoreDuplicates: ignoreDuplicates === 'true',
     skipFilterStep: skipFilterStep === 'true',
     isSilent: isSilent === 'true',
     emailIsVerified: emailIsVerified === 'true',

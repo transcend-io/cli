@@ -400,7 +400,7 @@ Additionally, the JSON cache file will store the result of any privacy requests 
 This allows for the script to continue uploading requests even if some requests error out. The script
 user can then inspect the errors, and decide whether it is necessary to re-run those requests.
 
-https://user-images.githubusercontent.com/10264973/205434290-85cd3ce7-cc6f-44fc-83ca-3bb8fde4d589.mov
+https://user-images.githubusercontent.com/10264973/205477183-d4762087-668c-43f1-a84c-0fce0ec3e132.mov
 
 #### Authentication
 
@@ -479,12 +479,6 @@ Specify default country code for phone numbers
 
 ```sh
 yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --defaultPhoneCountryCode=44
-```
-
-Gracefully handle requests that are duplicate, do not consider them errors.
-
-```sh
-yarn tr-request-upload --auth=<api-key> --file=/Users/michaelfarrell/Desktop/test.csv --ignoreDuplicates=true
 ```
 
 Include debug logs - warning, this logs out personal data.
