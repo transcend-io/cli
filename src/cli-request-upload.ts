@@ -30,6 +30,7 @@ async function main(): Promise<void> {
     file = './requests.csv',
     transcendApiUrl = 'https://api.transcend.io',
     cacheFilepath = './transcend-privacy-requests-cache.json',
+    requestReceiptFolder = './privacy-request-upload-receipts',
     auth,
     sombraAuth,
     concurrency = '100',
@@ -59,6 +60,7 @@ async function main(): Promise<void> {
   // Upload privacy requests
   await uploadPrivacyRequestsFromCsv({
     cacheFilepath,
+    requestReceiptFolder,
     file,
     auth,
     sombraAuth,

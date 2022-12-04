@@ -1,4 +1,5 @@
 import { getValues, getEntries } from '@transcend-io/type-utils';
+import type { PersistedState } from '@transcend-io/persisted-state';
 import inquirer from 'inquirer';
 import titleCase from 'lodash/startCase';
 import {
@@ -20,16 +21,16 @@ export type ColumnNameMap = {
  * Determine the mapping between columns in CSV
  *
  * @param columnNames - The set of column names
- * @param cached - The cached file state used to map DSR inputs
+ * @param state - The cached file state used to map DSR inputs
  * @returns The column name mapping
  */
 export async function mapCsvColumnsToApi(
   columnNames: string[],
-  cached: CachedFileState,
+  state: PersistedState<typeof CachedFileState>,
 ): Promise<ColumnNameMap> {
   // Determine the columns that should be mapped
   const columnQuestions = getValues(ColumnName).filter(
-    (name) => !cached.columnNames[name],
+    (name) => !state.getValue('columnNames', name),
   );
 
   // Skip mapping when everything is mapped
@@ -61,8 +62,7 @@ export async function mapCsvColumnsToApi(
         );
 
   getEntries(columnNameMap).forEach(([k, v]) => {
-    // eslint-disable-next-line no-param-reassign
-    cached.columnNames[k] = v;
+    state.setValue(v, 'columnNames', k);
   });
   return columnNameMap;
 }

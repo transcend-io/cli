@@ -69,6 +69,13 @@ export const CachedFileState = t.type({
     t.string,
     valuesOf({ ...CompletedRequestStatus, [NONE]: NONE }),
   ),
+});
+
+/** Type override */
+export type CachedFileState = t.TypeOf<typeof CachedFileState>;
+
+// Cache state
+export const CachedRequestState = t.type({
   /** Set of privacy requests that failed to upload */
   failingRequests: t.array(t.record(t.string, t.any)),
   /** Successfully uploaded requests */
@@ -90,6 +97,4 @@ export const CachedFileState = t.type({
 });
 
 /** Type override */
-export type CachedFileState = t.TypeOf<typeof CachedFileState>;
-
-export const CachedState = t.record(t.string, CachedFileState);
+export type CachedRequestState = t.TypeOf<typeof CachedRequestState>;

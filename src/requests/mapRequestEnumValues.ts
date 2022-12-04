@@ -9,7 +9,7 @@ import { LanguageKey } from '@transcend-io/internationalization';
 import { ObjByString } from '@transcend-io/type-utils';
 import { logger } from '../logger';
 import { makeGraphQLRequest, DataSubject, DATA_SUBJECTS } from '../graphql';
-import { CachedState, NONE, ColumnName } from './constants';
+import { CachedFileState, NONE, ColumnName } from './constants';
 import { mapEnumValues } from './mapEnumValues';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
@@ -25,24 +25,18 @@ export async function mapRequestEnumValues(
   client: GraphQLClient,
   requests: ObjByString[],
   {
-    fileName,
     state,
     columnNameMap,
   }: {
-    /** Name of fileName to be cached */
-    fileName: string;
     /** State value to write cache to */
-    state: PersistedState<typeof CachedState>;
+    state: PersistedState<typeof CachedFileState>;
     /** Mapping of column names */
     columnNameMap: ColumnNameMap;
   },
 ): Promise<void> {
-  // Current cache value
-  const cached = state.getValue(fileName);
-
   // Get mapped value
   const getMappedName = (attribute: ColumnName): string =>
-    cached.columnNames[attribute] || columnNameMap[attribute]!;
+    state.getValue('columnNames', attribute) || columnNameMap[attribute]!;
 
   // Fetch all data subjects in the organization
   const { internalSubjects } = await makeGraphQLRequest<{
@@ -57,27 +51,24 @@ export async function mapRequestEnumValues(
     await mapEnumValues(
       getUniqueValuesForColumn(requests, getMappedName(ColumnName.RequestType)),
       Object.values(RequestAction),
-      cached.requestTypeToRequestAction || {},
+      state.getValue('requestTypeToRequestAction'),
     );
-  cached.requestTypeToRequestAction = requestTypeToRequestAction;
-  state.setValue(cached, fileName);
+  state.setValue(requestTypeToRequestAction, 'requestTypeToRequestAction');
   logger.info(colors.magenta('Determining mapping of columns for subject'));
   const subjectTypeToSubjectName: { [k in string]: string } =
     await mapEnumValues(
       getUniqueValuesForColumn(requests, getMappedName(ColumnName.SubjectType)),
       internalSubjects.map(({ type }) => type),
-      cached.subjectTypeToSubjectName || {},
+      state.getValue('subjectTypeToSubjectName'),
     );
-  cached.subjectTypeToSubjectName = subjectTypeToSubjectName;
-  state.setValue(cached, fileName);
+  state.setValue(subjectTypeToSubjectName, 'subjectTypeToSubjectName');
   logger.info(colors.magenta('Determining mapping of columns for locale'));
   const languageToLocale: { [k in string]: LanguageKey } = await mapEnumValues(
     getUniqueValuesForColumn(requests, getMappedName(ColumnName.Locale)),
     Object.values(LanguageKey),
-    cached.languageToLocale || {},
+    state.getValue('languageToLocale'),
   );
-  cached.languageToLocale = languageToLocale;
-  state.setValue(cached, fileName);
+  state.setValue(languageToLocale, 'languageToLocale');
   logger.info(
     colors.magenta('Determining mapping of columns for request status'),
   );
@@ -90,8 +81,7 @@ export async function mapRequestEnumValues(
       : await mapEnumValues(
           getUniqueValuesForColumn(requests, requestStatusColumn),
           [...Object.values(CompletedRequestStatus), NONE],
-          cached.statusToRequestStatus || {},
+          state.getValue('statusToRequestStatus'),
         );
-  cached.statusToRequestStatus = statusToRequestStatus;
-  state.setValue(cached, fileName);
+  state.setValue(statusToRequestStatus, 'statusToRequestStatus');
 }

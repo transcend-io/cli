@@ -1,4 +1,5 @@
 import { LanguageKey } from '@transcend-io/internationalization';
+import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   NORMALIZE_PHONE_NUMBER,
   CompletedRequestStatus,
@@ -96,13 +97,13 @@ export function normalizeIdentifierValue(
  * request.
  *
  * @param requestInputs - CSV of requests to be uploaded
- * @param cached - The cached set of mapping values
+ * @param state - The cached set of mapping values
  * @param options - Options
  * @returns [raw input, request input] list
  */
 export function mapCsvRowsToRequestInputs(
   requestInputs: ObjByString[],
-  cached: CachedFileState,
+  state: PersistedState<typeof CachedFileState>,
   {
     columnNameMap,
     identifierNameMap,
@@ -124,7 +125,7 @@ export function mapCsvRowsToRequestInputs(
 ): [Record<string, string>, PrivacyRequestInput][] {
   // map the CSV to request input
   const getMappedName = (attribute: ColumnName): string =>
-    cached.columnNames[attribute] || columnNameMap[attribute]!;
+    state.getValue('columnNames', attribute) || columnNameMap[attribute]!;
   return requestInputs.map(
     (input): [Record<string, string>, PrivacyRequestInput] => {
       // The extra identifiers to upload for this request
@@ -193,30 +194,38 @@ export function mapCsvRowsToRequestInputs(
           coreIdentifier: input[getMappedName(ColumnName.CoreIdentifier)],
           requestType:
             requestTypeColumn === BULK_APPLY
-              ? cached.requestTypeToRequestAction[BLANK]
-              : cached.requestTypeToRequestAction[input[requestTypeColumn]],
+              ? state.getValue('requestTypeToRequestAction', BLANK)
+              : state.getValue(
+                  'requestTypeToRequestAction',
+                  input[requestTypeColumn],
+                ),
           subjectType:
             dataSubjectTypeColumn === BULK_APPLY
-              ? cached.subjectTypeToSubjectName[BLANK]
-              : cached.subjectTypeToSubjectName[input[dataSubjectTypeColumn]],
+              ? state.getValue('subjectTypeToSubjectName', BLANK)
+              : state.getValue(
+                  'subjectTypeToSubjectName',
+                  input[dataSubjectTypeColumn],
+                ),
           ...(getMappedName(ColumnName.Locale) !== NONE &&
           input[getMappedName(ColumnName.Locale)]
             ? {
-                locale:
-                  cached.languageToLocale[
-                    input[getMappedName(ColumnName.Locale)]
-                  ],
+                locale: state.getValue(
+                  'languageToLocale',
+                  input[getMappedName(ColumnName.Locale)],
+                ),
               }
             : {}),
           ...(getMappedName(ColumnName.RequestStatus) !== NONE &&
-          cached.statusToRequestStatus[
-            input[getMappedName(ColumnName.RequestStatus)]
-          ] !== NONE &&
+          state.getValue(
+            'statusToRequestStatus',
+            input[getMappedName(ColumnName.RequestStatus)],
+          ) !== NONE &&
           input[getMappedName(ColumnName.RequestStatus)]
             ? {
-                status: cached.statusToRequestStatus[
-                  input[getMappedName(ColumnName.RequestStatus)]
-                ] as CompletedRequestStatus,
+                status: state.getValue(
+                  'statusToRequestStatus',
+                  input[getMappedName(ColumnName.RequestStatus)],
+                ) as CompletedRequestStatus,
               }
             : {}),
           ...(getMappedName(ColumnName.CreatedAt) !== NONE &&
