@@ -78,7 +78,7 @@ export function normalizeIdentifierValue(
   if (identifierType === IdentifierType.Phone) {
     const normalized = identifierValue
       .replace(NORMALIZE_PHONE_NUMBER, '')
-      .replace(/[()]/g, '') // FIXME move
+      .replace(/[()]/g, '')
       .replace(/[–]/g, '')
       .replace(/[:]/g, '')
       .replace(/[‭‬]/g, '')

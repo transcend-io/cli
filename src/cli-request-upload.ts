@@ -6,9 +6,6 @@ import colors from 'colors';
 import { logger } from './logger';
 import { splitCsvToList, uploadPrivacyRequestsFromCsv } from './requests';
 
-// FIXME multi email
-// FIXME retry failed requests
-
 /**
  * Upload a CSV of Privacy Requests.
  *
