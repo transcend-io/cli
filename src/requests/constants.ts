@@ -47,6 +47,8 @@ export const CachedFileState = t.type({
   columnNames: t.partial(applyEnum(ColumnName, () => t.string)),
   /** Mapping between the identifier names and the CSV column name for that input */
   identifierNames: t.record(t.string, t.string),
+  /** Mapping between the request attribute inputs and the CSV column name for that input */
+  attributeNames: t.record(t.string, t.string),
   /** Mapping between CSV request type and Transcend Request Action */
   requestTypeToRequestAction: t.record(t.string, valuesOf(RequestAction)),
   /** Mapping between CSV data subject type and the name of the data subject in Transcend */

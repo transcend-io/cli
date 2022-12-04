@@ -8,7 +8,6 @@ import * as t from 'io-ts';
 import uniq from 'lodash/uniq';
 import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 
-import { NORMALIZE_PHONE_NUMBER } from '@transcend-io/privacy-types';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { logger } from './logger';
 import {
@@ -21,8 +20,9 @@ import {
   mapCsvColumnsToApi,
   parseAttributesFromString,
   readCsv,
-  AttestedExtraIdentifiers,
   submitPrivacyRequest,
+  mapColumnsToAttributes,
+  mapColumnsToIdentifiers,
   filterRows,
   mapCsvRowsToRequestInputs,
 } from './requests';
@@ -115,12 +115,23 @@ async function main(): Promise<void> {
   const filteredRequestList =
     skipFilterStep === 'true' ? requestsList : await filterRows(requestsList);
 
-  // FIXME map over ALL columns for attributes
+  // Build a GraphQL client
   const client = buildTranscendGraphQLClient(transcendApiUrl, auth);
 
   // Determine the columns that should be mapped
   const columnNameMap = await mapCsvColumnsToApi(columnNames, cached);
   state.setValue(cached, file);
+  const identifierNameMap = await mapColumnsToIdentifiers(
+    client,
+    columnNames,
+    cached,
+  );
+  state.setValue(cached, file);
+  const attributeNameMap = await mapColumnsToAttributes(
+    client,
+    columnNames,
+    cached,
+  );
   await mapRequestEnumValues(client, filteredRequestList, {
     fileName: file,
     state,
@@ -129,11 +140,11 @@ async function main(): Promise<void> {
   cached = state.getValue(file);
 
   // map the CSV to request input
-  const requestInputs = mapCsvRowsToRequestInputs(
-    filteredRequestList,
-    cached,
+  const requestInputs = mapCsvRowsToRequestInputs(filteredRequestList, cached, {
     columnNameMap,
-  );
+    identifierNameMap,
+    attributeNameMap,
+  });
 
   // Submit each request
   // FIXME parallelism
@@ -148,66 +159,10 @@ async function main(): Promise<void> {
       ),
     );
 
-    const attestedExtraIdentifiers: AttestedExtraIdentifiers = {};
-
-    // add phone number
-    if (rawRow['Phone Number']) {
-      if (!attestedExtraIdentifiers.phone) {
-        attestedExtraIdentifiers.phone = [];
-      }
-      attestedExtraIdentifiers.phone.push({
-        value: rawRow['Phone Number']
-          .replace(NORMALIZE_PHONE_NUMBER, '')
-          .replace(/[A-Za-z]/g, ''),
-        name: 'phone',
-      });
-    }
-
-    // uncomment to add support for custom identifiers
-    // if (rawRow.Address) {
-    //  if (!attestedExtraIdentifiers.custom) {
-    //    attestedExtraIdentifiers.custom = [];
-    //  }
-    //  attestedExtraIdentifiers.custom.push({
-    //    value: rawRow.Address,
-    //    name: 'address',
-    //  });
-    // }
-    // if (rawRow['User Identifier']) {
-    //  const id = rawRow['User Identifier'];
-    //  if (!attestedExtraIdentifiers.custom) {
-    //    attestedExtraIdentifiers.custom = [];
-    //  }
-    //  attestedExtraIdentifiers.custom.push({
-    //    value: id,
-    //    name: 'user_id',
-    //  });
-    // }
-    // if (rawRow['First Name'] || rawRow['Last Name']) {
-    //  let name = '';
-    //  if (rawRow['First Name']) {
-    //    name += rawRow['First Name'];
-    //  }
-    //  if (rawRow['Last Name']) {
-    //    if (name) {
-    //      name += ' ';
-    //    }
-    //    name += rawRow['Last Name'];
-    //  }
-    //  if (!attestedExtraIdentifiers.custom) {
-    //    attestedExtraIdentifiers.custom = [];
-    //  }
-    //  attestedExtraIdentifiers.custom.push({
-    //    value: name,
-    //    name: 'Full_name',
-    //  });
-    // }
-
     // Skip on dry run
     if (dryRun === 'true') {
-      logger.info(colors.magenta('Bailing out on dry run'));
       logger.info(
-        colors.magenta(JSON.stringify(attestedExtraIdentifiers, null, 2)),
+        colors.magenta('Bailing out on dry run because dryRun is set'),
       );
       return;
     }
