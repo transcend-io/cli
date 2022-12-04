@@ -97,14 +97,17 @@ export async function uploadPrivacyRequestsFromCsv({
     statusToRequestStatus: {},
     identifierNames: {},
     attributeNames: {},
+    regionToCountrySubDivision: {},
+    regionToCountry: {},
   });
 
   // Create a new state file to store the requests from this run
+  const requestCacheFile = join(
+    requestReceiptFolder,
+    `tr-request-upload-${new Date().toISOString()}-${file.split('/').pop()}`,
+  );
   const requestState = new PersistedState(
-    join(
-      requestReceiptFolder,
-      `tr-request-upload-${new Date().toISOString()}-${file.split('/').pop()}`,
-    ),
+    requestCacheFile,
     CachedRequestState,
     {
       successfulRequests: [],
@@ -315,11 +318,11 @@ export async function uploadPrivacyRequestsFromCsv({
   // Log duplicates
   if (requestState.getValue('duplicateRequests').length > 0) {
     logger.info(
-      colors.magenta(
+      colors.yellow(
         `Encountered "${
           requestState.getValue('duplicateRequests').length
         }" duplicate requests. ` +
-          `See "${cacheFilepath}" to review the core identifiers for these requests.`,
+          `See "${requestCacheFile}" to review the core identifiers for these requests.`,
       ),
     );
   }
@@ -331,7 +334,7 @@ export async function uploadPrivacyRequestsFromCsv({
         `Encountered "${
           requestState.getValue('failingRequests').length
         }" errors. ` +
-          `See "${cacheFilepath}" to review the error messages and inputs.`,
+          `See "${requestCacheFile}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);

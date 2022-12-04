@@ -4,6 +4,8 @@ import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   CompletedRequestStatus,
   RequestAction,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
 import { LanguageKey } from '@transcend-io/internationalization';
 import { ObjByString } from '@transcend-io/type-utils';
@@ -44,6 +46,7 @@ export async function mapRequestEnumValues(
     internalSubjects: DataSubject[];
   }>(client, DATA_SUBJECTS);
 
+  // Map RequestAction
   logger.info(
     colors.magenta('Determining mapping of columns for request action'),
   );
@@ -54,6 +57,8 @@ export async function mapRequestEnumValues(
       state.getValue('requestTypeToRequestAction'),
     );
   state.setValue(requestTypeToRequestAction, 'requestTypeToRequestAction');
+
+  // Map data subject type
   logger.info(colors.magenta('Determining mapping of columns for subject'));
   const subjectTypeToSubjectName: { [k in string]: string } =
     await mapEnumValues(
@@ -62,6 +67,8 @@ export async function mapRequestEnumValues(
       state.getValue('subjectTypeToSubjectName'),
     );
   state.setValue(subjectTypeToSubjectName, 'subjectTypeToSubjectName');
+
+  // Map locale
   logger.info(colors.magenta('Determining mapping of columns for locale'));
   const languageToLocale: { [k in string]: LanguageKey } = await mapEnumValues(
     getUniqueValuesForColumn(requests, getMappedName(ColumnName.Locale)),
@@ -69,6 +76,11 @@ export async function mapRequestEnumValues(
     state.getValue('languageToLocale'),
   );
   state.setValue(languageToLocale, 'languageToLocale');
+  logger.info(
+    colors.magenta('Determining mapping of columns for request status'),
+  );
+
+  // Map request status
   logger.info(
     colors.magenta('Determining mapping of columns for request status'),
   );
@@ -84,4 +96,36 @@ export async function mapRequestEnumValues(
           state.getValue('statusToRequestStatus'),
         );
   state.setValue(statusToRequestStatus, 'statusToRequestStatus');
+
+  // Map country
+  logger.info(colors.magenta('Determining mapping of columns for country'));
+  const countryColumn = getMappedName(ColumnName.Country);
+  const regionToCountry: {
+    [k in string]: IsoCountryCode | typeof NONE;
+  } =
+    countryColumn === NONE
+      ? {}
+      : await mapEnumValues(
+          getUniqueValuesForColumn(requests, countryColumn),
+          [...Object.values(IsoCountryCode), NONE],
+          state.getValue('regionToCountry'),
+        );
+  state.setValue(regionToCountry, 'regionToCountry');
+
+  // Map country sub division
+  logger.info(
+    colors.magenta('Determining mapping of columns for country sub division'),
+  );
+  const countrySubDivisionColumn = getMappedName(ColumnName.CountrySubDivision);
+  const regionToCountrySubDivision: {
+    [k in string]: IsoCountrySubdivisionCode | typeof NONE;
+  } =
+    countrySubDivisionColumn === NONE
+      ? {}
+      : await mapEnumValues(
+          getUniqueValuesForColumn(requests, countrySubDivisionColumn),
+          [...Object.values(IsoCountrySubdivisionCode), NONE],
+          state.getValue('regionToCountrySubDivision'),
+        );
+  state.setValue(regionToCountrySubDivision, 'regionToCountrySubDivision');
 }

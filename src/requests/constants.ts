@@ -3,6 +3,8 @@ import { LanguageKey } from '@transcend-io/internationalization';
 import {
   CompletedRequestStatus,
   RequestAction,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
 
@@ -24,6 +26,10 @@ export enum ColumnName {
   SubjectType = 'subjectType',
   /** The title of the locale column */
   Locale = 'locale',
+  /** The country */
+  Country = 'country',
+  /** The country sub division */
+  CountrySubDivision = 'countrySubDivision',
   /** The title of the requestStatus column */
   RequestStatus = 'requestStatus',
   /** The title of the createdAt column */
@@ -42,6 +48,8 @@ export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
   [ColumnName.CreatedAt]: false,
   [ColumnName.DataSiloIds]: false,
   [ColumnName.Locale]: false,
+  [ColumnName.Country]: false,
+  [ColumnName.CountrySubDivision]: false,
 };
 
 /** These parameters can be specified for the entire CSV set if needed */
@@ -64,6 +72,16 @@ export const CachedFileState = t.type({
   subjectTypeToSubjectName: t.record(t.string, t.string),
   /** Mapping between language imported and Transcend locale code */
   languageToLocale: t.record(t.string, valuesOf(LanguageKey)),
+  /** Mapping between region and country code */
+  regionToCountry: t.record(
+    t.string,
+    valuesOf({ ...IsoCountryCode, [NONE]: NONE }),
+  ),
+  /** Mapping between region and country sub division code */
+  regionToCountrySubDivision: t.record(
+    t.string,
+    valuesOf({ ...IsoCountrySubdivisionCode, [NONE]: NONE }),
+  ),
   /** Mapping between request status in import to Transcend request status */
   statusToRequestStatus: t.record(
     t.string,

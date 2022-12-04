@@ -5,6 +5,8 @@ import {
   CompletedRequestStatus,
   RequestAction,
   IdentifierType,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
 import { ObjByString } from '@transcend-io/type-utils';
 
@@ -45,6 +47,10 @@ export interface PrivacyRequestInput {
   requestType: RequestAction;
   /** Type of data subject */
   subjectType: string;
+  /** Country */
+  country?: IsoCountryCode;
+  /** Country sub division */
+  countrySubDivision?: IsoCountrySubdivisionCode;
   /** Attribute inputs */
   attributes?: AttributeInput[];
   /** The status that the request should be created as */
@@ -213,6 +219,24 @@ export function mapCsvRowsToRequestInputs(
                   'languageToLocale',
                   input[getMappedName(ColumnName.Locale)],
                 ),
+              }
+            : {}),
+          ...(getMappedName(ColumnName.Country) !== NONE &&
+          input[getMappedName(ColumnName.Country)]
+            ? {
+                country: state.getValue(
+                  'regionToCountry',
+                  input[getMappedName(ColumnName.Country)],
+                ) as IsoCountryCode,
+              }
+            : {}),
+          ...(getMappedName(ColumnName.CountrySubDivision) !== NONE &&
+          input[getMappedName(ColumnName.CountrySubDivision)]
+            ? {
+                countrySubDivision: state.getValue(
+                  'regionToCountrySubDivision',
+                  input[getMappedName(ColumnName.CountrySubDivision)],
+                ) as IsoCountrySubdivisionCode,
               }
             : {}),
           ...(getMappedName(ColumnName.RequestStatus) !== NONE &&
