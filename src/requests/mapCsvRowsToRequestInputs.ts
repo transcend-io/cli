@@ -7,7 +7,13 @@ import {
 } from '@transcend-io/privacy-types';
 import { ObjByString } from '@transcend-io/type-utils';
 
-import { CachedFileState, ColumnName, NONE } from './constants';
+import {
+  CachedFileState,
+  BLANK,
+  BULK_APPLY,
+  ColumnName,
+  NONE,
+} from './constants';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { splitCsvToList } from './splitCsvToList';
 import type { AttributeInput } from './parseAttributesFromString';
@@ -31,8 +37,6 @@ export interface PrivacyRequestInput {
   email: string;
   /** Extra identifiers */
   attestedExtraIdentifiers: AttestedExtraIdentifiers;
-  /** Email is verified */
-  emailIsVerified: boolean;
   /** Core identifier for user */
   coreIdentifier: string;
   /** Action type being submitted  */
@@ -45,8 +49,6 @@ export interface PrivacyRequestInput {
   status?: CompletedRequestStatus;
   /** The time that the request was created */
   createdAt?: Date;
-  /** Whether in silent mode */
-  isSilent: boolean;
   /** Data silo IDs to submit for */
   dataSiloIds?: string[];
   /** Language key to map to */
@@ -155,23 +157,23 @@ export function mapCsvRowsToRequestInputs(
           }
         });
 
+      const requestTypeColumn = getMappedName(ColumnName.RequestType);
+      const dataSubjectTypeColumn = getMappedName(ColumnName.SubjectType);
       return [
         input,
         {
           email: input[getMappedName(ColumnName.Email)],
           attestedExtraIdentifiers,
           attributes,
-          emailIsVerified: true,
-          isSilent: true,
           coreIdentifier: input[getMappedName(ColumnName.CoreIdentifier)],
           requestType:
-            cached.requestTypeToRequestAction[
-              input[getMappedName(ColumnName.RequestType)]
-            ],
+            requestTypeColumn === BULK_APPLY
+              ? cached.requestTypeToRequestAction[BLANK]
+              : cached.requestTypeToRequestAction[input[requestTypeColumn]],
           subjectType:
-            cached.subjectTypeToSubjectName[
-              input[getMappedName(ColumnName.SubjectType)]
-            ] || 'Customer',
+            dataSubjectTypeColumn === BULK_APPLY
+              ? cached.subjectTypeToSubjectName[BLANK]
+              : cached.subjectTypeToSubjectName[input[dataSubjectTypeColumn]],
           ...(getMappedName(ColumnName.Locale) !== NONE &&
           input[getMappedName(ColumnName.Locale)]
             ? {

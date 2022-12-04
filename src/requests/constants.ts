@@ -6,7 +6,9 @@ import {
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
 
-export const NONE = 'NONE';
+export const NONE = '[NONE]' as const;
+export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]' as const;
+export const BLANK = '<blank>' as const;
 
 /**
  * Column names to map
@@ -30,6 +32,7 @@ export enum ColumnName {
   DataSiloIds = 'dataSiloIds',
 }
 
+/** These parameters are required in the Transcend DSR API */
 export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
   [ColumnName.Email]: false,
   [ColumnName.CoreIdentifier]: true,
@@ -39,6 +42,12 @@ export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
   [ColumnName.CreatedAt]: false,
   [ColumnName.DataSiloIds]: false,
   [ColumnName.Locale]: false,
+};
+
+/** These parameters can be specified for the entire CSV set if needed */
+export const CAN_APPLY_IN_BULK: { [k in ColumnName]?: boolean } = {
+  [ColumnName.RequestType]: true,
+  [ColumnName.SubjectType]: true,
 };
 
 // Cache state

@@ -12,3 +12,4 @@ export * from './mapCsvRowsToRequestInputs';
 export * from './submitPrivacyRequest';
 export * from './mapColumnsToIdentifiers';
 export * from './mapColumnsToAttributes';
+export * from './uploadPrivacyRequestsFromCsv';
