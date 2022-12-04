@@ -1,4 +1,5 @@
 import * as t from 'io-ts';
+import uniq from 'lodash/uniq';
 import { valuesOf, decodeCodec } from '@transcend-io/type-utils';
 import {
   IsoCountryCode,
@@ -7,10 +8,7 @@ import {
   RequestStatus,
 } from '@transcend-io/privacy-types';
 import type { Got } from 'got';
-import {
-  PrivacyRequestInput,
-  AttestedExtraIdentifiers,
-} from './mapCsvRowsToRequestInputs';
+import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 import { AttributeInput } from './parseAttributesFromString';
 
 export const PrivacyRequestResponse = t.type({
@@ -48,13 +46,10 @@ export async function submitPrivacyRequest(
   sombra: Got,
   input: PrivacyRequestInput,
   {
-    attestedExtraIdentifiers = {},
     details = '',
     isTest = false,
     additionalAttributes = [],
   }: {
-    /** Extra identifiers to upload */
-    attestedExtraIdentifiers?: AttestedExtraIdentifiers;
     /** Whether or not the request is a test request */
     isTest?: boolean;
     /** Request details */
@@ -63,6 +58,21 @@ export async function submitPrivacyRequest(
     additionalAttributes?: AttributeInput[];
   } = {},
 ): Promise<PrivacyRequestResponse> {
+  // Merge the per-request attributes with the
+  // global attributes
+  const mergedAttributes = [...additionalAttributes];
+  (input.attributes || []).forEach((attribute) => {
+    const existing = mergedAttributes.find(
+      (attr) => attr.key === attribute.key,
+    );
+    if (existing) {
+      existing.values.push(...attribute.values);
+      existing.values = uniq(existing.values);
+    } else {
+      mergedAttributes.push(attribute);
+    }
+  });
+
   // Make the GraphQL request
   const response = await sombra
     .post('v1/data-subject-request', {
@@ -72,14 +82,14 @@ export async function submitPrivacyRequest(
           coreIdentifier: input.coreIdentifier,
           email: input.email,
           emailIsVerified: input.emailIsVerified,
-          attestedExtraIdentifiers,
+          attestedExtraIdentifiers: input.attestedExtraIdentifiers,
         },
         subjectType: input.subjectType,
         isSilent: input.isSilent,
         isTest,
         ...(input.locale ? { locale: input.locale } : {}),
         details,
-        attributes: additionalAttributes,
+        attributes: mergedAttributes,
         ...(input.createdAt ? { createdAt: input.createdAt } : {}),
         ...(input.dataSiloIds ? { dataSiloIds: input.dataSiloIds } : {}),
         ...(input.status ? { completedRequestStatus: input.status } : {}),
