@@ -17,7 +17,7 @@ export const CronIdentifier = t.type({
   /** The request nonce */
   nonce: t.string,
   /** The time the request was created */
-  // requestCreatedAt: t.string, TODO
+  requestCreatedAt: t.string,
   /** The number of days until the request is overdue */
   daysUntilOverdue: t.number,
   /** Request attributes */
