@@ -73,11 +73,15 @@ export async function pullCronIdentifiersToCsv({
   // Write out to CSV
   writeCsv(
     file,
-    identifiers.map((identifier) => ({
+    identifiers.map(({ attributes, ...identifier }) => ({
       ...identifier,
-      attributes: identifier.attributes
-        .map((attr) => `${attr.key}:${attr.values.join(';')}`)
-        .join(','),
+      ...attributes.reduce(
+        (acc, val) =>
+          Object.assign(acc, {
+            [val.key]: val.values.join(','),
+          }),
+        {},
+      ),
     })),
   );
 
