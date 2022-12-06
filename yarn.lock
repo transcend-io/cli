@@ -427,9 +427,10 @@ __metadata:
     typescript: =4.5.5
     yargs-parser: ^21.1.1
   bin:
+    tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
+    tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
     tr-discover-silos: ./build/cli-discover-silos.js
     tr-pull: ./build/cli-pull.js
-    tr-pull-cron-identifiers: ./build/cli-pull-cron-identifiers.js
     tr-push: ./build/cli-push.js
     tr-request-upload: ./build/cli-request-upload.js
   languageName: unknown

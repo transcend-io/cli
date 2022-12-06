@@ -13,13 +13,13 @@ import { RequestAction } from '@transcend-io/privacy-types';
  * Requires an API key with scope for the cron integration being checked on.
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-cron-identifiers.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-cron-pull-identifiers.ts --auth=asd123 \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --requestType=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-pull-cron-identifiers --auth=asd123  \
+ * yarn tr-cron-pull-identifiers --auth=asd123  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --requestType=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
