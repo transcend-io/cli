@@ -9,7 +9,7 @@ import { TranscendInput } from '../codecs';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface ApiKey {
-  /** ID of APi key */
+  /** ID of API key */
   id: string;
   /** Title of API key */
   title: string;

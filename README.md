@@ -25,14 +25,18 @@
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
   - [Usage](#usage-4)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
   - [Usage](#usage-5)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
   - [Usage](#usage-6)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+    - [Authentication](#authentication-6)
+    - [Arguments](#arguments-6)
+  - [Usage](#usage-7)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -51,11 +55,13 @@ If your codebase is typescript or javascript based, you can add this package as 
 yarn add -D @transcend-io/cli
 
 # cli commands available within package
-yarn tr-pull --auth=xxx
-yarn tr-push --auth=xxx
-yarn tr-discover-silos --auth=xxx
-yarn tr-request-upload --auth=xxx
-yarn tr-cron-pull-identifiers --auth=xxx
+yarn tr-pull --auth=$TRANSCEND_API_KEY
+yarn tr-push --auth=$TRANSCEND_API_KEY
+yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
+yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -65,11 +71,13 @@ or
 npm i -D @transcend-io/cli
 
 # cli commands available within package
-tr-pull --auth=xxx
-tr-push --auth=xxx
-tr-discover-silos --auth=xxx
-tr-request-upload --auth=xxx
-tr-cron-pull-identifiers --auth=xxx
+tr-pull --auth=$TRANSCEND_API_KEY
+tr-push --auth=$TRANSCEND_API_KEY
+tr-discover-silos --auth=$TRANSCEND_API_KEY
+tr-request-upload --auth=$TRANSCEND_API_KEY
+tr-request-restart --auth=$TRANSCEND_API_KEY
+tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
+tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -79,10 +87,13 @@ alternatively, you can install the cli globally on your machine:
 npm i -g @transcend-io/cli
 
 # cli commands available everywhere on machine
-tr-pull --auth=xxx
-tr-push --auth=xxx
-tr-discover-silos --auth=xxx
-tr-request-upload --auth=xxx
+tr-pull --auth=$TRANSCEND_API_KEY
+tr-push --auth=$TRANSCEND_API_KEY
+tr-discover-silos --auth=$TRANSCEND_API_KEY
+tr-request-upload --auth=$TRANSCEND_API_KEY
+tr-request-restart --auth=$TRANSCEND_API_KEY
+tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
+tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 ```
 
 Note:
@@ -523,10 +534,10 @@ yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop
    --isSilent=false --emailIsVerified=false
 ```
 
-Increase the concurrency (defaults to 20)
+Increase the concurrency (defaults to 100)
 
 ```sh
-yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --concurrency=20
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --concurrency=100
 ```
 
 Tag all uploaded requests with an attribute
@@ -546,6 +557,98 @@ Include debug logs - warning, this logs out personal data.
 
 ```sh
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --debug=true
+```
+
+### tr-request-restart
+
+Bulk update a set of privacy requests based on a set of request filters.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Submit New Data Subject Request
+- View the Request Compilation
+
+#### Arguments
+
+| Argument             | Description                                                                                                                               | Type            | Default                           | Required |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | --------------------------------- | -------- |
+| auth                 | The Transcend API capable of submitting privacy requests.                                                                                 | string          | N/A                               | true     |
+| acions               | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                               | true     |
+| statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[] | N/A                               | true     |
+| transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io          | false    |
+| requestReceiptFolder | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                                     | string          | ./privacy-request-upload-receipts | false    |
+| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string          | N/A                               | false    |
+| concurrency          | The concurrency to use when uploading requests in parallel.                                                                               | number          | 20                                | false    |
+| requestIds           | Specify the specific request IDs to restart                                                                                               | string[]        | []                                | false    |
+| createdAt            | Restart requests that were submitted before a specific date.                                                                              | Date            | Date.now()                        | false    |
+| markSilent           | Requests older than this date should be marked as silent mode                                                                             | Date            | Date.now() - 3 months             | false    |
+| sendEmailReceipt     | Send email receipts to the restarted requests                                                                                             | boolean         | false                             | false    |
+| copyIdentifiers      | Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only.           | boolean         | false                             | false    |
+| skipWaitingPeriod    | Skip queued state of request and go straight to compiling                                                                                 | boolean         | false                             | false    |
+
+### Usage
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE
+```
+
+For self-hosted sombras that use an internal key:
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE \
+ --transcendUrl=https://api.us.transcend.io
+```
+
+Increase the concurrency (defaults to 20)
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --concurrency=100
+```
+
+Restart specific requests by ID
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
+```
+
+Restart requests that were submitted before a specific date.
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --createdAt=2022-05-11T00:46
+```
+
+Restart requests and place everything in silent mode submitted before a certain date
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --markSilent=2022-12-05T00:46
+```
+
+Send email receipts to the restarted requests
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --sendEmailReceipt=true
+```
+
+Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --copyIdentifiers=true
+```
+
+Skip queued state of request and go straight to compiling
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --skipWaitingPeriod=true
 ```
 
 ### tr-cron-pull-identifiers

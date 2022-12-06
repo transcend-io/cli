@@ -13,3 +13,5 @@ export * from './createSombraGotInstance';
 export * from './buildTranscendGraphQLClient';
 export * from './gqls';
 export * from './fetchAllAttributeKeys';
+export * from './fetchAllRequests';
+export * from './fetchAllRequestIdentifiers';
