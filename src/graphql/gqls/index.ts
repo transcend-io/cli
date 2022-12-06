@@ -8,3 +8,5 @@ export * from './siloDiscovery';
 export * from './template';
 export * from './organization';
 export * from './attributeKey';
+export * from './request';
+export * from './RequestIdentifier';
