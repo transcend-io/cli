@@ -12,6 +12,9 @@ export const NONE = '[NONE]' as const;
 export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]' as const;
 export const BLANK = '<blank>' as const;
 
+/** These are uploaded at the top level of the request */
+export const IDENTIFIER_BLOCK_LIST = ['email', 'coreIdentifier'];
+
 /**
  * Column names to map
  */
@@ -92,20 +95,26 @@ export const CachedFileState = t.type({
 /** Type override */
 export type CachedFileState = t.TypeOf<typeof CachedFileState>;
 
+/**
+ * Successfully processed request
+ */
+export const SuccessfulRequest = t.type({
+  id: t.string,
+  link: t.string,
+  rowIndex: t.number,
+  coreIdentifier: t.string,
+  attemptedAt: t.string,
+});
+
+/** Type override */
+export type SuccessfulRequest = t.TypeOf<typeof SuccessfulRequest>;
+
 // Cache state
 export const CachedRequestState = t.type({
   /** Set of privacy requests that failed to upload */
   failingRequests: t.array(t.record(t.string, t.any)),
   /** Successfully uploaded requests */
-  successfulRequests: t.array(
-    t.type({
-      id: t.string,
-      link: t.string,
-      rowIndex: t.number,
-      coreIdentifier: t.string,
-      attemptedAt: t.string,
-    }),
-  ),
+  successfulRequests: t.array(SuccessfulRequest),
   /** Duplicate requests */
   duplicateRequests: t.array(
     t.type({

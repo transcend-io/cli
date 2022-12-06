@@ -14,3 +14,5 @@ export * from './mapColumnsToIdentifiers';
 export * from './mapColumnsToAttributes';
 export * from './extractClientError';
 export * from './uploadPrivacyRequestsFromCsv';
+export * from './bulkRestartRequests';
+export * from './restartPrivacyRequest';

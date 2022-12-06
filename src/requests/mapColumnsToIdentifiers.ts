@@ -1,7 +1,7 @@
 import type { GraphQLClient } from 'graphql-request';
 import inquirer from 'inquirer';
 import { INITIALIZER, makeGraphQLRequest, Initializer } from '../graphql';
-import { CachedFileState } from './constants';
+import { CachedFileState, IDENTIFIER_BLOCK_LIST } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
 import type { PersistedState } from '@transcend-io/persisted-state';
 
@@ -11,9 +11,6 @@ import type { PersistedState } from '@transcend-io/persisted-state';
 export type IdentifierNameMap = {
   [k in string]: string;
 };
-
-/** These are uploaded at the top level of the request */
-const IDENTIFIER_BLOCK_LIST = ['email', 'coreIdentifier'];
 
 /**
  * Create a mapping from the identifier names that can be included
