@@ -25,10 +25,14 @@
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
   - [Usage](#usage-4)
-  - [tr-pull-cron-identifiers](#tr-pull-cron-identifiers)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
   - [Usage](#usage-5)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+    - [Authentication](#authentication-5)
+    - [Arguments](#arguments-5)
+  - [Usage](#usage-6)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -51,7 +55,7 @@ yarn tr-pull --auth=xxx
 yarn tr-push --auth=xxx
 yarn tr-discover-silos --auth=xxx
 yarn tr-request-upload --auth=xxx
-yarn tr-pull-cron-identifiers --auth=xxx
+yarn tr-cron-pull-identifiers --auth=xxx
 ```
 
 or
@@ -65,7 +69,7 @@ tr-pull --auth=xxx
 tr-push --auth=xxx
 tr-discover-silos --auth=xxx
 tr-request-upload --auth=xxx
-tr-pull-cron-identifiers --auth=xxx
+tr-cron-pull-identifiers --auth=xxx
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -229,7 +233,7 @@ tr-pull --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
 Or a specific data silo(s) can be pulled in:
 
 ```sh
-tr-pull --auth=$TRANSCEND_API_KEY --dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
+tr-pull --auth=$TRANSCEND_API_KEY ---dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
 ```
 
 Or a specific types of data silo(s) can be pulled in:
@@ -406,7 +410,7 @@ Then, you'll need to grab that `dataSiloId` and a Transcend API key and pass it 
 
 ```sh
 # Scan a javascript project (package.json files) to look for new data silos
-yarn tr-discover-silos --scanPath=./myJavascriptProject --auth={{api_key}} --dataSiloId=abcdefg
+yarn tr-discover-silos --scanPath=./myJavascriptProject --auth={{api_key}} ---dataSiloId=abcdefg
 ```
 
 This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
@@ -544,7 +548,7 @@ Include debug logs - warning, this logs out personal data.
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --debug=true
 ```
 
-### tr-pull-cron-identifiers
+### tr-cron-pull-identifiers
 
 If you are using the cron job integration, you can run this command to pull the outstanding identifiers
 for the data silo to a CSV.
@@ -574,34 +578,89 @@ The API key must be associated to the ID of the integration/data silo that is be
 ### Usage
 
 ```sh
-yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
-   --requestType=ERASURE
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE
 ```
 
 Pull to a specific file location
 
 ```sh
-yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
    --file=/Users/transcend/Desktop/test.csv
 ```
 
 For self-hosted sombras that use an internal key:
 
 ```sh
-yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY -dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
-   --requestType=ERASURE --sombraAuth=$SOMBRA_INTERNAL_KEY
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE  \
+   --sombraAuth=$SOMBRA_INTERNAL_KEY
 ```
 
 Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
-yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
  --transcendUrl=https://api.us.transcend.io
 ```
 
 Specifying the page limit, defaults to 100.
 
 ```sh
-yarn tr-pull-cron-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --file=/Users/transcend/Desktop/test.csv \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
  --pageLimit=300
+```
+
+### tr-cron-mark-identifiers-completed
+
+This command takes the output of `tr-cron-pull-identifiers` and notifies Transcend that all of the requests in the CSV have been processed.
+This is used in the workflow like:
+
+1. Pull identifiers to CSV:
+   `yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE --file=./outstanding-requests.csv`
+2. Run your process to operate on that CSV of requests.
+3. Notify Transcend of completion
+   `yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --file=./outstanding-requests.csv`
+
+Read more at https://docs.transcend.io/docs/integrations/cron-job-integration.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must be associated to the ID of the integration/data silo that is being operated on.
+
+#### Arguments
+
+| Argument     | Description                                                                          | Type               | Default                  | Required |
+| ------------ | ------------------------------------------------------------------------------------ | ------------------ | ------------------------ | -------- |
+| auth         | The Transcend API capable of pulling the cron identifiers.                           | string             | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to pull in.                                                  | string - UUID      | N/A                      | true     |
+| file         | Path to the CSV file where identifiers will be written to.                           | string - file-path | ./cron-identifiers.csv   | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io | false    |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                      | false    |
+
+### Usage
+
+```sh
+yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
+```
+
+Pull to a specific file location
+
+```sh
+yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+   --file=/Users/transcend/Desktop/test.csv
+```
+
+For self-hosted sombras that use an internal key:
+
+```sh
+yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+   --sombraAuth=$SOMBRA_INTERNAL_KEY
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+ --transcendUrl=https://api.us.transcend.io
 ```
