@@ -432,6 +432,7 @@ __metadata:
     tr-discover-silos: ./build/cli-discover-silos.js
     tr-pull: ./build/cli-pull.js
     tr-push: ./build/cli-push.js
+    tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
   languageName: unknown
   linkType: soft
