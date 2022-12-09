@@ -104,7 +104,9 @@ export async function uploadPrivacyRequestsFromCsv({
   // Create a new state file to store the requests from this run
   const requestCacheFile = join(
     requestReceiptFolder,
-    `tr-request-upload-${new Date().toISOString()}-${file.split('/').pop()}`,
+    `tr-request-upload-${new Date().toISOString()}-${file
+      .split('/')
+      .pop()}`.replace('.csv', '.json'),
   );
   const requestState = new PersistedState(
     requestCacheFile,
