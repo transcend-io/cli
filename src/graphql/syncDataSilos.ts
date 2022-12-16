@@ -705,13 +705,21 @@ export async function syncDataSilo(
         logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
         const fields = datapoint.fields
           ? datapoint.fields.map(
-              ({ key, description, categories, purposes, ...rest }) =>
+              ({
+                key,
+                description,
+                categories,
+                purposes,
+                attributes,
+                ...rest
+              }) =>
                 // TODO: Support setting title separately from the 'key/name'
                 ({
                   name: key,
                   description,
                   categories,
                   purposes,
+                  attributes,
                   accessRequestVisibilityEnabled:
                     rest['access-request-visibility-enabled'],
                   erasureRequestRedactionEnabled:
