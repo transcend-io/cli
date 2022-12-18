@@ -46,6 +46,8 @@ async function main(): Promise<void> {
     sendEmailReceipt = 'false',
     /** Copy over all identifiers rather than restarting the request only with the core identifier */
     copyIdentifiers = 'false',
+    /** Whether to restart request with verified email or not */
+    emailIsVerified = 'true',
     /** Skip the waiting period when restarting requests */
     skipWaitingPeriod = 'false',
     /** Include a receipt of the requests that were restarted in this file */
@@ -115,6 +117,7 @@ async function main(): Promise<void> {
     requestStatuses,
     requestIds: splitCsvToList(requestIds),
     createdAt: new Date(createdAt),
+    emailIsVerified: emailIsVerified === 'true',
     markSilent: new Date(markSilent),
     sendEmailReceipt: sendEmailReceipt === 'true',
     copyIdentifiers: copyIdentifiers === 'true',
