@@ -21,12 +21,15 @@ export async function restartPrivacyRequest(
   {
     sendEmailReceipt = false,
     skipWaitingPeriod = false,
+    emailIsVerified = true,
     requestIdentifiers = [],
   }: {
     /** List of request identifiers to include */
     requestIdentifiers?: RequestIdentifier[];
     /** When true, send an email receipt to data subject */
     sendEmailReceipt?: boolean;
+    /** Whether the email is verified */
+    emailIsVerified?: boolean;
     /** Whether to skip waiting period */
     skipWaitingPeriod?: boolean;
   } = {},
@@ -39,7 +42,7 @@ export async function restartPrivacyRequest(
         subject: {
           coreIdentifier: request.coreIdentifier,
           email: request.email,
-          emailIsVerified: true,
+          emailIsVerified,
           ...(requestIdentifiers.length > 0
             ? {
                 attestedExtraIdentifiers: apply(

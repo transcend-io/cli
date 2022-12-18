@@ -50,6 +50,7 @@ export async function bulkRestartRequests({
   createdAt = new Date(),
   markSilent,
   sendEmailReceipt = false,
+  emailIsVerified = true,
   copyIdentifiers = false,
   skipWaitingPeriod = false,
   concurrency = 20,
@@ -68,6 +69,8 @@ export async function bulkRestartRequests({
   sombraAuth?: string;
   /** Request IDs to filter for */
   requestIds?: string[];
+  /** Whether to re-verify the email when restarting the request */
+  emailIsVerified?: boolean;
   /** Filter for requests that were submitted before this date */
   createdAt?: Date;
   /** Requests that have been open for this length of time should be marked as silent mode */
@@ -175,6 +178,7 @@ export async function bulkRestartRequests({
             requestIdentifiers,
             skipWaitingPeriod,
             sendEmailReceipt,
+            emailIsVerified,
           },
         );
 
