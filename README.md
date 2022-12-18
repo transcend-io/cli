@@ -577,13 +577,14 @@ The API key needs the following scopes:
 | Argument             | Description                                                                                                                               | Type            | Default                           | Required |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | --------------------------------- | -------- |
 | auth                 | The Transcend API capable of submitting privacy requests.                                                                                 | string          | N/A                               | true     |
-| acions               | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                               | true     |
+| actions              | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                               | true     |
 | statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[] | N/A                               | true     |
 | transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io          | false    |
 | requestReceiptFolder | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                                     | string          | ./privacy-request-upload-receipts | false    |
 | sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string          | N/A                               | false    |
 | concurrency          | The concurrency to use when uploading requests in parallel.                                                                               | number          | 20                                | false    |
 | requestIds           | Specify the specific request IDs to restart                                                                                               | string[]        | []                                | false    |
+| emailIsVerified      | Indicate whether the primary email address is verified. Set to false to send a verification email.                                        | boolean         | true                              | false    |
 | createdAt            | Restart requests that were submitted before a specific date.                                                                              | Date            | Date.now()                        | false    |
 | markSilent           | Requests older than this date should be marked as silent mode                                                                             | Date            | Date.now() - 3 months             | false    |
 | sendEmailReceipt     | Send email receipts to the restarted requests                                                                                             | boolean         | false                             | false    |
@@ -613,6 +614,12 @@ Increase the concurrency (defaults to 20)
 
 ```sh
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --concurrency=100
+```
+
+Re-verify emails
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --emailIsVerified=false
 ```
 
 Restart specific requests by ID
