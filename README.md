@@ -37,6 +37,8 @@
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
   - [Usage](#usage-7)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -774,3 +776,14 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
  --transcendUrl=https://api.us.transcend.io
 ```
+
+### tr-manual-enrichment-pull-identifiers
+
+- View Incoming Requests
+- View the Request Compilation
+
+FIXME
+
+### tr-manual-enrichment-push-identifiers
+
+FIXME
