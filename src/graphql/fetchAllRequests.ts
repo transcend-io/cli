@@ -32,12 +32,28 @@ export interface PrivacyRequest {
   coreIdentifier: string;
   /** Type of request action */
   type: RequestAction;
+  /** STatus of request action */
+  status: RequestStatus;
   /** Type of data subject */
   subjectType: string;
   /** Country of request */
   country?: IsoCountryCode | null;
   /** Sub division of request */
   countrySubDivision?: IsoCountrySubdivisionCode | null;
+  /** Attribute values */
+  attributeValues: {
+    /** ID of value */
+    id: string;
+    /** Name of value */
+    name: string;
+    /** Attribute key */
+    attributeKey: {
+      /** ID of key */
+      id: string;
+      /** Name of key */
+      name: string;
+    };
+  }[];
 }
 
 const PAGE_SIZE = 50;
