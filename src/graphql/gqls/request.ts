@@ -17,6 +17,7 @@ export const REQUESTS = gql`
         createdAt
         email
         link
+        status
         details
         isTest
         locale
@@ -26,6 +27,14 @@ export const REQUESTS = gql`
         subjectType
         country
         countrySubDivision
+        attributeValues {
+          id
+          name
+          attributeKey {
+            id
+            name
+          }
+        }
       }
       totalCount
     }

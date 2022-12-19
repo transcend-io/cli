@@ -1,5 +1,6 @@
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
+import uniq from 'lodash/uniq';
 import {
   pullCronPageOfIdentifiers,
   CronIdentifier,
@@ -71,19 +72,18 @@ export async function pullCronIdentifiersToCsv({
   );
 
   // Write out to CSV
-  writeCsv(
-    file,
-    identifiers.map(({ attributes, ...identifier }) => ({
-      ...identifier,
-      ...attributes.reduce(
-        (acc, val) =>
-          Object.assign(acc, {
-            [val.key]: val.values.join(','),
-          }),
-        {},
-      ),
-    })),
-  );
+  const data = identifiers.map(({ attributes, ...identifier }) => ({
+    ...identifier,
+    ...attributes.reduce(
+      (acc, val) =>
+        Object.assign(acc, {
+          [val.key]: val.values.join(','),
+        }),
+      {},
+    ),
+  }));
+  const headers = uniq(data.map((d) => Object.keys(d)).flat());
+  writeCsv(file, data, headers);
 
   logger.info(
     colors.green(
