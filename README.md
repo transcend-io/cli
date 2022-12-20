@@ -38,7 +38,9 @@
     - [Arguments](#arguments-6)
   - [Usage](#usage-7)
   - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+    - [Authentication](#authentication-7)
+    - [Arguments](#arguments-7)
+  - [Usage](#usage-8)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -779,11 +781,59 @@ yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=7
 
 ### tr-manual-enrichment-pull-identifiers
 
+This command pulls down the set of privacy requests that are currently pending manual enrichment. This is useful for the following workflow
+
+1. Pull identifiers to CSV:
+   `yarn tr-manual-enrichment-pull-identifiers --file=./enrichment-requests.csv`
+2. Fill out the CSV with additional identifiers
+3. Push updated back to Transcend
+   `yarn tr-manual-enrichment-push-identifiers --file=./enrichment-requests.csv`
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
 - View Incoming Requests
 - View the Request Compilation
 
-FIXME
+#### Arguments
 
-### tr-manual-enrichment-push-identifiers
+| Argument     | Description                                                                   | Type               | Default                             | Required |
+| ------------ | ----------------------------------------------------------------------------- | ------------------ | ----------------------------------- | -------- |
+| auth         | The Transcend API capable of pull request information.                        | string             | N/A                                 | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io            | false    |
+| file         | Path to the CSV file where requests will be written to.                       | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| actions      | The set of request actions to pull requests for.                              | RequestAction[]    | []                                  | false    |
+| concurrency  | The concurrency to use when uploading requests in parallel.                   | number             | 100                                 | false    |
 
-FIXME
+### Usage
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY
+```
+
+Pull to a specific file location
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
+```
+
+For specific types of requests
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE
+```
+
+For US hosted infrastructure
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+With specific concurrency
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
+```
