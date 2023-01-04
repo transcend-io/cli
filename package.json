@@ -17,6 +17,7 @@
     "tr-manual-enrichment-pull-identifiers": "./build/cli-manual-enrichment-pull-identifiers.js",
     "tr-pull": "./build/cli-pull.js",
     "tr-push": "./build/cli-push.js",
+    "tr-push-data-flows": "./build/cli-push-data-flows.js",
     "tr-request-restart": "./build/cli-request-restart.js",
     "tr-request-upload": "./build/cli-request-upload.js"
   },
