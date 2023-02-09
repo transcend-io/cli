@@ -114,12 +114,16 @@ export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
 /**
  * The data category for a field
  */
-export const DataCategoryInput = t.type({
-  /** The parent category */
-  category: valuesOf(DataCategoryType),
-  /** User-defined name for this sub category */
-  name: t.string,
-});
+export const DataCategoryInput = t.intersection([
+  t.type({
+    /** The parent category */
+    category: valuesOf(DataCategoryType),
+  }),
+  t.partial({
+    /** User-defined name for this sub category */
+    name: t.string,
+  }),
+]);
 
 export const Attributes = t.type({
   key: t.string,
