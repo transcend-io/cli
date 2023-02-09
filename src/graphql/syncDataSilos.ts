@@ -717,7 +717,12 @@ export async function syncDataSilo(
                 ({
                   name: key,
                   description,
-                  categories,
+                  categories: !categories
+                    ? undefined
+                    : categories.map((category) => ({
+                        ...category,
+                        name: category.name || '',
+                      })),
                   purposes,
                   attributes,
                   accessRequestVisibilityEnabled:
