@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import colors from 'colors';
 import { REQUESTS } from './gqls';
+import cliProgress from 'cli-progress';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   RequestAction,
@@ -77,6 +78,14 @@ export async function fetchAllRequests(
     statuses: RequestStatus[];
   },
 ): Promise<PrivacyRequest[]> {
+  // create a new progress bar instance and use shades_classic theme
+  const t0 = new Date().getTime();
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+
+  // read in requests
   const requests: PrivacyRequest[] = [];
   let offset = 0;
 
@@ -94,12 +103,27 @@ export async function fetchAllRequests(
     });
     if (offset === 0 && totalCount > PAGE_SIZE) {
       logger.info(colors.magenta(`Fetching ${totalCount} requests`));
+      progressBar.start(totalCount, 0);
     }
 
     requests.push(...nodes);
     offset += PAGE_SIZE;
+    progressBar.update(offset);
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
+
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+
+  // Log completion time
+  logger.info(
+    colors.green(
+      `Completed fetching of ${requests.length} request in "${
+        totalTime / 1000
+      }" seconds.`,
+    ),
+  );
 
   return requests;
 }
