@@ -41,6 +41,10 @@
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
   - [Usage](#usage-8)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+    - [Authentication](#authentication-8)
+    - [Arguments](#arguments-8)
+  - [Usage](#usage-9)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -836,4 +840,46 @@ With specific concurrency
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
+```
+
+### tr-mark-request-data-silos-completed
+
+This command takes in a CSV of Request IDs as well as a Data Silo ID and marks all associated privacy request jobs as completed.
+This command is useful with the "Bulk Response" UI.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Request Compilation"
+
+#### Arguments
+
+| Argument     | Description                                                                   | Type               | Default                   | Required |
+| ------------ | ----------------------------------------------------------------------------- | ------------------ | ------------------------- | -------- |
+| auth         | The Transcend API capable of pulling the cron identifiers.                    | string             | N/A                       | true     |
+| dataSiloId   | The ID of the data silo to pull in.                                           | string - UUID      | N/A                       | true     |
+| file         | Path to the CSV file where identifiers will be written to.                    | string - file-path | ./request-identifiers.csv | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io  | false    |
+
+### Usage
+
+```sh
+yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
+```
+
+Pull to a specific file location
+
+```sh
+yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+   --file=/Users/transcend/Desktop/test.csv
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+ --transcendUrl=https://api.us.transcend.io
 ```

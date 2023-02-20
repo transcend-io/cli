@@ -11,3 +11,4 @@ export * from './attributeKey';
 export * from './request';
 export * from './RequestIdentifier';
 export * from './RequestEnricher';
+export * from './RequestDataSilo';
