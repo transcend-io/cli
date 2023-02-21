@@ -37,7 +37,7 @@
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
   - [Usage](#usage-7)
-  - [yarn tr-manual-enrichment-push-identifiers](#yarn-tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
   - [Usage](#usage-8)
@@ -787,7 +787,7 @@ yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=7
  --transcendUrl=https://api.us.transcend.io
 ```
 
-### yarn tr-manual-enrichment-push-identifiers
+### tr-manual-enrichment-pull-identifiers
 
 This command pulls down the set of privacy requests that are currently pending manual enrichment.
 
@@ -873,7 +873,7 @@ The API key must have the following scopes:
 | Argument     | Description                                                                          | Type               | Default                             | Required |
 | ------------ | ------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
 | auth         | The Transcend API capable of pull request information.                               | string             | N/A                                 | true     |
-| enricherId   | The ID of the Enricher to upload to                                                  | string - UUID      | N/A                                 | true     |
+| enricherId   | The ID of the Request Enricher to upload to                                          | string - UUID      | N/A                                 | true     |
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
 | file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
