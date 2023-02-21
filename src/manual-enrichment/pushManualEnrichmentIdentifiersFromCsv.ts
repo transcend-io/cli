@@ -18,6 +18,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   file,
   auth,
   sombraAuth,
+  enricherId,
   concurrency = 100,
   transcendUrl = 'https://api.transcend.io',
 }: {
@@ -25,6 +26,8 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   file: string;
   /** Transcend API key authentication */
   auth: string;
+  /** ID of enricher being uploaded to */
+  enricherId: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
   /** Concurrency */
@@ -38,9 +41,6 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   // Read from CSV
   logger.info(colors.magenta(`Reading "${file}" from disk`));
   const activeResults = readCsv(file, EnrichPrivacyRequest);
-  console.log(Object.keys(activeResults[0])[0]);
-  console.log(activeResults[0].id);
-  console.log(activeResults[0]);
 
   // Notify Transcend
   logger.info(
@@ -49,7 +49,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   await map(
     activeResults,
     async (request) => {
-      await enrichPrivacyRequest(sombra, request);
+      await enrichPrivacyRequest(sombra, request, enricherId);
     },
     { concurrency },
   );

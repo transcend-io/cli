@@ -9,7 +9,7 @@ import { pushManualEnrichmentIdentifiersFromCsv } from './manual-enrichment';
 /**
  * Push the the set of manually enriched requests back into the Transcend dashboard
  *
- * Requires an API key with scope to Manage Request Compilation
+ * Requires an API key with scope to Manage Request Identity Verification
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-manual-enrichment-push-identifiers.ts --auth=asd123 \
@@ -25,6 +25,7 @@ async function main(): Promise<void> {
     file = './manual-enrichment-identifiers.csv',
     transcendUrl = 'https://api.transcend.io',
     auth,
+    enricherId,
     sombraAuth,
     concurrency = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -39,10 +40,22 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Ensure enricherId is provided
+  if (!enricherId) {
+    logger.error(
+      colors.red(
+        'An Enricher ID must be provided. ' +
+          'You can specify using --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf',
+      ),
+    );
+    process.exit(1);
+  }
+
   // Pull manual enrichment identifiers
   await pushManualEnrichmentIdentifiersFromCsv({
     file,
     transcendUrl,
+    enricherId,
     concurrency: parseInt(concurrency, 10),
     auth,
     sombraAuth,
