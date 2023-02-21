@@ -41,10 +41,14 @@
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
   - [Usage](#usage-8)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
   - [Usage](#usage-9)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+    - [Authentication](#authentication-9)
+    - [Arguments](#arguments-9)
+  - [Usage](#usage-10)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -785,7 +789,9 @@ yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=7
 
 ### tr-manual-enrichment-pull-identifiers
 
-This command pulls down the set of privacy requests that are currently pending manual enrichment. This is useful for the following workflow
+This command pulls down the set of privacy requests that are currently pending manual enrichment.
+
+This is useful for the following workflow:
 
 1. Pull identifiers to CSV:
    `yarn tr-manual-enrichment-pull-identifiers --file=./enrichment-requests.csv`
@@ -840,6 +846,67 @@ With specific concurrency
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
+```
+
+### tr-manual-enrichment-push-identifiers
+
+This command push up a set of identifiers for a set of requests pending manual enrichment.
+
+This is useful for the following workflow:
+
+1. Pull identifiers to CSV:
+   `yarn tr-manual-enrichment-pull-identifiers --file=./enrichment-requests.csv`
+2. Fill out the CSV with additional identifiers
+3. Push updated back to Transcend
+   `yarn tr-manual-enrichment-push-identifiers --file=./enrichment-requests.csv`
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Request Identity Verification"
+
+#### Arguments
+
+| Argument     | Description                                                                          | Type               | Default                             | Required |
+| ------------ | ------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
+| auth         | The Transcend API capable of pull request information.                               | string             | N/A                                 | true     |
+| enricherId   | The ID of the Request Enricher to upload to                                          | string - UUID      | N/A                                 | true     |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
+| file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| concurrency  | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
+
+### Usage
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf
+```
+
+Pull to a specific file location
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --file=/Users/transcend/Desktop/test.csv
+```
+
+For US hosted infrastructure
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --transcendUrl=https://api.us.transcend.io
+```
+
+With Sombra authentication
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --sombraAuth=$SOMBRA_INTERNAL_KEY
+```
+
+With specific concurrency
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --concurrency=200
 ```
 
 ### tr-mark-request-data-silos-completed

@@ -18,6 +18,21 @@ export function readCsv<T extends t.Any>(
   codec: T,
   options: Options = { columns: true },
 ): t.TypeOf<T>[] {
+  // read file contents and parse
   const fileContent = parse(readFileSync(pathToFile, 'utf-8'), options);
-  return decodeCodec(t.array(codec), fileContent);
+
+  // validate codec
+  const data = decodeCodec(t.array(codec), fileContent);
+
+  // remove any special characters from object keys
+  const parsed = data.map((datum) =>
+    Object.entries(datum).reduce(
+      (acc, [key, value]) =>
+        Object.assign(acc, {
+          [key.replace(/[^a-z_.\-A-Z ]/g, '')]: value,
+        }),
+      {} as T,
+    ),
+  );
+  return parsed;
 }
