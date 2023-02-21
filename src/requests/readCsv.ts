@@ -29,7 +29,7 @@ export function readCsv<T extends t.Any>(
     Object.entries(datum).reduce(
       (acc, [key, value]) =>
         Object.assign(acc, {
-          [key.replace(/[^a-zA-Z ]/g, '')]: value,
+          [key.replace(/[^a-z_\.\-A-Z ]/g, '')]: value,
         }),
       {} as T,
     ),

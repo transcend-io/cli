@@ -37,7 +37,7 @@
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
   - [Usage](#usage-7)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [yarn tr-manual-enrichment-push-identifiers](#yarn-tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
   - [Usage](#usage-8)
@@ -787,7 +787,7 @@ yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=7
  --transcendUrl=https://api.us.transcend.io
 ```
 
-### tr-manual-enrichment-pull-identifiers
+### yarn tr-manual-enrichment-push-identifiers
 
 This command pulls down the set of privacy requests that are currently pending manual enrichment.
 
