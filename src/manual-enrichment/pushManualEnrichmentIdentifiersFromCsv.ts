@@ -46,14 +46,42 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   logger.info(
     colors.magenta(`Enriching "${activeResults.length}" privacy requests.`),
   );
+
+  let successCount = 0;
+  let skippedCount = 0;
+  let errorCount = 0;
+
   await map(
     activeResults,
     async (request) => {
-      await enrichPrivacyRequest(sombra, request, enricherId);
+      try {
+        const result = await enrichPrivacyRequest(sombra, request, enricherId);
+        if (result) {
+          successCount += 1;
+        } else {
+          skippedCount += 1;
+        }
+      } catch (err) {
+        errorCount += 1;
+      }
     },
     { concurrency },
   );
 
-  logger.info(colors.green('Successfully notified Transcend!'));
+  logger.info(
+    colors.green(
+      `Successfully notified Transcend! \n Success count: ${successCount}.`,
+    ),
+  );
+
+  if (skippedCount > 0) {
+    logger.info(colors.magenta(`Skipped count: ${skippedCount}.`));
+  }
+
+  if (errorCount > 0) {
+    logger.info(colors.red(`Error Count: ${errorCount}.`));
+    throw new Error(`Failed to enrich: ${errorCount} requests.`);
+  }
+
   return activeResults.length;
 }
