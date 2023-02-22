@@ -57,7 +57,9 @@ export async function enrichPrivacyRequest(
       })
       .json();
 
-    logger.error(colors.green(`Successfully enriched request: ${id}`));
+    logger.error(
+      colors.green(`Successfully enriched request: ${ADMIN_URL}${id}`),
+    );
     return true;
   } catch (err) {
     // skip if already enriched
