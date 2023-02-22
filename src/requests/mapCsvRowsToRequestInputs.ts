@@ -90,7 +90,9 @@ export function normalizeIdentifierValue(
       .replace(/[:]/g, '')
       .replace(/[‭‬]/g, '')
       .replace(/[A-Za-z]/g, '');
-    return normalized.startsWith('+')
+    return !normalized
+      ? ''
+      : normalized.startsWith('+')
       ? normalized
       : `+${defaultPhoneCountryCode}${normalized}`;
   }
@@ -150,20 +152,23 @@ export function mapCsvRowsToRequestInputs(
           // Only add the identifier if the value exists
           const identifierValue = input[columnName];
           if (identifierValue) {
-            // Initialize
-            if (!attestedExtraIdentifiers[identifierType]) {
-              attestedExtraIdentifiers[identifierType] = [];
-            }
+            const normalized = normalizeIdentifierValue(
+              identifierValue,
+              identifierType,
+              defaultPhoneCountryCode,
+            );
+            if (normalized) {
+              // Initialize
+              if (!attestedExtraIdentifiers[identifierType]) {
+                attestedExtraIdentifiers[identifierType] = [];
+              }
 
-            // Add the identifier
-            attestedExtraIdentifiers[identifierType]!.push({
-              value: normalizeIdentifierValue(
-                identifierValue,
-                identifierType,
-                defaultPhoneCountryCode,
-              ),
-              name: identifierName,
-            });
+              // Add the identifier
+              attestedExtraIdentifiers[identifierType]!.push({
+                value: normalized,
+                name: identifierName,
+              });
+            }
           }
         });
 
