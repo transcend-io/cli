@@ -5,6 +5,8 @@ import uniq from 'lodash/uniq';
 import colors from 'colors';
 import { splitCsvToList } from '../requests/splitCsvToList';
 
+const ADMIN_URL =
+  'https://app.transcend.io/privacy-requests/incoming-requests/';
 /**
  * Minimal set required to mark as completed
  */
@@ -65,7 +67,7 @@ export async function enrichPrivacyRequest(
     ) {
       logger.warn(
         colors.magenta(
-          `Skipped enrichment for request: ${id}, request is no longer in the enriching phase.`,
+          `Skipped enrichment for request: ${ADMIN_URL}${id}, request is no longer in the enriching phase.`,
         ),
       );
       return false;
@@ -74,7 +76,7 @@ export async function enrichPrivacyRequest(
     // error
     logger.error(
       colors.red(
-        `Failed to enricher identifiers for request with id: ${id} - ${err.message} - ${err.response.body}`,
+        `Failed to enricher identifiers for request with id: ${ADMIN_URL}${id} - ${err.message} - ${err.response.body}`,
       ),
     );
     throw err;
