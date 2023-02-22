@@ -19,12 +19,15 @@ export type EnrichPrivacyRequest = t.TypeOf<typeof EnrichPrivacyRequest>;
  * @param sombra - Sombra instance configured to make requests
  * @param request - Request to enricher
  * @param enricherId - The ID of the enricher being uploaded to
+ * @returns True if enriched successfully, false if skipped, throws error if failed
  */
 export async function enrichPrivacyRequest(
   sombra: Got,
-  { id, ...rest }: EnrichPrivacyRequest,
+  { id: rawId, ...rest }: EnrichPrivacyRequest,
   enricherId: string,
-): Promise<void> {
+): Promise<boolean> {
+  const id = rawId.toLowerCase();
+
   // Pull out the identifiers
   const enrichedIdentifiers = Object.entries(rest).reduce(
     (acc, [key, value]) => {
@@ -51,7 +54,24 @@ export async function enrichPrivacyRequest(
         },
       })
       .json();
+
+    logger.error(colors.green(`Successfully enriched request: ${id}`));
+    return true;
   } catch (err) {
+    // skip if already enriched
+    if (
+      typeof err.response.body === 'string' &&
+      err.response.body.includes('Cannot update a resolved RequestEnricher')
+    ) {
+      logger.warn(
+        colors.magenta(
+          `Skipped enrichment for request: ${id}, request is no longer in the enriching phase.`,
+        ),
+      );
+      return false;
+    }
+
+    // error
     logger.error(
       colors.red(
         `Failed to enricher identifiers for request with id: ${id} - ${err.message} - ${err.response.body}`,
