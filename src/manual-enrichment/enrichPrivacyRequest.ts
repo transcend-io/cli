@@ -21,13 +21,24 @@ export type EnrichPrivacyRequest = t.TypeOf<typeof EnrichPrivacyRequest>;
  * @param sombra - Sombra instance configured to make requests
  * @param request - Request to enricher
  * @param enricherId - The ID of the enricher being uploaded to
+ * @param index - Index of request ID
  * @returns True if enriched successfully, false if skipped, throws error if failed
  */
 export async function enrichPrivacyRequest(
   sombra: Got,
   { id: rawId, ...rest }: EnrichPrivacyRequest,
   enricherId: string,
+  index?: number,
 ): Promise<boolean> {
+  if (!rawId) {
+    // error
+    const msg = `Request ID must be provided to enricher request.${
+      index ? ` Found error in row: ${index}` : ''
+    }`;
+    logger.error(colors.red(msg));
+    throw new Error(msg);
+  }
+
   const id = rawId.toLowerCase();
 
   // Pull out the identifiers
