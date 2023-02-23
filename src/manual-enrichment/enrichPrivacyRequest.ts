@@ -32,14 +32,11 @@ export async function enrichPrivacyRequest(
 ): Promise<boolean> {
   if (!rawId) {
     // error
-    logger.error(
-      colors.red(
-        `Request ID must be provided to enricher request.${
-          index ? ` Found error in row: ${index}` : ''
-        }`,
-      ),
-    );
-    throw err;
+    const msg = `Request ID must be provided to enricher request.${
+      index ? ` Found error in row: ${index}` : ''
+    }`;
+    logger.error(colors.red(msg));
+    throw new Error(msg);
   }
 
   const id = rawId.toLowerCase();
