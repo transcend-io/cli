@@ -37,7 +37,9 @@ export async function enrichPrivacyRequest(
       return values.length === 0
         ? acc
         : Object.assign(acc, {
-            [key]: splitCsvToList(value).map((val) => ({ value: val })),
+            [key]: uniq(splitCsvToList(value)).map((val) => ({
+              value: key === 'email' ? val.toLowerCase() : val,
+            })),
           });
     },
     {} as Record<string, string[]>,
