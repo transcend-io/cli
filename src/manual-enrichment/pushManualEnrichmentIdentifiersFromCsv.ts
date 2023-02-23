@@ -53,9 +53,14 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
 
   await map(
     activeResults,
-    async (request) => {
+    async (request, index) => {
       try {
-        const result = await enrichPrivacyRequest(sombra, request, enricherId);
+        const result = await enrichPrivacyRequest(
+          sombra,
+          request,
+          enricherId,
+          index,
+        );
         if (result) {
           successCount += 1;
         } else {
