@@ -13,12 +13,12 @@ import { markRequestDataSiloIdsCompleted } from './cron';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/mark-request-data-silos-completed..ts --auth=asd123 \
+ * yarn ts-node ./src/cli-mark-request-data-silos-completed.ts --auth=asd123 \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-mark-request-data-silos-completed. --auth=asd123  \
+ * yarn tr-mark-request-data-silos-completed --auth=asd123  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
