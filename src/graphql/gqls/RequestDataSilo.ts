@@ -26,3 +26,13 @@ export const CHANGE_REQUEST_DATA_SILO_STATUS = gql`
     }
   }
 `;
+
+export const RETRY_REQUEST_DATA_SILO_STATUS = gql`
+  mutation TranscendCliRetryRequestDataSilo($requestDataSiloId: ID!) {
+    retryRequestDataSilo(id: $requestDataSiloId) {
+      requestDataSilo {
+        id
+      }
+    }
+  }
+`;
