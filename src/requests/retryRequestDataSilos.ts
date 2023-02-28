@@ -3,7 +3,7 @@ import colors from 'colors';
 import { logger } from '../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import {
-  RETRY_REQUEST_DATA_SILO_STATUS,
+  RETRY_REQUEST_DATA_SILO,
   fetchRequestDataSilo,
   fetchAllRequests,
   makeGraphQLRequest,
@@ -74,7 +74,7 @@ export async function retryRequestDataSilos({
         await makeGraphQLRequest<{
           /** Whether we successfully uploaded the results */
           success: boolean;
-        }>(client, RETRY_REQUEST_DATA_SILO_STATUS, {
+        }>(client, RETRY_REQUEST_DATA_SILO, {
           requestDataSiloId: requestDataSilo.id,
         });
       } catch (err) {
