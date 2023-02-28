@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.25.5",
+  "version": "4.26.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -20,7 +20,8 @@
     "tr-pull": "./build/cli-pull.js",
     "tr-push": "./build/cli-push.js",
     "tr-request-restart": "./build/cli-request-restart.js",
-    "tr-request-upload": "./build/cli-request-upload.js"
+    "tr-request-upload": "./build/cli-request-upload.js",
+    "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js"
   },
   "files": [
     "build/**/*",

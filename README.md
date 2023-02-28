@@ -49,6 +49,10 @@
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
   - [Usage](#usage-10)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+    - [Authentication](#authentication-10)
+    - [Arguments](#arguments-10)
+  - [Usage](#usage-11)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -948,5 +952,39 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+ --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-retry-request-data-silos
+
+This command allows for bulk restarting a set of data silos jobs for open privacy requests. This is equivalent to clicking the "Wipe and Retry" button for a particular data silo across a set of privacy requests.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Request Compilation"
+
+#### Arguments
+
+| Argument     | Description                                                                                                                               | Type            | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth         | The Transcend API capable of pulling the cron identifiers.                                                                                | string          | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to pull in.                                                                                                       | string - UUID   | N/A                      | true     |
+| actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                      | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io | false    |
+
+### Usage
+
+```sh
+yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ACCESS
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ACCESS \
  --transcendUrl=https://api.us.transcend.io
 ```
