@@ -34,7 +34,8 @@
     "clean": "yarn pnpify tsc --build --clean",
     "lint": "yarn pnpify eslint src --ext .ts",
     "prepublish": "yarn build",
-    "test": "yarn pnpify mocha './src/**/*.test.ts'"
+    "test": "yarn pnpify mocha './src/**/*.test.ts'",
+    "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts"
   },
   "dependencies": {
     "@transcend-io/internationalization": "^1.5.0",

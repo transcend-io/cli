@@ -1,0 +1,550 @@
+{
+  "type": "object",
+  "properties": {
+    "api-keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "enrichers": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "title",
+              "url",
+              "input-identifier",
+              "output-identifiers"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "input-identifier": {
+                "type": "string"
+              },
+              "output-identifiers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "value"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "isSecret": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "privacy-actions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "AUTOMATED_DECISION_MAKING_OPT_OUT",
+                    "USE_OF_SENSITIVE_INFORMATION_OPT_OUT",
+                    "CONTACT_OPT_OUT",
+                    "SALE_OPT_OUT",
+                    "TRACKING_OPT_OUT",
+                    "CUSTOM_OPT_OUT",
+                    "AUTOMATED_DECISION_MAKING_OPT_IN",
+                    "USE_OF_SENSITIVE_INFORMATION_OPT_IN",
+                    "SALE_OPT_IN",
+                    "TRACKING_OPT_IN",
+                    "CONTACT_OPT_IN",
+                    "CUSTOM_OPT_IN",
+                    "ACCESS",
+                    "ERASURE",
+                    "RECTIFICATION",
+                    "RESTRICTION",
+                    "BUSINESS_PURPOSE",
+                    "PLACE_ON_LEGAL_HOLD",
+                    "REMOVE_FROM_LEGAL_HOLD"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "data-silos": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "title",
+              "integrationName"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "integrationName": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "api-key-title": {
+                "type": "string"
+              },
+              "headers": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "value"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "isSecret": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "data-subjects": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "identity-keys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "deletion-dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "owners": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "teams": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "disabled": {
+                "type": "boolean"
+              },
+              "datapoints": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "key"
+                      ],
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "data-collection-tag": {
+                          "type": "string"
+                        },
+                        "privacy-action-queries": {
+                          "type": "object",
+                          "properties": {
+                            "ACCESS": {
+                              "type": "string"
+                            },
+                            "ERASURE": {
+                              "type": "string"
+                            },
+                            "RECTIFICATION": {
+                              "type": "string"
+                            },
+                            "RESTRICTION": {
+                              "type": "string"
+                            },
+                            "BUSINESS_PURPOSE": {
+                              "type": "string"
+                            },
+                            "PLACE_ON_LEGAL_HOLD": {
+                              "type": "string"
+                            },
+                            "REMOVE_FROM_LEGAL_HOLD": {
+                              "type": "string"
+                            },
+                            "AUTOMATED_DECISION_MAKING_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "USE_OF_SENSITIVE_INFORMATION_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "CONTACT_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "SALE_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "TRACKING_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "CUSTOM_OPT_OUT": {
+                              "type": "string"
+                            },
+                            "AUTOMATED_DECISION_MAKING_OPT_IN": {
+                              "type": "string"
+                            },
+                            "USE_OF_SENSITIVE_INFORMATION_OPT_IN": {
+                              "type": "string"
+                            },
+                            "SALE_OPT_IN": {
+                              "type": "string"
+                            },
+                            "TRACKING_OPT_IN": {
+                              "type": "string"
+                            },
+                            "CONTACT_OPT_IN": {
+                              "type": "string"
+                            },
+                            "CUSTOM_OPT_IN": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "privacy-actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "ACCESS",
+                              "ERASURE",
+                              "RECTIFICATION",
+                              "RESTRICTION",
+                              "BUSINESS_PURPOSE",
+                              "PLACE_ON_LEGAL_HOLD",
+                              "REMOVE_FROM_LEGAL_HOLD",
+                              "AUTOMATED_DECISION_MAKING_OPT_OUT",
+                              "USE_OF_SENSITIVE_INFORMATION_OPT_OUT",
+                              "CONTACT_OPT_OUT",
+                              "SALE_OPT_OUT",
+                              "TRACKING_OPT_OUT",
+                              "CUSTOM_OPT_OUT",
+                              "AUTOMATED_DECISION_MAKING_OPT_IN",
+                              "USE_OF_SENSITIVE_INFORMATION_OPT_IN",
+                              "SALE_OPT_IN",
+                              "TRACKING_OPT_IN",
+                              "CONTACT_OPT_IN",
+                              "CUSTOM_OPT_IN"
+                            ]
+                          }
+                        },
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "type": "object",
+                                "required": [
+                                  "key"
+                                ],
+                                "properties": {
+                                  "key": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "title": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "purposes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "purpose",
+                                        "name"
+                                      ],
+                                      "properties": {
+                                        "purpose": {
+                                          "type": "string",
+                                          "enum": [
+                                            "ESSENTIAL",
+                                            "ADDITIONAL_FUNCTIONALITY",
+                                            "ADVERTISING",
+                                            "MARKETING",
+                                            "ANALYTICS",
+                                            "PERSONALIZATION",
+                                            "OPERATION_SECURITY",
+                                            "LEGAL",
+                                            "TRANSFER",
+                                            "SALE",
+                                            "HR",
+                                            "OTHER",
+                                            "UNSPECIFIED"
+                                          ]
+                                        },
+                                        "name": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "categories": {
+                                    "type": "array",
+                                    "items": {
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "required": [
+                                            "category"
+                                          ],
+                                          "properties": {
+                                            "category": {
+                                              "type": "string",
+                                              "enum": [
+                                                "FINANCIAL",
+                                                "HEALTH",
+                                                "CONTACT",
+                                                "LOCATION",
+                                                "DEMOGRAPHIC",
+                                                "ID",
+                                                "ONLINE_ACTIVITY",
+                                                "USER_PROFILE",
+                                                "SOCIAL_MEDIA",
+                                                "CONNECTION",
+                                                "TRACKING",
+                                                "DEVICE",
+                                                "SURVEY",
+                                                "OTHER",
+                                                "UNSPECIFIED",
+                                                "NOT_PERSONAL_DATA"
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "access-request-visibility-enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "erasure-request-redaction-enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "attributes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "key",
+                                        "values"
+                                      ],
+                                      "properties": {
+                                        "key": {
+                                          "type": "string"
+                                        },
+                                        "values": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "email-settings": {
+                "type": "object",
+                "properties": {
+                  "notify-email-address": {
+                    "type": "string"
+                  },
+                  "send-frequency": {
+                    "type": "number"
+                  },
+                  "send-type": {
+                    "type": "string",
+                    "enum": [
+                      "PER_DSR",
+                      "CROSS_DSR"
+                    ]
+                  },
+                  "include-identifiers-attachment": {
+                    "type": "boolean"
+                  },
+                  "completion-link-type": {
+                    "type": "string",
+                    "enum": [
+                      "LOGGED_IN_USER",
+                      "UNAUTHENTICATED_EXTERNAL_USER",
+                      "NO_LINK_MARK_DATAPOINT_AS_RESOLVED"
+                    ]
+                  },
+                  "manual-work-retry-frequency": {
+                    "type": "string"
+                  }
+                }
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "key",
+                    "values"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
