@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../transcend-yml-schema.json
+
 api-keys:
   - title: Transcend Prod Server Silo Key
 enrichers: []

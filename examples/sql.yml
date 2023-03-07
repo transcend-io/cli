@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../transcend-yml-schema.json
+
 data-silos:
   - title: Database
     description: Integrate with your own databases, such as Amazon Redshift or PostgreSQL.
