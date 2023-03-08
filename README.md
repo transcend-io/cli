@@ -124,9 +124,17 @@ You can find various examples for your `transcend.yml` file in the [examples/](.
 
 The API for this YAML file can be found in [./src/codecs.ts](./src/codecs.ts) under the variable named "TranscendInput". The shape of the YAML file will be type-checked every time a command is run.
 
-The structure of the file looks something like the following:
+You can include a JSON schema to check `transcend.yml` in your IDE by adding this comment to the top of your file:
+
+```yml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json
+```
+
+The structure of `transcend.yml` looks something like the following:
 
 ```yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json
+
 # Manage at: https://app.transcend.io/infrastructure/api-keys
 # See https://docs.transcend.io/docs/authentication
 # Define API keys that may be shared across data silos

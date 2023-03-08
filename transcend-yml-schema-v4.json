@@ -1,4 +1,8 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json",
+  "title": "transcend.yml",
+  "description": "Define personal data schema in code using Transcend.",
   "type": "object",
   "properties": {
     "api-keys": {

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../transcend-yml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json
 
 data-silos:
   - title: Manually Notify Backend Team
