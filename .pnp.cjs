@@ -43,6 +43,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/colors", "npm:1.2.1"],\
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/json-schema", "npm:7.0.11"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.11.2"],\
@@ -74,7 +75,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
-            ["json-schema", "npm:0.4.0"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.7.1"],\
@@ -529,6 +529,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/colors", "npm:1.2.1"],\
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/json-schema", "npm:7.0.11"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.11.2"],\
@@ -560,7 +561,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
-            ["json-schema", "npm:0.4.0"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.7.1"],\
@@ -742,6 +742,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/json-schema", [\
+        ["npm:7.0.11", {\
+          "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.11-79462ae5ca-527bddfe62.zip/node_modules/@types/json-schema/",\
+          "packageDependencies": [\
+            ["@types/json-schema", "npm:7.0.11"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:7.0.9", {\
           "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.9-361918cff3-259d0e25f1.zip/node_modules/@types/json-schema/",\
           "packageDependencies": [\
@@ -4182,15 +4189,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-798ed4cf33.zip/node_modules/json-parse-even-better-errors/",\
           "packageDependencies": [\
             ["json-parse-even-better-errors", "npm:2.3.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["json-schema", [\
-        ["npm:0.4.0", {\
-          "packageLocation": "./.yarn/cache/json-schema-npm-0.4.0-e776313070-66389434c3.zip/node_modules/json-schema/",\
-          "packageDependencies": [\
-            ["json-schema", "npm:0.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

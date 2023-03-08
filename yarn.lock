@@ -389,6 +389,7 @@ __metadata:
     "@types/colors": ^1.2.1
     "@types/inquirer": ^7.3.1
     "@types/js-yaml": ^4.0.5
+    "@types/json-schema": ^7.0.11
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.0
     "@types/node": ^18.11.2
@@ -420,7 +421,6 @@ __metadata:
     inquirer-autocomplete-prompt: =1.3.0
     io-ts: =2.2.16
     js-yaml: ^4.1.0
-    json-schema: ^0.4.0
     lodash: ^4.17.21
     mocha: ^10.1.0
     prettier: ^2.7.1
@@ -583,6 +583,13 @@ __metadata:
   version: 4.0.5
   resolution: "@types/js-yaml@npm:4.0.5"
   checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
+  languageName: node
+  linkType: hard
+
+"@types/json-schema@npm:^7.0.11":
+  version: 7.0.11
+  resolution: "@types/json-schema@npm:7.0.11"
+  checksum: 527bddfe62db9012fccd7627794bd4c71beb77601861055d87e3ee464f2217c85fca7a4b56ae677478367bbd248dbde13553312b7d4dbc702a2f2bbf60c4018d
   languageName: node
   linkType: hard
 
@@ -3435,13 +3442,6 @@ fsevents@~2.3.2:
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
   checksum: 7486074d3ba247769fda17d5181b345c9fb7d12e0da98b22d1d71a5db9698d8b4bd900a3ec1a4ffdd60846fc2556274a5c894d0c48795f14cb03aeae7b55260b
-  languageName: node
-  linkType: hard
-
-"json-schema@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "json-schema@npm:0.4.0"
-  checksum: 66389434c3469e698da0df2e7ac5a3281bcff75e797a5c127db7c5b56270e01ae13d9afa3c03344f76e32e81678337a8c912bdbb75101c62e487dc3778461d72
   languageName: node
   linkType: hard
 
