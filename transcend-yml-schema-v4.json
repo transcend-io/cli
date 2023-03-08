@@ -9,9 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string"
@@ -23,9 +21,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string"
@@ -72,10 +68,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "value"
-                      ],
+                      "required": ["name", "value"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -137,10 +130,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "integrationName"
-            ],
+            "required": ["title", "integrationName"],
             "properties": {
               "title": {
                 "type": "string"
@@ -168,10 +158,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "value"
-                      ],
+                      "required": ["name", "value"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -231,9 +218,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "key"
-                      ],
+                      "required": ["key"],
                       "properties": {
                         "key": {
                           "type": "string"
@@ -353,9 +338,7 @@
                             "allOf": [
                               {
                                 "type": "object",
-                                "required": [
-                                  "key"
-                                ],
+                                "required": ["key"],
                                 "properties": {
                                   "key": {
                                     "type": "string"
@@ -382,10 +365,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "purpose",
-                                        "name"
-                                      ],
+                                      "required": ["purpose", "name"],
                                       "properties": {
                                         "purpose": {
                                           "type": "string",
@@ -417,9 +397,7 @@
                                       "allOf": [
                                         {
                                           "type": "object",
-                                          "required": [
-                                            "category"
-                                          ],
+                                          "required": ["category"],
                                           "properties": {
                                             "category": {
                                               "type": "string",
@@ -465,10 +443,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "key",
-                                        "values"
-                                      ],
+                                      "required": ["key", "values"],
                                       "properties": {
                                         "key": {
                                           "type": "string"
@@ -503,10 +478,7 @@
                   },
                   "send-type": {
                     "type": "string",
-                    "enum": [
-                      "PER_DSR",
-                      "CROSS_DSR"
-                    ]
+                    "enum": ["PER_DSR", "CROSS_DSR"]
                   },
                   "include-identifiers-attachment": {
                     "type": "boolean"
@@ -528,10 +500,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
