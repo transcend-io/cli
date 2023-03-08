@@ -34,7 +34,7 @@
     "rootDir": "src",
     "types": ["mocha", "node"]
   },
-  "include": ["src", "scripts"],
+  "include": ["src"],
   "exclude": ["node_modules", "build"],
   "references": []
 }
