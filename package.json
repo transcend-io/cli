@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.26.0",
+  "version": "4.26.1",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -34,13 +34,14 @@
     "clean": "yarn pnpify tsc --build --clean",
     "lint": "yarn pnpify eslint src --ext .ts",
     "prepublish": "yarn build",
-    "test": "yarn pnpify mocha './src/**/*.test.ts'"
+    "test": "yarn pnpify mocha './src/**/*.test.ts'",
+    "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
   },
   "dependencies": {
     "@transcend-io/internationalization": "^1.5.0",
     "@transcend-io/persisted-state": "^1.0.0",
     "@transcend-io/privacy-types": "^4.18.0",
-    "@transcend-io/type-utils": "^1.0.5",
+    "@transcend-io/type-utils": "^1.0.7",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
     "colors": "^1.4.0",

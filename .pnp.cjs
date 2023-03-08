@@ -36,7 +36,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/internationalization", "npm:1.5.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.0"],\
             ["@transcend-io/privacy-types", "npm:4.18.0"],\
-            ["@transcend-io/type-utils", "npm:1.0.5"],\
+            ["@transcend-io/type-utils", "npm:1.0.7"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -521,7 +521,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/internationalization", "npm:1.5.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.0"],\
             ["@transcend-io/privacy-types", "npm:4.18.0"],\
-            ["@transcend-io/type-utils", "npm:1.0.5"],\
+            ["@transcend-io/type-utils", "npm:1.0.7"],\
             ["@types/bluebird", "npm:3.5.37"],\
             ["@types/chai", "npm:4.3.3"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -608,6 +608,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@transcend-io-type-utils-npm-1.0.5-53d562f965-4d1bb97518.zip/node_modules/@transcend-io/type-utils/",\
           "packageDependencies": [\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
+            ["fp-ts", "npm:2.11.8"],\
+            ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.0.7", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-type-utils-npm-1.0.7-2ef3c1e7b2-488d2456d3.zip/node_modules/@transcend-io/type-utils/",\
+          "packageDependencies": [\
+            ["@transcend-io/type-utils", "npm:1.0.7"],\
             ["fp-ts", "npm:2.11.8"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"]\
           ],\
