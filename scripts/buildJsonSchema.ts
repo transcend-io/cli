@@ -16,7 +16,7 @@
 
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-import { toJsonSchema } from './helpers/toJsonSchema';
+import { toJsonSchema } from '@transcend-io/type-utils';
 import * as packageJson from '../package.json';
 import { TranscendInput } from '../src/codecs.ts';
 

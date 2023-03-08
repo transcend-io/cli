@@ -382,14 +382,13 @@ __metadata:
     "@transcend-io/internationalization": ^1.5.0
     "@transcend-io/persisted-state": ^1.0.0
     "@transcend-io/privacy-types": ^4.18.0
-    "@transcend-io/type-utils": ^1.0.5
+    "@transcend-io/type-utils": ^1.0.7
     "@types/bluebird": ^3.5.37
     "@types/chai": ^4.3.3
     "@types/cli-progress": ^3
     "@types/colors": ^1.2.1
     "@types/inquirer": ^7.3.1
     "@types/js-yaml": ^4.0.5
-    "@types/json-schema": ^7.0.11
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.0
     "@types/node": ^18.11.2
@@ -480,6 +479,16 @@ __metadata:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
   checksum: 4d1bb9751852f36120872bcd7fde25e18454f0ebb0c655dd4d8c228dd9b49b1da75f11b323e65eb359f504df2fe0084e1ecffdbeadc52e6a1a05163a3cd2fd2b
+  languageName: node
+  linkType: hard
+
+"@transcend-io/type-utils@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@transcend-io/type-utils@npm:1.0.7"
+  dependencies:
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+  checksum: 488d2456d3b470a79e64505e9f383cd9bc9d9a55906e10a921b8580e7ac66a5f427659c4f72204ea9f18c205b3d4918d49bf29f7d48bcf2e7730d9b8268c5e20
   languageName: node
   linkType: hard
 
@@ -583,13 +592,6 @@ __metadata:
   version: 4.0.5
   resolution: "@types/js-yaml@npm:4.0.5"
   checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
-  languageName: node
-  linkType: hard
-
-"@types/json-schema@npm:^7.0.11":
-  version: 7.0.11
-  resolution: "@types/json-schema@npm:7.0.11"
-  checksum: 527bddfe62db9012fccd7627794bd4c71beb77601861055d87e3ee464f2217c85fca7a4b56ae677478367bbd248dbde13553312b7d4dbc702a2f2bbf60c4018d
   languageName: node
   linkType: hard
 
