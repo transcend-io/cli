@@ -124,7 +124,7 @@ You can find various examples for your `transcend.yml` file in the [examples/](.
 
 The API for this YAML file can be found in [./src/codecs.ts](./src/codecs.ts) under the variable named "TranscendInput". The shape of the YAML file will be type-checked every time a command is run.
 
-By default, your editor or IDE should recognize `transcend.yml` and lint it against our published JSON schema. This is dependent on whether your editor uses [yaml-language-server](https://github.com/redhat-developer/yaml-language-server)
+By default, your editor or IDE should recognize `transcend.yml` and validate it against our published [JSON schema](./transcend-yml-schema-v4.json). This is dependent on whether your editor uses [yaml-language-server](https://github.com/redhat-developer/yaml-language-server), such as through the [VS Code YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml).
 
 The structure of `transcend.yml` looks something like the following:
 
