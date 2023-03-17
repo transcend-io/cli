@@ -18,3 +18,4 @@ export * from './fetchAllRequestIdentifiers';
 export * from './fetchAllRequestEnrichers';
 export * from './fetchRequestDataSilo';
 export * from './fetchAllAttributes';
+export * from './syncAttribute';

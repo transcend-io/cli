@@ -159,7 +159,7 @@ export async function pullTranscendConfiguration(
           ) as AttributeResourceType[],
         name,
         type,
-        values: values.map(({ name }) => name),
+        values: values.map(({ name, color }) => ({ name, color })),
       }),
     );
   }

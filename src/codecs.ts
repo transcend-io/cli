@@ -24,6 +24,8 @@ export enum AttributeResourceType {
   AirgapCookie = 'airgapCookie',
   /** Data Flow tabs */
   AirgapDataFlow = 'airgapDataFlow',
+  /** Ropa */
+  ROPA = 'ROPA',
   /** Requests table */
   Request = 'request',
   /** Vendor table */
@@ -46,6 +48,7 @@ export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   [AttributeResourceType.ProcessingPurposeSubCategory]:
     'processingPurposeSubCategories',
   [AttributeResourceType.Request]: 'requests',
+  [AttributeResourceType.ROPA]: 'ROPA',
   [AttributeResourceType.SubDataPoint]: 'subDataPoints',
   [AttributeResourceType.AirgapCookie]: 'airgapCookies',
   [AttributeResourceType.AirgapDataFlow]: 'airgapDataFlows',
@@ -170,15 +173,34 @@ export const DataCategoryInput = t.intersection([
   }),
 ]);
 
-export const AttributeInput = t.intersection([
+export const AttributeValueInput = t.intersection([
   t.type({
+    /** Name of attribute value */
     name: t.string,
-    type: t.string,
   }),
   t.partial({
+    /** Color */
+    color: t.string,
+  }),
+]);
+
+/** Type override */
+export type AttributeValueInput = t.TypeOf<typeof AttributeValueInput>;
+
+export const AttributeInput = t.intersection([
+  t.type({
+    /** Name of attribute */
+    name: t.string,
+    /** Type of attribute */
+    type: t.string, // FIXME
+  }),
+  t.partial({
+    /** Description of attribute */
     description: t.string,
+    /** Resource types that the attribute is enabled on */
     resources: t.array(valuesOf(AttributeResourceType)),
-    values: t.array(t.string),
+    /** Values of attribute */
+    values: t.array(AttributeValueInput),
   }),
 ]);
 
@@ -186,7 +208,9 @@ export const AttributeInput = t.intersection([
 export type AttributeInput = t.TypeOf<typeof AttributeInput>;
 
 export const Attributes = t.type({
+  /** Attribute key */
   key: t.string,
+  /** Attribute values */
   values: t.array(t.string),
 });
 

@@ -5,9 +5,11 @@ import colors from 'colors';
 import { mapSeries } from 'bluebird';
 import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
 import { syncEnricher } from './syncEnrichers';
+import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
 import { fetchDataSubjects } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
+import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
 import { makeGraphQLRequest, syncTemplate } from '.';
 
@@ -28,16 +30,16 @@ export async function syncConfigurationToTranscend(
 
   logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
+  const { templates, attributes, enrichers, 'data-silos': dataSilos } = input;
+
   const [identifierByName, dataSubjects, apiKeyTitleMap] = await Promise.all([
     // Ensure all identifiers are created and create a map from name -> identifier.id
-    fetchIdentifiersAndCreateMissing(input, client),
+    enrichers ? fetchIdentifiersAndCreateMissing(input, client) : {},
     // Grab all data subjects in the organization
-    fetchDataSubjects(input, client),
+    dataSilos ? fetchDataSubjects(input, client) : {},
     // Grab API keys
-    fetchApiKeys(input, client),
+    dataSilos ? fetchApiKeys(input, client) : {},
   ]);
-
-  const { templates, enrichers, 'data-silos': dataSilos } = input;
 
   // Sync email templates
   if (templates) {
@@ -83,6 +85,34 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${enrichers.length}" enrichers!`));
+  }
+
+  // Sync attributes
+  if (attributes) {
+    // Fetch existing
+    const existingAttributes = await fetchAllAttributes(client);
+    logger.info(colors.magenta(`Syncing "${attributes.length}" attributes...`));
+    await mapSeries(attributes, async (attribute) => {
+      const existing = existingAttributes.find(
+        (attr) => attr.name === attribute.name,
+      );
+
+      logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
+      try {
+        await syncAttribute(client, attribute, existing);
+        logger.info(
+          colors.green(`Successfully synced attribute "${attribute.name}"!`),
+        );
+      } catch (err) {
+        encounteredError = true;
+        logger.info(
+          colors.red(
+            `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
+          ),
+        );
+      }
+    });
+    logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
   }
 
   // Store dependency updates
