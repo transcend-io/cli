@@ -9,7 +9,7 @@ import {
 } from '@transcend-io/privacy-types';
 import type { Got } from 'got';
 import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
-import { AttributeInput } from './parseAttributesFromString';
+import { ParsedAttributeInput } from './parseAttributesFromString';
 
 export const PrivacyRequestResponse = t.type({
   id: t.string,
@@ -61,7 +61,7 @@ export async function submitPrivacyRequest(
     /** Request details */
     details?: string;
     /** Additional attributes to tag the requests with */
-    additionalAttributes?: AttributeInput[];
+    additionalAttributes?: ParsedAttributeInput[];
   } = {},
 ): Promise<PrivacyRequestResponse> {
   // Merge the per-request attributes with the

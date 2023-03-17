@@ -1,4 +1,4 @@
-import { AttributeValue } from '.';
+import type { DataSiloAttributeValue } from './syncDataSilos';
 
 export interface FormattedAttribute {
   /** Attribute key */
@@ -14,7 +14,7 @@ export interface FormattedAttribute {
  * @returns formatted attributes
  */
 export function formatAttributeValues(
-  vals: AttributeValue[],
+  vals: DataSiloAttributeValue[],
 ): FormattedAttribute[] {
   const attributes: FormattedAttribute[] = [];
 

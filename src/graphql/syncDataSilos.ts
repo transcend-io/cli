@@ -31,7 +31,7 @@ import {
 import sortBy from 'lodash/sortBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-export interface AttributeValue {
+export interface DataSiloAttributeValue {
   /** Key associated to value */
   attributeKey: {
     /** Name of key */
@@ -50,7 +50,7 @@ export interface DataSilo {
   /** The link to the data silo */
   link: string;
   /** Attribute labels */
-  attributeValues: AttributeValue[];
+  attributeValues: DataSiloAttributeValue[];
   /** description */
   description: string;
   /** Metadata for this data silo */
@@ -154,7 +154,7 @@ interface SubDataPoint {
    */
   erasureRequestRedactionEnabled: boolean;
   /** Attribute attached to subdatapoint */
-  attributeValues: AttributeValue[];
+  attributeValues: DataSiloAttributeValue[];
 }
 
 interface DataPoint {
@@ -470,7 +470,7 @@ export interface DataSiloEnriched {
    */
   manualWorkRetryFrequency: string;
   /** Attribute values tagged to data silo */
-  attributeValues: AttributeValue[];
+  attributeValues: DataSiloAttributeValue[];
 }
 
 /**
