@@ -20,7 +20,7 @@ import {
 import { AttributeKey } from '../graphql';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { splitCsvToList } from './splitCsvToList';
-import type { AttributeInput } from './parseAttributesFromString';
+import type { ParsedAttributeInput } from './parseAttributesFromString';
 import { AttributeNameMap } from './mapColumnsToAttributes';
 import { IdentifierNameMap } from './mapColumnsToIdentifiers';
 
@@ -52,7 +52,7 @@ export interface PrivacyRequestInput {
   /** Country sub division */
   countrySubDivision?: IsoCountrySubdivisionCode;
   /** Attribute inputs */
-  attributes?: AttributeInput[];
+  attributes?: ParsedAttributeInput[];
   /** The status that the request should be created as */
   status?: CompletedRequestStatus;
   /** The time that the request was created */
@@ -173,7 +173,7 @@ export function mapCsvRowsToRequestInputs(
         });
 
       // The extra attributes to upload for this request
-      const attributes: AttributeInput[] = [];
+      const attributes: ParsedAttributeInput[] = [];
       Object.entries(attributeNameMap)
         // filter out skipped attributes
         .filter(([, columnName]) => columnName !== NONE)

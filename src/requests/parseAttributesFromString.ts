@@ -1,7 +1,7 @@
 import colors from 'colors';
 import { logger } from '../logger';
 
-export interface AttributeInput {
+export interface ParsedAttributeInput {
   /** Attribute key */
   key: string;
   /** Attribute values */
@@ -16,7 +16,7 @@ export interface AttributeInput {
  */
 export function parseAttributesFromString(
   attributes: string[],
-): AttributeInput[] {
+): ParsedAttributeInput[] {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = attributes.map((attribute) => {
     const [attributeKey, attributeValuesRaw] = attribute.trim().split(':');
