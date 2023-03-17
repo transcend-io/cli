@@ -24,35 +24,35 @@
   - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
-  - [Usage](#usage-4)
+    - [Usage](#usage-4)
   - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
-  - [Usage](#usage-5)
+    - [Usage](#usage-5)
   - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
-  - [Usage](#usage-6)
+    - [Usage](#usage-6)
   - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
-  - [Usage](#usage-7)
+    - [Usage](#usage-7)
   - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
-  - [Usage](#usage-8)
+    - [Usage](#usage-8)
   - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
-  - [Usage](#usage-9)
+    - [Usage](#usage-9)
   - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
-  - [Usage](#usage-10)
+    - [Usage](#usage-10)
   - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
-  - [Usage](#usage-11)
+    - [Usage](#usage-11)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -242,14 +242,15 @@ _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 #### Arguments
 
-| Argument     | Description                                                                   | Type                | Default                  | Required |
-| ------------ | ----------------------------------------------------------------------------- | ------------------- | ------------------------ | -------- |
-| auth         | The Transcend API capable of fetching the configuration                       | string              | N/A                      | true     |
-| file         | Path to the YAML file to pull into                                            | string - file-path  | ./transcend.yml          | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL        | https://api.transcend.io | false    |
-| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.         | list(string - UUID) | N/A                      | false    |
-| pageSize     | The page size to use when paginating over the API                             | number              | 50                       | false    |
-| debug        | Set to true to include debug logs while pulling the configuration             | boolean             | false                    | false    |
+| Argument     | Description                                                                                                                        | Type                | Default                               | Required |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------- | -------- |
+| auth         | The Transcend API capable of fetching the configuration                                                                            | string              | N/A                                   | true     |
+| resources    | The different resource types to pull (apiKeys,templates,dataSilos,enrichers,vendors,businessEntities,dataFlows,cookies,attributes) | string              | apiKeys,templates,dataSilos,enrichers | false    |
+| file         | Path to the YAML file to pull into                                                                                                 | string - file-path  | ./transcend.yml                       | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                      | string - URL        | https://api.transcend.io              | false    |
+| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.                                                              | list(string - UUID) | N/A                                   | false    |
+| pageSize     | The page size to use when paginating over the API                                                                                  | number              | 50                                    | false    |
+| debug        | Set to true to include debug logs while pulling the configuration                                                                  | boolean             | false                                 | false    |
 
 #### Usage
 
@@ -276,6 +277,8 @@ Or a specific types of data silo(s) can be pulled in:
 ```sh
 tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake
 ```
+
+FIXME examples
 
 Or with a specific page size (max 100)
 
@@ -508,7 +511,7 @@ The API key needs the following scopes:
 | debug                   | Debug logging.                                                                                                          | boolean            | false                                   | false    |
 | defaultPhoneCountryCode | When uploading phone numbers, if the phone number is missing a country code, assume this country code. Defaults to USA. | string             | 1                                       | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
@@ -615,7 +618,7 @@ The API key needs the following scopes:
 | copyIdentifiers      | Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only.           | boolean         | false                             | false    |
 | skipWaitingPeriod    | Skip queued state of request and go straight to compiling                                                                                 | boolean         | false                             | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE
@@ -709,7 +712,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra.                                                    | string                 | N/A                      | false    |
 | pageLimit    | The page limit to use when pulling in pages of identifiers.                                                                             | number                 | 100                      | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE
@@ -772,7 +775,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io | false    |
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                      | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
@@ -830,7 +833,7 @@ The API key must have the following scopes:
 | actions      | The set of request actions to pull requests for.                              | RequestAction[]    | []                                  | false    |
 | concurrency  | The concurrency to use when uploading requests in parallel.                   | number             | 100                                 | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY
@@ -891,7 +894,7 @@ The API key must have the following scopes:
 | file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
 | concurrency  | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf
@@ -943,7 +946,7 @@ The API key must have the following scopes:
 | file         | Path to the CSV file where identifiers will be written to.                    | string - file-path | ./request-identifiers.csv | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io  | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
@@ -984,7 +987,7 @@ The API key must have the following scopes:
 | actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                      | true     |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io | false    |
 
-### Usage
+#### Usage
 
 ```sh
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ACCESS

@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines */
 import * as t from 'io-ts';
-import { applyEnum, valuesOf } from '@transcend-io/type-utils';
+import { applyEnum, valuesOf, invert } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
   ProcessingPurpose,
@@ -9,7 +9,52 @@ import {
   RequestActionObjectResolver,
   PromptAVendorEmailSendType,
   PromptAVendorEmailCompletionLinkType,
-} from '@transcend-io/privacy-types';
+} from '@transcend-io/privacy-types'; // FIXME pr auto update
+
+/**
+ * Resources that can be assigned attributes
+ * FIXME
+ */
+export enum AttributeResourceType {
+  /** Data silos table */
+  DataSilo = 'dataSilo',
+  /** subdatapoints table (shows up under Data Inventory > Data Points tab) */
+  SubDataPoint = 'subDataPoint',
+  /** Cookies tabs */
+  AirgapCookie = 'airgapCookie',
+  /** Data Flow tabs */
+  AirgapDataFlow = 'airgapDataFlow',
+  /** Requests table */
+  Request = 'request',
+  /** Vendor table */
+  Vendor = 'vendor',
+  /** Business entity table */
+  BusinessEntity = 'businessEntity',
+  /** Categories table */
+  DataSubCategory = 'dataSubCategory',
+  /** Processing purpose table */
+  ProcessingPurposeSubCategory = 'processingPurposeSubCategory',
+}
+
+export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
+  AttributeResourceType,
+  string
+> = {
+  [AttributeResourceType.BusinessEntity]: 'businessEntities',
+  [AttributeResourceType.DataSilo]: 'dataSilos',
+  [AttributeResourceType.DataSubCategory]: 'dataSubCategories',
+  [AttributeResourceType.ProcessingPurposeSubCategory]:
+    'processingPurposeSubCategories',
+  [AttributeResourceType.Request]: 'requests',
+  [AttributeResourceType.SubDataPoint]: 'subDataPoints',
+  [AttributeResourceType.AirgapCookie]: 'airgapCookies',
+  [AttributeResourceType.AirgapDataFlow]: 'airgapDataFlows',
+  [AttributeResourceType.Vendor]: 'vendors',
+};
+
+export const ATTRIBUTE_KEY_PLURAL_TO_SINGULAR = invert(
+  ATTRIBUTE_KEY_SINGULAR_TO_PLURAL,
+);
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -124,6 +169,21 @@ export const DataCategoryInput = t.intersection([
     name: t.string,
   }),
 ]);
+
+export const AttributeInput = t.intersection([
+  t.type({
+    name: t.string,
+    type: t.string,
+  }),
+  t.partial({
+    description: t.string,
+    resources: t.array(valuesOf(AttributeResourceType)),
+    values: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type AttributeInput = t.TypeOf<typeof AttributeInput>;
 
 export const Attributes = t.type({
   key: t.string,
@@ -369,6 +429,10 @@ export const TranscendInput = t.partial({
    * Enricher definitions
    */
   enrichers: t.array(EnricherInput),
+  /**
+   * Attribute definitions
+   */
+  attributes: t.array(AttributeInput),
   /**
    * Data silo definitions
    */

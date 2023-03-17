@@ -30,11 +30,11 @@
   "scripts": {
     "update:sdks": "yarn sdks base",
     "update:deps": "yarn upgrade-interactive && yarn update:sdks",
-    "build": "yarn pnpify tsc --build",
-    "clean": "yarn pnpify tsc --build --clean",
-    "lint": "yarn pnpify eslint src --ext .ts",
+    "build": "yarn tsc --build",
+    "clean": "yarn tsc --build --clean",
+    "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
-    "test": "yarn pnpify mocha './src/**/*.test.ts'",
+    "test": "yarn mocha './src/**/*.test.ts'",
     "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
   },
   "dependencies": {
@@ -58,6 +58,7 @@
     "io-ts": "=2.2.16",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "pluralize": "^8.0.0",
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
@@ -70,6 +71,7 @@
     "@types/lodash": "^4.14.186",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.2",
+    "@types/pluralize": "^0.0.29",
     "@types/yargs-parser": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
@@ -77,7 +79,7 @@
     "@yarnpkg/sdks": "^2.6.0",
     "chai": "^4.3.6",
     "depcheck": "^1.4.3",
-    "eslint": "^8.25.0",
+    "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
