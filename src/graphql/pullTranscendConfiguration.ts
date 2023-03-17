@@ -89,7 +89,7 @@ export async function pullTranscendConfiguration(
 
   logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
-  // FIXME condition each by permissions and cli option
+  // Fetch all data, but only conditional fetch data that is requested
   const [
     dataSubjects,
     apiKeyTitleMap,

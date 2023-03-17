@@ -2,27 +2,48 @@ import { GraphQLClient } from 'graphql-request';
 import { DATA_FLOWS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
+import {
+  ConsentTrackerSource,
+  ConsentTrackerStatus,
+} from '@transcend-io/privacy-types';
 
 export interface Cookie {
+  /** ID of the cookie */
   id: string;
+  /** Name of the cookie */
   name: string;
+  /** Whether cookie is a regular express */
   isRegex: boolean;
+  /** Description of cookie */
   description: string;
+  /** Enabled tracking purposes for the cookie */
   trackingPurposes: string[];
+  /** The consent service */
   service: {
+    /** Integration name of service */
     integrationName: string;
   };
-  source: string; // FIXME
-  status: string; //FIXME
+  /** Source of how tracker was added */
+  source: ConsentTrackerSource;
+  /** Status of cookie labeling */
+  status: ConsentTrackerStatus;
+  /** Owners of that cookie */
   owners: {
+    /** Email address of owner */
     email: string;
   }[];
+  /** Teams assigned to that cookie */
   teams: {
+    /** Name of team */
     name: string;
   }[];
+  /** Attributes assigned to that cookie */
   attributeValues: {
+    /** Name of attribute value */
     name: string;
+    /** Attribute key that the value represents */
     attributeKey: {
+      /** Name of attribute team */
       name: string;
     };
   }[];
@@ -60,7 +81,7 @@ export async function fetchAllCookies(
       first: PAGE_SIZE,
       offset,
       airgapBundleId,
-      status: 'LIVE', // FIXME
+      status: ConsentTrackerStatus.Live, // FIXME
     });
     cookies.push(...nodes);
     offset += PAGE_SIZE;

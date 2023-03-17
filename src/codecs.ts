@@ -7,36 +7,27 @@ import {
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
+  DataFlowScope,
   PromptAVendorEmailSendType,
+  ConsentTrackerStatus,
+  AttributeKeyType,
+  AttributeSupportedResourceType,
   PromptAVendorEmailCompletionLinkType,
-} from '@transcend-io/privacy-types'; // FIXME pr auto update
+} from '@transcend-io/privacy-types';
 
 /**
  * Resources that can be assigned attributes
  * FIXME
  */
-export enum AttributeResourceType {
-  /** Data silos table */
-  DataSilo = 'dataSilo',
-  /** subdatapoints table (shows up under Data Inventory > Data Points tab) */
-  SubDataPoint = 'subDataPoint',
-  /** Cookies tabs */
-  AirgapCookie = 'airgapCookie',
-  /** Data Flow tabs */
-  AirgapDataFlow = 'airgapDataFlow',
+export const AttributeResourceType = makeEnum({
+  ...AttributeSupportedResourceType,
   /** Ropa */
   ROPA = 'ROPA',
-  /** Requests table */
-  Request = 'request',
-  /** Vendor table */
-  Vendor = 'vendor',
-  /** Business entity table */
-  BusinessEntity = 'businessEntity',
-  /** Categories table */
-  DataSubCategory = 'dataSubCategory',
-  /** Processing purpose table */
-  ProcessingPurposeSubCategory = 'processingPurposeSubCategory',
-}
+});
+
+/** Type override */
+export type AttributeResourceType =
+  typeof AttributeResourceType[keyof typeof AttributeResourceType];
 
 export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   AttributeResourceType,
@@ -192,7 +183,7 @@ export const AttributeInput = t.intersection([
     /** Name of attribute */
     name: t.string,
     /** Type of attribute */
-    type: t.string, // FIXME
+    type: valuesOf(AttributeKeyType),
   }),
   t.partial({
     /** Description of attribute */
@@ -364,13 +355,21 @@ export const DataFlowInput = t.intersection([
     /** Value of data flow */
     value: t.string,
     /** Type of data flow */
-    type: t.string, // FIXME
+    type: valuesOf(DataFlowScope),
   }),
   t.partial({
+    /** Description of data flow */
     description: t.string,
+    /** The tracking purposes that are required to be opted in for this data flow */
     trackingPurposes: t.array(t.string),
+    /**
+     * Name of the consent service attached
+     */
     service: t.string,
-    status: t.string, // FIXME
+    /**
+     * Status of the tracker (approved vs triage)
+     */
+    status: valuesOf(ConsentTrackerStatus),
     /**
      * The email addresses of the employees within your company that are the go-to individuals
      * for managing this data silo
@@ -400,11 +399,20 @@ export const CookieInput = t.intersection([
     name: t.string,
   }),
   t.partial({
+    /** Whether or not the cookie is a regular expression */
     isRegex: t.boolean,
+    /** Description of data flow */
     description: t.string,
+    /** The tracking purposes that are required to be opted in for this data flow */
     trackingPurposes: t.array(t.string),
+    /**
+     * Name of the consent service attached
+     */
     service: t.string,
-    status: t.string, // FIXME
+    /**
+     * Status of the tracker (approved vs triage)
+     */
+    status: valuesOf(ConsentTrackerStatus),
     /**
      * The email addresses of the employees within your company that are the go-to individuals
      * for managing this data silo

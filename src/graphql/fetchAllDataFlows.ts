@@ -2,27 +2,49 @@ import { GraphQLClient } from 'graphql-request';
 import { DATA_FLOWS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
+import {
+  DataFlowScope,
+  ConsentTrackerSource,
+  ConsentTrackerStatus,
+} from '@transcend-io/privacy-types';
 
 export interface DataFlow {
+  /** ID of data flow */
   id: string;
+  /** Value of data flow */
   value: string;
-  type: string; // FIXME
+  /** Type of data flow */
+  type: DataFlowScope;
+  /** Description of data flow */
   description: string;
+  /** Enabled tracking purposes */
   trackingType: string[];
+  /** The consent service */
   service: {
+    /** Integration name of service */
     integrationName: string;
   };
-  source: string; // FIXME
-  status: string; //FIXME
+  /** Source of how tracker was added */
+  source: ConsentTrackerSource;
+  /** Status of data flow labeling */
+  status: ConsentTrackerStatus;
+  /** Owners of that data flow */
   owners: {
+    /** Email address of owner */
     email: string;
   }[];
+  /** Teams assigned to that data flow */
   teams: {
+    /** Name of team */
     name: string;
   }[];
+  /** Attributes assigned to that data flow */
   attributeValues: {
+    /** Name of attribute value */
     name: string;
+    /** Attribute key that the value represents */
     attributeKey: {
+      /** Name of attribute team */
       name: string;
     };
   }[];
@@ -60,7 +82,7 @@ export async function fetchAllDataFlows(
       first: PAGE_SIZE,
       offset,
       airgapBundleId,
-      status: 'LIVE', // FIXME
+      status: ConsentTrackerStatus.Live, // FIXME
     });
     dataFlows.push(...nodes);
     offset += PAGE_SIZE;

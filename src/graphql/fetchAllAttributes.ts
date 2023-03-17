@@ -3,6 +3,7 @@ import { ATTRIBUTES, ATTRIBUTE_VALUES } from './gqls';
 
 import { logger } from '../logger';
 import colors from 'colors';
+import { AttributeKeyType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface AttributeValue {
@@ -41,7 +42,7 @@ export interface Attribute {
   /** Enabled on processing purposes */
   enabledOnProcessingPurposeSubCategories: boolean;
   /** Type of attribute */
-  type: string; // FIXME
+  type: AttributeKeyType;
   /** Values */
   values: AttributeValue[];
 }
@@ -90,8 +91,10 @@ export async function fetchAllAttributeValues(
   return attributeValues;
 }
 
-// FIXME
-export const SKIP_ATTRIBUTE_TYPES = ['TEXT', 'URL', 'ASSESSMENT'];
+export const SYNC_ATTRIBUTE_TYPES = [
+  AttributeKeyType.MultiSelect,
+  AttributeKeyType.SingleSelect,
+];
 
 /**
  * Fetch all attributes in an organization
@@ -126,9 +129,9 @@ export async function fetchAllAttributes(
       ...(await Promise.all(
         nodes.map(async (node) => ({
           ...node,
-          values: SKIP_ATTRIBUTE_TYPES.includes(node.type)
-            ? []
-            : await fetchAllAttributeValues(client, node.id),
+          values: SYNC_ATTRIBUTE_TYPES.includes(node.type)
+            ? await fetchAllAttributeValues(client, node.id)
+            : [],
         })),
       )),
     );
