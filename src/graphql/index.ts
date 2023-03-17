@@ -19,3 +19,6 @@ export * from './fetchAllRequestEnrichers';
 export * from './fetchRequestDataSilo';
 export * from './fetchAllAttributes';
 export * from './syncAttribute';
+export * from './fetchAllDataFlows';
+export * from './fetchAllCookies';
+export * from './fetchConsentManagerId';

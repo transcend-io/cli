@@ -5,6 +5,8 @@ import {
   AttributeInput,
   AttributeResourceType,
   EnricherInput,
+  DataFlowInput,
+  CookieInput,
   ATTRIBUTE_KEY_PLURAL_TO_SINGULAR,
 } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
@@ -19,6 +21,8 @@ import {
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllEnrichers } from './syncEnrichers';
+import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { formatAttributeValues } from './formatAttributeValues';
@@ -91,6 +95,8 @@ export async function pullTranscendConfiguration(
     apiKeyTitleMap,
     dataSilos,
     enrichers,
+    dataFlows,
+    cookies,
     attributes,
     templates,
   ] = await Promise.all([
@@ -114,6 +120,14 @@ export async function pullTranscendConfiguration(
     // Fetch enrichers
     resources.includes(TranscendPullResource.Enrichers)
       ? fetchAllEnrichers(client)
+      : [],
+    // Fetch data flows
+    resources.includes(TranscendPullResource.DataFlows)
+      ? fetchAllDataFlows(client)
+      : [],
+    // Fetch data flows
+    resources.includes(TranscendPullResource.Cookies)
+      ? fetchAllCookies(client)
       : [],
     // Fetch attributes
     resources.includes(TranscendPullResource.Attributes)
@@ -142,6 +156,66 @@ export async function pullTranscendConfiguration(
           title,
         }),
       );
+  }
+
+  // Save data flows
+  if (dataFlows.length > 0) {
+    result['data-flows'] = dataFlows.map(
+      ({
+        value,
+        type,
+        description,
+        trackingType,
+        service,
+        status,
+        owners,
+        teams,
+        attributeValues,
+      }): DataFlowInput => ({
+        value,
+        type,
+        description: description || undefined,
+        trackingPurposes: trackingType,
+        status,
+        service: service?.integrationName,
+        owners: owners.map(({ email }) => email),
+        teams: teams.map(({ name }) => name),
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save cookies
+  if (cookies.length > 0) {
+    result.cookies = cookies.map(
+      ({
+        name,
+        isRegex,
+        description,
+        trackingPurposes,
+        service,
+        status,
+        owners,
+        teams,
+        attributeValues,
+      }): CookieInput => ({
+        name,
+        isRegex,
+        description: description || undefined,
+        trackingPurposes,
+        status,
+        service: service?.integrationName,
+        owners: owners.map(({ email }) => email),
+        teams: teams.map(({ name }) => name),
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
   }
 
   // Save attributes

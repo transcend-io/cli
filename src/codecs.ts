@@ -359,6 +359,75 @@ export type PromptAVendorEmailSettings = t.TypeOf<
   typeof PromptAVendorEmailSettings
 >;
 
+export const DataFlowInput = t.intersection([
+  t.type({
+    /** Value of data flow */
+    value: t.string,
+    /** Type of data flow */
+    type: t.string, // FIXME
+  }),
+  t.partial({
+    description: t.string,
+    trackingPurposes: t.array(t.string),
+    service: t.string,
+    status: t.string, // FIXME
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data silo
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
+  }),
+]);
+
+/** Type override */
+export type DataFlowInput = t.TypeOf<typeof DataFlowInput>;
+
+export const CookieInput = t.intersection([
+  t.type({
+    /** Name of data flow */
+    name: t.string,
+  }),
+  t.partial({
+    isRegex: t.boolean,
+    description: t.string,
+    trackingPurposes: t.array(t.string),
+    service: t.string,
+    status: t.string, // FIXME
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data silo
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
+  }),
+]);
+
+/** Type override */
+export type CookieInput = t.TypeOf<typeof CookieInput>;
+
 /**
  * Input to define a data silo
  *
@@ -461,6 +530,14 @@ export const TranscendInput = t.partial({
    * Data silo definitions
    */
   'data-silos': t.array(DataSiloInput),
+  /**
+   * Data flow definitions
+   */
+  'data-flows': t.array(DataFlowInput),
+  /**
+   * Cookie definitions
+   */
+  cookies: t.array(CookieInput),
 });
 
 /** Type override */
