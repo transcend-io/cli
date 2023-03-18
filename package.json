@@ -58,7 +58,6 @@
     "io-ts": "=2.2.16",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "pluralize": "^8.0.0",
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
@@ -71,7 +70,6 @@
     "@types/lodash": "^4.14.186",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.2",
-    "@types/pluralize": "^0.0.29",
     "@types/yargs-parser": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
