@@ -3,15 +3,16 @@ import {
   ApiKeyInput,
   DataSiloInput,
   AttributeInput,
-  AttributeResourceType,
   EnricherInput,
   DataFlowInput,
   CookieInput,
-  ATTRIBUTE_KEY_PLURAL_TO_SINGULAR,
 } from '../codecs';
+import {
+  AttributeResourceType,
+  ENABLED_ON_TO_ATTRIBUTE_KEY,
+} from '../tmp-attribute-key';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
-import camelCase from 'lodash/camelCase';
 import keyBy from 'lodash/keyBy';
 import mapValues from 'lodash/mapValues';
 import { fetchEnrichedDataSilos } from './syncDataSilos';
@@ -227,10 +228,7 @@ export async function pullTranscendConfiguration(
         resources: Object.entries(rest)
           .filter(([key, value]) => value && key.startsWith('enabledOn'))
           .map(
-            ([key]) =>
-              ATTRIBUTE_KEY_PLURAL_TO_SINGULAR[
-                camelCase(key.replace('enabledOn', ''))
-              ],
+            ([key]) => ENABLED_ON_TO_ATTRIBUTE_KEY[key],
           ) as AttributeResourceType[],
         name,
         type,

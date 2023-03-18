@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request';
-import { ATTRIBUTE_KEY_TO_ENABLED_ON } from '../codecs';
+import { ATTRIBUTE_KEY_TO_ENABLED_ON } from '../../tmp-attribute-key';
 
 // TODO: https://transcend.height.app/T-23527 - remove these when GraphQL schema is re-designed
 const ENABLED_ON_QUERY_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)

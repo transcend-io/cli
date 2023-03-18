@@ -1,10 +1,9 @@
+import { AttributeInput } from '../codecs';
 import {
-  ATTRIBUTE_KEY_SINGULAR_TO_PLURAL,
-  AttributeInput,
   AttributeResourceType,
-} from '../codecs';
+  ATTRIBUTE_KEY_TO_ENABLED_ON,
+} from '../tmp-attribute-key';
 import difference from 'lodash/difference';
-import upperFirst from 'lodash/upperFirst';
 import keyBy from 'lodash/keyBy';
 import { GraphQLClient } from 'graphql-request';
 import {
@@ -32,9 +31,7 @@ export async function syncAttribute(
     ...attribute.resources?.reduce(
       (acc, resource) =>
         Object.assign(acc, {
-          [`enabledOn${upperFirst(
-            ATTRIBUTE_KEY_SINGULAR_TO_PLURAL[resource],
-          )}`]: true,
+          [ATTRIBUTE_KEY_TO_ENABLED_ON[resource]]: true,
         }),
       {},
     ),
@@ -44,9 +41,7 @@ export async function syncAttribute(
     ).reduce(
       (acc, resource) =>
         Object.assign(acc, {
-          [`enabledOn${upperFirst(
-            ATTRIBUTE_KEY_SINGULAR_TO_PLURAL[resource],
-          )}`]: false,
+          [ATTRIBUTE_KEY_TO_ENABLED_ON[resource]]: false,
         }),
       {},
     ),
