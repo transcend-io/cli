@@ -417,7 +417,6 @@ __metadata:
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.0
     "@types/node": ^18.11.2
-    "@types/pluralize": ^0.0.29
     "@types/yargs-parser": ^21.0.0
     "@typescript-eslint/eslint-plugin": ^5.40.1
     "@typescript-eslint/parser": ^5.40.1
@@ -429,7 +428,7 @@ __metadata:
     colors: ^1.4.0
     csv-parse: =4.9.1
     depcheck: ^1.4.3
-    eslint: ^8.10.0
+    eslint: ^8.25.0
     eslint-config-airbnb-base: ^15.0.0
     eslint-import-resolver-typescript: ^3.5.1
     eslint-plugin-eslint-comments: ^3.2.0
@@ -448,7 +447,6 @@ __metadata:
     js-yaml: ^4.1.0
     lodash: ^4.17.21
     mocha: ^10.1.0
-    pluralize: ^8.0.0
     prettier: ^2.7.1
     ts-node: 10.9.1
     typescript: =4.5.5
@@ -705,13 +703,6 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: fd6bce2b674b6efc3db4c7c3d336bd70c90838e8439de639b909ce22f3720d21344f52427f1d9e57b265fcb7f6c018699b99e5e0c208a1a4823014269a6bf35b
-  languageName: node
-  linkType: hard
-
-"@types/pluralize@npm:^0.0.29":
-  version: 0.0.29
-  resolution: "@types/pluralize@npm:0.0.29"
-  checksum: db7732b733ba1dc59f080f87364c9f985c1ae9f1e5ec5fcefb83c1327149e01ecac42766352eb7b19b117cf39defa99cf514629f3666968a3bdeb00e74f2a97e
   languageName: node
   linkType: hard
 
@@ -2325,7 +2316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.10.0":
+"eslint@npm:^8.25.0":
   version: 8.36.0
   resolution: "eslint@npm:8.36.0"
   dependencies:
@@ -4326,13 +4317,6 @@ fsevents@~2.3.2:
   version: 7.0.0
   resolution: "pluralize@npm:7.0.0"
   checksum: e3f694924b7c8c03dc9fa40b2312e17787998ac6e20fccace11efa1146046eb9931541bfd247b3ec5535e730d902a5aee7c32681d5bf9a00fc74a72039a3e609
-  languageName: node
-  linkType: hard
-
-"pluralize@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "pluralize@npm:8.0.0"
-  checksum: 08931d4a6a4a5561a7f94f67a31c17e6632cb21e459ab3ff4f6f629d9a822984cf8afef2311d2005fbea5d7ef26016ebb090db008e2d8bce39d0a9a9d218736e
   languageName: node
   linkType: hard
 

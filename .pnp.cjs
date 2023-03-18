@@ -46,7 +46,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.11.2"],\
-            ["@types/pluralize", "npm:0.0.29"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.40.1"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.40.1"],\
@@ -77,7 +76,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
-            ["pluralize", "npm:8.0.0"],\
             ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bda367"],\
@@ -574,7 +572,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.11.2"],\
-            ["@types/pluralize", "npm:0.0.29"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.40.1"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.40.1"],\
@@ -605,7 +602,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
-            ["pluralize", "npm:8.0.0"],\
             ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bda367"],\
@@ -890,15 +886,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-parse-json-npm-4.0.0-298522afa6-fd6bce2b67.zip/node_modules/@types/parse-json/",\
           "packageDependencies": [\
             ["@types/parse-json", "npm:4.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/pluralize", [\
-        ["npm:0.0.29", {\
-          "packageLocation": "./.yarn/cache/@types-pluralize-npm-0.0.29-a6b8916fba-db7732b733.zip/node_modules/@types/pluralize/",\
-          "packageDependencies": [\
-            ["@types/pluralize", "npm:0.0.29"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5208,13 +5195,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/pluralize-npm-7.0.0-5e0212129c-e3f694924b.zip/node_modules/pluralize/",\
           "packageDependencies": [\
             ["pluralize", "npm:7.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:8.0.0", {\
-          "packageLocation": "./.yarn/cache/pluralize-npm-8.0.0-f5f044ed52-08931d4a6a.zip/node_modules/pluralize/",\
-          "packageDependencies": [\
-            ["pluralize", "npm:8.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
