@@ -5,6 +5,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 /**
  * Fetch consent manager ID
  *
+ * @param client - GraphQL client
  * @returns Consent manager ID in organization
  */
 export async function fetchConsentManagerId(
