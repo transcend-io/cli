@@ -17,3 +17,6 @@ export * from './fetchAllRequests';
 export * from './fetchAllRequestIdentifiers';
 export * from './fetchAllRequestEnrichers';
 export * from './fetchRequestDataSilo';
+export * from './fetchAllDataFlows';
+export * from './fetchAllCookies';
+export * from './fetchConsentManagerId';
