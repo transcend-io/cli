@@ -126,6 +126,7 @@ export async function fetchAllAttributes(
       offset,
     });
     attributes.push(
+      // eslint-disable-next-line no-await-in-loop
       ...(await Promise.all(
         nodes.map(async (node) => ({
           ...node,
