@@ -1,7 +1,13 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines */
 import * as t from 'io-ts';
-import { applyEnum, valuesOf, invert } from '@transcend-io/type-utils';
+import {
+  applyEnum,
+  apply,
+  valuesOf,
+  invert,
+  makeEnum,
+} from '@transcend-io/type-utils';
 import {
   DataCategoryType,
   ProcessingPurpose,
@@ -14,21 +20,25 @@ import {
   AttributeSupportedResourceType,
   PromptAVendorEmailCompletionLinkType,
 } from '@transcend-io/privacy-types';
+import upperFirst from 'lodash/upperFirst';
 
 /**
  * Resources that can be assigned attributes
- * FIXME
+ * TODO: https://transcend.height.app/T-23523 - remove this enum after ROPA view is deprecated
  */
 export const AttributeResourceType = makeEnum({
   ...AttributeSupportedResourceType,
   /** Ropa */
-  ROPA = 'ROPA',
+  ROPA: 'ROPA',
 });
 
 /** Type override */
 export type AttributeResourceType =
   typeof AttributeResourceType[keyof typeof AttributeResourceType];
 
+/**
+ * TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
+ */
 export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   AttributeResourceType,
   string
@@ -46,9 +56,22 @@ export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   [AttributeResourceType.Vendor]: 'vendors',
 };
 
+/**
+ * TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
+ */
 export const ATTRIBUTE_KEY_PLURAL_TO_SINGULAR = invert(
   ATTRIBUTE_KEY_SINGULAR_TO_PLURAL,
 );
+
+/**
+ * TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
+ */
+export const ATTRIBUTE_KEY_TO_ENABLED_ON = apply(
+  ATTRIBUTE_KEY_SINGULAR_TO_PLURAL,
+  (pluralName) => `enabledOn${upperFirst(pluralName)}`,
+);
+
+console.log(ATTRIBUTE_KEY_TO_ENABLED_ON);
 
 /**
  * Input to define email templates that can be used to communicate to end-users

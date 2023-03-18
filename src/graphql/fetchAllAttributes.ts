@@ -24,7 +24,11 @@ export interface Attribute {
   isCustom: boolean;
   /** Description */
   description: string;
-  // FIXME
+  /** Type of attribute */
+  type: AttributeKeyType;
+  /** Values */
+  values: AttributeValue[];
+  // TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
   /** Enabled on data silos */
   enabledOnDataSilos: boolean;
   /** Enabled on data requests */
@@ -41,10 +45,6 @@ export interface Attribute {
   enabledOnDataSubCategories: boolean;
   /** Enabled on processing purposes */
   enabledOnProcessingPurposeSubCategories: boolean;
-  /** Type of attribute */
-  type: AttributeKeyType;
-  /** Values */
-  values: AttributeValue[];
 }
 
 const PAGE_SIZE = 20;

@@ -55,10 +55,12 @@ const PAGE_SIZE = 20;
  * Fetch all Cookies in the organization
  *
  * @param client - GraphQL client
+ * @param status - The status to fetch
  * @returns All Cookies in the organization
  */
 export async function fetchAllCookies(
   client: GraphQLClient,
+  status = ConsentTrackerStatus.Live,
 ): Promise<Cookie[]> {
   const cookies: Cookie[] = [];
   let offset = 0;
@@ -81,7 +83,7 @@ export async function fetchAllCookies(
       first: PAGE_SIZE,
       offset,
       airgapBundleId,
-      status: ConsentTrackerStatus.Live, // FIXME
+      status,
     });
     cookies.push(...nodes);
     offset += PAGE_SIZE;

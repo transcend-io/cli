@@ -90,6 +90,7 @@ export async function pullTranscendConfiguration(
   logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
   // Fetch all data, but only conditional fetch data that is requested
+  // FIXME include ConsentTrackerStatus
   const [
     dataSubjects,
     apiKeyTitleMap,

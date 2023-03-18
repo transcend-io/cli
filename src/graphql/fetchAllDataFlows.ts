@@ -56,10 +56,12 @@ const PAGE_SIZE = 20;
  * Fetch all DataFlows in the organization
  *
  * @param client - GraphQL client
+ * @param status - The status to fetch
  * @returns All DataFlows in the organization
  */
 export async function fetchAllDataFlows(
   client: GraphQLClient,
+  status = ConsentTrackerStatus.Live,
 ): Promise<DataFlow[]> {
   const dataFlows: DataFlow[] = [];
   let offset = 0;
@@ -82,7 +84,7 @@ export async function fetchAllDataFlows(
       first: PAGE_SIZE,
       offset,
       airgapBundleId,
-      status: ConsentTrackerStatus.Live, // FIXME
+      status,
     });
     dataFlows.push(...nodes);
     offset += PAGE_SIZE;
