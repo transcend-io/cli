@@ -381,7 +381,7 @@ __metadata:
   dependencies:
     "@transcend-io/internationalization": ^1.5.0
     "@transcend-io/persisted-state": ^1.0.0
-    "@transcend-io/privacy-types": ^4.18.0
+    "@transcend-io/privacy-types": ^4.24.0
     "@transcend-io/type-utils": ^1.0.7
     "@types/bluebird": ^3.5.37
     "@types/chai": ^4.3.3
@@ -463,12 +463,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.18.0":
-  version: 4.18.0
-  resolution: "@transcend-io/privacy-types@npm:4.18.0"
+"@transcend-io/privacy-types@npm:^4.24.0":
+  version: 4.24.0
+  resolution: "@transcend-io/privacy-types@npm:4.24.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: ca385eaa566f92712a3f013b15d36c7e01393808cd6a29ce94414c6c7e20e5f889375cc483731bde7a1046a916452bbc7d018b2f814d10ac9d8bbe9f0bc54ab5
+  checksum: 2bfaeb39f6f072f50ffdb1058262be178cd0211f7b3ead621c039c8871fafadd552e840a878978bd511182a1bc12501c28b02bf60f2d8c73cd20d724201a8a9b
   languageName: node
   linkType: hard
 
