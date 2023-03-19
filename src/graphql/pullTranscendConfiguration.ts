@@ -40,8 +40,6 @@ export enum TranscendPullResource {
   Templates = 'templates',
   DataSilos = 'dataSilos',
   Enrichers = 'enrichers',
-  Vendors = 'vendors',
-  BusinessEntities = 'businessEntities',
   DataFlows = 'dataFlows',
   Cookies = 'cookies',
 }
@@ -92,7 +90,6 @@ export async function pullTranscendConfiguration(
   logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
   // Fetch all data, but only conditional fetch data that is requested
-  // FIXME include ConsentTrackerStatus
   const [
     dataSubjects,
     apiKeyTitleMap,
@@ -233,7 +230,10 @@ export async function pullTranscendConfiguration(
           ) as AttributeResourceType[],
         name,
         type,
-        values: values.map(({ name, color }) => ({ name, color })),
+        values: values.map(({ name, color }) => ({
+          name,
+          color: color || undefined,
+        })),
       }),
     );
   }

@@ -83,7 +83,7 @@ export async function syncAttribute(
   if (missingAttributes.length > 0) {
     await makeGraphQLRequest(client, CREATE_ATTRIBUTE_VALUES, {
       input: missingAttributes.map(({ color, name }) => ({
-        color,
+        color: color || undefined,
         name,
         attributeKeyId,
       })),
