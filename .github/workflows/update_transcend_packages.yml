@@ -2,7 +2,8 @@ name: 'Cron: Update transcend-io dependencies'
 
 on:
   # Allow running manually when desired
-  workflow_dispatch:
+  # workflow_dispatch: FIXME
+  pull_request:
 
   # Run daily
   schedule:
@@ -13,8 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/commands/dependencies/install_yarn_deps
-        timeout-minutes: 15
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: yarn
 
       # Install
       - run: yarn up @transcend-io/internationalization
