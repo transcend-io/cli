@@ -41,6 +41,18 @@ jobs:
           node-version: 14.x
       - run: yarn pnpify depcheck
 
+  generate-json-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: yarn script:json-schema
+      - name: Ensure no files changed
+        run: git diff --quiet HEAD || (git diff --raw && echo "Detected untracked changes in git after running command '${{ matrix.command }}'" && exit 1)
+
   run-pre-commits:
     runs-on: ubuntu-latest
     steps:
