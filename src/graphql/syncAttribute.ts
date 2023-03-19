@@ -17,8 +17,9 @@ import { Attribute } from './fetchAllAttributes';
 /**
  * Sync attribute
  *
- * @param attributes - The attribute input
  * @param client - GraphQL client
+ * @param attribute - The attribute input
+ * @param existingAttribute - The existing attribute configuration if it exists
  */
 export async function syncAttribute(
   client: GraphQLClient,
@@ -51,7 +52,9 @@ export async function syncAttribute(
   let attributeKeyId: string;
   if (!existingAttribute) {
     const { attributeKey } = await makeGraphQLRequest<{
+      /** Attribute key */
       attributeKey: {
+        /** ID */
         id: string;
       };
     }>(client, CREATE_ATTRIBUTE, {

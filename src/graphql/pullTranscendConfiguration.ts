@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   TranscendInput,
   ApiKeyInput,
@@ -392,3 +393,4 @@ export async function pullTranscendConfiguration(
   }
   return result;
 }
+/* eslint-enable max-lines */
