@@ -2,8 +2,7 @@ name: 'Cron: Update transcend-io dependencies'
 
 on:
   # Allow running manually when desired
-  # workflow_dispatch: FIXME
-  pull_request:
+  workflow_dispatch:
 
   # Run daily
   schedule:
