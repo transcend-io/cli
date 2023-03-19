@@ -124,6 +124,84 @@
         ]
       }
     },
+    "attributes": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "MULTI_SELECT",
+                  "SINGLE_SELECT",
+                  "TEXT",
+                  "EMAIL",
+                  "TELEPHONE",
+                  "URL",
+                  "ASSESSMENT"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "dataSilo",
+                    "subDataPoint",
+                    "airgapCookie",
+                    "airgapDataFlow",
+                    "request",
+                    "vendor",
+                    "businessEntity",
+                    "dataSubCategory",
+                    "processingPurposeSubCategory",
+                    "ROPA"
+                  ]
+                }
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": ["name"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "color": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "data-silos": {
       "type": "array",
       "items": {
@@ -494,6 +572,147 @@
                   "manual-work-retry-frequency": {
                     "type": "string"
                   }
+                }
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["key", "values"],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "data-flows": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["value", "type"],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["HOST", "PATH", "QUERY_PARAM", "REGEX", "CSP"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "trackingPurposes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "service": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["LIVE", "NEEDS_REVIEW"]
+              },
+              "owners": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "teams": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["key", "values"],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "cookies": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "isRegex": {
+                "type": "boolean"
+              },
+              "description": {
+                "type": "string"
+              },
+              "trackingPurposes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "service": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["LIVE", "NEEDS_REVIEW"]
+              },
+              "owners": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "teams": {
+                "type": "array",
+                "items": {
+                  "type": "string"
                 }
               },
               "attributes": {
