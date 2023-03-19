@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { DATA_FLOWS } from './gqls';
+import { COOKIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
 import {
@@ -79,7 +79,7 @@ export async function fetchAllCookies(
         /** List of matches */
         nodes: Cookie[];
       };
-    }>(client, DATA_FLOWS, {
+    }>(client, COOKIES, {
       first: PAGE_SIZE,
       offset,
       airgapBundleId,

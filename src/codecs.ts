@@ -7,9 +7,13 @@ import {
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
+  DataFlowScope,
   PromptAVendorEmailSendType,
+  ConsentTrackerStatus,
+  AttributeKeyType,
   PromptAVendorEmailCompletionLinkType,
 } from '@transcend-io/privacy-types';
+import { AttributeResourceType } from './tmp-attribute-key';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -125,8 +129,44 @@ export const DataCategoryInput = t.intersection([
   }),
 ]);
 
+export const AttributeValueInput = t.intersection([
+  t.type({
+    /** Name of attribute value */
+    name: t.string,
+  }),
+  t.partial({
+    /** Color */
+    color: t.string,
+  }),
+]);
+
+/** Type override */
+export type AttributeValueInput = t.TypeOf<typeof AttributeValueInput>;
+
+export const AttributeInput = t.intersection([
+  t.type({
+    /** Name of attribute */
+    name: t.string,
+    /** Type of attribute */
+    type: valuesOf(AttributeKeyType),
+  }),
+  t.partial({
+    /** Description of attribute */
+    description: t.string,
+    /** Resource types that the attribute is enabled on */
+    resources: t.array(valuesOf(AttributeResourceType)),
+    /** Values of attribute */
+    values: t.array(AttributeValueInput),
+  }),
+]);
+
+/** Type override */
+export type AttributeInput = t.TypeOf<typeof AttributeInput>;
+
 export const Attributes = t.type({
+  /** Attribute key */
   key: t.string,
+  /** Attribute values */
   values: t.array(t.string),
 });
 
@@ -275,6 +315,92 @@ export type PromptAVendorEmailSettings = t.TypeOf<
   typeof PromptAVendorEmailSettings
 >;
 
+export const DataFlowInput = t.intersection([
+  t.type({
+    /** Value of data flow */
+    value: t.string,
+    /** Type of data flow */
+    type: valuesOf(DataFlowScope),
+  }),
+  t.partial({
+    /** Description of data flow */
+    description: t.string,
+    /** The tracking purposes that are required to be opted in for this data flow */
+    trackingPurposes: t.array(t.string),
+    /**
+     * Name of the consent service attached
+     */
+    service: t.string,
+    /**
+     * Status of the tracker (approved vs triage)
+     */
+    status: valuesOf(ConsentTrackerStatus),
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data silo
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
+  }),
+]);
+
+/** Type override */
+export type DataFlowInput = t.TypeOf<typeof DataFlowInput>;
+
+export const CookieInput = t.intersection([
+  t.type({
+    /** Name of data flow */
+    name: t.string,
+  }),
+  t.partial({
+    /** Whether or not the cookie is a regular expression */
+    isRegex: t.boolean,
+    /** Description of data flow */
+    description: t.string,
+    /** The tracking purposes that are required to be opted in for this data flow */
+    trackingPurposes: t.array(t.string),
+    /**
+     * Name of the consent service attached
+     */
+    service: t.string,
+    /**
+     * Status of the tracker (approved vs triage)
+     */
+    status: valuesOf(ConsentTrackerStatus),
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data silo
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
+  }),
+]);
+
+/** Type override */
+export type CookieInput = t.TypeOf<typeof CookieInput>;
+
 /**
  * Input to define a data silo
  *
@@ -370,9 +496,21 @@ export const TranscendInput = t.partial({
    */
   enrichers: t.array(EnricherInput),
   /**
+   * Attribute definitions
+   */
+  attributes: t.array(AttributeInput),
+  /**
    * Data silo definitions
    */
   'data-silos': t.array(DataSiloInput),
+  /**
+   * Data flow definitions
+   */
+  'data-flows': t.array(DataFlowInput),
+  /**
+   * Cookie definitions
+   */
+  cookies: t.array(CookieInput),
 });
 
 /** Type override */

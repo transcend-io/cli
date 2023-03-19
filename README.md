@@ -224,26 +224,31 @@ This command can be helpful if you are looking to:
 
 In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
 
-The API key needs the following scopes:
+The API key permissions for this command vary based on the value to the `resources` argument. See the table below to understand the necessary permissions for the resources you are attempting to pull.
 
-- View Data Map
-- View Identity Verification Settings
-- View Data Subject Request Settings
-- View API Keys
-- View Email Templates
+| Key        | Description                                                                                                                          | Scope                                            | Is Default | Link                                                                                                                                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apiKeys    | API Key definitions assigned to Data Silos. API keys cannot be created through the cli, but you can map API key usage to Data Silos. | View API Keys                                    | true       | [Infrastructure -> API keys](https://app.transcend.io/infrastructure/api-keys)                                                                                                                        |
+| templates  | Email templates. Only template titles can be created and mapped to other resources.                                                  | View Email Templates                             | true       | [Privacy Requests -> Email Templates](https://app.transcend.io/privacy-requests/email-templates)                                                                                                      |
+| dataSilos  | The Data Silo/Integration definitions.                                                                                               | View Data Map,View Data Subject Request Settings | true       | [Data Mapping -> Data Inventory -> Data Silos](https://app.transcend.io/data-map/data-inventory/) and [Infrastucture -> Integrations](https://app.transcend.io/infrastructure/integrationsdata-silos) |
+| enrichers  | The Privacy Request enricher configurations.                                                                                         | View Identity Verification Settings              | true       | [Privacy Requests -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                              |
+| attributes | Attribute definitions that define extra metadata for each table in the Admin Dashboard.                                              | View Global Attributes                           | false      | [Infrastructure -> Attributes](https://app.transcend.io/infrastructure/attributes)                                                                                                                    |
+| dataFlows  | Consent Manager Data Flow definitions.                                                                                               | View Data Map Data Flows                         | false      | [Consent Manager -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)                                                                                                         |
+| cookies    | Consent Manager Cookie definitions.                                                                                                  | View Data Flows                                  | false      | [Consent Manager -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)approved                                                                                                       |
 
 _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 #### Arguments
 
-| Argument     | Description                                                                   | Type                | Default                  | Required |
-| ------------ | ----------------------------------------------------------------------------- | ------------------- | ------------------------ | -------- |
-| auth         | The Transcend API capable of fetching the configuration                       | string              | N/A                      | true     |
-| file         | Path to the YAML file to pull into                                            | string - file-path  | ./transcend.yml          | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL        | https://api.transcend.io | false    |
-| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.         | list(string - UUID) | N/A                      | false    |
-| pageSize     | The page size to use when paginating over the API                             | number              | 50                       | false    |
-| debug        | Set to true to include debug logs while pulling the configuration             | boolean             | false                    | false    |
+| Argument     | Description                                                                              | Type                | Default                               | Required |
+| ------------ | ---------------------------------------------------------------------------------------- | ------------------- | ------------------------------------- | -------- |
+| auth         | The Transcend API capable of fetching the configuration                                  | string              | N/A                                   | true     |
+| resources    | The different resource types to pull in (see table above for breakdown of each resource) | string              | apiKeys,templates,dataSilos,enrichers | false    |
+| file         | Path to the YAML file to pull into                                                       | string - file-path  | ./transcend.yml                       | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL        | https://api.transcend.io              | false    |
+| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.                    | list(string - UUID) | N/A                                   | false    |
+| pageSize     | The page size to use when paginating over the API                                        | number              | 50                                    | false    |
+| debug        | Set to true to include debug logs while pulling the configuration                        | boolean             | false                                 | false    |
 
 #### Usage
 
@@ -271,6 +276,24 @@ Or a specific types of data silo(s) can be pulled in:
 tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake
 ```
 
+Specifying the resource types to pull in (the following resources are the default resources):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=apiKeys,templates,dataSilos,enrichers
+```
+
+Pull in data flow and cookie resources instead (see [this example](./examples/data-flows-cookies.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=dataFlows,cookies
+```
+
+Pull in attribute definitions only (see [this example](./examples/attributes.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=attributes
+```
+
 Or with a specific page size (max 100)
 
 ```sh
@@ -293,14 +316,17 @@ Given a transcend.yml file, sync the contents up to your connected services view
 
 In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
 
-The API key needs the following scopes:
+The API key needs the following scopes when pushing the various resource types:
 
-- Manage Data Map
-- Manage Request Identity Verification
-- Connect Data Silos
-- Manage Data Subject Request Settings
-- View API Keys
-- Manage Email Templates
+| Key        | Description                                                                                                   | Scope                                | Is Default | Link                                                                                                                                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apiKeys    | API Key definitions. API keys cannot be created through the cli, but you can map API key usage to Data Silos. | View API Keys                        | true       | [Infrastructure -> API keys](https://app.transcend.io/infrastructure/api-keys)                                                                                                                        |
+| templates  | Email templates. Only template titles can be created and mapped to other resources.                           | Manage Email Templates               | true       | [Privacy Requests -> Email Templates](https://app.transcend.io/privacy-requests/email-templates)                                                                                                      |
+| dataSilos  | The Data Silo/Integration definitions.                                                                        | Manage Data Map,Connect Data Silos   | true       | [Data Mapping -> Data Inventory -> Data Silos](https://app.transcend.io/data-map/data-inventory/) and [Infrastucture -> Integrations](https://app.transcend.io/infrastructure/integrationsdata-silos) |
+| enrichers  | The Privacy Request enricher configurations.                                                                  | Manage Request Identity Verification | true       | [Privacy Requests -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                              |
+| attributes | Attribute definitions that define extra metadata for each table in the Admin Dashboard.                       | Manage Global Attributes             | false      | [Infrastructure -> Attributes](https://app.transcend.io/infrastructure/attributes)                                                                                                                    |
+| dataFlows  | Consent Manager Data Flow definitions.                                                                        | Manage Data Flows                    | false      | [Consent Manager -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)                                                                                                         |
+| cookies    | Consent Manager Cookie definitions.                                                                           | Manage Data Flows                    | false      | [Consent Manager -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                               |
 
 #### Arguments
 
