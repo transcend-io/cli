@@ -35,12 +35,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "url",
-              "input-identifier",
-              "output-identifiers"
-            ],
+            "required": ["title", "output-identifiers"],
             "properties": {
               "title": {
                 "type": "string"
