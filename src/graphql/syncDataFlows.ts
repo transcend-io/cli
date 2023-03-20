@@ -3,6 +3,7 @@ import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
 import chunk from 'lodash/chunk';
 import { mapSeries } from 'bluebird';
 import { DataFlowInput } from '../codecs';
+import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId, fetchPurposes } from './fetchConsentManagerId';
 
@@ -19,7 +20,7 @@ export async function updateDataFlows(
   dataFlowInputs: [DataFlowInput, string][],
 ): Promise<void> {
   const purposes = await fetchPurposes(client);
-  const purposeNameToId = indexBy(purposes, 'name');
+  const purposeNameToId = keyBy(purposes, 'name');
 
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
     await makeGraphQLRequest(client, UPDATE_DATA_FLOWS, {
@@ -27,9 +28,9 @@ export async function updateDataFlows(
         id,
         value: flow.value,
         type: flow.type,
-        purposeIds: flow.trackingPurposes.map(
-          (purpose) => purposeNameToId[purpose.name].id,
-        ),
+        purposeIds: flow.trackingPurposes
+          ? flow.trackingPurposes.map((purpose) => purposeNameToId[purpose].id)
+          : undefined,
         description: flow.description,
         service: flow.service,
         status: flow.status,
@@ -51,16 +52,16 @@ export async function createDataFlows(
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
   const purposes = await fetchPurposes(client);
-  const purposeNameToId = indexBy(purposes, 'name');
+  const purposeNameToId = keyBy(purposes, 'name');
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
     await makeGraphQLRequest(client, CREATE_DATA_FLOWS, {
       airgapBundleId,
       dataFlows: page.map((flow) => ({
         value: flow.value,
         type: flow.type,
-        purposeIds: flow.trackingPurposes.map(
-          (purpose) => purposeNameToId[purpose.name].id,
-        ),
+        purposeIds: flow.trackingPurposes
+          ? flow.trackingPurposes.map((purpose) => purposeNameToId[purpose].id)
+          : undefined,
         description: flow.description,
         service: flow.service,
         status: flow.status,
