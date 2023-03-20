@@ -4,7 +4,14 @@ export const DATA_SUBJECTS = gql`
   query TranscendCliDataSubjects {
     internalSubjects {
       id
+      title {
+        defaultMessage
+      }
       type
+      adminDashboardDefaultSilentMode
+      actions {
+        type
+      }
     }
   }
 `;

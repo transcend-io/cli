@@ -74,7 +74,7 @@ export const UPDATE_ENRICHER = gql`
     $title: String!
     $description: String!
     $url: String!
-    $inputIdentifier: ID!
+    $inputIdentifier: ID
     $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!
     $actions: [RequestAction!]!

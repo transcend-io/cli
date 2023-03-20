@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
+import { IdentifierType, RequestAction } from '@transcend-io/privacy-types';
 import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
 import keyBy from 'lodash/keyBy';
 import uniq from 'lodash/uniq';
@@ -15,6 +16,33 @@ export interface Identifier {
   id: string;
   /** Name of identifier */
   name: string;
+  /** The type of identifier */
+  type: IdentifierType;
+  /** Regular expression to  */
+  regex: string;
+  /** The set of options that the identifier  */
+  selectOptions: string[];
+  /** Whether identifier is enabled on privacy center */
+  privacyCenterVisibility: RequestAction[];
+  /** Enabled data subjects that are exposed this identifier on the privacy center */
+  dataSubjects: {
+    /** type of data subjects */
+    type: string;
+  }[];
+  /** Whether identifier is a required field in privacy center form */
+  isRequiredInForm: boolean;
+  /** Identifier placeholder text */
+  placeholder: string;
+  /** Display title for identifier */
+  displayTitle: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Display description for identifier */
+  displayDescription: {
+    /** Default */
+    defaultMessage: string;
+  };
 }
 
 const PAGE_SIZE = 20;
