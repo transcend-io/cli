@@ -344,7 +344,7 @@ export const DataFlowInput = t.intersection([
      * The names of teams within your Transcend instance that should be responsible
      * for managing this data silo.
      *
-     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * @see https://docs.transcend.io/docs/security/access-control#teams
      * for more information about how to create and manage teams
      */
     teams: t.array(t.string),

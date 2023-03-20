@@ -1,5 +1,16 @@
 import { gql } from 'graphql-request';
 
+export const PURPOSES = gql`
+  query {
+    purposes {
+      purposes {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const CREATE_DATA_FLOWS = gql`
   mutation TranscendCreateDataFlows(
     $dataFlows: [DataFlowInput!]!
@@ -8,6 +19,16 @@ export const CREATE_DATA_FLOWS = gql`
     createDataFlows(
       input: { airgapBundleId: $airgapBundleId, dataFlows: $dataFlows }
     ) {
+      dataFlows {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_DATA_FLOWS = gql`
+  mutation TranscendUpdateDataFlows($dataFlows: [UpdateDataFlowInput!]!) {
+    updateDataFlows(input: { dataFlows: $dataFlows }) {
       dataFlows {
         id
       }
