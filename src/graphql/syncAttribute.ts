@@ -51,11 +51,16 @@ export async function syncAttribute(
   // create or update attribute key
   let attributeKeyId: string;
   if (!existingAttribute) {
-    const { attributeKey } = await makeGraphQLRequest<{
-      /** Attribute key */
-      attributeKey: {
-        /** ID */
-        id: string;
+    const {
+      createAttributeKey: { attributeKey },
+    } = await makeGraphQLRequest<{
+      /** Create attribute key response */
+      createAttributeKey: {
+        /** Attribute key */
+        attributeKey: {
+          /** ID */
+          id: string;
+        };
       };
     }>(client, CREATE_ATTRIBUTE, {
       type: attribute.type,

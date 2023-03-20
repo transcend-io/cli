@@ -1,4 +1,4 @@
-import { TranscendInput } from '../codecs';
+import { TranscendInput, DataFlowInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -11,7 +11,11 @@ import { fetchDataSubjects } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
-import { makeGraphQLRequest, syncTemplate } from '.';
+import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import { createDataFlows, updateDataFlows } from './syncDataFlows';
+import { syncTemplate } from './syncTemplates';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
@@ -30,7 +34,13 @@ export async function syncConfigurationToTranscend(
 
   logger.info(colors.magenta(`Fetching data with page size ${pageSize}...`));
 
-  const { templates, attributes, enrichers, 'data-silos': dataSilos } = input;
+  const {
+    templates,
+    attributes,
+    enrichers,
+    'data-silos': dataSilos,
+    'data-flows': dataFlows,
+  } = input;
 
   const [identifierByName, dataSubjects, apiKeyTitleMap] = await Promise.all([
     // Ensure all identifiers are created and create a map from name -> identifier.id
@@ -90,8 +100,8 @@ export async function syncConfigurationToTranscend(
   // Sync attributes
   if (attributes) {
     // Fetch existing
-    const existingAttributes = await fetchAllAttributes(client);
     logger.info(colors.magenta(`Syncing "${attributes.length}" attributes...`));
+    const existingAttributes = await fetchAllAttributes(client);
     await mapSeries(attributes, async (attribute) => {
       const existing = existingAttributes.find(
         (attr) => attr.name === attribute.name,
@@ -113,6 +123,84 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
+  }
+
+  // Sync data flows
+  if (dataFlows) {
+    logger.info(colors.magenta(`Syncing "${dataFlows.length}" data flows...`));
+
+    // Ensure no duplicates are being uploaded
+    const notUnique = dataFlows.filter(
+      (dataFlow) =>
+        dataFlows.filter(
+          (flow) =>
+            dataFlow.value === flow.value && dataFlow.type === flow.type,
+        ).length > 1,
+    );
+    if (notUnique.length > 0) {
+      throw new Error(
+        `Failed to upload data flows as there were non-unique entries found: ${notUnique
+          .map(({ value }) => value)
+          .join(',')}`,
+      );
+    }
+
+    // Fetch existing
+    const [existingLiveDataFlows, existingInReviewDataFlows] =
+      await Promise.all([
+        fetchAllDataFlows(client, ConsentTrackerStatus.Live),
+        fetchAllDataFlows(client, ConsentTrackerStatus.NeedsReview),
+      ]);
+    const allDataFlows = [
+      ...existingLiveDataFlows,
+      ...existingInReviewDataFlows,
+    ];
+
+    // Determine which data flows are new vs existing
+    const mapDataFlowsToExisting = dataFlows.map((dataFlow) => [
+      dataFlow,
+      allDataFlows.find(
+        (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type,
+      )?.id,
+    ]);
+
+    // Create the new data flows
+    const newDataFlows = mapDataFlowsToExisting
+      .filter(([, existing]) => !existing)
+      .map(([flow]) => flow as DataFlowInput);
+    try {
+      logger.info(
+        colors.magenta(`Creating "${newDataFlows.length}" new data flows...`),
+      );
+      await createDataFlows(client, newDataFlows);
+      logger.info(
+        colors.green(`Successfully synced ${newDataFlows.length} data flows!`),
+      );
+    } catch (err) {
+      encounteredError = true;
+      logger.info(colors.red(`Failed to create data flows! - ${err.message}`));
+    }
+
+    // Update existing data flows
+    const existingDataFlows = mapDataFlowsToExisting.filter(
+      (x): x is [DataFlowInput, string] => !!x[1],
+    );
+    try {
+      logger.info(
+        colors.magenta(`Updating "${existingDataFlows.length}" data flows...`),
+      );
+      await updateDataFlows(client, existingDataFlows);
+      logger.info(
+        colors.green(
+          `Successfully updated "${existingDataFlows.length}" data flows!`,
+        ),
+      );
+    } catch (err) {
+      encounteredError = true;
+      logger.info(colors.red(`Failed to create data flows! - ${err.message}`));
+    }
+
+    logger.info(colors.green(`Synced "${dataFlows.length}" data flows!`));
   }
 
   // Store dependency updates

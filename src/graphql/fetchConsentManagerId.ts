@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { FETCH_CONSENT_MANAGER } from './gqls';
+import { FETCH_CONSENT_MANAGER, PURPOSES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
@@ -24,4 +24,32 @@ export async function fetchConsentManagerId(
     };
   }>(client, FETCH_CONSENT_MANAGER);
   return consentManager.id;
+}
+
+export interface ConsentPurpose {
+  /** ID of purpose */
+  id: string;
+  /** Name of purpose */
+  name: string;
+}
+
+/**
+ * Fetch consent manager ID
+ *
+ * @param client - GraphQL client
+ * @returns Consent manager ID in organization
+ */
+export async function fetchPurposes(
+  client: GraphQLClient,
+): Promise<ConsentPurpose[]> {
+  const {
+    purposes: { purposes },
+  } = await makeGraphQLRequest<{
+    /** Consent manager query */
+    purposes: {
+      /** Consent manager object */
+      purposes: ConsentPurpose[];
+    };
+  }>(client, PURPOSES);
+  return purposes;
 }

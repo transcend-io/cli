@@ -22,3 +22,4 @@ export * from './syncAttribute';
 export * from './fetchAllDataFlows';
 export * from './fetchAllCookies';
 export * from './fetchConsentManagerId';
+export * from './syncDataFlows';
