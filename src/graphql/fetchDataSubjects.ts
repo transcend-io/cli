@@ -4,6 +4,7 @@ import keyBy from 'lodash/keyBy';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 import difference from 'lodash/difference';
+import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 import { TranscendInput } from '../codecs';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -15,6 +16,35 @@ export interface DataSubject {
   id: string;
   /** Type of data subject */
   type: string;
+  /** Title of data subject */
+  title: {
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Whether silent mode is enabled by default */
+  adminDashboardDefaultSilentMode: boolean;
+  /** Enabled actions */
+  actions: {
+    /** Type of action */
+    type: RequestActionObjectResolver;
+  }[];
+}
+
+/**
+ * Fetch all data subjects in an organization
+ *
+ * @param client - GraphQL client
+ * @returns List of data subject configurations
+ */
+export async function fetchAllDataSubjects(
+  client: GraphQLClient,
+): Promise<DataSubject[]> {
+  // Fetch all data subjects in the organization
+  const { internalSubjects } = await makeGraphQLRequest<{
+    /** Query response */
+    internalSubjects: DataSubject[];
+  }>(client, DATA_SUBJECTS);
+  return internalSubjects;
 }
 
 /**
@@ -25,7 +55,7 @@ export interface DataSubject {
  * @param fetchAll - When true, always fetch all subjects
  * @returns The list of data subjects
  */
-export async function fetchDataSubjects(
+export async function ensureAllDataSubjectsExist(
   { 'data-silos': dataSilos = [] }: TranscendInput,
   client: GraphQLClient,
   fetchAll = false,
@@ -39,10 +69,7 @@ export async function fetchDataSubjects(
   }
 
   // Fetch all data subjects in the organization
-  const { internalSubjects } = await makeGraphQLRequest<{
-    /** Query response */
-    internalSubjects: DataSubject[];
-  }>(client, DATA_SUBJECTS);
+  const internalSubjects = await fetchAllDataSubjects(client);
   const dataSubjectByName = keyBy(internalSubjects, 'type');
 
   // Determine expected set of data subjects to create

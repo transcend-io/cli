@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const PURPOSES = gql`
-  query {
+  query TranscendCliPurposes {
     purposes {
       purposes {
         id
@@ -12,7 +12,7 @@ export const PURPOSES = gql`
 `;
 
 export const CREATE_DATA_FLOWS = gql`
-  mutation TranscendCreateDataFlows(
+  mutation TranscendCliCreateDataFlows(
     $dataFlows: [DataFlowInput!]!
     $airgapBundleId: ID!
   ) {
@@ -27,7 +27,7 @@ export const CREATE_DATA_FLOWS = gql`
 `;
 
 export const UPDATE_DATA_FLOWS = gql`
-  mutation TranscendUpdateDataFlows($dataFlows: [UpdateDataFlowInput!]!) {
+  mutation TranscendCliUpdateDataFlows($dataFlows: [UpdateDataFlowInput!]!) {
     updateDataFlows(input: { dataFlows: $dataFlows }) {
       dataFlows {
         id
@@ -37,7 +37,7 @@ export const UPDATE_DATA_FLOWS = gql`
 `;
 
 export const CREATE_COOKIES = gql`
-  mutation TranscendCreateCookies(
+  mutation TranscendCliCreateCookies(
     $cookies: [CookieInput!]!
     $airgapBundleId: ID!
   ) {
@@ -132,11 +132,24 @@ export const COOKIES = gql`
   }
 `;
 
-export const FETCH_CONSENT_MANAGER = gql`
-  query TranscendFetchConsentManager {
+export const FETCH_CONSENT_MANAGER_ID = gql`
+  query TranscendCliFetchConsentManagerId {
     consentManager {
       consentManager {
         id
+      }
+    }
+  }
+`;
+
+export const FETCH_CONSENT_MANAGER = gql`
+  query TranscendCliFetchConsentManager {
+    consentManager {
+      consentManager {
+        id
+        configuration {
+          domains
+        }
       }
     }
   }

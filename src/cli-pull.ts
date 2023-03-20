@@ -61,7 +61,10 @@ async function main(): Promise<void> {
     );
     process.exit(1);
   }
-  splitResources = resources.split(',') as TranscendPullResource[];
+  splitResources =
+    resources === 'all'
+      ? VALID_RESOURCES
+      : (resources.split(',') as TranscendPullResource[]);
   const invalidResources = splitResources.filter(
     (resource) => !VALID_RESOURCES.includes(resource),
   );

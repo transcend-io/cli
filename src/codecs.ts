@@ -9,6 +9,8 @@ import {
   RequestActionObjectResolver,
   DataFlowScope,
   PromptAVendorEmailSendType,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
   ConsentTrackerStatus,
   AttributeKeyType,
   PromptAVendorEmailCompletionLinkType,
@@ -76,6 +78,14 @@ export const EnricherInput = t.intersection([
   t.type({
     /** The display title of the enricher */
     title: t.string,
+
+    /**
+     * The names of the identifiers that can be resolved by this enricher.
+     * i.e. email -> [userId, phone, advertisingId]
+     */
+    'output-identifiers': t.array(t.string),
+  }),
+  t.partial({
     /** The URL of the enricher */
     url: t.string,
     /**
@@ -84,13 +94,7 @@ export const EnricherInput = t.intersection([
      * be called with the value of that identifier as input
      */
     'input-identifier': t.string,
-    /**
-     * The names of the identifiers that can be resolved by this enricher.
-     * i.e. email -> [userId, phone, advertisingId]
-     */
-    'output-identifiers': t.array(t.string),
-  }),
-  t.partial({
+    /** Headers to include in the webhook */
     headers: t.array(WebhookHeader),
     /** Internal description for why the enricher is needed */
     description: t.string,
@@ -103,7 +107,7 @@ export const EnricherInput = t.intersection([
 export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 
 /**
- * The data category for a field
+ * The processing purpose for a field
  */
 export const ProcessingPurposeInput = t.type({
   /** The parent purpose */
@@ -128,6 +132,9 @@ export const DataCategoryInput = t.intersection([
     name: t.string,
   }),
 ]);
+
+/** Type override */
+export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
 
 export const AttributeValueInput = t.intersection([
   t.type({
@@ -172,9 +179,6 @@ export const Attributes = t.type({
 
 /** Type override */
 export type Attributes = t.TypeOf<typeof Attributes>;
-
-/** Type override */
-export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
 
 /**
  * Annotate specific fields within a datapoint. These are often database table columns.
@@ -315,6 +319,127 @@ export type PromptAVendorEmailSettings = t.TypeOf<
   typeof PromptAVendorEmailSettings
 >;
 
+/**
+ * Input to define a business entity
+ *
+ * @see https://app.transcend.io/data-map/data-inventory/business-entities
+ */
+export const BusinessEntityInput = t.intersection([
+  t.type({
+    /** The title of the business entity */
+    title: t.string,
+  }),
+  t.partial({
+    /** Description of the business entity */
+    description: t.string,
+    /** Address of the business entity */
+    address: t.string,
+    /** Country of headquarters */
+    headquarterCountry: valuesOf(IsoCountryCode),
+    /** Subdivision of headquarters */
+    headquarterSubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** Data protection officer name for the business entity */
+    dataProtectionOfficerName: t.string,
+    /** Data protection officer email for the business entity */
+    dataProtectionOfficerEmail: t.string,
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(Attributes),
+  }),
+]);
+
+/** Type override */
+export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
+
+/**
+ * Input to define a data subject
+ *
+ * @see https://app.transcend.io/privacy-requests/settings
+ */
+export const DataSubjectInput = t.intersection([
+  t.type({
+    /** The type of the data subject */
+    type: t.string,
+  }),
+  t.partial({
+    /** The title of the data subject */
+    title: t.string,
+    /** Whether or not to default new requests made in the admin dashboard to silent mode */
+    adminDashboardDefaultSilentMode: t.boolean,
+    /** Enabled request actions for the data subject */
+    actions: t.array(valuesOf(RequestAction)),
+  }),
+]);
+
+/** Type override */
+export type DataSubjectInput = t.TypeOf<typeof DataSubjectInput>;
+
+/**
+ * Input to define an action
+ *
+ * @see https://app.transcend.io/privacy-requests/settings
+ */
+export const ActionInput = t.intersection([
+  t.type({
+    /** The type of the data subject */
+    type: valuesOf(RequestAction),
+  }),
+  t.partial({
+    /** Whether or not to skip deletion phase when no data is found */
+    skipSecondaryIfNoFiles: t.boolean,
+    /** Whether to skip the downloadable step */
+    skipDownloadableStep: t.boolean,
+    /** Whether the request action requires review */
+    requiresReview: t.boolean,
+    /** The wait period for the action */
+    waitingPeriod: t.number,
+  }),
+]);
+
+/** Type override */
+export type ActionInput = t.TypeOf<typeof ActionInput>;
+
+/**
+ * Input to define an identifier
+ *
+ * @see https://app.transcend.io/privacy-requests/identifiers
+ */
+export const IdentifierInput = t.intersection([
+  t.type({
+    /** The name of the identifier */
+    name: t.string,
+    /** The type of the identifier */
+    type: t.string,
+  }),
+  t.partial({
+    /** Regular expression to verify the identifier */
+    regex: t.string,
+    /** The fixed set of options that an identifier can take on */
+    selectOptions: t.array(t.string),
+    /** Whether or not the identifier is shown in the privacy center form */
+    privacyCenterVisibility: t.array(valuesOf(RequestAction)),
+    /** The set of data subjects that this identifier is enabled for */
+    dataSubjects: t.array(t.string),
+    /** When true, the identifier is a required field on the privacy center form */
+    isRequiredInForm: t.boolean,
+    /** Placeholder message for identifier */
+    placeholder: t.string,
+    /** Display title for identifier */
+    displayTitle: t.string,
+    /** Display description for identifier */
+    displayDescription: t.string,
+  }),
+]);
+
+/** Type override */
+export type IdentifierInput = t.TypeOf<typeof IdentifierInput>;
+
+/**
+ * Input to define a data flow
+ *
+ * @see https://app.transcend.io/consent-manager/data-flows/approved
+ */
 export const DataFlowInput = t.intersection([
   t.type({
     /** Value of data flow */
@@ -387,7 +512,7 @@ export const CookieInput = t.intersection([
      * The names of teams within your Transcend instance that should be responsible
      * for managing this data silo.
      *
-     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * @see https://docs.transcend.io/docs/security/access-control#teams
      * for more information about how to create and manage teams
      */
     teams: t.array(t.string),
@@ -400,6 +525,14 @@ export const CookieInput = t.intersection([
 
 /** Type override */
 export type CookieInput = t.TypeOf<typeof CookieInput>;
+
+export const ConsentManagerInput = t.partial({
+  /** The consent manager domains in the instance */
+  domains: t.array(t.string),
+});
+
+/** Type override */
+export type ConsentManagerInput = t.TypeOf<typeof ConsentManagerInput>;
 
 /**
  * Input to define a data silo
@@ -454,7 +587,7 @@ export const DataSiloInput = t.intersection([
      * The names of teams within your Transcend instance that should be responsible
      * for managing this data silo.
      *
-     * @see: https://docs.transcend.io/docs/security/access-control#teams
+     * @see https://docs.transcend.io/docs/security/access-control#teams
      * for more information about how to create and manage teams
      */
     teams: t.array(t.string),
@@ -500,6 +633,22 @@ export const TranscendInput = t.partial({
    */
   attributes: t.array(AttributeInput),
   /**
+   * Business entity definitions
+   */
+  'business-entities': t.array(BusinessEntityInput),
+  /**
+   * Data subject definitions
+   */
+  'data-subjects': t.array(DataSubjectInput),
+  /**
+   * Action definitions
+   */
+  actions: t.array(ActionInput),
+  /**
+   * Identifier definitions
+   */
+  identifiers: t.array(IdentifierInput),
+  /**
    * Data silo definitions
    */
   'data-silos': t.array(DataSiloInput),
@@ -511,6 +660,10 @@ export const TranscendInput = t.partial({
    * Cookie definitions
    */
   cookies: t.array(CookieInput),
+  /**
+   * Consent manager definition
+   */
+  'consent-manager': ConsentManagerInput,
 });
 
 /** Type override */
