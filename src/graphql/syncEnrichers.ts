@@ -88,6 +88,7 @@ export async function syncEnricher(
   );
 
   // If enricher exists, update it, else create new
+  const inputIdentifier = enricher['input-identifier'];
   if (existingEnricher) {
     await makeGraphQLRequest(client, UPDATE_ENRICHER, {
       id: existingEnricher.id,
@@ -95,19 +96,21 @@ export async function syncEnricher(
       url: enricher.url,
       headers: enricher.headers,
       description: enricher.description || '',
-      inputIdentifier: identifiersByName[enricher['input-identifier']].id,
+      inputIdentifier: inputIdentifier
+        ? identifiersByName[inputIdentifier].id
+        : undefined,
       identifiers: enricher['output-identifiers'].map(
         (id) => identifiersByName[id].id,
       ),
       actions: enricher['privacy-actions'] || Object.values(RequestAction),
     });
-  } else {
+  } else if (inputIdentifier) {
     await makeGraphQLRequest(client, CREATE_ENRICHER, {
       title: enricher.title,
       url: enricher.url,
       headers: enricher.headers,
       description: enricher.description || '',
-      inputIdentifier: identifiersByName[enricher['input-identifier']].id,
+      inputIdentifier: identifiersByName[inputIdentifier].id,
       identifiers: enricher['output-identifiers'].map(
         (id) => identifiersByName[id].id,
       ),

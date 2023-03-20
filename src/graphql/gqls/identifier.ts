@@ -6,6 +6,21 @@ export const IDENTIFIERS = gql`
       nodes {
         id
         name
+        type
+        regex
+        selectOptions
+        privacyCenterVisibility
+        dataSubjects {
+          type
+        }
+        isRequiredInForm
+        placeholder
+        displayTitle {
+          defaultMessage
+        }
+        displayDescription {
+          defaultMessage
+        }
       }
     }
   }

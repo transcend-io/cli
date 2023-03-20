@@ -7,7 +7,7 @@ import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
 import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
-import { fetchDataSubjects } from './fetchDataSubjects';
+import { ensureAllDataSubjectsExist } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
@@ -38,18 +38,27 @@ export async function syncConfigurationToTranscend(
     templates,
     attributes,
     enrichers,
+    'data-subjects': dataSubjects, // FIXME
+    // 'business-entities': businessEntities, // FIXME
+    // actions, // FIXME
+    // identifiers, // FIXME
+    // cookies, // FIXME
+    // consentManager, // FIXME
     'data-silos': dataSilos,
     'data-flows': dataFlows,
   } = input;
 
-  const [identifierByName, dataSubjects, apiKeyTitleMap] = await Promise.all([
-    // Ensure all identifiers are created and create a map from name -> identifier.id
-    enrichers ? fetchIdentifiersAndCreateMissing(input, client) : {},
-    // Grab all data subjects in the organization
-    dataSilos ? fetchDataSubjects(input, client) : {},
-    // Grab API keys
-    dataSilos ? fetchApiKeys(input, client) : {},
-  ]);
+  const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
+    await Promise.all([
+      // Ensure all identifiers are created and create a map from name -> identifier.id
+      enrichers ? fetchIdentifiersAndCreateMissing(input, client) : {},
+      // Grab all data subjects in the organization
+      dataSilos || dataSubjects
+        ? ensureAllDataSubjectsExist(input, client)
+        : {},
+      // Grab API keys
+      dataSilos ? fetchApiKeys(input, client) : {},
+    ]);
 
   // Sync email templates
   if (templates) {
@@ -213,7 +222,7 @@ export async function syncConfigurationToTranscend(
       logger.info(colors.magenta(`Syncing data silo "${dataSilo.title}"...`));
       try {
         const dataSiloInfo = await syncDataSilo(dataSilo, client, {
-          dataSubjectsByName: dataSubjects,
+          dataSubjectsByName,
           apiKeysByTitle: apiKeyTitleMap,
           pageSize,
         });

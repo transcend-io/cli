@@ -4,14 +4,22 @@ import {
   ApiKeyInput,
   DataSiloInput,
   AttributeInput,
+  ActionInput,
+  IdentifierInput,
+  BusinessEntityInput,
   EnricherInput,
   DataFlowInput,
+  DataSubjectInput,
   CookieInput,
 } from '../codecs';
 import {
   AttributeResourceType,
   ENABLED_ON_TO_ATTRIBUTE_KEY,
 } from '../tmp-attribute-key';
+import {
+  RequestAction,
+  ConsentTrackerStatus,
+} from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';
@@ -19,11 +27,15 @@ import mapValues from 'lodash/mapValues';
 import { fetchEnrichedDataSilos } from './syncDataSilos';
 import {
   convertToDataSubjectAllowlist,
-  fetchDataSubjects,
+  fetchAllDataSubjects,
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
+import { fetchConsentManager } from './fetchConsentManagerId';
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
+import { fetchAllActions } from './fetchAllActions';
+import { fetchAllIdentifiers } from './fetchIdentifiers';
 import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
@@ -41,7 +53,12 @@ export enum TranscendPullResource {
   DataSilos = 'dataSilos',
   Enrichers = 'enrichers',
   DataFlows = 'dataFlows',
+  BusinessEntities = 'businessEntities',
+  Actions = 'actions',
+  DataSubjects = 'dataSubjects',
+  Identifiers = 'identifiers',
   Cookies = 'cookies',
+  ConsentManager = 'consentManager',
 }
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
@@ -99,11 +116,16 @@ export async function pullTranscendConfiguration(
     cookies,
     attributes,
     templates,
+    identifiers,
+    actions,
+    businessEntities,
+    consentManager,
   ] = await Promise.all([
     // Grab all data subjects in the organization
-    resources.includes(TranscendPullResource.DataSilos)
-      ? fetchDataSubjects({}, client, true)
-      : {},
+    resources.includes(TranscendPullResource.DataSilos) ||
+    resources.includes(TranscendPullResource.DataSubjects)
+      ? fetchAllDataSubjects(client)
+      : [],
     // Grab API keys
     resources.includes(TranscendPullResource.ApiKeys)
       ? fetchApiKeys({}, client, true)
@@ -123,11 +145,20 @@ export async function pullTranscendConfiguration(
       : [],
     // Fetch data flows
     resources.includes(TranscendPullResource.DataFlows)
-      ? fetchAllDataFlows(client)
+      ? [
+          ...(await fetchAllDataFlows(client, ConsentTrackerStatus.Live)),
+          ...(await fetchAllDataFlows(
+            client,
+            ConsentTrackerStatus.NeedsReview,
+          )),
+        ]
       : [],
     // Fetch data flows
     resources.includes(TranscendPullResource.Cookies)
-      ? fetchAllCookies(client)
+      ? [
+          ...(await fetchAllCookies(client, ConsentTrackerStatus.Live)),
+          ...(await fetchAllCookies(client, ConsentTrackerStatus.NeedsReview)),
+        ]
       : [],
     // Fetch attributes
     resources.includes(TranscendPullResource.Attributes)
@@ -137,6 +168,22 @@ export async function pullTranscendConfiguration(
     resources.includes(TranscendPullResource.Templates)
       ? fetchAllTemplates(client)
       : [],
+    // Fetch identifiers
+    resources.includes(TranscendPullResource.Identifiers)
+      ? fetchAllIdentifiers(client)
+      : [],
+    // Fetch actions
+    resources.includes(TranscendPullResource.Actions)
+      ? fetchAllActions(client)
+      : [],
+    // Fetch business entities
+    resources.includes(TranscendPullResource.BusinessEntities)
+      ? fetchAllBusinessEntities(client)
+      : [],
+    // Fetch consent manager
+    resources.includes(TranscendPullResource.ConsentManager)
+      ? fetchConsentManager(client)
+      : undefined,
   ]);
 
   const result: TranscendInput = {};
@@ -156,6 +203,112 @@ export async function pullTranscendConfiguration(
           title,
         }),
       );
+  }
+
+  // Save Consent Manager
+  if (consentManager) {
+    result['consent-manager'] = {
+      domains: consentManager.configuration.domains,
+    };
+  }
+
+  // Save Data Subjects
+  if (dataSubjects.length > 0) {
+    result['data-subjects'] = dataSubjects.map(
+      ({
+        type,
+        title,
+        adminDashboardDefaultSilentMode,
+        actions,
+      }): DataSubjectInput => ({
+        type,
+        title: title?.defaultMessage,
+        adminDashboardDefaultSilentMode,
+        actions: actions.map(({ type }) => type),
+      }),
+    );
+  }
+
+  // Save business entities
+  if (businessEntities.length > 0) {
+    result['business-entities'] = businessEntities.map(
+      ({
+        title,
+        description,
+        address,
+        headquarterCountry,
+        headquarterSubDivision,
+        dataProtectionOfficerName,
+        dataProtectionOfficerEmail,
+        attributeValues,
+      }): BusinessEntityInput => ({
+        title,
+        description: description || undefined,
+        address: address || undefined,
+        headquarterCountry: headquarterCountry || undefined,
+        headquarterSubDivision: headquarterSubDivision || undefined,
+        dataProtectionOfficerName: dataProtectionOfficerName || undefined,
+        dataProtectionOfficerEmail: dataProtectionOfficerEmail || undefined,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save Actions
+  if (actions.length > 0) {
+    result.actions = actions.map(
+      ({
+        type,
+        skipSecondaryIfNoFiles,
+        skipDownloadableStep,
+        requiresReview,
+        waitingPeriod,
+      }): ActionInput => ({
+        type,
+        skipSecondaryIfNoFiles,
+        skipDownloadableStep,
+        requiresReview,
+        waitingPeriod,
+      }),
+    );
+  }
+
+  // Save identifiers
+  if (identifiers.length > 0) {
+    result.identifiers = identifiers.map(
+      ({
+        name,
+        type,
+        regex,
+        selectOptions,
+        privacyCenterVisibility,
+        isRequiredInForm,
+        placeholder,
+        displayTitle,
+        dataSubjects,
+        displayDescription,
+      }): IdentifierInput => ({
+        name,
+        type,
+        regex,
+        selectOptions: selectOptions.length > 0 ? selectOptions : undefined,
+        privacyCenterVisibility:
+          privacyCenterVisibility.length > 0
+            ? privacyCenterVisibility
+            : undefined,
+        isRequiredInForm,
+        placeholder: placeholder || undefined,
+        dataSubjects:
+          dataSubjects.length > 0
+            ? dataSubjects.map(({ type }) => type)
+            : undefined,
+        displayTitle: displayTitle?.defaultMessage,
+        displayDescription: displayDescription?.defaultMessage,
+      }),
+    );
   }
 
   // Save data flows
@@ -244,28 +397,30 @@ export async function pullTranscendConfiguration(
   }
 
   // Save enrichers
-  if (enrichers.length > 0 && dataSiloIds.length === 0) {
-    result.enrichers = enrichers
-      .filter(({ type }) => type === 'SERVER')
-      .map(
-        ({
-          title,
-          url,
-          inputIdentifier,
-          identifiers,
-          actions,
-        }): EnricherInput => ({
-          title,
-          url,
-          'input-identifier': inputIdentifier.name,
-          'output-identifiers': identifiers.map(({ name }) => name),
-          'privacy-actions': actions,
-        }),
-      );
+  if (enrichers.length > 0) {
+    result.enrichers = enrichers.map(
+      ({
+        title,
+        url,
+        inputIdentifier,
+        identifiers,
+        actions,
+      }): EnricherInput => ({
+        title,
+        url: url || undefined,
+        'input-identifier': inputIdentifier?.name,
+        'output-identifiers': identifiers.map(({ name }) => name),
+        'privacy-actions':
+          Object.values(RequestAction).length === actions.length
+            ? undefined
+            : actions,
+      }),
+    );
   }
 
   // Save data silos
   if (dataSilos.length > 0) {
+    const indexedDataSubjects = keyBy(dataSubjects, 'type');
     result['data-silos'] = dataSilos.map(
       ([
         {
@@ -315,7 +470,7 @@ export async function pullTranscendConfiguration(
           subjectBlocklist.length > 0
             ? convertToDataSubjectAllowlist(
                 subjectBlocklist.map(({ type }) => type),
-                dataSubjects,
+                indexedDataSubjects,
               )
             : undefined,
         ...(catalog.hasAvcFunctionality
