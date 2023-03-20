@@ -154,3 +154,16 @@ export const FETCH_CONSENT_MANAGER = gql`
     }
   }
 `;
+
+export const UPDATE_CONSENT_MANAGER_DOMAINS = gql`
+  mutation TranscendCliUpdateConsentManagerDomains(
+    $airgapBundleId: ID!
+    $domains: [String!]!
+  ) {
+    updateConsentManagerDomains(
+      input: { id: $airgapBundleId, domains: $domains }
+    ) {
+      clientMutationId
+    }
+  }
+`;

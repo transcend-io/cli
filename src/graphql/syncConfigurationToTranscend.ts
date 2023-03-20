@@ -9,6 +9,7 @@ import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
 import { ensureAllDataSubjectsExist } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
+import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
@@ -43,7 +44,7 @@ export async function syncConfigurationToTranscend(
     // actions, // FIXME
     // identifiers, // FIXME
     // cookies, // FIXME
-    // consentManager, // FIXME
+    'consent-manager': consentManager,
     'data-silos': dataSilos,
     'data-flows': dataFlows,
   } = input;
@@ -59,6 +60,20 @@ export async function syncConfigurationToTranscend(
       // Grab API keys
       dataSilos ? fetchApiKeys(input, client) : {},
     ]);
+
+  // Sync consent manager
+  if (consentManager) {
+    logger.info(colors.magenta('Syncing consent manager...'));
+    try {
+      await syncConsentManager(client, consentManager);
+      logger.info(colors.green('Successfully synced consent manager!'));
+    } catch (err) {
+      encounteredError = true;
+      logger.info(
+        colors.red(`Failed to sync consent manager! - ${err.message}`),
+      );
+    }
+  }
 
   // Sync email templates
   if (templates) {

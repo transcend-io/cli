@@ -299,6 +299,12 @@ Pull in attribute definitions only (see [this example](./examples/attributes.yml
 tr-pull --auth=$TRANSCEND_API_KEY --resources=attributes
 ```
 
+Pull in consent manager domain list (see [this example](./examples/consent-manager-domains.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=consentManager
+```
+
 Pull everything:
 
 ```sh
