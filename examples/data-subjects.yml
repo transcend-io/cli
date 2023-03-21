@@ -1,0 +1,15 @@
+data-subjects:
+  - type: Customer
+    title: Customer
+    active: true
+    adminDashboardDefaultSilentMode: true
+    actions:
+      - ERASURE
+      - SALE_OPT_OUT
+  - type: employee
+    title: Employee
+    active: false
+    adminDashboardDefaultSilentMode: false
+    actions:
+      - ACCESS
+      - RECTIFICATION

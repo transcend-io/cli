@@ -363,6 +363,8 @@ export const DataSubjectInput = t.intersection([
     type: t.string,
   }),
   t.partial({
+    /** Whether the data subject is active on the Privacy Center & DSR API */
+    active: t.boolean,
     /** The title of the data subject */
     title: t.string,
     /** Whether or not to default new requests made in the admin dashboard to silent mode */

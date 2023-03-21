@@ -7,6 +7,7 @@ export const DATA_SUBJECTS = gql`
       title {
         defaultMessage
       }
+      active
       type
       adminDashboardDefaultSilentMode
       actions {
@@ -23,6 +24,22 @@ export const CREATE_DATA_SUBJECT = gql`
         id
         type
       }
+    }
+  }
+`;
+
+export const UPDATE_DATA_SUBJECT = gql`
+  mutation TranscendCliUpdateDataSubject($input: UpdateSubjectInput!) {
+    updateSubject(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const TOGGLE_DATA_SUBJECT = gql`
+  mutation TranscendCliToggleDataSubject($input: ToggleSubjectInput!) {
+    toggleSubject(input: $input) {
+      clientMutationId
     }
   }
 `;
