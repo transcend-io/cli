@@ -16,6 +16,8 @@ export interface DataSubject {
   id: string;
   /** Type of data subject */
   type: string;
+  /** Whether active */
+  active: boolean;
   /** Title of data subject */
   title: {
     /** Default message */

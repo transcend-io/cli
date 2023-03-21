@@ -218,11 +218,13 @@ export async function pullTranscendConfiguration(
       ({
         type,
         title,
+        active,
         adminDashboardDefaultSilentMode,
         actions,
       }): DataSubjectInput => ({
         type,
         title: title?.defaultMessage,
+        active,
         adminDashboardDefaultSilentMode,
         actions: actions.map(({ type }) => type),
       }),
