@@ -317,6 +317,12 @@ Pull in request actions configurations (see [this example](./examples/actions.ym
 tr-pull --auth=$TRANSCEND_API_KEY --resources=actions
 ```
 
+Pull in request data subject configurations (see [this example](./examples/data-subjects.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=dataSubjects
+```
+
 Pull everything:
 
 ```sh
