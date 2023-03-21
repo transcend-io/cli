@@ -47,3 +47,11 @@ export const CREATE_IDENTIFIER = gql`
     }
   }
 `;
+
+export const UPDATE_IDENTIFIER = gql`
+  mutation TranscendCliUpdateIdentifier($input: UpdateIdentifierInput!) {
+    updateIdentifier(input: $input) {
+      clientMutationId
+    }
+  }
+`;
