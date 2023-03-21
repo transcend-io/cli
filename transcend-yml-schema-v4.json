@@ -5658,6 +5658,9 @@
           {
             "type": "object",
             "properties": {
+              "active": {
+                "type": "boolean"
+              },
               "title": {
                 "type": "string"
               },
