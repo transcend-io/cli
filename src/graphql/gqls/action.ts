@@ -14,3 +14,11 @@ export const ACTIONS = gql`
     }
   }
 `;
+
+export const UPDATE_ACTION = gql`
+  mutation TranscendCliUpdateAction($input: UpdateActionInput!) {
+    updateAction(input: $input) {
+      clientMutationId
+    }
+  }
+`;

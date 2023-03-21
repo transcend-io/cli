@@ -311,6 +311,12 @@ Pull in identifier configurations (see [this example](./examples/identifiers.yml
 tr-pull --auth=$TRANSCEND_API_KEY --resources=identifiers
 ```
 
+Pull in request actions configurations (see [this example](./examples/actions.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=actions
+```
+
 Pull everything:
 
 ```sh

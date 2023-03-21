@@ -268,8 +268,12 @@ export async function pullTranscendConfiguration(
         waitingPeriod,
       }): ActionInput => ({
         type,
-        skipSecondaryIfNoFiles,
-        skipDownloadableStep,
+        ...(type === RequestAction.Erasure
+          ? {
+              skipSecondaryIfNoFiles,
+              skipDownloadableStep,
+            }
+          : {}),
         requiresReview,
         waitingPeriod,
       }),
