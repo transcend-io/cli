@@ -1,0 +1,49 @@
+identifiers:
+  - name: User-Agent
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: IP Address
+    type: custom
+    regex: ^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$
+    isRequiredInForm: false
+  - name: segment_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: google_analytics_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: coreIdentifier
+    type: coreIdentifier
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: advertisingId
+    type: advertisingId
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: gaid
+    type: gaid
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: idfa
+    type: idfa
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: user_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: name
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: phone
+    type: phone
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: email
+    type: email
+    regex: ^.*$
+    isRequiredInForm: false

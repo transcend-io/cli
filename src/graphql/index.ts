@@ -25,4 +25,6 @@ export * from './fetchConsentManagerId';
 export * from './fetchAllBusinessEntities';
 export * from './syncDataFlows';
 export * from './syncConsentManager';
+export * from './sleepPromise';
 export * from './fetchAllActions';
+export * from './syncIdentifier';

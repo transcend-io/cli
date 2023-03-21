@@ -86,14 +86,18 @@ export async function fetchAllIdentifiers(
  * @returns A map from identifier name to Identifier
  */
 export async function fetchIdentifiersAndCreateMissing(
-  { enrichers = [], 'data-silos': dataSilos = [] }: TranscendInput,
+  {
+    enrichers = [],
+    'data-silos': dataSilos = [],
+    identifiers = [],
+  }: TranscendInput,
   client: GraphQLClient,
 ): Promise<{ [k in string]: Identifier }> {
   // Grab all existing identifiers
-  const identifiers = await fetchAllIdentifiers(client);
+  const allIdentifiers = await fetchAllIdentifiers(client);
 
   // Create a map
-  const identifiersByName = keyBy(identifiers, 'name');
+  const identifiersByName = keyBy(allIdentifiers, 'name');
 
   // Determine expected set of identifiers
   const expectedIdentifiers = uniq([
@@ -104,10 +108,11 @@ export async function fetchIdentifiersAndCreateMissing(
       ]),
     ),
     ...flatten(dataSilos.map((dataSilo) => dataSilo['identity-keys'])),
+    ...identifiers.map(({ name }) => name),
   ]).filter((x) => !!x);
   const missingIdentifiers = difference(
     expectedIdentifiers,
-    identifiers.map(({ name }) => name),
+    allIdentifiers.map(({ name }) => name),
   );
 
   // If there are missing identifiers, create new ones
