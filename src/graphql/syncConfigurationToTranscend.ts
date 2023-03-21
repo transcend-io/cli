@@ -3,7 +3,11 @@ import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries } from 'bluebird';
-import { fetchIdentifiersAndCreateMissing } from './fetchIdentifiers';
+import {
+  fetchIdentifiersAndCreateMissing,
+  Identifier,
+} from './fetchIdentifiers';
+import { syncIdentifier } from './syncIdentifier';
 import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
@@ -42,7 +46,7 @@ export async function syncConfigurationToTranscend(
     'data-subjects': dataSubjects, // FIXME
     // 'business-entities': businessEntities, // FIXME
     // actions, // FIXME
-    // identifiers, // FIXME
+    identifiers,
     // cookies, // FIXME
     'consent-manager': consentManager,
     'data-silos': dataSilos,
@@ -52,7 +56,9 @@ export async function syncConfigurationToTranscend(
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
     await Promise.all([
       // Ensure all identifiers are created and create a map from name -> identifier.id
-      enrichers ? fetchIdentifiersAndCreateMissing(input, client) : {},
+      enrichers || identifiers
+        ? fetchIdentifiersAndCreateMissing(input, client)
+        : ({} as { [k in string]: Identifier }),
       // Grab all data subjects in the organization
       dataSilos || dataSubjects
         ? ensureAllDataSubjectsExist(input, client)
@@ -119,6 +125,42 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${enrichers.length}" enrichers!`));
+  }
+
+  // Sync identifiers
+  if (identifiers) {
+    // Fetch existing
+    logger.info(
+      colors.magenta(`Syncing "${identifiers.length}" identifiers...`),
+    );
+    await mapSeries(identifiers, async (identifier) => {
+      const existing = identifierByName[identifier.name];
+      if (!existing) {
+        throw new Error(
+          `Failed to find identifier with name: ${identifier.type}. Should have been auto-created by cli.`,
+        );
+      }
+
+      logger.info(colors.magenta(`Syncing identifier "${identifier.type}"...`));
+      try {
+        await syncIdentifier(client, {
+          identifier,
+          dataSubjectsByName,
+          identifierId: existing.id,
+        });
+        logger.info(
+          colors.green(`Successfully synced identifier "${identifier.type}"!`),
+        );
+      } catch (err) {
+        encounteredError = true;
+        logger.info(
+          colors.red(
+            `Failed to sync identifier "${identifier.type}"! - ${err.message}`,
+          ),
+        );
+      }
+    });
+    logger.info(colors.green(`Synced "${identifiers.length}" identifiers!`));
   }
 
   // Sync attributes
