@@ -28,3 +28,4 @@ export * from './syncConsentManager';
 export * from './sleepPromise';
 export * from './fetchAllActions';
 export * from './syncIdentifier';
+export * from './syncAction';

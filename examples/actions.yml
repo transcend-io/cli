@@ -1,0 +1,60 @@
+actions:
+  - type: REMOVE_FROM_LEGAL_HOLD
+    requiresReview: true
+    waitingPeriod: 0
+  - type: CONTACT_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: ERASURE
+    skipSecondaryIfNoFiles: false
+    skipDownloadableStep: true
+    requiresReview: true
+    waitingPeriod: 0
+  - type: RESTRICTION
+    requiresReview: true
+    waitingPeriod: 0
+  - type: SALE_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: TRACKING_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: AUTOMATED_DECISION_MAKING_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: USE_OF_SENSITIVE_INFORMATION_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: USE_OF_SENSITIVE_INFORMATION_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: PLACE_ON_LEGAL_HOLD
+    requiresReview: true
+    waitingPeriod: 0
+  - type: BUSINESS_PURPOSE
+    requiresReview: true
+    waitingPeriod: 0
+  - type: SALE_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: TRACKING_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: CUSTOM_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: CONTACT_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+  - type: CUSTOM_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: AUTOMATED_DECISION_MAKING_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+  - type: RECTIFICATION
+    requiresReview: true
+    waitingPeriod: 0
+  - type: ACCESS
+    requiresReview: true
+    waitingPeriod: 0
