@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { TranscendInput, DataFlowInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
@@ -20,7 +21,9 @@ import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { createDataFlows, updateDataFlows } from './syncDataFlows';
+import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
+import { fetchAllActions } from './fetchAllActions';
 
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
@@ -45,7 +48,7 @@ export async function syncConfigurationToTranscend(
     enrichers,
     'data-subjects': dataSubjects, // FIXME
     // 'business-entities': businessEntities, // FIXME
-    // actions, // FIXME
+    actions,
     identifiers,
     // cookies, // FIXME
     'consent-manager': consentManager,
@@ -161,6 +164,40 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${identifiers.length}" identifiers!`));
+  }
+
+  // Sync actions
+  if (actions) {
+    // Fetch existing
+    logger.info(colors.magenta(`Syncing "${actions.length}" actions...`));
+    const existingActions = await fetchAllActions(client);
+    await mapSeries(actions, async (action) => {
+      const existing = existingActions.find((act) => act.type === action.type);
+      if (!existing) {
+        throw new Error(
+          `Failed to find action with type: ${action.type}. Should have already existing in the organization.`,
+        );
+      }
+
+      logger.info(colors.magenta(`Syncing action "${action.type}"...`));
+      try {
+        await syncAction(client, {
+          action,
+          actionId: existing.id,
+        });
+        logger.info(
+          colors.green(`Successfully synced action "${action.type}"!`),
+        );
+      } catch (err) {
+        encounteredError = true;
+        logger.info(
+          colors.red(
+            `Failed to sync action "${action.type}"! - ${err.message}`,
+          ),
+        );
+      }
+    });
+    logger.info(colors.green(`Synced "${actions.length}" actions!`));
   }
 
   // Sync attributes
@@ -342,3 +379,4 @@ export async function syncConfigurationToTranscend(
 
   return encounteredError;
 }
+/* eslint-enable max-lines */
