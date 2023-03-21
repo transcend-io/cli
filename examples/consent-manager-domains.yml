@@ -1,0 +1,4 @@
+consent-manager:
+  domains:
+    - test.transcend.io
+    - docs.transcend.io

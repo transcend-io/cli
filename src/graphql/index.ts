@@ -24,4 +24,5 @@ export * from './fetchAllCookies';
 export * from './fetchConsentManagerId';
 export * from './fetchAllBusinessEntities';
 export * from './syncDataFlows';
+export * from './syncConsentManager';
 export * from './fetchAllActions';
