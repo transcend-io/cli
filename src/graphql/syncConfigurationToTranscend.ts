@@ -12,7 +12,11 @@ import { syncIdentifier } from './syncIdentifier';
 import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
-import { ensureAllDataSubjectsExist } from './fetchDataSubjects';
+import {
+  fetchAllDataSubjects,
+  ensureAllDataSubjectsExist,
+} from './fetchDataSubjects';
+import { syncDataSubject } from './syncDataSubject';
 import { fetchApiKeys } from './fetchApiKeys';
 import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
@@ -45,11 +49,11 @@ export async function syncConfigurationToTranscend(
   const {
     templates,
     attributes,
-    enrichers,
-    'data-subjects': dataSubjects, // FIXME
-    // 'business-entities': businessEntities, // FIXME
     actions,
     identifiers,
+    'data-subjects': dataSubjects,
+    enrichers, // FIXME
+    // 'business-entities': businessEntities, // FIXME
     // cookies, // FIXME
     'consent-manager': consentManager,
     'data-silos': dataSilos,
@@ -198,6 +202,48 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${actions.length}" actions!`));
+  }
+
+  // Sync data subjects
+  if (dataSubjects) {
+    // Fetch existing
+    logger.info(
+      colors.magenta(`Syncing "${dataSubjects.length}" data subjects...`),
+    );
+    const existingDataSubjects = await fetchAllDataSubjects(client);
+    await mapSeries(dataSubjects, async (dataSubject) => {
+      const existing = existingDataSubjects.find(
+        (subj) => subj.type === dataSubject.type,
+      );
+      if (!existing) {
+        throw new Error(
+          `Failed to find data subject with type: ${dataSubject.type}. Should have already existing in the organization.`,
+        );
+      }
+
+      logger.info(
+        colors.magenta(`Syncing data subject "${dataSubject.type}"...`),
+      );
+      try {
+        await syncDataSubject(client, {
+          dataSubject,
+          dataSubjectId: existing.id,
+        });
+        logger.info(
+          colors.green(
+            `Successfully synced data subject "${dataSubject.type}"!`,
+          ),
+        );
+      } catch (err) {
+        encounteredError = true;
+        logger.info(
+          colors.red(
+            `Failed to sync data subject "${dataSubject.type}"! - ${err.message}`,
+          ),
+        );
+      }
+    });
+    logger.info(colors.green(`Synced "${dataSubjects.length}" data subjects!`));
   }
 
   // Sync attributes
