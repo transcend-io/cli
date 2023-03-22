@@ -54,7 +54,7 @@ export async function syncConfigurationToTranscend(
     identifiers,
     'data-subjects': dataSubjects,
     'business-entities': businessEntities,
-    enrichers, // FIXME
+    enrichers,
     // cookies, // FIXME
     'consent-manager': consentManager,
     'data-silos': dataSilos,
