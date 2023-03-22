@@ -26,6 +26,8 @@ export * from './fetchAllBusinessEntities';
 export * from './syncDataFlows';
 export * from './syncConsentManager';
 export * from './sleepPromise';
+export * from './syncBusinessEntities';
+export * from './syncDataSubject';
 export * from './fetchAllActions';
 export * from './syncIdentifier';
 export * from './syncAction';
