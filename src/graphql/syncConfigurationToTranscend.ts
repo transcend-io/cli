@@ -21,6 +21,7 @@ import { fetchApiKeys } from './fetchApiKeys';
 import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
+import { syncBusinessEntities } from './syncBusinessEntities';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
@@ -52,8 +53,8 @@ export async function syncConfigurationToTranscend(
     actions,
     identifiers,
     'data-subjects': dataSubjects,
+    'business-entities': businessEntities,
     enrichers, // FIXME
-    // 'business-entities': businessEntities, // FIXME
     // cookies, // FIXME
     'consent-manager': consentManager,
     'data-silos': dataSilos,
@@ -110,6 +111,15 @@ export async function syncConfigurationToTranscend(
       }
     });
     logger.info(colors.green(`Synced "${templates.length}" email templates!`));
+  }
+
+  // Sync business entities
+  if (businessEntities) {
+    const businessEntitySuccess = await syncBusinessEntities(
+      client,
+      businessEntities,
+    );
+    encounteredError = encounteredError || !businessEntitySuccess;
   }
 
   // Sync enrichers
