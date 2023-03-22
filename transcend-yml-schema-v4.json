@@ -54,6 +54,22 @@
               "url": {
                 "type": "string"
               },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "SOMBRA",
+                  "email",
+                  "phone",
+                  "SERVER",
+                  "PERSON",
+                  "LEGAL_HOLD",
+                  "AUTO_APPROVE",
+                  "REGEX_MATCH",
+                  "REGION_MATCH",
+                  "LOOKER",
+                  "WAIT_PERIOD"
+                ]
+              },
               "input-identifier": {
                 "type": "string"
               },
