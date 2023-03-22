@@ -36,4 +36,4 @@ const schemaFilePath = join(
   `transcend-yml-schema-v${majorVersion}.json`,
 );
 
-writeFileSync(schemaFilePath, JSON.stringify(jsonSchema, null, 2));
+writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, null, 2)}\n`);

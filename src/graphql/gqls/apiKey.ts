@@ -10,3 +10,23 @@ export const API_KEYS = gql`
     }
   }
 `;
+
+export const CREATE_API_KEY = gql`
+  mutation TranscendCliCreateApiKey($input: ApiKeyInput!) {
+    createApiKey(input: $input) {
+      apiKey {
+        id
+        apiKey
+        title
+      }
+    }
+  }
+`;
+
+export const DELETE_API_KEY = gql`
+  mutation TranscendCliDeleteApiKey($id: ID!) {
+    deleteApiKey(id: $id) {
+      clientMutationId
+    }
+  }
+`;

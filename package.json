@@ -14,6 +14,7 @@
     "tr-cron-mark-identifiers-completed": "./build/cli-cron-mark-identifiers-completed.js",
     "tr-cron-pull-identifiers": "./build/cli-cron-pull-identifiers.js",
     "tr-discover-silos": "./build/cli-discover-silos.js",
+    "tr-generate-api-keys": "./build/cli-generate-cross-account-api-keys.js",
     "tr-manual-enrichment-pull-identifiers": "./build/cli-manual-enrichment-pull-identifiers.js",
     "tr-manual-enrichment-push-identifiers": "./build/cli-manual-enrichment-push-identifiers.js",
     "tr-mark-request-data-silos-completed": "./build/cli-mark-request-data-silos-completed.js",

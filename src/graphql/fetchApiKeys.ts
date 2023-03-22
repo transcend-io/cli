@@ -20,6 +20,38 @@ const PAGE_SIZE = 20;
 const ADMIN_LINK = 'https://app.transcend.io/infrastructure/api-keys';
 
 /**
+ * Fetch all API keys in an organization
+ *
+ * @param client - Client
+ * @param titles - Filter on titles
+ * @returns API keys
+ */
+export async function fetchAllApiKeys(
+  client: GraphQLClient,
+  titles?: string[],
+): Promise<ApiKey[]> {
+  const apiKeys: ApiKey[] = [];
+  let offset = 0;
+
+  // Paginate
+  let shouldContinue = false;
+  do {
+    const {
+      apiKeys: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await makeGraphQLRequest(client, API_KEYS, {
+      first: PAGE_SIZE,
+      offset,
+      titles,
+    });
+    apiKeys.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+  return apiKeys;
+}
+
+/**
  * Fetch all apiKeys and if any are found in the config that are
  * missing, create those apiKeys.
  *
@@ -42,24 +74,7 @@ export async function fetchApiKeys(
     ),
   );
   const titles = apiKeyInputs.map(({ title }) => title);
-  const apiKeys: ApiKey[] = [];
-  let offset = 0;
-
-  // Paginate
-  let shouldContinue = false;
-  do {
-    const {
-      apiKeys: { nodes },
-      // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, API_KEYS, {
-      first: PAGE_SIZE,
-      offset,
-      titles: fetchAll ? undefined : titles,
-    });
-    apiKeys.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
-  } while (shouldContinue);
+  const apiKeys = await fetchAllApiKeys(client, fetchAll ? undefined : titles);
 
   // Create a map
   const apiKeysByTitle = keyBy(apiKeys, 'title');
