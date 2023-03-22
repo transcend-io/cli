@@ -104,12 +104,15 @@ export async function syncEnricher(
       identifiers: enricher['output-identifiers'].map(
         (id) => identifiersByName[id].id,
       ),
-      actions: actionUpdates,
+      ...(existingEnricher.type === EnricherType.Sombra
+        ? {}
+        : { actions: actionUpdates }),
     });
   } else if (inputIdentifier) {
     await makeGraphQLRequest(client, CREATE_ENRICHER, {
       title: enricher.title,
       url: enricher.url,
+      type: enricher.type || EnricherType.Server,
       headers: enricher.headers,
       description: enricher.description || '',
       inputIdentifier: identifiersByName[inputIdentifier].id,

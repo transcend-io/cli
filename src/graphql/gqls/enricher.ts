@@ -46,6 +46,7 @@ export const CREATE_ENRICHER = gql`
     $title: String!
     $description: String!
     $url: String!
+    type: EnricherType!
     $inputIdentifier: ID!
     $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!
@@ -54,7 +55,7 @@ export const CREATE_ENRICHER = gql`
     createEnricher(
       input: {
         title: $title
-        type: SERVER
+        type: $type
         description: $description
         url: $url
         inputIdentifier: $inputIdentifier
@@ -77,7 +78,7 @@ export const UPDATE_ENRICHER = gql`
     $inputIdentifier: ID
     $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!
-    $actions: [RequestAction!]!
+    $actions: [RequestAction!]
   ) {
     updateEnricher(
       input: {

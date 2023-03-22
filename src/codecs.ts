@@ -1,9 +1,10 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines */
 import * as t from 'io-ts';
-import { applyEnum, valuesOf, EnricherType } from '@transcend-io/type-utils';
+import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
+  EnricherType,
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
