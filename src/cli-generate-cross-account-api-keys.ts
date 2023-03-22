@@ -29,7 +29,7 @@ const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
  *
  * Standard usage:
  * yarn tr-generate-api-keys --email=test@transcend.io --password=NE8pGp$s8Gm4Mzb5 \
- *   --apiKeyTitle="My Test Key" --scopes="View Email Templates,View Data Map"
+ *   --apiKeyTitle="My Test Key" --scopes="View Email Templates,View Data Map" --file=./secrets.json
  */
 async function main(): Promise<void> {
   // Parse command line arguments
