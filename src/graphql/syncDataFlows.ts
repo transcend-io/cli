@@ -3,9 +3,9 @@ import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
 import chunk from 'lodash/chunk';
 import { mapSeries } from 'bluebird';
 import { DataFlowInput } from '../codecs';
-import keyBy from 'lodash/keyBy';
+// import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchConsentManagerId, fetchPurposes } from './fetchConsentManagerId';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
 
 const MAX_PAGE_SIZE = 100;
 
@@ -19,8 +19,9 @@ export async function updateDataFlows(
   client: GraphQLClient,
   dataFlowInputs: [DataFlowInput, string][],
 ): Promise<void> {
-  const purposes = await fetchPurposes(client);
-  const purposeNameToId = keyBy(purposes, 'name');
+  // TODO: https://transcend.height.app/T-19841 - add with custom purposes
+  // const purposes = await fetchPurposes(client);
+  // const purposeNameToId = keyBy(purposes, 'name');
 
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
     await makeGraphQLRequest(client, UPDATE_DATA_FLOWS, {
@@ -28,9 +29,16 @@ export async function updateDataFlows(
         id,
         value: flow.value,
         type: flow.type,
-        purposeIds: flow.trackingPurposes
-          ? flow.trackingPurposes.map((purpose) => purposeNameToId[purpose].id)
-          : undefined,
+        trackingType:
+          flow.trackingPurposes && flow.trackingPurposes.length > 0
+            ? flow.trackingPurposes
+            : undefined,
+        // TODO: https://transcend.height.app/T-19841 - add with custom purposes
+        // purposeIds: flow.trackingPurposes
+        //   ? flow.trackingPurposes
+        //       .filter((purpose) => purpose !== 'Unknown')
+        //       .map((purpose) => purposeNameToId[purpose].id)
+        // : undefined,
         description: flow.description,
         service: flow.service,
         status: flow.status,
@@ -51,17 +59,25 @@ export async function createDataFlows(
   dataFlowInputs: DataFlowInput[],
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
-  const purposes = await fetchPurposes(client);
-  const purposeNameToId = keyBy(purposes, 'name');
+  // TODO: https://transcend.height.app/T-19841 - add with custom purposes
+  // const purposes = await fetchPurposes(client);
+  // const purposeNameToId = keyBy(purposes, 'name');
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
     await makeGraphQLRequest(client, CREATE_DATA_FLOWS, {
       airgapBundleId,
       dataFlows: page.map((flow) => ({
         value: flow.value,
         type: flow.type,
-        purposeIds: flow.trackingPurposes
-          ? flow.trackingPurposes.map((purpose) => purposeNameToId[purpose].id)
-          : undefined,
+        trackingType:
+          flow.trackingPurposes && flow.trackingPurposes.length > 0
+            ? flow.trackingPurposes
+            : undefined,
+        // TODO: https://transcend.height.app/T-19841 - add with custom purposes
+        // purposeIds: flow.trackingPurposes
+        //   ? flow.trackingPurposes
+        //       .filter((purpose) => purpose !== 'Unknown')
+        //       .map((purpose) => purposeNameToId[purpose].id)
+        //   : undefined,
         description: flow.description,
         service: flow.service,
         status: flow.status,

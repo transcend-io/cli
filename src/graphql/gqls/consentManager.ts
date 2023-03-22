@@ -55,7 +55,7 @@ export const DATA_FLOWS = gql`
     $first: Int!
     $airgapBundleId: ID!
     $offset: Int!
-    $status: DataFlowStatus
+    $status: ConsentTrackerStatus
   ) {
     dataFlows(
       first: $first
@@ -96,7 +96,7 @@ export const COOKIES = gql`
     $first: Int!
     $offset: Int!
     $airgapBundleId: ID!
-    $status: DataFlowStatus
+    $status: ConsentTrackerStatus
   ) {
     cookies(
       first: $first
