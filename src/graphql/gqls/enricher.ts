@@ -72,8 +72,8 @@ export const UPDATE_ENRICHER = gql`
   mutation TranscendCliUpdateEnricher(
     $id: ID!
     $title: String!
-    $description: String!
-    $url: String!
+    $description: String
+    $url: String
     $inputIdentifier: ID
     $headers: [CustomHeaderInput!]
     $identifiers: [ID!]!

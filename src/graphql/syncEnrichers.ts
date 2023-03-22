@@ -1,7 +1,7 @@
 import { EnricherInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { ENRICHERS, CREATE_ENRICHER, UPDATE_ENRICHER } from './gqls';
-import { RequestAction } from '@transcend-io/privacy-types';
+import { EnricherType, RequestAction } from '@transcend-io/privacy-types';
 import { Identifier } from './fetchIdentifiers';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -13,7 +13,7 @@ export interface Enricher {
   /** URL of enricher */
   url: string;
   /** Server silo */
-  type: 'SERVER' | 'PERSON';
+  type: EnricherType;
   /** Input identifier */
   inputIdentifier: {
     /** Identifier name */
@@ -89,6 +89,8 @@ export async function syncEnricher(
 
   // If enricher exists, update it, else create new
   const inputIdentifier = enricher['input-identifier'];
+  const actionUpdates =
+    enricher['privacy-actions'] || Object.values(RequestAction);
   if (existingEnricher) {
     await makeGraphQLRequest(client, UPDATE_ENRICHER, {
       id: existingEnricher.id,
@@ -102,7 +104,7 @@ export async function syncEnricher(
       identifiers: enricher['output-identifiers'].map(
         (id) => identifiersByName[id].id,
       ),
-      actions: enricher['privacy-actions'] || Object.values(RequestAction),
+      actions: actionUpdates,
     });
   } else if (inputIdentifier) {
     await makeGraphQLRequest(client, CREATE_ENRICHER, {
@@ -114,7 +116,7 @@ export async function syncEnricher(
       identifiers: enricher['output-identifiers'].map(
         (id) => identifiersByName[id].id,
       ),
-      actions: enricher['privacy-actions'] || Object.values(RequestAction),
+      actions: actionUpdates,
     });
   }
 }

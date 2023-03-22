@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines */
 import * as t from 'io-ts';
-import { applyEnum, valuesOf } from '@transcend-io/type-utils';
+import { applyEnum, valuesOf, EnricherType } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
   ProcessingPurpose,
@@ -88,6 +88,8 @@ export const EnricherInput = t.intersection([
   t.partial({
     /** The URL of the enricher */
     url: t.string,
+    /** The type of enricher */
+    type: valuesOf(EnricherType),
     /**
      * The name of the identifier that will be the input to this enricher.
      * Whenever a privacy request contains this identifier, the webhook will
