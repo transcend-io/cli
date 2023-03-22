@@ -1,0 +1,26 @@
+business-entities:
+  - title: eBrands
+    description: Parent company with a lot to acquire
+    address: 1135 Hanson Ave, San Francisco
+    headquarterCountry: US
+    headquarterSubDivision: US-CA
+    dataProtectionOfficerName: Caroline C
+    dataProtectionOfficerEmail: caroline@transcend.io
+  - title: eShopIt
+    description: Primary eCommerce brand
+    address: 1600 Penn Ave, NY, NY
+    headquarterCountry: US
+    headquarterSubDivision: US-NY
+    dataProtectionOfficerName: Jeffery Henderson
+    dataProtectionOfficerEmail: jeffery@acme.com
+  - title: Sneaker Supply
+    description: Recently acquired company
+    address: Güntzelstrasse 86, Zurich
+    headquarterCountry: DE
+    dataProtectionOfficerName: Bill Nye
+    dataProtectionOfficerEmail: bill@science.com
+    attributes:
+      - key: Tag
+        values:
+          - test
+          - test2

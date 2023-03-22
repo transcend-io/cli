@@ -22,3 +22,38 @@ export const BUSINESS_ENTITIES = gql`
     }
   }
 `;
+
+export const CREATE_BUSINESS_ENTITY = gql`
+  mutation TranscendCliCreateBusinessEntity(
+    $input: CreateBusinessEntityInput!
+  ) {
+    createBusinessEntity(input: $input) {
+      businessEntity {
+        id
+        title
+        description
+        dataProtectionOfficerName
+        dataProtectionOfficerEmail
+        address
+        headquarterCountry
+        headquarterSubDivision
+        attributeValues {
+          name
+          attributeKey {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_BUSINESS_ENTITIES = gql`
+  mutation TranscendCliUpdateBusinessEntities(
+    $input: [UpdateBusinessEntityInput!]!
+  ) {
+    updateBusinessEntities(input: { businessEntities: $input }) {
+      clientMutationId
+    }
+  }
+`;
