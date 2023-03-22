@@ -49,10 +49,12 @@ identifiers:
     isRequiredInForm: false
 enrichers:
   - title: Transcend Email Verification
+    type: email
     input-identifier: email
     output-identifiers:
       - email
   - title: Request Ingestion
+    type: SOMNRA
     output-identifiers:
       - email
       - coreIdentifier
@@ -64,6 +66,7 @@ enrichers:
       - gaid
   - title: Basic Identity Enrichment
     description: Enrich an email address to the userId and phone number
+    type: SERVER
     url: https://example.acme.com/transcend-enrichment-webhook
     input-identifier: email
     output-identifiers:
@@ -71,6 +74,7 @@ enrichers:
       - phone
       - segment_id
   - title: Fraud Check
+    type: SERVER
     description: Ensure the email address is not marked as fraudulent
     url: https://example.acme.com/transcend-fraud-check
     input-identifier: email
@@ -81,6 +85,7 @@ enrichers:
       - ERASURE
   # Note: description is an optional field
   - title: Analytics Enrichment
+    type: SERVER
     url: https://analytics.acme.com/transcend-enrichment-webhook
     input-identifier: userId
     output-identifiers:

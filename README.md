@@ -305,6 +305,12 @@ Pull in business entities only (see [this example](./examples/business-entities.
 tr-pull --auth=$TRANSCEND_API_KEY --resources=businessEntities
 ```
 
+Pull in enrichers and identifiers (see [this example](./examples/enrichers.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=enrichers,identifiers
+```
+
 Pull in consent manager domain list (see [this example](./examples/consent-manager-domains.yml)):
 
 ```sh
