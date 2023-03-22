@@ -36,20 +36,19 @@ export const UPDATE_DATA_FLOWS = gql`
   }
 `;
 
-export const CREATE_COOKIES = gql`
-  mutation TranscendCliCreateCookies(
-    $cookies: [CookieInput!]!
+export const UPDATE_OR_CREATE_COOKIES = gql`
+  mutation TranscendCliUpdateOrCreateCookies(
+    $cookies: [UpdateOrCreateCookieInput!]!
     $airgapBundleId: ID!
   ) {
-    createCookies(
+    updateOrCreateCookies(
       input: { airgapBundleId: $airgapBundleId, cookies: $cookies }
     ) {
-      dataFlows {
-        id
-      }
+      clientMutationId
     }
   }
 `;
+
 export const DATA_FLOWS = gql`
   query TranscendCliDataFlows(
     $first: Int!
