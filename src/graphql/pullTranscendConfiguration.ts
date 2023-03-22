@@ -408,12 +408,14 @@ export async function pullTranscendConfiguration(
       ({
         title,
         url,
+        type,
         inputIdentifier,
         identifiers,
         actions,
       }): EnricherInput => ({
         title,
         url: url || undefined,
+        type,
         'input-identifier': inputIdentifier?.name,
         'output-identifiers': identifiers.map(({ name }) => name),
         'privacy-actions':

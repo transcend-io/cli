@@ -1,0 +1,92 @@
+identifiers:
+  - name: name
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: user_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: advertisingId
+    type: advertisingId
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: gaid
+    type: gaid
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: idfa
+    type: idfa
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: google_analytics_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: segment_id
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: User-Agent
+    type: custom
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: IP Address
+    type: custom
+    regex: ^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$
+    isRequiredInForm: false
+  - name: phone
+    type: phone
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: email
+    type: email
+    regex: ^.*$
+    isRequiredInForm: false
+  - name: coreIdentifier
+    type: coreIdentifier
+    regex: ^.*$
+    isRequiredInForm: false
+enrichers:
+  - title: Transcend Email Verification
+    type: email
+    input-identifier: email
+    output-identifiers:
+      - email
+  - title: Request Ingestion
+    type: SOMNRA
+    output-identifiers:
+      - email
+      - coreIdentifier
+      - phone
+      - IP Address
+      - User-Agent
+      - segment_id
+      - idfa
+      - gaid
+  - title: Basic Identity Enrichment
+    description: Enrich an email address to the userId and phone number
+    type: SERVER
+    url: https://example.acme.com/transcend-enrichment-webhook
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+      - segment_id
+  - title: Fraud Check
+    type: SERVER
+    description: Ensure the email address is not marked as fraudulent
+    url: https://example.acme.com/transcend-fraud-check
+    input-identifier: email
+    output-identifiers:
+      - email
+    # Only call the webhook on certain action types
+    privacy-actions:
+      - ERASURE
+  # Note: description is an optional field
+  - title: Analytics Enrichment
+    type: SERVER
+    url: https://analytics.acme.com/transcend-enrichment-webhook
+    input-identifier: userId
+    output-identifiers:
+      - idfa
