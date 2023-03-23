@@ -23,7 +23,7 @@ export async function syncConsentManager(
   try {
     airgapBundleId = await fetchConsentManagerId(client, 1);
   } catch (err) {
-    // FIXME
+    // TODO: https://transcend.height.app/T-23778
     if (err.message.includes('AirgapBundle not found')) {
       const { organization } = await makeGraphQLRequest<{
         /** Organization */

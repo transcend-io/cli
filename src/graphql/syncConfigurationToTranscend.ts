@@ -46,7 +46,7 @@ export async function syncConfigurationToTranscend(
   client: GraphQLClient,
   {
     pageSize = 50,
-    // FIXME expose
+    // TODO: https://transcend.height.app/T-23779
     publishToPrivacyCenter = true,
   }: {
     /** Page size */
@@ -501,7 +501,7 @@ export async function syncConfigurationToTranscend(
   }
 
   if (publishToPrivacyCenter) {
-    // FIXME
+    // TODO: https://transcend.height.app/T-23779
   }
 
   return encounteredError;
