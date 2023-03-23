@@ -33,3 +33,4 @@ export * from './syncIdentifier';
 export * from './syncAction';
 export * from './loginUser';
 export * from './manageApiKeys';
+export * from './syncCookies';
