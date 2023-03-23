@@ -413,6 +413,7 @@ Push changes to multiple Transcend instances using the output of [tr-generate-ap
 ```sh
 tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./transcend-api-keys.json
+tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=./transcend-api-keys.json
 ```
 
