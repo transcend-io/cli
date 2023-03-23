@@ -53,6 +53,10 @@
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-11)
+    - [Arguments](#arguments-11)
+    - [Usage](#usage-12)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1067,4 +1071,56 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 ```sh
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ACCESS \
  --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-generate-api-keys
+
+This command allows for creating API keys across multiple Transcend instances. This is useful for customers that are managing many Transcend instances and need to regularly create, cycle or delete API keys across all of their instances. Unlike the other commands that rely on API key authentication, this command relies upon username/password authentication. This command will spit out the API keys into a [JSON file](./examples/api-keys.json), and that JSON file can be used in subsequent cli commands.
+
+#### Authentication
+
+In order to use this command, you will need to provide your email and password for the Transcend account. This command will only generate API keys for Transcend instances where you have the permission to "Manage API Keys".
+
+#### Arguments
+
+| Argument             | Description                                                                                                                                                  | Type               | Default                  | Required |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ------------------------ | -------- |
+| email                | The email address that you use to [log into Transcend](https://app.transcend.io/login).                                                                      | string             | N/A                      | true     |
+| password             | The password for your account login.                                                                                                                         | string             | N/A                      | true     |
+| apiKeyTitle          | The title of the API key being generated or destroyed.                                                                                                       | string             | N/A                      | true     |
+| file                 | The file where API keys should be written to.                                                                                                                | string - file-path | N/A                      | true     |
+| scopes               | The list of [scopes](https://docs.transcend.io/docs/security/access-control#scopes) that should be given to the API key.                                     | string[]           | N/A                      | true     |
+| deleteExistingApiKey | When true, if an API key exists with the specified "apiKeyTitle", the existing API key is deleted. When false, an error is thrown if API key already exists. | boolean            | true                     | false    |
+| createNewApiKey      | When true, new API keys will be created. Set to false if you simply want to delete all API keys with a title.                                                | boolean            | true                     | false    |
+| transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                | string - URL       | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --transcendUrl=https://api.us.transcend.io
+```
+
+Delete all API keys with a certain title.
+
+```sh
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --createNewApiKey=false
+```
+
+Throw error if an API key already exists with that title, default behavior is to delete the existing API key and create a new one with that same title.
+
+```sh
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --deleteExistingApiKey=false
 ```

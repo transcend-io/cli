@@ -1,0 +1,12 @@
+[
+  {
+    "organizationName": "Acme Organization",
+    "organizationId": "1ab7a146-28a5-4fee-b073-fc5aaf9efbd0",
+    "apiKey": "f4135e5083b17ba9849387d44ea64064c257ce5929cc780aec0e6aa590df587c"
+  },
+  {
+    "organizationName": "Affiliate Organization",
+    "organizationId": "e12fa698-5db5-4734-b323-0ab638d4acda",
+    "apiKey": "9626f2b7ee90cc5ff2651a0a95db2a87a866a409ea2c13de6a750a444777da9d"
+  }
+]
