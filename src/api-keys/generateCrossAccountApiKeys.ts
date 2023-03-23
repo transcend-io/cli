@@ -71,7 +71,11 @@ export async function generateCrossAccountApiKeys({
   logger.info(colors.magenta('Logging in using email and password.'));
   const { roles, loginCookie } = await loginUser(client, { email, password });
   logger.info(
-    colors.green(`Successfully logged in and found ${roles.length} roles!`),
+    colors.green(
+      `Successfully logged in and found ${roles.length} role${
+        roles.length === 1 ? '' : 's'
+      }!`,
+    ),
   );
 
   // Save cookie to call route subsequent times
@@ -86,7 +90,7 @@ export async function generateCrossAccountApiKeys({
   // Generate API keys
   logger.info(
     colors.magenta(
-      `Generating API keys with title: ${apiKeyTitle} scopes: ${scopes.join(
+      `Generating API keys with title: ${apiKeyTitle}, scopes: ${scopes.join(
         ',',
       )}.`,
     ),
@@ -166,10 +170,22 @@ export async function generateCrossAccountApiKeys({
       });
     }
   });
-  logger.info(colors.green(`Successfully created ${results.length} API keys!`));
+  logger.info(
+    colors.green(
+      `Successfully created ${results.length} API keys${
+        results.length === 1 ? '' : 's'
+      }`,
+    ),
+  );
 
   if (errors.length > 0) {
-    logger.error(colors.red(`Failed to create ${errors.length} API keys!`));
+    logger.error(
+      colors.red(
+        `Failed to create ${errors.length} API key${
+          errors.length === 1 ? '' : 's'
+        }!`,
+      ),
+    );
   }
 
   return { errors, apiKeys: results };

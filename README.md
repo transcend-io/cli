@@ -1097,14 +1097,14 @@ In order to use this command, you will need to provide your email and password f
 #### Usage
 
 ```sh
-yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9fW" \
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json
 ```
 
 Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
-yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9fW" \
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --transcendUrl=https://api.us.transcend.io
 ```
@@ -1112,7 +1112,7 @@ yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9f
 Delete all API keys with a certain title.
 
 ```sh
-yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9fW" \
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --createNewApiKey=false
 ```
@@ -1120,7 +1120,7 @@ yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9f
 Throw error if an API key already exists with that title, default behavior is to delete the existing API key and create a new one with that same title.
 
 ```sh
-yarn tr-generate-api-keys  --email=test@transcend.io --password="?B8pJ&ZBpPqPO9fW" \
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --deleteExistingApiKey=false
 ```
