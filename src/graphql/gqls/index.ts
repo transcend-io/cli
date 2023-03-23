@@ -16,3 +16,4 @@ export * from './attribute';
 export * from './consentManager';
 export * from './businessEntity';
 export * from './action';
+export * from './auth';
