@@ -94,6 +94,7 @@ export async function ensureAllDataSubjectsExist(
         CREATE_DATA_SUBJECT,
         {
           type: dataSubject,
+          skipPublish: true,
         },
       );
       logger.info(colors.green(`Created data subject ${dataSubject}!`));

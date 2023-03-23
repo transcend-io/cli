@@ -3,7 +3,7 @@ import { TranscendInput, DataFlowInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries, map } from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
@@ -31,6 +31,8 @@ import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
 
+const CONCURRENCY = 10;
+
 /**
  * Sync the yaml input back to Transcend using the GraphQL APIs
  *
@@ -42,7 +44,16 @@ import { fetchAllActions } from './fetchAllActions';
 export async function syncConfigurationToTranscend(
   input: TranscendInput,
   client: GraphQLClient,
-  pageSize: number,
+  {
+    pageSize = 50,
+    // TODO: https://transcend.height.app/T-23779
+    publishToPrivacyCenter = true,
+  }: {
+    /** Page size */
+    pageSize?: number;
+    /** When true, skip publishing to privacy center */
+    publishToPrivacyCenter?: boolean;
+  },
 ): Promise<boolean> {
   let encounteredError = false;
 
@@ -66,7 +77,11 @@ export async function syncConfigurationToTranscend(
     await Promise.all([
       // Ensure all identifiers are created and create a map from name -> identifier.id
       enrichers || identifiers
-        ? fetchIdentifiersAndCreateMissing(input, client)
+        ? fetchIdentifiersAndCreateMissing(
+            input,
+            client,
+            !publishToPrivacyCenter,
+          )
         : ({} as { [k in string]: Identifier }),
       // Grab all data subjects in the organization
       dataSilos || dataSubjects
@@ -95,22 +110,28 @@ export async function syncConfigurationToTranscend(
     logger.info(
       colors.magenta(`Syncing "${templates.length}" email templates...`),
     );
-    await mapSeries(templates, async (template) => {
-      logger.info(colors.magenta(`Syncing template "${template.title}"...`));
-      try {
-        await syncTemplate(template, client);
-        logger.info(
-          colors.green(`Successfully synced template "${template.title}"!`),
-        );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync template "${template.title}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+    await map(
+      templates,
+      async (template) => {
+        logger.info(colors.magenta(`Syncing template "${template.title}"...`));
+        try {
+          await syncTemplate(template, client);
+          logger.info(
+            colors.green(`Successfully synced template "${template.title}"!`),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync template "${template.title}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${templates.length}" email templates!`));
   }
 
@@ -132,22 +153,28 @@ export async function syncConfigurationToTranscend(
   // Sync enrichers
   if (enrichers) {
     logger.info(colors.magenta(`Syncing "${enrichers.length}" enrichers...`));
-    await mapSeries(enrichers, async (enricher) => {
-      logger.info(colors.magenta(`Syncing enricher "${enricher.title}"...`));
-      try {
-        await syncEnricher(enricher, client, identifierByName);
-        logger.info(
-          colors.green(`Successfully synced enricher "${enricher.title}"!`),
-        );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync enricher "${enricher.title}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+    await map(
+      enrichers,
+      async (enricher) => {
+        logger.info(colors.magenta(`Syncing enricher "${enricher.title}"...`));
+        try {
+          await syncEnricher(enricher, client, identifierByName);
+          logger.info(
+            colors.green(`Successfully synced enricher "${enricher.title}"!`),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync enricher "${enricher.title}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${enrichers.length}" enrichers!`));
   }
 
@@ -157,33 +184,44 @@ export async function syncConfigurationToTranscend(
     logger.info(
       colors.magenta(`Syncing "${identifiers.length}" identifiers...`),
     );
-    await mapSeries(identifiers, async (identifier) => {
-      const existing = identifierByName[identifier.name];
-      if (!existing) {
-        throw new Error(
-          `Failed to find identifier with name: ${identifier.type}. Should have been auto-created by cli.`,
-        );
-      }
+    await map(
+      identifiers,
+      async (identifier) => {
+        const existing = identifierByName[identifier.name];
+        if (!existing) {
+          throw new Error(
+            `Failed to find identifier with name: ${identifier.type}. Should have been auto-created by cli.`,
+          );
+        }
 
-      logger.info(colors.magenta(`Syncing identifier "${identifier.type}"...`));
-      try {
-        await syncIdentifier(client, {
-          identifier,
-          dataSubjectsByName,
-          identifierId: existing.id,
-        });
         logger.info(
-          colors.green(`Successfully synced identifier "${identifier.type}"!`),
+          colors.magenta(`Syncing identifier "${identifier.type}"...`),
         );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync identifier "${identifier.type}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+        try {
+          await syncIdentifier(client, {
+            identifier,
+            dataSubjectsByName,
+            identifierId: existing.id,
+            skipPublish: !publishToPrivacyCenter,
+          });
+          logger.info(
+            colors.green(
+              `Successfully synced identifier "${identifier.type}"!`,
+            ),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync identifier "${identifier.type}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${identifiers.length}" identifiers!`));
   }
 
@@ -192,32 +230,41 @@ export async function syncConfigurationToTranscend(
     // Fetch existing
     logger.info(colors.magenta(`Syncing "${actions.length}" actions...`));
     const existingActions = await fetchAllActions(client);
-    await mapSeries(actions, async (action) => {
-      const existing = existingActions.find((act) => act.type === action.type);
-      if (!existing) {
-        throw new Error(
-          `Failed to find action with type: ${action.type}. Should have already existing in the organization.`,
+    await map(
+      actions,
+      async (action) => {
+        const existing = existingActions.find(
+          (act) => act.type === action.type,
         );
-      }
+        if (!existing) {
+          throw new Error(
+            `Failed to find action with type: ${action.type}. Should have already existing in the organization.`,
+          );
+        }
 
-      logger.info(colors.magenta(`Syncing action "${action.type}"...`));
-      try {
-        await syncAction(client, {
-          action,
-          actionId: existing.id,
-        });
-        logger.info(
-          colors.green(`Successfully synced action "${action.type}"!`),
-        );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync action "${action.type}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+        logger.info(colors.magenta(`Syncing action "${action.type}"...`));
+        try {
+          await syncAction(client, {
+            action,
+            actionId: existing.id,
+            skipPublish: !publishToPrivacyCenter,
+          });
+          logger.info(
+            colors.green(`Successfully synced action "${action.type}"!`),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync action "${action.type}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${actions.length}" actions!`));
   }
 
@@ -228,38 +275,45 @@ export async function syncConfigurationToTranscend(
       colors.magenta(`Syncing "${dataSubjects.length}" data subjects...`),
     );
     const existingDataSubjects = await fetchAllDataSubjects(client);
-    await mapSeries(dataSubjects, async (dataSubject) => {
-      const existing = existingDataSubjects.find(
-        (subj) => subj.type === dataSubject.type,
-      );
-      if (!existing) {
-        throw new Error(
-          `Failed to find data subject with type: ${dataSubject.type}. Should have already existing in the organization.`,
+    await map(
+      dataSubjects,
+      async (dataSubject) => {
+        const existing = existingDataSubjects.find(
+          (subj) => subj.type === dataSubject.type,
         );
-      }
+        if (!existing) {
+          throw new Error(
+            `Failed to find data subject with type: ${dataSubject.type}. Should have already existing in the organization.`,
+          );
+        }
 
-      logger.info(
-        colors.magenta(`Syncing data subject "${dataSubject.type}"...`),
-      );
-      try {
-        await syncDataSubject(client, {
-          dataSubject,
-          dataSubjectId: existing.id,
-        });
         logger.info(
-          colors.green(
-            `Successfully synced data subject "${dataSubject.type}"!`,
-          ),
+          colors.magenta(`Syncing data subject "${dataSubject.type}"...`),
         );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync data subject "${dataSubject.type}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+        try {
+          await syncDataSubject(client, {
+            dataSubject,
+            dataSubjectId: existing.id,
+            skipPublish: !publishToPrivacyCenter,
+          });
+          logger.info(
+            colors.green(
+              `Successfully synced data subject "${dataSubject.type}"!`,
+            ),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync data subject "${dataSubject.type}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${dataSubjects.length}" data subjects!`));
   }
 
@@ -268,26 +322,32 @@ export async function syncConfigurationToTranscend(
     // Fetch existing
     logger.info(colors.magenta(`Syncing "${attributes.length}" attributes...`));
     const existingAttributes = await fetchAllAttributes(client);
-    await mapSeries(attributes, async (attribute) => {
-      const existing = existingAttributes.find(
-        (attr) => attr.name === attribute.name,
-      );
+    await map(
+      attributes,
+      async (attribute) => {
+        const existing = existingAttributes.find(
+          (attr) => attr.name === attribute.name,
+        );
 
-      logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
-      try {
-        await syncAttribute(client, attribute, existing);
-        logger.info(
-          colors.green(`Successfully synced attribute "${attribute.name}"!`),
-        );
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
+        logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
+        try {
+          await syncAttribute(client, attribute, existing);
+          logger.info(
+            colors.green(`Successfully synced attribute "${attribute.name}"!`),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
     logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
   }
 
@@ -438,6 +498,10 @@ export async function syncConfigurationToTranscend(
     logger.info(
       colors.green(`Synced "${dependencyUpdates.length}" data silos!`),
     );
+  }
+
+  if (publishToPrivacyCenter) {
+    // TODO: https://transcend.height.app/T-23779
   }
 
   return encounteredError;

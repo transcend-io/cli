@@ -83,6 +83,7 @@ export async function fetchAllIdentifiers(
  *
  * @param input - Transcend input
  * @param client - GraphQL client
+ * @param skipPublish - When true, skip publishing to privacy center
  * @returns A map from identifier name to Identifier
  */
 export async function fetchIdentifiersAndCreateMissing(
@@ -92,6 +93,7 @@ export async function fetchIdentifiersAndCreateMissing(
     identifiers = [],
   }: TranscendInput,
   client: GraphQLClient,
+  skipPublish = false,
 ): Promise<{ [k in string]: Identifier }> {
   // Grab all existing identifiers
   const allIdentifiers = await fetchAllIdentifiers(client);
@@ -136,10 +138,13 @@ export async function fetchIdentifiersAndCreateMissing(
         client,
         CREATE_IDENTIFIER,
         {
-          name: identifier,
-          type: nativeTypesRemaining.includes(identifier!)
-            ? identifier
-            : 'custom',
+          input: {
+            name: identifier,
+            type: nativeTypesRemaining.includes(identifier!)
+              ? identifier
+              : 'custom',
+            skipPublish,
+          },
         },
       );
       logger.info(colors.green(`Created identifier ${identifier}!`));

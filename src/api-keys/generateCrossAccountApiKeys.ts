@@ -9,16 +9,8 @@ import {
 } from '../graphql';
 import { ScopeName } from '@transcend-io/privacy-types';
 import colors from 'colors';
+import { StoredApiKey } from '../codecs';
 import { logger } from '../logger';
-
-export interface ApiKeyAndOrganization {
-  /** Name of instance */
-  organizationName: string;
-  /** API key */
-  apiKey: string;
-  /** Organization ID API key is for */
-  organizationId: string;
-}
 
 export interface ApiKeyGenerateError {
   /** Name of instance */
@@ -60,7 +52,7 @@ export async function generateCrossAccountApiKeys({
   createNewApiKey?: boolean;
 }): Promise<{
   /** Successfully generated */
-  apiKeys: ApiKeyAndOrganization[];
+  apiKeys: StoredApiKey[];
   /** Error results */
   errors: ApiKeyGenerateError[];
 }> {
@@ -84,7 +76,7 @@ export async function generateCrossAccountApiKeys({
   });
 
   // Save the resulting API keys
-  const results: ApiKeyAndOrganization[] = [];
+  const results: StoredApiKey[] = [];
   const errors: ApiKeyGenerateError[] = [];
 
   // Generate API keys
@@ -172,7 +164,7 @@ export async function generateCrossAccountApiKeys({
   });
   logger.info(
     colors.green(
-      `Successfully created ${results.length} API keys${
+      `Successfully created ${results.length} API key${
         results.length === 1 ? '' : 's'
       }`,
     ),
