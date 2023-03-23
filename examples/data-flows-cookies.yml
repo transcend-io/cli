@@ -6,8 +6,10 @@ data-flows:
       - Essential
     status: LIVE
     service: DatoCMS
-    owners: []
-    teams: []
+    owners:
+      - test@transcend.io
+    teams:
+      - Marketing
   - value: use.typekit.net
     type: HOST
     description: Loads the font
