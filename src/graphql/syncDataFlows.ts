@@ -43,6 +43,9 @@ export async function updateDataFlows(
         service: flow.service,
         status: flow.status,
         attributes: flow.attributes,
+        // TODO: https://transcend.height.app/T-23718
+        // owners,
+        // teams,
       })),
     });
   });
@@ -82,6 +85,9 @@ export async function createDataFlows(
         service: flow.service,
         status: flow.status,
         // attributes: flow.attributes, TODO: https://transcend.height.app/T-23561
+        // FIXME
+        // owners,
+        // teams,
       })),
       dropMatchingDataFlowsInTriage: true,
     });

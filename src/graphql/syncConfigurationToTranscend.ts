@@ -12,6 +12,7 @@ import { syncIdentifier } from './syncIdentifier';
 import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSilo, DataSilo } from './syncDataSilos';
+import { syncCookies } from './syncCookies';
 import {
   fetchAllDataSubjects,
   ensureAllDataSubjectsExist,
@@ -55,7 +56,7 @@ export async function syncConfigurationToTranscend(
     'data-subjects': dataSubjects,
     'business-entities': businessEntities,
     enrichers,
-    // cookies, // FIXME
+    cookies,
     'consent-manager': consentManager,
     'data-silos': dataSilos,
     'data-flows': dataFlows,
@@ -120,6 +121,12 @@ export async function syncConfigurationToTranscend(
       businessEntities,
     );
     encounteredError = encounteredError || !businessEntitySuccess;
+  }
+
+  // Sync cookies
+  if (cookies) {
+    const cookiesSuccess = await syncCookies(client, cookies);
+    encounteredError = encounteredError || !cookiesSuccess;
   }
 
   // Sync enrichers

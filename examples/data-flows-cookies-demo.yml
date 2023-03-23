@@ -1,0 +1,3220 @@
+data-flows:
+  - value: www.datocms-assets.com
+    type: HOST
+    description: Assets (mostly images) from DatoCMS
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: DatoCMS
+    owners: []
+    teams: []
+  - value: use.typekit.net
+    type: HOST
+    description: Loads the font
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: adobeTypekit
+    owners: []
+    teams: []
+  - value: cdn.segment.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - value: www.recaptcha.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: cdn.segment.io
+    type: HOST
+    description: Loads Segment script. Not tracking—just loading JS.
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - value: www.googletagmanager.com
+    type: HOST
+    description: Tracks analytics and injects Chili Piper and ZoomInfo WebSights
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleTagManager
+    owners: []
+    teams: []
+  - value: pi.pardot.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - value: sync.transcend.io
+    type: HOST
+    description: Used for cross-domain consent sync
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: snap.licdn.com
+    type: HOST
+    trackingPurposes:
+      - SaleOfInfo
+    status: LIVE
+    service: linkedinAds
+    owners: []
+    teams: []
+  - value: cdn.transcend.io
+    type: HOST
+    description: Loads airgap.js, and other Transcend assets
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: www.gstatic.com
+    type: HOST
+    description: Loads reCAPTCHA
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: js.chilipiper.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: chiliPiper
+    owners: []
+    teams: []
+  - value: go.transcend.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - value: docs.transcend.io
+    type: HOST
+    description: Base URL of our docs
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: privacy.transcend.io
+    type: HOST
+    description: Base URL of our Privacy Center
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: images.ctfassets.net
+    type: HOST
+    description: Images from the integration catalog
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: contentful
+    owners: []
+    teams: []
+  - value: static.ads-twitter.com
+    type: HOST
+    description: 'Guessed service: Twitter Ads & Widgets'
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: twitterAds
+    owners: []
+    teams: []
+  - value: ws.zoominfo.com
+    type: HOST
+    description: 'Guessed service: zoominfo'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: zoomInfo
+    owners: []
+    teams: []
+  - value: t.co
+    type: HOST
+    description: 'Guessed service: Twitter Ads & Widgets'
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: twitterAds
+    owners: []
+    teams: []
+  - value: analytics.twitter.com
+    type: HOST
+    description: 'Guessed service: Twitter Ads'
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: twitterAds
+    owners: []
+    teams: []
+  - value: api.segment.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - value: p.typekit.net
+    type: HOST
+    description: Adobe Typekit analytics pixel. Not necessary for font loading.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: adobeTypekit
+    owners: []
+    teams: []
+  - value: px.ads.linkedin.com
+    type: HOST
+    description: LinkedIn Ads conversion tracking pixel
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: linkedinAds
+    owners: []
+    teams: []
+  - value: jpg8j4at9p-dsn.algolia.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: algolia
+    owners: []
+    teams: []
+  - value: vitals.vercel-insights.com
+    type: HOST
+    description: 'Guessed service: insights'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vercel
+    owners: []
+    teams: []
+  - value: www.google-analytics.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: cdn.linkedin.oribi.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: linkedin
+    owners: []
+    teams: []
+  - value: status.transcend.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: transcend
+    owners: []
+    teams: []
+  - value: www.google.com
+    type: HOST
+    description: Loads reCAPTCHA
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: adservice.google.com
+    type: HOST
+    description: 'Guessed service: googleAdsense'
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: api.chilipiper.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: chiliPiper
+    owners: []
+    teams: []
+  - value: td.doubleclick.net
+    type: HOST
+    description: 'Guessed service: googleDoubleclick'
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: googleDoubleClick
+    owners: []
+    teams: []
+  - value: sentry.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: api.lever.co
+    type: HOST
+    description: Lever
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: lever
+    owners: []
+    teams: []
+  - value: player.vimeo.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: transcendundefined
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: connect.facebook.net
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: facebookAds
+    owners: []
+    teams: []
+  - value: cysecurity.mines.edu
+    type: HOST
+    description: 'Guessed service: leadgnome'
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    owners: []
+    teams: []
+  - value: cdn.vercel-insights.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vercel
+    owners: []
+    teams: []
+  - value: localhost
+    type: HOST
+    description: 'Guessed service: ipswitchWsFtpClientSoftware'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: misc-assets-transcend-io.s3.amazonaws.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: vercel.live
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vercel
+    owners: []
+    teams: []
+  - value: api.vimeo.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: translate.googleapis.com
+    type: HOST
+    description: 'Guessed service: googleCloudEndpoints'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: jpg8j4at9p-1.algolianet.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: algolia
+    owners: []
+    teams: []
+  - value: www.google.co.in
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: assets.vercel.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vercel
+    owners: []
+    teams: []
+  - value: aorta.clickagy.com
+    type: HOST
+    description: 'Guessed service: clickagy'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: zoomInfo
+    owners: []
+    teams: []
+  - value: www.googleadservices.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.bd
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: jpg8j4at9p-2.algolianet.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: algolia
+    owners: []
+    teams: []
+  - value: me.kis.v2.scr.kaspersky-labs.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: browser.translate.yandex.net
+    type: HOST
+    description: 'Guessed service: yandexMetrica'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: yandexMetrica
+    owners: []
+    teams: []
+  - value: jpg8j4at9p-3.algolianet.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: algolia
+    owners: []
+    teams: []
+  - value: api.ucalc.pro
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.ca
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ws:localhost
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: cdn.pardot.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - value: gc.kis.v2.scr.kaspersky-labs.com
+    type: HOST
+    description: 'Guessed service: kasperskyEndpointProtection'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: stats.g.doubleclick.net
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ucalc.pro
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.com.my
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.pk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: adblockers.opera-mini.net
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: customer.iad-03.braze.com
+    type: HOST
+    description: 'Guessed service: brazeFormerlyAppboy'
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: brazeFormerlyAppboy
+    owners: []
+    teams: []
+  - value: cdn.jsdelivr.net
+    type: HOST
+    description: 'Guessed service: jsDelivr'
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: jsdelivr
+    owners: []
+    teams: []
+  - value: tags.clickagy.com
+    type: HOST
+    description: 'Guessed service: clickagy'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: zoomInfo
+    owners: []
+    teams: []
+  - value: js.intercomcdn.com
+    type: HOST
+    trackingPurposes:
+      - Functional
+      - Essential
+    status: LIVE
+    service: intercom
+    owners: []
+    teams: []
+  - value: translate.google.com
+    type: HOST
+    description: 'Guessed service: googleTranslate'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.co.il
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: hemsync.clickagy.com
+    type: HOST
+    description: 'Guessed service: clickagy'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: zoomInfo
+    owners: []
+    teams: []
+  - value: api.axept.io
+    type: HOST
+    description: 'Guessed service: adeptSecure'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: firestore.googleapis.com
+    type: HOST
+    description: 'Guessed service: google-cloud-endpoints'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.com.br
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: fonts.googleapis.com
+    type: HOST
+    description: 'Guessed service: googleFonts'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleFonts
+    owners: []
+    teams: []
+  - value: sessions.bugsnag.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: bugsnag
+    owners: []
+    teams: []
+  - value: uebx9s1rlf-dsn.algolia.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: algolia
+    owners: []
+    teams: []
+  - value: www.google.com.ng
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.sg
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: extension-backend.trylavender.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.co.id
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.au
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.ph
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: region1.google-analytics.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: transcend-testing-assets.s3-us-west-1.amazonaws.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: transcend.chilipiper.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: chiliPiper
+    owners: []
+    teams: []
+  - value: www.google.ae
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ssl.google-analytics.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: d33wubrfki0l68.cloudfront.net
+    type: HOST
+    description: Netlify CDN loads JS, font
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: netlify
+    owners: []
+    teams: []
+  - value: webkit-masked-url:hidden
+    type: HOST
+    description: 'Guessed service: hiddenMarkovModelToolkit'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.google.com.ar
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.za
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: prod-backend-company-uploads-transcend-io.s3.amazonaws.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: www.google.com.jm
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.th
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: i.vimeocdn.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: app.launchdarkly.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: o413355.ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: tracking.chilipiper.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: chiliPiper
+    owners: []
+    teams: []
+  - value: www.google.co.jp
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.mx
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.jo
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: fonts.gstatic.com
+    type: HOST
+    description: 'Guessed service: googleFonts'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleFonts
+    owners: []
+    teams: []
+  - value: api.cognitive.microsofttranslator.com
+    type: HOST
+    description: 'Guessed service: microsoftTranslator'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: conoret.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: csp.withgoogle.com
+    type: HOST
+    description: 'Guessed service: logitrack'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: meetlookup.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: yastatic.net
+    type: HOST
+    description: 'Guessed service: Yandex Metrica'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: api.amplitude.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - value: raw.githubusercontent.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: gitHub
+    owners: []
+    teams: []
+  - value: www.google.am
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.cl
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.ke
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.kr
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.do
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.eg
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.hk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.np
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.pe
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.tr
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.tw
+    type: HOST
+    description: Google
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.nz
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.ug
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.dz
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.ge
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.mk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.mv
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.nl
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.ru
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.sr
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.bs
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.com.af
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.com.mm
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.co.uz
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.co.zm
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.is
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: s3.amazonaws.com
+    type: HOST
+    description: 'Guessed service: autoscalr'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: api-js.mixpanel.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: mixpanel
+    owners: []
+    teams: []
+  - value: recaptcha.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: www.google.sn
+    type: HOST
+    description: 'Guessed service: google-adsense'
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    owners: []
+    teams: []
+  - value: pouch-global-font-assets.s3.eu-central-1.amazonaws.com
+    type: HOST
+    description: 'Guessed service: autoscalr'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: amazonWebServices
+    owners: []
+    teams: []
+  - value: edge.microsoft.com
+    type: HOST
+    description: 'Guessed service: bingAds'
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: bingAds
+    owners: []
+    teams: []
+  - value: logs.browser-intake-datadoghq.com
+    type: HOST
+    description: 'Guessed service: browserUpdate'
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - value: update.evernote.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: evernote
+    owners: []
+    teams: []
+  - value: www.facebook.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: facebookAds
+    owners: []
+    teams: []
+  - value: use.fontawesome.com
+    type: HOST
+    description: 'Guessed service: fontAwesome'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: fontAwesome
+    owners: []
+    teams: []
+  - value: googleads.g.doubleclick.net
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ssl.gstatic.com
+    type: HOST
+    description: 'Guessed service: synopsysStaticApplicationSecurityTesting'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.al
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.cr
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.ma
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.co
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.ec
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.kw
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.pr
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.sa
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.sv
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.uy
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.vn
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.co.uk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.de
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.fr
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.ie
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.iq
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.kz
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.lk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.mn
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.mu
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.no
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.gt
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: www.google.com.kh
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: storage.googleapis.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleApps
+    owners: []
+    teams: []
+  - value: www.gstatic.cn
+    type: HOST
+    description: 'Guessed service: synopsysStaticApplicationSecurityTesting'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleApps
+    owners: []
+    teams: []
+  - value: app.transcend.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: clientstream.launchdarkly.com
+    type: HOST
+    description: 'Guessed service: launchdarkly'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: launchDarkly
+    owners: []
+    teams: []
+  - value: cdn.loom.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: loom
+    owners: []
+    teams: []
+  - value: o104379.ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: o470461.ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: o486460.ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: o921931.ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: www.youtube.com
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: youtube
+    owners: []
+    teams: []
+  - value: 1637314617.rsc.cdn77.org
+    type: HOST
+    description: 'Guessed service: cdn77'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: api.fonts.ninja
+    type: HOST
+    description: 'Guessed service: fontscom'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: api.transcend.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: events.launchdarkly.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    owners: []
+    teams: []
+  - value: 'file:'
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: gemmating.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: internet-extension:khmmfcceknncifmkiimjnnjldibgajpl
+    type: HOST
+    description: 'Guessed service: inboxsdk'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: 'javascript:'
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: negbar.ad-blocker.org
+    type: HOST
+    description: 'Guessed service: adSorcery'
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    owners: []
+    teams: []
+  - value: pro.ip-api.com
+    type: HOST
+    description: 'Guessed service: IP-API'
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    owners: []
+    teams: []
+  - value: wss:tm.filter
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.sourcescrub.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: columbia.scene7.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: adobeExperienceManager
+    owners: []
+    teams: []
+  - value: dks.scene7.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: adobeExperienceManager
+    owners: []
+    teams: []
+  - value: underarmour.scene7.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: adobeExperienceManager
+    owners: []
+    teams: []
+  - value: cdn.amplitude.com
+    type: HOST
+    description: Loads the Amplitude script (not tracking)
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - value: assets.calendly.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: calendly
+    owners: []
+    teams: []
+  - value: calendly.com
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: calendly
+    owners: []
+    teams: []
+  - value: res.cloudinary.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: cloudinary
+    owners: []
+    teams: []
+  - value: images.contentful.com
+    type: HOST
+    description: 'Guessed service: contentful'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: contentful
+    owners: []
+    teams: []
+  - value: assets.customer.io
+    type: HOST
+    description: Loads the Customer.io script (not tracking)
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: customerIo
+    owners: []
+    teams: []
+  - value: track.customer.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: customerIo
+    owners: []
+    teams: []
+  - value: browser-http-intake.logs.datadoghq.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - value: rum-http-intake.logs.datadoghq.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - value: datocms-assets.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: DatoCMS
+    owners: []
+    teams: []
+  - value: safari-extension:2B1D7ACA-A879-4A57-B9B3-0AC5EA4693E3
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: ghostInspector
+    owners: []
+    teams: []
+  - value: safari-extension:70170BF7-D4E5-4822-816B-A494C340D3AC
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: ghostInspector
+    owners: []
+    teams: []
+  - value: safari-extension:80E9F430-9EC2-46BA-9A1C-97CB8E4E998F
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: ghostInspector
+    owners: []
+    teams: []
+  - value: safari-extension:A61176E1-DDFD-459A-84DC-BF162F98F748
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: ghostInspector
+    owners: []
+    teams: []
+  - value: bid.g.doubleclick.net
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - SaleOfInfo
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: googleadservices.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: //googleads.g.doubleclick.net/pagead/viewthroughconversion/
+    type: PATH
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: tpc.googlesyndication.com
+    type: HOST
+    description: 'Guessed service: Google Ads'
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ^www\.google\.[a-z]{2}$
+    type: REGEX
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.cn
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: ^www\.google\.com\.[a-z]{2}$
+    type: REGEX
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.com.cy
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.dk
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.pt
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.se
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - value: www.google.gy
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - value: doubleclick.net
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: googleDoubleClick
+    owners: []
+    teams: []
+  - value: ph-static.imgix.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: imgix
+    owners: []
+    teams: []
+  - value: hn2.inspectlet.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: inspectlet
+    owners: []
+    teams: []
+  - value: intercomcdn.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: intercom
+    owners: []
+    teams: []
+  - value: intercom.io
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: intercom
+    owners: []
+    teams: []
+  - value: transcend.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - value: ads.linkedin.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - SaleOfInfo
+    status: LIVE
+    service: linkedinAds
+    owners: []
+    teams: []
+  - value: app.netlify.com
+    type: HOST
+    description: 'Guessed service: netlify'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: netlify
+    owners: []
+    teams: []
+  - value: netlify-cdp-loader.netlify.app
+    type: HOST
+    description: 'Guessed service: netlify'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: netlify
+    owners: []
+    teams: []
+  - value: cdn.optimizely.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: optimizely
+    owners: []
+    teams: []
+  - value: //www.google.com/recaptcha/
+    type: PATH
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: //www.google.com/recaptcha/api.js
+    type: PATH
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: recaptcha
+    owners: []
+    teams: []
+  - value: /.*?\.ingest\.sentry\.io/
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: ingest.sentry.io
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: sentry
+    owners: []
+    teams: []
+  - value: js.stripe.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: stripe
+    owners: []
+    teams: []
+  - value: 66ce6edb-b9e2-4e8e-8b92-edc1e0a0e83a.trayapp.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: tray
+    owners: []
+    teams: []
+  - value: fresnel.vimeocdn.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: f.vimeocdn.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: vimeo.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: vimeo
+    owners: []
+    teams: []
+  - value: www.youtube-nocookie.com
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: youtube
+    owners: []
+    teams: []
+  - value: app.zoominfo.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: zoomInfo
+    owners: []
+    teams: []
+  - value: adblock.spammerslapper.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    owners: []
+    teams: []
+  - value: amplitude.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    owners: []
+    teams: []
+  - value: api-iam.intercom.io
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    owners: []
+    teams: []
+  - value: api.microsofttranslator.com
+    type: HOST
+    description: 'Guessed service: microsoft-translator'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: cdn.readme.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: cdn.skypack.dev
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: cloudfront.net
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: example.xn--q9jyb4c
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: files.readme.io
+    type: HOST
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: '*.hotjar.com'
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: me.kes.v2.scr.kaspersky-labs.com
+    type: HOST
+    description: 'Guessed service: Unknown'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: product-images.ibotta.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: proxdevcool.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: public-images-1540456210.s3.amazonaws.com
+    type: HOST
+    description: 'Guessed service: autoscalr'
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-extension:059F8C70-0659-4FA8-9E10-4ED6762A310F
+    type: HOST
+    description: 'Guessed service: safari'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-extension:A45AF531-7E3E-4D35-B9C0-BED7B64AC389
+    type: HOST
+    description: 'Guessed service: safari'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-extension:com.ebay.safari.myebaymanager-QYHMMGCMJR
+    type: HOST
+    description: 'Guessed service: safari'
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:138509D8-FF53-4B0B-A17D-B5AA569DE544
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:36D8A9D4-1AA6-4EC6-A001-CFDEB933B559
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:375AE913-ADCF-4A8E-9273-31CB995E4AEF
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:3C4EE30B-12C0-4A1C-9FA5-552672679705
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:43EDECCE-0289-42A0-B261-4B4484A43CE7
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:4A48EF17-1887-453C-B7E8-E865FDFA7E80
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:554D6922-030B-4C63-81CD-0819A9C18A14
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:5CE83655-1CE5-4311-8E68-657D01670B10
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:7EEAEC71-2110-481B-AE9A-BE20902F3E57
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:8D063645-D9EC-461E-B433-8D4F0171BD68
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:A1EC891F-71BB-48DB-B65C-A921F9938C6C
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:AE2C7D8E-EE0A-4B3A-B850-2B4CF29DA8AD
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:D65BDC34-5C14-4195-A526-7087C027836D
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:D7DD86ED-E93B-4A36-99D8-EE99E1E2020C
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:DBD47520-4CEC-4CB8-9723-B40A144FED64
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:DE3394DD-7088-4C41-B0AE-35C9D41AFAE3
+    type: HOST
+    description: 'Guessed service: webScraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: safari-web-extension:E55DA491-6E18-48E1-BF16-A44C7E105935
+    type: HOST
+    description: 'Guessed service: web-scraper'
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    owners: []
+    teams: []
+  - value: test.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: test-transcend-csp.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: transcend.test
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: wss://*.hotjar.com
+    type: PATH
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: wss://*.test.test
+    type: PATH
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: wss://transcend.test
+    type: PATH
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.instok.org
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: www.loom.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: LIVE
+    owners: []
+    teams: []
+  - value: widget.intercom.io
+    type: HOST
+    trackingPurposes:
+      - Functional
+    status: NEEDS_REVIEW
+    service: intercom
+    owners: []
+    teams: []
+  - value: downloads.intercomcdn.com
+    type: HOST
+    description: 'Guessed service: Intercom'
+    trackingPurposes:
+      - Essential
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: cdn-test.trancsend.com
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - Essential
+    status: NEEDS_REVIEW
+    service: transcend
+    owners: []
+    teams: []
+  - value: ibotta.com
+    type: HOST
+    trackingPurposes: []
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: www.pagespeed-mod.com
+    type: HOST
+    description: 'Guessed service: modio'
+    trackingPurposes:
+      - Essential
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: www.google.co.ve
+    type: HOST
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: NEEDS_REVIEW
+    service: googleAds
+    owners: []
+    teams: []
+  - value: app.sourcescrub.com
+    type: HOST
+    trackingPurposes: []
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: analytics.google.com
+    type: HOST
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: tl.ytlogs.ru
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: ad.doubleclick.net
+    type: HOST
+    description: 'Guessed service: google-doubleclick'
+    trackingPurposes:
+      - Advertising
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: cdnmc.global-cache.online
+    type: HOST
+    description: 'Guessed service: globalShopSolutions'
+    trackingPurposes:
+      - Essential
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: m.youtube.com
+    type: HOST
+    description: 'Guessed service: YouTube Advertising'
+    trackingPurposes:
+      - Advertising
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: www.google.cg
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: www.google.com.lb
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: 3001.scriptcdn.net
+    type: HOST
+    description: 'Guessed service: scripted'
+    trackingPurposes:
+      - Advertising
+      - Functional
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: adtonus.com
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: fonts.bunny.net
+    type: HOST
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: www.google.bj
+    type: HOST
+    description: 'Guessed service: google-analytics'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - value: ^https://.+ingest\.sentry\.io
+    type: REGEX
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    service: sentry
+    owners: []
+    teams: []
+cookies:
+  - name: __tld__
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - name: ajs_user_id
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - name: _dd_s
+    isRegex: false
+    description: test
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - name: ajs_group_id
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - name: showAnnouncementBanner
+    isRegex: false
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - name: ab._gd
+    isRegex: false
+    description: >-
+      Temporarily created (and then deleted) to determine the root-level cookie
+      domain, which allows the SDK to work properly across sub-domains.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: braze
+    owners: []
+    teams: []
+  - name: _gid
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: ajs_anonymous_id
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - name: _gcl_aw
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _ga
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _gat_codelabAccount
+    isRegex: false
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - name: _gcl_au
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: __utma
+    isRegex: false
+    description: Used to distinguish users and sessions.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: __utmb
+    isRegex: false
+    description: Used to distinguish users and sessions.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: __utmc
+    isRegex: false
+    description: Used to distinguish users and sessions.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: __utmz
+    isRegex: false
+    description: >-
+      Stores the traffic source or campaign that explains how the user reached
+      your site. The cookie is created when the javascript library executes and
+      is updated every time data is sent to Google Analytics.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: ab.storage.deviceId.7af503ae-0c84-478f-98b0-ecfff5d67750
+    isRegex: false
+    description: >-
+      Out-of-the-box randomly generated string used to identify anonymous users,
+      and to differentiate users’ devices and enables device-based messaging.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: braze
+    owners: []
+    teams: []
+  - name: ab.storage.sessionId.7af503ae-0c84-478f-98b0-ecfff5d67750
+    isRegex: false
+    description: >-
+      Out-of-the-box randomly generated string used to determine whether the
+      user is starting a new or existing session to sync messages and calculate
+      session analytics.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: braze
+    owners: []
+    teams: []
+  - name: ab.storage.userId.7af503ae-0c84-478f-98b0-ecfff5d67750
+    isRegex: false
+    description: >-
+      Used to determine whether the currently logged-in user has changed and to
+      associate events with the current user.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: braze
+    owners: []
+    teams: []
+  - name: _cio
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: customerIo
+    owners: []
+    teams: []
+  - name: _cioanonid
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: customerIo
+    owners: []
+    teams: []
+  - name: _cioid
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: customerIo
+    owners: []
+    teams: []
+  - name: datadog-synthetics-public-id
+    isRegex: false
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - name: datadog-synthetics-result-id
+    isRegex: false
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: datadog
+    owners: []
+    teams: []
+  - name: _fbp
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: facebookPixel
+    owners: []
+    teams: []
+  - name: _gac_gb_UA-98816685-6
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _gac_UA-98816685-6
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _ga_HB3Q40CBPP
+    isRegex: false
+    description: >-
+      Automatically created by a Google Analytics script to track a user's page
+      views and clicks with a unique ID, without revealing who you are.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _gali
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _gat
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _ga_Y61M7LSS57
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: _gcl_gb
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: googtrans
+    isRegex: false
+    description: A cookie set as a part of the Google Translate services.
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: googleTranslateApi
+    owners: []
+    teams: []
+  - name: rl_group_id
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: rudderStack
+    owners: []
+    teams: []
+  - name: rl_group_trait
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: rudderStack
+    owners: []
+    teams: []
+  - name: rl_trait
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: rudderStack
+    owners: []
+    teams: []
+  - name: rl_user_id
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: rudderStack
+    owners: []
+    teams: []
+  - name: _uetsid
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: bingAds
+    owners: []
+    teams: []
+  - name: _uetvid
+    isRegex: false
+    trackingPurposes:
+      - Advertising
+    status: LIVE
+    service: bingAds
+    owners: []
+    teams: []
+  - name: __utmt
+    isRegex: false
+    description: Used to throttle request rate.
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: visitor_id883383
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - name: visitor_id883383-hash
+    isRegex: false
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - name: ^ab\.storage\.deviceId\..*
+    isRegex: true
+    description: >-
+      Out-of-the-box randomly generated string used to identify anonymous users,
+      and to differentiate users’ devices and enables device-based messaging.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: braze
+    owners: []
+    teams: []
+  - name: ^ajs_anonymous_id.*
+    isRegex: true
+    description: >-
+      This cookie is used to identify a specific visitor - this information is
+      used to identify the number of specific visitors on a website.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: segment
+    owners: []
+    teams: []
+  - name: ^amp_.*
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - name: ^amp_cookie_test_.+
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - name: ^amplitude_.*
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - name: ^amplitude_id.*
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: amplitude
+    owners: []
+    teams: []
+  - name: ^_ga.*
+    isRegex: true
+    description: >-
+      Automatically created by a Google Analytics script to track a user's page
+      views and clicks with a unique ID, without revealing who you are.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: ^_gac_.*
+    isRegex: true
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: LIVE
+    service: googleAds
+    owners: []
+    teams: []
+  - name: ^_gcl.*
+    isRegex: true
+    description: Google conversion tracking cookie
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: ^intercom-session-.*
+    isRegex: true
+    trackingPurposes:
+      - Essential
+    status: LIVE
+    service: intercom
+    owners: []
+    teams: []
+  - name: ^lpv.*
+    isRegex: true
+    description: >-
+      Used in context with behavioral tracking by the website. The cookie
+      registers the user’s behavior and navigation across multiple websites and
+      ensures that no tracking errors occur when the user has multiple
+      browser-tabs open.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforce
+    owners: []
+    teams: []
+  - name: ^mp_.*_mixpanel$
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: mixpanel
+    owners: []
+    teams: []
+  - name: ^mp_.+_mixpanel$
+    isRegex: true
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: mixpanel
+    owners: []
+    teams: []
+  - name: ^_tldtest_.*
+    isRegex: true
+    trackingPurposes:
+      - Functional
+    status: LIVE
+    service: internalService
+    owners: []
+    teams: []
+  - name: ^visitor_id\d+-.+$
+    isRegex: true
+    description: >-
+      The visitor hash cookie contains the account ID and stores a unique hash.
+      For example, the cookie name visitor_id12345-hash stores the hash
+      “855c3697d9979e78ac404c4ba2c66533”, and the account ID is 12345. This
+      cookie is a security measure to make sure that a malicious user can’t fake
+      a visitor and access corresponding prospect information.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - name: ^visitor_id\d+$
+    isRegex: true
+    description: >-
+      The visitor cookie includes a unique visitor ID and the unique identifier
+      for your account. For example, the cookie name visitor_id12345 stores the
+      visitor ID 1010101010. The account identifier, 12345, makes sure that the
+      visitor is tracked on the correct Pardot account. The visitor value is the
+      visitor_id in your Pardot account. This cookie is set for visitors by the
+      Pardot tracking code.
+    trackingPurposes:
+      - Analytics
+    status: LIVE
+    service: salesforcePardot
+    owners: []
+    teams: []
+  - name: ln_or
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: arp_scroll_position
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: intercom-device-id-f7yqnv3x
+    isRegex: false
+    trackingPurposes: []
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: cookietest
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: li_fat_id
+    isRegex: false
+    description: >-
+      Member indirect identifier for Members for conversion tracking,
+      retargeting, analytics
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: NEEDS_REVIEW
+    service: linkedin
+    owners: []
+    teams: []
+  - name: cookiecookie
+    isRegex: false
+    trackingPurposes: []
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: __x
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: SLG_G_WPT_TO
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: usprivacy
+    isRegex: false
+    description: >-
+      Storage of information about your consent for the purpose of enforcement
+      of the California data protection laws.
+    trackingPurposes:
+      - Essential
+    status: NEEDS_REVIEW
+    service: dailymotion
+    owners: []
+    teams: []
+  - name: ext_name
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: logglytrackingsession
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    service: loggly
+    owners: []
+    teams: []
+  - name: ^a.*$
+    isRegex: true
+    trackingPurposes:
+      - Advertising
+      - Analytics
+      - Functional
+      - SaleOfInfo
+    status: NEEDS_REVIEW
+    service: neustar
+    owners: []
+    teams: []
+  - name: ^ab\.storage\.sessionId\..*
+    isRegex: true
+    description: >-
+      Out-of-the-box randomly generated string used to determine whether the
+      user is starting a new or existing session to sync messages and calculate
+      session analytics.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: NEEDS_REVIEW
+    service: braze
+    owners: []
+    teams: []
+  - name: ^ab\.storage\.userId\..*
+    isRegex: true
+    description: >-
+      Used to determine whether the currently logged-in user has changed and to
+      associate events with the current user.
+    trackingPurposes:
+      - Advertising
+      - Analytics
+    status: NEEDS_REVIEW
+    service: braze
+    owners: []
+    teams: []
+  - name: ^_gd.*
+    isRegex: true
+    trackingPurposes:
+      - Functional
+    status: NEEDS_REVIEW
+    service: googleAnalytics
+    owners: []
+    teams: []
+  - name: ^Hm_ck_.+
+    isRegex: true
+    description: 'Guessed service: baidu'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: ^Hm_lpvt_.+
+    isRegex: true
+    description: 'Guessed service: baidu'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: ^Hm_lvt_.+
+    isRegex: true
+    description: 'Guessed service: baidu'
+    trackingPurposes:
+      - Analytics
+    status: NEEDS_REVIEW
+    owners: []
+    teams: []
+  - name: ^intercom-id-.*
+    isRegex: true
+    trackingPurposes:
+      - Functional
+    status: NEEDS_REVIEW
+    service: intercom
+    owners: []
+    teams: []
+  - name: rl_anonymous_id
+    isRegex: false
+    trackingPurposes:
+      - Unknown
+    status: NEEDS_REVIEW
+    service: rudderStack
+    owners: []
+    teams: []
