@@ -96,7 +96,7 @@ async function main(): Promise<void> {
   }
 
   // Validate scopes
-  const splitScopes = scopes.split(',');
+  const splitScopes = scopes.split(',').map((x) => x.trim());
   const invalidScopes = splitScopes.filter(
     (scopeTitle) => !SCOPES_BY_TITLE[scopeTitle],
   );

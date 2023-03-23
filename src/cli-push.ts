@@ -2,6 +2,7 @@
 
 import yargs from 'yargs-parser';
 import { logger } from './logger';
+import { mapSeries } from 'bluebird';
 import { existsSync } from 'fs';
 import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
@@ -11,8 +12,55 @@ import {
 } from './graphql';
 
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
+import { TranscendInput } from './codecs';
 import { ObjByString } from '@transcend-io/type-utils';
+import { validateTranscendAuth } from './api-keys';
 import { mergeTranscendInputs } from './mergeTranscendInputs';
+
+/**
+ * Sync configuration to Transcend
+ *
+ * @param options - Options
+ * @returns True if synced successfully, false if error occurs
+ */
+async function syncConfiguration({
+  transcendUrl,
+  auth,
+  pageSize,
+  publishToPrivacyCenter,
+  contents,
+}: {
+  /** Transcend YAML */
+  contents: TranscendInput;
+  /** Transcend URL */
+  transcendUrl: string;
+  /** API key */
+  auth: string;
+  /** Page size */
+  pageSize: number;
+  /** Skip privacy center publish step */
+  publishToPrivacyCenter: boolean;
+}): Promise<boolean> {
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  // Sync to Transcend
+  try {
+    const encounteredError = await syncConfigurationToTranscend(
+      contents,
+      client,
+      { pageSize, publishToPrivacyCenter },
+    );
+    return !encounteredError;
+    return true;
+  } catch (err) {
+    logger.error(
+      colors.red(
+        `An unexpected error occurred syncing the schema: ${err.message}`,
+      ),
+    );
+    return false;
+  }
+}
 
 /**
  * Push the transcend.yml file remotely into a Transcend instance
@@ -31,17 +79,11 @@ async function main(): Promise<void> {
     auth,
     variables = '',
     pageSize = '',
+    publishToPrivacyCenter,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
-  // Ensure auth is passed
-  if (!auth) {
-    logger.error(
-      colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
-      ),
-    );
-    process.exit(1);
-  }
+  // Parse authentication as API key or path to list of API keys
+  const apiKeyOrList = await validateTranscendAuth(auth);
 
   // Parse out the variables
   const splitVars = variables.split(',').filter((x) => !!x);
@@ -89,29 +131,68 @@ async function main(): Promise<void> {
   const [base, ...rest] = transcendInputs;
   const contents = mergeTranscendInputs(base, ...rest);
 
-  // Create a GraphQL client
-  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+  // Parse page size
+  const parsedPageSize = pageSize ? parseInt(pageSize, 10) : 50;
 
-  // Sync to Transcend
-  try {
-    const encounteredError = await syncConfigurationToTranscend(
+  // process a single API key
+  if (typeof apiKeyOrList === 'string') {
+    const success = await syncConfiguration({
+      transcendUrl,
+      auth: apiKeyOrList,
       contents,
-      client,
-      pageSize ? parseInt(pageSize, 10) : 50,
-    );
-    if (encounteredError) {
+      publishToPrivacyCenter: publishToPrivacyCenter === 'true',
+      pageSize: parsedPageSize,
+    });
+
+    // exist with error code
+    if (!success) {
       logger.info(
         colors.red(
           `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
         ),
       );
+
       process.exit(1);
     }
-  } catch (err) {
-    logger.error(
-      colors.red(`An error occurred syncing the schema: ${err.message}`),
-    );
-    process.exit(1);
+  } else {
+    const encounteredErrors: string[] = [];
+    await mapSeries(apiKeyOrList, async (apiKey, ind) => {
+      const prefix = `[${ind}/${apiKeyOrList.length}][${apiKey.organizationName}] `;
+      logger.info(
+        colors.magenta(
+          `~~~\n\n${prefix}Attempting to push configuration...\n\n~~~`,
+        ),
+      );
+
+      const success = await syncConfiguration({
+        transcendUrl,
+        auth: apiKey.apiKey,
+        contents,
+        pageSize: parsedPageSize,
+        publishToPrivacyCenter: publishToPrivacyCenter === 'true',
+      });
+
+      if (success) {
+        logger.info(
+          colors.green(`${prefix}Successfully pushed configuration!`),
+        );
+      } else {
+        logger.error(colors.red(`${prefix}Failed to sync configuration.`));
+        encounteredErrors.push(apiKey.organizationName);
+      }
+    });
+
+    if (encounteredErrors.length > 0) {
+      logger.info(
+        colors.red(
+          `Sync encountered errors for "${encounteredErrors.join(
+            ',',
+          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
+      );
+
+      process.exit(1);
+    }
   }
 
   // Indicate success

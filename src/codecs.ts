@@ -673,3 +673,18 @@ export const TranscendInput = t.partial({
 
 /** Type override */
 export type TranscendInput = t.TypeOf<typeof TranscendInput>;
+
+/**
+ * The output of `tr-generate-api-keys` that can be provided to `tr-push`
+ */
+export const StoredApiKey = t.type({
+  /** Name of instance */
+  organizationName: t.string,
+  /** API key */
+  apiKey: t.string,
+  /** Organization ID API key is for */
+  organizationId: t.string,
+});
+
+/** Type override */
+export type StoredApiKey = t.TypeOf<typeof StoredApiKey>;

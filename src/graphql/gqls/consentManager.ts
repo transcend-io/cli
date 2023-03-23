@@ -153,6 +153,15 @@ export const FETCH_CONSENT_MANAGER = gql`
     }
   }
 `;
+export const CREATE_CONSENT_MANAGER = gql`
+  mutation TranscendCliCreateManager($privacyCenterId: ID!) {
+    createConsentManager(input: { privacyCenterId: $privacyCenterId }) {
+      consentManager {
+        id
+      }
+    }
+  }
+`;
 
 export const UPDATE_CONSENT_MANAGER_DOMAINS = gql`
   mutation TranscendCliUpdateConsentManagerDomains(

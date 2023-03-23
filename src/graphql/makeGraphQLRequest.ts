@@ -2,7 +2,7 @@ import { GraphQLClient, RequestDocument, Variables } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 4;
 
 /**
  * Make a GraphQL request with retries
@@ -11,6 +11,7 @@ const MAX_RETRIES = 3;
  * @param document - document
  * @param variables - Variable
  * @param requestHeaders - Headers
+ * @param maxRequests - Max number of requests
  * @returns Response
  */
 export async function makeGraphQLRequest<T, V = Variables>(
@@ -18,6 +19,7 @@ export async function makeGraphQLRequest<T, V = Variables>(
   document: RequestDocument,
   variables?: V,
   requestHeaders?: RequestInit['headers'],
+  maxRequests = MAX_RETRIES,
 ): Promise<T> {
   let retryCount = 0;
   // eslint-disable-next-line no-constant-condition
@@ -27,15 +29,15 @@ export async function makeGraphQLRequest<T, V = Variables>(
       const result = await client.request(document, variables, requestHeaders);
       return result;
     } catch (err) {
-      if (retryCount > MAX_RETRIES) {
+      if (retryCount >= maxRequests) {
         throw err;
       }
+      retryCount += 1;
       logger.log(
         colors.yellow(
-          `REQUEST FAILED: ${err.message}. Retrying ${retryCount}/${MAX_RETRIES}...`,
+          `REQUEST FAILED: ${err.message}. Retrying ${retryCount}/${maxRequests}...`,
         ),
       );
-      retryCount += 1;
     }
   }
 }

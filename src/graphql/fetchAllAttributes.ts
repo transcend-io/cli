@@ -47,7 +47,7 @@ export interface Attribute {
   enabledOnProcessingPurposeSubCategories: boolean;
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 100;
 
 /**
  * Fetch all attribute values for an attribute key
