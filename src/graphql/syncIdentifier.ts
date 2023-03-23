@@ -3,7 +3,6 @@ import { GraphQLClient } from 'graphql-request';
 import { UPDATE_IDENTIFIER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import type { DataSubject } from './fetchDataSubjects';
-import { sleepPromise } from './sleepPromise';
 
 /**
  * Sync the consent manager
@@ -17,6 +16,7 @@ export async function syncIdentifier(
     identifier,
     dataSubjectsByName,
     identifierId,
+    skipPublish = false,
   }: {
     /** Identifier update input */
     identifier: IdentifierInput;
@@ -24,6 +24,8 @@ export async function syncIdentifier(
     dataSubjectsByName: { [k in string]: DataSubject };
     /** Existing identifier Id */
     identifierId: string;
+    /** When true, skip publishing to privacy center */
+    skipPublish?: boolean;
   },
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_IDENTIFIER, {
@@ -39,9 +41,7 @@ export async function syncIdentifier(
       dataSubjectIds: identifier.dataSubjects
         ? identifier.dataSubjects.map((type) => dataSubjectsByName[type].id)
         : undefined,
+      skipPublish,
     },
   });
-
-  // TODO: https://transcend.height.app/T-23578 - bulk update with single invalidation
-  await sleepPromise(1000 * 3);
 }

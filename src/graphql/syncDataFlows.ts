@@ -84,8 +84,8 @@ export async function createDataFlows(
         description: flow.description,
         service: flow.service,
         status: flow.status,
-        // attributes: flow.attributes, TODO: https://transcend.height.app/T-23561
-        // FIXME
+        attributes: flow.attributes,
+        // TODO: https://transcend.height.app/T-23718
         // owners,
         // teams,
       })),

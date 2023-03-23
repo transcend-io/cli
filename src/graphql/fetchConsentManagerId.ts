@@ -17,7 +17,7 @@ export interface ConsentManager {
 }
 
 /**
- * Fetch consent manager ID
+ * Fetch consent manager
  *
  * @param client - GraphQL client
  * @returns Consent manager ID in organization
@@ -41,10 +41,12 @@ export async function fetchConsentManager(
  * Fetch consent manager ID
  *
  * @param client - GraphQL client
+ * @param maxRequests - = Max number of requests to send
  * @returns Consent manager ID in organization
  */
 export async function fetchConsentManagerId(
   client: GraphQLClient,
+  maxRequests?: number,
 ): Promise<string> {
   const {
     consentManager: { consentManager },
@@ -57,7 +59,7 @@ export async function fetchConsentManagerId(
         id: string;
       };
     };
-  }>(client, FETCH_CONSENT_MANAGER_ID);
+  }>(client, FETCH_CONSENT_MANAGER_ID, {}, {}, maxRequests);
   return consentManager.id;
 }
 

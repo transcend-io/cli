@@ -2,7 +2,6 @@ import { ActionInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_ACTION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { sleepPromise } from './sleepPromise';
 
 /**
  * Sync the consent manager
@@ -15,11 +14,14 @@ export async function syncAction(
   {
     action,
     actionId,
+    skipPublish = false,
   }: {
     /** Action update input */
     action: ActionInput;
     /** Existing action Id */
     actionId: string;
+    /** When true, skip publishing to privacy center */
+    skipPublish?: boolean;
   },
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_ACTION, {
@@ -29,9 +31,7 @@ export async function syncAction(
       skipDownloadableStep: action.skipDownloadableStep,
       requiresReview: action.requiresReview,
       waitingPeriod: action.waitingPeriod,
+      skipPublish,
     },
   });
-
-  // TODO: https://transcend.height.app/T-23578 - bulk update with single invalidation
-  await sleepPromise(1000 * 3);
 }
