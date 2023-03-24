@@ -1,8 +1,8 @@
 import { gql } from 'graphql-request';
 
 export const BUSINESS_ENTITIES = gql`
-  query TranscendCliBusinessEntities {
-    businessEntities {
+  query TranscendCliBusinessEntities($first: Int!, $offset: Int!) {
+    businessEntities(first: $first, offset: $offset) {
       nodes {
         id
         title
