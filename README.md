@@ -249,15 +249,15 @@ _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 #### Arguments
 
-| Argument     | Description                                                                              | Type                | Default                               | Required |
-| ------------ | ---------------------------------------------------------------------------------------- | ------------------- | ------------------------------------- | -------- |
-| auth         | The Transcend API capable of fetching the configuration                                  | string              | N/A                                   | true     |
-| resources    | The different resource types to pull in (see table above for breakdown of each resource) | string              | apiKeys,templates,dataSilos,enrichers | false    |
-| file         | Path to the YAML file to pull into                                                       | string - file-path  | ./transcend.yml                       | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL        | https://api.transcend.io              | false    |
-| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.                    | list(string - UUID) | N/A                                   | false    |
-| pageSize     | The page size to use when paginating over the API                                        | number              | 50                                    | false    |
-| debug        | Set to true to include debug logs while pulling the configuration                        | boolean             | false                                 | false    |
+| Argument     | Description                                                                              | Type                                                         | Default                               | Required |
+| ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------- | -------- |
+| auth         | The Transcend API capable of fetching the configuration                                  | string (API key or path to tr-generate-api-keys JSON output) | N/A                                   | true     |
+| resources    | The different resource types to pull in (see table above for breakdown of each resource) | string                                                       | apiKeys,templates,dataSilos,enrichers | false    |
+| file         | Path to the YAML file to pull into                                                       | string - file-path                                           | ./transcend.yml                       | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL                                                 | https://api.transcend.io              | false    |
+| dataSiloIds  | The UUIDs of the data silos that should be pulled into the YAML file.                    | list(string - UUID)                                          | N/A                                   | false    |
+| pageSize     | The page size to use when paginating over the API                                        | number                                                       | 50                                    | false    |
+| debug        | Set to true to include debug logs while pulling the configuration                        | boolean                                                      | false                                 | false    |
 
 #### Usage
 
@@ -355,6 +355,12 @@ Or with debug logs
 
 ```sh
 tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake --debug=true
+```
+
+Pull in configuration files across multiple instances
+
+```sh
+tr-pull --auth=./transcend-api-keys.json --resources=consentManager --file=./transcend/
 ```
 
 Note: This command will overwrite the existing transcend.yml file that you have locally.
