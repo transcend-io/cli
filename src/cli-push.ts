@@ -3,7 +3,8 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import { mapSeries } from 'bluebird';
-import { existsSync } from 'fs';
+import { existsSync, lstatSync } from 'fs';
+import { join } from 'path';
 import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
 import {
@@ -14,7 +15,7 @@ import {
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
 import { TranscendInput } from './codecs';
 import { ObjByString } from '@transcend-io/type-utils';
-import { validateTranscendAuth } from './api-keys';
+import { validateTranscendAuth, listFiles } from './api-keys';
 import { mergeTranscendInputs } from './mergeTranscendInputs';
 
 /**
@@ -93,8 +94,15 @@ async function main(): Promise<void> {
     vars[k] = v;
   });
 
-  // If file list is a CSV
-  const fileList = file.split(',');
+  // check if we are being passed a list of API keys and a list of files
+  let fileList: string[];
+  if (Array.isArray(apiKeyOrList) && lstatSync(file).isDirectory()) {
+    fileList = listFiles(file).map((filePath) => join(file, filePath));
+  } else {
+    fileList = file.split(',');
+  }
+
+  // Ensure at least one file is parsed
   if (fileList.length < 1) {
     throw new Error('No file specified!');
   }
@@ -117,7 +125,10 @@ async function main(): Promise<void> {
       // Read in the yaml file and validate it's shape
       const newContents = readTranscendYaml(filePath, vars);
       logger.info(colors.green(`Successfully read in "${filePath}"`));
-      return newContents;
+      return {
+        content: newContents,
+        name: filePath.split('/').pop()!.replace('.yml', ''),
+      };
     } catch (err) {
       logger.error(
         colors.red(
@@ -128,14 +139,17 @@ async function main(): Promise<void> {
       throw err;
     }
   });
-  const [base, ...rest] = transcendInputs;
-  const contents = mergeTranscendInputs(base, ...rest);
 
   // Parse page size
   const parsedPageSize = pageSize ? parseInt(pageSize, 10) : 50;
 
   // process a single API key
   if (typeof apiKeyOrList === 'string') {
+    // if passed multiple inputs, merge them together
+    const [base, ...rest] = transcendInputs.map(({ content }) => content);
+    const contents = mergeTranscendInputs(base, ...rest);
+
+    // sync the configuration
     const success = await syncConfiguration({
       transcendUrl,
       auth: apiKeyOrList,
@@ -155,6 +169,21 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   } else {
+    // if passed multiple inputs, expect them to be one per instance
+    if (
+      transcendInputs.length !== 1 &&
+      transcendInputs.length !== apiKeyOrList.length
+    ) {
+      throw new Error(
+        'Expected list of yml files to be equal to the list of API keys.' +
+          `Got ${transcendInputs.length} YML file${
+            transcendInputs.length === 1 ? '' : 's'
+          } and ${apiKeyOrList.length} API key${
+            apiKeyOrList.length === 1 ? '' : 's'
+          }`,
+      );
+    }
+
     const encounteredErrors: string[] = [];
     await mapSeries(apiKeyOrList, async (apiKey, ind) => {
       const prefix = `[${ind}/${apiKeyOrList.length}][${apiKey.organizationName}] `;
@@ -164,10 +193,29 @@ async function main(): Promise<void> {
         ),
       );
 
+      // use the merged contents if 1 yml passed, else use the contents that map to that organization
+      const useContents =
+        transcendInputs.length === 1
+          ? transcendInputs[0].content
+          : transcendInputs.find(
+              (input) => input.name === apiKey.organizationName,
+            )?.content;
+
+      // Throw error if cannot find a yml file matching that organization name
+      if (!useContents) {
+        logger.error(
+          colors.red(
+            `${prefix}Failed to find transcend.yml file for organization: "${apiKey.organizationName}".`,
+          ),
+        );
+        encounteredErrors.push(apiKey.organizationName);
+        return;
+      }
+
       const success = await syncConfiguration({
         transcendUrl,
         auth: apiKey.apiKey,
-        contents,
+        contents: useContents,
         pageSize: parsedPageSize,
         publishToPrivacyCenter: publishToPrivacyCenter === 'true',
       });

@@ -416,13 +416,23 @@ An alternative file destination can be specified:
 tr-push --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
 ```
 
-Push changes to multiple Transcend instances using the output of [tr-generate-api-keys](#tr-generate-api-keys)
+Push a single yml file configuration into multiple Transcend instances. This uses the output of [tr-generate-api-keys](#tr-generate-api-keys).
 
 ```sh
 tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
 tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=./transcend-api-keys.json
+```
+
+Push multiple yml file configurations into multiple Transcend instances. This uses the output of [tr-generate-api-keys](#tr-generate-api-keys).
+
+```sh
+tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+tr-pull --auth=./transcend-api-keys.json --file=./transcend/
+# <edit yml files in folder in between these steps>
+tr-push --auth=./transcend-api-keys.json --file=./transcend/
 ```
 
 Some things to note about this sync process:
