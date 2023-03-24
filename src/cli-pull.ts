@@ -3,12 +3,16 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
+import { mapSeries } from 'bluebird';
+import { join } from 'path';
+import fs from 'fs';
 import {
   buildTranscendGraphQLClient,
   pullTranscendConfiguration,
   DEFAULT_TRANSCEND_PULL_RESOURCES,
   TranscendPullResource,
 } from './graphql';
+import { validateTranscendAuth } from './api-keys';
 import { writeTranscendYaml } from './readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
 
@@ -36,18 +40,8 @@ async function main(): Promise<void> {
     auth,
   } = yargs(process.argv.slice(2));
 
-  // Ensure auth is passed
-  if (!auth) {
-    logger.error(
-      colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
-      ),
-    );
-    process.exit(1);
-  }
-
-  // Create a GraphQL client
-  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+  // Parse authentication as API key or path to list of API keys
+  const apiKeyOrList = await validateTranscendAuth(auth);
 
   // Parse request actions
   let splitResources: TranscendPullResource[] = [];
@@ -79,33 +73,99 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const dataSiloIdsParsed = (dataSiloIds as string)
+    .split(',')
+    .filter((x) => !!x);
+  const integrationNamesParsed = (integrationNames as string)
+    .split(',')
+    .filter((x) => !!x);
+  const pageSizeParsed = pageSize ? parseInt(pageSize, 10) : 50;
+  const isDebug = debug === 'true';
+
   // Sync to Disk
-  try {
-    const configuration = await pullTranscendConfiguration(client, {
-      dataSiloIds: (dataSiloIds as string).split(',').filter((x) => !!x),
-      integrationNames: (integrationNames as string)
-        .split(',')
-        .filter((x) => !!x),
-      resources: splitResources,
-      pageSize: pageSize ? parseInt(pageSize, 10) : 50,
-      debug: debug === 'true',
+  if (typeof apiKeyOrList === 'string') {
+    try {
+      // Create a GraphQL client
+      const client = buildTranscendGraphQLClient(transcendUrl, apiKeyOrList);
+
+      const configuration = await pullTranscendConfiguration(client, {
+        dataSiloIds: dataSiloIdsParsed,
+        integrationNames: integrationNamesParsed,
+        resources: splitResources,
+        pageSize: pageSizeParsed,
+        debug: isDebug,
+      });
+
+      logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
+      writeTranscendYaml(file, configuration);
+    } catch (err) {
+      logger.error(
+        colors.red(`An error occurred syncing the schema: ${err.message}`),
+      );
+      process.exit(1);
+    }
+
+    // Indicate success
+    logger.info(
+      colors.green(
+        `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH_INTEGRATIONS}`,
+      ),
+    );
+  } else {
+    if (!fs.lstatSync(file).isDirectory()) {
+      throw new Error(
+        'File is expected to be a folder when passing in a list of API keys to pull from. e.g. --file=./working/',
+      );
+    }
+
+    const encounteredErrors: string[] = [];
+    await mapSeries(apiKeyOrList, async (apiKey, ind) => {
+      const prefix = `[${ind}/${apiKeyOrList.length}][${apiKey.organizationName}] `;
+      logger.info(
+        colors.magenta(
+          `~~~\n\n${prefix}Attempting to pull configuration...\n\n~~~`,
+        ),
+      );
+
+      // Create a GraphQL client
+      const client = buildTranscendGraphQLClient(transcendUrl, apiKey.apiKey);
+
+      try {
+        const configuration = await pullTranscendConfiguration(client, {
+          dataSiloIds: dataSiloIdsParsed,
+          integrationNames: integrationNamesParsed,
+          resources: splitResources,
+          pageSize: pageSizeParsed,
+          debug: isDebug,
+        });
+
+        const filePath = join(file, `${apiKey.organizationName}.yml`);
+        logger.info(
+          colors.magenta(`Writing configuration to file "${filePath}"...`),
+        );
+        writeTranscendYaml(filePath, configuration);
+
+        logger.info(
+          colors.green(`${prefix}Successfully pulled configuration!`),
+        );
+      } catch (err) {
+        logger.error(colors.red(`${prefix}Failed to sync configuration.`));
+        encounteredErrors.push(apiKey.organizationName);
+      }
     });
 
-    logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
-    writeTranscendYaml(file, configuration);
-  } catch (err) {
-    logger.error(
-      colors.red(`An error occurred syncing the schema: ${err.message}`),
-    );
-    process.exit(1);
-  }
+    if (encounteredErrors.length > 0) {
+      logger.info(
+        colors.red(
+          `Sync encountered errors for "${encounteredErrors.join(
+            ',',
+          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
+      );
 
-  // Indicate success
-  logger.info(
-    colors.green(
-      `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH_INTEGRATIONS}`,
-    ),
-  );
+      process.exit(1);
+    }
+  }
 }
 
 main();
