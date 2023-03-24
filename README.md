@@ -360,6 +360,8 @@ tr-pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake --debu
 Pull in configuration files across multiple instances
 
 ```sh
+tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
 tr-pull --auth=./transcend-api-keys.json --resources=consentManager --file=./transcend/
 ```
 
