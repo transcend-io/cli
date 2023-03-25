@@ -55,11 +55,12 @@ export const DATA_FLOWS = gql`
     $airgapBundleId: ID!
     $offset: Int!
     $status: ConsentTrackerStatus
+    $showZeroActivity: Boolean
   ) {
     dataFlows(
       first: $first
       offset: $offset
-      filterBy: { status: $status }
+      filterBy: { status: $status, showZeroActivity: $showZeroActivity }
       input: { airgapBundleId: $airgapBundleId }
     ) {
       nodes {

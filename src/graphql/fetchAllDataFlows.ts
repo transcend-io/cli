@@ -85,6 +85,9 @@ export async function fetchAllDataFlows(
       offset,
       airgapBundleId,
       status,
+      ...(status === ConsentTrackerStatus.NeedsReview
+        ? { showZeroActivity: true }
+        : {}),
     });
     dataFlows.push(...nodes);
     offset += PAGE_SIZE;
