@@ -53,10 +53,14 @@
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-12)
+    - [Arguments](#arguments-12)
+    - [Usage](#usage-13)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1098,6 +1102,66 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 ```sh
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ACCESS \
  --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-update-consent-manager
+
+This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this commannd.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Consent Manager Developer Settings"
+
+#### Arguments
+
+| Argument     | Description                                                                   | Type         | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------- | ------------ | ------------------------ | -------- |
+| auth         | The Transcend API capable of pulling the cron identifiers.                    | string       | N/A                      | true     |
+| bundleTypes  | The bundle types to deploy                                                    | BundleType[] | PRODUCTION,TEST          | false    |
+| deokiy       | When true, deploy the Consent Manager after updating the version              | boolean      | false                    | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+Update version and deploy bundles.
+
+```sh
+yarn tr-update-consent-manager -auth=$TRANSCEND_API_KEY --deploy=true
+```
+
+Update just the TEST bundle
+
+```sh
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=TEST
+```
+
+Update just the PRODUCTION bundle
+
+```sh
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
+```
+
+Update multiple organizations at once
+
+```sh
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
+
+tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD --scopes="Manage Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+yarn tr-update-consent-manager  --auth=./transcend-api-keys.json --deploy=true
 ```
 
 ### tr-generate-api-keys

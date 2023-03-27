@@ -154,12 +154,41 @@ export const FETCH_CONSENT_MANAGER = gql`
     }
   }
 `;
+
 export const CREATE_CONSENT_MANAGER = gql`
-  mutation TranscendCliCreateManager($privacyCenterId: ID!) {
+  mutation TranscendCliCreateConsentManager($privacyCenterId: ID!) {
     createConsentManager(input: { privacyCenterId: $privacyCenterId }) {
       consentManager {
         id
       }
+    }
+  }
+`;
+
+export const UPDATE_CONSENT_MANAGER_TO_LATEST = gql`
+  mutation TranscendCliUpdateConsentManagerToLatest(
+    $airgapBundleId: ID!
+    $bundleType: ConsentBundleType!
+  ) {
+    updateConsentManagerToLatestVersion(
+      id: $airgapBundleId
+      input: { bundleType: $bundleType }
+    ) {
+      clientMutationId
+    }
+  }
+`;
+
+export const DEPLOY_CONSENT_MANAGER = gql`
+  mutation TranscendCliDeployConsentManager(
+    $airgapBundleId: ID!
+    $bundleType: ConsentBundleType!
+  ) {
+    deployConsentManagerBundle(
+      id: $airgapBundleId
+      input: { bundleType: $bundleType }
+    ) {
+      clientMutationId
     }
   }
 `;

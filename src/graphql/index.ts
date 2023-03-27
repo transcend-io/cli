@@ -34,3 +34,4 @@ export * from './loginUser';
 export * from './manageApiKeys';
 export * from './syncCookies';
 export * from './fetchPrivacyCenterId';
+export * from './deployConsentManager';

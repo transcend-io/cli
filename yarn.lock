@@ -406,7 +406,7 @@ __metadata:
   dependencies:
     "@transcend-io/internationalization": ^1.5.0
     "@transcend-io/persisted-state": ^1.0.0
-    "@transcend-io/privacy-types": ^4.26.0
+    "@transcend-io/privacy-types": ^4.27.0
     "@transcend-io/type-utils": ^1.0.7
     "@types/bluebird": ^3.5.37
     "@types/chai": ^4.3.3
@@ -464,6 +464,7 @@ __metadata:
     tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
     tr-retry-request-data-silos: ./build/cli-retry-request-data-silos.js
+    tr-update-consent-manager: ./build/cli-update-consent-manager-to-latest.js
   languageName: unknown
   linkType: soft
 
@@ -489,12 +490,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.26.0":
-  version: 4.26.0
-  resolution: "@transcend-io/privacy-types@npm:4.26.0"
+"@transcend-io/privacy-types@npm:^4.27.0":
+  version: 4.27.0
+  resolution: "@transcend-io/privacy-types@npm:4.27.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: 0dcdfaa59fab0c04bf8f2e98ec2932cf52031d88621bd23bfccfb730322f6389a37939f1752ac349c35b4c31c06f86665ffad050815529241f5c7e574684bd6f
+  checksum: 792e7d55d2ff2dfb121b0dd78f435c1a479006632ad21f300963dde1ddcb94bb3653d13a525b3aa50d62f6916fdf0f173e8eeee3f214ceb7a53060b696262ad5
   languageName: node
   linkType: hard
 
