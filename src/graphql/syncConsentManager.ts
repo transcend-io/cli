@@ -20,6 +20,8 @@ export async function syncConsentManager(
   consentManager: ConsentManagerInput,
 ): Promise<void> {
   let airgapBundleId: string;
+
+  // ensure the consent manager is created and deployed
   try {
     airgapBundleId = await fetchConsentManagerId(client, 1);
   } catch (err) {
@@ -61,10 +63,23 @@ export async function syncConsentManager(
       throw err;
     }
   }
+
+  // sync domains
   if (consentManager.domains) {
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_DOMAINS, {
       domains: consentManager.domains,
       airgapBundleId,
     });
   }
+
+  // FIXME
+  //  csp: CspOption;
+  //  unknownRequestPolicy: UnknownRequestPolicy;
+  //  unknownCookiePolicy: UnknownRequestPolicy;
+  //  syncEndpoint: string;
+  //  telemetryPartitioning: TelemetryPartitionStrategy;
+  //  signedIabAgreement: SignedIabAgreementOption;
+  //  uspapi: SignedIabAgreementOption;
+  //  syncGroups: string;
+  //  partition: string;
 }

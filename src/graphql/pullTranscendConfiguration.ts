@@ -208,7 +208,21 @@ export async function pullTranscendConfiguration(
   // Save Consent Manager
   if (consentManager) {
     result['consent-manager'] = {
-      domains: consentManager.configuration.domains,
+      domains: consentManager.configuration.domains || undefined,
+      partition: consentManager.configuration.partition || undefined,
+      csp: consentManager.configuration.csp || undefined,
+      unknownRequestPolicy:
+        consentManager.configuration.unknownRequestPolicy || undefined,
+      unknownCookiePolicy:
+        consentManager.configuration.unknownCookiePolicy || undefined,
+      syncEndpoint: consentManager.configuration.syncEndpoint || undefined,
+      telemetryPartitioning:
+        consentManager.configuration.telemetryPartitioning || undefined,
+      signedIabAgreement:
+        consentManager.configuration.signedIabAgreement || undefined,
+      uspapi: consentManager.configuration.uspapi || undefined,
+      // FIXME shape
+      syncGroups: consentManager.configuration.syncGroups || undefined,
     };
   }
 
