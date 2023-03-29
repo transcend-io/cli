@@ -147,6 +147,8 @@ export const FETCH_CONSENT_MANAGER = gql`
     consentManager {
       consentManager {
         id
+        bundleURL
+        testBundleURL
         configuration {
           domains
           csp
@@ -209,6 +211,19 @@ export const UPDATE_CONSENT_MANAGER_DOMAINS = gql`
   ) {
     updateConsentManagerDomains(
       input: { id: $airgapBundleId, domains: $domains }
+    ) {
+      clientMutationId
+    }
+  }
+`;
+
+export const UPDATE_CONSENT_MANAGER_PARTITION = gql`
+  mutation TranscendCliUpdateConsentManagerPartition(
+    $airgapBundleId: ID!
+    $partition: String!
+  ) {
+    updateConsentManagerPartition(
+      input: { id: $airgapBundleId, partition: $partition }
     ) {
       clientMutationId
     }

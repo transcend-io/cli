@@ -16,6 +16,10 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 export interface ConsentManager {
   /** ID of consent manager */
   id: string;
+  /** Production bundle URL */
+  bundleURL: string;
+  /** Test bundle URL */
+  testBundleURL: string;
   /** Configuration of consent manager */
   configuration: {
     /** Domain list */
