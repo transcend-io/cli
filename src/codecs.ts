@@ -555,7 +555,7 @@ export const ConsentManagerInput = t.partial({
   signedIabAgreement: valuesOf(SignedIabAgreementOption),
   /** Whether or not to use the US Privacy API */
   uspapi: valuesOf(UspapiOption),
-  // FIXME shape
+  // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
   /** The Shared XDI host sync groups config (JSON) for this airgap bundle */
   syncGroups: t.string,
 });

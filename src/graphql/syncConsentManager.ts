@@ -72,14 +72,20 @@ export async function syncConsentManager(
     });
   }
 
-  // FIXME
+  // TODO: https://transcend.height.app/T-23920
   //  csp: CspOption;
   //  unknownRequestPolicy: UnknownRequestPolicy;
   //  unknownCookiePolicy: UnknownRequestPolicy;
-  //  syncEndpoint: string;
   //  telemetryPartitioning: TelemetryPartitionStrategy;
+
+  // TODO: https://transcend.height.app/T-23875
+  //  syncEndpoint: string;
+  // TODO: https://transcend.height.app/T-23919
+  //  syncGroups: string;
+  // TODO: https://transcend.height.app/T-23874
+  //  partition: string;
+
+  // TODO: https://transcend.height.app/T-23872
   //  signedIabAgreement: SignedIabAgreementOption;
   //  uspapi: SignedIabAgreementOption;
-  //  syncGroups: string;
-  //  partition: string;
 }
