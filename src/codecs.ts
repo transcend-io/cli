@@ -8,6 +8,7 @@ import {
   ProcessingPurpose,
   RequestAction,
   RequestActionObjectResolver,
+  UspapiOption,
   DataFlowScope,
   PromptAVendorEmailSendType,
   IsoCountryCode,
@@ -15,6 +16,10 @@ import {
   ConsentTrackerStatus,
   AttributeKeyType,
   PromptAVendorEmailCompletionLinkType,
+  CspOption,
+  UnknownRequestPolicy,
+  TelemetryPartitionStrategy,
+  SignedIabAgreementOption,
 } from '@transcend-io/privacy-types';
 import { AttributeResourceType } from './tmp-attribute-key';
 
@@ -534,6 +539,25 @@ export type CookieInput = t.TypeOf<typeof CookieInput>;
 export const ConsentManagerInput = t.partial({
   /** The consent manager domains in the instance */
   domains: t.array(t.string),
+  /** Key used to partition consent records */
+  partition: t.string,
+  /** CSP protection configuration */
+  csp: valuesOf(CspOption),
+  /** The consent manager unknown request policy */
+  unknownRequestPolicy: valuesOf(UnknownRequestPolicy),
+  /** The consent manager unknown cookie policy */
+  unknownCookiePolicy: valuesOf(UnknownRequestPolicy),
+  /** The XDI sync endpoint for this airgap bundle */
+  syncEndpoint: t.string,
+  /** The telemetry partitioning strategy */
+  telemetryPartitioning: valuesOf(TelemetryPartitionStrategy),
+  /** Whether the site owner has signed the IAB agreement */
+  signedIabAgreement: valuesOf(SignedIabAgreementOption),
+  /** Whether or not to use the US Privacy API */
+  uspapi: valuesOf(UspapiOption),
+  // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
+  /** The Shared XDI host sync groups config (JSON) for this airgap bundle */
+  syncGroups: t.string,
 });
 
 /** Type override */

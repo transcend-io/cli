@@ -20,6 +20,8 @@ export async function syncConsentManager(
   consentManager: ConsentManagerInput,
 ): Promise<void> {
   let airgapBundleId: string;
+
+  // ensure the consent manager is created and deployed
   try {
     airgapBundleId = await fetchConsentManagerId(client, 1);
   } catch (err) {
@@ -61,10 +63,29 @@ export async function syncConsentManager(
       throw err;
     }
   }
+
+  // sync domains
   if (consentManager.domains) {
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_DOMAINS, {
       domains: consentManager.domains,
       airgapBundleId,
     });
   }
+
+  // TODO: https://transcend.height.app/T-23920
+  //  csp: CspOption;
+  //  unknownRequestPolicy: UnknownRequestPolicy;
+  //  unknownCookiePolicy: UnknownRequestPolicy;
+  //  telemetryPartitioning: TelemetryPartitionStrategy;
+
+  // TODO: https://transcend.height.app/T-23875
+  //  syncEndpoint: string;
+  // TODO: https://transcend.height.app/T-23919
+  //  syncGroups: string;
+  // TODO: https://transcend.height.app/T-23874
+  //  partition: string;
+
+  // TODO: https://transcend.height.app/T-23872
+  //  signedIabAgreement: SignedIabAgreementOption;
+  //  uspapi: SignedIabAgreementOption;
 }

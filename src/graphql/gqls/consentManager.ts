@@ -149,6 +149,15 @@ export const FETCH_CONSENT_MANAGER = gql`
         id
         configuration {
           domains
+          csp
+          unknownRequestPolicy
+          unknownCookiePolicy
+          syncEndpoint
+          telemetryPartitioning
+          signedIabAgreement
+          uspapi
+          syncGroups
+          partition
         }
       }
     }

@@ -42,7 +42,7 @@
   "dependencies": {
     "@transcend-io/internationalization": "^1.5.0",
     "@transcend-io/persisted-state": "^1.0.0",
-    "@transcend-io/privacy-types": "^4.27.0",
+    "@transcend-io/privacy-types": "^4.29.0",
     "@transcend-io/type-utils": "^1.0.7",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
