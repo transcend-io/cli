@@ -1,5 +1,12 @@
 import { GraphQLClient } from 'graphql-request';
 import {
+  CspOption,
+  UnknownRequestPolicy,
+  UspapiOption,
+  TelemetryPartitionStrategy,
+  SignedIabAgreementOption,
+} from '@transcend-io/privacy-types';
+import {
   FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER,
   PURPOSES,
@@ -13,6 +20,24 @@ export interface ConsentManager {
   configuration: {
     /** Domain list */
     domains: string[];
+    /** CSP option */
+    csp: CspOption;
+    /** Unknown request policy */
+    unknownRequestPolicy: UnknownRequestPolicy;
+    /** Unknown cookie policy */
+    unknownCookiePolicy: UnknownRequestPolicy;
+    /** Sync endpoint */
+    syncEndpoint: string;
+    /** Telemetry partitioning */
+    telemetryPartitioning: TelemetryPartitionStrategy;
+    /** Signed IAB agreement */
+    signedIabAgreement: SignedIabAgreementOption;
+    /** USP API support */
+    uspapi: UspapiOption;
+    /** Sync groups */
+    syncGroups: string;
+    /** Partition parameter */
+    partition: string;
   };
 }
 

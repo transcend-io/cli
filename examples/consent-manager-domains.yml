@@ -2,3 +2,12 @@ consent-manager:
   domains:
     - test.transcend.io
     - docs.transcend.io
+  csp: 'Off'
+  partition: my-custom-partition-key
+  unknownRequestPolicy: ALLOW
+  unknownCookiePolicy: ALLOW
+  syncEndpoint: >-
+    https://sync.transcend.io/consent-manager/75db5e78-0d69-4554-a3bd-84b72ca3b3d9
+  telemetryPartitioning: origin
+  signedIabAgreement: 'no'
+  uspapi: 'off'

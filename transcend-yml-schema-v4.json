@@ -6391,6 +6391,39 @@
           "items": {
             "type": "string"
           }
+        },
+        "partition": {
+          "type": "string"
+        },
+        "csp": {
+          "type": "string",
+          "enum": ["Strict", "Lax", "On", "Off"]
+        },
+        "unknownRequestPolicy": {
+          "type": "string",
+          "enum": ["ALLOW", "REQUIRE_FULL_CONSENT", "BLOCK"]
+        },
+        "unknownCookiePolicy": {
+          "type": "string",
+          "enum": ["ALLOW", "REQUIRE_FULL_CONSENT", "BLOCK"]
+        },
+        "syncEndpoint": {
+          "type": "string"
+        },
+        "telemetryPartitioning": {
+          "type": "string",
+          "enum": ["origin", "path", "url"]
+        },
+        "signedIabAgreement": {
+          "type": "string",
+          "enum": ["yes", "no"]
+        },
+        "uspapi": {
+          "type": "string",
+          "enum": ["on", "off"]
+        },
+        "syncGroups": {
+          "type": "string"
         }
       }
     }
