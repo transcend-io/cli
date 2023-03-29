@@ -30,6 +30,7 @@ async function syncConfiguration({
   pageSize,
   publishToPrivacyCenter,
   contents,
+  classifyService = false,
 }: {
   /** Transcend YAML */
   contents: TranscendInput;
@@ -41,6 +42,8 @@ async function syncConfiguration({
   pageSize: number;
   /** Skip privacy center publish step */
   publishToPrivacyCenter: boolean;
+  /** classify data flow service if missing */
+  classifyService?: boolean;
 }): Promise<boolean> {
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
@@ -49,10 +52,9 @@ async function syncConfiguration({
     const encounteredError = await syncConfigurationToTranscend(
       contents,
       client,
-      { pageSize, publishToPrivacyCenter },
+      { pageSize, publishToPrivacyCenter, classifyService },
     );
     return !encounteredError;
-    return true;
   } catch (err) {
     logger.error(
       colors.red(
@@ -81,6 +83,7 @@ async function main(): Promise<void> {
     variables = '',
     pageSize = '',
     publishToPrivacyCenter,
+    classifyService = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Parse authentication as API key or path to list of API keys
@@ -156,6 +159,7 @@ async function main(): Promise<void> {
       contents,
       publishToPrivacyCenter: publishToPrivacyCenter === 'true',
       pageSize: parsedPageSize,
+      classifyService: !!classifyService,
     });
 
     // exist with error code
@@ -218,6 +222,7 @@ async function main(): Promise<void> {
         contents: useContents,
         pageSize: parsedPageSize,
         publishToPrivacyCenter: publishToPrivacyCenter === 'true',
+        classifyService: !!classifyService,
       });
 
       if (success) {
