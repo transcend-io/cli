@@ -4,6 +4,7 @@ import {
   UPDATE_CONSENT_MANAGER_DOMAINS,
   FETCH_PRIVACY_CENTER_ID,
   CREATE_CONSENT_MANAGER,
+  UPDATE_CONSENT_MANAGER_PARTITION,
   DEPLOYED_PRIVACY_CENTER_URL,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -72,6 +73,14 @@ export async function syncConsentManager(
     });
   }
 
+  // sync partition
+  if (consentManager.partition) {
+    await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_PARTITION, {
+      partition: consentManager.partition,
+      airgapBundleId,
+    });
+  }
+
   // TODO: https://transcend.height.app/T-23920
   //  csp: CspOption;
   //  unknownRequestPolicy: UnknownRequestPolicy;
@@ -82,8 +91,6 @@ export async function syncConsentManager(
   //  syncEndpoint: string;
   // TODO: https://transcend.height.app/T-23919
   //  syncGroups: string;
-  // TODO: https://transcend.height.app/T-23874
-  //  partition: string;
 
   // TODO: https://transcend.height.app/T-23872
   //  signedIabAgreement: SignedIabAgreementOption;

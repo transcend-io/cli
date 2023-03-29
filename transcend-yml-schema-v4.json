@@ -6386,6 +6386,12 @@
     "consent-manager": {
       "type": "object",
       "properties": {
+        "bundleUrls": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "domains": {
           "type": "array",
           "items": {

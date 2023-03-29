@@ -208,6 +208,10 @@ export async function pullTranscendConfiguration(
   // Save Consent Manager
   if (consentManager) {
     result['consent-manager'] = {
+      bundleUrls: {
+        TEST: consentManager.testBundleURL,
+        PRODUCTION: consentManager.bundleURL,
+      },
       domains: consentManager.configuration.domains || undefined,
       partition: consentManager.configuration.partition || undefined,
       csp: consentManager.configuration.csp || undefined,
