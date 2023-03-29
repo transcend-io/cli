@@ -4,6 +4,7 @@ import * as t from 'io-ts';
 import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import {
   DataCategoryType,
+  ConsentBundleType,
   EnricherType,
   ProcessingPurpose,
   RequestAction,
@@ -537,6 +538,8 @@ export const CookieInput = t.intersection([
 export type CookieInput = t.TypeOf<typeof CookieInput>;
 
 export const ConsentManagerInput = t.partial({
+  /** The consent manager domains in the instance */
+  bundleUrls: t.record(valuesOf(ConsentBundleType), t.string),
   /** The consent manager domains in the instance */
   domains: t.array(t.string),
   /** Key used to partition consent records */
