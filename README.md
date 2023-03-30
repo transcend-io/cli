@@ -398,13 +398,14 @@ The API key needs the following scopes when pushing the various resource types:
 
 #### Arguments
 
-| Argument     | Description                                                                                                 | Type                                                         | Default                  | Required |
-| ------------ | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ | -------- |
-| auth         | The Transcend API capable of pushing the configuration                                                      | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
-| file         | Path to the YAML file to push from                                                                          | string - file-path                                           | ./transcend.yml          | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL                                                 | https://api.transcend.io | false    |
-| pageSize     | The page size to use when paginating over the API                                                           | number                                                       | 50                       | false    |
-| variables    | The variables to template into the YAML file when pushing configuration. e.g. domain:acme.com,stage:staging | string                                                       | N/A                      | false    |
+| Argument        | Description                                                                                                 | Type                                                         | Default                  | Required |
+| --------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ | -------- |
+| auth            | The Transcend API capable of pushing the configuration                                                      | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
+| file            | Path to the YAML file to push from                                                                          | string - file-path                                           | ./transcend.yml          | false    |
+| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL                                                 | https://api.transcend.io | false    |
+| pageSize        | The page size to use when paginating over the API                                                           | number                                                       | 50                       | false    |
+| variables       | The variables to template into the YAML file when pushing configuration. e.g. domain:acme.com,stage:staging | string                                                       | N/A                      | false    |
+| classifyService | classify data flow service if missing                                                                       | boolean                                                      | false                    | false    |
 
 #### Usage
 
@@ -437,6 +438,13 @@ tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
 tr-pull --auth=./transcend-api-keys.json --file=./transcend/
 # <edit yml files in folder in between these steps>
 tr-push --auth=./transcend-api-keys.json --file=./transcend/
+```
+
+Apply service classifier to all data flows.
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=dataFlows
+tr-push --auth=$TRANSCEND_API_KEY --resources=dataFlows --classifyService=true
 ```
 
 Some things to note about this sync process:
