@@ -48,11 +48,14 @@ export async function syncConfigurationToTranscend(
     pageSize = 50,
     // TODO: https://transcend.height.app/T-23779
     publishToPrivacyCenter = true,
+    classifyService = false,
   }: {
     /** Page size */
     pageSize?: number;
     /** When true, skip publishing to privacy center */
     publishToPrivacyCenter?: boolean;
+    /** classify data flow service if missing */
+    classifyService?: boolean;
   },
 ): Promise<boolean> {
   let encounteredError = false;
@@ -398,7 +401,7 @@ export async function syncConfigurationToTranscend(
       logger.info(
         colors.magenta(`Creating "${newDataFlows.length}" new data flows...`),
       );
-      await createDataFlows(client, newDataFlows);
+      await createDataFlows(client, newDataFlows, classifyService);
       logger.info(
         colors.green(`Successfully synced ${newDataFlows.length} data flows!`),
       );
@@ -415,7 +418,7 @@ export async function syncConfigurationToTranscend(
       logger.info(
         colors.magenta(`Updating "${existingDataFlows.length}" data flows...`),
       );
-      await updateDataFlows(client, existingDataFlows);
+      await updateDataFlows(client, existingDataFlows, classifyService);
       logger.info(
         colors.green(
           `Successfully updated "${existingDataFlows.length}" data flows!`,
