@@ -14,10 +14,12 @@ const MAX_PAGE_SIZE = 100;
  *
  * @param client - GraphQL client
  * @param dataFlowInputs - [DataFlowInput, Data Flow ID] mappings to update
+ * @param classifyService - classify service if missing
  */
 export async function updateDataFlows(
   client: GraphQLClient,
   dataFlowInputs: [DataFlowInput, string][],
+  classifyService = false,
 ): Promise<void> {
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
   // const purposes = await fetchPurposes(client);
@@ -47,6 +49,7 @@ export async function updateDataFlows(
         // owners,
         // teams,
       })),
+      classifyService,
     });
   });
 }
@@ -56,10 +59,12 @@ export async function updateDataFlows(
  *
  * @param client - GraphQL client
  * @param dataFlowInputs - List of data flows to create
+ * @param classifyService - classify service if missing
  */
 export async function createDataFlows(
   client: GraphQLClient,
   dataFlowInputs: DataFlowInput[],
+  classifyService = false,
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
@@ -90,6 +95,7 @@ export async function createDataFlows(
         // teams,
       })),
       dropMatchingDataFlowsInTriage: true,
+      classifyService,
     });
   });
 }
