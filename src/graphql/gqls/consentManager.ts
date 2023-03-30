@@ -15,9 +15,14 @@ export const CREATE_DATA_FLOWS = gql`
   mutation TranscendCliCreateDataFlows(
     $dataFlows: [DataFlowInput!]!
     $airgapBundleId: ID!
+    $classifyService: Boolean
   ) {
     createDataFlows(
-      input: { airgapBundleId: $airgapBundleId, dataFlows: $dataFlows }
+      input: {
+        airgapBundleId: $airgapBundleId
+        dataFlows: $dataFlows
+        classifyService: $classifyService
+      }
     ) {
       dataFlows {
         id
@@ -27,8 +32,13 @@ export const CREATE_DATA_FLOWS = gql`
 `;
 
 export const UPDATE_DATA_FLOWS = gql`
-  mutation TranscendCliUpdateDataFlows($dataFlows: [UpdateDataFlowInput!]!) {
-    updateDataFlows(input: { dataFlows: $dataFlows }) {
+  mutation TranscendCliUpdateDataFlows(
+    $dataFlows: [UpdateDataFlowInput!]!
+    $classifyService: Boolean
+  ) {
+    updateDataFlows(
+      input: { dataFlows: $dataFlows, classifyService: $classifyService }
+    ) {
       dataFlows {
         id
       }
