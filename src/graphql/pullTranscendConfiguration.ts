@@ -214,7 +214,8 @@ export async function pullTranscendConfiguration(
       },
       domains: consentManager.configuration.domains || undefined,
       partition: consentManager.configuration.partition || undefined,
-      csp: consentManager.configuration.csp || undefined,
+      consentPrecedence:
+        consentManager.configuration.consentPrecedence || undefined,
       unknownRequestPolicy:
         consentManager.configuration.unknownRequestPolicy || undefined,
       unknownCookiePolicy:

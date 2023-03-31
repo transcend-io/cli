@@ -161,7 +161,7 @@ export const FETCH_CONSENT_MANAGER = gql`
         testBundleURL
         configuration {
           domains
-          csp
+          consentPrecedence
           unknownRequestPolicy
           unknownCookiePolicy
           syncEndpoint
@@ -273,6 +273,16 @@ export const TOGGLE_TELEMETRY_PARTITION_STRATEGY = gql`
     $input: ToggleTelemetryPartitionStrategyInput!
   ) {
     toggleTelemetryPartitioning(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const TOGGLE_CONSENT_PRECEDENCE = gql`
+  mutation TranscendCliToggleConsentPrecedence(
+    $input: ToggleConsentPrecedenceInput!
+  ) {
+    toggleConsentPrecedence(input: $input) {
       clientMutationId
     }
   }

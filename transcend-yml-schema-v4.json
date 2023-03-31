@@ -6401,9 +6401,9 @@
         "partition": {
           "type": "string"
         },
-        "csp": {
+        "consentPrecedence": {
           "type": "string",
-          "enum": ["Strict", "Lax", "On", "Off"]
+          "enum": ["user", "signal"]
         },
         "unknownRequestPolicy": {
           "type": "string",
@@ -6422,7 +6422,7 @@
         },
         "signedIabAgreement": {
           "type": "string",
-          "enum": ["yes", "no"]
+          "enum": ["yes", "no", "unknown"]
         },
         "uspapi": {
           "type": "string",
