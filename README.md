@@ -1191,6 +1191,7 @@ In order to use this command, you will need to provide your email and password f
 | scopes               | The list of [scopes](https://docs.transcend.io/docs/security/access-control#scopes) that should be given to the API key.                                     | string[]           | N/A                      | true     |
 | deleteExistingApiKey | When true, if an API key exists with the specified "apiKeyTitle", the existing API key is deleted. When false, an error is thrown if API key already exists. | boolean            | true                     | false    |
 | createNewApiKey      | When true, new API keys will be created. Set to false if you simply want to delete all API keys with a title.                                                | boolean            | true                     | false    |
+| parentOrganizationId | Filter for only a specific organization by ID, returning all child accounts associated with that organization.                                               | string - UUID      | true                     | false    |
 | transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                | string - URL       | https://api.transcend.io | false    |
 
 #### Usage
@@ -1206,6 +1207,25 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --transcendUrl=https://api.us.transcend.io
+```
+
+Filter for only a specific organization by ID, returning all child accounts associated with that organization. Can use the following GQL query on the [EU GraphQL Playground](https://api.us.transcend.io/graphql) or [US GraphQL Playground](https://api.us.transcend.io/graphql).
+
+```gql
+query {
+  user {
+    organization {
+      id
+      parentOrganizationId
+    }
+  }
+}
+```
+
+```sh
+yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --parentOrganizationId=7098bb38-070d-4f26-8fa4-1b61b9cdef77
 ```
 
 Delete all API keys with a certain title.

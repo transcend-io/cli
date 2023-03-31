@@ -32,6 +32,7 @@ export async function generateCrossAccountApiKeys({
   password,
   scopes,
   apiKeyTitle,
+  parentOrganizationId,
   deleteExistingApiKey = true,
   createNewApiKey = true,
   transcendUrl = 'https://api.transcend.io',
@@ -40,6 +41,8 @@ export async function generateCrossAccountApiKeys({
   email: string;
   /** Password of user generating API keys */
   password: string;
+  /** Filter for organizations that match this parent organization ID */
+  parentOrganizationId?: string;
   /** Title of the API create to create */
   apiKeyTitle: string;
   /** Title of the API create to create */
@@ -70,6 +73,15 @@ export async function generateCrossAccountApiKeys({
     ),
   );
 
+  // Filter down by parentOrganizationId
+  const filteredRoles = parentOrganizationId
+    ? roles.filter(
+        (role) =>
+          role.organization.id === parentOrganizationId ||
+          role.organization.parentOrganizationId === parentOrganizationId,
+      )
+    : roles;
+
   // Save cookie to call route subsequent times
   client.setHeaders({
     Cookie: loginCookie,
@@ -89,7 +101,7 @@ export async function generateCrossAccountApiKeys({
   );
 
   // Map over each role
-  await mapSeries(roles, async (role) => {
+  await mapSeries(filteredRoles, async (role) => {
     try {
       // Log into the other instance
       await assumeRole(client, { roleId: role.id, email });

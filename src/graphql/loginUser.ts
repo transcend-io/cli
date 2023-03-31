@@ -9,6 +9,8 @@ export interface OrganizationPreview {
   id: string;
   /** uri of organization */
   uri: string;
+  /** ID of parent organization */
+  parentOrganizationId?: string;
 }
 
 export interface UserRole {
