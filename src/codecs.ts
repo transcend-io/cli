@@ -12,12 +12,12 @@ import {
   UspapiOption,
   DataFlowScope,
   PromptAVendorEmailSendType,
+  ConsentPrecedenceOption,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   ConsentTrackerStatus,
   AttributeKeyType,
   PromptAVendorEmailCompletionLinkType,
-  CspOption,
   UnknownRequestPolicy,
   TelemetryPartitionStrategy,
   SignedIabAgreementOption,
@@ -544,8 +544,8 @@ export const ConsentManagerInput = t.partial({
   domains: t.array(t.string),
   /** Key used to partition consent records */
   partition: t.string,
-  /** CSP protection configuration */
-  csp: valuesOf(CspOption),
+  /** Precedence of signals vs user input */
+  consentPrecedence: valuesOf(ConsentPrecedenceOption),
   /** The consent manager unknown request policy */
   unknownRequestPolicy: valuesOf(UnknownRequestPolicy),
   /** The consent manager unknown cookie policy */

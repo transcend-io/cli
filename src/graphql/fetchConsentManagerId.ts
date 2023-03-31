@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import {
-  CspOption,
+  ConsentPrecedenceOption,
   UnknownRequestPolicy,
   UspapiOption,
   TelemetryPartitionStrategy,
@@ -24,8 +24,8 @@ export interface ConsentManager {
   configuration: {
     /** Domain list */
     domains: string[];
-    /** CSP option */
-    csp: CspOption;
+    /** Consent precedence of user vs signal */
+    consentPrecedence: ConsentPrecedenceOption;
     /** Unknown request policy */
     unknownRequestPolicy: UnknownRequestPolicy;
     /** Unknown cookie policy */
