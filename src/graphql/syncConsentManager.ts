@@ -6,6 +6,8 @@ import {
   CREATE_CONSENT_MANAGER,
   UPDATE_TOGGLE_USP_API,
   UPDATE_CONSENT_MANAGER_PARTITION,
+  TOGGLE_UNKNOWN_COOKIE_POLICY,
+  TOGGLE_UNKNOWN_REQUEST_POLICY,
   DEPLOYED_PRIVACY_CENTER_URL,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -95,10 +97,28 @@ export async function syncConsentManager(
     });
   }
 
+  // sync default request policy
+  if (consentManager.unknownRequestPolicy) {
+    await makeGraphQLRequest(client, TOGGLE_UNKNOWN_REQUEST_POLICY, {
+      input: {
+        id: airgapBundleId,
+        unknownRequestPolicy: consentManager.unknownRequestPolicy,
+      },
+    });
+  }
+
+  // sync default cookie policy
+  if (consentManager.unknownRequestPolicy) {
+    await makeGraphQLRequest(client, TOGGLE_UNKNOWN_COOKIE_POLICY, {
+      input: {
+        id: airgapBundleId,
+        unknownCookiePolicy: consentManager.unknownCookiePolicy,
+      },
+    });
+  }
+
   // TODO: https://transcend.height.app/T-23920
   //  csp: CspOption;
-  //  unknownRequestPolicy: UnknownRequestPolicy;
-  //  unknownCookiePolicy: UnknownRequestPolicy;
   //  telemetryPartitioning: TelemetryPartitionStrategy;
 
   // TODO: https://transcend.height.app/T-23875
