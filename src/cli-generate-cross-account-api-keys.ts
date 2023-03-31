@@ -40,6 +40,7 @@ async function main(): Promise<void> {
     password,
     apiKeyTitle,
     scopes,
+    parentOrganizationId,
     deleteExistingApiKey = 'true',
     createNewApiKey = 'true',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -119,6 +120,7 @@ async function main(): Promise<void> {
     transcendUrl,
     password,
     email,
+    parentOrganizationId,
     deleteExistingApiKey: deleteExistingApiKey !== 'false',
     createNewApiKey: createNewApiKey !== 'false',
     apiKeyTitle,

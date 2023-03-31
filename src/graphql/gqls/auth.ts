@@ -28,6 +28,7 @@ export const LOGIN = gql`
             name
             id
             uri
+            parentOrganizationId
           }
         }
       }
