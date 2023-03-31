@@ -247,3 +247,23 @@ export const UPDATE_TOGGLE_USP_API = gql`
     }
   }
 `;
+
+export const TOGGLE_UNKNOWN_REQUEST_POLICY = gql`
+  mutation TranscendCliToggleUnknownRequestPolicy(
+    $input: ToggleUnknownRequestPolicyInput!
+  ) {
+    toggleUnknownRequestPolicy(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const TOGGLE_UNKNOWN_COOKIE_POLICY = gql`
+  mutation TranscendCliToggleUnknownCookiePolicy(
+    $input: ToggleUnknownCookiePolicyInput!
+  ) {
+    toggleUnknownCookiePolicy(input: $input) {
+      clientMutationId
+    }
+  }
+`;
