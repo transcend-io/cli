@@ -6,6 +6,7 @@ import {
   CREATE_CONSENT_MANAGER,
   UPDATE_TOGGLE_USP_API,
   UPDATE_CONSENT_MANAGER_PARTITION,
+  TOGGLE_TELEMETRY_PARTITION_STRATEGY,
   TOGGLE_UNKNOWN_COOKIE_POLICY,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
   DEPLOYED_PRIVACY_CENTER_URL,
@@ -117,9 +118,15 @@ export async function syncConsentManager(
     });
   }
 
-  // TODO: https://transcend.height.app/T-23920
-  //  csp: CspOption;
-  //  telemetryPartitioning: TelemetryPartitionStrategy;
+  // sync telemetry partition strategy
+  if (consentManager.telemetryPartitioning) {
+    await makeGraphQLRequest(client, TOGGLE_TELEMETRY_PARTITION_STRATEGY, {
+      input: {
+        id: airgapBundleId,
+        strategy: consentManager.telemetryPartitioning,
+      },
+    });
+  }
 
   // TODO: https://transcend.height.app/T-23875
   //  syncEndpoint: string;
