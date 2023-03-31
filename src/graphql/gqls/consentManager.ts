@@ -239,3 +239,11 @@ export const UPDATE_CONSENT_MANAGER_PARTITION = gql`
     }
   }
 `;
+
+export const UPDATE_TOGGLE_USP_API = gql`
+  mutation TranscendCliToggleUspAPI($input: ToggleUspapiInput!) {
+    toggleUspapi(input: $input) {
+      clientMutationId
+    }
+  }
+`;

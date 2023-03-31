@@ -4,6 +4,7 @@ import {
   UPDATE_CONSENT_MANAGER_DOMAINS,
   FETCH_PRIVACY_CENTER_ID,
   CREATE_CONSENT_MANAGER,
+  UPDATE_TOGGLE_USP_API,
   UPDATE_CONSENT_MANAGER_PARTITION,
   DEPLOYED_PRIVACY_CENTER_URL,
 } from './gqls';
@@ -81,6 +82,19 @@ export async function syncConsentManager(
     });
   }
 
+  // sync uspapi
+  if (consentManager.uspapi || consentManager.signedIabAgreement) {
+    await makeGraphQLRequest(client, UPDATE_TOGGLE_USP_API, {
+      input: {
+        id: airgapBundleId,
+        ...(consentManager.uspapi ? { uspapi: consentManager.uspapi } : {}),
+        ...(consentManager.signedIabAgreement
+          ? { signedIabAgreement: consentManager.signedIabAgreement }
+          : {}),
+      },
+    });
+  }
+
   // TODO: https://transcend.height.app/T-23920
   //  csp: CspOption;
   //  unknownRequestPolicy: UnknownRequestPolicy;
@@ -91,8 +105,4 @@ export async function syncConsentManager(
   //  syncEndpoint: string;
   // TODO: https://transcend.height.app/T-23919
   //  syncGroups: string;
-
-  // TODO: https://transcend.height.app/T-23872
-  //  signedIabAgreement: SignedIabAgreementOption;
-  //  uspapi: SignedIabAgreementOption;
 }
