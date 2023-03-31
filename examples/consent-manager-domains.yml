@@ -2,12 +2,15 @@ consent-manager:
   domains:
     - test.transcend.io
     - docs.transcend.io
-  csp: 'Off'
-  partition: my-custom-partition-key
-  unknownRequestPolicy: ALLOW
-  unknownCookiePolicy: ALLOW
+  bundleUrls:
+    TEST: >-
+      https://cdn.transcend.io/cm-test/25305680-593c-4772-9522-2251e79db515/airgap.js
+    PRODUCTION: https://cdn.transcend.io/cm/25305680-593c-4772-9522-2251e79db515/airgap.js
+  consentPrecedence: user
+  unknownRequestPolicy: REQUIRE_FULL_CONSENT
+  unknownCookiePolicy: REQUIRE_FULL_CONSENT
   syncEndpoint: >-
-    https://sync.transcend.io/consent-manager/75db5e78-0d69-4554-a3bd-84b72ca3b3d9
-  telemetryPartitioning: origin
+    https://sync.transcend.io/consent-manager/25305680-593c-4772-9522-2251e79db515
+  telemetryPartitioning: path
   signedIabAgreement: 'no'
   uspapi: 'off'

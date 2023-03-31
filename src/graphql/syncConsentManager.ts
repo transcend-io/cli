@@ -8,6 +8,7 @@ import {
   UPDATE_CONSENT_MANAGER_PARTITION,
   TOGGLE_TELEMETRY_PARTITION_STRATEGY,
   TOGGLE_UNKNOWN_COOKIE_POLICY,
+  TOGGLE_CONSENT_PRECEDENCE,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
   DEPLOYED_PRIVACY_CENTER_URL,
 } from './gqls';
@@ -124,6 +125,16 @@ export async function syncConsentManager(
       input: {
         id: airgapBundleId,
         strategy: consentManager.telemetryPartitioning,
+      },
+    });
+  }
+
+  // sync telemetry partition strategy
+  if (consentManager.consentPrecedence) {
+    await makeGraphQLRequest(client, TOGGLE_CONSENT_PRECEDENCE, {
+      input: {
+        id: airgapBundleId,
+        consentPrecedence: consentManager.consentPrecedence,
       },
     });
   }
