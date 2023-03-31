@@ -267,3 +267,13 @@ export const TOGGLE_UNKNOWN_COOKIE_POLICY = gql`
     }
   }
 `;
+
+export const TOGGLE_TELEMETRY_PARTITION_STRATEGY = gql`
+  mutation TranscendCliToggleTelemetryPartitionStrategy(
+    $input: ToggleTelemetryPartitionStrategyInput!
+  ) {
+    toggleTelemetryPartitioning(input: $input) {
+      clientMutationId
+    }
+  }
+`;
