@@ -536,7 +536,8 @@ export async function pullTranscendConfiguration(
                     keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
                     (databaseIntegrationQuery) =>
                       databaseIntegrationQuery.suggestedQuery ||
-                      databaseIntegrationQuery.query,
+                      databaseIntegrationQuery.query ||
+                      undefined,
                   ),
                 }
               : {}),
