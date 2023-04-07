@@ -4,14 +4,9 @@ export const REQUESTS = gql`
   query TranscendCliRequests(
     $first: Int!
     $offset: Int!
-    $actions: [RequestAction!]!
-    $statuses: [RequestStatus!]!
+    $filterBy: RequestFiltersInput!
   ) {
-    requests(
-      filterBy: { type: $actions, status: $statuses }
-      first: $first
-      offset: $offset
-    ) {
+    requests(filterBy: $filterBy, first: $first, offset: $offset) {
       nodes {
         id
         createdAt
@@ -21,6 +16,7 @@ export const REQUESTS = gql`
         details
         isTest
         locale
+        origin
         isSilent
         coreIdentifier
         type
