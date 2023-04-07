@@ -17,3 +17,4 @@ export * from './uploadPrivacyRequestsFromCsv';
 export * from './bulkRestartRequests';
 export * from './restartPrivacyRequest';
 export * from './retryRequestDataSilos';
+export * from './pullRequestsToCsv';

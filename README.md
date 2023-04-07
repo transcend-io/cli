@@ -29,38 +29,42 @@
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
     - [Usage](#usage-5)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-13)
+    - [Arguments](#arguments-13)
+    - [Usage](#usage-14)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -83,9 +87,15 @@ yarn tr-pull --auth=$TRANSCEND_API_KEY
 yarn tr-push --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
+yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
 yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
+yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
+yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -99,9 +109,15 @@ tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
+tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
 tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
+tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
+tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
+tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
+tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -797,6 +813,77 @@ Skip queued state of request and go straight to compiling
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --skipWaitingPeriod=true
 ```
 
+### tr-request-export
+
+Export privacy requests and request identifiers to a CSV file.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- View Incoming Requests
+- View the Request Compilation
+
+#### Arguments
+
+| Argument        | Description                                                                                                                               | Type               | Default                        | Required |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------ | -------- |
+| auth            | The Transcend API capable of pulling privacy requests.                                                                                    | string             | N/A                            | true     |
+| actions         | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]    | N/A                            | false    |
+| statuses        | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[]    | N/A                            | false    |
+| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL       | https://api.transcend.io       | false    |
+| file            | Path to the CSV file where identifiers will be written to.                                                                                | string - file-path | ./transcend-request-export.csv | false    |
+| concurrency     | The concurrency to use when uploading requests in parallel.                                                                               | number             | 100                            | false    |
+| createdAtBefore | Pull requests that were submitted before this time                                                                                        | Date               | N/A                            | false    |
+| createdAtAfter  | Pull requests that were submitted after this time                                                                                         | Date               | N/A                            | false    |
+| showTests       | Filter for test requests or production requests - when not provided, pulls both                                                           | boolean            | N/A                            | false    |
+
+#### Usage
+
+Pull all requests:
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY
+```
+
+Filter for specific actions and statuses:
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+Increase the concurrency (defaults to 100)
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --concurrency=500
+```
+
+Filter for production requests only
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --showTests=false
+```
+
+Filter for requests within a date range
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --createdAtBefore="04/05/2023" --createdAtAfter="02/21/2023"
+```
+
+Write to a specific file location
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --file=./path/to/file.csv
+```
+
 ### tr-cron-pull-identifiers
 
 If you are using the cron job integration, you can run this command to pull the outstanding identifiers
@@ -1139,7 +1226,7 @@ The API key must have the following scopes:
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 ```
 
-Specifying the backend URL, needed for US hosted backend infrastructure.
+Specifying the backend URL, needed for US hosted backend infrastructu re.
 
 ```sh
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
