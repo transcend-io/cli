@@ -79,6 +79,8 @@ export interface TranscendPullConfigurationInput {
   resources?: TranscendPullResource[];
   /** The data silo types to sync.If empty list, pull all.  */
   integrationNames: string[];
+  /** The tracker statuses to pull */
+  trackerStatuses?: ConsentTrackerStatus[];
 }
 
 /**
@@ -96,6 +98,7 @@ export async function pullTranscendConfiguration(
     debug,
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES,
     pageSize,
+    trackerStatuses = Object.values(ConsentTrackerStatus),
   }: TranscendPullConfigurationInput,
 ): Promise<TranscendInput> {
   if (dataSiloIds.length > 0 && integrationNames.length > 0) {
@@ -146,18 +149,23 @@ export async function pullTranscendConfiguration(
     // Fetch data flows
     resources.includes(TranscendPullResource.DataFlows)
       ? [
-          ...(await fetchAllDataFlows(client, ConsentTrackerStatus.Live)),
-          ...(await fetchAllDataFlows(
-            client,
-            ConsentTrackerStatus.NeedsReview,
-          )),
+          ...(trackerStatuses.includes(ConsentTrackerStatus.Live)
+            ? await fetchAllDataFlows(client, ConsentTrackerStatus.Live)
+            : []),
+          ...(trackerStatuses.includes(ConsentTrackerStatus.NeedsReview)
+            ? await fetchAllDataFlows(client, ConsentTrackerStatus.NeedsReview)
+            : []),
         ]
       : [],
     // Fetch data flows
     resources.includes(TranscendPullResource.Cookies)
       ? [
-          ...(await fetchAllCookies(client, ConsentTrackerStatus.Live)),
-          ...(await fetchAllCookies(client, ConsentTrackerStatus.NeedsReview)),
+          ...(trackerStatuses.includes(ConsentTrackerStatus.Live)
+            ? await fetchAllCookies(client, ConsentTrackerStatus.Live)
+            : []),
+          ...(trackerStatuses.includes(ConsentTrackerStatus.NeedsReview)
+            ? await fetchAllCookies(client, ConsentTrackerStatus.NeedsReview)
+            : []),
         ]
       : [],
     // Fetch attributes
