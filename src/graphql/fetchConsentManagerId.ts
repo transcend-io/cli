@@ -9,6 +9,7 @@ import {
 import {
   FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER,
+  EXPERIENCES,
   PURPOSES,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -100,10 +101,10 @@ export interface ConsentPurpose {
 }
 
 /**
- * Fetch consent manager ID
+ * Fetch consent manager purposes
  *
  * @param client - GraphQL client
- * @returns Consent manager ID in organization
+ * @returns Consent manager purposes in the organization
  */
 export async function fetchPurposes(
   client: GraphQLClient,
@@ -118,4 +119,43 @@ export async function fetchPurposes(
     };
   }>(client, PURPOSES);
   return purposes;
+}
+
+const PAGE_SIZE = 50;
+
+export interface ConsentExperience {
+  /** ID of experience */
+  id: string;
+  /** Name of experience */
+  name: string;
+}
+
+/**
+ * Fetch consent manager experiences
+ *
+ * @param client - GraphQL client
+ * @returns Consent manager experiences in the organization
+ */
+export async function fetchConsentManagerExperiences(
+  client: GraphQLClient,
+): Promise<ConsentExperience[]> {
+  const experiences: ConsentExperience[] = [];
+  let offset = 0;
+
+  // Try to fetch an enricher with the same title
+  let shouldContinue = false;
+  do {
+    const {
+      experiences: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await makeGraphQLRequest(client, EXPERIENCES, {
+      first: PAGE_SIZE,
+      offset,
+    });
+    experiences.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return experiences;
 }

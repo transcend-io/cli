@@ -41,6 +41,7 @@
     "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
   },
   "dependencies": {
+    "@transcend-io/airgap.js-types": "^8.31.0",
     "@transcend-io/internationalization": "^1.5.0",
     "@transcend-io/persisted-state": "^1.0.0",
     "@transcend-io/privacy-types": "^4.29.2",

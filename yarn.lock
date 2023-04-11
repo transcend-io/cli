@@ -400,10 +400,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@transcend-io/airgap.js-types@npm:^8.31.0":
+  version: 8.31.0
+  resolution: "@transcend-io/airgap.js-types@npm:8.31.0"
+  dependencies:
+    "@transcend-io/type-utils": ^1.0.5
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+  checksum: d7cd98ba77a217ccf81668d13bbc444e7d172abbaf509189ecc10f1a1180155ac738ce6e24ef2b8a1444c3400c80f194063b601895e48d2d1ed1ec793ad3a1db
+  languageName: node
+  linkType: hard
+
 "@transcend-io/cli@workspace:.":
   version: 0.0.0-use.local
   resolution: "@transcend-io/cli@workspace:."
   dependencies:
+    "@transcend-io/airgap.js-types": ^8.31.0
     "@transcend-io/internationalization": ^1.5.0
     "@transcend-io/persisted-state": ^1.0.0
     "@transcend-io/privacy-types": ^4.29.2
