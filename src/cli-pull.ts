@@ -12,9 +12,11 @@ import {
   DEFAULT_TRANSCEND_PULL_RESOURCES,
   TranscendPullResource,
 } from './graphql';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { validateTranscendAuth } from './api-keys';
 import { writeTranscendYaml } from './readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from './constants';
+import { splitCsvToList } from './requests';
 
 const VALID_RESOURCES = Object.values(TranscendPullResource);
 
@@ -38,10 +40,33 @@ async function main(): Promise<void> {
     pageSize = '',
     debug = '',
     auth,
+    trackerStatuses = Object.values(ConsentTrackerStatus).join(','),
   } = yargs(process.argv.slice(2));
 
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
+
+  // Validate trackerStatuses
+  const parsedTrackerStatuses = splitCsvToList(
+    trackerStatuses,
+  ) as ConsentTrackerStatus[];
+  const invalidTrackerStatuses = parsedTrackerStatuses.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (type) => !Object.values(ConsentTrackerStatus).includes(type as any),
+  );
+  if (invalidTrackerStatuses.length > 0) {
+    logger.error(
+      colors.red(
+        `Failed to parse trackerStatuses:"${invalidTrackerStatuses.join(
+          ',',
+        )}".\n` +
+          `Expected one of: \n${Object.values(ConsentTrackerStatus).join(
+            '\n',
+          )}`,
+      ),
+    );
+    process.exit(1);
+  }
 
   // Parse request actions
   let splitResources: TranscendPullResource[] = [];
@@ -94,6 +119,7 @@ async function main(): Promise<void> {
         resources: splitResources,
         pageSize: pageSizeParsed,
         debug: isDebug,
+        trackerStatuses: parsedTrackerStatuses,
       });
 
       logger.info(colors.magenta(`Writing configuration to file "${file}"...`));
@@ -137,6 +163,7 @@ async function main(): Promise<void> {
           resources: splitResources,
           pageSize: pageSizeParsed,
           debug: isDebug,
+          trackerStatuses: parsedTrackerStatuses,
         });
 
         const filePath = join(file, `${apiKey.organizationName}.yml`);
