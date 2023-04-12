@@ -1,16 +1,162 @@
 consent-manager:
-  domains:
-    - test.transcend.io
-    - docs.transcend.io
   bundleUrls:
     TEST: >-
-      https://cdn.transcend.io/cm-test/25305680-593c-4772-9522-2251e79db515/airgap.js
-    PRODUCTION: https://cdn.transcend.io/cm/25305680-593c-4772-9522-2251e79db515/airgap.js
+      https://cdn.transcend.io/cm-test/6efb0409-a0f6-4d3c-90dd-0a03f909dd68/airgap.js
+    PRODUCTION: https://cdn.transcend.io/cm/6efb0409-a0f6-4d3c-90dd-0a03f909dd68/airgap.js
+  domains:
+    - eshopit.co
+    - test.transcend.io
+    - docs.transcend.io
+    - localhost:3000
+    - localhost:8084
   consentPrecedence: user
-  unknownRequestPolicy: REQUIRE_FULL_CONSENT
-  unknownCookiePolicy: REQUIRE_FULL_CONSENT
+  unknownRequestPolicy: BLOCK
+  unknownCookiePolicy: ALLOW
   syncEndpoint: >-
-    https://sync.transcend.io/consent-manager/25305680-593c-4772-9522-2251e79db515
-  telemetryPartitioning: path
-  signedIabAgreement: 'no'
-  uspapi: 'off'
+    https://sync.transcend.io/consent-manager/6efb0409-a0f6-4d3c-90dd-0a03f909dd68
+  telemetryPartitioning: origin
+  signedIabAgreement: 'yes'
+  uspapi: 'on'
+  experiences:
+    - name: GDPR
+      displayName: GDPR
+      regions:
+        - country: EU
+        - country: GB
+        - country: LI
+        - country: 'NO'
+        - country: IS
+      operator: IN
+      displayPriority: 10
+      viewState: QuickOptions
+      purposes:
+        - name: Advertising
+        - name: Analytics
+        - name: Functional
+        - name: SaleOfInfo
+      optedOutPurposes:
+        - name: Advertising
+        - name: Analytics
+        - name: Functional
+        - name: SaleOfInfo
+      browserLanguages:
+        - fr
+        - de
+        - it
+        - de-AT
+        - nl-BE
+        - fr-BE
+        - bg-BG
+        - hr-HR
+        - cs-CZ
+        - da-DK
+        - fi-FI
+        - sv-SE
+        - fr-FR
+        - de-DE
+        - el-GR
+        - hu-HU
+        - en-IE
+        - it-IT
+        - lt-LT
+        - nl-NL
+        - pl-PL
+        - pt-PT
+        - ro-RO
+        - es-ES
+        - sv-SE
+      browserTimeZones: []
+    - name: CPA
+      displayName: CPA
+      regions:
+        - countrySubDivision: US-CO
+          country: US
+      operator: IN
+      displayPriority: 20
+      viewState: Hidden
+      purposes:
+        - name: SaleOfInfo
+      optedOutPurposes: []
+      browserLanguages: []
+      browserTimeZones: []
+    - name: CDPA
+      displayName: CDPA
+      regions:
+        - countrySubDivision: US-VA
+          country: US
+      operator: IN
+      displayPriority: 20
+      viewState: Hidden
+      purposes:
+        - name: SaleOfInfo
+      optedOutPurposes: []
+      browserLanguages: []
+      browserTimeZones: []
+    - name: CPRA
+      displayName: CPRA
+      regions:
+        - countrySubDivision: US-CT
+          country: US
+        - countrySubDivision: US-VA
+          country: US
+        - countrySubDivision: US-NV
+          country: US
+        - countrySubDivision: US-CO
+          country: US
+        - countrySubDivision: US-WA
+          country: US
+        - countrySubDivision: US-CA
+          country: US
+        - countrySubDivision: US-UT
+          country: US
+        - countrySubDivision: US-NY
+          country: US
+        - countrySubDivision: US-FL
+          country: US
+        - countrySubDivision: US-IA
+          country: US
+      operator: IN
+      displayPriority: 20
+      viewState: NoticeAndDoNotSell
+      purposes:
+        - name: SaleOfInfo
+      optedOutPurposes: []
+      browserLanguages: []
+      browserTimeZones:
+        - America/Los_Angeles
+    - name: LGPD
+      displayName: LGPD
+      regions:
+        - country: BR
+        - country: AD
+      operator: IN
+      displayPriority: 20
+      viewState: QuickOptions
+      purposes:
+        - name: Advertising
+        - name: Analytics
+        - name: Functional
+        - name: SaleOfInfo
+      optedOutPurposes:
+        - name: Advertising
+        - name: Analytics
+        - name: Functional
+        - name: SaleOfInfo
+      browserLanguages:
+        - pt-BR
+      browserTimeZones:
+        - Africa/Accra
+    - name: Unknown
+      displayName: Unknown
+      regions: []
+      operator: NOT_IN
+      displayPriority: 100
+      viewState: Hidden
+      purposes:
+        - name: Advertising
+        - name: Analytics
+        - name: Functional
+        - name: SaleOfInfo
+      optedOutPurposes: []
+      browserLanguages: []
+      browserTimeZones: []

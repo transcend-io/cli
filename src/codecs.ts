@@ -14,14 +14,20 @@ import {
   PromptAVendorEmailSendType,
   ConsentPrecedenceOption,
   IsoCountryCode,
+  BrowserTimeZone,
   IsoCountrySubdivisionCode,
   ConsentTrackerStatus,
   AttributeKeyType,
   PromptAVendorEmailCompletionLinkType,
+  RegionsOperator,
   UnknownRequestPolicy,
   TelemetryPartitionStrategy,
   SignedIabAgreementOption,
 } from '@transcend-io/privacy-types';
+import {
+  InitialViewState,
+  BrowserLanguage,
+} from '@transcend-io/airgap.js-types';
 import { AttributeResourceType } from './tmp-attribute-key';
 
 /**
@@ -537,6 +543,55 @@ export const CookieInput = t.intersection([
 /** Type override */
 export type CookieInput = t.TypeOf<typeof CookieInput>;
 
+export const ConsentManageExperienceInput = t.intersection([
+  t.type({
+    /** Name of experience */
+    name: t.string,
+  }),
+  t.partial({
+    /** Name of experience */
+    displayName: t.string,
+    /** Region that define this regional experience */
+    regions: t.array(
+      t.partial({
+        countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+        country: valuesOf(IsoCountryCode),
+      }),
+    ),
+    /** In vs not in operator */
+    operator: valuesOf(RegionsOperator),
+    /** Priority of experience */
+    displayPriority: t.number,
+    /** View state to prompt when auto prompting is enabled */
+    viewState: valuesOf(InitialViewState),
+    /** Purposes that can be opted out of in a particular experience */
+    purposes: t.array(
+      t.type({
+        /** Name of purpose */
+        name: t.string,
+      }),
+    ),
+    /** Purposes that are opted out by default in a particular experience */
+    optedOutPurposes: t.array(
+      t.type({
+        /** Name of purpose */
+        name: t.string,
+      }),
+    ),
+    /**
+     * Browser languages that define this regional experience
+     */
+    browserLanguages: t.array(valuesOf(BrowserLanguage)),
+    /** Browser time zones that define this regional experience */
+    browserTimeZones: t.array(valuesOf(BrowserTimeZone)),
+  }),
+]);
+
+/** Type override */
+export type ConsentManageExperienceInput = t.TypeOf<
+  typeof ConsentManageExperienceInput
+>;
+
 export const ConsentManagerInput = t.partial({
   /** The consent manager domains in the instance */
   bundleUrls: t.record(valuesOf(ConsentBundleType), t.string),
@@ -558,6 +613,8 @@ export const ConsentManagerInput = t.partial({
   signedIabAgreement: valuesOf(SignedIabAgreementOption),
   /** Whether or not to use the US Privacy API */
   uspapi: valuesOf(UspapiOption),
+  /** Regional experience configurations */
+  experiences: t.array(ConsentManageExperienceInput),
   // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
   /** The Shared XDI host sync groups config (JSON) for this airgap bundle */
   syncGroups: t.string,

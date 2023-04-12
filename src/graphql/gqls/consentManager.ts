@@ -11,6 +11,33 @@ export const PURPOSES = gql`
   }
 `;
 
+export const EXPERIENCES = gql`
+  query TranscendCliExperiences($first: Int!, $offset: Int!) {
+    experiences(first: $first, offset: $offset) {
+      nodes {
+        id
+        name
+        displayName
+        regions {
+          countrySubDivision
+          country
+        }
+        operator
+        displayPriority
+        viewState
+        purposes {
+          name
+        }
+        optedOutPurposes {
+          name
+        }
+        browserLanguages
+        browserTimeZones
+      }
+    }
+  }
+`;
+
 export const CREATE_DATA_FLOWS = gql`
   mutation TranscendCliCreateDataFlows(
     $dataFlows: [DataFlowInput!]!
