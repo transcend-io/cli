@@ -30,7 +30,10 @@ import {
   fetchAllDataSubjects,
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
-import { fetchConsentManager } from './fetchConsentManagerId';
+import {
+  fetchConsentManager,
+  fetchConsentManagerExperiences,
+} from './fetchConsentManagerId';
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
@@ -123,6 +126,7 @@ export async function pullTranscendConfiguration(
     actions,
     businessEntities,
     consentManager,
+    consentManagerExperiences,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -192,6 +196,10 @@ export async function pullTranscendConfiguration(
     resources.includes(TranscendPullResource.ConsentManager)
       ? fetchConsentManager(client)
       : undefined,
+    // Fetch consent manager experiences
+    resources.includes(TranscendPullResource.ConsentManager)
+      ? fetchConsentManagerExperiences(client)
+      : [],
   ]);
 
   const result: TranscendInput = {};
@@ -236,6 +244,25 @@ export async function pullTranscendConfiguration(
       uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
+      experiences: consentManagerExperiences.map((experience) => ({
+        name: experience.name,
+        displayName: experience.displayName || undefined,
+        regions: experience.regions.map((region) => ({
+          countrySubDivision: region.countrySubDivision || undefined,
+          country: region.country || undefined,
+        })),
+        operator: experience.operator,
+        displayPriority: experience.displayPriority,
+        viewState: experience.viewState,
+        purposes: experience.purposes.map((purpose) => ({
+          name: purpose.name,
+        })),
+        optedOutPurposes: experience.optedOutPurposes.map((purpose) => ({
+          name: purpose.name,
+        })),
+        browserLanguages: experience.browserLanguages,
+        browserTimeZones: experience.browserTimeZones,
+      })),
     };
   }
 

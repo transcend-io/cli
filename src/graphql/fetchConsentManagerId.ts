@@ -4,8 +4,16 @@ import {
   UnknownRequestPolicy,
   UspapiOption,
   TelemetryPartitionStrategy,
+  RegionsOperator,
+  IsoCountrySubdivisionCode,
+  IsoCountryCode,
+  BrowserTimeZone,
   SignedIabAgreementOption,
 } from '@transcend-io/privacy-types';
+import {
+  InitialViewState,
+  BrowserLanguage,
+} from '@transcend-io/airgap.js-types';
 import {
   FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER,
@@ -128,6 +136,37 @@ export interface ConsentExperience {
   id: string;
   /** Name of experience */
   name: string;
+  /** Experience display name */
+  displayName?: string;
+  /** Region that define this regional experience */
+  regions: {
+    /** Sub division */
+    countrySubDivision?: IsoCountrySubdivisionCode;
+    /** Country */
+    country?: IsoCountryCode;
+  }[];
+  /** In vs not in operator */
+  operator: RegionsOperator;
+  /** Priority of experience */
+  displayPriority: number;
+  /** View state to prompt when auto prompting is enabled */
+  viewState: InitialViewState;
+  /** Purposes that can be opted out of in a particular experience */
+  purposes: {
+    /** Name of purpose */
+    name: string;
+  }[];
+  /** Purposes that are opted out by default in a particular experience */
+  optedOutPurposes: {
+    /** Name of purpose */
+    name: string;
+  }[];
+  /**
+   * Browser languages that define this regional experience
+   */
+  browserLanguages: BrowserLanguage[];
+  /** Browser time zones that define this regional experience */
+  browserTimeZones: BrowserTimeZone[];
 }
 
 /**
@@ -142,7 +181,7 @@ export async function fetchConsentManagerExperiences(
   const experiences: ConsentExperience[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Fetch all experiences
   let shouldContinue = false;
   do {
     const {
