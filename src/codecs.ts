@@ -14,7 +14,7 @@ import {
   PromptAVendorEmailSendType,
   ConsentPrecedenceOption,
   IsoCountryCode,
-  BrowserTimeZones,
+  BrowserTimeZone,
   IsoCountrySubdivisionCode,
   ConsentTrackerStatus,
   AttributeKeyType,
@@ -24,7 +24,10 @@ import {
   TelemetryPartitionStrategy,
   SignedIabAgreementOption,
 } from '@transcend-io/privacy-types';
-import { InitialViewState } from '@transcend-io/airgap.js-types';
+import {
+  InitialViewState,
+  BrowserLanguage,
+} from '@transcend-io/airgap.js-types';
 import { AttributeResourceType } from './tmp-attribute-key';
 
 /**
@@ -577,11 +580,10 @@ export const ConsentManageExperienceInput = t.intersection([
     ),
     /**
      * Browser languages that define this regional experience
-     * TODO: https://transcend.height.app/T-24173 - use enum
      */
-    browserLanguages: t.array(t.string),
+    browserLanguages: t.array(valuesOf(BrowserLanguage)),
     /** Browser time zones that define this regional experience */
-    browserTimeZones: t.array(valuesOf(BrowserTimeZones)),
+    browserTimeZones: t.array(valuesOf(BrowserTimeZone)),
   }),
 ]);
 
