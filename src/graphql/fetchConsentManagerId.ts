@@ -4,11 +4,20 @@ import {
   UnknownRequestPolicy,
   UspapiOption,
   TelemetryPartitionStrategy,
+  RegionsOperator,
+  IsoCountrySubdivisionCode,
+  IsoCountryCode,
+  BrowserTimeZone,
   SignedIabAgreementOption,
 } from '@transcend-io/privacy-types';
 import {
+  InitialViewState,
+  BrowserLanguage,
+} from '@transcend-io/airgap.js-types';
+import {
   FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER,
+  EXPERIENCES,
   PURPOSES,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -100,10 +109,10 @@ export interface ConsentPurpose {
 }
 
 /**
- * Fetch consent manager ID
+ * Fetch consent manager purposes
  *
  * @param client - GraphQL client
- * @returns Consent manager ID in organization
+ * @returns Consent manager purposes in the organization
  */
 export async function fetchPurposes(
   client: GraphQLClient,
@@ -118,4 +127,74 @@ export async function fetchPurposes(
     };
   }>(client, PURPOSES);
   return purposes;
+}
+
+const PAGE_SIZE = 50;
+
+export interface ConsentExperience {
+  /** ID of experience */
+  id: string;
+  /** Name of experience */
+  name: string;
+  /** Experience display name */
+  displayName?: string;
+  /** Region that define this regional experience */
+  regions: {
+    /** Sub division */
+    countrySubDivision?: IsoCountrySubdivisionCode;
+    /** Country */
+    country?: IsoCountryCode;
+  }[];
+  /** In vs not in operator */
+  operator: RegionsOperator;
+  /** Priority of experience */
+  displayPriority: number;
+  /** View state to prompt when auto prompting is enabled */
+  viewState: InitialViewState;
+  /** Purposes that can be opted out of in a particular experience */
+  purposes: {
+    /** Name of purpose */
+    name: string;
+  }[];
+  /** Purposes that are opted out by default in a particular experience */
+  optedOutPurposes: {
+    /** Name of purpose */
+    name: string;
+  }[];
+  /**
+   * Browser languages that define this regional experience
+   */
+  browserLanguages: BrowserLanguage[];
+  /** Browser time zones that define this regional experience */
+  browserTimeZones: BrowserTimeZone[];
+}
+
+/**
+ * Fetch consent manager experiences
+ *
+ * @param client - GraphQL client
+ * @returns Consent manager experiences in the organization
+ */
+export async function fetchConsentManagerExperiences(
+  client: GraphQLClient,
+): Promise<ConsentExperience[]> {
+  const experiences: ConsentExperience[] = [];
+  let offset = 0;
+
+  // Fetch all experiences
+  let shouldContinue = false;
+  do {
+    const {
+      experiences: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await makeGraphQLRequest(client, EXPERIENCES, {
+      first: PAGE_SIZE,
+      offset,
+    });
+    experiences.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return experiences;
 }
