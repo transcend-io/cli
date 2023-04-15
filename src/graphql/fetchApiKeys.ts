@@ -39,7 +39,13 @@ export async function fetchAllApiKeys(
     const {
       apiKeys: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, API_KEYS, {
+    } = await makeGraphQLRequest<{
+      /** API keys */
+      apiKeys: {
+        /** List */
+        nodes: ApiKey[];
+      };
+    }>(client, API_KEYS, {
       first: PAGE_SIZE,
       offset,
       titles,

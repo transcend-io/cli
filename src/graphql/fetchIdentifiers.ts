@@ -65,7 +65,13 @@ export async function fetchAllIdentifiers(
     const {
       identifiers: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, IDENTIFIERS, {
+    } = await makeGraphQLRequest<{
+      /** Identifiers */
+      identifiers: {
+        /** List */
+        nodes: Identifier[];
+      };
+    }>(client, IDENTIFIERS, {
       first: PAGE_SIZE,
       offset,
     });
@@ -134,19 +140,21 @@ export async function fetchIdentifiersAndCreateMissing(
     const nativeTypesRemaining = newIdentifierTypes.map(({ name }) => name);
     await mapSeries(missingIdentifiers, async (identifier) => {
       logger.info(colors.magenta(`Creating identifier ${identifier}...`));
-      const { createIdentifier } = await makeGraphQLRequest(
-        client,
-        CREATE_IDENTIFIER,
-        {
-          input: {
-            name: identifier,
-            type: nativeTypesRemaining.includes(identifier!)
-              ? identifier
-              : 'custom',
-            skipPublish,
-          },
+      const { createIdentifier } = await makeGraphQLRequest<{
+        /** createIdentifier Response */
+        createIdentifier: {
+          /** Created identifier */
+          identifier: Identifier;
+        };
+      }>(client, CREATE_IDENTIFIER, {
+        input: {
+          name: identifier,
+          type: nativeTypesRemaining.includes(identifier!)
+            ? identifier
+            : 'custom',
+          skipPublish,
         },
-      );
+      });
       logger.info(colors.green(`Created identifier ${identifier}!`));
 
       identifiersByName[identifier!] = createIdentifier.identifier;

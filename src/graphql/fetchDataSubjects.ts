@@ -89,14 +89,16 @@ export async function ensureAllDataSubjectsExist(
     );
     await mapSeries(missingDataSubjects, async (dataSubject) => {
       logger.info(colors.magenta(`Creating data subject ${dataSubject}...`));
-      const { createSubject } = await makeGraphQLRequest(
-        client,
-        CREATE_DATA_SUBJECT,
-        {
-          type: dataSubject,
-          skipPublish: true,
-        },
-      );
+      const { createSubject } = await makeGraphQLRequest<{
+        /** Create Subject Response */
+        createSubject: {
+          /** Created Data Subject */
+          subject: DataSubject;
+        };
+      }>(client, CREATE_DATA_SUBJECT, {
+        type: dataSubject,
+        skipPublish: true,
+      });
       logger.info(colors.green(`Created data subject ${dataSubject}!`));
 
       dataSubjectByName[dataSubject] = createSubject.subject;

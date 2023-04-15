@@ -42,7 +42,13 @@ export async function fetchAllRequestIdentifiers(
     const {
       requestIdentifiers: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, REQUEST_IDENTIFIERS, {
+    } = await makeGraphQLRequest<{
+      /** Request Identifiers */
+      requestIdentifiers: {
+        /** List */
+        nodes: RequestIdentifier[];
+      };
+    }>(client, REQUEST_IDENTIFIERS, {
       first: PAGE_SIZE,
       offset,
       requestId,

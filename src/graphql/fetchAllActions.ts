@@ -38,7 +38,13 @@ export async function fetchAllActions(
     const {
       actions: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, ACTIONS, {
+    } = await makeGraphQLRequest<{
+      /** Actions */
+      actions: {
+        /** List */
+        nodes: Action[];
+      };
+    }>(client, ACTIONS, {
       first: PAGE_SIZE,
       offset,
     });

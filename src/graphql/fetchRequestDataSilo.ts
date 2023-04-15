@@ -28,7 +28,13 @@ export async function fetchRequestDataSilo(
 ): Promise<RequestDataSilo> {
   const {
     requestDataSilos: { nodes },
-  } = await makeGraphQLRequest(client, REQUEST_DATA_SILOS, {
+  } = await makeGraphQLRequest<{
+    /** Request Data Silos */
+    requestDataSilos: {
+      /** List */
+      nodes: RequestDataSilo[];
+    };
+  }>(client, REQUEST_DATA_SILOS, {
     dataSiloId,
     requestId,
   });
