@@ -106,7 +106,15 @@ export async function fetchAllRequests(
     const {
       requests: { nodes, totalCount },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, REQUESTS, {
+    } = await makeGraphQLRequest<{
+      /** Requests */
+      requests: {
+        /** List */
+        nodes: PrivacyRequest[];
+        /** Total count */
+        totalCount: number;
+      };
+    }>(client, REQUESTS, {
       first: PAGE_SIZE,
       offset,
       filterBy: {

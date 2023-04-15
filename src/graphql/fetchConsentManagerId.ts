@@ -187,7 +187,13 @@ export async function fetchConsentManagerExperiences(
     const {
       experiences: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, EXPERIENCES, {
+    } = await makeGraphQLRequest<{
+      /** Consent experience */
+      experiences: {
+        /** List */
+        nodes: ConsentExperience[];
+      };
+    }>(client, EXPERIENCES, {
       first: PAGE_SIZE,
       offset,
     });

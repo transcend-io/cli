@@ -45,7 +45,13 @@ export async function fetchAllRequestEnrichers(
     const {
       requestEnrichers: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, REQUEST_ENRICHERS, {
+    } = await makeGraphQLRequest<{
+      /** Request Enrichers */
+      requestEnrichers: {
+        /** List */
+        nodes: RequestEnricher[];
+      };
+    }>(client, REQUEST_ENRICHERS, {
       first: PAGE_SIZE,
       offset,
       requestId,
