@@ -21,7 +21,16 @@ export async function createSombraGotInstance(
   const client = buildTranscendGraphQLClient(transcendUrl, transcendApiKey);
 
   // Grab metadata about organization's sombra from GraphQL endpoint
-  const { organization } = await makeGraphQLRequest(client, ORGANIZATION);
+  const { organization } = await makeGraphQLRequest<{
+    /** Requests */
+    organization: {
+      /** PrimarySombra related to organization */
+      sombra: {
+        /** URL of sombra */
+        customerUrl: string;
+      };
+    };
+  }>(client, ORGANIZATION);
 
   // Create got instance with default values
   return got.extend({

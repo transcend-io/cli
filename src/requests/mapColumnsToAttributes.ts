@@ -39,11 +39,9 @@ export async function mapColumnsToAttributes(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<
-          {
-            [k in string]: string;
-          }
-        >(
+        await inquirer.prompt<{
+          [k in string]: string;
+        }>(
           columnQuestions.map(({ name }) => {
             const matches = fuzzyMatchColumns(columnNames, name, false);
             return {

@@ -55,7 +55,13 @@ export async function fetchAllBusinessEntities(
     const {
       businessEntities: { nodes },
       // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest(client, BUSINESS_ENTITIES, {
+    } = await makeGraphQLRequest<{
+      /** Business entities */
+      businessEntities: {
+        /** List */
+        nodes: BusinessEntity[];
+      };
+    }>(client, BUSINESS_ENTITIES, {
       first: PAGE_SIZE,
       offset,
     });

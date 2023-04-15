@@ -38,11 +38,9 @@ export async function mapCsvColumnsToApi(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<
-          {
-            [k in ColumnName]?: string;
-          }
-        >(
+        await inquirer.prompt<{
+          [k in ColumnName]?: string;
+        }>(
           columnQuestions.map((name) => {
             const field = titleCase(name.replace('ColumnName', ''));
             const matches = fuzzyMatchColumns(
