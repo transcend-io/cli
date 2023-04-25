@@ -92,6 +92,18 @@ export async function loginUser(
 }
 
 /**
+ * Sleep in a promise
+ *
+ * @param sleepTime - The time to sleep in milliseconds.
+ * @returns Resolves promise
+ */
+function sleepPromise(sleepTime: number): Promise<number> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(sleepTime), sleepTime);
+  });
+}
+
+/**
  * Assume role for user into another organization
  *
  * @param client - GraphQL client
@@ -109,6 +121,9 @@ export async function assumeRole(
     roleId: string;
   },
 ): Promise<void> {
+  // these routes have a low rate limit
+  await sleepPromise(1000 * 12);
+
   const {
     determineLoginMethod: { loginMethod },
   } = await makeGraphQLRequest<{
