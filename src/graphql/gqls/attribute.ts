@@ -104,3 +104,13 @@ ${ENABLED_ON_INPUT}
     }
   }
 `;
+
+export const SET_RESOURCE_ATTRIBUTES = gql`
+  mutation TranscendCliSetResourceAttributes(
+    $input: SetResourceAttributesInput!
+  ) {
+    setResourceAttributes(input: $input) {
+      clientMutationId
+    }
+  }
+`;
