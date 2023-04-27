@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { REQUEST_IDENTIFIERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { IdentifierType } from '@transcend-io/privacy-types';
 
 export interface RequestIdentifier {
   /** ID of request */
@@ -9,6 +10,11 @@ export interface RequestIdentifier {
   name: string;
   /** The underlying identifier value */
   value: string;
+  /** Identifier metadata */
+  identifier: {
+    /** Type of identifier */
+    type: IdentifierType;
+  };
   /** Whether request identifier has been verified at least one */
   isVerifiedAtLeastOnce: boolean;
   /** Whether request identifier has been verified */
