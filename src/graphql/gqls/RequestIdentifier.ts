@@ -15,6 +15,9 @@ export const REQUEST_IDENTIFIERS = gql`
         id
         name
         value
+        identifier {
+          type
+        }
         isVerifiedAtLeastOnce
         isVerified
       }
