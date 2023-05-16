@@ -401,6 +401,8 @@ export interface DataSiloEnriched {
   title: string;
   /** Type of silo */
   type: string;
+  /** Outer type of silo */
+  outerType: string;
   /** Description of data silo */
   description: string;
   /** Webhook URL */
@@ -596,7 +598,13 @@ export async function syncDataSilo(
 
   // If data silo exists, update it, else create new
   if (existingDataSilo) {
-    await makeGraphQLRequest(client, UPDATE_DATA_SILO, {
+    const { updateDataSilo } = await makeGraphQLRequest<{
+      /** Mutation result */
+      updateDataSilo: {
+        /** Updated data silo */
+        dataSilo: DataSilo;
+      };
+    }>(client, UPDATE_DATA_SILO, {
       id: existingDataSilo.id,
       title: dataSilo.title,
       url: dataSilo.url,
@@ -622,7 +630,9 @@ export async function syncDataSilo(
         : undefined,
       attributes: dataSilo.attributes,
     });
+    existingDataSilo = updateDataSilo.dataSilo;
   } else {
+    // FIXME use createDataSilos
     const { connectDataSilo } = await makeGraphQLRequest<{
       /** Mutation result */
       connectDataSilo: {
@@ -634,6 +644,7 @@ export async function syncDataSilo(
       url: dataSilo.url,
       headers: dataSilo.headers,
       type: dataSilo.integrationName,
+      outerType: dataSilo['outer-type'] || undefined,
       description: dataSilo.description || '',
       identifiers: dataSilo['identity-keys'],
       isLive: !dataSilo.disabled,
@@ -653,6 +664,7 @@ export async function syncDataSilo(
             dataSubjectsByName,
           )
         : undefined,
+      attributes: dataSilo.attributes,
     });
     existingDataSilo = connectDataSilo.dataSilo;
   }
