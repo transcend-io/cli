@@ -33,6 +33,7 @@ export const DATA_SILO = gql`
       title
       description
       type
+      outerType
       url
       notifyEmailAddress
       attributeValues {
@@ -110,6 +111,14 @@ export const UPDATE_DATA_SILO = gql`
       }
     ) {
       clientMutationId
+      dataSilo {
+        id
+        title
+        type
+        catalog {
+          hasAvcFunctionality
+        }
+      }
     }
   }
 `;
@@ -121,8 +130,10 @@ export const CREATE_DATA_SILO = gql`
     $url: String
     $headers: [CustomHeaderInput!]
     $type: String!
+    $outerType: String
     $identifiers: [String!]
     $isLive: Boolean!
+    $attributes: [AttributeInput!]
     $notifyEmailAddress: String
     $dataSubjectBlockListIds: [ID!]
     $dependedOnDataSiloTitles: [String!]
@@ -135,7 +146,9 @@ export const CREATE_DATA_SILO = gql`
         name: $type
         title: $title
         description: $description
+        outerType: $outerType
         url: $url
+        attributes: $attributes
         headers: $headers
         notifyEmailAddress: $notifyEmailAddress
         identifiers: $identifiers

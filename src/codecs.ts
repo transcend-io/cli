@@ -642,6 +642,8 @@ export const DataSiloInput = t.intersection([
     integrationName: t.string,
   }),
   t.partial({
+    /** For prompt a person or database integrations, the underlying integration name */
+    'outer-type': t.string,
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */

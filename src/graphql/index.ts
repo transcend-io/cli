@@ -8,6 +8,7 @@ export * from './syncDataSilos';
 export * from './syncEnrichers';
 export * from './uploadSiloDiscoveryResults';
 export * from './syncTemplates';
+export * from './fetchCatalogs';
 export * from './makeGraphQLRequest';
 export * from './createSombraGotInstance';
 export * from './setResourceAttributes';
