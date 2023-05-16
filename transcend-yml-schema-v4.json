@@ -5867,6 +5867,9 @@
           {
             "type": "object",
             "properties": {
+              "outer-type": {
+                "type": "string"
+              },
               "description": {
                 "type": "string"
               },

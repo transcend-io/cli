@@ -490,6 +490,7 @@ export async function pullTranscendConfiguration(
           description,
           url,
           type,
+          outerType,
           apiKeys,
           notifyEmailAddress,
           identifiers,
@@ -511,6 +512,7 @@ export async function pullTranscendConfiguration(
         title,
         description,
         integrationName: type,
+        'outer-type': outerType || undefined,
         url: url || undefined,
         'api-key-title': apiKeys[0]?.title,
         'identity-keys': identifiers
