@@ -24,7 +24,8 @@
     "tr-request-restart": "./build/cli-request-restart.js",
     "tr-request-upload": "./build/cli-request-upload.js",
     "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js",
-    "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js"
+    "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
+    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
   },
   "files": [
     "build/**/*",

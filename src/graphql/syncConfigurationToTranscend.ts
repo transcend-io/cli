@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { TranscendInput, DataFlowInput } from '../codecs';
+import { TranscendInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -23,10 +23,8 @@ import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { UPDATE_DATA_SILO } from './gqls';
 import { syncBusinessEntities } from './syncBusinessEntities';
-import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
-import { createDataFlows, updateDataFlows } from './syncDataFlows';
+import { syncDataFlows } from './syncDataFlows';
 import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
@@ -356,80 +354,12 @@ export async function syncConfigurationToTranscend(
 
   // Sync data flows
   if (dataFlows) {
-    logger.info(colors.magenta(`Syncing "${dataFlows.length}" data flows...`));
-
-    // Ensure no duplicates are being uploaded
-    const notUnique = dataFlows.filter(
-      (dataFlow) =>
-        dataFlows.filter(
-          (flow) =>
-            dataFlow.value === flow.value && dataFlow.type === flow.type,
-        ).length > 1,
+    const syncedDataFlows = await syncDataFlows(
+      client,
+      dataFlows,
+      classifyService,
     );
-    if (notUnique.length > 0) {
-      throw new Error(
-        `Failed to upload data flows as there were non-unique entries found: ${notUnique
-          .map(({ value }) => value)
-          .join(',')}`,
-      );
-    }
-
-    // Fetch existing
-    const [existingLiveDataFlows, existingInReviewDataFlows] =
-      await Promise.all([
-        fetchAllDataFlows(client, ConsentTrackerStatus.Live),
-        fetchAllDataFlows(client, ConsentTrackerStatus.NeedsReview),
-      ]);
-    const allDataFlows = [
-      ...existingLiveDataFlows,
-      ...existingInReviewDataFlows,
-    ];
-
-    // Determine which data flows are new vs existing
-    const mapDataFlowsToExisting = dataFlows.map((dataFlow) => [
-      dataFlow,
-      allDataFlows.find(
-        (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type,
-      )?.id,
-    ]);
-
-    // Create the new data flows
-    const newDataFlows = mapDataFlowsToExisting
-      .filter(([, existing]) => !existing)
-      .map(([flow]) => flow as DataFlowInput);
-    try {
-      logger.info(
-        colors.magenta(`Creating "${newDataFlows.length}" new data flows...`),
-      );
-      await createDataFlows(client, newDataFlows, classifyService);
-      logger.info(
-        colors.green(`Successfully synced ${newDataFlows.length} data flows!`),
-      );
-    } catch (err) {
-      encounteredError = true;
-      logger.info(colors.red(`Failed to create data flows! - ${err.message}`));
-    }
-
-    // Update existing data flows
-    const existingDataFlows = mapDataFlowsToExisting.filter(
-      (x): x is [DataFlowInput, string] => !!x[1],
-    );
-    try {
-      logger.info(
-        colors.magenta(`Updating "${existingDataFlows.length}" data flows...`),
-      );
-      await updateDataFlows(client, existingDataFlows, classifyService);
-      logger.info(
-        colors.green(
-          `Successfully updated "${existingDataFlows.length}" data flows!`,
-        ),
-      );
-    } catch (err) {
-      encounteredError = true;
-      logger.info(colors.red(`Failed to create data flows! - ${err.message}`));
-    }
-
-    logger.info(colors.green(`Synced "${dataFlows.length}" data flows!`));
+    encounteredError = encounteredError || !syncedDataFlows;
   }
 
   // Store dependency updates
