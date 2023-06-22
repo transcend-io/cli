@@ -138,7 +138,7 @@ tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 
 Note:
 
-_The cli-commands default to using the EU Transcend backend. To use these commands with the US backend, you will need to use the flag --transcendUrl=https://api.us.transend.io._
+_The cli-commands default to using the EU Transcend backend. To use these commands with the US backend, you will need to use the flag --transcendUrl=https://api.us.transcend.io._
 
 ## transcend.yml
 
