@@ -1,0 +1,77 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/javascript-node-postgres
+// Update the VARIANT arg in docker-compose.yml to pick a Node.js version
+{
+  "name": "CLI",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  // workspaceFolder only is used for local devcontainers, not remote Github Codespaces,
+  // so we use the default value from Github Codespaces here to keep both consistent
+  "workspaceFolder": "/workspaces/cli",
+  "runArgs": ["--network=host"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "arcanis.vscode-zipfs",
+        "slevesque.vscode-zipexplorer",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bcanzanella.openmatchingfiles",
+        "vscode-icons-team.vscode-icons",
+        "wayou.vscode-todo-highlight",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "hashicorp.terraform",
+        "timonwong.shellcheck",
+        "formulahendry.auto-rename-tag",
+        "apollographql.vscode-apollo",
+        "naumovs.color-highlight",
+        "mikestead.dotenv",
+        "grapecity.gc-excelviewer",
+        "editorconfig.editorconfig",
+        "techer.open-in-browser",
+        "donjayamanne.githistory",
+        "valentjn.vscode-ltex",
+        "eamodio.gitlens",
+        "fabiospampinato.vscode-terminals",
+        "msjsdiag.debugger-for-chrome",
+        "ms-vsliveshare.vsliveshare",
+        "redhat.vscode-yaml",
+        "reduckted.vscode-gitweblinks",
+        "adpyke.vscode-sql-formatter",
+        "yoavbls.pretty-ts-errors"
+      ],
+      "settings": {
+        "extensions.ignoreRecommendations": true,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        }
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+  "remoteEnv": {
+    // This env will affect the VsCode version of `git` that runs in the sidebar to skip certain pre-commits
+    "SKIP": "dockerfile-lint,check-executables-have-shebangs"
+  },
+  "otherPortsAttributes": {
+    "onAutoForward": "silent"
+  },
+  "remoteUser": "root"
+}
