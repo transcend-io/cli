@@ -57,11 +57,11 @@
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv-1)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
@@ -98,6 +98,7 @@ yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 ```
@@ -120,6 +121,7 @@ tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
+tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 ```
@@ -1205,7 +1207,7 @@ yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e
  --transcendUrl=https://api.us.transcend.io
 ```
 
-### tr-upload-data-flows-from-csv
+### tr-update-consent-manager
 
 This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this commannd.
 
@@ -1229,40 +1231,40 @@ The API key must have the following scopes:
 #### Usage
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 ```
 
-Specifying the backend URL, needed for US hosted backend infrastructure.
+Specifying the backend URL, needed for US hosted backend infrastructu re.
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
 ```
 
 Update version and deploy bundles.
 
 ```sh
-yarn tr-upload-data-flows-from-csv -auth=$TRANSCEND_API_KEY --deploy=true
+yarn tr-update-consent-manager -auth=$TRANSCEND_API_KEY --deploy=true
 ```
 
 Update just the TEST bundle
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --bundleTypes=TEST
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=TEST
 ```
 
 Update just the PRODUCTION bundle
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
 ```
 
 Update multiple organizations at once
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
+yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTION
 
 tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD --scopes="Manage Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
-yarn tr-upload-data-flows-from-csv  --auth=./transcend-api-keys.json --deploy=true
+yarn tr-update-consent-manager  --auth=./transcend-api-keys.json --deploy=true
 ```
 
 ### tr-upload-data-flows-from-csv
