@@ -60,11 +60,16 @@ export const CREATE_DATA_FLOWS = gql`
 
 export const UPDATE_DATA_FLOWS = gql`
   mutation TranscendCliUpdateDataFlows(
+    $airgapBundleId: ID!
     $dataFlows: [UpdateDataFlowInput!]!
     $classifyService: Boolean
   ) {
     updateDataFlows(
-      input: { dataFlows: $dataFlows, classifyService: $classifyService }
+      input: {
+        airgapBundleId: $airgapBundleId
+        dataFlows: $dataFlows
+        classifyService: $classifyService
+      }
     ) {
       dataFlows {
         id
