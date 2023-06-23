@@ -275,7 +275,7 @@ _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 | Argument         | Description                                                                              | Type                                                         | Default                               | Required |
 | ---------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------- | -------- |
-| auth             | The Transcend API capable of fetching the configuration                                  | string (API key or path to tr-generate-api-keys JSON output) | N/A                                   | true     |
+| auth             | The Transcend API key with the scopes necessary for the command.                         | string (API key or path to tr-generate-api-keys JSON output) | N/A                                   | true     |
 | resources        | The different resource types to pull in (see table above for breakdown of each resource) | string                                                       | apiKeys,templates,dataSilos,enrichers | false    |
 | file             | Path to the YAML file to pull into                                                       | string - file-path                                           | ./transcend.yml                       | false    |
 | transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL                                                 | https://api.transcend.io              | false    |
@@ -422,7 +422,7 @@ The API key needs the following scopes when pushing the various resource types:
 
 | Argument        | Description                                                                                                 | Type                                                         | Default                  | Required |
 | --------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ | -------- |
-| auth            | The Transcend API capable of pushing the configuration                                                      | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
+| auth            | The Transcend API key with the scopes necessary for the command.                                            | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
 | file            | Path to the YAML file to push from                                                                          | string - file-path                                           | ./transcend.yml          | false    |
 | transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL                                                 | https://api.transcend.io | false    |
 | pageSize        | The page size to use when paginating over the API                                                           | number                                                       | 50                       | false    |
@@ -629,7 +629,7 @@ The API key needs the following scopes:
 
 | Argument                | Description                                                                                                             | Type               | Default                                 | Required |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------- | -------- |
-| auth                    | The Transcend API capable of submitting privacy requests.                                                               | string             | N/A                                     | true     |
+| auth                    | The Transcend API key with the scopes necessary for the command.                                                        | string             | N/A                                     | true     |
 | file                    | Path to the CSV file of requests to tupload.                                                                            | string - file-path | ./requests.csv                          | false    |
 | transcendUrl            | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                           | string - URL       | https://api.transcend.io                | false    |
 | cacheFilepath           | The path to the JSON file encoding the metadata used to map the CSV shape to Transcend API.                             | string             | ./transcend-privacy-requests-cache.json | false    |
@@ -737,7 +737,7 @@ The API key needs the following scopes:
 
 | Argument             | Description                                                                                                                               | Type            | Default                           | Required |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | --------------------------------- | -------- |
-| auth                 | The Transcend API capable of submitting privacy requests.                                                                                 | string          | N/A                               | true     |
+| auth                 | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                               | true     |
 | actions              | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                               | true     |
 | statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[] | N/A                               | true     |
 | transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io          | false    |
@@ -836,7 +836,7 @@ The API key needs the following scopes:
 
 | Argument        | Description                                                                                                                               | Type               | Default                        | Required |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------ | -------- |
-| auth            | The Transcend API capable of pulling privacy requests.                                                                                    | string             | N/A                            | true     |
+| auth            | The Transcend API key with the scopes necessary for the command.                                                                          | string             | N/A                            | true     |
 | actions         | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]    | N/A                            | false    |
 | statuses        | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[]    | N/A                            | false    |
 | transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL       | https://api.transcend.io       | false    |
@@ -909,7 +909,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 
 | Argument     | Description                                                                                                                             | Type                   | Default                  | Required |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------ | -------- |
-| auth         | The Transcend API capable of pulling the cron identifiers.                                                                              | string                 | N/A                      | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                                        | string                 | N/A                      | true     |
 | dataSiloId   | The ID of the data silo to pull in.                                                                                                     | string - UUID          | N/A                      | true     |
 | requestType  | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to fetch. | string - RequestAction | N/A                      | true     |
 | file         | Path to the CSV file where identifiers will be written to.                                                                              | string - file-path     | ./cron-identifiers.csv   | false    |
@@ -974,7 +974,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 
 | Argument     | Description                                                                          | Type               | Default                  | Required |
 | ------------ | ------------------------------------------------------------------------------------ | ------------------ | ------------------------ | -------- |
-| auth         | The Transcend API capable of pulling the cron identifiers.                           | string             | N/A                      | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.                     | string             | N/A                      | true     |
 | dataSiloId   | The ID of the data silo to pull in.                                                  | string - UUID      | N/A                      | true     |
 | file         | Path to the CSV file where identifiers will be written to.                           | string - file-path | ./cron-identifiers.csv   | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io | false    |
@@ -1032,7 +1032,7 @@ The API key must have the following scopes:
 
 | Argument     | Description                                                                   | Type               | Default                             | Required |
 | ------------ | ----------------------------------------------------------------------------- | ------------------ | ----------------------------------- | -------- |
-| auth         | The Transcend API capable of pull request information.                        | string             | N/A                                 | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string             | N/A                                 | true     |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io            | false    |
 | file         | Path to the CSV file where requests will be written to.                       | string - file-path | ./manual-enrichment-identifiers.csv | false    |
 | actions      | The set of request actions to pull requests for.                              | RequestAction[]    | []                                  | false    |
@@ -1092,7 +1092,7 @@ The API key must have the following scopes:
 
 | Argument     | Description                                                                          | Type               | Default                             | Required |
 | ------------ | ------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
-| auth         | The Transcend API capable of pull request information.                               | string             | N/A                                 | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.                     | string             | N/A                                 | true     |
 | enricherId   | The ID of the Request Enricher to upload to                                          | string - UUID      | N/A                                 | true     |
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
@@ -1146,7 +1146,7 @@ The API key must have the following scopes:
 
 | Argument     | Description                                                                   | Type               | Default                   | Required |
 | ------------ | ----------------------------------------------------------------------------- | ------------------ | ------------------------- | -------- |
-| auth         | The Transcend API capable of pulling the cron identifiers.                    | string             | N/A                       | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string             | N/A                       | true     |
 | dataSiloId   | The ID of the data silo to pull in.                                           | string - UUID      | N/A                       | true     |
 | file         | Path to the CSV file where identifiers will be written to.                    | string - file-path | ./request-identifiers.csv | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io  | false    |
@@ -1187,7 +1187,7 @@ The API key must have the following scopes:
 
 | Argument     | Description                                                                                                                               | Type            | Default                  | Required |
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
-| auth         | The Transcend API capable of pulling the cron identifiers.                                                                                | string          | N/A                      | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                      | true     |
 | dataSiloId   | The ID of the data silo to pull in.                                                                                                       | string - UUID   | N/A                      | true     |
 | actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                      | true     |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io | false    |
@@ -1221,7 +1221,7 @@ The API key must have the following scopes:
 
 | Argument     | Description                                                                   | Type         | Default                  | Required |
 | ------------ | ----------------------------------------------------------------------------- | ------------ | ------------------------ | -------- |
-| auth         | The Transcend API capable of pulling the cron identifiers.                    | string       | N/A                      | true     |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string       | N/A                      | true     |
 | bundleTypes  | The bundle types to deploy                                                    | BundleType[] | PRODUCTION,TEST          | false    |
 | deploy       | When true, deploy the Consent Manager after updating the version              | boolean      | false                    | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false    |
@@ -1288,7 +1288,7 @@ The API key must have the following scopes:
 
 | Argument        | Description                                                                                                | Type                 | Default                  | Required |
 | --------------- | ---------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------ | -------- |
-| auth            | The Transcend API capable of pulling the cron identifiers.                                                 | string               | N/A                      | true     |
+| auth            | The Transcend API key with the scopes necessary for the command.                                           | string               | N/A                      | true     |
 | trackerStatus   | Whether or not to upload the data flows into the "Approved" tab (LIVE) or the "Triage" tab (NEEDS_REVIEW). | ConsentTrackerStatus | N/A                      | true     |
 | file            | Path to the CSV file to upload                                                                             | string - file-path   | ./data-flows.csv         | false    |
 | classifyService | When true, automatically assign the service for a data flow based on the domain that is specified          | boolean              | false                    | false    |
