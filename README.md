@@ -1276,6 +1276,7 @@ Step 1) Download the CSV of data flows that you want to edit from the Admin Dash
 <img width="1464" alt="Screenshot 2023-06-22 at 6 05 36 PM" src="https://github.com/transcend-io/cli/assets/10264973/c4b65b31-2cf3-49c9-b543-041567c7aff8">
 
 Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
 Step 3) Upload the modified CSV file back into the dashboard with the command `yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --file=./approved-flows.csv --trackerStatus=LIVE`
 
 #### Authentication
