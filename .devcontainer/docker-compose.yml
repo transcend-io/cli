@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: CLI_Codespace
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: 16-bullseye
+
+    volumes:
+      - ..:/workspaces/main:cached
+      - transcend-shell-history:/commandhistory
+      - pre-commit-cache:/root/.cache/pre-commit
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/bash -c "sleep infinity"
+
+    network_mode: 'host'
+
+    environment:
+      # This is set to `true` locally when using devcontainers, so we add this here for compatibility
+      REMOTE_CONTAINERS: 'true'
+
+volumes:
+  pre-commit-cache:
+  transcend-shell-history:

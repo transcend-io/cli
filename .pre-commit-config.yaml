@@ -18,7 +18,7 @@ repos:
       - id: check-added-large-files
         exclude: (yarn.lock|.yarn/|.pnp.cjs)
       - id: check-json
-        exclude: (.vscode/|tsconfig.json)
+        exclude: (.vscode/|tsconfig.json|./.devcontainer)
       - id: detect-private-key
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
