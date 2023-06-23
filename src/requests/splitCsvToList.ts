@@ -1,6 +1,10 @@
 /**
  * Split string to CSV
  *
+ * Filter out double commas and spaces like:
+ * Dog, Cat -> ['Dog', 'Cat']
+ * Dog,,Cat -> ['Dog', 'Cat']
+ *
  * @param value - Value
  * @returns List of values
  */
