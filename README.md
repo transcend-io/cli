@@ -1328,7 +1328,7 @@ yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIV
 Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
-yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIVE
+yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
 ```
 
 ### tr-generate-api-keys
