@@ -64,6 +64,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.2.12"],\
             ["fp-ts", "npm:2.11.8"],\
             ["fuzzysearch", "npm:1.0.3"],\
+            ["global-tunnel", "npm:1.2.0"],\
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
@@ -586,6 +587,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.2.12"],\
             ["fp-ts", "npm:2.11.8"],\
             ["fuzzysearch", "npm:1.0.3"],\
+            ["global-tunnel", "npm:1.2.0"],\
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
@@ -3480,6 +3482,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["global-tunnel", [\
+        ["npm:1.2.0", {\
+          "packageLocation": "./.yarn/cache/global-tunnel-npm-1.2.0-576bd14bf9-f040717219.zip/node_modules/global-tunnel/",\
+          "packageDependencies": [\
+            ["global-tunnel", "npm:1.2.0"],\
+            ["lodash", "npm:1.3.1"],\
+            ["tunnel", "npm:0.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["globals", [\
         ["npm:11.12.0", {\
           "packageLocation": "./.yarn/cache/globals-npm-11.12.0-1fa7f41a6c-67051a45ec.zip/node_modules/globals/",\
@@ -4496,6 +4509,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["lodash", [\
+        ["npm:1.3.1", {\
+          "packageLocation": "./.yarn/cache/lodash-npm-1.3.1-1451832054-09d0a019f3.zip/node_modules/lodash/",\
+          "packageDependencies": [\
+            ["lodash", "npm:1.3.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:4.17.21", {\
           "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-eb835a2e51.zip/node_modules/lodash/",\
           "packageDependencies": [\
@@ -6354,6 +6374,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["tunnel", [\
+        ["npm:0.0.2", {\
+          "packageLocation": "./.yarn/cache/tunnel-npm-0.0.2-a6eb5033ef-50f670d21e.zip/node_modules/tunnel/",\
+          "packageDependencies": [\
+            ["tunnel", "npm:0.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.0.6", {\
           "packageLocation": "./.yarn/cache/tunnel-npm-0.0.6-b1c0830ea4-c362948df9.zip/node_modules/tunnel/",\
           "packageDependencies": [\
