@@ -21,54 +21,58 @@
     - [Authentication](#authentication-2)
     - [Usage](#usage-3)
     - [Arguments](#arguments-2)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-approve](#tr-request-approve)
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
     - [Usage](#usage-4)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
     - [Usage](#usage-5)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-15)
+    - [Arguments](#arguments-15)
+    - [Usage](#usage-16)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -90,6 +94,7 @@ yarn add -D @transcend-io/cli
 yarn tr-pull --auth=$TRANSCEND_API_KEY
 yarn tr-push --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -113,6 +118,7 @@ npm i -D @transcend-io/cli
 tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
+tr-request-approve --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -134,12 +140,7 @@ npm i -g @transcend-io/cli
 
 # cli commands available everywhere on machine
 tr-pull --auth=$TRANSCEND_API_KEY
-tr-push --auth=$TRANSCEND_API_KEY
-tr-discover-silos --auth=$TRANSCEND_API_KEY
-tr-request-upload --auth=$TRANSCEND_API_KEY
-tr-request-restart --auth=$TRANSCEND_API_KEY
-tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
-tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
+...
 ```
 
 Note:
@@ -599,6 +600,56 @@ You can include additional arguments as well:
 | dataSiloID | The UUID of the corresponding data silo.                                                                                                                             | string | N/A     | true     |
 | auth       | Transcend API key.                                                                                                                                                   | string | N/A     | true     |
 | fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). | string | N/A     | false    |
+
+### tr-request-approve
+
+Bulk approve a set of privacy requests from the [Privacy Requests -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Request Approval and Communication
+- View Incoming Requests
+- Manage Request Compilation
+
+#### Arguments
+
+| Argument         | Description                                                                                                                                | Type            | Default                  | Required |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------- | ------------------------ | -------- |
+| auth             | The Transcend API key with the scopes necessary for the command.                                                                           | string          | N/A                      | true     |
+| actions          | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to approve. | RequestAction[] | N/A                      | true     |
+| silentModeBefore | Any requests made before this date should be marked as silent mode                                                                         | Date            | N/A                      | false    |
+| transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                              | string - URL    | https://api.transcend.io | false    |
+| concurrency      | The concurrency to use when uploading requests in parallel.                                                                                | number          | 100                      | false    |
+
+#### Usage
+
+Bulk approve all SALE_OPT_OUT and ERASURE requests
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --transcendUrl=https://api.us.transcend.io
+```
+
+Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing the individual.
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+```
+
+Increase the concurrency (defaults to 100)
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
+```
 
 ### tr-request-upload
 

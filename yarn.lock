@@ -460,6 +460,7 @@ __metadata:
     tr-mark-request-data-silos-completed: ./build/cli-mark-request-data-silos-completed.js
     tr-pull: ./build/cli-pull.js
     tr-push: ./build/cli-push.js
+    tr-request-approve: ./build/cli-request-approve.js
     tr-request-export: ./build/cli-request-export.js
     tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
