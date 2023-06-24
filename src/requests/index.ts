@@ -10,6 +10,7 @@ export * from './mapCsvColumnsToApi';
 export * from './mapRequestEnumValues';
 export * from './mapCsvRowsToRequestInputs';
 export * from './submitPrivacyRequest';
+export * from './approvePrivacyRequests';
 export * from './mapColumnsToIdentifiers';
 export * from './mapColumnsToAttributes';
 export * from './extractClientError';
