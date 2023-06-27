@@ -25,54 +25,58 @@
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
     - [Usage](#usage-4)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-cancel](#tr-request-cancel)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
     - [Usage](#usage-5)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-16)
+    - [Arguments](#arguments-16)
+    - [Usage](#usage-17)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -95,6 +99,7 @@ yarn tr-pull --auth=$TRANSCEND_API_KEY
 yarn tr-push --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -119,6 +124,7 @@ tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
 tr-request-approve --auth=$TRANSCEND_API_KEY
+tr-request-cancel --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -639,7 +645,7 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --transcendUrl=https://api.us.transcend.io
 ```
 
-Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing the individual.
+Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests. When not provided, the existing silent mode state of that request will be used to determine if emails are sent.
 
 ```sh
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
@@ -649,6 +655,69 @@ Increase the concurrency (defaults to 100)
 
 ```sh
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
+```
+
+### tr-request-cancel
+
+Bulk cancel a set of privacy requests from the [Privacy Requests -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Request Approval and Communication
+- View Incoming Requests
+
+#### Arguments
+
+| Argument          | Description                                                                                                                                                                                        | Type            | Default                                                                                  | Required |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth              | The Transcend API key with the scopes necessary for the command.                                                                                                                                   | string          | N/A                                                                                      | true     |
+| actions           | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel.                                                          | RequestAction[] | N/A                                                                                      | true     |
+| statuses          | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                                                                                       | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| silentModeBefore  | Any requests made before this date should be marked as silent mode for canceling to skip email sending                                                                                             | Date            | N/A                                                                                      | false    |
+| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string          | Request Canceled                                                                         | false    |
+| transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                                      | string - URL    | https://api.transcend.io                                                                 | false    |
+| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 100                                                                                      | false    |
+
+#### Usage
+
+Bulk cancel all open SALE_OPT_OUT and ERASURE requests.
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --transcendUrl=https://api.us.transcend.io
+```
+
+Bulk cancel all Erasure (request.type=ERASURE) requests that are in an enriching state (request.status=ENRICHING)
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --statuses=ENRICHING
+```
+
+Send a specific email template to the request that are being canceled. When not provided, the default cancellation template is used ("Request Canceled").
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --cancellationTitle="Custom Email Template"
+```
+
+Cancel all open SALE_OPT_OUT, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests. When not provided, the existing silent mode state of that request will be used to determine if emails are sent.
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+```
+
+Increase the concurrency (defaults to 100)
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
 ```
 
 ### tr-request-upload

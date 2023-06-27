@@ -8,6 +8,16 @@ export interface Template {
   id: string;
   /** Title of Template */
   title: string;
+  /** Template subject (e.g. email subject) */
+  subject: {
+    /** Default message for template subject */
+    defaultMessage: string;
+  };
+  /** Template body - rich text HTML */
+  template: {
+    /** Default message for template body */
+    defaultMessage: string;
+  };
 }
 
 const PAGE_SIZE = 20;

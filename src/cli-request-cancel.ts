@@ -4,23 +4,21 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { RequestAction } from '@transcend-io/privacy-types';
-import { splitCsvToList, approvePrivacyRequests } from './requests';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { splitCsvToList, cancelPrivacyRequests } from './requests';
 
 /**
- * Restart requests based on some filter criteria
+ * Cancel requests based on some filter criteria
  *
  * Requires scopes:
  * - Request Approval and Communication
- * - View Incoming Requests
- * - Manage Request Compilation
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-approve.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-request-cancel.ts --auth=asd123 \
  *   --requestType=ERASURE --silentModeBefore=06/23/2023
  *
  * Standard usage:
- * yarn tr-request-approve --auth=asd123  \
+ * yarn tr-request-cancel --auth=asd123  \
  *   --requestType=ERASURE --silentModeBefore=06/23/2023
  */
 async function main(): Promise<void> {
@@ -29,7 +27,9 @@ async function main(): Promise<void> {
     transcendUrl = 'https://api.transcend.io',
     auth,
     actions = '',
+    statuses = '',
     silentModeBefore,
+    cancellationTitle,
     concurrency = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -59,11 +59,29 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Validate statuses
+  const parsedStatuses = splitCsvToList(statuses) as RequestStatus[];
+  const invalidStatues = parsedStatuses.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (type) => !Object.values(RequestStatus).includes(type as any),
+  );
+  if (invalidStatues.length > 0) {
+    logger.error(
+      colors.red(
+        `Failed to parse statuses:"${invalidStatues.join(',')}".\n` +
+          `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
+      ),
+    );
+    process.exit(1);
+  }
+
   // Pull privacy requests
-  await approvePrivacyRequests({
+  await cancelPrivacyRequests({
     transcendUrl,
     requestActions: parsedActions,
     auth,
+    cancellationTitle,
+    statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
   });

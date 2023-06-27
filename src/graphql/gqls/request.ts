@@ -37,9 +37,18 @@ export const REQUESTS = gql`
   }
 `;
 
-export const APPROVE_PRIVACY_REQUESTS = gql`
+export const APPROVE_PRIVACY_REQUEST = gql`
   mutation TranscendCliApprovePrivacyRequest($input: CommunicationInput!) {
     approveRequest(input: $input) {
+      request {
+        id
+      }
+    }
+  }
+`;
+export const CANCEL_PRIVACY_REQUEST = gql`
+  mutation TranscendCliCancelPrivacyRequest($input: CommunicationInput!) {
+    cancelRequest(input: $input) {
       request {
         id
       }

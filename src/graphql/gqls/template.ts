@@ -6,6 +6,12 @@ export const TEMPLATES = gql`
       nodes {
         id
         title
+        subject {
+          defaultMessage
+        }
+        template {
+          defaultMessage
+        }
       }
     }
   }

@@ -7,20 +7,33 @@ import {
   fetchAllRequests,
   makeGraphQLRequest,
   buildTranscendGraphQLClient,
-  APPROVE_PRIVACY_REQUEST,
+  CANCEL_PRIVACY_REQUEST,
+  fetchAllTemplates,
+  Template,
 } from '../graphql';
 import cliProgress from 'cli-progress';
 
 /**
- * Approve a set of privacy requests
+ * Cancel a set of privacy requests
  *
  * @param options - Options
- * @returns The number of requests approved
+ * @returns The number of requests canceled
  */
-export async function approvePrivacyRequests({
+export async function cancelPrivacyRequests({
   requestActions,
+  cancellationTitle,
   auth,
   silentModeBefore,
+  statuses = [
+    RequestStatus.Compiling,
+    RequestStatus.RequestMade,
+    RequestStatus.Delayed,
+    RequestStatus.Approving,
+    RequestStatus.Secondary,
+    RequestStatus.Enriching,
+    RequestStatus.Waiting,
+    RequestStatus.SecondaryApproving,
+  ],
   concurrency = 100,
   transcendUrl = 'https://api.transcend.io',
 }: {
@@ -30,10 +43,14 @@ export async function approvePrivacyRequests({
   auth: string;
   /** Concurrency limit for approving */
   concurrency?: number;
+  /** The request statuses to cancel */
+  statuses?: RequestStatus[];
   /** Mark these requests as silent mode if they were created before this date */
   silentModeBefore?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
+  /** The email template to use when canceling the requests */
+  cancellationTitle?: string;
 }): Promise<number> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -46,37 +63,71 @@ export async function approvePrivacyRequests({
     cliProgress.Presets.shades_classic,
   );
 
+  // Grab the template with that title
+  let cancelationTemplate: Template | undefined;
+  if (cancellationTitle) {
+    const matchingTemplates = await fetchAllTemplates(
+      client,
+      cancellationTitle,
+    );
+    const exactTitleMatch = matchingTemplates.find(
+      (template) => template.title === cancellationTitle,
+    );
+    if (!exactTitleMatch) {
+      throw new Error(
+        `Failed to find a template with title: "${cancellationTitle}"`,
+      );
+    }
+    cancelationTemplate = exactTitleMatch;
+  }
+
   // Pull in the requests
   const allRequests = await fetchAllRequests(client, {
     actions: requestActions,
-    statuses: [RequestStatus.Approving],
+    statuses,
   });
 
   // Notify Transcend
-  logger.info(colors.magenta(`Approving "${allRequests.length}" requests.`));
+  logger.info(
+    colors.magenta(
+      `Canceling "${allRequests.length}" requests${
+        cancelationTemplate
+          ? ` Using template: ${cancelationTemplate.title}`
+          : ''
+      }.`,
+    ),
+  );
 
   let total = 0;
   progressBar.start(allRequests.length, 0);
   await map(
     allRequests,
-    async (requestToApprove) => {
+    async (requestToCancel) => {
       // update request to silent mode if silentModeBefore is defined
       // and the request was created before silentModeBefore
       if (
         silentModeBefore &&
-        new Date(silentModeBefore) > new Date(requestToApprove.createdAt)
+        new Date(silentModeBefore) > new Date(requestToCancel.createdAt)
       ) {
         await makeGraphQLRequest(client, UPDATE_PRIVACY_REQUEST, {
           input: {
-            id: requestToApprove.id,
+            id: requestToCancel.id,
             isSilent: true,
           },
         });
       }
 
-      // approve the request
-      await makeGraphQLRequest(client, APPROVE_PRIVACY_REQUEST, {
-        input: { requestId: requestToApprove.id },
+      // cancel the request
+      await makeGraphQLRequest(client, CANCEL_PRIVACY_REQUEST, {
+        input: {
+          requestId: requestToCancel.id,
+          ...(cancelationTemplate
+            ? {
+                subject: `Re: ${cancelationTemplate.subject.defaultMessage}`,
+                template: cancelationTemplate.template.defaultMessage,
+              }
+            : {}),
+        },
       });
 
       total += 1;
@@ -91,7 +142,7 @@ export async function approvePrivacyRequests({
 
   logger.info(
     colors.green(
-      `Successfully approved ${total} requests in "${
+      `Successfully canceled ${total} requests in "${
         totalTime / 1000
       }" seconds!`,
     ),
