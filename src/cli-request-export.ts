@@ -15,12 +15,12 @@ import { splitCsvToList, pullRequestsToCsv } from './requests';
  * - View the Request Compilation
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-export.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-request-export.ts --auth=$TRANSCEND_API_KEY \
  *   --requestType=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-request-export --auth=asd123  \
+ * yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
  *   --requestType=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
@@ -42,7 +42,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

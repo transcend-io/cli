@@ -13,12 +13,12 @@ import { RequestAction } from '@transcend-io/privacy-types';
  * Requires an API key with scope to View Incoming Requests
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-manual-enrichment-pull-identifiers.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-manual-enrichment-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-manual-enricher-pull-identifiers --auth=asd123  \
+ * yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

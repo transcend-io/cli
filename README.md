@@ -61,22 +61,26 @@
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-17)
+    - [Arguments](#arguments-17)
+    - [Usage](#usage-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -107,6 +111,7 @@ yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
+yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
@@ -132,6 +137,7 @@ tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
+tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
@@ -1290,6 +1296,39 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+ --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-skip-request-data-silos
+
+This command allows for bulk skipping all open privacy request jobs for a particular data silo. This command is useful if you want to disable a data silo and then clear out any active privacy requests that are still queued up for that data silo.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Request Compilation"
+
+#### Arguments
+
+| Argument     | Description                                                                   | Type          | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------- | ------------- | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string        | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to skip privacy request jobs for.                     | string - UUID | N/A                      | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL  | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
  --transcendUrl=https://api.us.transcend.io
 ```
 

@@ -15,10 +15,10 @@ import { validateTranscendAuth } from './api-keys';
  * Requires an API key with scope "Manage Consent Manager Developer Settings".
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-update-consent-manager-to-latest.ts --auth=asd123
+ * yarn ts-node ./src/cli-update-consent-manager-to-latest.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage:
- * yarn tr-update-consent-manager --auth=asd123
+ * yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
  */
 async function main(): Promise<void> {
   // Parse command line arguments

@@ -17,11 +17,11 @@ const ONE_MONTH = 30.5 * 24 * 60 * 60 * 1000;
  *    - "View the Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-restart.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-request-restart.ts --auth=$TRANSCEND_API_KEY \
  *   --statuses=COMPILING,APPROVING --actions=ERASURE
  *
  * Standard usage:
- * yarn tr-request-restart --auth=asd123 \
+ * yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
  *   --statuses=COMPILING,APPROVING --actions=ERASURE
  */
 async function main(): Promise<void> {
@@ -58,7 +58,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);
