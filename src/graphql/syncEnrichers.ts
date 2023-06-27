@@ -98,16 +98,23 @@ export async function fetchAllEnrichers(
 /**
  * Sync an enricher configuration
  *
- * @param enricher - The enricher input
  * @param client - GraphQL client
- * @param identifiersByName - Index of identifiers in the organization
- * @param dataSubjectsByName - Lookup data subject by name
+ * @param options - Options
  */
 export async function syncEnricher(
-  enricher: EnricherInput,
   client: GraphQLClient,
-  identifiersByName: { [name in string]: Identifier },
-  dataSubjectsByName: { [name in string]: DataSubject },
+  {
+    enricher,
+    identifierByName,
+    dataSubjectsByName,
+  }: {
+    /** The enricher input */
+    enricher: EnricherInput;
+    /** Index of identifiers in the organization */
+    identifierByName: { [name in string]: Identifier };
+    /** Lookup data subject by name */
+    dataSubjectsByName: { [name in string]: DataSubject };
+  },
 ): Promise<void> {
   // Try to fetch an enricher with the same title
   const matches = await fetchAllEnrichers(client, enricher.title);
@@ -147,10 +154,10 @@ export async function syncEnricher(
         dataSubjectIds,
         description: enricher.description || '',
         inputIdentifier: inputIdentifier
-          ? identifiersByName[inputIdentifier].id
+          ? identifierByName[inputIdentifier].id
           : undefined,
         identifiers: enricher['output-identifiers'].map(
-          (id) => identifiersByName[id].id,
+          (id) => identifierByName[id].id,
         ),
         ...(existingEnricher.type === EnricherType.Sombra
           ? {}
@@ -175,9 +182,9 @@ export async function syncEnricher(
         dataSubjectIds,
         regionList: enricher.regionList,
         description: enricher.description || '',
-        inputIdentifier: identifiersByName[inputIdentifier].id,
+        inputIdentifier: identifierByName[inputIdentifier].id,
         identifiers: enricher['output-identifiers'].map(
-          (id) => identifiersByName[id].id,
+          (id) => identifierByName[id].id,
         ),
         actions: actionUpdates,
       },
