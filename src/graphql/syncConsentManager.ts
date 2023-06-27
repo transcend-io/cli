@@ -81,7 +81,10 @@ export async function syncConsentManagerExperiences(
             displayName: exp.displayName,
             regions: exp.regions,
             operator: exp.operator,
-            displayPriority: exp.displayPriority,
+            displayPriority:
+              exp.displayPriority !== existingExperience.displayPriority
+                ? exp.displayPriority
+                : undefined,
             viewState: exp.viewState,
             purposes: purposeIds,
             optedOutPurposes: optedOutPurposeIds,
