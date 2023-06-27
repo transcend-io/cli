@@ -85,7 +85,7 @@ export async function syncConfigurationToTranscend(
           )
         : ({} as { [k in string]: Identifier }),
       // Grab all data subjects in the organization
-      dataSilos || dataSubjects
+      dataSilos || dataSubjects || enrichers
         ? ensureAllDataSubjectsExist(input, client)
         : {},
       // Grab API keys
@@ -159,7 +159,12 @@ export async function syncConfigurationToTranscend(
       async (enricher) => {
         logger.info(colors.magenta(`Syncing enricher "${enricher.title}"...`));
         try {
-          await syncEnricher(enricher, client, identifierByName);
+          await syncEnricher(
+            enricher,
+            client,
+            identifierByName,
+            dataSubjectsByName,
+          );
           logger.info(
             colors.green(`Successfully synced enricher "${enricher.title}"!`),
           );

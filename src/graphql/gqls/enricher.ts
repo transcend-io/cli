@@ -8,11 +8,20 @@ export const ENRICHERS = gql`
         title
         url
         type
+        expirationDuration
+        lookerQueryTitle
+        testRegex
+        transitionRequestStatus
+        phoneNumbers
+        regionList
         inputIdentifier {
           name
         }
         identifiers {
           name
+        }
+        dataSubjects {
+          type
         }
         actions
       }
@@ -42,56 +51,16 @@ export const INITIALIZER = gql`
 `;
 
 export const CREATE_ENRICHER = gql`
-  mutation TranscendCliCreateEnricher(
-    $title: String!
-    $description: String!
-    $url: String!
-    type: EnricherType!
-    $inputIdentifier: ID!
-    $headers: [CustomHeaderInput!]
-    $identifiers: [ID!]!
-    $actions: [RequestAction!]!
-  ) {
-    createEnricher(
-      input: {
-        title: $title
-        type: $type
-        description: $description
-        url: $url
-        inputIdentifier: $inputIdentifier
-        headers: $headers
-        identifiers: $identifiers
-        actions: $actions
-      }
-    ) {
+  mutation TranscendCliCreateEnricher($input: EnricherInput!) {
+    createEnricher(input: $input) {
       clientMutationId
     }
   }
 `;
 
 export const UPDATE_ENRICHER = gql`
-  mutation TranscendCliUpdateEnricher(
-    $id: ID!
-    $title: String!
-    $description: String
-    $url: String
-    $inputIdentifier: ID
-    $headers: [CustomHeaderInput!]
-    $identifiers: [ID!]!
-    $actions: [RequestAction!]
-  ) {
-    updateEnricher(
-      input: {
-        id: $id
-        title: $title
-        description: $description
-        url: $url
-        inputIdentifier: $inputIdentifier
-        headers: $headers
-        identifiers: $identifiers
-        actions: $actions
-      }
-    ) {
+  mutation TranscendCliUpdateEnricher($input: UpdateEnricherInput!) {
+    updateEnricher(input: $input) {
       clientMutationId
     }
   }

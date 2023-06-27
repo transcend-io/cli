@@ -58,14 +58,22 @@ export async function fetchAllDataSubjects(
  * @returns The list of data subjects
  */
 export async function ensureAllDataSubjectsExist(
-  { 'data-silos': dataSilos = [] }: TranscendInput,
+  {
+    'data-silos': dataSilos = [],
+    'data-subjects': dataSubjects = [],
+    enrichers = [],
+  }: TranscendInput,
   client: GraphQLClient,
   fetchAll = false,
 ): Promise<{ [type in string]: DataSubject }> {
   // Only need to fetch data subjects if specified in config
-  const expectedDataSubjects = uniq(
-    flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
-  );
+  const expectedDataSubjects = uniq([
+    ...flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
+    ...flatten(
+      enrichers.map((enricher) => enricher['data-subjects'] || []) || [],
+    ),
+    ...dataSubjects.map((subject) => subject.type),
+  ]);
   if (expectedDataSubjects.length === 0 && !fetchAll) {
     return {};
   }
