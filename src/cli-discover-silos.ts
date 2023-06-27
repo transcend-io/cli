@@ -17,14 +17,14 @@ import { findFilesToScan } from './plugins/findFilesToScan';
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
- *   --auth=asd123 \
+ *   --auth=$TRANSCEND_API_KEY \
  *   --ignoreDirs=build_directories_to_ignore \
  *   --dataSiloId=abcdefgh
  *
  * Note: the data silo ID has to belong to a data silo that has an active plugin of type SILO_DISCOVERY
  *
  * Standard usage
- * yarn tr-scan  --scanPath=./myJavascriptProject --auth=asd123
+ * yarn tr-scan  --scanPath=./myJavascriptProject --auth=$TRANSCEND_API_KEY
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -41,7 +41,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

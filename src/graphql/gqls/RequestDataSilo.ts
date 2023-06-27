@@ -1,10 +1,12 @@
 import { gql } from 'graphql-request';
 
 export const REQUEST_DATA_SILOS = gql`
-  query TranscendCliRequestDataSilos($requestId: ID!, $dataSiloId: ID!) {
-    requestDataSilos(
-      filterBy: { requestId: $requestId, dataSiloId: $dataSiloId }
-    ) {
+  query TranscendCliRequestDataSilos(
+    $first: Int!
+    $offset: Int!
+    $filterBy: RequestDataSiloFiltersInput!
+  ) {
+    requestDataSilos(filterBy: $filterBy, first: $first, offset: $offset) {
       nodes {
         id
       }

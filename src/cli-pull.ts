@@ -24,10 +24,10 @@ const VALID_RESOURCES = Object.values(TranscendPullResource);
  * Sync data silo configuration from Transcend down locally to disk
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull.ts --file=./examples/invalid.yml --auth=asd123
+ * yarn ts-node ./src/cli-pull.ts --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY
  *
  * Standard usage
- * yarn tr-push --file=./examples/invalid.yml --auth=asd123
+ * yarn tr-push --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY
  */
 async function main(): Promise<void> {
   // Parse command line arguments

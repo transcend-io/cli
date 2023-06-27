@@ -12,11 +12,11 @@ import { pushManualEnrichmentIdentifiersFromCsv } from './manual-enrichment';
  * Requires an API key with scope to Manage Request Identity Verification
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-manual-enrichment-push-identifiers.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-manual-enrichment-push-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-manual-enrichment-push-identifiers --auth=asd123  \
+ * yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
 async function main(): Promise<void> {
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);
