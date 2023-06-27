@@ -319,3 +319,19 @@ export const TOGGLE_CONSENT_PRECEDENCE = gql`
     }
   }
 `;
+
+export const UPDATE_CONSENT_EXPERIENCE = gql`
+  mutation TranscendCliUpdateConsentExperience($input: UpdateExperienceInput!) {
+    updateExperience(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const CREATE_CONSENT_EXPERIENCE = gql`
+  mutation TranscendCliCreateConsentExperience($input: CreateExperienceInput!) {
+    createExperience(input: $input) {
+      clientMutationId
+    }
+  }
+`;
