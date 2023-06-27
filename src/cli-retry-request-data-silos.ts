@@ -14,12 +14,12 @@ import { retryRequestDataSilos } from './requests';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-retry-request-data-silos.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-retry-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --actions=ACCESS,ERASURE
  *
  * Standard usage:
- * yarn tr-retry-request-data-silos --auth=asd123  \
+ * yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --actions=ACCESS,ERASURE
  */
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

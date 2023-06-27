@@ -14,12 +14,12 @@ import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
  *    - "Manage Data Flows"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-upload-data-flows-from-csv.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-upload-data-flows-from-csv.ts --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
  *   --trackerStatus=LIVE
  *
  * Standard usage:
- * yarn tr-upload-data-flows-from-csv --auth=asd123 \
+ * yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
  *   --trackerStatus=LIVE
  */
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

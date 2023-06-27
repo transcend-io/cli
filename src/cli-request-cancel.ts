@@ -14,11 +14,11 @@ import { splitCsvToList, cancelPrivacyRequests } from './requests';
  * - Request Approval and Communication
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-cancel.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-request-cancel.ts --auth=$TRANSCEND_API_KEY \
  *   --requestType=ERASURE --silentModeBefore=06/23/2023
  *
  * Standard usage:
- * yarn tr-request-cancel --auth=asd123  \
+ * yarn tr-request-cancel --auth=$TRANSCEND_API_KEY  \
  *   --requestType=ERASURE --silentModeBefore=06/23/2023
  */
 async function main(): Promise<void> {
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);
