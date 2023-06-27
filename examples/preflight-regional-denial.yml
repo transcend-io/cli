@@ -1,0 +1,105 @@
+actions:
+  - type: RECTIFICATION
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: ERASURE
+    skipSecondaryIfNoFiles: false
+    skipDownloadableStep: true
+    requiresReview: false
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: CONTACT_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: ACCESS
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: RESTRICTION
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+enrichers:
+  - title: Reject rejects for US states that are not California
+    type: REGION_MATCH
+    input-identifier: coreIdentifier
+    output-identifiers:
+      - coreIdentifier
+    privacy-actions:
+      - ERASURE
+      - ACCESS
+      - RECTIFICATION
+      - RESTRICTION
+    expirationDuration: 86400000
+    transitionRequestStatus: CANCELED
+    regionList:
+      - 'US-AK'
+      - 'US-AL'
+      - 'US-AR'
+      - 'US-AS'
+      - 'US-AZ'
+      - 'US-CO'
+      - 'US-CT'
+      - 'US-DC'
+      - 'US-DE'
+      - 'US-FL'
+      - 'US-GA'
+      - 'US-GU'
+      - 'US-HI'
+      - 'US-IA'
+      - 'US-ID'
+      - 'US-IL'
+      - 'US-IN'
+      - 'US-KS'
+      - 'US-KY'
+      - 'US-LA'
+      - 'US-MA'
+      - 'US-MD'
+      - 'US-ME'
+      - 'US-MI'
+      - 'US-MN'
+      - 'US-MO'
+      - 'US-MP'
+      - 'US-MS'
+      - 'US-MT'
+      - 'US-NC'
+      - 'US-ND'
+      - 'US-NE'
+      - 'US-NH'
+      - 'US-NJ'
+      - 'US-NM'
+      - 'US-NV'
+      - 'US-NY'
+      - 'US-OH'
+      - 'US-OK'
+      - 'US-OR'
+      - 'US-PA'
+      - 'US-PR'
+      - 'US-RI'
+      - 'US-SC'
+      - 'US-SD'
+      - 'US-TN'
+      - 'US-TX'
+      - 'US-UM'
+      - 'US-UT'
+      - 'US-VA'
+      - 'US-VI'
+      - 'US-VT'
+      - 'US-WA'
+      - 'US-WI'
+      - 'US-WV'
+      - 'US-WY'
+    data-subjects:
+      - Employee

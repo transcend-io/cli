@@ -2,6 +2,16 @@ import { ActionInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_ACTION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+import difference from 'lodash/difference';
+import {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+} from '@transcend-io/privacy-types';
+
+const ALL_COUNTRIES_AND_SUBDIVISIONS = [
+  ...Object.values(IsoCountryCode),
+  ...Object.values(IsoCountrySubdivisionCode),
+];
 
 /**
  * Sync the consent manager
@@ -32,6 +42,10 @@ export async function syncAction(
       requiresReview: action.requiresReview,
       waitingPeriod: action.waitingPeriod,
       skipPublish,
+      regionList: action.regionBlockList
+        ? difference(ALL_COUNTRIES_AND_SUBDIVISIONS, action.regionBlockList)
+        : action.regionList,
+      regionDetectionMethod: action.regionDetectionMethod,
     },
   });
 }

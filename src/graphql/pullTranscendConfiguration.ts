@@ -321,6 +321,8 @@ export async function pullTranscendConfiguration(
         skipSecondaryIfNoFiles,
         skipDownloadableStep,
         requiresReview,
+        regionList,
+        regionDetectionMethod,
         waitingPeriod,
       }): ActionInput => ({
         type,
@@ -332,6 +334,8 @@ export async function pullTranscendConfiguration(
           : {}),
         requiresReview,
         waitingPeriod,
+        regionDetectionMethod,
+        regionList: regionList.length > 0 ? regionList : undefined,
       }),
     );
   }
@@ -466,6 +470,13 @@ export async function pullTranscendConfiguration(
         inputIdentifier,
         identifiers,
         actions,
+        testRegex,
+        dataSubjects,
+        expirationDuration,
+        lookerQueryTitle,
+        transitionRequestStatus,
+        phoneNumbers,
+        regionList,
       }): EnricherInput => ({
         title,
         url: url || undefined,
@@ -476,6 +487,15 @@ export async function pullTranscendConfiguration(
           Object.values(RequestAction).length === actions.length
             ? undefined
             : actions,
+        testRegex: testRegex || undefined,
+        lookerQueryTitle: lookerQueryTitle || undefined,
+        expirationDuration: parseInt(expirationDuration, 10),
+        transitionRequestStatus: transitionRequestStatus || undefined,
+        phoneNumbers:
+          phoneNumbers && phoneNumbers.length > 0 ? phoneNumbers : undefined,
+        regionList:
+          regionList && regionList.length > 0 ? regionList : undefined,
+        'data-subjects': dataSubjects.map(({ type }) => type),
       }),
     );
   }
