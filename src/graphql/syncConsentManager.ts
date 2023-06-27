@@ -1,4 +1,4 @@
-import { ConsentManagerInput } from '../codecs';
+import { ConsentManageExperienceInput, ConsentManagerInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import {
   UPDATE_CONSENT_MANAGER_DOMAINS,
@@ -11,9 +11,110 @@ import {
   TOGGLE_CONSENT_PRECEDENCE,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
   DEPLOYED_PRIVACY_CENTER_URL,
+  UPDATE_CONSENT_EXPERIENCE,
+  CREATE_CONSENT_EXPERIENCE,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
+import {
+  fetchConsentManagerId,
+  fetchConsentManagerExperiences,
+  fetchPurposes,
+} from './fetchConsentManagerId';
+import keyBy from 'lodash/keyBy';
+import { map } from 'bluebird';
+import { InitialViewState } from '@transcend-io/airgap.js-types';
+
+const PURPOSES_LINK =
+  'https://app.transcend.io/consent-manager/regional-experiences/purposes';
+
+/**
+ * Sync consent manager experiences up to Transcend
+ *
+ * @param client - GraphQL client
+ * @param experiences - The experience inputs
+ */
+export async function syncConsentManagerExperiences(
+  client: GraphQLClient,
+  experiences: ConsentManageExperienceInput[],
+): Promise<void> {
+  // Fetch existing experiences
+  const existingExperiences = await fetchConsentManagerExperiences(client);
+  const experienceLookup = keyBy(existingExperiences, 'name');
+
+  // Fetch existing purposes
+  const purposes = await fetchPurposes(client);
+  const purposeLookup = keyBy(purposes, 'name');
+
+  // Bulk update or create experiences
+  await map(
+    experiences,
+    async (exp, ind) => {
+      // Purpose IDs
+      const purposeIds = exp.purposes?.map((purpose, ind2) => {
+        const existingPurpose = purposeLookup[purpose.name];
+        if (!existingPurpose) {
+          throw new Error(
+            `Invalid purpose name provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
+              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+          );
+        }
+        return existingPurpose.id;
+      });
+      const optedOutPurposeIds = exp.optedOutPurposes?.map((purpose, ind2) => {
+        const existingPurpose = purposeLookup[purpose.name];
+        if (!existingPurpose) {
+          throw new Error(
+            `Invalid purpose name provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
+              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+          );
+        }
+        return existingPurpose.id;
+      });
+
+      // update experience
+      const existingExperience = experienceLookup[exp.name];
+      if (existingExperience) {
+        await makeGraphQLRequest(client, UPDATE_CONSENT_EXPERIENCE, {
+          input: {
+            id: existingExperience.id,
+            name: exp.name,
+            displayName: exp.displayName,
+            regions: exp.regions,
+            operator: exp.operator,
+            displayPriority:
+              exp.displayPriority !== existingExperience.displayPriority
+                ? exp.displayPriority
+                : undefined,
+            viewState: exp.viewState,
+            purposes: purposeIds,
+            optedOutPurposes: optedOutPurposeIds,
+            browserLanguages: exp.browserLanguages,
+            browserTimeZones: exp.browserTimeZones,
+          },
+        });
+      } else {
+        // create new experience
+        await makeGraphQLRequest(client, CREATE_CONSENT_EXPERIENCE, {
+          input: {
+            name: exp.name,
+            displayName: exp.displayName,
+            regions: exp.regions,
+            operator: exp.operator,
+            displayPriority: exp.displayPriority,
+            viewState: exp.viewState || InitialViewState.Hidden,
+            purposes: purposeIds || [],
+            optedOutPurposes: optedOutPurposeIds || [],
+            browserLanguages: exp.browserLanguages,
+            browserTimeZones: exp.browserTimeZones,
+          },
+        });
+      }
+    },
+    {
+      concurrency: 10,
+    },
+  );
+}
 
 /**
  * Sync the consent manager
@@ -137,6 +238,11 @@ export async function syncConsentManager(
         consentPrecedence: consentManager.consentPrecedence,
       },
     });
+  }
+
+  // Update experience configurations
+  if (consentManager.experiences) {
+    await syncConsentManagerExperiences(client, consentManager.experiences);
   }
 
   // TODO: https://transcend.height.app/T-23875
