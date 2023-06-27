@@ -47,7 +47,7 @@
     "@transcend-io/airgap.js-types": "^9.2.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.2",
-    "@transcend-io/privacy-types": "^4.33.0",
+    "@transcend-io/privacy-types": "^4.38.0",
     "@transcend-io/type-utils": "^1.0.7",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",

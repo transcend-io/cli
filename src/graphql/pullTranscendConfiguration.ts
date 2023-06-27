@@ -321,6 +321,8 @@ export async function pullTranscendConfiguration(
         skipSecondaryIfNoFiles,
         skipDownloadableStep,
         requiresReview,
+        regionList,
+        regionDetectionMethod,
         waitingPeriod,
       }): ActionInput => ({
         type,
@@ -332,6 +334,8 @@ export async function pullTranscendConfiguration(
           : {}),
         requiresReview,
         waitingPeriod,
+        regionDetectionMethod,
+        regionList: regionList.length > 0 ? regionList : undefined,
       }),
     );
   }

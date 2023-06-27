@@ -1,0 +1,117 @@
+actions:
+  - type: RECTIFICATION
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: ERASURE
+    skipSecondaryIfNoFiles: false
+    skipDownloadableStep: true
+    requiresReview: false
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: CONTACT_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: ACCESS
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: FORM
+    regionBlockList:
+      - US
+  - type: RESTRICTION
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: REMOVE_FROM_LEGAL_HOLD
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: PLACE_ON_LEGAL_HOLD
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: USE_OF_SENSITIVE_INFORMATION_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: USE_OF_SENSITIVE_INFORMATION_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: CUSTOM_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: CUSTOM_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: AUTOMATED_DECISION_MAKING_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: TRACKING_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: BUSINESS_PURPOSE
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: CONTACT_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: TRACKING_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: SALE_OPT_IN
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: AUTOMATED_DECISION_MAKING_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US
+  - type: SALE_OPT_OUT
+    requiresReview: true
+    waitingPeriod: 0
+    regionDetectionMethod: DISABLED
+    regionBlockList:
+      - US

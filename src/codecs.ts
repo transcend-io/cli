@@ -23,6 +23,7 @@ import {
   UnknownRequestPolicy,
   TelemetryPartitionStrategy,
   SignedIabAgreementOption,
+  RegionDetectionMethod,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -411,6 +412,16 @@ export const ActionInput = t.intersection([
     requiresReview: t.boolean,
     /** The wait period for the action */
     waitingPeriod: t.number,
+    /** The method in which the data subject's region is detected */
+    regionDetectionMethod: valuesOf(RegionDetectionMethod),
+    /** The list of regions to show in the form */
+    regionList: t.array(
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
+    ),
+    /** The list of regions NOT to show in the form */
+    regionBlockList: t.array(
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
+    ),
   }),
 ]);
 

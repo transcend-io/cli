@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/airgap.js-types", "npm:9.2.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
-            ["@transcend-io/privacy-types", "npm:4.33.0"],\
+            ["@transcend-io/privacy-types", "npm:4.38.0"],\
             ["@transcend-io/type-utils", "npm:1.0.7"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
@@ -553,7 +553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/airgap.js-types", "npm:9.2.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
-            ["@transcend-io/privacy-types", "npm:4.33.0"],\
+            ["@transcend-io/privacy-types", "npm:4.38.0"],\
             ["@transcend-io/type-utils", "npm:1.0.7"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
@@ -627,10 +627,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@transcend-io/privacy-types", [\
-        ["npm:4.33.0", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.33.0-950c83a742-73d38b462d.zip/node_modules/@transcend-io/privacy-types/",\
+        ["npm:4.38.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.38.0-65dd99f9a7-6f79e56220.zip/node_modules/@transcend-io/privacy-types/",\
           "packageDependencies": [\
-            ["@transcend-io/privacy-types", "npm:4.33.0"],\
+            ["@transcend-io/privacy-types", "npm:4.38.0"],\
             ["@transcend-io/type-utils", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
