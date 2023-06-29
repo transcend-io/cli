@@ -5597,8 +5597,7 @@
                     "vendor",
                     "businessEntity",
                     "dataSubCategory",
-                    "processingPurposeSubCategory",
-                    "ROPA"
+                    "processingPurposeSubCategory"
                   ]
                 }
               },
