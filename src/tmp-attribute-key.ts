@@ -1,39 +1,24 @@
 import upperFirst from 'lodash/upperFirst';
-import { apply, invert, makeEnum } from '@transcend-io/type-utils';
+import { apply, invert } from '@transcend-io/type-utils';
 import { AttributeSupportedResourceType } from '@transcend-io/privacy-types';
-
-/**
- * Resources that can be assigned attributes
- * TODO: https://transcend.height.app/T-23523 - remove this enum after ROPA view is deprecated
- */
-export const AttributeResourceType = makeEnum({
-  ...AttributeSupportedResourceType,
-  /** Ropa */
-  ROPA: 'ROPA',
-});
-
-/** Type override */
-export type AttributeResourceType =
-  typeof AttributeResourceType[keyof typeof AttributeResourceType];
 
 /**
  * TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
  */
 export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
-  AttributeResourceType,
+  AttributeSupportedResourceType,
   string
 > = {
-  [AttributeResourceType.BusinessEntity]: 'businessEntities',
-  [AttributeResourceType.DataSilo]: 'dataSilos',
-  [AttributeResourceType.DataSubCategory]: 'dataSubCategories',
-  [AttributeResourceType.ProcessingPurposeSubCategory]:
+  [AttributeSupportedResourceType.BusinessEntity]: 'businessEntities',
+  [AttributeSupportedResourceType.DataSilo]: 'dataSilos',
+  [AttributeSupportedResourceType.DataSubCategory]: 'dataSubCategories',
+  [AttributeSupportedResourceType.ProcessingPurposeSubCategory]:
     'processingPurposeSubCategories',
-  [AttributeResourceType.Request]: 'requests',
-  [AttributeResourceType.ROPA]: 'ROPA',
-  [AttributeResourceType.SubDataPoint]: 'subDataPoints',
-  [AttributeResourceType.AirgapCookie]: 'airgapCookies',
-  [AttributeResourceType.AirgapDataFlow]: 'airgapDataFlows',
-  [AttributeResourceType.Vendor]: 'vendors',
+  [AttributeSupportedResourceType.Request]: 'requests',
+  [AttributeSupportedResourceType.SubDataPoint]: 'subDataPoints',
+  [AttributeSupportedResourceType.AirgapCookie]: 'airgapCookies',
+  [AttributeSupportedResourceType.AirgapDataFlow]: 'airgapDataFlows',
+  [AttributeSupportedResourceType.Vendor]: 'vendors',
 };
 
 /**

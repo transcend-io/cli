@@ -11,9 +11,8 @@ const ENABLED_ON_RESPONSE = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
 const ENABLED_ON_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
   .map((enabledOn) => `        ${enabledOn}: $${enabledOn}`)
   .join('\n');
-// TODO: https://transcend.height.app/T-23523 - update monorepo to not be required
 const ENABLED_ON_CREATE_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
-  .map((enabledOn) => `    $${enabledOn}: Boolean!`)
+  .map((enabledOn) => `    $${enabledOn}: Boolean`)
   .join('\n');
 
 export const ATTRIBUTES = gql`
