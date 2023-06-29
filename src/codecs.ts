@@ -25,12 +25,12 @@ import {
   SignedIabAgreementOption,
   RegionDetectionMethod,
   PreflightRequestStatus,
+  AttributeSupportedResourceType,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
   BrowserLanguage,
 } from '@transcend-io/airgap.js-types';
-import { AttributeResourceType } from './tmp-attribute-key';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -206,7 +206,7 @@ export const AttributeInput = t.intersection([
     /** Description of attribute */
     description: t.string,
     /** Resource types that the attribute is enabled on */
-    resources: t.array(valuesOf(AttributeResourceType)),
+    resources: t.array(valuesOf(AttributeSupportedResourceType)),
     /** Values of attribute */
     values: t.array(AttributeValueInput),
   }),

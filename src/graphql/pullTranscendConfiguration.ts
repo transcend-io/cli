@@ -12,13 +12,11 @@ import {
   DataSubjectInput,
   CookieInput,
 } from '../codecs';
-import {
-  AttributeResourceType,
-  ENABLED_ON_TO_ATTRIBUTE_KEY,
-} from '../tmp-attribute-key';
+import { ENABLED_ON_TO_ATTRIBUTE_KEY } from '../tmp-attribute-key';
 import {
   RequestAction,
   ConsentTrackerStatus,
+  AttributeSupportedResourceType,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
@@ -444,7 +442,7 @@ export async function pullTranscendConfiguration(
           .filter(([key, value]) => value && key.startsWith('enabledOn'))
           .map(
             ([key]) => ENABLED_ON_TO_ATTRIBUTE_KEY[key],
-          ) as AttributeResourceType[],
+          ) as AttributeSupportedResourceType[],
         name,
         type,
         values: values.map(({ name, color }) => ({
