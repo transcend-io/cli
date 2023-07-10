@@ -15,6 +15,7 @@ export * from './RequestEnricher';
 export * from './RequestDataSilo';
 export * from './attribute';
 export * from './consentManager';
+export * from './consentManagerMetrics';
 export * from './businessEntity';
 export * from './action';
 export * from './privacyCenter';
