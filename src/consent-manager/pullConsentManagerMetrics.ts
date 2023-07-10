@@ -7,6 +7,15 @@ import {
 } from '../graphql';
 
 /**
+ * One second of time in ms
+ */
+const ONE_SECOND = 1000;
+const ONE_MINUTE = 60 * ONE_SECOND;
+const ONE_HOUR = 60 * ONE_MINUTE;
+const ONE_DAY = 24 * ONE_HOUR;
+const ONE_WEEK = 7 * ONE_DAY;
+
+/**
  * Pull consent manager metrics in an organization
  *
  * @param client - GraphQL client
@@ -44,10 +53,17 @@ export async function pullConsentManagerMetrics(
   if (startTime > endTime) {
     throw new Error('Received "end" date that happened before "start" date');
   }
-  const startDate = start.toISOString();
-  const endDate = end.toISOString();
+
+  // do not allow hourly bins greater than 2 weeks
+  if (bin === '1h' && end.getTime() - start.getTime() > ONE_WEEK * 2) {
+    throw new Error(
+      'When using bin=1h, start and end time can be no more than 2 weeks apart',
+    );
+  }
 
   // Pull in the metrics
+  const startDate = start.toISOString();
+  const endDate = end.toISOString();
   const [privacySignalData, consentChangesData, consentSessionsByRegimeData] =
     await Promise.all([
       fetchConsentManagerAnalyticsData(client, {

@@ -98,7 +98,7 @@ async function main(): Promise<void> {
 
   logger.info(
     colors.magenta(
-      `Pulling consent metrics from start=${startDate.toString()} to end=${endDate.toISOString()}`,
+      `Pulling consent metrics from start=${startDate.toString()} to end=${endDate.toISOString()} with bin size "${bin}"`,
     ),
   );
 
@@ -117,11 +117,19 @@ async function main(): Promise<void> {
 
       // Write to file
       Object.entries(configuration).forEach(([metricName, metrics]) => {
-        const file = join(folder, `${metricName}.csv`);
-        logger.info(
-          colors.magenta(`Writing configuration to file "${file}"...`),
-        );
-        writeCsv(file, metrics);
+        metrics.forEach(({ points, name }) => {
+          const file = join(folder, `${metricName}_${name}.csv`);
+          logger.info(
+            colors.magenta(`Writing configuration to file "${file}"...`),
+          );
+          writeCsv(
+            file,
+            points.map(({ key, value }) => ({
+              timestamp: key,
+              value,
+            })),
+          );
+        });
       });
     } catch (err) {
       logger.error(
@@ -164,11 +172,19 @@ async function main(): Promise<void> {
 
         // Write to file
         Object.entries(configuration).forEach(([metricName, metrics]) => {
-          const file = join(subFolder, `${metricName}.csv`);
-          logger.info(
-            colors.magenta(`Writing configuration to file "${file}"...`),
-          );
-          writeCsv(file, metrics);
+          metrics.forEach(({ points, name }) => {
+            const file = join(subFolder, `${metricName}_${name}.csv`);
+            logger.info(
+              colors.magenta(`Writing configuration to file "${file}"...`),
+            );
+            writeCsv(
+              file,
+              points.map(({ key, value }) => ({
+                timestamp: key,
+                value,
+              })),
+            );
+          });
         });
 
         logger.info(
