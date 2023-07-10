@@ -19,6 +19,7 @@ import {
   FETCH_CONSENT_MANAGER,
   EXPERIENCES,
   PURPOSES,
+  CONSENT_MANAGER_ANALYTICS_DATA,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -203,4 +204,67 @@ export async function fetchConsentManagerExperiences(
   } while (shouldContinue);
 
   return experiences;
+}
+
+/**
+ * The allowed bin sizes for pulling consent metrics
+ */
+export enum ConsentManagerMetricBin {
+  Hourly = '1h',
+  Daily = '1d',
+}
+
+export interface ConsentManagerMetric {
+  /** Name of metric */
+  name: string;
+  /** The metrics */
+  points: {
+    /** Key of metric */
+    key: string;
+    /** Value of metric */
+    value: string;
+  }[];
+}
+
+/**
+ * Fetch consent manager analytics data
+ *
+ * @param client - GraphQL client
+ * @param input - Input for fetching data
+ * @returns Consent manager purposes in the organization
+ */
+export async function fetchConsentManagerAnalyticsData(
+  client: GraphQLClient,
+  input: {
+    /** Data source */
+    dataSource:
+      | 'PRIVACY_SIGNAL_TIMESERIES'
+      | 'CONSENT_CHANGES_TIMESERIES'
+      | 'CONSENT_SESSIONS_BY_REGIME';
+    /** Start date, in ISO string format */
+    startDate: string;
+    /** End date, in ISO string format */
+    endDate: string;
+    /** Force refetching */
+    forceRefetch?: boolean;
+    /** Airgap bundle ID */
+    airgapBundleId: string;
+    /** Bin interval */
+    binInterval: ConsentManagerMetricBin;
+    /** Whether or not to smooth the time series */
+    smoothTimeseries: false;
+  },
+): Promise<ConsentManagerMetric[]> {
+  const {
+    analyticsData: { series },
+  } = await makeGraphQLRequest<{
+    /** Analytics data response */
+    analyticsData: {
+      /** Consent manager metrics */
+      series: ConsentManagerMetric[];
+    };
+  }>(client, CONSENT_MANAGER_ANALYTICS_DATA, {
+    input,
+  });
+  return series;
 }
