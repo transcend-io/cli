@@ -239,10 +239,10 @@ export async function fetchConsentManagerAnalyticsData(
   input: {
     /** Data source */
     dataSource: 'PRIVACY_SIGNAL_TIMESERIES' | 'CONSENT_CHANGES_TIMESERIES'; // FIXME
-    /** Start date */
-    startDate: number;
-    /** End date */
-    endDate: number;
+    /** Start date, in ISO string format */
+    startDate: string;
+    /** End date, in ISO string format */
+    endDate: string;
     /** Force refetching */
     forceRefetch?: boolean;
     /** Airgap bundle ID */

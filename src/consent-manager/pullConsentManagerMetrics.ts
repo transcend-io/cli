@@ -42,13 +42,15 @@ export async function pullConsentManagerMetrics(
   if (startTime > endTime) {
     throw new Error('Received "end" date that happened before "start" date');
   }
+  const startDate = start.toISOString();
+  const endDate = end.toISOString();
 
   // Pull in the metrics
   const [privacySignalData, consentChangesData] = await Promise.all([
     fetchConsentManagerAnalyticsData(client, {
       dataSource: 'PRIVACY_SIGNAL_TIMESERIES',
-      startDate: startTime,
-      endDate: endTime,
+      startDate,
+      endDate,
       forceRefetch: true,
       airgapBundleId,
       binInterval: bin,
@@ -56,8 +58,8 @@ export async function pullConsentManagerMetrics(
     }),
     fetchConsentManagerAnalyticsData(client, {
       dataSource: 'CONSENT_CHANGES_TIMESERIES',
-      startDate: startTime,
-      endDate: endTime,
+      startDate,
+      endDate,
       forceRefetch: true,
       airgapBundleId,
       binInterval: bin,
