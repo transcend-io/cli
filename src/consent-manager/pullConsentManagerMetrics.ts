@@ -32,6 +32,8 @@ export async function pullConsentManagerMetrics(
   PRIVACY_SIGNAL_TIMESERIES: ConsentManagerMetric[];
   /** Consent changes data */
   CONSENT_CHANGES_TIMESERIES: ConsentManagerMetric[];
+  /** Consent sessions by regime */
+  CONSENT_SESSIONS_BY_REGIME: ConsentManagerMetric[];
 }> {
   // Grab the bundleId associated with this API key
   const airgapBundleId = await fetchConsentManagerId(client);
@@ -46,29 +48,40 @@ export async function pullConsentManagerMetrics(
   const endDate = end.toISOString();
 
   // Pull in the metrics
-  const [privacySignalData, consentChangesData] = await Promise.all([
-    fetchConsentManagerAnalyticsData(client, {
-      dataSource: 'PRIVACY_SIGNAL_TIMESERIES',
-      startDate,
-      endDate,
-      forceRefetch: true,
-      airgapBundleId,
-      binInterval: bin,
-      smoothTimeseries: false,
-    }),
-    fetchConsentManagerAnalyticsData(client, {
-      dataSource: 'CONSENT_CHANGES_TIMESERIES',
-      startDate,
-      endDate,
-      forceRefetch: true,
-      airgapBundleId,
-      binInterval: bin,
-      smoothTimeseries: false,
-    }),
-  ]);
+  const [privacySignalData, consentChangesData, consentSessionsByRegimeData] =
+    await Promise.all([
+      fetchConsentManagerAnalyticsData(client, {
+        dataSource: 'PRIVACY_SIGNAL_TIMESERIES',
+        startDate,
+        endDate,
+        forceRefetch: true,
+        airgapBundleId,
+        binInterval: bin,
+        smoothTimeseries: false,
+      }),
+      fetchConsentManagerAnalyticsData(client, {
+        dataSource: 'CONSENT_CHANGES_TIMESERIES',
+        startDate,
+        endDate,
+        forceRefetch: true,
+        airgapBundleId,
+        binInterval: bin,
+        smoothTimeseries: false,
+      }),
+      fetchConsentManagerAnalyticsData(client, {
+        dataSource: 'CONSENT_SESSIONS_BY_REGIME',
+        startDate,
+        endDate,
+        forceRefetch: true,
+        airgapBundleId,
+        binInterval: bin,
+        smoothTimeseries: false,
+      }),
+    ]);
 
   return {
     PRIVACY_SIGNAL_TIMESERIES: privacySignalData,
     CONSENT_CHANGES_TIMESERIES: consentChangesData,
+    CONSENT_SESSIONS_BY_REGIME: consentSessionsByRegimeData,
   };
 }

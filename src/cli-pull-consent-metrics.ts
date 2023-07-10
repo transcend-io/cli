@@ -121,8 +121,6 @@ async function main(): Promise<void> {
         logger.info(
           colors.magenta(`Writing configuration to file "${file}"...`),
         );
-        console.log(file);
-        console.log(metrics);
         writeCsv(file, metrics);
       });
     } catch (err) {
@@ -170,8 +168,6 @@ async function main(): Promise<void> {
           logger.info(
             colors.magenta(`Writing configuration to file "${file}"...`),
           );
-          console.log(file);
-          console.log(metrics);
           writeCsv(file, metrics);
         });
 

@@ -208,7 +208,6 @@ export async function fetchConsentManagerExperiences(
 
 /**
  * The allowed bin sizes for pulling consent metrics
- * FIXME
  */
 export enum ConsentManagerMetricBin {
   Hourly = '1h',
@@ -238,7 +237,10 @@ export async function fetchConsentManagerAnalyticsData(
   client: GraphQLClient,
   input: {
     /** Data source */
-    dataSource: 'PRIVACY_SIGNAL_TIMESERIES' | 'CONSENT_CHANGES_TIMESERIES'; // FIXME
+    dataSource:
+      | 'PRIVACY_SIGNAL_TIMESERIES'
+      | 'CONSENT_CHANGES_TIMESERIES'
+      | 'CONSENT_SESSIONS_BY_REGIME';
     /** Start date, in ISO string format */
     startDate: string;
     /** End date, in ISO string format */
