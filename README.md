@@ -73,14 +73,18 @@
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-18)
+    - [Arguments](#arguments-18)
+    - [Usage](#usage-19)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1393,7 +1397,7 @@ The API key must have the following scopes:
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 ```
 
-Specifying the backend URL, needed for US hosted backend infrastructu re.
+Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
@@ -1424,6 +1428,59 @@ yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTIO
 
 tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD --scopes="Manage Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
 yarn tr-update-consent-manager  --auth=./transcend-api-keys.json --deploy=true
+```
+
+### tr-pull-consent-metrics
+
+This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "View Consent Manager"
+
+#### Arguments
+
+| Argument     | Description                                                                   | Type                    | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------- | ----------------------- | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string                  | N/A                      | true     |
+| start        | The start date to pull metrics from.                                          | string - date           | N/A                      | true     |
+| end          | The end date to pull metrics until.                                           | string - date           | now()                    | true     |
+| folder       | The folder to save metrics to                                                 | string - path           | ./consent-metrics/       | false    |
+| bin          | The bin metric when pulling data (1h or 1d)                                   | ConsentManagerMetricBin | 1d                       | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL            | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --transcendUrl=https://api.us.transcend.io
+```
+
+Pull start and end date explicitly
+
+```sh
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --end=03/01/2023
+```
+
+Save to an explicit folder
+
+```sh
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --end=03/01/2023 --folder=./my-folder/
+```
+
+Bin data hourly vs daily
+
+```sh
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --bin=1h
 ```
 
 ### tr-upload-data-flows-from-csv
