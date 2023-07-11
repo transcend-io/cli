@@ -12,5 +12,5 @@ if (process.env.http_proxy) {
   logger.info(colors.green(`Initializing proxy: ${process.env.http_proxy}`));
 
   // eslint-disable-next-line global-require
-  require('global-tunnel').initialize();
+  require('global-tunnel-ng').initialize();
 }
