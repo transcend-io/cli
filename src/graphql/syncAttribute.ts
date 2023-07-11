@@ -1,8 +1,5 @@
 import { AttributeInput } from '../codecs';
-import {
-  AttributeResourceType,
-  ATTRIBUTE_KEY_TO_ENABLED_ON,
-} from '../tmp-attribute-key';
+import { ATTRIBUTE_KEY_TO_ENABLED_ON } from '../tmp-attribute-key';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
 import { GraphQLClient } from 'graphql-request';
@@ -13,6 +10,7 @@ import {
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { Attribute } from './fetchAllAttributes';
+import { AttributeSupportedResourceType } from '@transcend-io/privacy-types';
 
 /**
  * Sync attribute
@@ -37,7 +35,7 @@ export async function syncAttribute(
       {},
     ),
     ...difference(
-      Object.values(AttributeResourceType),
+      Object.values(AttributeSupportedResourceType),
       attribute.resources || [],
     ).reduce(
       (acc, resource) =>

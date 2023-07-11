@@ -12,12 +12,12 @@ import { pushCronIdentifiersFromCsv } from './cron';
  * Requires an API key with scope for the cron integration being checked on.
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-cron-mark-identifiers-completed.ts --auth=asd123 \
+ * yarn ts-node ./src/cli-cron-mark-identifiers-completed.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
- * yarn tr-pull-cron-mark-identifiers-completed --auth=asd123  \
+ * yarn tr-pull-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
@@ -35,7 +35,7 @@ async function main(): Promise<void> {
   if (!auth) {
     logger.error(
       colors.red(
-        'A Transcend API key must be provided. You can specify using --auth=asd123',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);

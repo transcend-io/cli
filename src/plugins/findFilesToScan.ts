@@ -1,6 +1,6 @@
 import fastGlob from 'fast-glob';
 import { logger } from '../logger';
-import { SiloDiscoveryConfig, SiloDiscoveryRawResults } from '.';
+import { SiloDiscoveryConfig, SiloDiscoveryRawResults } from './types';
 
 /**
  * Helper to scan for data silos in all package.json files that it can find in a directory

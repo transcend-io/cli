@@ -9,6 +9,8 @@ export const ACTIONS = gql`
         skipSecondaryIfNoFiles
         skipDownloadableStep
         requiresReview
+        regionList
+        regionDetectionMethod
         waitingPeriod
       }
     }

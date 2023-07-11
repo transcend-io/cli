@@ -69,10 +69,10 @@ async function syncConfiguration({
  * Push the transcend.yml file remotely into a Transcend instance
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
+ * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
  *
  * Standard usage
- * yarn tr-push --file=./examples/invalid.yml --auth=asd123 --variables=domain:acme.com,stage:staging
+ * yarn tr-push --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
  */
 async function main(): Promise<void> {
   // Parse command line arguments

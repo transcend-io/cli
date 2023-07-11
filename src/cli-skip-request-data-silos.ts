@@ -4,28 +4,25 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { markRequestDataSiloIdsCompleted } from './cron';
+import { skipRequestDataSilos } from './requests';
 
 /**
- * Given a set of Request IDs and a Data Silo ID, mark the RequestDataSilos as completed
+ * Given a data silo ID, skip all active privacy requests that are open for that data silo
  *
  * Requires an API key with scope:
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-mark-request-data-silos-completed.ts --auth=$TRANSCEND_API_KEY \
- *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ * yarn ts-node ./src/cli-skip-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
+ *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc
  *
  * Standard usage:
- * yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY  \
- *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ * yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY  \
+ *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    file = './request-identifiers.csv',
     transcendUrl = 'https://api.transcend.io',
     auth,
     dataSiloId,
@@ -52,8 +49,7 @@ async function main(): Promise<void> {
   }
 
   // Upload privacy requests
-  await markRequestDataSiloIdsCompleted({
-    file,
+  await skipRequestDataSilos({
     transcendUrl,
     auth,
     dataSiloId,

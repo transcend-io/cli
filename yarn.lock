@@ -404,7 +404,7 @@ __metadata:
     "@transcend-io/airgap.js-types": ^9.2.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.2
-    "@transcend-io/privacy-types": ^4.33.0
+    "@transcend-io/privacy-types": ^4.38.0
     "@transcend-io/type-utils": ^1.0.7
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
@@ -460,11 +460,15 @@ __metadata:
     tr-manual-enrichment-push-identifiers: ./build/cli-manual-enrichment-push-identifiers.js
     tr-mark-request-data-silos-completed: ./build/cli-mark-request-data-silos-completed.js
     tr-pull: ./build/cli-pull.js
+    tr-pull-consent-metrics: ./build/cli-pull-consent-metrics.js
     tr-push: ./build/cli-push.js
+    tr-request-approve: ./build/cli-request-approve.js
+    tr-request-cancel: ./build/cli-request-cancel.js
     tr-request-export: ./build/cli-request-export.js
     tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
     tr-retry-request-data-silos: ./build/cli-retry-request-data-silos.js
+    tr-skip-request-data-silos: ./build/cli-skip-request-data-silos.js
     tr-update-consent-manager: ./build/cli-update-consent-manager-to-latest.js
     tr-upload-data-flows-from-csv: ./build/cli-upload-data-flows-from-csv.js
   languageName: unknown
@@ -490,12 +494,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.33.0":
-  version: 4.33.0
-  resolution: "@transcend-io/privacy-types@npm:4.33.0"
+"@transcend-io/privacy-types@npm:^4.38.0":
+  version: 4.38.0
+  resolution: "@transcend-io/privacy-types@npm:4.38.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: 73d38b462dbea634fc72c9c3c376c9456b4a6d8376c88d48581804d8089696b66f82a81a5793c7fb6b73bb0fb46d5fa5af38a724ac7bf746f16f9c5a2682fb8f
+  checksum: 6f79e562200554f7384123f178057f26eb6a061a32e668ea37365a02405dffefd6e276826d49e3f14526521cf7087428c349af609e63546da0957d51fff0c8d3
   languageName: node
   linkType: hard
 
@@ -4825,26 +4829,15 @@ resolve@^1.18.1:
   linkType: hard
 
 "semver@npm:^6.3.0":
-  version: 6.3.0
-  resolution: "semver@npm:6.3.0"
-  bin:
-    semver: ./bin/semver.js
-  checksum: 1b26ecf6db9e8292dd90df4e781d91875c0dcc1b1909e70f5d12959a23c7eebb8f01ea581c00783bbee72ceeaad9505797c381756326073850dc36ed284b21b9
-  languageName: node
-  linkType: hard
-
-"semver@npm:^7.1.2, semver@npm:^7.3.2, semver@npm:^7.3.5":
-  version: 7.3.5
-  resolution: "semver@npm:7.3.5"
-  dependencies:
-    lru-cache: ^6.0.0
+  version: 6.3.1
+  resolution: "semver@npm:6.3.1"
   bin:
     semver: bin/semver.js
-  checksum: 5eafe6102bea2a7439897c1856362e31cc348ccf96efd455c8b5bc2c61e6f7e7b8250dc26b8828c1d76a56f818a7ee907a36ae9fb37a599d3d24609207001d60
+  checksum: ae47d06de28836adb9d3e25f22a92943477371292d9b665fb023fae278d345d508ca1958232af086d85e0155aee22e313e100971898bbb8d5d89b8b1d4054ca2
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.7, semver@npm:^7.3.8":
+"semver@npm:^7.1.2, semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8":
   version: 7.3.8
   resolution: "semver@npm:7.3.8"
   dependencies:

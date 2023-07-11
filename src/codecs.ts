@@ -23,12 +23,14 @@ import {
   UnknownRequestPolicy,
   TelemetryPartitionStrategy,
   SignedIabAgreementOption,
+  RegionDetectionMethod,
+  PreflightRequestStatus,
+  AttributeSupportedResourceType,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
   BrowserLanguage,
 } from '@transcend-io/airgap.js-types';
-import { AttributeResourceType } from './tmp-attribute-key';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -99,6 +101,8 @@ export const EnricherInput = t.intersection([
     'output-identifiers': t.array(t.string),
   }),
   t.partial({
+    /** Internal description for why the enricher is needed */
+    description: t.string,
     /** The URL of the enricher */
     url: t.string,
     /** The type of enricher */
@@ -109,10 +113,36 @@ export const EnricherInput = t.intersection([
      * be called with the value of that identifier as input
      */
     'input-identifier': t.string,
+    /**
+     * A regular expression that can be used to match on for cancelation
+     */
+    testRegex: t.string,
+    /**
+     * For looker integration - the title of the looker query to run
+     */
+    lookerQueryTitle: t.string,
+    /**
+     * The duration (in ms) that the enricher should take to execute.
+     */
+    expirationDuration: t.number,
+    /**
+     * The status that the enricher should transfer to when condition is met.
+     */
+    transitionRequestStatus: valuesOf(PreflightRequestStatus),
+    /**
+     * For twilio integration - the phone numbers that can be used to send text codes
+     */
+    phoneNumbers: t.array(t.string),
+    /** The list of regions that should trigger the preflight check */
+    regionList: t.array(
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
+    ),
+    /**
+     * Specify which data subjects the enricher should run for
+     */
+    'data-subjects': t.array(t.string),
     /** Headers to include in the webhook */
     headers: t.array(WebhookHeader),
-    /** Internal description for why the enricher is needed */
-    description: t.string,
     /** The privacy actions that the enricher should run against */
     'privacy-actions': t.array(valuesOf(RequestAction)),
   }),
@@ -176,7 +206,7 @@ export const AttributeInput = t.intersection([
     /** Description of attribute */
     description: t.string,
     /** Resource types that the attribute is enabled on */
-    resources: t.array(valuesOf(AttributeResourceType)),
+    resources: t.array(valuesOf(AttributeSupportedResourceType)),
     /** Values of attribute */
     values: t.array(AttributeValueInput),
   }),
@@ -411,6 +441,16 @@ export const ActionInput = t.intersection([
     requiresReview: t.boolean,
     /** The wait period for the action */
     waitingPeriod: t.number,
+    /** The method in which the data subject's region is detected */
+    regionDetectionMethod: valuesOf(RegionDetectionMethod),
+    /** The list of regions to show in the form */
+    regionList: t.array(
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
+    ),
+    /** The list of regions NOT to show in the form */
+    regionBlockList: t.array(
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
+    ),
   }),
 ]);
 

@@ -1,5 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
-import { RequestAction } from '@transcend-io/privacy-types';
+import {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+  RegionDetectionMethod,
+  RequestAction,
+} from '@transcend-io/privacy-types';
 import { ACTIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -16,6 +21,10 @@ export interface Action {
   requiresReview: boolean;
   /** Waiting period for action */
   waitingPeriod: number;
+  /** Method in which the data subject's region is detected */
+  regionDetectionMethod: RegionDetectionMethod;
+  /** The list of regions to show in the form */
+  regionList: (IsoCountryCode | IsoCountrySubdivisionCode)[];
 }
 
 const PAGE_SIZE = 20;
