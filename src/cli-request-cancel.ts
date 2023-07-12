@@ -31,6 +31,8 @@ async function main(): Promise<void> {
     silentModeBefore,
     cancellationTitle,
     concurrency = '100',
+    /** List of request IDs */
+    requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -81,6 +83,7 @@ async function main(): Promise<void> {
     requestActions: parsedActions,
     auth,
     cancellationTitle,
+    requestIds: requestIds ? splitCsvToList(requestIds) : undefined,
     statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,

@@ -23,6 +23,7 @@ export async function cancelPrivacyRequests({
   requestActions,
   cancellationTitle,
   auth,
+  requestIds,
   silentModeBefore,
   statuses = [
     RequestStatus.Compiling,
@@ -45,6 +46,8 @@ export async function cancelPrivacyRequests({
   concurrency?: number;
   /** The request statuses to cancel */
   statuses?: RequestStatus[];
+  /** The set of privacy requests to cancel */
+  requestIds?: string[];
   /** Mark these requests as silent mode if they were created before this date */
   silentModeBefore?: Date;
   /** API URL for Transcend backend */
@@ -82,10 +85,17 @@ export async function cancelPrivacyRequests({
   }
 
   // Pull in the requests
-  const allRequests = await fetchAllRequests(client, {
+  let allRequests = await fetchAllRequests(client, {
     actions: requestActions,
     statuses,
   });
+
+  // Filter down requests by request ID
+  if (requestIds && requestIds.length > 0) {
+    allRequests = allRequests.filter((request) =>
+      requestIds.includes(request.id),
+    );
+  }
 
   // Notify Transcend
   logger.info(
