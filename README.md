@@ -682,15 +682,17 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument          | Description                                                                                                                                                                                        | Type            | Default                                                                                  | Required |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
-| auth              | The Transcend API key with the scopes necessary for the command.                                                                                                                                   | string          | N/A                                                                                      | true     |
-| actions           | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel.                                                          | RequestAction[] | N/A                                                                                      | true     |
-| statuses          | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                                                                                       | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
-| silentModeBefore  | Any requests made before this date should be marked as silent mode for canceling to skip email sending                                                                                             | Date            | N/A                                                                                      | false    |
-| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string          | Request Canceled                                                                         | false    |
-| transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                                      | string - URL    | https://api.transcend.io                                                                 | false    |
-| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 100                                                                                      | false    |
+| Argument   | Description                                                                                                                               | Type            | Default                                                                                  | Required |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth       | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                                                                                      | true     |
+| actions    | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel. | RequestAction[] | N/A                                                                                      | true     |
+| statuses   | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                              | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| requestIds | Specify the specific request IDs to cancel                                                                                                | string[]        | []                                                                                       | false    |
+
+| silentModeBefore | Any requests made before this date should be marked as silent mode for canceling to skip email sending | Date | N/A | false |
+| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string | Request Canceled | false |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false |
+| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
 
 #### Usage
 
@@ -710,6 +712,13 @@ Bulk cancel all Erasure (request.type=ERASURE) requests that are in an enriching
 
 ```sh
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --statuses=ENRICHING
+```
+
+Bulk cancel requests by ID
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE,SALE_OPT_OUT,CONTACT_OPT_OUT --statuses=ENRICHING,COMPILING,APPROVING,WAITING,REQUEST_MADE,ON_HOLD,DELAYED,SECONDARY \
+  --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
 Send a specific email template to the request that are being canceled. When not provided, the default cancellation template is used ("Request Canceled").
