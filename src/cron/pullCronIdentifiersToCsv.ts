@@ -8,6 +8,7 @@ import {
 import { RequestAction } from '@transcend-io/privacy-types';
 import { writeCsv } from './writeCsv';
 import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Pull the set of cron job identifiers to CSV
@@ -21,7 +22,7 @@ export async function pullCronIdentifiersToCsv({
   sombraAuth,
   requestType,
   pageLimit = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

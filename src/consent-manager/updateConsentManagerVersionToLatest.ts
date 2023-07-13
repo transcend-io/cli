@@ -9,6 +9,7 @@ import {
 import colors from 'colors';
 
 import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Update the consent manager to latest version
@@ -18,7 +19,7 @@ import { logger } from '../logger';
 export async function updateConsentManagerVersionToLatest({
   auth,
   deploy = false,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
   bundleTypes = Object.values(ConsentBundleType),
 }: {
   /** Transcend API key authentication */

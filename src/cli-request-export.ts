@@ -6,6 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { splitCsvToList, pullRequestsToCsv } from './requests';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Pull down the metadata for a set of Privacy requests.
@@ -28,7 +29,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend-request-export.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     actions = '',
     statuses = '',

@@ -12,7 +12,7 @@ import {
   syncConfigurationToTranscend,
 } from './graphql';
 
-import { ADMIN_DASH_INTEGRATIONS } from './constants';
+import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from './constants';
 import { TranscendInput } from './codecs';
 import { ObjByString } from '@transcend-io/type-utils';
 import { validateTranscendAuth, listFiles } from './api-keys';
@@ -78,7 +78,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend.yml',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     variables = '',
     pageSize = '',
@@ -110,6 +110,7 @@ async function main(): Promise<void> {
     throw new Error('No file specified!');
   }
 
+  // eslint-disable-next-line array-callback-return,consistent-return
   const transcendInputs = fileList.map((filePath) => {
     // Ensure yaml file exists on disk
     if (!existsSync(filePath)) {
@@ -139,7 +140,6 @@ async function main(): Promise<void> {
         ),
       );
       process.exit(1);
-      throw err;
     }
   });
 

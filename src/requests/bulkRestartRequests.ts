@@ -16,6 +16,7 @@ import {
 } from '../graphql';
 import { extractClientError } from './extractClientError';
 import { SuccessfulRequest } from './constants';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /** Minimal state we need to keep a list of requests */
 const ErrorRequest = t.intersection([
@@ -45,7 +46,7 @@ export async function bulkRestartRequests({
   sombraAuth,
   requestActions,
   requestStatuses,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
   requestIds = [],
   createdAt = new Date(),
   markSilent,

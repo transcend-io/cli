@@ -12,6 +12,7 @@ import groupBy from 'lodash/groupBy';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { writeCsv } from '../cron/writeCsv';
 import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 export interface ExportedPrivacyRequest extends PrivacyRequest {
   /** Request identifiers */
@@ -29,7 +30,7 @@ export async function pullRequestsToCsv({
   actions = [],
   statuses = [],
   pageLimit = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
   createdAtAfter,
   showTests,

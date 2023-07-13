@@ -6,6 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { uploadDataFlowsFromCsv } from './consent-manager';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Upload a CSV of data flows
@@ -30,7 +31,7 @@ async function main(): Promise<void> {
     trackerStatus,
     classifyService = 'false',
     file = './data-flows.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed

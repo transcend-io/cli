@@ -451,6 +451,7 @@ __metadata:
     typescript: ^5.0.4
     yargs-parser: ^21.1.1
   bin:
+    tr-build-xdi-sync-endpoint: ./build/cli-build-xdi-sync-endpoint.js
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
     tr-discover-silos: ./build/cli-discover-silos.js

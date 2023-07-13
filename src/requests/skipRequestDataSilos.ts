@@ -12,6 +12,7 @@ import {
   RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Given a data silo ID, mark all open request data silos as skipped
@@ -23,7 +24,7 @@ export async function skipRequestDataSilos({
   dataSiloId,
   auth,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** Transcend API key authentication */
   auth: string;

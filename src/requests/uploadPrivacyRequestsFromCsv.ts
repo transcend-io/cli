@@ -22,6 +22,7 @@ import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
 import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
 import { filterRows } from './filterRows';
 import { extractClientError } from './extractClientError';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Upload a set of privacy requests from CSV
@@ -36,7 +37,7 @@ export async function uploadPrivacyRequestsFromCsv({
   sombraAuth,
   concurrency = 100,
   defaultPhoneCountryCode = '1', // USA
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
   attributes = [],
   emailIsVerified = true,
   skipFilterStep = false,
