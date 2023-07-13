@@ -7,6 +7,7 @@ import {
   EnrichPrivacyRequest,
 } from './enrichPrivacyRequest';
 import { readCsv } from '../requests';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Push a CSV of enriched requests back into Transcend
@@ -20,7 +21,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   sombraAuth,
   enricherId,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

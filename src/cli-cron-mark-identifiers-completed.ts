@@ -5,6 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { pushCronIdentifiersFromCsv } from './cron';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Mark all of the identifiers in a cron job CSV as completed.
@@ -25,7 +26,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './cron-identifiers.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     sombraAuth,
     dataSiloId,

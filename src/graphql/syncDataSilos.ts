@@ -632,7 +632,7 @@ export async function syncDataSilo(
     });
     existingDataSilo = updateDataSilo.dataSilo;
   } else {
-    // FIXME use createDataSilos
+    // TODO: https://transcend.height.app/T-26999 - remove this, use createDataSilos
     const { connectDataSilo } = await makeGraphQLRequest<{
       /** Mutation result */
       connectDataSilo: {

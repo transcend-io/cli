@@ -53,6 +53,11 @@ export interface ConsentManager {
     /** Partition parameter */
     partition: string;
   };
+  /** When using a custom partition, this is the partition value */
+  partition?: {
+    /** Partition value */
+    partition: string;
+  };
 }
 
 /**

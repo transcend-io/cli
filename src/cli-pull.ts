@@ -15,7 +15,7 @@ import {
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { validateTranscendAuth } from './api-keys';
 import { writeTranscendYaml } from './readTranscendYaml';
-import { ADMIN_DASH_INTEGRATIONS } from './constants';
+import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from './constants';
 import { splitCsvToList } from './requests';
 
 const VALID_RESOURCES = Object.values(TranscendPullResource);
@@ -33,7 +33,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend.yml',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     dataSiloIds = '',
     integrationNames = '',
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES.join(','),
@@ -176,7 +176,9 @@ async function main(): Promise<void> {
           colors.green(`${prefix}Successfully pulled configuration!`),
         );
       } catch (err) {
-        logger.error(colors.red(`${prefix}Failed to sync configuration.`));
+        logger.error(
+          colors.red(`${prefix}Failed to sync configuration. - ${err.message}`),
+        );
         encounteredErrors.push(apiKey.organizationName);
       }
     });

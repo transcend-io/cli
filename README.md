@@ -85,6 +85,10 @@
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-19)
+    - [Arguments](#arguments-19)
+    - [Usage](#usage-20)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -118,8 +122,10 @@ yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -144,8 +150,11 @@ tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
+tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
+
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -1626,4 +1635,74 @@ Throw error if an API key already exists with that title, default behavior is to
 yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --deleteExistingApiKey=false
+```
+
+### tr-build-xdi-sync-endpoint
+
+This command allows for building of the [XDI Sync Endpoint](<https://docs.transcend.io/docs/consent/reference/xdi#addxdihostscript(standalone)>) across a set of Transcend accounts.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys) or by using the `yarn tr-generate-api-keys` command above.
+
+The API key must have the following scopes:
+
+- "View Consent Manager"
+
+#### Arguments
+
+| Argument           | Description                                                                                               | Type               | Default                  | Required |
+| ------------------ | --------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ | -------- |
+| auth               | The Transcend API key with the scopes necessary for the command.                                          | string             | N/A                      | true     |
+| xdiLocation        | The location of the XDI that will be loaded by the generated sync endpoint. Typically this ends in xdi.js | string             | N/A                      | true     |
+| file               | The HTML file path where the sync endpoint should be written.                                             | string - file-path | ./sync-endpoint.html     | false    |
+| removeIpAddresses  | When true, remove IP addresses from the domain list                                                       | boolean            | true                     | false    |
+| domainBlockList    | The set of domains that should be excluded from the sync endpoint                                         | string[]           | localhost                | false    |
+| xdiAllowedCommands | The allowed set of XDI commands                                                                           | string             | ConsentManager:Sync      | false    |
+| transcendUrl       | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                             | string - URL       | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --transcendUrl=https://api.us.transcend.io
+```
+
+Configuring across multiple Transcend Instances:
+
+```sh
+# Pull down API keys across all Transcend instances
+yarn tr-generate-api-keys --email=$TRANSCEND_EMAIL --password=$TRANSCEND_PASSWORD --transcendUrl=https://api.us.transcend.io --scopes="View Consent Manager" --apiKeyTitle="[cli][$TRANSCEND_EMAIL] XDI Endpoint Construction" --file=./api-keys.json --parentOrganizationId=1821d872-6114-406e-90c3-73b4d5e246cf
+
+# Path list of API keys as authentication
+yarn tr-build-xdi-sync-endpoint --auth=./api-keys.json --xdiLocation=https://cdn.your-site.com/xdi.js --transcendUrl=https://api.us.transcend.io
+```
+
+Pull to specific file location
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --file=./my-folder/sync-endpoint.html
+```
+
+Don't filter out regular expressions
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --removeIpAddresses=false
+```
+
+Filter out certain domains that should not be included in the sync endpoint definition
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --domainBlockList=ignored.com,localhost
+```
+
+Override XDI allowed commands
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --xdiAllowedCommands="ExtractIdentifiers:Simple"
 ```

@@ -6,6 +6,7 @@ import { RequestAction } from '@transcend-io/privacy-types';
 
 import { logger } from './logger';
 import { retryRequestDataSilos } from './requests';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Bulk wipe and retry a set of requests for a specific data silo
@@ -26,7 +27,7 @@ import { retryRequestDataSilos } from './requests';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     dataSiloId,
     actions,
