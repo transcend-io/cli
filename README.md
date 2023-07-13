@@ -1191,31 +1191,31 @@ The API key must have the following scopes:
 #### Usage
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 ```
 
 Pull to a specific file location
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
 ```
 
 For specific types of requests
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE
 ```
 
 For US hosted infrastructure
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
 ```
 
 With specific concurrency
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
 ```
 
 ### tr-manual-enrichment-push-identifiers
