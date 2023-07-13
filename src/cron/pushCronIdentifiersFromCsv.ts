@@ -7,6 +7,7 @@ import {
 } from './markCronIdentifierCompleted';
 import { logger } from '../logger';
 import { readCsv } from '../requests';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Given a CSV of cron job outputs, mark all requests as completed in Transcend
@@ -20,7 +21,7 @@ export async function pushCronIdentifiersFromCsv({
   auth,
   sombraAuth,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

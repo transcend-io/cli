@@ -6,6 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
 import { RequestAction } from '@transcend-io/privacy-types';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Pull the the set of requests that actively require manual enrichment.
@@ -26,7 +27,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './manual-enrichment-identifiers.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     actions = '',
     concurrency = '100',

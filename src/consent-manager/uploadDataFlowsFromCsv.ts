@@ -10,6 +10,7 @@ import { readCsv } from '../requests/readCsv';
 import { valuesOf } from '@transcend-io/type-utils';
 import { DataFlowInput } from '../codecs';
 import { splitCsvToList } from '../requests';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Minimal set required to mark as completed
@@ -64,7 +65,7 @@ export async function uploadDataFlowsFromCsv({
   trackerStatus,
   file,
   classifyService = false,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

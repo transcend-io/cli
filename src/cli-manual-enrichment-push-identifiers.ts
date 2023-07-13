@@ -5,6 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { pushManualEnrichmentIdentifiersFromCsv } from './manual-enrichment';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Push the the set of manually enriched requests back into the Transcend dashboard
@@ -23,7 +24,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './manual-enrichment-identifiers.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     enricherId,
     sombraAuth,

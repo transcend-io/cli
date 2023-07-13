@@ -6,6 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { splitCsvToList, bulkRestartRequests } from './requests';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 const ONE_MONTH = 30.5 * 24 * 60 * 60 * 1000;
 
@@ -28,7 +29,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     auth,
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     sombraAuth,
     /** Restart requests matching these request actions */
     actions,

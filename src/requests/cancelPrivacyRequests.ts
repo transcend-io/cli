@@ -12,6 +12,7 @@ import {
   Template,
 } from '../graphql';
 import cliProgress from 'cli-progress';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Cancel a set of privacy requests
@@ -36,7 +37,7 @@ export async function cancelPrivacyRequests({
     RequestStatus.SecondaryApproving,
   ],
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */
   requestActions: RequestAction[];

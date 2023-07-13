@@ -5,6 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { skipRequestDataSilos } from './requests';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Given a data silo ID, skip all active privacy requests that are open for that data silo
@@ -23,7 +24,7 @@ import { skipRequestDataSilos } from './requests';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     dataSiloId,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };

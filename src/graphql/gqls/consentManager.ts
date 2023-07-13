@@ -203,6 +203,9 @@ export const FETCH_CONSENT_MANAGER = gql`
           syncGroups
           partition
         }
+        partition {
+          partition
+        }
       }
     }
   }

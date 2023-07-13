@@ -8,6 +8,7 @@ import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 
 import { logger } from './logger';
 import { generateCrossAccountApiKeys } from './api-keys';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 const SCOPES_BY_TITLE = keyBy(
   Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
@@ -34,7 +35,7 @@ const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     file,
     email,
     password,
