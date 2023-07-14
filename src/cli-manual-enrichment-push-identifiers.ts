@@ -28,6 +28,7 @@ async function main(): Promise<void> {
     auth,
     enricherId,
     sombraAuth,
+    markSilent = 'false',
     concurrency = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -58,6 +59,7 @@ async function main(): Promise<void> {
     transcendUrl,
     enricherId,
     concurrency: parseInt(concurrency, 10),
+    markSilent: markSilent === 'true',
     auth,
     sombraAuth,
   });
