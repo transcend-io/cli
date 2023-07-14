@@ -1237,6 +1237,7 @@ In order to use this cli, you will first need to generate an API key on the Tran
 The API key must have the following scopes:
 
 - "Manage Request Identity Verification"
+- "Manage Request Compilation" (only when specifying `markSilent`)
 
 #### Arguments
 
@@ -1247,6 +1248,7 @@ The API key must have the following scopes:
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
 | file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| markSilent   | When true, set requests into silent mode before enriching                            | boolean            | false                               | false    |
 | concurrency  | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
 
 #### Usage
@@ -1277,6 +1279,12 @@ With specific concurrency
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --concurrency=200
+```
+
+When enriching requests, mark all requests as silent mode before processing
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --markSilent=true
 ```
 
 ### tr-mark-request-data-silos-completed
