@@ -43,6 +43,7 @@
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
+    "run:example:proxy": "ts-node --transpile-only scripts/example-proxy",
     "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
   },
   "dependencies": {
@@ -59,7 +60,7 @@
     "fast-glob": "^3.2.12",
     "fp-ts": "=2.11.8",
     "fuzzysearch": "^1.0.3",
-    "global-tunnel-ng": "^2.7.1",
+    "global-agent": "^3.0.0",
     "got": "^11.8.5",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
@@ -68,6 +69,7 @@
     "io-ts": "=2.2.16",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "undici": "^5.22.1",
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
@@ -76,7 +78,8 @@
     "@types/cli-progress": "^3.11.0",
     "@types/colors": "^1.2.1",
     "@types/fuzzysearch": "^1.0.0",
-    "@types/global-tunnel-ng": "^2",
+    "@types/global-agent": "^2.1.1",
+    "@types/http-proxy": "^1",
     "@types/inquirer": "^7.3.1",
     "@types/inquirer-autocomplete-prompt": "^3.0.0",
     "@types/js-yaml": "^4.0.5",
@@ -95,6 +98,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsdoc": "^41.1.1",
+    "http-proxy": "^1.18.1",
     "mocha": "^10.1.0",
     "prettier": "^2.8.7",
     "ts-node": "10.9.1",
