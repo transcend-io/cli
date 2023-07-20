@@ -89,7 +89,7 @@
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [Proxy Usage](#proxy-usage)
+- [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
