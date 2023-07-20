@@ -89,6 +89,7 @@
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
+- [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1714,3 +1715,7 @@ Override XDI allowed commands
 ```sh
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --xdiAllowedCommands="ExtractIdentifiers:Simple"
 ```
+
+## Proxy usage
+
+If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
