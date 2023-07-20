@@ -85,7 +85,11 @@
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-- [Proxy Usage](#proxy-usage)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-19)
+    - [Arguments](#arguments-19)
+    - [Usage](#usage-20)
+  - [Proxy Usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -119,8 +123,10 @@ yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -145,8 +151,11 @@ tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
+tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
+
 ```
 
 alternatively, you can install the cli globally on your machine:
@@ -683,15 +692,17 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument          | Description                                                                                                                                                                                        | Type            | Default                                                                                  | Required |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
-| auth              | The Transcend API key with the scopes necessary for the command.                                                                                                                                   | string          | N/A                                                                                      | true     |
-| actions           | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel.                                                          | RequestAction[] | N/A                                                                                      | true     |
-| statuses          | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                                                                                       | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
-| silentModeBefore  | Any requests made before this date should be marked as silent mode for canceling to skip email sending                                                                                             | Date            | N/A                                                                                      | false    |
-| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string          | Request Canceled                                                                         | false    |
-| transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                                      | string - URL    | https://api.transcend.io                                                                 | false    |
-| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 100                                                                                      | false    |
+| Argument   | Description                                                                                                                               | Type            | Default                                                                                  | Required |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth       | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                                                                                      | true     |
+| actions    | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel. | RequestAction[] | N/A                                                                                      | true     |
+| statuses   | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                              | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| requestIds | Specify the specific request IDs to cancel                                                                                                | string[]        | []                                                                                       | false    |
+
+| silentModeBefore | Any requests made before this date should be marked as silent mode for canceling to skip email sending | Date | N/A | false |
+| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string | Request Canceled | false |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false |
+| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
 
 #### Usage
 
@@ -711,6 +722,13 @@ Bulk cancel all Erasure (request.type=ERASURE) requests that are in an enriching
 
 ```sh
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --statuses=ENRICHING
+```
+
+Bulk cancel requests by ID
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE,SALE_OPT_OUT,CONTACT_OPT_OUT --statuses=ENRICHING,COMPILING,APPROVING,WAITING,REQUEST_MADE,ON_HOLD,DELAYED,SECONDARY \
+  --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
 Send a specific email template to the request that are being canceled. When not provided, the default cancellation template is used ("Request Canceled").
@@ -1174,31 +1192,31 @@ The API key must have the following scopes:
 #### Usage
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
 ```
 
 Pull to a specific file location
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv
 ```
 
 For specific types of requests
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE
 ```
 
 For US hosted infrastructure
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
 ```
 
 With specific concurrency
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --concurrency=200
 ```
 
 ### tr-manual-enrichment-push-identifiers
@@ -1220,6 +1238,7 @@ In order to use this cli, you will first need to generate an API key on the Tran
 The API key must have the following scopes:
 
 - "Manage Request Identity Verification"
+- "Manage Request Compilation" (only when specifying `markSilent`)
 
 #### Arguments
 
@@ -1230,6 +1249,7 @@ The API key must have the following scopes:
 | sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
 | file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| markSilent   | When true, set requests into silent mode before enriching                            | boolean            | false                               | false    |
 | concurrency  | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
 
 #### Usage
@@ -1260,6 +1280,12 @@ With specific concurrency
 
 ```sh
 yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --concurrency=200
+```
+
+When enriching requests, mark all requests as silent mode before processing
+
+```sh
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --markSilent=true
 ```
 
 ### tr-mark-request-data-silos-completed
@@ -1618,6 +1644,76 @@ Throw error if an API key already exists with that title, default behavior is to
 yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --deleteExistingApiKey=false
+```
+
+### tr-build-xdi-sync-endpoint
+
+This command allows for building of the [XDI Sync Endpoint](<https://docs.transcend.io/docs/consent/reference/xdi#addxdihostscript(standalone)>) across a set of Transcend accounts.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys) or by using the `yarn tr-generate-api-keys` command above.
+
+The API key must have the following scopes:
+
+- "View Consent Manager"
+
+#### Arguments
+
+| Argument           | Description                                                                                               | Type               | Default                  | Required |
+| ------------------ | --------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ | -------- |
+| auth               | The Transcend API key with the scopes necessary for the command.                                          | string             | N/A                      | true     |
+| xdiLocation        | The location of the XDI that will be loaded by the generated sync endpoint. Typically this ends in xdi.js | string             | N/A                      | true     |
+| file               | The HTML file path where the sync endpoint should be written.                                             | string - file-path | ./sync-endpoint.html     | false    |
+| removeIpAddresses  | When true, remove IP addresses from the domain list                                                       | boolean            | true                     | false    |
+| domainBlockList    | The set of domains that should be excluded from the sync endpoint                                         | string[]           | localhost                | false    |
+| xdiAllowedCommands | The allowed set of XDI commands                                                                           | string             | ConsentManager:Sync      | false    |
+| transcendUrl       | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                             | string - URL       | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --transcendUrl=https://api.us.transcend.io
+```
+
+Configuring across multiple Transcend Instances:
+
+```sh
+# Pull down API keys across all Transcend instances
+yarn tr-generate-api-keys --email=$TRANSCEND_EMAIL --password=$TRANSCEND_PASSWORD --transcendUrl=https://api.us.transcend.io --scopes="View Consent Manager" --apiKeyTitle="[cli][$TRANSCEND_EMAIL] XDI Endpoint Construction" --file=./api-keys.json --parentOrganizationId=1821d872-6114-406e-90c3-73b4d5e246cf
+
+# Path list of API keys as authentication
+yarn tr-build-xdi-sync-endpoint --auth=./api-keys.json --xdiLocation=https://cdn.your-site.com/xdi.js --transcendUrl=https://api.us.transcend.io
+```
+
+Pull to specific file location
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --file=./my-folder/sync-endpoint.html
+```
+
+Don't filter out regular expressions
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --removeIpAddresses=false
+```
+
+Filter out certain domains that should not be included in the sync endpoint definition
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --domainBlockList=ignored.com,localhost
+```
+
+Override XDI allowed commands
+
+```sh
+yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --xdiAllowedCommands="ExtractIdentifiers:Simple"
 ```
 
 ## Proxy usage

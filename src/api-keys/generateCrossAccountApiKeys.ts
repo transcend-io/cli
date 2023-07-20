@@ -11,6 +11,7 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { StoredApiKey } from '../codecs';
 import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 export interface ApiKeyGenerateError {
   /** Name of instance */
@@ -35,7 +36,7 @@ export async function generateCrossAccountApiKeys({
   parentOrganizationId,
   deleteExistingApiKey = true,
   createNewApiKey = true,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** Email address of user generating API keys */
   email: string;

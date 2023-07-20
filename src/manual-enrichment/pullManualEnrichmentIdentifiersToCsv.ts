@@ -14,6 +14,7 @@ import { map } from 'bluebird';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { writeCsv } from '../cron/writeCsv';
 import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */
@@ -32,7 +33,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   auth,
   requestActions,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

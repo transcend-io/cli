@@ -8,6 +8,7 @@ import { mapSeries } from 'bluebird';
 import { logger } from './logger';
 import { updateConsentManagerVersionToLatest } from './consent-manager';
 import { validateTranscendAuth } from './api-keys';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Update the consent manager to latest version
@@ -23,7 +24,7 @@ import { validateTranscendAuth } from './api-keys';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     deploy = 'false',
     bundleTypes = Object.values(ConsentBundleType).join(','),

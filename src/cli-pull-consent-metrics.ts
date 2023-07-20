@@ -11,7 +11,7 @@ import {
   ConsentManagerMetricBin,
 } from './graphql';
 import { validateTranscendAuth } from './api-keys';
-import { ADMIN_DASH_INTEGRATIONS } from './constants';
+import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from './constants';
 import { pullConsentManagerMetrics } from './consent-manager';
 import { writeCsv } from './cron';
 
@@ -28,7 +28,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     folder = './consent-metrics/',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     bin = '1d',
     auth,
     end,

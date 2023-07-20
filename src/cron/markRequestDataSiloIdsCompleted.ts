@@ -10,6 +10,7 @@ import {
 } from '../graphql';
 import * as t from 'io-ts';
 import cliProgress from 'cli-progress';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 const RequestIdRow = t.type({
   'Request Id': t.string,
@@ -26,7 +27,7 @@ export async function markRequestDataSiloIdsCompleted({
   dataSiloId,
   auth,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;

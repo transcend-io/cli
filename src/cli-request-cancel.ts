@@ -6,6 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { splitCsvToList, cancelPrivacyRequests } from './requests';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Cancel requests based on some filter criteria
@@ -24,13 +25,15 @@ import { splitCsvToList, cancelPrivacyRequests } from './requests';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     actions = '',
     statuses = '',
     silentModeBefore,
     cancellationTitle,
     concurrency = '100',
+    /** List of request IDs */
+    requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -81,6 +84,7 @@ async function main(): Promise<void> {
     requestActions: parsedActions,
     auth,
     cancellationTitle,
+    requestIds: requestIds ? splitCsvToList(requestIds) : undefined,
     statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,

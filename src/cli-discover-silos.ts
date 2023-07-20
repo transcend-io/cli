@@ -3,7 +3,7 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
-import { ADMIN_DASH } from './constants';
+import { ADMIN_DASH, DEFAULT_TRANSCEND_API } from './constants';
 import { SILO_DISCOVERY_FUNCTIONS } from './plugins';
 import {
   fetchActiveSiloDiscoPlugin,
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
   const {
     scanPath = '.',
     ignoreDirs = '',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     dataSiloId = '',
     fileGlobs = '',
     auth,

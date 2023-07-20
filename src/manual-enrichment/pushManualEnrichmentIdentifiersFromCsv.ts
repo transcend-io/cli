@@ -1,12 +1,18 @@
 import colors from 'colors';
 import { map } from 'bluebird';
 import { logger } from '../logger';
-import { createSombraGotInstance } from '../graphql';
+import {
+  UPDATE_PRIVACY_REQUEST,
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  makeGraphQLRequest,
+} from '../graphql';
 import {
   enrichPrivacyRequest,
   EnrichPrivacyRequest,
 } from './enrichPrivacyRequest';
 import { readCsv } from '../requests';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Push a CSV of enriched requests back into Transcend
@@ -19,8 +25,9 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   auth,
   sombraAuth,
   enricherId,
+  markSilent,
   concurrency = 100,
-  transcendUrl = 'https://api.transcend.io',
+  transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** CSV file path */
   file: string;
@@ -34,9 +41,12 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
   concurrency?: number;
   /** API URL for Transcend backend */
   transcendUrl?: string;
+  /** Mark requests in silent mode before enriching */
+  markSilent?: boolean;
 }): Promise<number> {
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Read from CSV
   logger.info(colors.magenta(`Reading "${file}" from disk`));
@@ -55,6 +65,20 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
     activeResults,
     async (request, index) => {
       try {
+        // Mark requests in silent mode before a certain date
+        if (markSilent) {
+          await makeGraphQLRequest(client, UPDATE_PRIVACY_REQUEST, {
+            input: {
+              id: request.id,
+              isSilent: true,
+            },
+          });
+
+          logger.info(
+            colors.magenta(`Mark request as silent mode - ${request.id}`),
+          );
+        }
+
         const result = await enrichPrivacyRequest(
           sombra,
           request,

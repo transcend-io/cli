@@ -5,6 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { pushManualEnrichmentIdentifiersFromCsv } from './manual-enrichment';
+import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
  * Push the the set of manually enriched requests back into the Transcend dashboard
@@ -23,10 +24,11 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './manual-enrichment-identifiers.csv',
-    transcendUrl = 'https://api.transcend.io',
+    transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     enricherId,
     sombraAuth,
+    markSilent = 'false',
     concurrency = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -57,6 +59,7 @@ async function main(): Promise<void> {
     transcendUrl,
     enricherId,
     concurrency: parseInt(concurrency, 10),
+    markSilent: markSilent === 'true',
     auth,
     sombraAuth,
   });
