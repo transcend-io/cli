@@ -5,7 +5,7 @@ import yargs from 'yargs-parser';
 
 export const logger = console;
 
-// When PROXY_URL env var is specified, initiate the proxy
+// When the proxy env var of flag is specified, initiate the proxy
 const { httpProxy = process.env.http_proxy } = yargs(process.argv.slice(2));
 logger.info(colors.magenta(`Got httpProxy parameter of '${httpProxy}'`));
 if (httpProxy) {
