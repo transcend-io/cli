@@ -1,22 +1,20 @@
 import colors from 'colors';
 import { bootstrap } from 'global-agent';
 import { ProxyAgent, setGlobalDispatcher } from 'undici';
+import yargs from 'yargs-parser';
 
 export const logger = console;
 
 // When PROXY_URL env var is specified, initiate the proxy
-logger.info(
-  colors.magenta(
-    `Got env var process.env.http_proxy=${process.env.http_proxy}`,
-  ),
-);
-if (process.env.http_proxy) {
-  logger.info(colors.green(`Initializing proxy: ${process.env.http_proxy}`));
+const { httpProxy = process.env.http_proxy } = yargs(process.argv.slice(2));
+logger.info(colors.magenta(`Got httpProxy parameter of '${httpProxy}'`));
+if (httpProxy) {
+  logger.info(colors.green(`Initializing proxy: ${httpProxy}`));
 
   // Use global-agent, which overrides `request` based requests
-  process.env.GLOBAL_AGENT_HTTP_PROXY = process.env.http_proxy;
+  process.env.GLOBAL_AGENT_HTTP_PROXY = httpProxy;
   bootstrap();
 
   // Use undici, which overrides `fetch` based requests
-  setGlobalDispatcher(new ProxyAgent(process.env.http_proxy));
+  setGlobalDispatcher(new ProxyAgent(httpProxy));
 }

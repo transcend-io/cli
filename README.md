@@ -85,6 +85,7 @@
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
+- [Proxy Usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1618,3 +1619,7 @@ yarn tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSW
    --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
    --deleteExistingApiKey=false
 ```
+
+## Proxy usage
+
+If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
