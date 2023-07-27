@@ -54,6 +54,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
+            ["csv-parser", "npm:3.0.0"],\
+            ["csv-writer", "npm:1.6.0"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.38.0"],\
             ["eslint-config-airbnb-base", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:15.0.0"],\
@@ -579,6 +581,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
+            ["csv-parser", "npm:3.0.0"],\
+            ["csv-writer", "npm:1.6.0"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.38.0"],\
             ["eslint-config-airbnb-base", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:15.0.0"],\
@@ -2235,6 +2239,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/csv-parse-npm-4.9.1-89fbef128e-2bb839d259.zip/node_modules/csv-parse/",\
           "packageDependencies": [\
             ["csv-parse", "npm:4.9.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["csv-parser", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/csv-parser-npm-3.0.0-b80672e147-adc9d67d9f.zip/node_modules/csv-parser/",\
+          "packageDependencies": [\
+            ["csv-parser", "npm:3.0.0"],\
+            ["minimist", "npm:1.2.7"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["csv-writer", [\
+        ["npm:1.6.0", {\
+          "packageLocation": "./.yarn/cache/csv-writer-npm-1.6.0-c64e586af4-2e62cb46f0.zip/node_modules/csv-writer/",\
+          "packageDependencies": [\
+            ["csv-writer", "npm:1.6.0"]\
           ],\
           "linkType": "HARD"\
         }]\

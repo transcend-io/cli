@@ -427,6 +427,8 @@ __metadata:
     cli-progress: ^3.11.2
     colors: ^1.4.0
     csv-parse: =4.9.1
+    csv-parser: ^3.0.0
+    csv-writer: ^1.6.0
     depcheck: ^1.4.3
     eslint: ^8.38.0
     eslint-config-airbnb-base: ^15.0.0
@@ -455,6 +457,8 @@ __metadata:
     yargs-parser: ^21.1.1
   bin:
     tr-build-xdi-sync-endpoint: ./build/cli-build-xdi-sync-endpoint.js
+    tr-combine-legal-csv: ./build/cli-combine-legal-csv.js
+    tr-cookie-csv-to-yml: ./build/cli-cookie-csv-to-yml.js
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
     tr-discover-silos: ./build/cli-discover-silos.js
@@ -1828,6 +1832,24 @@ __metadata:
   version: 4.9.1
   resolution: "csv-parse@npm:4.9.1"
   checksum: 2bb839d259d812d7bb3dfb57aa6ff6ec832503916ea5666f5a90188bec899b6af87406c579e05c58004180a4481e6c2473479ef3c17430fd9ed5246bd876904a
+  languageName: node
+  linkType: hard
+
+"csv-parser@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "csv-parser@npm:3.0.0"
+  dependencies:
+    minimist: ^1.2.0
+  bin:
+    csv-parser: bin/csv-parser
+  checksum: adc9d67d9f185249825570778c24d13004625301655330f6b735a052b9fdfbe1a239a014afb1f89939e0626ee573718f71f9f14164db7c17e4bcb2f38d6a162b
+  languageName: node
+  linkType: hard
+
+"csv-writer@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "csv-writer@npm:1.6.0"
+  checksum: 2e62cb46f00b674f0710eb90586000601f3a467aabe529464dcb402d453a1322a716d7522ef3282dd6551f1059305c7dd3db49def1201caaf340597dcf7b4c7e
   languageName: node
   linkType: hard
 
