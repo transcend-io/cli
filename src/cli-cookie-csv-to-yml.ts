@@ -18,8 +18,8 @@ import { CookieInput } from './codecs';
  *
  * Standard usage:
  * yarn tr-cookie-csv-to-yml \
- *   --input=/Users/michaelfarrell/Desktop/input.csv \
- *   --output=/Users/michaelfarrell/Desktop/output.yml
+    --input=/Users/michaelfarrell/Desktop/input.csv \
+    --output=/Users/michaelfarrell/Desktop/output.yml
  *
  * @deprecated - This function is a hold until we have a tr-upload-cookies-from-csv
  */

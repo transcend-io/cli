@@ -51,19 +51,40 @@ function main(): void {
         .pipe(csv())
         .on('data', (row) => {
           const dataFlow = row['Connections Made To'];
-          const relevantLegalDecision = legalDecisions.get(dataFlow);
-          if (relevantLegalDecision) {
-            logger.info(
-              `Found a legal decision for ${dataFlow}. Old status was ${row.Purpose}, new is ${relevantLegalDecision}`,
-            );
+          const dataFlowParts = dataFlow.split('.');
+          for (let i = dataFlowParts.length; i > 1; i -= 1) {
+            const domainPart = dataFlowParts.slice(-i).join('.');
+            const relevantLegalDecision = legalDecisions.get(domainPart);
+            if (relevantLegalDecision) {
+              logger.info(
+                // eslint-disable-next-line max-len
+                `Found a legal decision for ${dataFlow} under ${domainPart}. Old status was ${row.Purpose}, new is ${relevantLegalDecision}`,
+              );
+              records.push({
+                ...row,
+                Purpose: relevantLegalDecision ?? row.Purpose,
+                /** If a legal decision was made, make the data flow live */
+                Status:
+                  relevantLegalDecision !== undefined ? 'LIVE' : row.Status,
+              });
+              return;
+            }
           }
 
-          records.push({
-            ...row,
-            Purpose: relevantLegalDecision ?? row.Purpose,
-            /** If a legal decision was made, make the data flow live */
-            Status: relevantLegalDecision !== undefined ? 'LIVE' : row.Status,
-          });
+          // const topLevelDomain = dataFlow.split('.').slice(-2).join('.');
+          // const relevantLegalDecision = legalDecisions.get(topLevelDomain);
+          // if (relevantLegalDecision) {
+          //   logger.info(
+          //     `Found a legal decision for ${dataFlow} under ${topLevelDomain}. Old status was ${row.Purpose}, new is ${relevantLegalDecision}`,
+          //   );
+          // }
+
+          // records.push({
+          //   ...row,
+          //   Purpose: relevantLegalDecision ?? row.Purpose,
+          //   /** If a legal decision was made, make the data flow live */
+          //   Status: relevantLegalDecision !== undefined ? 'LIVE' : row.Status,
+          // });
         })
         .on('end', () => {
           const csvWriter = createObjectCsvWriter({
