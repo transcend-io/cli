@@ -31,6 +31,11 @@ function main(): void {
     output = './combined.csv',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
+  /**
+   * NOTES: This first part here is reading in the legal CSV file and extracting
+   * information from each row on a domain and a CPRA Language field, which is where they
+   * are putting SaleOfInfo or something like it. Stores into the map `legalDecisions`
+   */
   logger.info(`Reading in legal decisions from ${legalCsv}`);
   const legalDecisions = new Map<string, string>();
   fs.createReadStream(legalCsv)
@@ -45,6 +50,13 @@ function main(): void {
         `Reading file located at ${dataFlowExportCsv} and updating with info from the legal team decisions`,
       );
 
+      /**
+       * NOTES: This deeply nested, hacky blob of code reads through the dataFlowExportCsv file, which
+       * is expected to be in the format that tr-upload-data-flows-from-csv expects, which is also the format
+       * that is exported from the Admin Dashboard. We look at each row and try to determine if we should override
+       * the `Status` column if the legal sheet gave an authoritative answer on either the domain, or any parent
+       * domain of the domain in that row, which is a feature explicitly requested.
+       */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const records: any[] = [];
       fs.createReadStream(dataFlowExportCsv)
@@ -70,23 +82,11 @@ function main(): void {
               return;
             }
           }
-
-          // const topLevelDomain = dataFlow.split('.').slice(-2).join('.');
-          // const relevantLegalDecision = legalDecisions.get(topLevelDomain);
-          // if (relevantLegalDecision) {
-          //   logger.info(
-          //     `Found a legal decision for ${dataFlow} under ${topLevelDomain}. Old status was ${row.Purpose}, new is ${relevantLegalDecision}`,
-          //   );
-          // }
-
-          // records.push({
-          //   ...row,
-          //   Purpose: relevantLegalDecision ?? row.Purpose,
-          //   /** If a legal decision was made, make the data flow live */
-          //   Status: relevantLegalDecision !== undefined ? 'LIVE' : row.Status,
-          // });
         })
         .on('end', () => {
+          /**
+           * NOTES: At the end, writes out a new CSV file with the changes
+           */
           const csvWriter = createObjectCsvWriter({
             path: output,
             header: Object.keys(records[0] ?? {}).map((header) => ({
