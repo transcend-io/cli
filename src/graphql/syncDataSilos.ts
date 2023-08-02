@@ -733,7 +733,7 @@ export async function syncDataSilo(
                     ? undefined
                     : categories.map((category) => ({
                         ...category,
-                        name: category.name || '',
+                        name: category.name || 'Other',
                       })),
                   purposes,
                   attributes,
