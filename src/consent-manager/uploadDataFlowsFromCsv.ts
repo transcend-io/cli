@@ -1,44 +1,11 @@
 import colors from 'colors';
-import * as t from 'io-ts';
 import { logger } from '../logger';
-import {
-  ConsentTrackerStatus,
-  DataFlowScope,
-} from '@transcend-io/privacy-types';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
 import { readCsv } from '../requests/readCsv';
-import { valuesOf } from '@transcend-io/type-utils';
-import { DataFlowInput } from '../codecs';
+import { DataFlowInput, DataFlowCsvInput } from '../codecs';
 import { splitCsvToList } from '../requests';
 import { DEFAULT_TRANSCEND_API } from '../constants';
-
-/**
- * Minimal set required to mark as completed
- */
-export const DataFlowCsvInput = t.intersection([
-  t.type({
-    /** The value of the data flow (host or regex) */
-    'Connections Made To': t.string,
-    /** The type of the data flow */
-    Type: valuesOf(DataFlowScope),
-    /** The CSV of purposes mapped to that data flow */
-    Purpose: t.string,
-  }),
-  t.partial({
-    /** The service that the data flow relates to */
-    Service: t.string,
-    /** Notes and descriptions for the data flow */
-    Notes: t.string,
-    /** Set of data flow owners */
-    Owners: t.string,
-    /** Set of data flow team owners */
-    Teams: t.string,
-    /** LIVE vs NEEDS_REVIEW aka Approved vs Triage  */
-    Status: valuesOf(ConsentTrackerStatus),
-  }),
-  // Custom attributes
-  t.record(t.string, t.string),
-]);
 
 const OMIT_COLUMNS = [
   'ID',
@@ -51,9 +18,6 @@ const OMIT_COLUMNS = [
   'Website URL',
   'Categories of Recipients',
 ];
-
-/** Type override */
-export type DataFlowCsvInput = t.TypeOf<typeof DataFlowCsvInput>;
 
 /**
  * Upload a set of data flows from CSV
