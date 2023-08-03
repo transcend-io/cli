@@ -735,7 +735,12 @@ export async function syncDataSilo(
                         ...category,
                         name: category.name || 'Other',
                       })),
-                  purposes,
+                  purposes: !purposes
+                    ? undefined
+                    : purposes.map((purpose) => ({
+                        ...purpose,
+                        name: purpose.name || 'Other',
+                      })),
                   attributes,
                   accessRequestVisibilityEnabled:
                     rest['access-request-visibility-enabled'],
