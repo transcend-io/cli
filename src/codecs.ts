@@ -814,3 +814,34 @@ export const StoredApiKey = t.type({
 
 /** Type override */
 export type StoredApiKey = t.TypeOf<typeof StoredApiKey>;
+
+/**
+ * Minimal set required to mark as completed
+ */
+export const DataFlowCsvInput = t.intersection([
+  t.type({
+    /** The value of the data flow (host or regex) */
+    'Connections Made To': t.string,
+    /** The type of the data flow */
+    Type: valuesOf(DataFlowScope),
+    /** The CSV of purposes mapped to that data flow */
+    Purpose: t.string,
+  }),
+  t.partial({
+    /** The service that the data flow relates to */
+    Service: t.string,
+    /** Notes and descriptions for the data flow */
+    Notes: t.string,
+    /** Set of data flow owners */
+    Owners: t.string,
+    /** Set of data flow team owners */
+    Teams: t.string,
+    /** LIVE vs NEEDS_REVIEW aka Approved vs Triage  */
+    Status: valuesOf(ConsentTrackerStatus),
+  }),
+  // Custom attributes
+  t.record(t.string, t.string),
+]);
+
+/** Type override */
+export type DataFlowCsvInput = t.TypeOf<typeof DataFlowCsvInput>;
