@@ -1596,7 +1596,7 @@ In order to use this cli, you will first need to generate an API key on the Tran
 
 The API key must have the following scopes:
 
-- "Manage Data Flows"
+- "Manage Cookies"
 
 #### Arguments
 
