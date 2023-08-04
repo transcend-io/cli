@@ -30,8 +30,8 @@
     "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js",
     "tr-skip-request-data-silos": "./build/cli-skip-request-data-silos.js",
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
-    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js",
-    "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js"
+    "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js",
+    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
   },
   "files": [
     "build/**/*",

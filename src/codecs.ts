@@ -843,6 +843,9 @@ export const DataFlowCsvInput = t.intersection([
   t.record(t.string, t.string),
 ]);
 
+/** Type override */
+export type DataFlowCsvInput = t.TypeOf<typeof DataFlowCsvInput>;
+
 export const CookieCsvInput = t.intersection([
   t.type({
     /** The value of the cookie */
@@ -867,8 +870,4 @@ export const CookieCsvInput = t.intersection([
 ]);
 
 /** Type override */
-export type DataFlowCsvInput = t.TypeOf<typeof DataFlowCsvInput>;
-/**
- *
- */
 export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;

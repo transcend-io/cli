@@ -24,10 +24,6 @@ import { DEFAULT_TRANSCEND_API } from './constants';
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
  *   --trackerStatus=LIVE
  */
-
-/**
- *
- */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
