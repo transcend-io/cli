@@ -455,6 +455,7 @@ __metadata:
     yargs-parser: ^21.1.1
   bin:
     tr-build-xdi-sync-endpoint: ./build/cli-build-xdi-sync-endpoint.js
+    tr-consent-managers-to-business-entities: cli-consent-managers-to-business-entities.ts
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
     tr-discover-silos: ./build/cli-discover-silos.js
