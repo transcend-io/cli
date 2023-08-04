@@ -6,6 +6,7 @@ import { map } from 'bluebird';
 import { StoredApiKey } from '../codecs';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { logger } from '../logger';
+import { domainToHost } from './domainToHost';
 
 /**
  * Sync group configuration mapping
@@ -25,15 +26,6 @@ export type XdiSyncGroups = { [k in string]: string[] };
 export const IP_ADDRESS_REGEX =
   // eslint-disable-next-line max-len
   /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
-/**
- * Convert a domain to host
- *
- * @param domain - e.g. test.acme.com
- * @returns Host acme.com
- */
-const domainToHost = (domain: string): string =>
-  new URL(`https://${domain}`).hostname.split('.').slice(-2).join('.');
 
 /**
  * Build the sync endpoint definition for a set of Transcend accounts
