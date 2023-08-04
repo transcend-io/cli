@@ -30,7 +30,8 @@
     "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js",
     "tr-skip-request-data-silos": "./build/cli-skip-request-data-silos.js",
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
-    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
+    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js",
+    "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js"
   },
   "files": [
     "build/**/*",
@@ -73,6 +74,7 @@
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
+    "@transcend-io/cli": "^4.72.0",
     "@types/bluebird": "^3.5.38",
     "@types/chai": "^4.3.4",
     "@types/cli-progress": "^3.11.0",

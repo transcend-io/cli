@@ -3,6 +3,7 @@
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
@@ -81,14 +82,18 @@
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-20)
+    - [Arguments](#arguments-20)
+    - [Usage](#usage-21)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -125,6 +130,7 @@ yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
+yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
 ```
@@ -1572,6 +1578,61 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-upload-cookies-from-csv
+
+This command allows for uploading cookies from CSV
+
+Step 1) Download the CSV of cookies that you want to edit from the Admin Dashboard under [Consent Manager -> Cookies](https://app.transcend.io/consent-manager/cookies). You can download cookies from both the "Triage" and "Approved" tabs.
+
+Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
+Step 3) Upload the modified CSV file back into the dashboard with the command `yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --file=./approved-flows.csv --trackerStatus=LIVE`
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Data Flows"
+
+#### Arguments
+
+| Argument      | Description                                                                                             | Type                 | Default                  | Required |
+| ------------- | ------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------ | -------- |
+| auth          | The Transcend API key with the scopes necessary for the command.                                        | string               | N/A                      | true     |
+| trackerStatus | Whether or not to upload the cookies into the "Approved" tab (LIVE) or the "Triage" tab (NEEDS_REVIEW). | ConsentTrackerStatus | N/A                      | true     |
+| file          | Path to the CSV file to upload                                                                          | string - file-path   | ./cookies.csv            | false    |
+| transcendUrl  | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                           | string - URL         | https://api.transcend.io | false    |
+
+Note: You `trackerStatus` can be specified on a per data flow basis by adding a column named "Status" to the CSV. The values should be of type `ConsentTrackerStatus` - which is `LIVE` or `NEEDS_REVIEW`.
+
+#### Usage
+
+Upload the file of cookies in `./data-flows.csv` into the ["Approved" tab](https://app.transcend.io/consent-manager/cookies/approved).
+
+```sh
+yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIVE
+```
+
+Upload the file of cookies in `./data-flows.csv` into the ["Triage" tab](https://app.transcend.io/consent-manager/cookies).
+
+```sh
+yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=NEEDS_REVIEW
+```
+
+Specifying the CSV file to read from:
+
+```sh
+yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIVE --file=./custom/my-cookies.csv
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
 ```
 
 ### tr-generate-api-keys
