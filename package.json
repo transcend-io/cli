@@ -49,7 +49,7 @@
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
     "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write",
-    "script:ai-proxy-json-schema": "ts-node --transpile-only scripts/buildAIProxyJsonSchema.ts && yarn prettier ./ai-proxy-yml-schema-v4.json --write"
+    "script:ai-proxy-json-schema": "ts-node --transpile-only scripts/buildAIProxyJsonSchema.ts && yarn prettier ./transcend-ai-proxy-policy-yml-schema.json --write"
   },
   "dependencies": {
     "@transcend-io/airgap.js-types": "^9.2.0",
