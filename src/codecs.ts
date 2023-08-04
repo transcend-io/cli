@@ -877,7 +877,7 @@ export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
 /// //////////////////////////////////////
 // Transcend Proxy AI Server policies   //
 /// //////////////////////////////////////
-export const Policies = t.literal('redactEmail');
+export const Policies = t.union([t.literal('redactEmail'), t.literal('log')]);
 
 /** Type override */
 export type Policies = t.TypeOf<typeof Policies>;
