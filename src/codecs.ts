@@ -31,6 +31,8 @@ import {
   InitialViewState,
   BrowserLanguage,
 } from '@transcend-io/airgap.js-types';
+import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
+import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -871,3 +873,61 @@ export const CookieCsvInput = t.intersection([
 
 /** Type override */
 export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
+
+/// //////////////////////////////////////
+// Transcend Proxy AI Server policies   //
+/// //////////////////////////////////////
+export const Policies = t.literal('redactEmail');
+
+/** Type override */
+export type Policies = t.TypeOf<typeof Policies>;
+
+/** the codec of a route enabled in an AI integration */
+export type EnabledRouteC = t.TypeC<{
+  /** the name of the enabled route */
+  routeName: t.Mixed;
+  /** the enabled policies */
+  enabledPolicies: t.ArrayC<t.LiteralC<Policies>>;
+}>;
+
+/** the codec of an AI Integration */
+export type AIIntegrationC = t.TypeC<{
+  /** the routes enabled in the AI integration */
+  enabledRoutes: t.ArrayC<EnabledRouteC>;
+}>;
+
+/**
+ * The names of the OpenAI routes that we support setting policies for
+ * reference: https://platform.openai.com/docs/api-reference/introduction
+ */
+export const OpenAIRouteName = t.union([
+  t.literal('/v1/chat/completions'),
+  t.literal('/v1/images/generations'),
+  t.literal('/v1/images/edits'),
+]);
+
+/** Type override */
+export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
+
+export const OpenAIEnabledRoute = buildEnabledRouteType({
+  TRouteName: OpenAIRouteName,
+});
+
+/** Type override */
+export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
+
+export const OpenAIIntegration = buildAIIntegrationType({
+  TEnabledRoutes: t.array(OpenAIEnabledRoute),
+});
+
+/** Type override */
+export type OpenAIIntegration = t.TypeOf<typeof OpenAIIntegration>;
+
+export const TranscendProxyAIPolicy = t.partial({
+  enabledAIIntegrations: t.partial({
+    openAI: OpenAIIntegration,
+  }),
+});
+
+/** Type override */
+export type TranscendProxyAIPolicy = t.TypeOf<typeof TranscendProxyAIPolicy>;
