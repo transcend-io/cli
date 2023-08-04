@@ -890,10 +890,13 @@ export type EnabledRouteC = t.TypeC<{
   enabledPolicies: t.ArrayC<t.LiteralC<Policies>>;
 }>;
 
+/** the codec of routes enabled in an AI integration */
+export type EnabledRoutesC = t.ArrayC<EnabledRouteC>;
+
 /** the codec of an AI Integration */
 export type AIIntegrationC = t.TypeC<{
   /** the routes enabled in the AI integration */
-  enabledRoutes: t.ArrayC<EnabledRouteC>;
+  enabledRoutes: EnabledRoutesC;
 }>;
 
 /**
