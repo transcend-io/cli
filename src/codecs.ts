@@ -903,11 +903,7 @@ export type AIIntegrationC = t.TypeC<{
  * The names of the OpenAI routes that we support setting policies for
  * reference: https://platform.openai.com/docs/api-reference/introduction
  */
-export const OpenAIRouteName = t.union([
-  t.literal('/v1/chat/completions'),
-  t.literal('/v1/images/generations'),
-  t.literal('/v1/images/edits'),
-]);
+export const OpenAIRouteName = t.literal('/v1/images/generations');
 
 /** Type override */
 export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
