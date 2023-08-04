@@ -47,3 +47,48 @@ export async function fetchAllCatalogs(
   } while (shouldContinue);
   return catalogs;
 }
+
+export interface IndexedCatalogs {
+  /** Mapping from service name to service title */
+  serviceToTitle: { [k in string]: string };
+  /** Mapping from service name to boolean indicate if service has API integration support */
+  serviceToSupportedIntegration: { [k in string]: boolean };
+}
+
+/**
+ * Fetch all integration catalogs and index them for usage in common utility manners
+ *
+ * @param client - Client
+ * @returns Integration catalogs
+ */
+export async function fetchAndIndexCatalogs(client: GraphQLClient): Promise<
+  {
+    /** List of all catalogs */
+    catalogs: Catalog[];
+  } & IndexedCatalogs
+> {
+  // Fetch all integrations in the catalog
+  const catalogs = await fetchAllCatalogs(client);
+
+  // Create mapping from service name to service title
+  const serviceToTitle = catalogs.reduce(
+    (acc, catalog) =>
+      Object.assign(acc, { [catalog.integrationName]: catalog.title }),
+    {} as { [k in string]: string },
+  );
+
+  // Create mapping from service name to boolean indicate if service has API integration support
+  const serviceToSupportedIntegration = catalogs.reduce(
+    (acc, catalog) =>
+      Object.assign(acc, {
+        [catalog.integrationName]: catalog.hasApiFunctionality,
+      }),
+    {} as { [k in string]: boolean },
+  );
+
+  return {
+    catalogs,
+    serviceToTitle,
+    serviceToSupportedIntegration,
+  };
+}

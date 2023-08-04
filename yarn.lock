@@ -458,6 +458,8 @@ __metadata:
     tr-consent-managers-to-business-entities: cli-consent-managers-to-business-entities.ts
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
+    tr-derive-data-silos-from-data-flows: ./build/cli-derive-data-silos-from-data-flows.js
+    tr-derive-data-silos-from-data-flows-cross-instance: ./build/cli-derive-data-silos-from-data-flows-cross-instance.js
     tr-discover-silos: ./build/cli-discover-silos.js
     tr-generate-api-keys: ./build/cli-generate-cross-account-api-keys.js
     tr-manual-enrichment-pull-identifiers: ./build/cli-manual-enrichment-pull-identifiers.js
