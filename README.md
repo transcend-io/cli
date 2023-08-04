@@ -1611,7 +1611,7 @@ Note: You `trackerStatus` can be specified on a per cookie basis by adding a col
 
 #### Usage
 
-Upload the file of cookies in `./data-flows.csv` into the ["Approved" tab](https://app.transcend.io/consent-manager/cookies/approved).
+Upload the file of cookies in `./cookies.csv` into the ["Approved" tab](https://app.transcend.io/consent-manager/cookies/approved).
 
 ```sh
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIVE
