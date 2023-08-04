@@ -5,7 +5,7 @@
   "description": "Define the schema for the the Transcend AI Proxy service.",
   "type": "object",
   "properties": {
-    "enabledAIIntegrations": {
+    "enabledIntegrations": {
       "type": "object",
       "properties": {
         "openAI": {
@@ -19,17 +19,7 @@
                 "required": ["routeName", "enabledPolicies"],
                 "properties": {
                   "routeName": {
-                    "anyOf": [
-                      {
-                        "const": "/v1/chat/completions"
-                      },
-                      {
-                        "const": "/v1/images/generations"
-                      },
-                      {
-                        "const": "/v1/images/edits"
-                      }
-                    ]
+                    "const": "/v1/images/generations"
                   },
                   "enabledPolicies": {
                     "type": "array",

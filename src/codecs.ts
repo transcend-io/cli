@@ -923,7 +923,7 @@ export const OpenAIIntegration = buildAIIntegrationType({
 export type OpenAIIntegration = t.TypeOf<typeof OpenAIIntegration>;
 
 export const GuardrailsPolicy = t.partial({
-  enabledAIIntegrations: t.partial({
+  enabledIntegrations: t.partial({
     openAI: OpenAIIntegration,
   }),
 });
