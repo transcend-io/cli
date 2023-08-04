@@ -845,3 +845,29 @@ export const DataFlowCsvInput = t.intersection([
 
 /** Type override */
 export type DataFlowCsvInput = t.TypeOf<typeof DataFlowCsvInput>;
+
+export const CookieCsvInput = t.intersection([
+  t.type({
+    /** The value of the cookie */
+    Name: t.string,
+    /** The CSV of purposes mapped to that cookie */
+    Purpose: t.string,
+  }),
+  t.partial({
+    /** The service that the cookie relates to */
+    Service: t.string,
+    /** Notes and descriptions for the cookie */
+    Notes: t.string,
+    /** Set of cookie owners */
+    Owners: t.string,
+    /** Set of cookie team owners */
+    Teams: t.string,
+    /** LIVE vs NEEDS_REVIEW aka Approved vs Triage  */
+    Status: valuesOf(ConsentTrackerStatus),
+  }),
+  // Custom attributes
+  t.record(t.string, t.string),
+]);
+
+/** Type override */
+export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
