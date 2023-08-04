@@ -48,7 +48,8 @@
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
-    "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
+    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write",
+    "script:ai-proxy-json-schema": "ts-node --transpile-only scripts/buildAIProxyJsonSchema.ts && yarn prettier ./ai-proxy-yml-schema-v4.json --write"
   },
   "dependencies": {
     "@transcend-io/airgap.js-types": "^9.2.0",
