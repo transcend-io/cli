@@ -1607,7 +1607,7 @@ The API key must have the following scopes:
 | file          | Path to the CSV file to upload                                                                          | string - file-path   | ./cookies.csv            | false    |
 | transcendUrl  | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                           | string - URL         | https://api.transcend.io | false    |
 
-Note: You `trackerStatus` can be specified on a per data flow basis by adding a column named "Status" to the CSV. The values should be of type `ConsentTrackerStatus` - which is `LIVE` or `NEEDS_REVIEW`.
+Note: You `trackerStatus` can be specified on a per cookie basis by adding a column named "Status" to the CSV. The values should be of type `ConsentTrackerStatus` - which is `LIVE` or `NEEDS_REVIEW`.
 
 #### Usage
 
