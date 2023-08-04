@@ -1617,7 +1617,7 @@ Upload the file of cookies in `./data-flows.csv` into the ["Approved" tab](https
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=LIVE
 ```
 
-Upload the file of cookies in `./data-flows.csv` into the ["Triage" tab](https://app.transcend.io/consent-manager/cookies).
+Upload the file of cookies in `./cookies.csv` into the ["Triage" tab](https://app.transcend.io/consent-manager/cookies).
 
 ```sh
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY --trackerStatus=NEEDS_REVIEW
