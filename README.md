@@ -3,7 +3,6 @@
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
@@ -74,26 +73,30 @@
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-21)
+    - [Arguments](#arguments-21)
+    - [Usage](#usage-22)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -128,6 +131,7 @@ yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
+yarn tr-consent-managers-to-business-entities --auth=$TRANSCEND_API_KEY
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
@@ -158,6 +162,7 @@ tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
+tr-consent-managers-to-business-entities --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
@@ -1461,6 +1466,35 @@ yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY --bundleTypes=PRODUCTIO
 
 tr-generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD --scopes="Manage Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
 yarn tr-update-consent-manager  --auth=./transcend-api-keys.json --deploy=true
+```
+
+### tr-consent-managers-to-business-entities
+
+This command allows for converting a folder or Consent Manager `transcend.yml` files into a single `transcend.yml` file where each consent manager configuration is a Business Entity in the data inventory.
+
+#### Authentication
+
+No authentication is required to run this command. It reads and writes files from local disk.
+
+#### Arguments
+
+| Argument                | Description                                                            | Type                 | Default                          | Required |
+| ----------------------- | ---------------------------------------------------------------------- | -------------------- | -------------------------------- | -------- |
+| consentManagerYmlFolder | Path to the folder of Consent Manager `transcend.yml` files to combine | string - folder-path | N/A                              | true     |
+| output                  | Path to the output `transcend.yml` with business entity configuration  | string - file-path   | ./combined-business-entities.yml | false    |
+
+#### Usage
+
+Combine files in folder `./working/consent-managers/` to file `./combined-business-entities.yml`
+
+```sh
+yarn tr-consent-managers-to-business-entities --consentManagerYmlFolder=./working/consent-managers/
+```
+
+Specify custom output file
+
+```sh
+yarn tr-consent-managers-to-business-entities --consentManagerYmlFolder=./working/consent-managers/ --output=./custom.yml
 ```
 
 ### tr-pull-consent-metrics
