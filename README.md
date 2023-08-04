@@ -77,26 +77,34 @@
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-22)
+    - [Arguments](#arguments-22)
+    - [Usage](#usage-23)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-23)
+    - [Arguments](#arguments-23)
+    - [Usage](#usage-24)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -131,7 +139,9 @@ yarn tr-mark-request-data-silos-completed --auth=$TRANSCEND_API_KEY
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
-yarn tr-consent-managers-to-business-entities --auth=$TRANSCEND_API_KEY
+yarn tr-consent-managers-to-business-entities
+yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
+yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
@@ -162,7 +172,9 @@ tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
-tr-consent-managers-to-business-entities --auth=$TRANSCEND_API_KEY
+tr-consent-managers-to-business-entities
+tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
+tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
@@ -1495,6 +1507,99 @@ Specify custom output file
 
 ```sh
 yarn tr-consent-managers-to-business-entities --consentManagerYmlFolder=./working/consent-managers/ --output=./custom.yml
+```
+
+### tr-derive-data-silos-from-data-flows
+
+Given a folder of data flow `transcend.yml` configurations, convert those configurations to set of data silo `transcend.yml` configurations.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API does not need any scopes, any API key will work.
+
+#### Arguments
+
+| Argument           | Description                                                                   | Type                 | Default                  | Required |
+| ------------------ | ----------------------------------------------------------------------------- | -------------------- | ------------------------ | -------- |
+| auth               | The Transcend API key with the scopes necessary for the command.              | string               | N/A                      | true     |
+| dataFlowsYmlFolder | The folder that contains data flow yml files                                  | string - folder-path | N/A                      | true     |
+| dataSilosYmlFolder | The folder that contains data silo yml files                                  | string - folder-path | N/A                      | true     |
+| ignoreYmls         | The set of yml files that should be skipped when uploading                    | string[]             | []                       | false    |
+| transcendUrl       | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL         | https://api.transcend.io | false    |
+
+#### Usage
+
+Convert data flow configurations in folder `./working/data-flows/` to data silo configurations in folder `./working/data-silos/`
+
+```sh
+yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY \
+ --dataFlowsYmlFolder=./working/data-flows/ \
+ --dataSilosYmlFolder=./working/data-silos/
+```
+
+Use with US backend
+
+```sh
+yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io \
+ --dataFlowsYmlFolder=./working/data-flows/ \
+ --dataSilosYmlFolder=./working/data-silos/
+```
+
+Skip a set of yml files
+
+```sh
+yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY --ignoreYmls="Skip.yml,Other.yml" \
+ --dataFlowsYmlFolder=./working/data-flows/ \
+ --dataSilosYmlFolder=./working/data-silos/
+```
+
+### tr-derive-data-silos-from-data-flows-cross-instance
+
+Given a folder of data flow `transcend.yml` configurations, convert those configurations to a single `transcend.yml` configurations of all related data silos.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API does not need any scopes, any API key will work.
+
+#### Arguments
+
+| Argument           | Description                                                                   | Type                 | Default                  | Required |
+| ------------------ | ----------------------------------------------------------------------------- | -------------------- | ------------------------ | -------- |
+| auth               | The Transcend API key with the scopes necessary for the command.              | string               | N/A                      | true     |
+| dataFlowsYmlFolder | The folder that contains data flow yml files                                  | string - folder-path | N/A                      | true     |
+| output             | The output transcend.yml file containing the data silo configurations         | string - file-path   | ./transcend.yml          | false    |
+| ignoreYmls         | The set of yml files that should be skipped when uploading                    | string[]             | []                       | false    |
+| transcendUrl       | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL         | https://api.transcend.io | false    |
+
+#### Usage
+
+Convert data flow configurations in folder `./working/data-flows/` to data silo configurations in file `./transcend.yml`
+
+```sh
+yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY --dataFlowsYmlFolder=./working/data-flows/
+```
+
+Use with US backend
+
+```sh
+yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY --dataFlowsYmlFolder=./working/data-flows/ \
+  --transcendUrl=https://api.us.transcend.io
+```
+
+Skip a set of yml files
+
+```sh
+yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY --dataFlowsYmlFolder=./working/data-flows/ --ignoreYmls="Skip.yml,Other.yml"
+```
+
+Convert data flow configurations in folder `./working/data-flows/` to data silo configurations in file `./output.yml`
+
+```sh
+yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY --dataFlowsYmlFolder=./working/data-flows/ --output=./output.yml
 ```
 
 ### tr-pull-consent-metrics
