@@ -17,7 +17,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { toJsonSchema } from '@transcend-io/type-utils';
-import { TranscendProxyAIPolicy } from '../src/codecs';
+import { GuardrailsPolicy } from '../src/codecs';
 
 const schemaDefaults = {
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -29,7 +29,7 @@ const schemaDefaults = {
 // Build the JSON schema from io-ts codec
 const jsonSchema = {
   ...schemaDefaults,
-  ...toJsonSchema(TranscendProxyAIPolicy),
+  ...toJsonSchema(GuardrailsPolicy),
 };
 
 const schemaFilePath = join(process.cwd(), 'guardrails-policy-yml-schema.json');
