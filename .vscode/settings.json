@@ -69,7 +69,8 @@
     "Upserting",
     "uspapi",
     "yaml",
-    "yarnpkg"
+    "yarnpkg",
+    "Ymls"
   ],
   "javascript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.importModuleSpecifier": "relative"

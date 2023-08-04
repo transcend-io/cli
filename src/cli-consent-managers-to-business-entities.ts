@@ -38,7 +38,7 @@ function main(): void {
     process.exit(1);
   }
 
-  // Ensure file is passed
+  // Ensure folder is passed
   if (
     !existsSync(consentManagerYmlFolder) ||
     !lstatSync(consentManagerYmlFolder).isDirectory()
