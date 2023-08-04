@@ -875,7 +875,7 @@ export const CookieCsvInput = t.intersection([
 export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
 
 /// //////////////////////////////////////
-// Transcend Proxy AI Server policies   //
+// Guardrails policies                  //
 /// //////////////////////////////////////
 export const Policies = t.union([t.literal('redactEmail'), t.literal('log')]);
 
@@ -926,11 +926,11 @@ export const OpenAIIntegration = buildAIIntegrationType({
 /** Type override */
 export type OpenAIIntegration = t.TypeOf<typeof OpenAIIntegration>;
 
-export const TranscendProxyAIPolicy = t.partial({
+export const GuardrailsPolicy = t.partial({
   enabledAIIntegrations: t.partial({
     openAI: OpenAIIntegration,
   }),
 });
 
 /** Type override */
-export type TranscendProxyAIPolicy = t.TypeOf<typeof TranscendProxyAIPolicy>;
+export type GuardrailsPolicy = t.TypeOf<typeof GuardrailsPolicy>;
