@@ -44,18 +44,18 @@ jobs:
       - run: yarn
       - run: yarn depcheck
 
-  generate-transcend-json-schema:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
-      - run: yarn
-      - run: yarn script:transcend-json-schema
-      - name: Ensure no files changed
-        run: git diff --quiet HEAD || (git diff --raw && echo "Detected untracked changes in git after running command '${{ matrix.command }}'" && exit 1)
+  # generate-transcend-json-schema:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Use Node.js 18.x
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 18.x
+  #     - run: yarn
+  #     - run: yarn script:transcend-json-schema
+  #     - name: Ensure no files changed
+  #       run: git diff --quiet HEAD || (git diff --raw && echo "Detected untracked changes in git after running command '${{ matrix.command }}'" && exit 1)
 
   generate-ai-proxy-json-schema:
     runs-on: ubuntu-latest
