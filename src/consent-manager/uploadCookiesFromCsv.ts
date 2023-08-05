@@ -57,10 +57,10 @@ export async function uploadCookiesFromCsv({
       Status,
       Owners,
       Teams,
-      'Connections Made To': name,
+      Name,
       ...rest
     }): CookieInput => ({
-      name,
+      name: Name,
       description: Notes,
       trackingPurposes: splitCsvToList(Purpose),
       // TODO: https://transcend.height.app/T-26391
