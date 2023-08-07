@@ -1,7 +1,6 @@
 /**
  * Convert io-ts codec for transcend.yml to a JSON Schema
  *
- * The output file should be unchanged across major versions.
  * Updates should be PR'd to https://github.com/SchemaStore/schemastore
  *
  * This can be used to add linting/autocomplete/intellisense to IDEs using `transcend.yml`
@@ -18,7 +17,7 @@ import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { toJsonSchema } from '@transcend-io/type-utils';
 import * as packageJson from '../package.json';
-import { TranscendInput } from '../src/codecs.ts';
+import { TranscendInput } from '../src/codecs';
 
 const schemaDefaults = {
   $schema: 'http://json-schema.org/draft-07/schema#',

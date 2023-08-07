@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.75.1",
+  "version": "4.76.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -48,7 +48,8 @@
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
-    "script:json-schema": "ts-node --transpile-only scripts/buildJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
+    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write",
+    "script:guardrails-json-schema": "ts-node --transpile-only scripts/buildGuardrailsJsonSchema.ts && yarn prettier ./guardrails-policy-yml-schema.json --write"
   },
   "dependencies": {
     "@transcend-io/airgap.js-types": "^9.2.0",
