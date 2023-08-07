@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import { EnabledRouteC, Policies } from '../codecs';
+import { EnabledRouteC, Policy } from '../codecs';
 
 /**
  * Builds a custom io-ts type that represents a route allowed by the proxy
@@ -15,5 +15,5 @@ export const buildEnabledRouteType = <T extends t.Mixed>({
 }): EnabledRouteC =>
   t.type({
     routeName: TRouteName,
-    enabledPolicies: t.array(Policies),
+    enabledPolicies: t.array(Policy),
   });

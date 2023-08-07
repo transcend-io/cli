@@ -877,17 +877,23 @@ export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
 /// //////////////////////////////////////
 // Guardrails policies                  //
 /// //////////////////////////////////////
-export const Policies = t.union([t.literal('redactEmail'), t.literal('log')]);
+export const Policy: PolicyC = t.union([
+  t.literal('redactEmail'),
+  t.literal('log'),
+]);
 
 /** Type override */
-export type Policies = t.TypeOf<typeof Policies>;
+export type Policy = t.TypeOf<typeof Policy>;
+
+/** the codec of the enabled policy  */
+export type PolicyC = t.UnionC<[t.LiteralC<'redactEmail'>, t.LiteralC<'log'>]>;
 
 /** the codec of a route enabled in an AI integration */
 export type EnabledRouteC = t.TypeC<{
   /** the name of the enabled route */
   routeName: t.Mixed;
   /** the enabled policies */
-  enabledPolicies: t.ArrayC<t.LiteralC<Policies>>;
+  enabledPolicies: t.ArrayC<PolicyC>;
 }>;
 
 /** the codec of routes enabled in an AI integration */

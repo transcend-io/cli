@@ -1,7 +1,6 @@
 /**
  * Convert io-ts codec for guardrailsPolicy.yml to a JSON Schema
  *
- * The output file should be unchanged across major versions.
  * Updates should be PR'd to https://github.com/SchemaStore/schemastore
  *
  * This can be used to add linting/autocomplete/intellisense to IDEs using `guardrailsPolicy.yml`
