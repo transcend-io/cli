@@ -12,6 +12,7 @@
   "main": "build/index",
   "bin": {
     "tr-build-xdi-sync-endpoint": "./build/cli-build-xdi-sync-endpoint.js",
+    "tr-consent-manager-service-json-to-yml": "./build/cli-consent-manager-service-json-to-yml.js",
     "tr-consent-managers-to-business-entities": "cli-consent-managers-to-business-entities.ts",
     "tr-cron-mark-identifiers-completed": "./build/cli-cron-mark-identifiers-completed.js",
     "tr-cron-pull-identifiers": "./build/cli-cron-pull-identifiers.js",
@@ -32,7 +33,6 @@
     "tr-request-upload": "./build/cli-request-upload.js",
     "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js",
     "tr-skip-request-data-silos": "./build/cli-skip-request-data-silos.js",
-    "tr-consent-manager-service-json-to-yml": "./build/cli-consent-manager-service-json-to-yml.js",
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
     "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js",
     "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
