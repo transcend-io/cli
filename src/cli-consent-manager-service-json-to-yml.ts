@@ -11,6 +11,10 @@ import {
   CookieInput,
   DataFlowInput,
 } from './codecs';
+import {
+  ConsentTrackerStatus,
+  DataFlowScope,
+} from '@transcend-io/privacy-types';
 
 /**
  * Take the output of (await airgap.getMetadata()).services and format into
@@ -36,32 +40,32 @@ function main(): void {
     logger.error(colors.red(`File does not exist: --file="${file}"`));
     process.exit(1);
   }
-  if (!existsSync(output)) {
-    logger.error(colors.red(`File does not exist: --output="${output}"`));
-    process.exit(1);
-  }
 
   // Read in each consent manager configuration
   const services = decodeCodec(
     t.array(ConsentManagerServiceMetadata),
-    readFileSync(file),
+    readFileSync(file, 'utf-8'),
   );
 
   // Create data flows and cookie configurations
   const dataFlows: DataFlowInput[] = [];
   const cookies: CookieInput[] = [];
   services.forEach((service) => {
-    service.dataFlows.forEach((dataFlow) => {
-      dataFlows.push({
-        value: dataFlow.value,
-        type: dataFlow.type,
-        trackingPurposes: dataFlow.trackingPurposes,
+    service.dataFlows
+      .filter(({ type }) => type !== DataFlowScope.CSP)
+      .forEach((dataFlow) => {
+        dataFlows.push({
+          value: dataFlow.value,
+          type: dataFlow.type,
+          status: ConsentTrackerStatus.Live,
+          trackingPurposes: dataFlow.trackingPurposes,
+        });
       });
-    });
 
     service.cookies.forEach((cookie) => {
       cookies.push({
         name: cookie.name,
+        status: ConsentTrackerStatus.Live,
         trackingPurposes: cookie.trackingPurposes,
       });
     });
