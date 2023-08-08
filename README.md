@@ -77,34 +77,38 @@
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-24)
+    - [Arguments](#arguments-24)
+    - [Usage](#usage-25)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -140,6 +144,7 @@ yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 yarn tr-consent-managers-to-business-entities
+yarn tr-consent-manager-service-json-to-yml
 yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
 yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
@@ -173,6 +178,7 @@ tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
 tr-consent-managers-to-business-entities
+tr-consent-manager-service-json-to-yml
 tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
 tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
@@ -1507,6 +1513,41 @@ Specify custom output file
 
 ```sh
 yarn tr-consent-managers-to-business-entities --consentManagerYmlFolder=./working/consent-managers/ --output=./custom.yml
+```
+
+### tr-consent-manager-service-json-to-yml
+
+Import the services from an airgap.js file into a Transcend instance.
+
+Step 1) Run `await airgap.getMetadata()` on a site with airgap
+Step 2) Right click on the printed object, and click `Copy object`
+Step 3) Place output of file in a file named `services.json`
+Step 4) Run `yarn tr-consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml`
+Step 5) Run `yarn tr-push --auth=$TRANSCEND_API_KEY --file=./transcend.yml --classifyService=true`
+
+#### Authentication
+
+No authentication is required to run this command. It reads and writes files from local disk.
+
+#### Arguments
+
+| Argument | Description                                                              | Type               | Default         | Required |
+| -------- | ------------------------------------------------------------------------ | ------------------ | --------------- | -------- |
+| file     | Path to the `services.json` file, output of `await airgap.getMetadata()` | string - file-path | ./services.json | false    |
+| output   | Path to the output `transcend.yml` to write to                           | string - file-path | ./transcend.yml | false    |
+
+#### Usage
+
+Convert data flow configurations in folder `./services.json` to yml in `./transcend.yml`
+
+```sh
+yarn tr-consent-manager-service-json-to-yml
+```
+
+With file locations
+
+```sh
+yarn tr-consent-manager-service-json-to-yml --file=./folder/services.json --output./folder/transcend.yml
 ```
 
 ### tr-derive-data-silos-from-data-flows

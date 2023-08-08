@@ -874,6 +874,40 @@ export const CookieCsvInput = t.intersection([
 /** Type override */
 export type CookieCsvInput = t.TypeOf<typeof CookieCsvInput>;
 
+/**
+ * Export of (await airgap.getMetadata()).services
+ */
+export const ConsentManagerServiceMetadata = t.type({
+  /** The title of the service */
+  title: t.string,
+  /** The description */
+  description: t.string,
+  /** Cookies */
+  cookies: t.array(
+    t.type({
+      /** Name of cookie */
+      name: t.string,
+      /** Allowed purposes */
+      trackingPurposes: t.array(t.string),
+    }),
+  ),
+  /** Data Flows */
+  dataFlows: t.array(
+    t.type({
+      /** Value of data flow */
+      value: t.string,
+      /** Type of data flow */
+      type: valuesOf(DataFlowScope),
+      /** Allowed purposes */
+      trackingPurposes: t.array(t.string),
+    }),
+  ),
+});
+
+/** Type override */
+export type ConsentManagerServiceMetadata = t.TypeOf<
+  typeof ConsentManagerServiceMetadata
+>;
 /// //////////////////////////////////////
 // Guardrails policies                  //
 /// //////////////////////////////////////
