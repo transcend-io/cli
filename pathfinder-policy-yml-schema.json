@@ -19,7 +19,7 @@
                 "required": ["routeName", "enabledPolicies"],
                 "properties": {
                   "routeName": {
-                    "const": "/v1/images/generations"
+                    "const": "/v1/chat/completions"
                   },
                   "enabledPolicies": {
                     "type": "array",
