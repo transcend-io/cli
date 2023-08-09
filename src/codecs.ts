@@ -909,7 +909,7 @@ export type ConsentManagerServiceMetadata = t.TypeOf<
   typeof ConsentManagerServiceMetadata
 >;
 /// //////////////////////////////////////
-// Guardrails policies                  //
+// Pathfinder policies                  //
 /// //////////////////////////////////////
 export const Policy: PolicyC = t.union([
   t.literal('redactEmail'),
@@ -943,7 +943,7 @@ export type AIIntegrationC = t.TypeC<{
  * The names of the OpenAI routes that we support setting policies for
  * reference: https://platform.openai.com/docs/api-reference/introduction
  */
-export const OpenAIRouteName = t.literal('/v1/images/generations');
+export const OpenAIRouteName = t.literal('/v1/chat/completions');
 
 /** Type override */
 export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
@@ -962,11 +962,11 @@ export const OpenAIIntegration = buildAIIntegrationType({
 /** Type override */
 export type OpenAIIntegration = t.TypeOf<typeof OpenAIIntegration>;
 
-export const GuardrailsPolicy = t.partial({
+export const PathfinderPolicy = t.partial({
   enabledIntegrations: t.partial({
     openAI: OpenAIIntegration,
   }),
 });
 
 /** Type override */
-export type GuardrailsPolicy = t.TypeOf<typeof GuardrailsPolicy>;
+export type PathfinderPolicy = t.TypeOf<typeof PathfinderPolicy>;
