@@ -19,7 +19,14 @@
                 "required": ["routeName", "enabledPolicies"],
                 "properties": {
                   "routeName": {
-                    "const": "/v1/chat/completions"
+                    "anyOf": [
+                      {
+                        "const": "/v1/chat/completions"
+                      },
+                      {
+                        "const": "/v1/embeddings"
+                      }
+                    ]
                   },
                   "enabledPolicies": {
                     "type": "array",

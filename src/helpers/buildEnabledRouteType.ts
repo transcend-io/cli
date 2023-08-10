@@ -12,7 +12,7 @@ export const buildEnabledRouteType = <T extends t.Mixed>({
 }: {
   /** the type of the routeName property */
   TRouteName: T;
-}): EnabledRouteC =>
+}): EnabledRouteC<T> =>
   t.type({
     routeName: TRouteName,
     enabledPolicies: t.array(Policy),
