@@ -939,13 +939,16 @@ export type AIIntegrationC<T extends t.Mixed> = t.TypeC<{
   enabledRoutes: EnabledRoutesC<T>;
 }>;
 
+/** The codec of OpenAI routeName */
 export type OpenAIRouteNameC = t.LiteralC<'/v1/chat/completions'>
 
 /**
  * The names of the OpenAI routes that we support setting policies for
  * reference: https://platform.openai.com/docs/api-reference/introduction
  */
-export const OpenAIRouteName: OpenAIRouteNameC = t.literal('/v1/chat/completions');
+export const OpenAIRouteName: OpenAIRouteNameC = t.literal(
+  '/v1/chat/completions'
+);
 
 /** Type override */
 export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
@@ -957,12 +960,16 @@ export const OpenAIEnabledRoute = buildEnabledRouteType({
 /** Type override */
 export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
 
-export const OpenAIEnabledRoutes = t.array(OpenAIEnabledRoute);
+/** The enabled routes for OpenAI */
+export const OpenAIEnabledRoutes: EnabledRoutesC<OpenAIRouteNameC> = t.array(OpenAIEnabledRoute);
   
 /** Type override */
 export type OpenAIEnabledRoutes = t.TypeOf<typeof OpenAIEnabledRoutes>;
 
-export const OpenAIIntegration = buildAIIntegrationType<OpenAIRouteNameC, EnabledRoutesC<OpenAIRouteNameC>>({
+export const OpenAIIntegration = buildAIIntegrationType<
+  OpenAIRouteNameC,
+  EnabledRoutesC<OpenAIRouteNameC>
+>({
   TEnabledRoutes: OpenAIEnabledRoutes,
 });
 
