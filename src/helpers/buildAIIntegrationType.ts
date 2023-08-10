@@ -7,12 +7,12 @@ import { AIIntegrationC, EnabledRouteC } from '../codecs';
  * @param TEnabledRoutes - the type of the enabledRoutes for the AIIntegration type
  * @returns an AIIntegration type
  */
-export const buildAIIntegrationType = <T extends t.ArrayC<EnabledRouteC>>({
+export const buildAIIntegrationType = <T extends t.Mixed, P extends t.ArrayC<EnabledRouteC<T>>>({
   TEnabledRoutes,
 }: {
   /** the type of the enabledRoutes property */
-  TEnabledRoutes: T;
-}): AIIntegrationC =>
+  TEnabledRoutes: P;
+}): AIIntegrationC<T> =>
   t.type({
     enabledRoutes: TEnabledRoutes,
   });
