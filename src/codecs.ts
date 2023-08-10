@@ -963,7 +963,7 @@ export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
 /** The enabled routes for OpenAI */
 export const OpenAIEnabledRoutes: EnabledRoutesC<OpenAIRouteNameC> =
   t.array(OpenAIEnabledRoute);
-  
+
 /** Type override */
 export type OpenAIEnabledRoutes = t.TypeOf<typeof OpenAIEnabledRoutes>;
 
