@@ -923,27 +923,35 @@ export type Policy = t.TypeOf<typeof Policy>;
 export type PolicyC = t.UnionC<[t.LiteralC<'redactEmail'>, t.LiteralC<'log'>]>;
 
 /** the codec of a route enabled in an AI integration */
-export type EnabledRouteC = t.TypeC<{
+export type EnabledRouteC<T extends t.Mixed> = t.TypeC<{
   /** the name of the enabled route */
-  routeName: t.Mixed;
+  routeName: T;
   /** the enabled policies */
   enabledPolicies: t.ArrayC<PolicyC>;
 }>;
 
 /** the codec of routes enabled in an AI integration */
-export type EnabledRoutesC = t.ArrayC<EnabledRouteC>;
+export type EnabledRoutesC<T extends t.Mixed> = t.ArrayC<EnabledRouteC<T>>;
 
 /** the codec of an AI Integration */
-export type AIIntegrationC = t.TypeC<{
+export type AIIntegrationC<T extends t.Mixed> = t.TypeC<{
   /** the routes enabled in the AI integration */
-  enabledRoutes: EnabledRoutesC;
+  enabledRoutes: EnabledRoutesC<T>;
 }>;
+
+/** The codec of OpenAI routeName */
+export type OpenAIRouteNameC = t.UnionC<
+  [t.LiteralC<'/v1/chat/completions'>, t.LiteralC<'/v1/embeddings'>]
+>;
 
 /**
  * The names of the OpenAI routes that we support setting policies for
  * reference: https://platform.openai.com/docs/api-reference/introduction
  */
-export const OpenAIRouteName = t.literal('/v1/chat/completions');
+export const OpenAIRouteName: OpenAIRouteNameC = t.union([
+  t.literal('/v1/chat/completions'),
+  t.literal('/v1/embeddings'),
+]);
 
 /** Type override */
 export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
@@ -955,8 +963,18 @@ export const OpenAIEnabledRoute = buildEnabledRouteType({
 /** Type override */
 export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
 
-export const OpenAIIntegration = buildAIIntegrationType({
-  TEnabledRoutes: t.array(OpenAIEnabledRoute),
+/** The enabled routes for OpenAI */
+export const OpenAIEnabledRoutes: EnabledRoutesC<OpenAIRouteNameC> =
+  t.array(OpenAIEnabledRoute);
+
+/** Type override */
+export type OpenAIEnabledRoutes = t.TypeOf<typeof OpenAIEnabledRoutes>;
+
+export const OpenAIIntegration = buildAIIntegrationType<
+  OpenAIRouteNameC,
+  EnabledRoutesC<OpenAIRouteNameC>
+>({
+  TEnabledRoutes: OpenAIEnabledRoutes,
 });
 
 /** Type override */
