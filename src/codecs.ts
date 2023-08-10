@@ -955,13 +955,8 @@ export const OpenAIEnabledRoute = buildEnabledRouteType({
 /** Type override */
 export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
 
-export const OpenAIEnabledRoutes = t.array(OpenAIEnabledRoute);
-
-  /** Type override */
-  export type OpenAIEnabledRoutes = t.TypeOf<typeof OpenAIEnabledRoutes>;
-
-export const OpenAIIntegration = buildAIIntegrationType<OpenAIRouteName, OpenAIEnabledRoutes>({
-  TEnabledRoutes: OpenAIEnabledRoutes,
+export const OpenAIIntegration = buildAIIntegrationType<OpenAIRouteName, t.array(OpenAIEnabledRoute)>({
+  TEnabledRoutes:  t.array(OpenAIEnabledRoute),
 });
 
 /** Type override */
