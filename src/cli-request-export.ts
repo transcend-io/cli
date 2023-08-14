@@ -69,7 +69,7 @@ async function main(): Promise<void> {
   const parsedStatuses = splitCsvToList(statuses) as RequestStatus[];
   const invalidStatuses = parsedStatuses.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (type) => !Object.values(RequestAction).includes(type as any),
+    (type) => !Object.values(RequestStatus).includes(type as any),
   );
   if (invalidStatuses.length > 0) {
     logger.error(
