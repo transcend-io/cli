@@ -657,6 +657,17 @@ export const ConsentManagerInput = t.partial({
   uspapi: valuesOf(UspapiOption),
   /** Regional experience configurations */
   experiences: t.array(ConsentManageExperienceInput),
+  /** Theme config */
+  theme: t.partial({
+    /** Primary color */
+    primaryColor: t.string,
+    /** Font color */
+    fontColor: t.string,
+    /** Privacy policy URL */
+    privacyPolicy: t.string,
+    /** Auto-prompt setting */
+    prompt: t.number,
+  }),
   // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
   /** The Shared XDI host sync groups config (JSON) for this airgap bundle */
   syncGroups: t.string,

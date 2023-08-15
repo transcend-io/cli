@@ -20,6 +20,7 @@ import {
   EXPERIENCES,
   PURPOSES,
   CONSENT_MANAGER_ANALYTICS_DATA,
+  FETCH_CONSENT_MANAGER_THEME,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -272,4 +273,40 @@ export async function fetchConsentManagerAnalyticsData(
     input,
   });
   return series;
+}
+
+export interface ConsentManagerTheme {
+  /** Primary color */
+  primaryColor: string;
+  /** Font color */
+  fontColor: string;
+  /** Privacy policy URL */
+  privacyPolicy?: string;
+  /** Auto-prompt setting */
+  prompt: number;
+}
+
+/**
+ * Fetch consent manager theme
+ *
+ * @param client - GraphQL client
+ * @param airgapBundleId - Airgap bundle ID to fetch for
+ * @returns Consent manager ID in organization
+ */
+export async function fetchConsentManagerTheme(
+  client: GraphQLClient,
+  airgapBundleId: string,
+): Promise<ConsentManagerTheme> {
+  const {
+    consentManagerTheme: { theme },
+  } = await makeGraphQLRequest<{
+    /** Consent manager query */
+    consentManagerTheme: {
+      /** Consent manager object */
+      theme: ConsentManagerTheme;
+    };
+  }>(client, FETCH_CONSENT_MANAGER_THEME, {
+    airgapBundleId,
+  });
+  return theme;
 }

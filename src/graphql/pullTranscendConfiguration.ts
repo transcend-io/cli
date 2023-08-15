@@ -31,6 +31,7 @@ import { fetchApiKeys } from './fetchApiKeys';
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
+  fetchConsentManagerTheme,
 } from './fetchConsentManagerId';
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
@@ -200,6 +201,11 @@ export async function pullTranscendConfiguration(
       : [],
   ]);
 
+  const consentManagerTheme =
+    resources.includes(TranscendPullResource.ConsentManager) && consentManager
+      ? await fetchConsentManagerTheme(client, consentManager.id)
+      : undefined;
+
   const result: TranscendInput = {};
 
   // Save API keys
@@ -242,6 +248,14 @@ export async function pullTranscendConfiguration(
       uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
+      theme: !consentManagerTheme
+        ? undefined
+        : {
+            primaryColor: consentManagerTheme.primaryColor || undefined,
+            fontColor: consentManagerTheme.fontColor || undefined,
+            privacyPolicy: consentManagerTheme.privacyPolicy || undefined,
+            prompt: consentManagerTheme.prompt,
+          },
       experiences: consentManagerExperiences.map((experience) => ({
         name: experience.name,
         displayName: experience.displayName || undefined,
