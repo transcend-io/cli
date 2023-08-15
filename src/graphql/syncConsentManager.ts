@@ -78,7 +78,6 @@ export async function syncConsentManagerExperiences(
           input: {
             id: existingExperience.id,
             name: exp.name,
-            displayName: exp.displayName,
             regions: exp.regions,
             operator: exp.operator,
             displayPriority:
