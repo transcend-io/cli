@@ -13,6 +13,7 @@ import {
   DEPLOYED_PRIVACY_CENTER_URL,
   UPDATE_CONSENT_EXPERIENCE,
   CREATE_CONSENT_EXPERIENCE,
+  UPDATE_CONSENT_MANAGER_THEME,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
@@ -242,6 +243,16 @@ export async function syncConsentManager(
   // Update experience configurations
   if (consentManager.experiences) {
     await syncConsentManagerExperiences(client, consentManager.experiences);
+  }
+
+  // update theme
+  if (consentManager.theme) {
+    await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_THEME, {
+      input: {
+        airgapBundleId,
+        ...consentManager.theme,
+      },
+    });
   }
 
   // TODO: https://transcend.height.app/T-23875

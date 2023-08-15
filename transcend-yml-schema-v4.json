@@ -28795,6 +28795,23 @@
             ]
           }
         },
+        "theme": {
+          "type": "object",
+          "properties": {
+            "primaryColor": {
+              "type": "string"
+            },
+            "fontColor": {
+              "type": "string"
+            },
+            "privacyPolicy": {
+              "type": "string"
+            },
+            "prompt": {
+              "type": "number"
+            }
+          }
+        },
         "syncGroups": {
           "type": "string"
         }
