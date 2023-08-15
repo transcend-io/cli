@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { gql } from 'graphql-request';
 
 export const PURPOSES = gql`
@@ -211,6 +212,19 @@ export const FETCH_CONSENT_MANAGER = gql`
   }
 `;
 
+export const FETCH_CONSENT_MANAGER_THEME = gql`
+  query TranscendCliFetchConsentManagerTheme($airgapBundleId: ID!) {
+    consentManagerTheme(input: { airgapBundleId: $airgapBundleId }) {
+      theme {
+        primaryColor
+        fontColor
+        privacyPolicy
+        prompt
+      }
+    }
+  }
+`;
+
 export const CREATE_CONSENT_MANAGER = gql`
   mutation TranscendCliCreateConsentManager($privacyCenterId: ID!) {
     createConsentManager(input: { privacyCenterId: $privacyCenterId }) {
@@ -323,6 +337,16 @@ export const TOGGLE_CONSENT_PRECEDENCE = gql`
   }
 `;
 
+export const UPDATE_CONSENT_MANAGER_THEME = gql`
+  mutation TranscendCliUpdateConsentManagerTheme(
+    $input: UpdateConsentManagerThemeInput!
+  ) {
+    updateConsentManagerTheme(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
 export const UPDATE_CONSENT_EXPERIENCE = gql`
   mutation TranscendCliUpdateConsentExperience($input: UpdateExperienceInput!) {
     updateExperience(input: $input) {
@@ -338,3 +362,4 @@ export const CREATE_CONSENT_EXPERIENCE = gql`
     }
   }
 `;
+/* eslint-enable max-lines */
