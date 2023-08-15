@@ -77,7 +77,7 @@ export async function syncConsentManagerExperiences(
         await makeGraphQLRequest(client, UPDATE_CONSENT_EXPERIENCE, {
           input: {
             id: existingExperience.id,
-            name: exp.name,
+            name: exp.displayName,
             regions: exp.regions,
             operator: exp.operator,
             displayPriority:
