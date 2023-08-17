@@ -1647,6 +1647,14 @@ yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_K
 
 This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.
 
+By default, the consent metrics will be written to a folder named `consent-metrics` within the directory where you run the command. You can override the location that these CSVs are written to using the flag “--folder=./my-folder/”. This folder will contain a set of CSV files:
+
+- CONSENT_CHANGES_TIMESERIES_optIn.csv -> this is a feed containing the number of explicit opt in events that happen - these are calls to airgap.setConsent(event, { SaleOfInfo: true })
+- CONSENT_CHANGES_TIMESERIES_optOut.csv -> this is a feed containing the number of explicit opt out events that happen - these are calls to airgap.setConsent(event, { SaleOfInfo: false })
+- CONSENT_SESSIONS_BY_REGIME_Default.csv -> this contains the number of sessions detected for the bin period
+- PRIVACY_SIGNAL_TIMESERIES_DNT.csv -> the number of DNT signals detected (note you chose not to honor the the DNT signal so this file can be ignored)
+- PRIVACY_SIGNAL_TIMESERIES_GPC.csv -> the number of GPC signals detected. When the GPC signal is detected, this results in a user being opted out. This is counted [per session](https://docs.transcend.io/docs/consent/reference/telemetry#faq).
+
 #### Authentication
 
 In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
