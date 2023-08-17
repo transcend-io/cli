@@ -9,6 +9,7 @@ export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   AttributeSupportedResourceType,
   string
 > = {
+  [AttributeSupportedResourceType.ActionItem]: 'actionItems',
   [AttributeSupportedResourceType.BusinessEntity]: 'businessEntities',
   [AttributeSupportedResourceType.DataSilo]: 'dataSilos',
   [AttributeSupportedResourceType.DataSubCategory]: 'dataSubCategories',
