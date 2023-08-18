@@ -404,7 +404,7 @@ __metadata:
     "@transcend-io/airgap.js-types": ^10.4.4
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.2
-    "@transcend-io/privacy-types": ^4.40.0
+    "@transcend-io/privacy-types": ^4.41.0
     "@transcend-io/type-utils": ^1.0.7
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
@@ -502,12 +502,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.40.0":
-  version: 4.40.0
-  resolution: "@transcend-io/privacy-types@npm:4.40.0"
+"@transcend-io/privacy-types@npm:^4.41.0":
+  version: 4.41.0
+  resolution: "@transcend-io/privacy-types@npm:4.41.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: 125f8f3f6696fdc2473f031e8d7d4662e68a3968e65949638fd0a7c22f12ff429e5d8999b1178b2b1b669840959ff5ebf36db8fe03f86e0a6c3c8be2ec954363
+  checksum: 2f75f66b53f1142c3c31a7a22010630a176f33ce0ea4991d62f8bb37091d8ba5bbca98b77bba84c122195a35b511efbc8d854e349b0e168906f97d6676e141a9
   languageName: node
   linkType: hard
 

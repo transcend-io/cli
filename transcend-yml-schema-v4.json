@@ -5588,6 +5588,7 @@
                 "items": {
                   "type": "string",
                   "enum": [
+                    "actionItem",
                     "dataSilo",
                     "subDataPoint",
                     "airgapCookie",
