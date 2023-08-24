@@ -28,7 +28,7 @@ const schemaDefaults = {
 // Build the JSON schema from io-ts codec
 const jsonSchema = {
   ...schemaDefaults,
-  ...toJsonSchema(PathfinderPolicy),
+  ...toJsonSchema(PathfinderPolicy, true),
 };
 
 const schemaFilePath = join(process.cwd(), 'pathfinder-policy-yml-schema.json');
