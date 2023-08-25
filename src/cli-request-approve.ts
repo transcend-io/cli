@@ -18,11 +18,11 @@ import { DEFAULT_TRANSCEND_API } from './constants';
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-request-approve.ts --auth=$TRANSCEND_API_KEY \
- *   --requestType=ERASURE --silentModeBefore=06/23/2023
+ *   --actions=ERASURE --silentModeBefore=06/23/2023
  *
  * Standard usage:
  * yarn tr-request-approve --auth=$TRANSCEND_API_KEY  \
- *   --requestType=ERASURE --silentModeBefore=06/23/2023
+ *   --actions=ERASURE --silentModeBefore=06/23/2023
  */
 async function main(): Promise<void> {
   // Parse command line arguments
