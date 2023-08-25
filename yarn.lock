@@ -472,6 +472,7 @@ __metadata:
     tr-request-approve: ./build/cli-request-approve.js
     tr-request-cancel: ./build/cli-request-cancel.js
     tr-request-export: ./build/cli-request-export.js
+    tr-request-mark-silent: ./build/cli-request-mark-silent.js
     tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
     tr-retry-request-data-silos: ./build/cli-retry-request-data-silos.js
