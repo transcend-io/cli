@@ -952,7 +952,11 @@ export type AIIntegrationC<T extends t.Mixed> = t.TypeC<{
 
 /** The codec of OpenAI routeName */
 export type OpenAIRouteNameC = t.UnionC<
-  [t.LiteralC<'/v1/chat/completions'>, t.LiteralC<'/v1/embeddings'>]
+  [
+    t.LiteralC<'/v1/chat/completions'>,
+    t.LiteralC<'/v1/embeddings'>,
+    t.LiteralC<'/v1/completions'>,
+  ]
 >;
 
 /**
@@ -962,6 +966,7 @@ export type OpenAIRouteNameC = t.UnionC<
 export const OpenAIRouteName: OpenAIRouteNameC = t.union([
   t.literal('/v1/chat/completions'),
   t.literal('/v1/embeddings'),
+  t.literal('/v1/completions'),
 ]);
 
 /** Type override */

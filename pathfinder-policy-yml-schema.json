@@ -25,6 +25,9 @@
                       },
                       {
                         "const": "/v1/embeddings"
+                      },
+                      {
+                        "const": "/v1/completions"
                       }
                     ]
                   },
