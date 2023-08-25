@@ -29,86 +29,90 @@
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
     - [Usage](#usage-5)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-mark-silent](#tr-request-mark-silent)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-25)
+    - [Arguments](#arguments-25)
+    - [Usage](#usage-26)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -133,6 +137,7 @@ yarn tr-push --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY
+yarn tr-mark-silent --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -166,6 +171,7 @@ tr-push --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
 tr-request-approve --auth=$TRANSCEND_API_KEY
 tr-request-cancel --auth=$TRANSCEND_API_KEY
+tr-request-mark-silent --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -776,6 +782,70 @@ Increase the concurrency (defaults to 100)
 
 ```sh
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
+```
+
+### tr-request-mark-silent
+
+Bulk update a set of privacy requests from the [Privacy Requests -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab to be in silent mode.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Request Compilation
+
+#### Arguments
+
+| Argument   | Description                                                                                                                                    | Type            | Default                                                                                  | Required |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth       | The Transcend API key with the scopes necessary for the command.                                                                               | string          | N/A                                                                                      | true     |
+| actions    | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to mark silent. | RequestAction[] | N/A                                                                                      | true     |
+| statuses   | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark silent.                              | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| requestIds | Specify the specific request IDs to mark silent                                                                                                | string[]        | []                                                                                       | false    |
+
+| silentModeBefore | Any requests made before this date should be marked as silent mode | Date | N/A | false |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false |
+| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
+
+#### Usage
+
+Bulk mark silent all open SALE_OPT_OUT and ERASURE requests.
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ERASURE --transcendUrl=https://api.us.transcend.io
+```
+
+Bulk mark as silent all Erasure (request.type=ERASURE) requests that are in an enriching state (request.status=ENRICHING)
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ERASURE --statuses=ENRICHING
+```
+
+Bulk mark as silent requests by ID
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE,SALE_OPT_OUT,CONTACT_OPT_OUT --statuses=ENRICHING,COMPILING,APPROVING,WAITING,REQUEST_MADE,ON_HOLD,DELAYED,SECONDARY \
+  --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
+```
+
+Mark sale opt out requests as silent if those requests were made before a certain date
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+```
+
+Increase the concurrency (defaults to 100)
+
+```sh
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
 ```
 
 ### tr-request-upload

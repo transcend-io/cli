@@ -5,38 +5,34 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { splitCsvToList, pullRequestsToCsv } from './requests';
+import { splitCsvToList, markSilentPrivacyRequests } from './requests';
 import { DEFAULT_TRANSCEND_API } from './constants';
 
 /**
- * Pull down the metadata for a set of Privacy requests.
+ * Bulk update requests to be in silent mode
  *
  * Requires scopes:
- * - View Incoming Requests
- * - View the Request Compilation
+ * - Manage Request Compilation
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-export.ts --auth=$TRANSCEND_API_KEY \
- *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ * yarn ts-node ./src/cli-request-mark-silent.ts --auth=$TRANSCEND_API_KEY \
+ *   --actions=ERASURE --silentModeBefore=06/23/2023
  *
  * Standard usage:
- * yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
- *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ * yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY  \
+ *   --actions=ERASURE --silentModeBefore=06/23/2023
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    file = './transcend-request-export.csv',
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     actions = '',
     statuses = '',
-    showTests,
-    createdAtBefore,
-    createdAtAfter,
-    pageLimit = '100',
+    silentModeBefore,
+    concurrency = '100',
+    /** List of request IDs */
+    requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -67,14 +63,14 @@ async function main(): Promise<void> {
 
   // Validate statuses
   const parsedStatuses = splitCsvToList(statuses) as RequestStatus[];
-  const invalidStatuses = parsedStatuses.filter(
+  const invalidStatues = parsedStatuses.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (type) => !Object.values(RequestStatus).includes(type as any),
   );
-  if (invalidStatuses.length > 0) {
+  if (invalidStatues.length > 0) {
     logger.error(
       colors.red(
-        `Failed to parse statuses:"${invalidStatuses.join(',')}".\n` +
+        `Failed to parse statuses:"${invalidStatues.join(',')}".\n` +
           `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
       ),
     );
@@ -82,17 +78,14 @@ async function main(): Promise<void> {
   }
 
   // Pull privacy requests
-  await pullRequestsToCsv({
-    file,
+  await markSilentPrivacyRequests({
     transcendUrl,
-    pageLimit: parseInt(pageLimit, 10),
-    actions: parsedActions,
-    statuses: parsedStatuses,
+    requestActions: parsedActions,
     auth,
-    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
-    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
-    showTests:
-      showTests === 'true' ? true : showTests === 'false' ? false : undefined,
+    requestIds: requestIds ? splitCsvToList(requestIds) : undefined,
+    statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
+    concurrency: parseInt(concurrency, 10),
+    silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
   });
 }
 

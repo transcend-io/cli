@@ -6,6 +6,7 @@ export * from './parseAttributesFromString';
 export * from './readCsv';
 export * from './getUniqueValuesForColumn';
 export * from './filterRows';
+export * from './markSilentPrivacyRequests';
 export * from './mapCsvColumnsToApi';
 export * from './mapRequestEnumValues';
 export * from './mapCsvRowsToRequestInputs';
