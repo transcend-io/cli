@@ -2,10 +2,16 @@
 
 import yargs from 'yargs-parser';
 import colors from 'colors';
+import * as t from 'io-ts';
 
 import { logger } from './logger';
 import { markRequestDataSiloIdsCompleted } from './cron';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { readCsv } from './requests';
+
+const RequestIdRow = t.type({
+  'Request Id': t.string,
+});
 
 /**
  * Given a set of Request IDs and a Data Silo ID, mark the RequestDataSilos as completed
@@ -52,9 +58,13 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Read from CSV
+  logger.info(colors.magenta(`Reading "${file}" from disk`));
+  const activeResults = readCsv(file, RequestIdRow);
+
   // Upload privacy requests
   await markRequestDataSiloIdsCompleted({
-    file,
+    requestIds: activeResults.map((request) => request['Request Id']),
     transcendUrl,
     auth,
     dataSiloId,
