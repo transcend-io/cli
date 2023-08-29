@@ -4,9 +4,11 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
+import uniq from 'lodash/uniq';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { splitCsvToList, pullRequestsToCsv } from './requests';
+import { splitCsvToList, pullPrivacyRequests } from './requests';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { writeCsv } from './cron';
 
 /**
  * Pull down the metadata for a set of Privacy requests.
@@ -82,8 +84,7 @@ async function main(): Promise<void> {
   }
 
   // Pull privacy requests
-  await pullRequestsToCsv({
-    file,
+  const { requestsFormattedForCsv } = await pullPrivacyRequests({
     transcendUrl,
     pageLimit: parseInt(pageLimit, 10),
     actions: parsedActions,
@@ -94,6 +95,17 @@ async function main(): Promise<void> {
     showTests:
       showTests === 'true' ? true : showTests === 'false' ? false : undefined,
   });
+
+  // Write to CSV
+  const headers = uniq(
+    requestsFormattedForCsv.map((d) => Object.keys(d)).flat(),
+  );
+  writeCsv(file, requestsFormattedForCsv, headers);
+  logger.info(
+    colors.green(
+      `Successfully wrote ${requestsFormattedForCsv.length} requests to file "${file}"`,
+    ),
+  );
 }
 
 main();

@@ -4,9 +4,11 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { pullCronIdentifiersToCsv } from './cron';
+import uniq from 'lodash/uniq';
+import { pullCustomSiloOutstandingIdentifiers, writeCsv } from './cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { splitCsvToList } from './requests';
 
 /**
  * Pull the set of active identifiers for a cron job silo.
@@ -16,13 +18,13 @@ import { DEFAULT_TRANSCEND_API } from './constants';
  * Dev Usage:
  * yarn ts-node ./src/cli-cron-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
- *   --requestType=ERASURE \
+ *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
  * yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
- *   --requestType=ERASURE \
+ *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
 async function main(): Promise<void> {
@@ -33,7 +35,7 @@ async function main(): Promise<void> {
     auth,
     sombraAuth,
     dataSiloId,
-    requestType,
+    actions,
     pageLimit = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -47,28 +49,43 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Validate request type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (!Object.values(RequestAction).includes(requestType as any)) {
+  // Validate actions
+  const parsedActions = splitCsvToList(actions) as RequestAction[];
+  const invalidActions = parsedActions.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (type) => !Object.values(RequestAction).includes(type as any),
+  );
+  if (invalidActions.length > 0) {
     logger.error(
       colors.red(
-        `Failed to parse requestType:"${requestType}".\n` +
+        `Failed to parse actions:"${invalidActions.join(',')}".\n` +
           `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
   }
 
-  // Upload privacy requests
-  await pullCronIdentifiersToCsv({
-    file,
-    transcendUrl,
-    pageLimit: parseInt(pageLimit, 10),
-    requestType: requestType as RequestAction,
-    auth,
-    sombraAuth,
-    dataSiloId,
-  });
+  // Pull down outstanding identifiers
+  const { identifiersFormattedForCsv } =
+    await pullCustomSiloOutstandingIdentifiers({
+      transcendUrl,
+      pageLimit: parseInt(pageLimit, 10),
+      actions: parsedActions,
+      auth,
+      sombraAuth,
+      dataSiloId,
+    });
+
+  // Write CSV
+  const headers = uniq(
+    identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
+  );
+  writeCsv(file, identifiersFormattedForCsv, headers);
+  logger.info(
+    colors.green(
+      `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
+    ),
+  );
 }
 
 main();

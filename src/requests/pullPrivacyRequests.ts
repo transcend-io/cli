@@ -7,10 +7,8 @@ import {
 } from '../graphql';
 import colors from 'colors';
 import { map } from 'bluebird';
-import uniq from 'lodash/uniq';
 import groupBy from 'lodash/groupBy';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { writeCsv } from '../cron/writeCsv';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
@@ -20,12 +18,11 @@ export interface ExportedPrivacyRequest extends PrivacyRequest {
 }
 
 /**
- * Pull the set of cron job requests to CSV
+ * Pull down a list of privacy requests
  *
  * @param options - Options
  */
-export async function pullRequestsToCsv({
-  file,
+export async function pullPrivacyRequests({
   auth,
   actions = [],
   statuses = [],
@@ -35,8 +32,6 @@ export async function pullRequestsToCsv({
   createdAtAfter,
   showTests,
 }: {
-  /** CSV file path */
-  file: string;
   /** Transcend API key authentication */
   auth: string;
   /** API URL for Transcend backend */
@@ -53,7 +48,12 @@ export async function pullRequestsToCsv({
   createdAtAfter?: Date;
   /** Return test requests */
   showTests?: boolean;
-}): Promise<ExportedPrivacyRequest[]> {
+}): Promise<{
+  /** All request information with attached identifiers */
+  requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
+  /** Requests that are formatted for CSV */
+  requestsFormattedForCsv: { [k in string]: string | null | boolean }[];
+}> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
@@ -73,7 +73,7 @@ export async function pullRequestsToCsv({
     colors.magenta(
       `${
         actions.length > 0
-          ? `Pulling requests of type "${actions.join(',')}"`
+          ? `Pulling requests of type "${actions.join('" , "')}"`
           : 'Pulling all requests'
       }${dateRange}`,
     ),
@@ -161,14 +161,6 @@ export async function pullRequestsToCsv({
       ),
     }),
   );
-  const headers = uniq(data.map((d) => Object.keys(d)).flat());
-  writeCsv(file, data, headers);
 
-  logger.info(
-    colors.green(
-      `Successfully wrote ${requests.length} requests to file "${file}"`,
-    ),
-  );
-
-  return requestsWithRequestIdentifiers;
+  return { requestsWithRequestIdentifiers, requestsFormattedForCsv: data };
 }

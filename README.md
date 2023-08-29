@@ -1157,47 +1157,47 @@ The API key must be associated to the ID of the integration/data silo that is be
 
 #### Arguments
 
-| Argument     | Description                                                                                                                             | Type                   | Default                  | Required |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------ | -------- |
-| auth         | The Transcend API key with the scopes necessary for the command.                                                                        | string                 | N/A                      | true     |
-| dataSiloId   | The ID of the data silo to pull in.                                                                                                     | string - UUID          | N/A                      | true     |
-| requestType  | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to fetch. | string - RequestAction | N/A                      | true     |
-| file         | Path to the CSV file where identifiers will be written to.                                                                              | string - file-path     | ./cron-identifiers.csv   | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                           | string - URL           | https://api.transcend.io | false    |
-| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra.                                                    | string                 | N/A                      | false    |
-| pageLimit    | The page limit to use when pulling in pages of identifiers.                                                                             | number                 | 100                      | false    |
+| Argument     | Description                                                                                                                               | Type               | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                                          | string             | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to pull in.                                                                                                       | string - UUID      | N/A                      | true     |
+| actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]    | N/A                      | true     |
+| file         | Path to the CSV file where identifiers will be written to.                                                                                | string - file-path | ./cron-identifiers.csv   | false    |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL       | https://api.transcend.io | false    |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string             | N/A                      | false    |
+| pageLimit    | The page limit to use when pulling in pages of identifiers.                                                                               | number             | 100                      | false    |
 
 #### Usage
 
 ```sh
-yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE
 ```
 
 Pull to a specific file location
 
 ```sh
-yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE \
    --file=/Users/transcend/Desktop/test.csv
 ```
 
 For self-hosted sombras that use an internal key:
 
 ```sh
-yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE  \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE  \
    --sombraAuth=$SOMBRA_INTERNAL_KEY
 ```
 
 Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
-yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE \
  --transcendUrl=https://api.us.transcend.io
 ```
 
 Specifying the page limit, defaults to 100.
 
 ```sh
-yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE \
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE \
  --pageLimit=300
 ```
 
@@ -1207,7 +1207,7 @@ This command takes the output of `tr-cron-pull-identifiers` and notifies Transce
 This is used in the workflow like:
 
 1. Pull identifiers to CSV:
-   `yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --requestType=ERASURE --file=./outstanding-requests.csv`
+   `yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE --file=./outstanding-requests.csv`
 2. Run your process to operate on that CSV of requests.
 3. Notify Transcend of completion
    `yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --file=./outstanding-requests.csv`
@@ -1280,13 +1280,14 @@ The API key must have the following scopes:
 
 #### Arguments
 
-| Argument     | Description                                                                   | Type               | Default                             | Required |
-| ------------ | ----------------------------------------------------------------------------- | ------------------ | ----------------------------------- | -------- |
-| auth         | The Transcend API key with the scopes necessary for the command.              | string             | N/A                                 | true     |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL       | https://api.transcend.io            | false    |
-| file         | Path to the CSV file where requests will be written to.                       | string - file-path | ./manual-enrichment-identifiers.csv | false    |
-| actions      | The set of request actions to pull requests for.                              | RequestAction[]    | []                                  | false    |
-| concurrency  | The concurrency to use when uploading requests in parallel.                   | number             | 100                                 | false    |
+| Argument     | Description                                                                                                                                | Type               | Default                             | Required |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                                           | string             | N/A                                 | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                              | string - URL       | https://api.transcend.io            | false    |
+| file         | Path to the CSV file where requests will be written to.                                                                                    | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to pull for. | RequestAction[]    | N/A                                 | false    |
+
+| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
 
 #### Usage
 
@@ -1390,7 +1391,7 @@ yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherI
 ### tr-mark-request-data-silos-completed
 
 This command takes in a CSV of Request IDs as well as a Data Silo ID and marks all associated privacy request jobs as completed.
-This command is useful with the "Bulk Response" UI.
+This command is useful with the "Bulk Response" UI. The CSV is expected to have 1 column named "Request Id".
 
 #### Authentication
 
