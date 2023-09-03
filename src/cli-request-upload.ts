@@ -37,6 +37,7 @@ async function main(): Promise<void> {
     concurrency = '100',
     isTest = 'false',
     isSilent = 'true',
+    skipSendingReceipt = 'false',
     defaultPhoneCountryCode = '1', // USA
     emailIsVerified = 'true',
     dryRun = 'false',
@@ -69,6 +70,7 @@ async function main(): Promise<void> {
     debug: debug === 'true',
     skipFilterStep: skipFilterStep === 'true',
     isSilent: isSilent === 'true',
+    skipSendingReceipt: skipSendingReceipt === 'true',
     emailIsVerified: emailIsVerified === 'true',
     isTest: isTest === 'true',
     dryRun: dryRun === 'true',

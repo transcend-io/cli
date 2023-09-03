@@ -50,7 +50,7 @@ export async function bulkRestartRequests({
   requestIds = [],
   createdAt = new Date(),
   markSilent,
-  sendEmailReceipt = false,
+  skipSendingReceipt = false,
   emailIsVerified = true,
   copyIdentifiers = false,
   skipWaitingPeriod = false,
@@ -77,7 +77,7 @@ export async function bulkRestartRequests({
   /** Requests that have been open for this length of time should be marked as silent mode */
   markSilent?: Date;
   /** Send an email receipt to the restarted requests */
-  sendEmailReceipt?: boolean;
+  skipSendingReceipt?: boolean;
   /** Copy over all identifiers rather than restarting the request only with the core identifier */
   copyIdentifiers?: boolean;
   /** Skip the waiting period when restarting requests */
@@ -125,8 +125,8 @@ export async function bulkRestartRequests({
   if (copyIdentifiers) {
     logger.info('copyIdentifiers detected - All Identifiers will be copied.');
   }
-  if (sendEmailReceipt) {
-    logger.info('sendEmailReceipt detected - Email receipts will be sent.');
+  if (skipSendingReceipt) {
+    logger.info('skipSendingReceipt detected - Email receipts will be sent.');
   }
   if (skipWaitingPeriod) {
     logger.info('skipWaitingPeriod detected - Waiting period will be skipped.');
@@ -178,7 +178,7 @@ export async function bulkRestartRequests({
           {
             requestIdentifiers,
             skipWaitingPeriod,
-            sendEmailReceipt,
+            skipSendingReceipt,
             emailIsVerified,
           },
         );

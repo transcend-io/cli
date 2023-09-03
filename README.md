@@ -889,6 +889,7 @@ The API key needs the following scopes:
 | attributes              | Tag all of the requests with the following attributes. Format: key1:value1;value2,key2:value3;value4                    | string             | Tags:transcend-cli                      | false    |
 | isTest                  | Flag whether the requests being uploaded are test requests or regular requests.                                         | boolean            | false                                   | false    |
 | isSilent                | Flag whether the requests being uploaded should be submitted in silent mode.                                            | boolean            | true                                    | false    |
+| skipSendingReceipt      | Flag whether to skip sending of the receipt email                                                                       | boolean            | false                                   | false    |
 | emailIsVerified         | Indicate whether the email address being uploaded is pre-verified. Set to false to send a verification email.           | boolean            | true                                    | false    |
 | skipFilterStep          | When true, skip the interactive step to filter down the CSV.                                                            | boolean            | false                                   | false    |
 | dryRun                  | When true, perform a dry run of the upload instead of calling the API to submit the requests.                           | boolean            | false                                   | false    |
@@ -936,6 +937,12 @@ Send email communications to the users throughout the request lifecycle.
 
 ```sh
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --isSilent=false
+```
+
+Upload requests without sending initial email receipt, but still send later emails
+
+```sh
+yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --skipSendingReceipt=true
 ```
 
 Send email verification to user before request continues.
@@ -998,7 +1005,7 @@ The API key needs the following scopes:
 | emailIsVerified      | Indicate whether the primary email address is verified. Set to false to send a verification email.                                        | boolean         | true                              | false    |
 | createdAt            | Restart requests that were submitted before a specific date.                                                                              | Date            | Date.now()                        | false    |
 | markSilent           | Requests older than this date should be marked as silent mode                                                                             | Date            | Date.now() - 3 months             | false    |
-| sendEmailReceipt     | Send email receipts to the restarted requests                                                                                             | boolean         | false                             | false    |
+| skipSendingReceipt   | Send email receipts to the restarted requests                                                                                             | boolean         | false                             | false    |
 | copyIdentifiers      | Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only.           | boolean         | false                             | false    |
 | skipWaitingPeriod    | Skip queued state of request and go straight to compiling                                                                                 | boolean         | false                             | false    |
 
@@ -1054,7 +1061,7 @@ yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING
 Send email receipts to the restarted requests
 
 ```sh
-yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --sendEmailReceipt=true
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --skipSendingReceipt=true
 ```
 
 Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only

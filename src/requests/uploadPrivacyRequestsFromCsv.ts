@@ -41,6 +41,7 @@ export async function uploadPrivacyRequestsFromCsv({
   attributes = [],
   emailIsVerified = true,
   skipFilterStep = false,
+  skipSendingReceipt = true,
   isTest = false,
   isSilent = true,
   debug = false,
@@ -70,6 +71,8 @@ export async function uploadPrivacyRequestsFromCsv({
   isTest?: boolean;
   /** Whether requests are uploaded in silent mode */
   isSilent?: boolean;
+  /** Whether to send the email receipt */
+  skipSendingReceipt?: boolean;
   /** Whether the email was verified up front */
   emailIsVerified?: boolean;
   /** Attributes string pre-parse */
@@ -225,6 +228,7 @@ export async function uploadPrivacyRequestsFromCsv({
             )}`,
             isTest,
             emailIsVerified,
+            skipSendingReceipt,
             isSilent,
             additionalAttributes: parsedAttributes,
           },

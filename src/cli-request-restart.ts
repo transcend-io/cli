@@ -44,7 +44,7 @@ async function main(): Promise<void> {
     /** Requests that have been open for this length of time should be marked as silent mode */
     markSilent = new Date(+new Date() - ONE_MONTH * 3).toISOString(),
     /** Send an email receipt to the restarted requests */
-    sendEmailReceipt = 'false',
+    skipSendingReceipt = 'false',
     /** Copy over all identifiers rather than restarting the request only with the core identifier */
     copyIdentifiers = 'false',
     /** Whether to restart request with verified email or not */
@@ -120,7 +120,7 @@ async function main(): Promise<void> {
     createdAt: new Date(createdAt),
     emailIsVerified: emailIsVerified === 'true',
     markSilent: new Date(markSilent),
-    sendEmailReceipt: sendEmailReceipt === 'true',
+    skipSendingReceipt: skipSendingReceipt === 'true',
     copyIdentifiers: copyIdentifiers === 'true',
     skipWaitingPeriod: skipWaitingPeriod === 'true',
     concurrency: parseInt(concurrency, 10),
