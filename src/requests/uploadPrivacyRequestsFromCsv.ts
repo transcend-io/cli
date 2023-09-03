@@ -138,7 +138,6 @@ export async function uploadPrivacyRequestsFromCsv({
       colors.magenta(`First request: ${JSON.stringify(firstRequest, null, 2)}`),
     );
   }
-
   // Determine what rows in the CSV should be imported
   // Choose columns that contain metadata to filter the requests
   const filteredRequestList = skipFilterStep
@@ -147,10 +146,8 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Build a GraphQL client
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
-
   // Grab the request attributes
   const requestAttributeKeys = await fetchAllRequestAttributeKeys(client);
-
   // Determine the columns that should be mapped
   const columnNameMap = await mapCsvColumnsToApi(columnNames, state);
   const identifierNameMap = await mapColumnsToIdentifiers(
@@ -195,7 +192,7 @@ export async function uploadPrivacyRequestsFromCsv({
       if (debug) {
         logger.info(
           colors.magenta(
-            `[${ind}/${requestInputs.length}] Importing: ${JSON.stringify(
+            `[${ind + 1}/${requestInputs.length}] Importing: ${JSON.stringify(
               requestInput,
               null,
               2,
@@ -234,12 +231,16 @@ export async function uploadPrivacyRequestsFromCsv({
         if (debug) {
           logger.info(
             colors.green(
-              `[${ind}/${requestInputs.length}] Successfully submitted the test data subject request: "${requestLogId}"`,
+              `[${ind + 1}/${
+                requestInputs.length
+              }] Successfully submitted the test data subject request: "${requestLogId}"`,
             ),
           );
           logger.info(
             colors.green(
-              `[${ind}/${requestInputs.length}] View it at: "${requestResponse.link}"`,
+              `[${ind + 1}/${requestInputs.length}] View it at: "${
+                requestResponse.link
+              }"`,
             ),
           );
         }
@@ -268,7 +269,9 @@ export async function uploadPrivacyRequestsFromCsv({
           if (debug) {
             logger.info(
               colors.yellow(
-                `[${ind}/${requestInputs.length}] Skipping request as it is a duplicate`,
+                `[${ind + 1}/${
+                  requestInputs.length
+                }] Skipping request as it is a duplicate`,
               ),
             );
           }
@@ -292,7 +295,9 @@ export async function uploadPrivacyRequestsFromCsv({
             logger.error(colors.red(clientError || msg));
             logger.error(
               colors.red(
-                `[${ind}/${requestInputs.length}] Failed to submit request for: "${requestLogId}"`,
+                `[${ind + 1}/${
+                  requestInputs.length
+                }] Failed to submit request for: "${requestLogId}"`,
               ),
             );
           }

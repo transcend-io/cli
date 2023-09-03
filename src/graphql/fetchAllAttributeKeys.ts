@@ -46,5 +46,5 @@ export async function fetchAllRequestAttributeKeys(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return attributeKeys;
+  return attributeKeys.sort((a, b) => a.name.localeCompare(b.name));
 }

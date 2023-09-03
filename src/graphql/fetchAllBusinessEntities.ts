@@ -70,5 +70,5 @@ export async function fetchAllBusinessEntities(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return businessEntities;
+  return businessEntities.sort((a, b) => a.title.localeCompare(b.title));
 }

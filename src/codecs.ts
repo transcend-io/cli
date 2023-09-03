@@ -749,6 +749,10 @@ export const DataSiloInput = t.intersection([
      * Configure email notification settings for privacy requests
      */
     'email-settings': PromptAVendorEmailSettings,
+    /** Country of data silo hosting */
+    country: valuesOf(IsoCountryCode),
+    /** Sub-division of data silo hosting */
+    countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
     /**
      * Attribute value and its corresponding attribute key
      */

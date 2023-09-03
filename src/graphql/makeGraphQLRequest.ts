@@ -16,6 +16,13 @@ function sleepPromise(sleepTime: number): Promise<number> {
   });
 }
 
+const KNOWN_ERRORS = [
+  'got invalid value',
+  'Client error',
+  'cannot affect row a second time',
+  'GRAPHQL_VALIDATION_FAILED',
+];
+
 /**
  * Make a GraphQL request with retries
  *
@@ -41,6 +48,10 @@ export async function makeGraphQLRequest<T, V = Variables>(
       const result = await client.request(document, variables, requestHeaders);
       return result;
     } catch (err) {
+      if (KNOWN_ERRORS.some((msg) => err.message.includes(msg))) {
+        throw err;
+      }
+
       // wait for rate limit to resolve
       if (err.message.startsWith('Client error: Too many requests')) {
         const rateLimitResetAt = err.response.headers?.get('x-ratelimit-reset');

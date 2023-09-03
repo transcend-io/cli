@@ -45,7 +45,9 @@ export async function fetchAllCatalogs(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return catalogs;
+  return catalogs.sort((a, b) =>
+    a.integrationName.localeCompare(b.integrationName),
+  );
 }
 
 export interface IndexedCatalogs {

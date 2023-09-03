@@ -15,6 +15,10 @@ const ENABLED_ON_CREATE_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
   .map((enabledOn) => `    $${enabledOn}: Boolean`)
   .join('\n');
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
+// # TODO: https://transcend.height.app/T-27909 - enable optimizations
+//       # isExportCsv: true
+//       # useMaster: false
 export const ATTRIBUTES = gql`
   query TranscendCliAttributes($first: Int!, $offset: Int!) {
     attributeKeys(first: $first, offset: $offset) {
@@ -40,6 +44,7 @@ export const CREATE_ATTRIBUTE_VALUES = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
 export const ATTRIBUTE_VALUES = gql`
   query TranscendCliAttributeValues(
     $first: Int!
@@ -49,6 +54,9 @@ export const ATTRIBUTE_VALUES = gql`
     attributeValues(
       first: $first
       offset: $offset
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
       filterBy: { attributeKeys: [$attributeKeyId] }
     ) {
       nodes {
