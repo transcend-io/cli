@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import colors from 'colors';
 import { map } from 'bluebird';
 import * as t from 'io-ts';
@@ -352,3 +353,4 @@ export async function uploadPrivacyRequestsFromCsv({
     process.exit(1);
   }
 }
+/* eslint-enable max-lines */

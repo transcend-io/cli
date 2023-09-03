@@ -44,24 +44,7 @@ import { fetchAllAttributes } from './fetchAllAttributes';
 import { formatAttributeValues } from './formatAttributeValues';
 import { logger } from '../logger';
 import colors from 'colors';
-
-/**
- * Resources that can be pulled in
- */
-export enum TranscendPullResource {
-  ApiKeys = 'apiKeys',
-  Attributes = 'attributes',
-  Templates = 'templates',
-  DataSilos = 'dataSilos',
-  Enrichers = 'enrichers',
-  DataFlows = 'dataFlows',
-  BusinessEntities = 'businessEntities',
-  Actions = 'actions',
-  DataSubjects = 'dataSubjects',
-  Identifiers = 'identifiers',
-  Cookies = 'cookies',
-  ConsentManager = 'consentManager',
-}
+import { TranscendPullResource } from '../enums';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,

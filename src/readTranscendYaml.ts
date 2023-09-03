@@ -3,7 +3,43 @@ import yaml from 'js-yaml';
 import { readFileSync, writeFileSync } from 'fs';
 import { TranscendInput } from './codecs';
 
-const PARAMETERS = /<<parameters\.(.+?)>>/;
+export const VARIABLE_PARAMETERS_REGEXP = /<<parameters\.(.+?)>>/;
+export const VARIABLE_PARAMETERS_NAME = 'parameters';
+
+/**
+ * Function that replaces variables in a text file.
+ * Throws error if there are variables that have not been replaced
+ *
+ * @param input - Input text
+ * @param variables - Variables to replace
+ * @param extraErrorMessage - Additional error message text
+ * @returns Output text
+ */
+export function replaceVariablesInYaml(
+  input: string,
+  variables: ObjByString,
+  extraErrorMessage = '',
+): string {
+  let contents = input;
+  // Replace variables
+  Object.entries(variables).forEach(([name, value]) => {
+    contents = contents
+      .split(`<<${VARIABLE_PARAMETERS_NAME}.${name}>>`)
+      .join(value);
+  });
+
+  // Throw error if unfilled variables
+  if (VARIABLE_PARAMETERS_REGEXP.test(contents)) {
+    const [, name] = VARIABLE_PARAMETERS_REGEXP.exec(contents) || [];
+    throw new Error(
+      `Found variable that was not set: ${name}.
+Make sure you are passing all parameters through the --${VARIABLE_PARAMETERS_NAME}=${name}:value-for-param flag.
+${extraErrorMessage}`,
+    );
+  }
+
+  return contents;
+}
 
 /**
  * Read in the contents of a yaml file and validate that the shape
@@ -18,24 +54,17 @@ export function readTranscendYaml(
   variables: ObjByString = {},
 ): TranscendInput {
   // Read in contents
-  let fileContents = readFileSync(filePath, 'utf-8');
+  const fileContents = readFileSync(filePath, 'utf-8');
 
   // Replace variables
-  Object.entries(variables).forEach(([name, value]) => {
-    fileContents = fileContents.split(`<<parameters.${name}>>`).join(value);
-  });
+  const replacedVariables = replaceVariablesInYaml(
+    fileContents,
+    variables,
+    `Also check that there are no extra variables defined in your yaml: ${filePath}`,
+  );
 
-  // Throw error if unfilled variables
-  if (PARAMETERS.test(fileContents)) {
-    const [, name] = PARAMETERS.exec(fileContents) || [];
-    throw new Error(
-      `Found variable that was not set: ${name}.
-Make sure you are passing all parameters through the --parameters=${name}:value-for-param flag.
-Also check that there are no extra variables defined in your yaml: ${filePath}`,
-    );
-  }
-
-  return decodeCodec(TranscendInput, yaml.load(fileContents));
+  // Validate shape
+  return decodeCodec(TranscendInput, yaml.load(replacedVariables));
 }
 
 /**
