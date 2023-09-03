@@ -10,6 +10,8 @@ export const REQUEST_IDENTIFIERS = gql`
       input: { requestId: $requestId }
       first: $first
       offset: $offset
+      # Order by createdAt to ensure pagination consistent as new silos are created
+      orderBy: [{ field: createdAt, direction: ASC }]
     ) {
       nodes {
         id

@@ -2,7 +2,13 @@ import { gql } from 'graphql-request';
 
 export const ENRICHERS = gql`
   query TranscendCliEnrichers($title: String, $first: Int!, $offset: Int!) {
-    enrichers(filterBy: { text: $title }, first: $first, offset: $offset) {
+    enrichers(
+      filterBy: { text: $title }
+      first: $first
+      offset: $offset
+      # Order by createdAt to ensure pagination consistent as new silos are created
+      orderBy: [{ field: createdAt, direction: ASC }]
+    ) {
       nodes {
         id
         title

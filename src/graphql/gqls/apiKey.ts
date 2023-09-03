@@ -2,7 +2,13 @@ import { gql } from 'graphql-request';
 
 export const API_KEYS = gql`
   query TranscendCliApiKeys($first: Int!, $offset: Int!, $titles: [String!]) {
-    apiKeys(first: $first, offset: $offset, filterBy: { titles: $titles }) {
+    apiKeys(
+      first: $first
+      offset: $offset
+      filterBy: { titles: $titles }
+      # Order by createdAt to ensure pagination consistent as new silos are created
+      orderBy: [{ field: createdAt, direction: ASC }]
+    ) {
       nodes {
         id
         title

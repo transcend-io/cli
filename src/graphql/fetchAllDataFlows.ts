@@ -94,5 +94,5 @@ export async function fetchAllDataFlows(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return dataFlows;
+  return dataFlows.sort((a, b) => a.value.localeCompare(b.value));
 }

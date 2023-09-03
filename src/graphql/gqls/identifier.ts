@@ -2,7 +2,12 @@ import { gql } from 'graphql-request';
 
 export const IDENTIFIERS = gql`
   query TranscendCliIdentifiers($first: Int!, $offset: Int!) {
-    identifiers(first: $first, offset: $offset) {
+    identifiers(
+      first: $first
+      offset: $offset
+      # Order by createdAt to ensure pagination consistent as new silos are created
+      orderBy: [{ field: createdAt, direction: ASC }]
+    ) {
       nodes {
         id
         name

@@ -12,6 +12,7 @@ export const PURPOSES = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
 export const EXPERIENCES = gql`
   query TranscendCliExperiences($first: Int!, $offset: Int!) {
     experiences(first: $first, offset: $offset) {
@@ -105,6 +106,8 @@ export const DATA_FLOWS = gql`
       offset: $offset
       filterBy: { status: $status, showZeroActivity: $showZeroActivity }
       input: { airgapBundleId: $airgapBundleId }
+      isExportCsv: true
+      useMaster: false
     ) {
       nodes {
         id
@@ -146,6 +149,8 @@ export const COOKIES = gql`
       offset: $offset
       filterBy: { status: $status }
       input: { airgapBundleId: $airgapBundleId }
+      isExportCsv: true
+      useMaster: false
     ) {
       nodes {
         id

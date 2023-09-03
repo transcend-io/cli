@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
 export const TEMPLATES = gql`
   query TranscendCliTemplates($title: String, $first: Int!, $offset: Int!) {
     templates(filterBy: { text: $title }, first: $first, offset: $offset) {

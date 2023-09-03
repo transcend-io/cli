@@ -88,7 +88,7 @@ export async function fetchAllAttributeValues(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return attributeValues;
+  return attributeValues.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export const SYNC_ATTRIBUTE_TYPES = [
@@ -140,5 +140,5 @@ export async function fetchAllAttributes(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return attributes;
+  return attributes.sort((a, b) => a.name.localeCompare(b.name));
 }

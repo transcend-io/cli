@@ -209,7 +209,7 @@ export async function fetchConsentManagerExperiences(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return experiences;
+  return experiences.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**

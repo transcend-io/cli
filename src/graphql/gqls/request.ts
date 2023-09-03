@@ -6,7 +6,13 @@ export const REQUESTS = gql`
     $offset: Int!
     $filterBy: RequestFiltersInput!
   ) {
-    requests(filterBy: $filterBy, first: $first, offset: $offset) {
+    requests(
+      filterBy: $filterBy
+      first: $first
+      offset: $offset
+      isExportCsv: true
+      useMaster: false
+    ) {
       nodes {
         id
         createdAt

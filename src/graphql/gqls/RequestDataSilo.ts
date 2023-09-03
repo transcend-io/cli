@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - order query
 export const REQUEST_DATA_SILOS = gql`
   query TranscendCliRequestDataSilos(
     $first: Int!

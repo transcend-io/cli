@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
 export const DATA_POINTS = gql`
   query TranscendCliDataPoints(
     $dataSiloIds: [ID!]
@@ -51,6 +52,8 @@ export const SUB_DATA_POINTS = gql`
       filterBy: { dataPoints: $dataPointIds }
       first: $first
       offset: $offset
+      isExportCsv: true
+      useMaster: false
     ) {
       totalCount
       nodes {
