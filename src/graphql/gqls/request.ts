@@ -6,7 +6,19 @@ export const REQUESTS = gql`
     $offset: Int!
     $filterBy: RequestFiltersInput!
   ) {
-    requests(filterBy: $filterBy, first: $first, offset: $offset) {
+    requests(
+      filterBy: $filterBy
+      first: $first
+      offset: $offset
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        # TODO: https://transcend.height.app/T-27909 - order by ID
+        # { field: id, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      useMaster: false
+    ) {
       nodes {
         id
         createdAt

@@ -3,7 +3,7 @@ import { TranscendInput } from '../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
-import { mapSeries, map } from 'bluebird';
+import { map } from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
@@ -11,7 +11,7 @@ import {
 import { syncIdentifier } from './syncIdentifier';
 import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
-import { syncDataSilo, DataSilo } from './syncDataSilos';
+import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
 import { syncCookies } from './syncCookies';
 import {
   fetchAllDataSubjects,
@@ -21,9 +21,7 @@ import { syncDataSubject } from './syncDataSubject';
 import { fetchApiKeys } from './fetchApiKeys';
 import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
-import { UPDATE_DATA_SILO } from './gqls';
 import { syncBusinessEntities } from './syncBusinessEntities';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { syncDataFlows } from './syncDataFlows';
 import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
@@ -367,74 +365,33 @@ export async function syncConfigurationToTranscend(
   }
 
   // Store dependency updates
-  const dependencyUpdates: [DataSilo, string[]][] = [];
-
+  const dependencyUpdates: [string, string[]][] = [];
   // Sync data silos
   if (dataSilos) {
-    logger.info(colors.magenta(`Syncing "${dataSilos.length}" data silos...`));
-    await mapSeries(dataSilos, async (dataSilo) => {
-      logger.info(colors.magenta(`Syncing data silo "${dataSilo.title}"...`));
-      try {
-        const dataSiloInfo = await syncDataSilo(dataSilo, client, {
-          dataSubjectsByName,
-          apiKeysByTitle: apiKeyTitleMap,
-          pageSize,
-        });
-        logger.info(
-          colors.green(
-            `Successfully synced data silo "${dataSilo.title}"! View at: ${dataSiloInfo.link}`,
-          ),
-        );
-
-        // Queue up dependency update
-        if (dataSilo['deletion-dependencies']) {
-          dependencyUpdates.push([
-            dataSiloInfo,
-            dataSilo['deletion-dependencies'],
-          ]);
-        }
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync data silo "${dataSilo.title}"! - ${err.message}`,
-          ),
-        );
+    const { success, dataSiloTitleToId } = await syncDataSilos(
+      dataSilos,
+      client,
+      {
+        dataSubjectsByName,
+        apiKeysByTitle: apiKeyTitleMap,
+        pageSize,
+      },
+    );
+    dataSilos?.forEach((dataSilo) => {
+      // Queue up dependency update
+      if (dataSilo['deletion-dependencies']) {
+        dependencyUpdates.push([
+          dataSiloTitleToId[dataSilo.title],
+          dataSilo['deletion-dependencies'],
+        ]);
       }
     });
-    logger.info(colors.green(`Synced "${dataSilos.length}" data silos!`));
+    encounteredError = encounteredError || !success;
   }
 
   // Dependencies updated at the end after all data silos are created
   if (dependencyUpdates.length > 0) {
-    logger.info(
-      colors.magenta(
-        `Syncing "${dependencyUpdates.length}" data silo dependencies...`,
-      ),
-    );
-    await mapSeries(dependencyUpdates, async ([dataSilo, dependencyTitles]) => {
-      logger.info(
-        colors.magenta(
-          `Syncing dependencies for data silo "${dataSilo.title}"...`,
-        ),
-      );
-      try {
-        await makeGraphQLRequest(client, UPDATE_DATA_SILO, {
-          id: dataSilo.id,
-          dependedOnDataSiloTitles: dependencyTitles,
-        });
-      } catch (err) {
-        encounteredError = true;
-        logger.info(
-          colors.red(
-            `Failed to sync dependencies for data silo "${dataSilo.title}"! - ${err.message}`,
-          ),
-        );
-      }
-    });
-    logger.info(
-      colors.green(`Synced "${dependencyUpdates.length}" data silos!`),
-    );
+    await syncDataSiloDependencies(client, dependencyUpdates);
   }
 
   if (publishToPrivacyCenter) {

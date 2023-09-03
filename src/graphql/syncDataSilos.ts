@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import cliProgress from 'cli-progress';
 import {
   DataCategoryInput,
   DataSiloInput,
@@ -8,15 +9,15 @@ import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries, map } from 'bluebird';
+import keyBy from 'lodash/keyBy';
 import {
   DATA_SILOS,
-  UPDATE_DATA_SILO,
-  CREATE_DATA_SILO,
+  CREATE_DATA_SILOS,
   UPDATE_OR_CREATE_DATA_POINT,
   DATA_SILO,
   DATA_POINTS,
   SUB_DATA_POINTS,
-  UPDATE_PROMPT_A_VENDOR_SETTINGS,
+  UPDATE_DATA_SILOS,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -24,12 +25,16 @@ import {
 } from './fetchDataSubjects';
 import { ApiKey } from './fetchApiKeys';
 import {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
   PromptAVendorEmailCompletionLinkType,
   PromptAVendorEmailSendType,
   RequestActionObjectResolver,
 } from '@transcend-io/privacy-types';
 import sortBy from 'lodash/sortBy';
+import chunk from 'lodash/chunk';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { apply } from '@transcend-io/type-utils';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -59,6 +64,8 @@ export interface DataSilo {
     hasAvcFunctionality: boolean;
   };
 }
+
+const BATCH_SILOS_LIMIT = 20;
 
 /**
  * Fetch all dataSilos in the organization
@@ -107,11 +114,13 @@ export async function fetchAllDataSilos(
         nodes: DataSilo[];
       };
     }>(client, DATA_SILOS, {
+      filterBy: {
+        ids: ids.length > 0 ? ids : undefined,
+        types: integrationNames.length > 0 ? integrationNames : undefined,
+        text: title,
+      },
       first: pageSize,
-      ids: ids.length > 0 ? ids : undefined,
-      types: integrationNames.length > 0 ? integrationNames : undefined,
       offset,
-      title,
     });
     dataSilos.push(...nodes);
     offset += pageSize;
@@ -129,7 +138,7 @@ export async function fetchAllDataSilos(
     ),
   );
 
-  return dataSilos;
+  return dataSilos.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 interface SubDataPoint {
@@ -258,6 +267,7 @@ export async function fetchAllSubDataPoints(
         dataPointIds: [dataPointId],
         offset,
       });
+
       subDataPoints.push(...nodes);
       offset += pageSize;
       shouldContinue = nodes.length === pageSize;
@@ -355,7 +365,9 @@ export async function fetchAllDataPoints(
           });
           dataPoints.push({
             ...node,
-            subDataPoints,
+            subDataPoints: subDataPoints.sort((a, b) =>
+              a.name.localeCompare(b.name),
+            ),
           });
 
           if (debug) {
@@ -391,7 +403,7 @@ export async function fetchAllDataPoints(
     offset += pageSize;
     shouldContinue = nodes.length === pageSize;
   } while (shouldContinue);
-  return sortBy(dataPoints, 'name');
+  return dataPoints.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export interface DataSiloEnriched {
@@ -448,6 +460,10 @@ export interface DataSiloEnriched {
   };
   /** Silo is live */
   isLive: boolean;
+  /** Hosting country of data silo */
+  country?: IsoCountryCode;
+  /** Hosting subdivision data silo */
+  countrySubDivision?: IsoCountrySubdivisionCode;
   /**
    * The frequency with which we should be sending emails for this data silo, in milliseconds.
    */
@@ -564,17 +580,13 @@ export async function fetchEnrichedDataSilos(
 /**
  * Sync a data silo configuration
  *
- * @param input - The transcend input definition
+ * @param dataSilos - Data silos to sync
  * @param client - GraphQL client
  * @param options - Options
  * @returns Data silo info
  */
-export async function syncDataSilo(
-  {
-    datapoints,
-    'email-settings': promptAVendorEmailSettings,
-    ...dataSilo
-  }: DataSiloInput,
+export async function syncDataSilos(
+  dataSilos: DataSiloInput[],
   client: GraphQLClient,
   {
     pageSize,
@@ -588,205 +600,357 @@ export async function syncDataSilo(
     /** API key title to API key */
     apiKeysByTitle: { [title in string]: ApiKey };
   },
-): Promise<DataSilo> {
-  // Try to fetch an dataSilo with the same title
-  const matches = await fetchAllDataSilos(client, {
-    title: dataSilo.title,
+): Promise<{
+  /** Whether successfully updated */
+  success: boolean;
+  /** A mapping between data silo title to data silo ID */
+  dataSiloTitleToId: { [k in string]: string };
+}> {
+  let encounteredError = false;
+
+  // Time duration
+  const t0 = new Date().getTime();
+  logger.info(colors.magenta(`Syncing "${dataSilos.length}" data silos...`));
+
+  // TODO: https://transcend.height.app/T-28707 - search by title instead of over-fetching
+  // Determine the set of data silos that already exist
+  const allDataSilos = await fetchAllDataSilos(client, {
+    // TODO: https://transcend.height.app/T-28707 - search by title instead of over-fetching
+    // titles: dataSilos.map(({ title }) => title),
     pageSize,
   });
-  let existingDataSilo = matches.find(({ title }) => title === dataSilo.title);
+  const allTitles = dataSilos.map(({ title }) => title);
+  const existingDataSilos = allDataSilos.filter((silo) =>
+    allTitles.includes(silo.title),
+  );
 
-  // If data silo exists, update it, else create new
-  if (existingDataSilo) {
-    const { updateDataSilo } = await makeGraphQLRequest<{
-      /** Mutation result */
-      updateDataSilo: {
-        /** Updated data silo */
-        dataSilo: DataSilo;
-      };
-    }>(client, UPDATE_DATA_SILO, {
-      id: existingDataSilo.id,
-      title: dataSilo.title,
-      url: dataSilo.url,
-      headers: dataSilo.headers,
-      description: dataSilo.description,
-      identifiers: dataSilo['identity-keys'],
-      isLive: !dataSilo.disabled,
-      ownerEmails: dataSilo.owners,
-      teamNames: dataSilo.teams,
-      // clear out if not specified, otherwise the update needs to be applied after
-      // all data silos are created
-      dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
-        ? undefined
-        : [],
-      apiKeyId: dataSilo['api-key-title']
-        ? apiKeysByTitle[dataSilo['api-key-title']].id
-        : undefined,
-      dataSubjectBlockListIds: dataSilo['data-subjects']
-        ? convertToDataSubjectBlockList(
-            dataSilo['data-subjects'],
-            dataSubjectsByName,
-          )
-        : undefined,
-      attributes: dataSilo.attributes,
-    });
-    existingDataSilo = updateDataSilo.dataSilo;
-  } else {
-    // TODO: https://transcend.height.app/T-26999 - remove this, use createDataSilos
-    const { connectDataSilo } = await makeGraphQLRequest<{
-      /** Mutation result */
-      connectDataSilo: {
-        /** Created data silo */
-        dataSilo: DataSilo;
-      };
-    }>(client, CREATE_DATA_SILO, {
-      title: dataSilo.title,
-      url: dataSilo.url,
-      headers: dataSilo.headers,
-      type: dataSilo.integrationName,
-      outerType: dataSilo['outer-type'] || undefined,
-      description: dataSilo.description || '',
-      identifiers: dataSilo['identity-keys'],
-      isLive: !dataSilo.disabled,
-      ownerEmails: dataSilo.owners,
-      teamNames: dataSilo.teams,
-      // clear out if not specified, otherwise the update needs to be applied after
-      // all data silos are created
-      dependedOnDataSiloTitles: dataSilo['deletion-dependencies']
-        ? undefined
-        : [],
-      apiKeyId: dataSilo['api-key-title']
-        ? apiKeysByTitle[dataSilo['api-key-title']].id
-        : undefined,
-      dataSubjectBlockListIds: dataSilo['data-subjects']
-        ? convertToDataSubjectBlockList(
-            dataSilo['data-subjects'],
-            dataSubjectsByName,
-          )
-        : undefined,
-      attributes: dataSilo.attributes,
-    });
-    existingDataSilo = connectDataSilo.dataSilo;
-  }
+  // Create a mapping of title -> existing silo, if it exists
+  const existingDataSiloByTitle = keyBy<Pick<DataSilo, 'id' | 'title'>>(
+    existingDataSilos,
+    'title',
+  );
 
-  if (promptAVendorEmailSettings) {
-    if (!existingDataSilo.catalog.hasAvcFunctionality) {
-      logger.info(
-        colors.red(
-          `The data silo ${dataSilo.title} does not support setting email-settings. Please remove this field your yml file.`,
-        ),
-      );
-      process.exit(1);
-    } else {
-      logger.info(
-        colors.magenta(
-          `Syncing email settings for data silo ${dataSilo.title}...`,
-        ),
-      );
-
-      await makeGraphQLRequest(client, UPDATE_PROMPT_A_VENDOR_SETTINGS, {
-        dataSiloId: existingDataSilo!.id,
-        notifyEmailAddress: promptAVendorEmailSettings['notify-email-address'],
-        promptAVendorEmailSendFrequency:
-          promptAVendorEmailSettings['send-frequency'],
-        promptAVendorEmailSendType: promptAVendorEmailSettings['send-type'],
-        promptAVendorEmailIncludeIdentifiersAttachment:
-          promptAVendorEmailSettings['include-identifiers-attachment'],
-        promptAVendorEmailCompletionLinkType:
-          promptAVendorEmailSettings['completion-link-type'],
-        promptAVendorEmailManualWorkRetryFrequency:
-          promptAVendorEmailSettings['manual-work-retry-frequency'],
-      });
-
-      logger.info(
-        colors.green(`Synced email-settings for data silo ${dataSilo.title}!`),
-      );
-    }
-  }
-
-  // Sync datapoints
-  if (datapoints) {
+  // Create new silos that do not exist
+  const newDataSiloInputs = dataSilos.filter(
+    ({ title }) => !existingDataSiloByTitle[title],
+  );
+  if (newDataSiloInputs.length > 0) {
     logger.info(
       colors.magenta(
-        `Syncing "${datapoints.length}" datapoints for data silo ${dataSilo.title}...`,
+        `Creating "${newDataSiloInputs.length}" data silos that did not exist...`,
       ),
     );
-    await map(
-      datapoints,
-      async (datapoint) => {
-        logger.info(colors.magenta(`Syncing datapoint "${datapoint.key}"...`));
-        const fields = datapoint.fields
-          ? datapoint.fields.map(
-              ({
-                key,
-                description,
-                categories,
-                purposes,
-                attributes,
-                ...rest
-              }) =>
-                // TODO: Support setting title separately from the 'key/name'
-                ({
-                  name: key,
-                  description,
-                  categories: !categories
-                    ? undefined
-                    : categories.map((category) => ({
-                        ...category,
-                        name: category.name || 'Other',
-                      })),
-                  purposes: !purposes
-                    ? undefined
-                    : purposes.map((purpose) => ({
-                        ...purpose,
-                        name: purpose.name || 'Other',
-                      })),
-                  attributes,
-                  accessRequestVisibilityEnabled:
-                    rest['access-request-visibility-enabled'],
-                  erasureRequestRedactionEnabled:
-                    rest['erasure-request-redaction-enabled'],
-                }),
-            )
-          : undefined;
 
-        if (fields && fields.length > 0) {
-          logger.info(
-            colors.magenta(
-              `Syncing ${fields.length} fields for datapoint "${datapoint.key}"...`,
-            ),
-          );
-        }
-        const payload = {
-          dataSiloId: existingDataSilo!.id,
-          path: datapoint.path,
-          name: datapoint.key,
-          title: datapoint.title,
-          description: datapoint.description,
-          ...(datapoint['data-collection-tag']
-            ? { dataCollectionTag: datapoint['data-collection-tag'] }
-            : {}),
-          querySuggestions: !datapoint['privacy-action-queries']
-            ? undefined
-            : Object.entries(datapoint['privacy-action-queries']).map(
-                ([key, value]) => ({
-                  requestType: key,
-                  suggestedQuery: value,
-                }),
-              ),
-          enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
-          subDataPoints: fields,
+    // Batch the creation
+    const chunked = chunk(newDataSiloInputs, BATCH_SILOS_LIMIT);
+    await mapSeries(chunked, async (dependencyUpdateChunk) => {
+      const {
+        createDataSilos: { dataSilos },
+      } = await makeGraphQLRequest<{
+        /** Mutation result */
+        createDataSilos: {
+          /** New data silos */
+          dataSilos: Pick<DataSilo, 'id' | 'title'>[];
         };
+      }>(client, CREATE_DATA_SILOS, {
+        input: dependencyUpdateChunk.map((input) => ({
+          name: input.integrationName,
+          title: input.title,
+          country: input.country,
+          countrySubDivision: input.countrySubDivision,
+        })),
+      });
 
-        await makeGraphQLRequest(client, UPDATE_OR_CREATE_DATA_POINT, payload);
+      // save mapping of title and id
+      dataSilos.forEach((silo) => {
+        existingDataSiloByTitle[silo.title] = silo;
+      });
+    });
 
-        logger.info(colors.green(`Synced datapoint "${datapoint.key}"!`));
-      },
-      {
-        concurrency: 5,
-      },
+    logger.info(
+      colors.green(
+        `Successfully created "${newDataSiloInputs.length}" data silos!`,
+      ),
     );
   }
-  return existingDataSilo;
+
+  // Batch the updates
+  const chunkedUpdates = chunk(dataSilos, BATCH_SILOS_LIMIT);
+  await mapSeries(chunkedUpdates, async (dataSiloUpdateChunk, ind) => {
+    logger.info(
+      colors.magenta(
+        `[Batch ${ind + 1}/${chunkedUpdates.length}] Syncing "${
+          dataSiloUpdateChunk.length
+        }" data silos`,
+      ),
+    );
+    await makeGraphQLRequest<{
+      /** Mutation result */
+      updateDataSilos: {
+        /** New data silos */
+        dataSilos: Pick<DataSilo, 'id' | 'title'>[];
+      };
+    }>(client, UPDATE_DATA_SILOS, {
+      input: {
+        dataSilos: dataSiloUpdateChunk.map((input) => ({
+          id: existingDataSiloByTitle[input.title].id,
+          country: input.country,
+          countrySubDivision: input.countrySubDivision,
+          url: input.url,
+          headers: input.headers,
+          description: input.description,
+          identifiers: input['identity-keys'],
+          isLive: !input.disabled,
+          ownerEmails: input.owners,
+          teamNames: input.teams,
+          // clear out if not specified, otherwise the update needs to be applied after
+          // all data silos are created
+          dependedOnDataSiloTitles: input['deletion-dependencies']
+            ? undefined
+            : [],
+          apiKeyId: input['api-key-title']
+            ? apiKeysByTitle[input['api-key-title']].id
+            : undefined,
+          dataSubjectBlockListIds: input['data-subjects']
+            ? convertToDataSubjectBlockList(
+                input['data-subjects'],
+                dataSubjectsByName,
+              )
+            : undefined,
+          attributes: input.attributes,
+          // AVC settings
+          notifyEmailAddress: input['email-settings']?.['notify-email-address'],
+          promptAVendorEmailSendFrequency:
+            input['email-settings']?.['send-frequency'],
+          promptAVendorEmailSendType: input['email-settings']?.['send-type'],
+          promptAVendorEmailIncludeIdentifiersAttachment:
+            input['email-settings']?.['include-identifiers-attachment'],
+          promptAVendorEmailCompletionLinkType:
+            input['email-settings']?.['completion-link-type'],
+          manualWorkRetryFrequency:
+            input['email-settings']?.['manual-work-retry-frequency'],
+        })),
+      },
+    });
+    logger.info(
+      colors.green(
+        `[Batch ${ind + 1}/${chunkedUpdates.length}] Synced "${
+          dataSiloUpdateChunk.length
+        }" data silos!`,
+      ),
+    );
+  });
+
+  // Sync datapoints
+
+  // create a new progress bar instance and use shades_classic theme
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+  const dataSilosWithDataPoints = dataSilos.filter(
+    ({ datapoints = [] }) => datapoints.length > 0,
+  );
+  const totalDataPoints = dataSilos
+    .map(({ datapoints = [] }) => datapoints.length)
+    .reduce((acc, count) => acc + count, 0);
+  logger.info(
+    colors.magenta(
+      `Syncing "${totalDataPoints}" datapoints from "${dataSilosWithDataPoints.length}" data silos...`,
+    ),
+  );
+  progressBar.start(totalDataPoints, 0);
+  let total = 0;
+
+  await map(
+    dataSilosWithDataPoints,
+    async ({ datapoints, title }) => {
+      if (datapoints) {
+        await map(
+          datapoints,
+          async (datapoint) => {
+            const fields = datapoint.fields
+              ? datapoint.fields.map(
+                  ({
+                    key,
+                    description,
+                    categories,
+                    purposes,
+                    attributes,
+                    ...rest
+                  }) =>
+                    // TODO: Support setting title separately from the 'key/name'
+                    ({
+                      name: key,
+                      description,
+                      categories: !categories
+                        ? undefined
+                        : categories.map((category) => ({
+                            ...category,
+                            name: category.name || 'Other',
+                          })),
+                      purposes: !purposes
+                        ? undefined
+                        : purposes.map((purpose) => ({
+                            ...purpose,
+                            name: purpose.name || 'Other',
+                          })),
+                      attributes,
+                      accessRequestVisibilityEnabled:
+                        rest['access-request-visibility-enabled'],
+                      erasureRequestRedactionEnabled:
+                        rest['erasure-request-redaction-enabled'],
+                    }),
+                )
+              : undefined;
+
+            const payload = {
+              dataSiloId: existingDataSiloByTitle[title].id,
+              path: datapoint.path,
+              name: datapoint.key,
+              title: datapoint.title,
+              description: datapoint.description,
+              ...(datapoint['data-collection-tag']
+                ? { dataCollectionTag: datapoint['data-collection-tag'] }
+                : {}),
+              querySuggestions: !datapoint['privacy-action-queries']
+                ? undefined
+                : Object.entries(datapoint['privacy-action-queries']).map(
+                    ([key, value]) => ({
+                      requestType: key,
+                      suggestedQuery: value,
+                    }),
+                  ),
+              enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
+              subDataPoints: fields,
+            };
+
+            // Ensure no duplicate sub-datapoints are provided
+            const subDataPointsToUpdate = (payload.subDataPoints || []).map(
+              ({ name }) => name,
+            );
+            const duplicateDataPoints = subDataPointsToUpdate.filter(
+              (name, index) => subDataPointsToUpdate.indexOf(name) !== index,
+            );
+            if (duplicateDataPoints.length > 0) {
+              logger.info(
+                colors.red(
+                  `\nCannot update datapoint "${
+                    datapoint.key
+                  }" as it has duplicate sub-datapoints with the same name: \n${duplicateDataPoints.join(
+                    '\n',
+                  )}`,
+                ),
+              );
+              encounteredError = true;
+            } else {
+              try {
+                await makeGraphQLRequest(
+                  client,
+                  UPDATE_OR_CREATE_DATA_POINT,
+                  payload,
+                );
+              } catch (err) {
+                logger.info(
+                  colors.red(
+                    `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
+                  ),
+                );
+                encounteredError = true;
+              }
+            }
+            total += 1;
+            progressBar.update(total);
+          },
+          {
+            concurrency: 5,
+          },
+        );
+      }
+    },
+    {
+      concurrency: 5,
+    },
+  );
+
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+
+  logger.info(
+    colors.green(
+      `Synced "${
+        dataSilos.length
+      }" data silos and "${totalDataPoints}" datapoints in "${
+        totalTime / 1000
+      }" seconds!`,
+    ),
+  );
+  return {
+    success: !encounteredError,
+    dataSiloTitleToId: apply(existingDataSiloByTitle, ({ id }) => id),
+  };
+}
+
+/**
+ * Sync data silo dependencies
+ *
+ * @param client - GraphQL client
+ * @param dependencyUpdates - Mapping from [data silo ID, dependency titles]
+ * @returns True upon success
+ */
+export async function syncDataSiloDependencies(
+  client: GraphQLClient,
+  dependencyUpdates: [string, string[]][],
+): Promise<boolean> {
+  let encounteredError = false;
+  logger.info(
+    colors.magenta(
+      `Syncing "${dependencyUpdates.length}" data silo dependencies...`,
+    ),
+  );
+
+  // Batch the updates
+  const chunkedUpdates = chunk(dependencyUpdates, BATCH_SILOS_LIMIT);
+  await mapSeries(chunkedUpdates, async (dependencyUpdateChunk, ind) => {
+    logger.info(
+      colors.magenta(
+        `[Batch ${ind}/${dependencyUpdateChunk.length}] Updating "${dependencyUpdateChunk.length}" data silos...`,
+      ),
+    );
+    try {
+      await makeGraphQLRequest<{
+        /** Mutation result */
+        updateDataSilos: {
+          /** New data silos */
+          dataSilos: Pick<DataSilo, 'id' | 'title'>[];
+        };
+      }>(client, UPDATE_DATA_SILOS, {
+        input: {
+          dataSilos: dependencyUpdateChunk.map(
+            ([id, dependedOnDataSiloTitles]) => ({
+              id,
+              dependedOnDataSiloTitles,
+            }),
+          ),
+        },
+      });
+      logger.info(
+        colors.green(
+          `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
+            `Synced "${dependencyUpdateChunk.length}" data silos!`,
+        ),
+      );
+    } catch (err) {
+      encounteredError = true;
+      logger.info(
+        colors.red(
+          `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
+            `Failed to update "${dependencyUpdateChunk.length}" silos! - ${err.message}`,
+        ),
+      );
+    }
+  });
+  return !encounteredError;
 }
 /* eslint-enable max-lines */

@@ -2,16 +2,21 @@ import { gql } from 'graphql-request';
 
 export const DATA_SILOS = gql`
   query TranscendCliDataSilos(
-    $title: String
-    $ids: [ID!]
-    $types: [String!]
+    $filterBy: DataSiloFiltersInput!
     $first: Int!
     $offset: Int!
   ) {
     dataSilos(
-      filterBy: { text: $title, ids: $ids, type: $types }
+      filterBy: $filterBy
       first: $first
       offset: $offset
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: title, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      useMaster: false
     ) {
       nodes {
         id
@@ -26,6 +31,7 @@ export const DATA_SILOS = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-28707 - batch this when apiKeys and dependentDataSilos exposed
 export const DATA_SILO = gql`
   query TranscendCliDataSilo($id: String!) {
     dataSilo(id: $id) {
@@ -34,6 +40,8 @@ export const DATA_SILO = gql`
       description
       type
       outerType
+      country
+      countrySubDivision
       url
       notifyEmailAddress
       attributeValues {
@@ -75,125 +83,25 @@ export const DATA_SILO = gql`
   }
 `;
 
-export const UPDATE_DATA_SILO = gql`
-  mutation TranscendCliUpdateDataSilo(
-    $id: ID!
-    $title: String
-    $description: String
-    $url: String
-    $headers: [CustomHeaderInput!]
-    $notifyEmailAddress: String
-    $identifiers: [String!]
-    $isLive: Boolean
-    $dataSubjectBlockListIds: [ID!]
-    $dependedOnDataSiloTitles: [String!]
-    $ownerEmails: [String!]
-    $teamNames: [String!]
-    $apiKeyId: ID
-    $attributes: [AttributeInput!]
-  ) {
-    updateDataSilo(
-      input: {
-        id: $id
-        title: $title
-        description: $description
-        url: $url
-        headers: $headers
-        notifyEmailAddress: $notifyEmailAddress
-        identifiers: $identifiers
-        isLive: $isLive
-        dataSubjectBlockListIds: $dataSubjectBlockListIds
-        dependedOnDataSiloTitles: $dependedOnDataSiloTitles
-        ownerEmails: $ownerEmails
-        teamNames: $teamNames
-        apiKeyId: $apiKeyId
-        attributes: $attributes
-      }
-    ) {
+export const UPDATE_DATA_SILOS = gql`
+  mutation TranscendCliUpdateDataSilo($input: UpdateDataSilosInput!) {
+    updateDataSilos(input: $input) {
       clientMutationId
-      dataSilo {
+      dataSilos {
         id
         title
-        type
-        catalog {
-          hasAvcFunctionality
-        }
       }
     }
   }
 `;
 
-export const CREATE_DATA_SILO = gql`
-  mutation TranscendCliCreateDataSilo(
-    $title: String!
-    $description: String!
-    $url: String
-    $headers: [CustomHeaderInput!]
-    $type: String!
-    $outerType: String
-    $identifiers: [String!]
-    $isLive: Boolean!
-    $attributes: [AttributeInput!]
-    $notifyEmailAddress: String
-    $dataSubjectBlockListIds: [ID!]
-    $dependedOnDataSiloTitles: [String!]
-    $ownerEmails: [String!]
-    $teamNames: [String!]
-    $apiKeyId: ID
-  ) {
-    connectDataSilo(
-      input: {
-        name: $type
-        title: $title
-        description: $description
-        outerType: $outerType
-        url: $url
-        attributes: $attributes
-        headers: $headers
-        notifyEmailAddress: $notifyEmailAddress
-        identifiers: $identifiers
-        isLive: $isLive
-        dataSubjectBlockListIds: $dataSubjectBlockListIds
-        dependedOnDataSiloTitles: $dependedOnDataSiloTitles
-        ownerEmails: $ownerEmails
-        apiKeyId: $apiKeyId
-        teamNames: $teamNames
-      }
-    ) {
-      dataSilo {
+export const CREATE_DATA_SILOS = gql`
+  mutation TranscendCliCreateDataSilo($input: [CreateDataSilosInput!]!) {
+    createDataSilos(input: $input) {
+      dataSilos {
         id
         title
-        type
-        catalog {
-          hasAvcFunctionality
-        }
       }
-    }
-  }
-`;
-
-export const UPDATE_PROMPT_A_VENDOR_SETTINGS = gql`
-  mutation UpdatePromptAVendorEmailSendSettings(
-    $dataSiloId: ID!
-    $notifyEmailAddress: String
-    $promptAVendorEmailSendFrequency: Int
-    $promptAVendorEmailSendType: PromptAVendorEmailSendType
-    $promptAVendorEmailIncludeIdentifiersAttachment: Boolean
-    $promptAVendorEmailCompletionLinkType: PromptAVendorEmailCompletionLinkType
-    $manualWorkRetryFrequency: String
-  ) {
-    updatePromptAVendorEmailSendSettings(
-      input: {
-        dataSiloId: $dataSiloId
-        notifyEmailAddress: $notifyEmailAddress
-        promptAVendorEmailSendFrequency: $promptAVendorEmailSendFrequency
-        promptAVendorEmailSendType: $promptAVendorEmailSendType
-        promptAVendorEmailIncludeIdentifiersAttachment: $promptAVendorEmailIncludeIdentifiersAttachment
-        promptAVendorEmailCompletionLinkType: $promptAVendorEmailCompletionLinkType
-        manualWorkRetryFrequency: $manualWorkRetryFrequency
-      }
-    ) {
-      clientMutationId
     }
   }
 `;

@@ -10,6 +10,14 @@ export const DATA_POINTS = gql`
       filterBy: { dataSilos: $dataSiloIds }
       first: $first
       offset: $offset
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
+      orderBy: [
+        # TODO: https://transcend.height.app/T-27909 - order by createdAt
+        # { field: createdAt, direction: ASC }
+        { field: name, direction: ASC }
+      ]
     ) {
       totalCount
       nodes {
@@ -51,6 +59,9 @@ export const SUB_DATA_POINTS = gql`
       filterBy: { dataPoints: $dataPointIds }
       first: $first
       offset: $offset
+      # TODO: https://transcend.height.app/T-27909 - add orderBy
+      # isExportCsv: true
+      useMaster: false
     ) {
       totalCount
       nodes {

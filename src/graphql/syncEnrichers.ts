@@ -92,7 +92,7 @@ export async function fetchAllEnrichers(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return enrichers;
+  return enrichers.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 /**
