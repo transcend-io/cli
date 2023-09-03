@@ -16,7 +16,11 @@ function sleepPromise(sleepTime: number): Promise<number> {
   });
 }
 
-const KNOWN_ERRORS = ['got invalid value', 'Client error'];
+const KNOWN_ERRORS = [
+  'got invalid value',
+  'Client error',
+  'cannot affect row a second time',
+];
 
 /**
  * Make a GraphQL request with retries

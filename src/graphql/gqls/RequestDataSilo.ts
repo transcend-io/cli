@@ -1,13 +1,18 @@
 import { gql } from 'graphql-request';
 
-// TODO: https://transcend.height.app/T-27909 - order query
 export const REQUEST_DATA_SILOS = gql`
   query TranscendCliRequestDataSilos(
     $first: Int!
     $offset: Int!
     $filterBy: RequestDataSiloFiltersInput!
   ) {
-    requestDataSilos(filterBy: $filterBy, first: $first, offset: $offset) {
+    requestDataSilos(
+      filterBy: $filterBy
+      first: $first
+      offset: $offset
+      # Order by createdAt to ensure pagination consistent as new silos are created
+      orderBy: [{ field: createdAt, direction: ASC }]
+    ) {
       nodes {
         id
       }

@@ -829,7 +829,7 @@ export async function syncDataSilos(
             } catch (err) {
               logger.info(
                 colors.red(
-                  `Failed to update "${datapoint.key} for data silo "${title}"! - ${err.message}`,
+                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
                 ),
               );
               encounteredError = true;
