@@ -49,6 +49,7 @@ export async function submitPrivacyRequest(
     details = '',
     isTest = false,
     emailIsVerified = true,
+    skipSendingReceipt = false,
     isSilent = true,
     additionalAttributes = [],
   }: {
@@ -58,6 +59,8 @@ export async function submitPrivacyRequest(
     isSilent?: boolean;
     /** Whether the email is verified up front */
     emailIsVerified?: boolean;
+    /** When true, skip sending of the email receipt */
+    skipSendingReceipt?: boolean;
     /** Request details */
     details?: string;
     /** Additional attributes to tag the requests with */
@@ -93,6 +96,7 @@ export async function submitPrivacyRequest(
         subjectType: input.subjectType,
         isSilent,
         isTest,
+        skipSendingReceipt,
         ...(input.locale ? { locale: input.locale } : {}),
         details,
         attributes: mergedAttributes,
