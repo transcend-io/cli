@@ -19,7 +19,7 @@ export async function restartPrivacyRequest(
   sombra: Got,
   request: PrivacyRequest,
   {
-    skipSendingReceipt = false,
+    sendEmailReceipt = false,
     skipWaitingPeriod = false,
     emailIsVerified = true,
     requestIdentifiers = [],
@@ -27,7 +27,7 @@ export async function restartPrivacyRequest(
     /** List of request identifiers to include */
     requestIdentifiers?: RequestIdentifier[];
     /** When true, send an email receipt to data subject */
-    skipSendingReceipt?: boolean;
+    sendEmailReceipt?: boolean;
     /** Whether the email is verified */
     emailIsVerified?: boolean;
     /** Whether to skip waiting period */
@@ -82,7 +82,7 @@ export async function restartPrivacyRequest(
         skipWaitingPeriod,
         createdAt: request.createdAt,
         details: `Restarted by Transcend cli: "tr-request-restart" - ${request.details}`,
-        skipSendingReceipt: !skipSendingReceipt,
+        skipSendingReceipt: !sendEmailReceipt,
       },
     })
     .json();
