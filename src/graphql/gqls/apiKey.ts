@@ -2,7 +2,18 @@ import { gql } from 'graphql-request';
 
 export const API_KEYS = gql`
   query TranscendCliApiKeys($first: Int!, $offset: Int!, $titles: [String!]) {
-    apiKeys(first: $first, offset: $offset, filterBy: { titles: $titles }) {
+    apiKeys(
+      first: $first
+      offset: $offset
+      filterBy: { titles: $titles }
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: title, direction: ASC }
+      ]
+    ) {
       nodes {
         id
         title

@@ -80,7 +80,7 @@ export async function fetchAllIdentifiers(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return identifiers;
+  return identifiers.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**

@@ -6,7 +6,18 @@ export const REQUEST_DATA_SILOS = gql`
     $offset: Int!
     $filterBy: RequestDataSiloFiltersInput!
   ) {
-    requestDataSilos(filterBy: $filterBy, first: $first, offset: $offset) {
+    requestDataSilos(
+      filterBy: $filterBy
+      first: $first
+      offset: $offset
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: title, direction: ASC, model: dataSilo }
+      ]
+    ) {
       nodes {
         id
       }

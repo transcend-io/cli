@@ -54,7 +54,7 @@ export async function fetchAllApiKeys(
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
-  return apiKeys;
+  return apiKeys.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 /**
@@ -80,17 +80,23 @@ export async function fetchApiKeys(
     ),
   );
   const titles = apiKeyInputs.map(({ title }) => title);
-  const apiKeys = await fetchAllApiKeys(client, fetchAll ? undefined : titles);
+  const expectedApiKeyTitles = uniq(
+    dataSilos
+      .map((silo) => silo['api-key-title'])
+      .filter((x): x is string => !!x),
+  );
+  const allTitlesExpected = [...expectedApiKeyTitles, ...titles];
+  const apiKeys = await fetchAllApiKeys(
+    client,
+    fetchAll ? undefined : [...expectedApiKeyTitles, ...titles],
+  );
 
   // Create a map
   const apiKeysByTitle = keyBy(apiKeys, 'title');
 
   // Determine expected set of apiKeys expected
-  const expectedApiKeyTitles = uniq(
-    dataSilos.map((silo) => silo['api-key-title']).filter((x) => !!x),
-  );
   const missingApiKeys = difference(
-    expectedApiKeyTitles,
+    allTitlesExpected,
     apiKeys.map(({ title }) => title),
   );
 

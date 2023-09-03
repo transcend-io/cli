@@ -213,16 +213,16 @@ export async function pullTranscendConfiguration(
     dataSilos.map(([{ apiKeys }]) => apiKeys.map(({ title }) => title)),
   );
   const relevantApiKeys = Object.values(apiKeyTitleMap).filter(({ title }) =>
-    apiKeyTitles.includes(title),
+    resources.includes(TranscendPullResource.ApiKeys)
+      ? true
+      : apiKeyTitles.includes(title),
   );
   if (relevantApiKeys.length > 0) {
-    result['api-keys'] = Object.values(apiKeyTitleMap)
-      .filter(({ title }) => apiKeyTitles.includes(title))
-      .map(
-        ({ title }): ApiKeyInput => ({
-          title,
-        }),
-      );
+    result['api-keys'] = relevantApiKeys.map(
+      ({ title }): ApiKeyInput => ({
+        title,
+      }),
+    );
   }
 
   // Save Consent Manager
@@ -528,6 +528,8 @@ export async function pullTranscendConfiguration(
           identifiers,
           dependentDataSilos,
           owners,
+          country,
+          countrySubDivision,
           teams,
           subjectBlocklist,
           isLive,
@@ -561,6 +563,8 @@ export async function pullTranscendConfiguration(
           ? { owners: owners.map(({ email }) => email) }
           : {}),
         ...(teams.length > 0 ? { teams: teams.map(({ name }) => name) } : {}),
+        country: country || undefined,
+        countrySubDivision: countrySubDivision || undefined,
         disabled: !isLive,
         'data-subjects':
           subjectBlocklist.length > 0

@@ -90,5 +90,5 @@ export async function fetchAllCookies(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return cookies;
+  return cookies.sort((a, b) => a.name.localeCompare(b.name));
 }

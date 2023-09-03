@@ -147,7 +147,9 @@ async function main(): Promise<void> {
   } else {
     const encounteredErrors: string[] = [];
     await mapSeries(apiKeyOrList, async (apiKey, ind) => {
-      const prefix = `[${ind}/${apiKeyOrList.length}][${apiKey.organizationName}] `;
+      const prefix = `[${ind + 1}/${apiKeyOrList.length}][${
+        apiKey.organizationName
+      }] `;
       logger.info(
         colors.magenta(
           `~~~\n\n${prefix}Attempting to pull consent metrics...\n\n~~~`,

@@ -62,5 +62,5 @@ export async function fetchAllActions(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return actions;
+  return actions.sort((a, b) => a.type.localeCompare(b.type));
 }

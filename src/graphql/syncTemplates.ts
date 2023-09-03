@@ -58,7 +58,7 @@ export async function fetchAllTemplates(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
-  return templates;
+  return templates.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 /**
