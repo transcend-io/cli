@@ -13,6 +13,9 @@ export const PURPOSES = gql`
 `;
 
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
+// # TODO: https://transcend.height.app/T-27909 - enable optimizations
+//       # isExportCsv: true
+//       # useMaster: false
 export const EXPERIENCES = gql`
   query TranscendCliExperiences($first: Int!, $offset: Int!) {
     experiences(first: $first, offset: $offset) {
@@ -106,7 +109,12 @@ export const DATA_FLOWS = gql`
       offset: $offset
       filterBy: { status: $status, showZeroActivity: $showZeroActivity }
       input: { airgapBundleId: $airgapBundleId }
-      isExportCsv: true
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: value, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
       useMaster: false
     ) {
       nodes {
@@ -149,7 +157,12 @@ export const COOKIES = gql`
       offset: $offset
       filterBy: { status: $status }
       input: { airgapBundleId: $airgapBundleId }
-      isExportCsv: true
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: name, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

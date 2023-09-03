@@ -10,7 +10,13 @@ export const REQUESTS = gql`
       filterBy: $filterBy
       first: $first
       offset: $offset
-      isExportCsv: true
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        # TODO: https://transcend.height.app/T-27909 - order by ID
+        # { field: id, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

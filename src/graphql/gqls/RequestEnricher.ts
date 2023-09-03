@@ -10,8 +10,14 @@ export const REQUEST_ENRICHERS = gql`
       input: { requestId: $requestId }
       first: $first
       offset: $offset
-      # Order by createdAt to ensure pagination consistent as new silos are created
-      orderBy: [{ field: createdAt, direction: ASC }]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        # TODO: https://transcend.height.app/T-28707 - include order
+        # { field: title, direction: ASC, model: enricher }
+      ]
     ) {
       nodes {
         id

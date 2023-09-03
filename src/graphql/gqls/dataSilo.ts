@@ -10,7 +10,12 @@ export const DATA_SILOS = gql`
       filterBy: $filterBy
       first: $first
       offset: $offset
-      isExportCsv: true
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: title, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

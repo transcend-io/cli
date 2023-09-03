@@ -10,8 +10,13 @@ export const REQUEST_IDENTIFIERS = gql`
       input: { requestId: $requestId }
       first: $first
       offset: $offset
-      # Order by createdAt to ensure pagination consistent as new silos are created
-      orderBy: [{ field: createdAt, direction: ASC }]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      # useMaster: false
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: name, direction: ASC }
+      ]
     ) {
       nodes {
         id

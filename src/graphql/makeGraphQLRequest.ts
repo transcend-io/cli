@@ -20,6 +20,7 @@ const KNOWN_ERRORS = [
   'got invalid value',
   'Client error',
   'cannot affect row a second time',
+  'GRAPHQL_VALIDATION_FAILED',
 ];
 
 /**

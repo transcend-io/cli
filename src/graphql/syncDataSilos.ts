@@ -267,6 +267,7 @@ export async function fetchAllSubDataPoints(
         dataPointIds: [dataPointId],
         offset,
       });
+
       subDataPoints.push(...nodes);
       offset += pageSize;
       shouldContinue = nodes.length === pageSize;
@@ -678,7 +679,9 @@ export async function syncDataSilos(
   await mapSeries(chunkedUpdates, async (dataSiloUpdateChunk, ind) => {
     logger.info(
       colors.magenta(
-        `[Batch ${ind}/${chunkedUpdates.length}] Syncing "${dataSiloUpdateChunk.length}" data silos`,
+        `[Batch ${ind + 1}/${chunkedUpdates.length}] Syncing "${
+          dataSiloUpdateChunk.length
+        }" data silos`,
       ),
     );
     await makeGraphQLRequest<{
@@ -731,7 +734,9 @@ export async function syncDataSilos(
     });
     logger.info(
       colors.green(
-        `[Batch ${ind}/${chunkedUpdates.length}] Synced "${dataSiloUpdateChunk.length}" data silos!`,
+        `[Batch ${ind + 1}/${chunkedUpdates.length}] Synced "${
+          dataSiloUpdateChunk.length
+        }" data silos!`,
       ),
     );
   });
@@ -820,19 +825,39 @@ export async function syncDataSilos(
               subDataPoints: fields,
             };
 
-            try {
-              await makeGraphQLRequest(
-                client,
-                UPDATE_OR_CREATE_DATA_POINT,
-                payload,
-              );
-            } catch (err) {
+            // Ensure no duplicate sub-datapoints are provided
+            const subDataPointsToUpdate = (payload.subDataPoints || []).map(
+              ({ name }) => name,
+            );
+            const duplicateDataPoints = subDataPointsToUpdate.filter(
+              (name, index) => subDataPointsToUpdate.indexOf(name) !== index,
+            );
+            if (duplicateDataPoints.length > 0) {
               logger.info(
                 colors.red(
-                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
+                  `\nCannot update datapoint "${
+                    datapoint.key
+                  }" as it has duplicate sub-datapoints with the same name: \n${duplicateDataPoints.join(
+                    '\n',
+                  )}`,
                 ),
               );
               encounteredError = true;
+            } else {
+              try {
+                await makeGraphQLRequest(
+                  client,
+                  UPDATE_OR_CREATE_DATA_POINT,
+                  payload,
+                );
+              } catch (err) {
+                logger.info(
+                  colors.red(
+                    `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
+                  ),
+                );
+                encounteredError = true;
+              }
             }
             total += 1;
             progressBar.update(total);
@@ -912,7 +937,7 @@ export async function syncDataSiloDependencies(
       });
       logger.info(
         colors.green(
-          `[Batch ${ind}/${dependencyUpdateChunk.length}] ` +
+          `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
             `Synced "${dependencyUpdateChunk.length}" data silos!`,
         ),
       );
@@ -920,7 +945,7 @@ export async function syncDataSiloDependencies(
       encounteredError = true;
       logger.info(
         colors.red(
-          `[Batch ${ind}/${dependencyUpdateChunk.length}] ` +
+          `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
             `Failed to update "${dependencyUpdateChunk.length}" silos! - ${err.message}`,
         ),
       );
