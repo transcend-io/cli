@@ -53,9 +53,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Enrichers]: [ScopeName.ViewRequestIdentitySettings],
   [TranscendPullResource.BusinessEntities]: [ScopeName.ViewDataInventory],
-  [TranscendPullResource.Identifiers]: [
-    ScopeName.ViewDataSubjectRequestSettings,
-  ],
+  [TranscendPullResource.Identifiers]: [ScopeName.ViewRequestIdentitySettings],
   [TranscendPullResource.Attributes]: [ScopeName.ViewGlobalAttributes],
   [TranscendPullResource.DataFlows]: [ScopeName.ViewDataFlow],
   [TranscendPullResource.Cookies]: [ScopeName.ViewDataFlow],
