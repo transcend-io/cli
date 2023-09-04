@@ -116,7 +116,7 @@ export async function fetchAllDataSilos(
     }>(client, DATA_SILOS, {
       filterBy: {
         ids: ids.length > 0 ? ids : undefined,
-        types: integrationNames.length > 0 ? integrationNames : undefined,
+        type: integrationNames.length > 0 ? integrationNames : undefined,
         text: title,
       },
       first: pageSize,
