@@ -9,7 +9,7 @@ import {
 } from '../graphql';
 import cliProgress from 'cli-progress';
 import {
-  RequestDataSiloStatus,
+  // RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../constants';
@@ -44,14 +44,6 @@ export async function skipRequestDataSilos({
   // fetch all RequestDataSilos that are open
   const requestDataSilos = await fetchRequestDataSilos(client, {
     dataSiloId,
-    // all active RequestDataSilos
-    statuses: [
-      RequestDataSiloStatus.Queued,
-      RequestDataSiloStatus.Waiting,
-      RequestDataSiloStatus.Error,
-      RequestDataSiloStatus.ActionRequired,
-      RequestDataSiloStatus.RemoteProcessing,
-    ],
     requestStatuses: [RequestStatus.Compiling, RequestStatus.Secondary],
   });
 
@@ -73,13 +65,19 @@ export async function skipRequestDataSilos({
   await map(
     requestDataSilos,
     async (requestDataSilo) => {
-      await makeGraphQLRequest<{
-        /** Whether we successfully uploaded the results */
-        success: boolean;
-      }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
-        requestDataSiloId: requestDataSilo.id,
-        status: 'SKIPPED',
-      });
+      try {
+        await makeGraphQLRequest<{
+          /** Whether we successfully uploaded the results */
+          success: boolean;
+        }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
+          requestDataSiloId: requestDataSilo.id,
+          status: 'SKIPPED',
+        });
+      } catch (err) {
+        if (!err.message.include('Client error: Request must be active:')) {
+          throw err;
+        }
+      }
 
       total += 1;
       progressBar.update(total);
