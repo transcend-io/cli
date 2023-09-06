@@ -31,8 +31,6 @@ import {
   InitialViewState,
   BrowserLanguage,
 } from '@transcend-io/airgap.js-types';
-import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
-import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -923,88 +921,3 @@ export const ConsentManagerServiceMetadata = t.type({
 export type ConsentManagerServiceMetadata = t.TypeOf<
   typeof ConsentManagerServiceMetadata
 >;
-/// //////////////////////////////////////
-// Pathfinder policies                  //
-/// //////////////////////////////////////
-export const Policy: PolicyC = t.union([
-  t.literal('redactEmail'),
-  t.literal('log'),
-]);
-
-/** Type override */
-export type Policy = t.TypeOf<typeof Policy>;
-
-/** the codec of the enabled policy  */
-export type PolicyC = t.UnionC<[t.LiteralC<'redactEmail'>, t.LiteralC<'log'>]>;
-
-/** the codec of a route enabled in an AI integration */
-export type EnabledRouteC<T extends t.Mixed> = t.TypeC<{
-  /** the name of the enabled route */
-  routeName: T;
-  /** the enabled policies */
-  enabledPolicies: t.ArrayC<PolicyC>;
-}>;
-
-/** the codec of routes enabled in an AI integration */
-export type EnabledRoutesC<T extends t.Mixed> = t.ArrayC<EnabledRouteC<T>>;
-
-/** the codec of an AI Integration */
-export type AIIntegrationC<T extends t.Mixed> = t.TypeC<{
-  /** the routes enabled in the AI integration */
-  enabledRoutes: EnabledRoutesC<T>;
-}>;
-
-/** The codec of OpenAI routeName */
-export type OpenAIRouteNameC = t.UnionC<
-  [
-    t.LiteralC<'/v1/chat/completions'>,
-    t.LiteralC<'/v1/embeddings'>,
-    t.LiteralC<'/v1/completions'>,
-  ]
->;
-
-/**
- * The names of the OpenAI routes that we support setting policies for
- * reference: https://platform.openai.com/docs/api-reference/introduction
- */
-export const OpenAIRouteName: OpenAIRouteNameC = t.union([
-  t.literal('/v1/chat/completions'),
-  t.literal('/v1/embeddings'),
-  t.literal('/v1/completions'),
-]);
-
-/** Type override */
-export type OpenAIRouteName = t.TypeOf<typeof OpenAIRouteName>;
-
-export const OpenAIEnabledRoute = buildEnabledRouteType({
-  TRouteName: OpenAIRouteName,
-});
-
-/** Type override */
-export type OpenAIEnabledRoute = t.TypeOf<typeof OpenAIEnabledRoute>;
-
-/** The enabled routes for OpenAI */
-export const OpenAIEnabledRoutes: EnabledRoutesC<OpenAIRouteNameC> =
-  t.array(OpenAIEnabledRoute);
-
-/** Type override */
-export type OpenAIEnabledRoutes = t.TypeOf<typeof OpenAIEnabledRoutes>;
-
-export const OpenAIIntegration = buildAIIntegrationType<
-  OpenAIRouteNameC,
-  EnabledRoutesC<OpenAIRouteNameC>
->({
-  TEnabledRoutes: OpenAIEnabledRoutes,
-});
-
-/** Type override */
-export type OpenAIIntegration = t.TypeOf<typeof OpenAIIntegration>;
-
-export const PathfinderPolicy = t.partial({
-  enabledIntegrations: t.partial({
-    openAI: OpenAIIntegration,
-  }),
-});
-
-/** Type override */
-export type PathfinderPolicy = t.TypeOf<typeof PathfinderPolicy>;

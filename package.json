@@ -50,8 +50,7 @@
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
-    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write",
-    "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
+    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write"
   },
   "dependencies": {
     "@transcend-io/airgap.js-types": "^10.4.4",

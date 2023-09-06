@@ -54,7 +54,6 @@ jobs:
           node-version: 18.x
       - run: yarn
       - run: yarn script:transcend-json-schema
-      - run: yarn script:pathfinder-json-schema
       - name: Ensure no files changed
         run: git diff --quiet HEAD || (git diff --raw && echo "Detected untracked changes in git after running command '${{ matrix.command }}'" && exit 1)
 
