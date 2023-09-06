@@ -8,10 +8,7 @@ import {
   fetchRequestDataSilos,
 } from '../graphql';
 import cliProgress from 'cli-progress';
-import {
-  // RequestDataSiloStatus,
-  RequestStatus,
-} from '@transcend-io/privacy-types';
+import { RequestStatus } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
