@@ -36,7 +36,7 @@ export async function cancelPrivacyRequests({
     RequestStatus.Waiting,
     RequestStatus.SecondaryApproving,
   ],
-  concurrency = 100,
+  concurrency = 50,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */
