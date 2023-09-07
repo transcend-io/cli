@@ -22,7 +22,7 @@ export async function approvePrivacyRequests({
   requestActions,
   auth,
   silentModeBefore,
-  concurrency = 100,
+  concurrency = 50,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */

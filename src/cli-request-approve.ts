@@ -31,7 +31,7 @@ async function main(): Promise<void> {
     auth,
     actions = '',
     silentModeBefore,
-    concurrency = '100',
+    concurrency = '50',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
