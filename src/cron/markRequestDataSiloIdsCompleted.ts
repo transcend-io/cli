@@ -66,13 +66,19 @@ export async function markRequestDataSiloIdsCompleted({
         dataSiloId,
       });
 
-      await makeGraphQLRequest<{
-        /** Whether we successfully uploaded the results */
-        success: boolean;
-      }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
-        requestDataSiloId: requestDataSilo.id,
-        status,
-      });
+      try {
+        await makeGraphQLRequest<{
+          /** Whether we successfully uploaded the results */
+          success: boolean;
+        }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
+          requestDataSiloId: requestDataSilo.id,
+          status,
+        });
+      } catch (err) {
+        if (!err.message.include('Client error: Request must be active:')) {
+          throw err;
+        }
+      }
 
       total += 1;
       progressBar.update(total);

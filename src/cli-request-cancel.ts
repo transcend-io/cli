@@ -31,7 +31,7 @@ async function main(): Promise<void> {
     statuses = '',
     silentModeBefore,
     cancellationTitle,
-    concurrency = '100',
+    concurrency = '50',
     /** List of request IDs */
     requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
