@@ -75,7 +75,7 @@ export async function markRequestDataSiloIdsCompleted({
           status,
         });
       } catch (err) {
-        if (!err.message.include('Client error: Request must be active:')) {
+        if (!err.message.includes('Client error: Request must be active:')) {
           throw err;
         }
       }

@@ -71,7 +71,7 @@ export async function skipRequestDataSilos({
           status: 'SKIPPED',
         });
       } catch (err) {
-        if (!err.message.include('Client error: Request must be active:')) {
+        if (!err.message.includes('Client error: Request must be active:')) {
           throw err;
         }
       }
