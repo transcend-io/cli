@@ -6,8 +6,7 @@ export const BUSINESS_ENTITIES = gql`
       first: $first
       offset: $offset
       orderBy: [
-        # TODO: https://transcend.height.app/T-27909 - enable optimizations
-        # { field: createdAt, direction: ASC }
+        { field: createdAt, direction: ASC }
         { field: title, direction: ASC }
       ]
       # TODO: https://transcend.height.app/T-27909 - enable optimizations

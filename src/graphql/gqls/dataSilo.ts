@@ -31,54 +31,71 @@ export const DATA_SILOS = gql`
   }
 `;
 
-// TODO: https://transcend.height.app/T-28707 - batch this when apiKeys and dependentDataSilos exposed
-export const DATA_SILO = gql`
-  query TranscendCliDataSilo($id: String!) {
-    dataSilo(id: $id) {
-      id
-      title
-      description
-      type
-      outerType
-      country
-      countrySubDivision
-      url
-      notifyEmailAddress
-      attributeValues {
-        attributeKey {
+export const DATA_SILOS_ENRICHED = gql`
+  query TranscendCliDataSilosEnriched(
+    $filterBy: DataSiloFiltersInput!
+    $first: Int!
+    $offset: Int!
+  ) {
+    dataSilos(
+      filterBy: $filterBy
+      first: $first
+      offset: $offset
+      orderBy: [
+        { field: createdAt, direction: ASC }
+        { field: title, direction: ASC }
+      ]
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
+      useMaster: false
+    ) {
+      nodes {
+        id
+        title
+        description
+        type
+        outerType
+        link
+        country
+        countrySubDivision
+        url
+        notifyEmailAddress
+        attributeValues {
+          attributeKey {
+            name
+          }
           name
         }
-        name
+        apiKeys {
+          title
+        }
+        subjectBlocklist {
+          type
+        }
+        identifiers {
+          name
+          isConnected
+        }
+        dependentDataSilos {
+          title
+        }
+        owners {
+          email
+        }
+        teams {
+          id
+          name
+        }
+        catalog {
+          hasAvcFunctionality
+        }
+        isLive
+        promptAVendorEmailSendFrequency
+        promptAVendorEmailSendType
+        promptAVendorEmailIncludeIdentifiersAttachment
+        promptAVendorEmailCompletionLinkType
+        manualWorkRetryFrequency
       }
-      apiKeys {
-        title
-      }
-      subjectBlocklist {
-        type
-      }
-      identifiers {
-        name
-        isConnected
-      }
-      dependentDataSilos {
-        title
-      }
-      owners {
-        email
-      }
-      teams {
-        id
-        name
-      }
-      catalog {
-        hasAvcFunctionality
-      }
-      isLive
-      promptAVendorEmailSendFrequency
-      promptAVendorEmailSendType
-      promptAVendorEmailIncludeIdentifiersAttachment
-      promptAVendorEmailCompletionLinkType
-      manualWorkRetryFrequency
     }
   }
 `;

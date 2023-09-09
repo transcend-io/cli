@@ -337,17 +337,19 @@ _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
 #### Arguments
 
-| Argument         | Description                                                                              | Type                                                         | Default                               | Required |
-| ---------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------- | -------- |
-| auth             | The Transcend API key with the scopes necessary for the command.                         | string (API key or path to tr-generate-api-keys JSON output) | N/A                                   | true     |
-| resources        | The different resource types to pull in (see table above for breakdown of each resource) | string                                                       | apiKeys,templates,dataSilos,enrichers | false    |
-| file             | Path to the YAML file to pull into                                                       | string - file-path                                           | ./transcend.yml                       | false    |
-| transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL                                                 | https://api.transcend.io              | false    |
-| dataSiloIds      | The UUIDs of the data silos that should be pulled into the YAML file.                    | list(string - UUID)                                          | N/A                                   | false    |
-| integrationNames | The types of integrations to pull down                                                   | string[]                                                     | N/A                                   | false    |
-| trackerStatuses  | The statuses of consent manager trackers to pull down. (Triage, Approved or both)        | ConsentTrackerStatus[]                                       | LIVE,NEEDS_REVIEW                     | false    |
-| pageSize         | The page size to use when paginating over the API                                        | number                                                       | 50                                    | false    |
-| debug            | Set to true to include debug logs while pulling the configuration                        | boolean                                                      | false                                 | false    |
+| Argument          | Description                                                                              | Type                                                         | Default                               | Required |
+| ----------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------- | -------- |
+| auth              | The Transcend API key with the scopes necessary for the command.                         | string (API key or path to tr-generate-api-keys JSON output) | N/A                                   | true     |
+| resources         | The different resource types to pull in (see table above for breakdown of each resource) | string                                                       | apiKeys,templates,dataSilos,enrichers | false    |
+| file              | Path to the YAML file to pull into                                                       | string - file-path                                           | ./transcend.yml                       | false    |
+| transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.            | string - URL                                                 | https://api.transcend.io              | false    |
+| dataSiloIds       | The UUIDs of the data silos that should be pulled into the YAML file.                    | list(string - UUID)                                          | N/A                                   | false    |
+| integrationNames  | The types of integrations to pull down                                                   | string[]                                                     | N/A                                   | false    |
+| trackerStatuses   | The statuses of consent manager trackers to pull down. (Triage, Approved or both)        | ConsentTrackerStatus[]                                       | LIVE,NEEDS_REVIEW                     | false    |
+| pageSize          | The page size to use when paginating over the API                                        | number                                                       | 50                                    | false    |
+| skipDatapoints    | When true, skip pulling in datapoints alongside data silo resource                       | boolean                                                      | false                                 | false    |
+| skipSubDatapoints | When true, skip pulling in subDatapoints alongside data silo resource                    | boolean                                                      | false                                 | false    |
+| debug             | Set to true to include debug logs while pulling the configuration                        | boolean                                                      | false                                 | false    |
 
 #### Usage
 
@@ -385,6 +387,18 @@ Pull in data flow and cookie resources, filtering for specific tracker statuses 
 
 ```sh
 tr-pull --auth=$TRANSCEND_API_KEY --resources=dataFlows,cookies --trackerStatuses=NEEDS_REVIEW,LIVE
+```
+
+Pull in data silos without any datapoint/table information
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipDatapoints=true
+```
+
+Pull in data silos and datapoints without any subdatapoint/column information
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipSubDatapoints=true
 ```
 
 Pull in attribute definitions only (see [this example](./examples/attributes.yml)):
