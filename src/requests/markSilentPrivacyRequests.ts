@@ -70,6 +70,7 @@ export async function markSilentPrivacyRequests({
     statuses,
     createdAtBefore,
     createdAtAfter,
+    isSilent: false,
   });
 
   // Filter down requests by request ID

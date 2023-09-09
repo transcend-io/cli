@@ -75,7 +75,8 @@ export async function fetchAllRequests(
     statuses = [],
     createdAtBefore,
     createdAtAfter,
-    showTests,
+    isTest,
+    isSilent,
   }: {
     /** Actions to filter on */
     actions?: RequestAction[];
@@ -86,7 +87,9 @@ export async function fetchAllRequests(
     /** Filter for requests created after this date */
     createdAtAfter?: Date;
     /** Return test requests */
-    showTests?: boolean;
+    isTest?: boolean;
+    /** Return silent mode requests */
+    isSilent?: boolean;
   } = {},
 ): Promise<PrivacyRequest[]> {
   // create a new progress bar instance and use shades_classic theme
@@ -120,7 +123,8 @@ export async function fetchAllRequests(
       filterBy: {
         type: actions.length > 0 ? actions : undefined,
         status: statuses.length > 0 ? statuses : undefined,
-        isTest: showTests,
+        isTest,
+        isSilent,
         createdAtBefore: createdAtBefore
           ? createdAtBefore.toISOString()
           : undefined,
