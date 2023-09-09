@@ -46,10 +46,12 @@ export async function bulkRestartRequests({
   sombraAuth,
   requestActions,
   requestStatuses,
+  createdAtBefore,
+  createdAtAfter,
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestIds = [],
   createdAt = new Date(),
-  markSilent,
+  silentModeBefore,
   sendEmailReceipt = false,
   emailIsVerified = true,
   copyIdentifiers = false,
@@ -75,13 +77,17 @@ export async function bulkRestartRequests({
   /** Filter for requests that were submitted before this date */
   createdAt?: Date;
   /** Requests that have been open for this length of time should be marked as silent mode */
-  markSilent?: Date;
+  silentModeBefore?: Date;
   /** Send an email receipt to the restarted requests */
   sendEmailReceipt?: boolean;
   /** Copy over all identifiers rather than restarting the request only with the core identifier */
   copyIdentifiers?: boolean;
   /** Skip the waiting period when restarting requests */
   skipWaitingPeriod?: boolean;
+  /** Filter for requests created before this date */
+  createdAtBefore?: Date;
+  /** Filter for requests created after this date */
+  createdAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
 }): Promise<void> {
@@ -114,6 +120,8 @@ export async function bulkRestartRequests({
   const allRequests = await fetchAllRequests(client, {
     actions: requestActions,
     statuses: requestStatuses,
+    createdAtBefore,
+    createdAtAfter,
   });
   const requests = allRequests.filter(
     (request) =>
@@ -171,7 +179,8 @@ export async function bulkRestartRequests({
             ...request,
             // override silent mode
             isSilent:
-              !!markSilent && new Date(request.createdAt) < markSilent
+              !!silentModeBefore &&
+              new Date(request.createdAt) < silentModeBefore
                 ? true
                 : request.isSilent,
           },

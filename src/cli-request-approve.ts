@@ -27,11 +27,20 @@ import { DEFAULT_TRANSCEND_API } from './constants';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
     auth,
+    /** Approve these specific actions */
     actions = '',
+    /** Mark as silent mode when made before this date */
     silentModeBefore,
+    /** Concurrency to approve requests at */
     concurrency = '50',
+    /** Filter for requests created before this date */
+    createdAtBefore,
+    /** Filter for requests created after this date */
+    createdAtAfter,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -67,6 +76,8 @@ async function main(): Promise<void> {
     auth,
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
+    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
+    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
   });
 }
 

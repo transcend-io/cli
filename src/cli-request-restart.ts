@@ -8,8 +8,6 @@ import { splitCsvToList, bulkRestartRequests } from './requests';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
 
-const ONE_MONTH = 30.5 * 24 * 60 * 60 * 1000;
-
 /**
  * Run a command to bulk restart a set of privacy requests
  *
@@ -28,8 +26,11 @@ const ONE_MONTH = 30.5 * 24 * 60 * 60 * 1000;
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    auth,
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
+    auth,
+    /** Sombra API key */
     sombraAuth,
     /** Restart requests matching these request actions */
     actions,
@@ -42,7 +43,7 @@ async function main(): Promise<void> {
     /** Filter for requests that were submitted before this date */
     createdAt = new Date().toISOString(),
     /** Requests that have been open for this length of time should be marked as silent mode */
-    markSilent = new Date(+new Date() - ONE_MONTH * 3).toISOString(),
+    silentModeBefore,
     /** Send an email receipt to the restarted requests */
     sendEmailReceipt = 'false',
     /** Copy over all identifiers rather than restarting the request only with the core identifier */
@@ -53,6 +54,10 @@ async function main(): Promise<void> {
     skipWaitingPeriod = 'false',
     /** Include a receipt of the requests that were restarted in this file */
     requestReceiptFolder = './privacy-request-upload-receipts',
+    /** Filter for requests created before this date */
+    createdAtBefore,
+    /** Filter for requests created after this date */
+    createdAtAfter,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -119,10 +124,12 @@ async function main(): Promise<void> {
     requestIds: splitCsvToList(requestIds),
     createdAt: new Date(createdAt),
     emailIsVerified: emailIsVerified === 'true',
-    markSilent: new Date(markSilent),
+    silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
     sendEmailReceipt: sendEmailReceipt === 'true',
     copyIdentifiers: copyIdentifiers === 'true',
     skipWaitingPeriod: skipWaitingPeriod === 'true',
+    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
+    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
     concurrency: parseInt(concurrency, 10),
     transcendUrl,
   });
