@@ -100,7 +100,7 @@ async function main(): Promise<void> {
     auth,
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
     createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
-    showTests:
+    isTest:
       showTests === 'true' ? true : showTests === 'false' ? false : undefined,
   });
 

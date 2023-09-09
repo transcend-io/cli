@@ -14,8 +14,7 @@ export const DATA_POINTS = gql`
       # isExportCsv: true
       # useMaster: false
       orderBy: [
-        # TODO: https://transcend.height.app/T-27909 - order by createdAt
-        # { field: createdAt, direction: ASC }
+        { field: createdAt, direction: ASC }
         { field: name, direction: ASC }
       ]
     ) {

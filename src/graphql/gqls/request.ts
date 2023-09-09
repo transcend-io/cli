@@ -12,8 +12,7 @@ export const REQUESTS = gql`
       offset: $offset
       orderBy: [
         { field: createdAt, direction: ASC }
-        # TODO: https://transcend.height.app/T-27909 - order by ID
-        # { field: id, direction: ASC }
+        { field: id, direction: ASC }
       ]
       # TODO: https://transcend.height.app/T-27909 - enable optimizations
       # isExportCsv: true

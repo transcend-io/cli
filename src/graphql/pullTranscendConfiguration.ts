@@ -66,6 +66,10 @@ export interface TranscendPullConfigurationInput {
   integrationNames: string[];
   /** The tracker statuses to pull */
   trackerStatuses?: ConsentTrackerStatus[];
+  /** Skip fetching of datapoints */
+  skipDatapoints?: boolean;
+  /** Skip fetching of subdatapoints */
+  skipSubDatapoints?: boolean;
 }
 
 /**
@@ -83,6 +87,8 @@ export async function pullTranscendConfiguration(
     debug,
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES,
     pageSize,
+    skipDatapoints,
+    skipSubDatapoints,
     trackerStatuses = Object.values(ConsentTrackerStatus),
   }: TranscendPullConfigurationInput,
 ): Promise<TranscendInput> {
@@ -126,6 +132,8 @@ export async function pullTranscendConfiguration(
           integrationNames,
           pageSize,
           debug,
+          skipDatapoints,
+          skipSubDatapoints,
         })
       : [],
     // Fetch enrichers

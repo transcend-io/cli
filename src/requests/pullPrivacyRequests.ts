@@ -30,7 +30,7 @@ export async function pullPrivacyRequests({
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
   createdAtAfter,
-  showTests,
+  isTest,
 }: {
   /** Transcend API key authentication */
   auth: string;
@@ -47,7 +47,7 @@ export async function pullPrivacyRequests({
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
   /** Return test requests */
-  showTests?: boolean;
+  isTest?: boolean;
 }): Promise<{
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
@@ -85,7 +85,7 @@ export async function pullPrivacyRequests({
     statuses,
     createdAtBefore,
     createdAtAfter,
-    showTests,
+    isTest,
   });
 
   // Fetch the request identifiers for those requests

@@ -36,6 +36,8 @@ async function main(): Promise<void> {
     transcendUrl = DEFAULT_TRANSCEND_API,
     dataSiloIds = '',
     integrationNames = '',
+    skipDatapoints,
+    skipSubDatapoints,
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES.join(','),
     pageSize = '',
     debug = '',
@@ -106,6 +108,8 @@ async function main(): Promise<void> {
     .filter((x) => !!x);
   const pageSizeParsed = pageSize ? parseInt(pageSize, 10) : 50;
   const isDebug = debug === 'true';
+  const shouldSkipDataPoints = skipDatapoints;
+  const shouldSkipSubDataPoints = skipSubDatapoints;
 
   // Sync to Disk
   if (typeof apiKeyOrList === 'string') {
@@ -119,6 +123,8 @@ async function main(): Promise<void> {
         resources: splitResources,
         pageSize: pageSizeParsed,
         debug: isDebug,
+        skipDatapoints: shouldSkipDataPoints,
+        skipSubDatapoints: shouldSkipSubDataPoints,
         trackerStatuses: parsedTrackerStatuses,
       });
 
@@ -126,7 +132,11 @@ async function main(): Promise<void> {
       writeTranscendYaml(file, configuration);
     } catch (err) {
       logger.error(
-        colors.red(`An error occurred syncing the schema: ${err.message}`),
+        colors.red(
+          `An error occurred syncing the schema: ${
+            debug ? err.stack : err.message
+          }`,
+        ),
       );
       process.exit(1);
     }
@@ -164,6 +174,8 @@ async function main(): Promise<void> {
           integrationNames: integrationNamesParsed,
           resources: splitResources,
           pageSize: pageSizeParsed,
+          skipDatapoints: shouldSkipDataPoints,
+          skipSubDatapoints: shouldSkipSubDataPoints,
           debug: isDebug,
           trackerStatuses: parsedTrackerStatuses,
         });

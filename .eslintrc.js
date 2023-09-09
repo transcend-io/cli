@@ -242,10 +242,6 @@ module.exports = {
     /** No unnecessary async statements on a function */
     'require-await': ['error'],
 
-    // TODO: https://github.com/benmosher/eslint-plugin-import/pull/1696 - Remove overrides,
-    // PR is merging soon -- 9/2/2020
-    'import/no-extraneous-dependencies': 0,
-
     // No unused imports or variables. Convenient for pre-commit hook.
     '@typescript-eslint/no-unused-vars': ['error'],
 
