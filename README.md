@@ -683,6 +683,8 @@ The API key needs the following scopes:
 | auth             | The Transcend API key with the scopes necessary for the command.                                                                           | string          | N/A                      | true     |
 | actions          | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to approve. | RequestAction[] | N/A                      | true     |
 | silentModeBefore | Any requests made before this date should be marked as silent mode                                                                         | Date            | N/A                      | false    |
+| createdAtBefore  | Approve requests that were submitted before this time                                                                                      | Date            | N/A                      | false    |
+| createdAtAfter   | Approve requests that were submitted after this time                                                                                       | Date            | N/A                      | false    |
 | transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                              | string - URL    | https://api.transcend.io | false    |
 | concurrency      | The concurrency to use when uploading requests in parallel.                                                                                | number          | 100                      | false    |
 
@@ -712,6 +714,12 @@ Increase the concurrency (defaults to 100)
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
 ```
 
+Approve ERASURE requests created within a specific time frame
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
+```
+
 ### tr-request-cancel
 
 Bulk cancel a set of privacy requests from the [Privacy Requests -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
@@ -727,17 +735,18 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument   | Description                                                                                                                               | Type            | Default                                                                                  | Required |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
-| auth       | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                                                                                      | true     |
-| actions    | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel. | RequestAction[] | N/A                                                                                      | true     |
-| statuses   | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                              | RequestStatus[] | REQUEST_MADE,WAITING,ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
-| requestIds | Specify the specific request IDs to cancel                                                                                                | string[]        | []                                                                                       | false    |
-
-| silentModeBefore | Any requests made before this date should be marked as silent mode for canceling to skip email sending | Date | N/A | false |
-| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string | Request Canceled | false |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false |
-| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
+| Argument          | Description                                                                                                                                                                                        | Type            | Default                                                                                  | Required |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth              | The Transcend API key with the scopes necessary for the command.                                                                                                                                   | string          | N/A                                                                                      | true     |
+| actions           | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to cancel.                                                          | RequestAction[] | N/A                                                                                      | true     |
+| statuses          | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to cancel.                                                                                       | RequestStatus[] | REQUEST_MADE,WAITING,ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| requestIds        | Specify the specific request IDs to cancel                                                                                                                                                         | string[]        | []                                                                                       | false    |
+| silentModeBefore  | Any requests made before this date should be marked as silent mode for canceling to skip email sending                                                                                             | Date            | N/A                                                                                      | false    |
+| createdAtBefore   | Cancel requests that were submitted before this time                                                                                                                                               | Date            | N/A                                                                                      | false    |
+| createdAtAfter    | Cancel requests that were submitted after this time                                                                                                                                                | Date            | N/A                                                                                      | false    |
+| cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string          | Request Canceled                                                                         | false    |
+| transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                                      | string - URL    | https://api.transcend.io                                                                 | false    |
+| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 100                                                                                      | false    |
 
 #### Usage
 
@@ -778,6 +787,12 @@ Cancel all open SALE_OPT_OUT, but mark any request made before 05/03/2023 as sil
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
 ```
 
+Cancel all open SALE_OPT_OUT, within a specific time frame
+
+```sh
+yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
+```
+
 Increase the concurrency (defaults to 100)
 
 ```sh
@@ -798,16 +813,16 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument   | Description                                                                                                                                    | Type            | Default                                                                                  | Required |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
-| auth       | The Transcend API key with the scopes necessary for the command.                                                                               | string          | N/A                                                                                      | true     |
-| actions    | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to mark silent. | RequestAction[] | N/A                                                                                      | true     |
-| statuses   | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark silent.                              | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
-| requestIds | Specify the specific request IDs to mark silent                                                                                                | string[]        | []                                                                                       | false    |
-
-| silentModeBefore | Any requests made before this date should be marked as silent mode | Date | N/A | false |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL | https://api.transcend.io | false |
-| concurrency | The concurrency to use when uploading requests in parallel. | number | 100 | false |
+| Argument        | Description                                                                                                                                    | Type            | Default                                                                                  | Required |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------- | -------- |
+| auth            | The Transcend API key with the scopes necessary for the command.                                                                               | string          | N/A                                                                                      | true     |
+| actions         | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to mark silent. | RequestAction[] | N/A                                                                                      | true     |
+| statuses        | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark silent.                              | RequestStatus[] | REQUEST_MADE,WAITING.ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING | false    |
+| requestIds      | Specify the specific request IDs to mark silent                                                                                                | string[]        | []                                                                                       | false    |
+| createdAtBefore | Mark silent requests that were submitted before this time                                                                                      | Date            | N/A                                                                                      | false    |
+| createdAtAfter  | Mark silent requests that were submitted after this time                                                                                       | Date            | N/A                                                                                      | false    |
+| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                  | string - URL    | https://api.transcend.io                                                                 | false    |
+| concurrency     | The concurrency to use when uploading requests in parallel.                                                                                    | number          | 100                                                                                      | false    |
 
 #### Usage
 
@@ -836,10 +851,10 @@ yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ACCESS,ERASURE,S
   --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
-Mark sale opt out requests as silent if those requests were made before a certain date
+Mark sale opt out requests as silent within a certain date range
 
 ```sh
-yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
 ```
 
 Increase the concurrency (defaults to 100)
@@ -1004,7 +1019,9 @@ The API key needs the following scopes:
 | requestIds           | Specify the specific request IDs to restart                                                                                               | string[]        | []                                | false    |
 | emailIsVerified      | Indicate whether the primary email address is verified. Set to false to send a verification email.                                        | boolean         | true                              | false    |
 | createdAt            | Restart requests that were submitted before a specific date.                                                                              | Date            | Date.now()                        | false    |
-| markSilent           | Requests older than this date should be marked as silent mode                                                                             | Date            | Date.now() - 3 months             | false    |
+| silentModeBefore     | Requests older than this date should be marked as silent mode                                                                             | Date            | N/A                               | false    |
+| createdAtBefore      | Restart requests that were submitted before this time                                                                                     | Date            | N/A                               | false    |
+| createdAtAfter       | Restart requests that were submitted after this time                                                                                      | Date            | N/A                               | false    |
 | sendEmailReceipt     | Send email receipts to the restarted requests                                                                                             | boolean         | false                             | false    |
 | copyIdentifiers      | Copy over all enriched identifiers from the initial request. Leave false to restart from scratch with initial identifiers only.           | boolean         | false                             | false    |
 | skipWaitingPeriod    | Skip queued state of request and go straight to compiling                                                                                 | boolean         | false                             | false    |
@@ -1055,7 +1072,13 @@ yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING
 Restart requests and place everything in silent mode submitted before a certain date
 
 ```sh
-yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --markSilent=2022-12-05T00:46
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --silentModeBefore=2022-12-05T00:46
+```
+
+Restart requests within a specific timeframe
+
+```sh
+yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE ---createdAtBefore="04/05/2023" --createdAtAfter="02/21/2023"
 ```
 
 Send email receipts to the restarted requests
@@ -1345,19 +1368,19 @@ In order to use this cli, you will first need to generate an API key on the Tran
 The API key must have the following scopes:
 
 - "Manage Request Identity Verification"
-- "Manage Request Compilation" (only when specifying `markSilent`)
+- "Manage Request Compilation" (only when specifying `silentModeBefore`)
 
 #### Arguments
 
-| Argument     | Description                                                                          | Type               | Default                             | Required |
-| ------------ | ------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
-| auth         | The Transcend API key with the scopes necessary for the command.                     | string             | N/A                                 | true     |
-| enricherId   | The ID of the Request Enricher to upload to                                          | string - UUID      | N/A                                 | true     |
-| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
-| file         | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
-| markSilent   | When true, set requests into silent mode before enriching                            | boolean            | false                               | false    |
-| concurrency  | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
+| Argument         | Description                                                                          | Type               | Default                             | Required |
+| ---------------- | ------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
+| auth             | The Transcend API key with the scopes necessary for the command.                     | string             | N/A                                 | true     |
+| enricherId       | The ID of the Request Enricher to upload to                                          | string - UUID      | N/A                                 | true     |
+| sombraAuth       | The sombra internal key, use for additional authentication when self-hosting sombra. | string             | N/A                                 | false    |
+| transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.        | string - URL       | https://api.transcend.io            | false    |
+| file             | Path to the CSV file where requests will be written to.                              | string - file-path | ./manual-enrichment-identifiers.csv | false    |
+| silentModeBefore | When true, set requests into silent mode before enriching                            | boolean            | false                               | false    |
+| concurrency      | The concurrency to use when uploading requests in parallel.                          | number             | 100                                 | false    |
 
 #### Usage
 
@@ -1392,7 +1415,7 @@ yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherI
 When enriching requests, mark all requests as silent mode before processing
 
 ```sh
-yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --markSilent=true
+yarn tr-manual-enrichment-push-identifiers --auth=$TRANSCEND_API_KEY --enricherId=27d45a0d-7d03-47fa-9b30-6d697005cfcf --silentModeBefore=true
 ```
 
 ### tr-mark-request-data-silos-completed

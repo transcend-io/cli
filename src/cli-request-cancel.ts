@@ -25,13 +25,24 @@ import { DEFAULT_TRANSCEND_API } from './constants';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
     auth,
+    /** Cancel these specific actions */
     actions = '',
+    /** Cancel these specific request statuses */
     statuses = '',
+    /** Mark requests to silent mode when canceling if created before this date */
     silentModeBefore,
+    /** Email template title to sue when canceling requests */
     cancellationTitle,
+    /** Concurrency to cancel requests at */
     concurrency = '50',
+    /** Filter for requests created before this date */
+    createdAtBefore,
+    /** Filter for requests created after this date */
+    createdAtAfter,
     /** List of request IDs */
     requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -88,6 +99,8 @@ async function main(): Promise<void> {
     statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
+    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
+    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
   });
 }
 
