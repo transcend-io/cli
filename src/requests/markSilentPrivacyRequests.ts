@@ -21,7 +21,6 @@ export async function markSilentPrivacyRequests({
   requestActions,
   auth,
   requestIds,
-  silentModeBefore,
   statuses = [
     RequestStatus.Compiling,
     RequestStatus.RequestMade,
@@ -32,6 +31,8 @@ export async function markSilentPrivacyRequests({
     RequestStatus.Waiting,
     RequestStatus.SecondaryApproving,
   ],
+  createdAtAfter,
+  createdAtBefore,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -45,8 +46,10 @@ export async function markSilentPrivacyRequests({
   statuses?: RequestStatus[];
   /** The set of privacy requests to cancel */
   requestIds?: string[];
-  /** Mark these requests as silent mode if they were created before this date */
-  silentModeBefore?: Date;
+  /** Filter for requests created before this date */
+  createdAtBefore?: Date;
+  /** Filter for requests created after this date */
+  createdAtAfter?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<number> {
@@ -65,7 +68,8 @@ export async function markSilentPrivacyRequests({
   let allRequests = await fetchAllRequests(client, {
     actions: requestActions,
     statuses,
-    createdAtBefore: silentModeBefore,
+    createdAtBefore,
+    createdAtAfter,
   });
 
   // Filter down requests by request ID

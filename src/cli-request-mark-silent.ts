@@ -16,21 +16,29 @@ import { DEFAULT_TRANSCEND_API } from './constants';
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-request-mark-silent.ts --auth=$TRANSCEND_API_KEY \
- *   --actions=ERASURE --silentModeBefore=06/23/2023
+ *   --actions=ERASURE --createdAtBefore=06/23/2023
  *
  * Standard usage:
  * yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY  \
- *   --actions=ERASURE --silentModeBefore=06/23/2023
+ *   --actions=ERASURE --createdAtBefore=06/23/2023
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
     auth,
+    /** Mark these specific actions as silent mode */
     actions = '',
+    /** Make these statuses silent mode - defaults to statuses for active requests */
     statuses = '',
-    silentModeBefore,
-    concurrency = '100',
+    /** Concurrency to mark silent */
+    concurrency = '50',
+    /** Filter for requests created before this date */
+    createdAtBefore,
+    /** Filter for requests created after this date */
+    createdAtAfter,
     /** List of request IDs */
     requestIds = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -85,7 +93,8 @@ async function main(): Promise<void> {
     requestIds: requestIds ? splitCsvToList(requestIds) : undefined,
     statuses: parsedStatuses.length > 0 ? parsedStatuses : undefined,
     concurrency: parseInt(concurrency, 10),
-    silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
+    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
+    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
   });
 }
 

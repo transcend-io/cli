@@ -31,13 +31,21 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     file = './transcend-request-export.csv',
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
     auth,
+    /** Request actions to export */
     actions = '',
+    /** Request statuses to export */
     statuses = '',
+    /** Whether or not to include test requests */
     showTests,
+    /** Filter on requests created before this date */
     createdAtBefore,
+    /** Filter on requests created after this date */
     createdAtAfter,
+    /** Page limit when paginating */
     pageLimit = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
