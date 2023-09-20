@@ -27984,6 +27984,9 @@
     "consent-manager": {
       "type": "object",
       "properties": {
+        "version": {
+          "type": "string"
+        },
         "bundleUrls": {
           "type": "object",
           "additionalProperties": {

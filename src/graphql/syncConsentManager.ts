@@ -6,6 +6,7 @@ import {
   CREATE_CONSENT_MANAGER,
   UPDATE_TOGGLE_USP_API,
   UPDATE_CONSENT_MANAGER_PARTITION,
+  UPDATE_CONSENT_MANAGER_VERSION,
   TOGGLE_TELEMETRY_PARTITION_STRATEGY,
   TOGGLE_UNKNOWN_COOKIE_POLICY,
   TOGGLE_CONSENT_PRECEDENCE,
@@ -184,6 +185,13 @@ export async function syncConsentManager(
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_PARTITION, {
       partition: consentManager.partition,
       airgapBundleId,
+    });
+  }
+
+  if (consentManager.version) {
+    await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_VERSION, {
+      airgapBundleId,
+      version: consentManager.version,
     });
   }
 
