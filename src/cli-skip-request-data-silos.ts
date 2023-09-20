@@ -4,8 +4,9 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { skipRequestDataSilos } from './requests';
+import { skipRequestDataSilos, splitCsvToList } from './requests';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { RequestStatus } from '@transcend-io/privacy-types';
 
 /**
  * Given a data silo ID, skip all active privacy requests that are open for that data silo
@@ -24,9 +25,14 @@ import { DEFAULT_TRANSCEND_API } from './constants';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
+    /** Transcend Backend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
+    /** API key */
     auth,
+    /** Data silo ID to mark requests fpr */
     dataSiloId,
+    /** Mark request data silos with requests matching these request statuses */
+    statuses = `${RequestStatus.Compiling},${RequestStatus.Secondary}`,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -49,12 +55,28 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Validate statuses
+  const parsedStatuses = splitCsvToList(statuses) as RequestStatus[];
+  const invalidStatuses = parsedStatuses.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (type) => !Object.values(RequestStatus).includes(type as any),
+  );
+  if (invalidStatuses.length > 0) {
+    logger.error(
+      colors.red(
+        `Failed to parse statuses:"${invalidStatuses.join(',')}".\n` +
+          `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
+      ),
+    );
+    process.exit(1);
+  }
+
   // Upload privacy requests
   await skipRequestDataSilos({
     transcendUrl,
     auth,
     dataSiloId,
+    requestStatuses: parsedStatuses,
   });
 }
-
 main();
