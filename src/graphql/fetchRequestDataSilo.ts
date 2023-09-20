@@ -1,10 +1,13 @@
 import { GraphQLClient } from 'graphql-request';
+import colors from 'colors';
+import cliProgress from 'cli-progress';
 import { REQUEST_DATA_SILOS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import { logger } from '../logger';
 
 export interface RequestDataSilo {
   /** ID of RequestDataSilo */
@@ -40,6 +43,13 @@ export async function fetchRequestDataSilos(
     requestStatuses?: RequestStatus[];
   },
 ): Promise<RequestDataSilo[]> {
+  // create a new progress bar instance and use shades_classic theme
+  const t0 = new Date().getTime();
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+
   const requestDataSilos: RequestDataSilo[] = [];
   let offset = 0;
 
@@ -47,13 +57,15 @@ export async function fetchRequestDataSilos(
   let shouldContinue = false;
   do {
     const {
-      requestDataSilos: { nodes },
+      requestDataSilos: { nodes, totalCount },
       // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Request Data Silos */
       requestDataSilos: {
         /** List */
         nodes: RequestDataSilo[];
+        /** Total count */
+        totalCount: number;
       };
     }>(client, REQUEST_DATA_SILOS, {
       first: PAGE_SIZE,
@@ -66,9 +78,29 @@ export async function fetchRequestDataSilos(
       },
     });
     requestDataSilos.push(...nodes);
+
+    if (offset === 0 && totalCount > PAGE_SIZE) {
+      logger.info(colors.magenta(`Fetching ${totalCount} requests`));
+      progressBar.start(totalCount, 0);
+    }
+
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
+    progressBar.update(offset);
   } while (shouldContinue);
+
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+
+  // Log completion time
+  logger.info(
+    colors.green(
+      `Completed fetching of ${
+        requestDataSilos.length
+      } request data silos in "${totalTime / 1000}" seconds.`,
+    ),
+  );
 
   return requestDataSilos;
 }

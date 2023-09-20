@@ -1488,11 +1488,12 @@ The API key must have the following scopes:
 
 #### Arguments
 
-| Argument     | Description                                                                   | Type          | Default                  | Required |
-| ------------ | ----------------------------------------------------------------------------- | ------------- | ------------------------ | -------- |
-| auth         | The Transcend API key with the scopes necessary for the command.              | string        | N/A                      | true     |
-| dataSiloId   | The ID of the data silo to skip privacy request jobs for.                     | string - UUID | N/A                      | true     |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL  | https://api.transcend.io | false    |
+| Argument     | Description                                                                                                                 | Type            | Default                  | Required |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                            | string          | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to skip privacy request jobs for.                                                                   | string - UUID   | N/A                      | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                               | string - URL    | https://api.transcend.io | false    |
+| statuses     | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark as completed for. | RequestStatus[] | COMPILING,SECONDARY      | false    |
 
 #### Usage
 
@@ -1505,6 +1506,12 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 ```sh
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
  --transcendUrl=https://api.us.transcend.io
+```
+
+Only mark as completed requests in "removing data" phase
+
+```sh
+yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --statuses=SECONDARY
 ```
 
 ### tr-retry-request-data-silos
