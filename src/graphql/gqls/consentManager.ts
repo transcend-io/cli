@@ -253,6 +253,17 @@ export const CREATE_CONSENT_MANAGER = gql`
   }
 `;
 
+export const UPDATE_CONSENT_MANAGER_VERSION = gql`
+  mutation TranscendCliUpdateConsentManager(
+    $airgapBundleId: ID!
+    $version: String!
+  ) {
+    updateConsentManager(id: $airgapBundleId, input: { version: $version }) {
+      clientMutationId
+    }
+  }
+`;
+
 export const UPDATE_CONSENT_MANAGER_TO_LATEST = gql`
   mutation TranscendCliUpdateConsentManagerToLatest(
     $airgapBundleId: ID!
