@@ -635,6 +635,8 @@ export type ConsentManageExperienceInput = t.TypeOf<
 >;
 
 export const ConsentManagerInput = t.partial({
+  /** Airgap version */
+  version: t.string,
   /** The consent manager domains in the instance */
   bundleUrls: t.record(valuesOf(ConsentBundleType), t.string),
   /** The consent manager domains in the instance */
