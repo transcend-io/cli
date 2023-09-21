@@ -22,6 +22,7 @@ export async function skipRequestDataSilos({
   auth,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
+  requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
 }: {
   /** Transcend API key authentication */
   auth: string;
@@ -31,6 +32,8 @@ export async function skipRequestDataSilos({
   concurrency?: number;
   /** API URL for Transcend backend */
   transcendUrl?: string;
+  /** Request statuses to mark as completed */
+  requestStatuses?: RequestStatus[];
 }): Promise<number> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -41,7 +44,7 @@ export async function skipRequestDataSilos({
   // fetch all RequestDataSilos that are open
   const requestDataSilos = await fetchRequestDataSilos(client, {
     dataSiloId,
-    requestStatuses: [RequestStatus.Compiling, RequestStatus.Secondary],
+    requestStatuses,
   });
 
   // Notify Transcend

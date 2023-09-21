@@ -14,13 +14,14 @@ export const REQUEST_DATA_SILOS = gql`
       # isExportCsv: true
       # useMaster: false
       orderBy: [
-        { field: createdAt, direction: ASC }
+        { field: createdAt, direction: DESC }
         { field: title, direction: ASC, model: dataSilo }
       ]
     ) {
       nodes {
         id
       }
+      totalCount
     }
   }
 `;
