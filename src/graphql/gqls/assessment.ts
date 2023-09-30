@@ -38,6 +38,9 @@ export const CREATE_ASSESSMENT = gql`
   mutation TranscendCliCreateAssessment($input: CreateAssessmentInput!) {
     createAssessment(input: $input) {
       clientMutationId
+      assessment {
+        id
+      }
     }
   }
 `;

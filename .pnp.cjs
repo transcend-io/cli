@@ -69,6 +69,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
+            ["handlebars", "npm:4.7.8"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
@@ -594,6 +595,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
+            ["handlebars", "npm:4.7.8"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
@@ -3722,6 +3724,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["handlebars", [\
+        ["npm:4.7.8", {\
+          "packageLocation": "./.yarn/cache/handlebars-npm-4.7.8-25244c2c82-00e68bb5c1.zip/node_modules/handlebars/",\
+          "packageDependencies": [\
+            ["handlebars", "npm:4.7.8"],\
+            ["minimist", "npm:1.2.7"],\
+            ["neo-async", "npm:2.6.2"],\
+            ["source-map", "npm:0.6.1"],\
+            ["uglify-js", "npm:3.17.4"],\
+            ["wordwrap", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["has", [\
         ["npm:1.0.3", {\
           "packageLocation": "./.yarn/cache/has-npm-1.0.3-b7f00631c1-b9ad53d53b.zip/node_modules/has/",\
@@ -5040,6 +5056,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/negotiator-npm-0.6.2-ba538e167a-dfddaff6c0.zip/node_modules/negotiator/",\
           "packageDependencies": [\
             ["negotiator", "npm:0.6.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["neo-async", [\
+        ["npm:2.6.2", {\
+          "packageLocation": "./.yarn/cache/neo-async-npm-2.6.2-75d6902586-deac9f8d00.zip/node_modules/neo-async/",\
+          "packageDependencies": [\
+            ["neo-async", "npm:2.6.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6553,6 +6578,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["uglify-js", [\
+        ["npm:3.17.4", {\
+          "packageLocation": "./.yarn/cache/uglify-js-npm-3.17.4-58d4ab56aa-7b3897df38.zip/node_modules/uglify-js/",\
+          "packageDependencies": [\
+            ["uglify-js", "npm:3.17.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["unbox-primitive", [\
         ["npm:1.0.1", {\
           "packageLocation": "./.yarn/cache/unbox-primitive-npm-1.0.1-50b9fde246-89d950e18f.zip/node_modules/unbox-primitive/",\
@@ -6709,6 +6743,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/word-wrap-npm-1.2.4-7a75a0d62c-8f1f2e0a39.zip/node_modules/word-wrap/",\
           "packageDependencies": [\
             ["word-wrap", "npm:1.2.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["wordwrap", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/wordwrap-npm-1.0.0-ae57a645e8-2a44b27881.zip/node_modules/wordwrap/",\
+          "packageDependencies": [\
+            ["wordwrap", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

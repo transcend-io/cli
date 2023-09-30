@@ -47,9 +47,12 @@ export async function syncConfigurationToTranscend(
     // TODO: https://transcend.height.app/T-23779
     publishToPrivacyCenter = true,
     classifyService = false,
+    creatorId,
   }: {
     /** Page size */
     pageSize?: number;
+    /** Creator ID TODO: https://transcend.height.app/T-29850 - remove this  */
+    creatorId?: string;
     /** When true, skip publishing to privacy center */
     publishToPrivacyCenter?: boolean;
     /** classify data flow service if missing */
@@ -383,7 +386,7 @@ export async function syncConfigurationToTranscend(
     const syncedAssessmentTemplates = await syncAssessmentTemplates(
       client,
       assessmentTemplates,
-      CONCURRENCY,
+      { concurrency: CONCURRENCY, creatorId },
     );
     encounteredError = encounteredError || !syncedAssessmentTemplates;
   }

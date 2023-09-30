@@ -10,6 +10,69 @@ import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import { logger } from '../logger';
 
 /**
+ * Create a new assessment
+ *
+ * @param client - GraphQL client
+ * @param input - Assessment input
+ * @returns Assessment ID
+ */
+export async function createAssessment(
+  client: GraphQLClient,
+  input: {
+    /** Title of assessment */
+    title: string;
+    /** Template ID */
+    assessmentTemplateId: string;
+  },
+): Promise<string> {
+  const {
+    createAssessment: { assessment },
+  } = await makeGraphQLRequest<{
+    /** createAssessment mutation */
+    createAssessment: {
+      /** Assessment */
+      assessment: {
+        /** ID */
+        id: string;
+      };
+    };
+  }>(client, CREATE_ASSESSMENT, {
+    input,
+  });
+  logger.info(
+    colors.green(`Successfully created assessment "${input.title}"!`),
+  );
+  return assessment.id;
+}
+
+/**
+ * Update an existing assessment
+ *
+ * @param client - GraphQL client
+ * @param input - Assessment input
+ */
+export async function updateAssessment(
+  client: GraphQLClient,
+  input: {
+    /** ID of assessment */
+    id: string;
+    /** Title of assessment */
+    title?: string;
+    /** Content */
+    content?: string;
+  },
+): Promise<void> {
+  await makeGraphQLRequest(client, UPDATE_ASSESSMENT, {
+    input,
+  });
+  logger.info(
+    colors.green(
+      `Successfully updated assessment "${input.title || input.id}"!`,
+    ),
+  );
+}
+
+/**
  * Sync the assessments
  *
  * @param client - GraphQL client
@@ -38,18 +101,11 @@ export async function syncAssessments(
 
         // Update if exists
         if (existingAssessment) {
-          await makeGraphQLRequest(client, UPDATE_ASSESSMENT, {
-            input: {
-              id: existingAssessment.id,
-              title: assessment.title,
-              content: assessment.content,
-            },
+          await updateAssessment(client, {
+            id: existingAssessment.id,
+            title: assessment.title,
+            content: assessment.content,
           });
-          logger.info(
-            colors.green(
-              `Successfully updated assessment "${assessment.title}"!`,
-            ),
-          );
         } else {
           // Create new
           const existingAssessmentTemplate =
@@ -59,18 +115,14 @@ export async function syncAssessments(
               `Could not find assessment with title: ${assessment['assessment-template']}`,
             );
           }
-          await makeGraphQLRequest(client, CREATE_ASSESSMENT, {
-            input: {
-              title: assessment.title,
-              content: assessment.content,
-              assessmentTemplateId: existingAssessmentTemplate.id,
-            },
+          const assessmentId = await createAssessment(client, {
+            title: assessment.title,
+            assessmentTemplateId: existingAssessmentTemplate.id,
           });
-          logger.info(
-            colors.green(
-              `Successfully created assessment "${assessment.title}"!`,
-            ),
-          );
+          await updateAssessment(client, {
+            id: assessmentId,
+            content: assessment.content,
+          });
         }
       } catch (err) {
         successful = false;

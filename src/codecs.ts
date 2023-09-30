@@ -230,14 +230,18 @@ export type Attributes = t.TypeOf<typeof Attributes>;
 /**
  * AssessmentTemplate type definition.
  */
-export const AssessmentTemplateInput = t.type({
-  /** The title of the assessment template. */
-  title: t.string,
-  /** The content of the assessment template. */
-  content: t.string,
-  /** Attribute keys related to the assessment template. */
-  attributeKeys: t.array(t.string),
-});
+export const AssessmentTemplateInput = t.intersection([
+  t.type({
+    /** The title of the assessment template. */
+    title: t.string,
+    /** The content of the assessment template. */
+    content: t.string,
+  }),
+  t.partial({
+    /** Attribute keys related to the assessment template. */
+    attributeKeys: t.array(t.string),
+  }),
+]);
 
 /**
  * Type override

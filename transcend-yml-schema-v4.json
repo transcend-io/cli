@@ -34217,22 +34217,31 @@
     "assessment-templates": {
       "type": "array",
       "items": {
-        "type": "object",
-        "required": ["title", "content", "attributeKeys"],
-        "properties": {
-          "title": {
-            "type": "string"
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["title", "content"],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              }
+            }
           },
-          "content": {
-            "type": "string"
-          },
-          "attributeKeys": {
-            "type": "array",
-            "items": {
-              "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "attributeKeys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
-        }
+        ]
       }
     },
     "assessments": {
