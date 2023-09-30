@@ -1,0 +1,23 @@
+assessment-templates:
+  - title: Artificial Intelligence Risk Assessment
+    content: |-
+      <p>
+          This AI Risk Assessment template is designed to identify risks associated with
+          the deployment of AI tools. ...
+        </p>
+    attributeKeys: []
+  - title: TIA
+    content: >-
+      <h2>Describe the intended transfer</h2>
+
+      <p>This TIA was approved by:</p>
+    attributeKeys: []
+assessments:
+  - title: Untitled Assessment
+    content: |-
+      <p>
+          This AI Risk Assessment template ...
+        </p>
+        <p>Copyright © 2023 Transcend Inc.</p>
+
+    assessment-template: Artificial Intelligence Risk Assessment
