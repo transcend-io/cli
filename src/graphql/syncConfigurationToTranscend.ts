@@ -13,6 +13,8 @@ import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
 import { syncCookies } from './syncCookies';
+import { syncAssessments } from './syncAssessments';
+import { syncAssessmentTemplates } from './syncAssessmentTemplates';
 import {
   fetchAllDataSubjects,
   ensureAllDataSubjectsExist,
@@ -67,6 +69,8 @@ export async function syncConfigurationToTranscend(
     'business-entities': businessEntities,
     enrichers,
     cookies,
+    assessments,
+    'assessment-templates': assessmentTemplates,
     'consent-manager': consentManager,
     'data-silos': dataSilos,
     'data-flows': dataFlows,
@@ -362,6 +366,26 @@ export async function syncConfigurationToTranscend(
       classifyService,
     );
     encounteredError = encounteredError || !syncedDataFlows;
+  }
+
+  // Sync assessments
+  if (assessments) {
+    const syncedAssessments = await syncAssessments(
+      client,
+      assessments,
+      CONCURRENCY,
+    );
+    encounteredError = encounteredError || !syncedAssessments;
+  }
+
+  // Sync assessment templates
+  if (assessmentTemplates) {
+    const syncedAssessmentTemplates = await syncAssessmentTemplates(
+      client,
+      assessmentTemplates,
+      CONCURRENCY,
+    );
+    encounteredError = encounteredError || !syncedAssessmentTemplates;
   }
 
   // Store dependency updates

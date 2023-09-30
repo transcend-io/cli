@@ -37,6 +37,8 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ManageDataSubjectRequestSettings,
   ],
+  [TranscendPullResource.Assessment]: [ScopeName.ManageAssessments],
+  [TranscendPullResource.AssessmentTemplate]: [ScopeName.ManageAssessments],
 };
 
 /**
@@ -62,4 +64,6 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ViewDataSubjectRequestSettings,
   ],
+  [TranscendPullResource.Assessment]: [ScopeName.ViewAssessments],
+  [TranscendPullResource.AssessmentTemplate]: [ScopeName.ViewAssessments],
 };

@@ -3,6 +3,8 @@
  */
 export enum TranscendPullResource {
   ApiKeys = 'apiKeys',
+  AssessmentTemplate = 'assessmentTemplate',
+  Assessment = 'assessment',
   Attributes = 'attributes',
   Templates = 'templates',
   DataSilos = 'dataSilos',

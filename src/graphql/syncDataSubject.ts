@@ -4,7 +4,7 @@ import { UPDATE_DATA_SUBJECT, TOGGLE_DATA_SUBJECT } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
- * Sync the consent manager
+ * Sync the data subjects
  *
  * @param client - GraphQL client
  * @param options - Options
