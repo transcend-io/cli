@@ -114,6 +114,10 @@
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
 - [Proxy usage](#proxy-usage)
+  - [tr-create-assessment](#tr-create-assessment)
+    - [Authentication](#authentication-26)
+    - [Arguments](#arguments-26)
+    - [Usage](#usage-27)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -157,6 +161,7 @@ yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
+yarn tr-create-assessment --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -190,6 +195,7 @@ tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
+tr-create-assessment --auth=$TRANSCEND_API_KEY
 
 ```
 
@@ -2100,3 +2106,46 @@ yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://
 ## Proxy usage
 
 If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
+
+### tr-create-assessment
+
+This command allows for creating a new assessment form an assessment template.
+
+Assessment templates can be managed here: https://app.transcend.io/assessments/templates
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys) or by using the `yarn tr-generate-api-keys` command above.
+
+The API key must have the following scopes:
+
+- "Manage Assessments"
+
+#### Arguments
+
+| Argument  | Description                                                      | Type   | Default        | Required |
+| --------- | ---------------------------------------------------------------- | ------ | -------------- | -------- |
+| auth      | The Transcend API key with the scopes necessary for the command. | string | N/A            | true     |
+| template  | The title of the assessment template                             | string | N/A - Prompted | false    |
+| title     | The title of the new assessment                                  | string | N/A - Prompted | false    |
+| variables | Additional template variables to pre-fill the template           | string | N/A - Prompted | false    |
+
+#### Usage
+
+Create a new assessment, filling out more information by being prompted by the terminal line
+
+```sh
+yarn tr-create-assessment --auth=$TRANSCEND_API_KEY
+```
+
+Specifying the template and title
+
+```sh
+yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing"
+```
+
+Configuring additional variables:
+
+```sh
+yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing" --variables=description:"testt test"
+```

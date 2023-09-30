@@ -14,9 +14,9 @@ import {
 
 import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from './constants';
 import { TranscendInput } from './codecs';
-import { ObjByString } from '@transcend-io/type-utils';
 import { validateTranscendAuth, listFiles } from './api-keys';
 import { mergeTranscendInputs } from './mergeTranscendInputs';
+import { parseVariablesFromString } from './helpers/parseVariablesFromString';
 
 /**
  * Sync configuration to Transcend
@@ -30,6 +30,7 @@ async function syncConfiguration({
   pageSize,
   publishToPrivacyCenter,
   contents,
+  creatorId,
   classifyService = false,
 }: {
   /** Transcend YAML */
@@ -44,6 +45,8 @@ async function syncConfiguration({
   publishToPrivacyCenter: boolean;
   /** classify data flow service if missing */
   classifyService?: boolean;
+  /** Creator ID for assessments TODO: https://transcend.height.app/T-29850 - remove this  */
+  creatorId?: string;
 }): Promise<boolean> {
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
@@ -52,7 +55,7 @@ async function syncConfiguration({
     const encounteredError = await syncConfigurationToTranscend(
       contents,
       client,
-      { pageSize, publishToPrivacyCenter, classifyService },
+      { pageSize, publishToPrivacyCenter, classifyService, creatorId },
     );
     return !encounteredError;
   } catch (err) {
@@ -84,18 +87,15 @@ async function main(): Promise<void> {
     pageSize = '',
     publishToPrivacyCenter,
     classifyService = '',
+    /** Creator ID of user for assessment templates TODO: https://transcend.height.app/T-29850 */
+    creatorId = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 
   // Parse out the variables
-  const splitVars = variables.split(',').filter((x) => !!x);
-  const vars: ObjByString = {};
-  splitVars.forEach((variable) => {
-    const [k, v] = variable.split(':');
-    vars[k] = v;
-  });
+  const vars = parseVariablesFromString(variables);
 
   // check if we are being passed a list of API keys and a list of files
   let fileList: string[];
@@ -160,6 +160,7 @@ async function main(): Promise<void> {
       publishToPrivacyCenter: publishToPrivacyCenter === 'true',
       pageSize: parsedPageSize,
       classifyService: !!classifyService,
+      creatorId,
     });
 
     // exist with error code
@@ -225,6 +226,7 @@ async function main(): Promise<void> {
         pageSize: parsedPageSize,
         publishToPrivacyCenter: publishToPrivacyCenter === 'true',
         classifyService: !!classifyService,
+        creatorId,
       });
 
       if (success) {
