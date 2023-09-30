@@ -14,12 +14,20 @@ import { logger } from '../logger';
  *
  * @param client - GraphQL client
  * @param assessmentTemplates - Assessment templates
- * @param concurrency - Concurrency
+ * @param options - Options
  */
 export async function syncAssessmentTemplates(
   client: GraphQLClient,
   assessmentTemplates: AssessmentTemplateInput[],
-  concurrency = 20,
+  {
+    concurrency = 20,
+    creatorId,
+  }: {
+    /** Creator ID TODO: https://transcend.height.app/T-29850 - remove this  */
+    creatorId?: string;
+    /** Concurrency */
+    concurrency?: number;
+  } = {},
 ): Promise<boolean> {
   let successful = true;
   // Index existing templates
@@ -52,6 +60,7 @@ export async function syncAssessmentTemplates(
             input: {
               title: assessmentTemplate.title,
               content: assessmentTemplate.content,
+              creatorId,
             },
           });
           logger.info(
