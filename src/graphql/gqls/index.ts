@@ -5,6 +5,7 @@ export * from './catalog';
 export * from './identifier';
 export * from './dataSubject';
 export * from './apiKey';
+export * from './assessment';
 export * from './siloDiscovery';
 export * from './template';
 export * from './organization';

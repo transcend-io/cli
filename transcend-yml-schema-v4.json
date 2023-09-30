@@ -34213,6 +34213,45 @@
           "type": "string"
         }
       }
+    },
+    "assessment-templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "attributeKeys"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "attributeKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "content", "assessment-template"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "assessment-template": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }
