@@ -228,6 +228,40 @@ export const Attributes = t.type({
 export type Attributes = t.TypeOf<typeof Attributes>;
 
 /**
+ * AssessmentTemplate type definition.
+ */
+export const AssessmentTemplateInput = t.type({
+  /** The title of the assessment template. */
+  title: t.string,
+  /** The content of the assessment template. */
+  content: t.string,
+  /** Attribute keys related to the assessment template. */
+  attributeKeys: t.array(t.string),
+});
+
+/**
+ * Type override
+ */
+export type AssessmentTemplateInput = t.TypeOf<typeof AssessmentTemplateInput>;
+
+/**
+ * Assessment type definition.
+ */
+export const AssessmentInput = t.type({
+  /** The title of the assessment template. */
+  title: t.string,
+  /** The content of the assessment template. */
+  content: t.string,
+  /** Title of the assessment template */
+  'assessment-template': t.string,
+});
+
+/**
+ * Type override
+ */
+export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
+
+/**
  * Annotate specific fields within a datapoint. These are often database table columns.
  * Fields can also be a JSON object or separate file.
  */
@@ -814,6 +848,14 @@ export const TranscendInput = t.partial({
    * Consent manager definition
    */
   'consent-manager': ConsentManagerInput,
+  /**
+   * Assessment template definitions
+   */
+  'assessment-templates': t.array(AssessmentTemplateInput),
+  /**
+   * Consent manager definition
+   */
+  assessments: t.array(AssessmentInput),
 });
 
 /** Type override */
