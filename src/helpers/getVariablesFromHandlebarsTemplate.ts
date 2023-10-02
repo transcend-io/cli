@@ -30,19 +30,12 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
   // Parse from {{#each}} or {{#with}}
   if (statement.type === 'BlockStatement' && statement) {
     const moustacheStatement = statement as hbs.AST.MustacheStatement;
-    const pathExpression = moustacheStatement.path as hbs.AST.PathExpression;
     const paramsExpressionList =
       moustacheStatement.params as hbs.AST.PathExpression[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const program = (moustacheStatement as any).program as hbs.AST.Program;
     const param = paramsExpressionList[0];
-    if (pathExpression.original === 'with') {
-      return {
-        [param.original]: program.body
-          .map(parseHandlebarsAst)
-          .reduce((acc, obj) => Object.assign(acc, obj), {}),
-      };
-    }
+    const pathExpression = moustacheStatement.path as hbs.AST.PathExpression;
     if (pathExpression.original === 'each') {
       return {
         [param.original]: [
@@ -52,9 +45,12 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
         ],
       };
     }
-    throw new Error(
-      `Got unknown path expression ${pathExpression.original} in statement.type === 'BlockStatement'`,
-    );
+
+    return {
+      [param.original]: program.body
+        .map(parseHandlebarsAst)
+        .reduce((acc, obj) => Object.assign(acc, obj), {}),
+    };
   }
   throw new Error(`Unknown statement: ${statement.type}`);
 }

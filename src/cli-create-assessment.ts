@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import handlebars from 'handlebars';
 import yargs from 'yargs-parser';
 import colors from 'colors';
 
@@ -16,6 +15,7 @@ import {
 } from './helpers/inquirer';
 import { parseVariablesFromString } from './helpers/parseVariablesFromString';
 import { createAssessment, updateAssessment } from './graphql/syncAssessments';
+import { createHandlebarsWithHelpers } from './ai';
 
 /**
  * Create a new assessment from an assessment template
@@ -177,6 +177,7 @@ async function main(): Promise<void> {
   });
 
   // Create new assessment
+  const handlebars = createHandlebarsWithHelpers();
   const content = handlebars
     .compile(assessmentTemplate.content)(results)
     // remove empty lines
