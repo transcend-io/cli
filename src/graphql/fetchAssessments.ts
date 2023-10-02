@@ -1,13 +1,18 @@
 import { GraphQLClient } from 'graphql-request';
 import { ASSESSMENTS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { AttributeSupportedResourceType } from '@transcend-io/privacy-types';
+import {
+  AttributeSupportedResourceType,
+  AssessmentStatus,
+} from '@transcend-io/privacy-types';
 
 export interface Assessment {
   /** ID of assessment */
   id: string;
   /** The title of the assessment template. */
   title: string;
+  /** The status of the assessment  */
+  status: AssessmentStatus;
   /** The content of the assessment template. */
   content: string;
   /** Title of the assessment template */
@@ -30,10 +35,17 @@ const PAGE_SIZE = 20;
  * Fetch all Assessments in the organization
  *
  * @param client - GraphQL client
+ * @param options - Options
  * @returns All Assessments in the organization
  */
 export async function fetchAllAssessments(
   client: GraphQLClient,
+  {
+    text,
+  }: {
+    /** Filter by text */
+    text?: string;
+  } = {},
 ): Promise<Assessment[]> {
   const assessments: Assessment[] = [];
   let offset = 0;
@@ -53,6 +65,7 @@ export async function fetchAllAssessments(
     }>(client, ASSESSMENTS, {
       first: PAGE_SIZE,
       offset,
+      ...(text ? { filterBy: { text } } : {}),
     });
     assessments.push(...nodes);
     offset += PAGE_SIZE;

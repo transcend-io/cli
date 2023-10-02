@@ -1,7 +1,11 @@
 import { gql } from 'graphql-request';
 
 export const ASSESSMENTS = gql`
-  query TranscendCliAssessments($first: Int!, $offset: Int!) {
+  query TranscendCliAssessments(
+    $first: Int!
+    $offset: Int!
+    $filterBy: AssessmentFiltersInput
+  ) {
     assessments(
       first: $first
       # TODO: https://transcend.height.app/T-27909 - enable optimizations
@@ -10,10 +14,12 @@ export const ASSESSMENTS = gql`
       # TODO: https://transcend.height.app/T-27909 - order by createdAt
       # orderBy: [{ field: title, direction: ASC }]
       offset: $offset
+      filterBy: $filterBy
     ) {
       nodes {
         id
         title
+        status
         assessmentTemplate {
           title
         }
