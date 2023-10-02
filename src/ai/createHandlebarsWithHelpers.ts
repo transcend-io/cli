@@ -116,17 +116,13 @@ const DEFAULT_HELPERS = {
    * @returns The object stringified
    */
   toJSON: <T extends ObjByString>(obj: T) =>
-    JSON.stringify(
-      obj,
-      (k, v) => {
-        // Necessary, else functions don't get written.
-        if (typeof v === 'function') {
-          return v.toString();
-        }
-        return v;
-      },
-      2,
-    ),
+    JSON.stringify(obj, (k, v) => {
+      // Necessary, else functions don't get written.
+      if (typeof v === 'function') {
+        return v.toString();
+      }
+      return v;
+    }),
   /**
    * Compares two string to see if they're sorted
    *
