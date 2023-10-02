@@ -22345,7 +22345,8 @@
                                                 "SURVEY",
                                                 "OTHER",
                                                 "UNSPECIFIED",
-                                                "NOT_PERSONAL_DATA"
+                                                "NOT_PERSONAL_DATA",
+                                                "INTEGRATION_IDENTIFIER"
                                               ]
                                             }
                                           }
