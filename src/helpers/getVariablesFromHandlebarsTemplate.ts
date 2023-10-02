@@ -35,6 +35,17 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const program = (moustacheStatement as any).program as hbs.AST.Program;
     const param = paramsExpressionList[0];
+    const pathExpression = moustacheStatement.path as hbs.AST.PathExpression;
+    if (pathExpression.original === 'each') {
+      return {
+        [param.original]: [
+          program.body
+            .map(parseHandlebarsAst)
+            .reduce((acc, obj) => Object.assign(acc, obj), {}),
+        ],
+      };
+    }
+
     return {
       [param.original]: [
         program.body
