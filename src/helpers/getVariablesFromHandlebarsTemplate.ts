@@ -47,11 +47,9 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
     }
 
     return {
-      [param.original]: [
-        program.body
-          .map(parseHandlebarsAst)
-          .reduce((acc, obj) => Object.assign(acc, obj), {}),
-      ],
+      [param.original]: program.body
+        .map(parseHandlebarsAst)
+        .reduce((acc, obj) => Object.assign(acc, obj), {}),
     };
   }
   throw new Error(`Unknown statement: ${statement.type}`);
