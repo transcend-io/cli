@@ -99,6 +99,13 @@ export class TranscendAiPrompt<
       );
     }
 
+    // If assessment is rejected, throw error
+    if (assessment.status === AssessmentStatus.Rejected) {
+      throw new Error(
+        `Assessment "${this.title}" cannot be used because it's in status: "${assessment.status}"`,
+      );
+    }
+
     // Template attributes into the template string
     const extraParams: ObjByString = {};
     if (fillTemplateWithAttributes) {
@@ -139,6 +146,8 @@ export class TranscendAiPrompt<
     // and provided parameters
     return (params) =>
       this.handlebars.compile(assessment.content)({
+        // template in currentDate by default
+        currentDate: new Date().toISOString(),
         ...extraParams,
         ...params,
       });
