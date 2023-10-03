@@ -10,6 +10,8 @@ const TEST_DATA = {
   moose: null,
   str: '',
   cat: [],
+  mew: { dog: 2 },
+  woof: {},
 };
 
 describe('filterNullValuesFromObject', () => {
@@ -18,7 +20,7 @@ describe('filterNullValuesFromObject', () => {
       test: 'data',
       name: true,
       cow: false,
-      cat: [],
+      mew: { dog: 2 },
     });
   });
 });
