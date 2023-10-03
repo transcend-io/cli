@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { filterNullValuesFromObject } from '../ai/filterNullValuesFromObject';
+import { filterNullishValuesFromObject } from '../ai/filterNullishValuesFromObject';
 
 const TEST_DATA = {
   test: 'data',
@@ -14,9 +14,9 @@ const TEST_DATA = {
   woof: {},
 };
 
-describe('filterNullValuesFromObject', () => {
+describe('filterNullishValuesFromObject', () => {
   it('should remove links', () => {
-    expect(filterNullValuesFromObject(TEST_DATA)).to.deep.equal({
+    expect(filterNullishValuesFromObject(TEST_DATA)).to.deep.equal({
       test: 'data',
       name: true,
       cow: false,

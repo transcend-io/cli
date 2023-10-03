@@ -4,9 +4,11 @@ import { ObjByString } from '@transcend-io/type-utils';
  * Given an object, remove all keys that are null-ish
  *
  * @param obj - Object
- * @returns Object with null values removed
+ * @returns Object with null-ish values removed
  */
-export function filterNullValuesFromObject<T extends ObjByString>(obj: T): T {
+export function filterNullishValuesFromObject<T extends ObjByString>(
+  obj: T,
+): T {
   return Object.entries(obj).reduce(
     (acc, [k, v]) =>
       v !== null &&
