@@ -77,6 +77,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
+            ["json2csv", "npm:6.0.0-alpha.2"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.8.7"],\
@@ -521,6 +522,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@streamparser/json", [\
+        ["npm:0.0.6", {\
+          "packageLocation": "./.yarn/cache/@streamparser-json-npm-0.0.6-f40ee058a8-48eff9d739.zip/node_modules/@streamparser/json/",\
+          "packageDependencies": [\
+            ["@streamparser/json", "npm:0.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@szmarczak/http-timer", [\
         ["npm:4.0.6", {\
           "packageLocation": "./.yarn/cache/@szmarczak-http-timer-npm-4.0.6-6ace00d82d-c29df3bcec.zip/node_modules/@szmarczak/http-timer/",\
@@ -606,6 +616,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["js-yaml", "npm:4.1.0"],\
+            ["json2csv", "npm:6.0.0-alpha.2"],\
             ["lodash", "npm:4.17.21"],\
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.8.7"],\
@@ -2204,6 +2215,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["combined-stream", "npm:1.0.8"],\
             ["delayed-stream", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["commander", [\
+        ["npm:6.2.1", {\
+          "packageLocation": "./.yarn/cache/commander-npm-6.2.1-d5b635f237-d7090410c0.zip/node_modules/commander/",\
+          "packageDependencies": [\
+            ["commander", "npm:6.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4642,6 +4662,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json2csv", [\
+        ["npm:6.0.0-alpha.2", {\
+          "packageLocation": "./.yarn/cache/json2csv-npm-6.0.0-alpha.2-392c173cc9-6f9ff361ef.zip/node_modules/json2csv/",\
+          "packageDependencies": [\
+            ["json2csv", "npm:6.0.0-alpha.2"],\
+            ["@streamparser/json", "npm:0.0.6"],\
+            ["commander", "npm:6.2.1"],\
+            ["lodash.get", "npm:4.4.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["json5", [\
         ["npm:1.0.2", {\
           "packageLocation": "./.yarn/cache/json5-npm-1.0.2-9607f93e30-866458a8c5.zip/node_modules/json5/",\
@@ -4714,6 +4746,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/lodash.escaperegexp-npm-4.1.2-c5b90e0e9c-6d99452b1c.zip/node_modules/lodash.escaperegexp/",\
           "packageDependencies": [\
             ["lodash.escaperegexp", "npm:4.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lodash.get", [\
+        ["npm:4.4.2", {\
+          "packageLocation": "./.yarn/cache/lodash.get-npm-4.4.2-7bda64ed87-e403047ddb.zip/node_modules/lodash.get/",\
+          "packageDependencies": [\
+            ["lodash.get", "npm:4.4.2"]\
           ],\
           "linkType": "HARD"\
         }]\
