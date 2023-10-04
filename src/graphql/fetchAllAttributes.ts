@@ -11,6 +11,8 @@ export interface AttributeValue {
   id: string;
   /** Attribute name */
   name: string;
+  /** Attribute description */
+  description: string;
   /** Color of attribute value */
   color: string;
 }

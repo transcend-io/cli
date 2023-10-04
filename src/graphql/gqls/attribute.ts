@@ -62,6 +62,7 @@ export const ATTRIBUTE_VALUES = gql`
       nodes {
         id
         name
+        description
         color
       }
     }
