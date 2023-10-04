@@ -146,10 +146,11 @@ export class TranscendAiPrompt<
               `Failed to find attribute with name: "${attributeName}"`,
             );
           }
-          extraParams[attributeNameWithPrefix] = existingAttribute.values;
+          extraParams[attributeNameWithPrefix] = existingAttribute;
         });
       }
     }
+    console.log(extraParams);
 
     // Return function that can compile template with attributes
     // and provided parameters
