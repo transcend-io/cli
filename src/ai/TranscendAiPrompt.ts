@@ -32,6 +32,9 @@ export class TranscendAiPrompt<
   /** Handlebars compiler */
   public handlebars: typeof handlebars;
 
+  /** Extract response from this tag */
+  public extractFromTagRegex?: RegExp;
+
   /**
    * Constructor
    *
@@ -40,6 +43,7 @@ export class TranscendAiPrompt<
   constructor({
     title,
     codec,
+    extractFromTag,
     handlebarsOptions,
   }: {
     /** Title of prompt in transcend */
@@ -48,10 +52,15 @@ export class TranscendAiPrompt<
     codec: TOutputCodec;
     /** Options for configuring handlebars */
     handlebarsOptions?: HandlebarsInput;
+    /** When provided, the response should be extracted from this tag name e.g. json */
+    extractFromTag?: string;
   }) {
     this.title = title;
     this.codec = codec;
     this.handlebars = createHandlebarsWithHelpers(handlebarsOptions);
+    this.extractFromTagRegex = extractFromTag
+      ? new RegExp(`<${extractFromTag}>([\\s\\S]+?)<\\/${extractFromTag}>`)
+      : undefined;
   }
 
   /**
@@ -160,6 +169,9 @@ export class TranscendAiPrompt<
    * @returns Parsed content
    */
   parseAiResponse(response: string): t.TypeOf<TOutputCodec> {
-    return decodeCodec(this.codec, response);
+    const extracted = this.extractFromTagRegex
+      ? (this.extractFromTagRegex.exec(response) || [])[1] || response
+      : response;
+    return decodeCodec(this.codec, extracted);
   }
 }
