@@ -146,7 +146,7 @@ export class TranscendAiPrompt<
               `Failed to find attribute with name: "${attributeName}"`,
             );
           }
-          extraParams[attributeNameWithPrefix] = existingAttribute.values;
+          extraParams[attributeNameWithPrefix] = existingAttribute;
         });
       }
     }
