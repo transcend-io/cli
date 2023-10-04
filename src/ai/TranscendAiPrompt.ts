@@ -150,7 +150,6 @@ export class TranscendAiPrompt<
         });
       }
     }
-    console.log(extraParams);
 
     // Return function that can compile template with attributes
     // and provided parameters
