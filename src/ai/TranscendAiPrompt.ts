@@ -5,7 +5,11 @@ import { Secret } from '@transcend-io/secret-value';
 import * as t from 'io-ts';
 import { fetchAllAssessments } from '../graphql/fetchAssessments';
 import { DEFAULT_TRANSCEND_API } from '../constants';
-import { buildTranscendGraphQLClient, fetchAllAttributes } from '../graphql';
+import {
+  buildTranscendGraphQLClient,
+  fetchAllAttributes,
+  fetchAllBusinessEntities,
+} from '../graphql';
 import { getVariablesFromHandlebarsTemplate } from '../helpers/getVariablesFromHandlebarsTemplate';
 import {
   HandlebarsInput,
@@ -15,6 +19,7 @@ import camelCase from 'lodash/camelCase';
 import keyBy from 'lodash/keyBy';
 
 export const EXPECTED_ATTRIBUTE_PREFIX = 'attribute-';
+export const BUSINESS_ENTITIES_PREFIX = 'businessEntities-';
 
 /**
  * Define an AI prompt that can be loaded from Transcend
@@ -70,7 +75,7 @@ export class TranscendAiPrompt<
    * @returns A function that can be used to call the prompt
    */
   async fetchPromptFromTranscend({
-    fillTemplateWithAttributes = true,
+    fillTemplateFromInventory = true,
     transcendUrl = DEFAULT_TRANSCEND_API,
     transcendApiKey,
     requireApproval,
@@ -78,7 +83,7 @@ export class TranscendAiPrompt<
     /** The Transcend API key */
     transcendApiKey: string | Secret<string>;
     /** When true, template in any attribute definitions in the prompt */
-    fillTemplateWithAttributes?: boolean;
+    fillTemplateFromInventory?: boolean;
     /** API of Transcend to call */
     transcendUrl?: string;
     /** When true, throw an error if the prompt is not approved */
@@ -117,7 +122,9 @@ export class TranscendAiPrompt<
 
     // Template attributes into the template string
     const extraParams: ObjByString = {};
-    if (fillTemplateWithAttributes) {
+
+    // Template in attributes
+    if (fillTemplateFromInventory) {
       // pull out the variables from the handlebar string
       const schema = getVariablesFromHandlebarsTemplate(assessment.content);
 
@@ -148,6 +155,25 @@ export class TranscendAiPrompt<
           }
           extraParams[attributeNameWithPrefix] = existingAttribute;
         });
+      }
+
+      // pull out the attributes to fetch
+      const businessEntitiesToFetch = Object.keys(schema).filter((key) =>
+        key.startsWith(BUSINESS_ENTITIES_PREFIX),
+      );
+
+      // Fetch business entities if there are template variables to fill
+      if (businessEntitiesToFetch.length > 0) {
+        // TODO: https://transcend.height.app/T-29886 - only fetch business needed
+        // and find a way to template when multiple entities
+        const businessEntities = await fetchAllBusinessEntities(client);
+        const businessEntity = businessEntities[0];
+        if (businessEntity) {
+          extraParams.dataProtectionOfficerName =
+            businessEntity.dataProtectionOfficerName;
+          extraParams.dataProtectionOfficerEmail =
+            businessEntity.dataProtectionOfficerEmail;
+        }
       }
     }
 
