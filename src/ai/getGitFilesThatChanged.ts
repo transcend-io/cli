@@ -1,5 +1,5 @@
 import difference from 'lodash/difference';
-import glob from 'glob';
+import fastGlob from 'fast-glob';
 import { execSync } from 'child_process';
 
 /**
@@ -68,7 +68,7 @@ export function getGitFilesThatChanged({
   // Filter out globs
   const filteredChanges =
     excludedGlob.length > 0
-      ? glob.sync(changedFiles, { ignore: excludedGlob })
+      ? fastGlob.sync(changedFiles, { ignore: excludedGlob })
       : changedFiles;
 
   // Get the contents of only the changed files
