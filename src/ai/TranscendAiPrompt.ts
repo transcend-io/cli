@@ -121,7 +121,7 @@ export class TranscendAiPrompt<
     }
 
     // Template attributes into the template string
-    const extraParams: ObjByString = {};
+    let extraParams: ObjByString = {};
 
     // Template in attributes
     if (fillTemplateFromInventory) {
@@ -169,6 +169,14 @@ export class TranscendAiPrompt<
         const businessEntities = await fetchAllBusinessEntities(client);
         const businessEntity = businessEntities[0];
         if (businessEntity) {
+          extraParams = {
+            ...extraParams,
+            ...Object.entries(businessEntity).reduce(
+              (acc, [key, value]) =>
+                Object.assign(acc, { [`businessEntities-${key}`]: value }),
+              {},
+            ),
+          };
           extraParams.dataProtectionOfficerName =
             businessEntity.dataProtectionOfficerName;
           extraParams.dataProtectionOfficerEmail =
