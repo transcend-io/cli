@@ -97,27 +97,31 @@
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-- [Proxy usage](#proxy-usage)
-  - [tr-create-assessment](#tr-create-assessment)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
+  - [tr-create-assessment](#tr-create-assessment)
+    - [Authentication](#authentication-27)
+    - [Arguments](#arguments-27)
+    - [Usage](#usage-28)
+- [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -157,6 +161,7 @@ yarn tr-consent-manager-service-json-to-yml
 yarn tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
 yarn tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
+yarn tr-upload-consent-preferences --auth=$TRANSCEND_API_KEY
 yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
@@ -188,6 +193,7 @@ tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-retry-request-data-silos --auth=$TRANSCEND_API_KEY
 tr-update-consent-manager --auth=$TRANSCEND_API_KEY
 tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY
+tr-upload-consent-preferences --auth=$TRANSCEND_API_KEY
 tr-consent-managers-to-business-entities
 tr-consent-manager-service-json-to-yml
 tr-derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
@@ -1842,6 +1848,57 @@ Bin data hourly vs daily
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --bin=1h
 ```
 
+### tr-upload-consent-preferences
+
+This command allows for updating of consent preferences to the [Managed Consent Database](https://docs.transcend.io/docs/consent/reference/managed-consent-database).
+
+Each row in the CSV must include:
+
+| Argument  | Description                                                                                               | Type                      | Default | Required |
+| --------- | --------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | -------- |
+| userId    | Unique ID identifying the user that the preferences ar efor                                               | string                    | N/A     | true     |
+| timestamp | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
+| purposes  | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | false    |
+| confirmed | Whether consent preferences have been explicitly confirmed or inferred                                    | boolean                   | true    | false    |
+| updated   | Time consent preferences were last updated                                                                | string - timestamp        | N/A     | false    |
+| usp       | US Privacy string                                                                                         | string - USP              | N/A     | false    |
+
+#### Authentication
+
+In order to use this cli, you will first need to follow [this guide](https://docs.transcend.io/docs/consent/reference/managed-consent-database#authenticate-a-user's-consent) in order
+to grab your encryption and signing keys.
+
+#### Arguments
+
+| Argument            | Description                                                                       | Type          | Default                      | Required |
+| ------------------- | --------------------------------------------------------------------------------- | ------------- | ---------------------------- | -------- |
+| base64EncryptionKey | The encyption key used to encrypt the userId                                      | string        | N/A                          | true     |
+| base64SigningKey    | The signing key used to prove authentication of consent request                   | string        | N/A                          | true     |
+| partition           | The partition key to upload consent preferences to                                | string        | N/A                          | true     |
+| file                | The file to pull consent preferences from                                         | string - path | ./preferences.csv            | false    |
+| transcendUrl        | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting. | string - URL  | https://consent.transcend.io | false    |
+| concurrency         | The concurrency to use when uploading requests in parallel.                       | number        | 100                          | false    |
+
+#### Usage
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
+
+```sh
+yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+```
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726` from file `./consent.csv`
+
+```sh
+yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./consent.csv
+```
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726` and set concurrency
+
+```sh
+yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --concurrency=200
+```
+
 ### tr-upload-data-flows-from-csv
 
 This command allows for uploading of data flows from CSV.
@@ -2103,10 +2160,6 @@ Override XDI allowed commands
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --xdiAllowedCommands="ExtractIdentifiers:Simple"
 ```
 
-## Proxy usage
-
-If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
-
 ### tr-create-assessment
 
 This command allows for creating a new assessment form an assessment template.
@@ -2149,3 +2202,7 @@ Configuring additional variables:
 ```sh
 yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing" --variables=description:"testt test"
 ```
+
+## Proxy usage
+
+If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
