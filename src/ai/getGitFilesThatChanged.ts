@@ -29,7 +29,11 @@ export function getGitFilesThatChanged({
 }): {
   /** The list of files that changed */
   changedFiles: string[];
-  /** Mapping from file name to file contents that changed */
+  /** Github repo name */
+  repoName: string;
+  /** Current commit */
+  commit: string;
+  /** File diffs */
   fileDiffs: { [k in string]: string };
 } {
   // Pull base branch
@@ -79,8 +83,14 @@ export function getGitFilesThatChanged({
     });
     fileDiffs[file] = contents;
   });
+
+  // Pull the github repo name
+  const repoName = githubRepo.split('/').pop()!.split('.')[0];
+
   return {
     changedFiles,
     fileDiffs,
+    repoName,
+    commit: latestThisCommit,
   };
 }

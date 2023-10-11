@@ -13,6 +13,13 @@ export const DEFAULT_TRANSCEND_API =
   process.env.TRANSCEND_API_URL || 'https://api.transcend.io';
 
 /**
+ * Override default transcend API url using
+ * TRANSCEND_API_URL=https://consent.us.transcend.io tr-pull ...
+ */
+export const DEFAULT_TRANSCEND_CONSENT_API =
+  process.env.TRANSCEND_CONSENT_API_URL || 'https://consent.transcend.io';
+
+/**
  * Mapping between resource type and scopes required for cli
  */
 export const TR_PUSH_RESOURCE_SCOPE_MAP: {
