@@ -483,6 +483,7 @@ __metadata:
     tr-mark-request-data-silos-completed: ./build/cli-mark-request-data-silos-completed.js
     tr-pull: ./build/cli-pull.js
     tr-pull-consent-metrics: ./build/cli-pull-consent-metrics.js
+    tr-pull-consent-preferences: ./build/cli-pull-consent-preferences.js
     tr-push: ./build/cli-push.js
     tr-request-approve: ./build/cli-request-approve.js
     tr-request-cancel: ./build/cli-request-cancel.js
