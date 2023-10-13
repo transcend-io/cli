@@ -1880,7 +1880,7 @@ to grab your encryption and signing keys.
 | ------------------- | --------------------------------------------------------------------------------- | ------------- | ---------------------------- | -------- |
 | base64EncryptionKey | The encyption key used to encrypt the userId                                      | string        | N/A                          | true     |
 | base64SigningKey    | The signing key used to prove authentication of consent request                   | string        | N/A                          | true     |
-| partition           | The partition key to upload consent preferences to                                | string        | N/A                          | true     |
+| partition           | The partition key to download consent preferences to                              | string        | N/A                          | true     |
 | file                | The file to pull consent preferences from                                         | string - path | ./preferences.csv            | false    |
 | transcendUrl        | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting. | string - URL  | https://consent.transcend.io | false    |
 | concurrency         | The concurrency to use when uploading requests in parallel.                       | number        | 100                          | false    |
