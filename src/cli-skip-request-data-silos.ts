@@ -33,6 +33,8 @@ async function main(): Promise<void> {
     dataSiloId,
     /** Mark request data silos with requests matching these request statuses */
     statuses = `${RequestStatus.Compiling},${RequestStatus.Secondary}`,
+    /** The status to set */
+    status = 'SKIPPED',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -75,6 +77,7 @@ async function main(): Promise<void> {
   await skipRequestDataSilos({
     transcendUrl,
     auth,
+    status: status as 'SKIPPED' | 'RESOLVED',
     dataSiloId,
     requestStatuses: parsedStatuses,
   });

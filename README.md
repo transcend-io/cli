@@ -1516,12 +1516,13 @@ The API key must have the following scopes:
 
 #### Arguments
 
-| Argument     | Description                                                                                                                 | Type            | Default                  | Required |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
-| auth         | The Transcend API key with the scopes necessary for the command.                                                            | string          | N/A                      | true     |
-| dataSiloId   | The ID of the data silo to skip privacy request jobs for.                                                                   | string - UUID   | N/A                      | true     |
-| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                               | string - URL    | https://api.transcend.io | false    |
-| statuses     | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark as completed for. | RequestStatus[] | COMPILING,SECONDARY      | false    |
+| Argument     | Description                                                                                                                 | Type                | Default                  | Required |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.                                                            | string              | N/A                      | true     |
+| dataSiloId   | The ID of the data silo to skip privacy request jobs for.                                                                   | string - UUID       | N/A                      | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                               | string - URL        | https://api.transcend.io | false    |
+| statuses     | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to mark as completed for. | RequestStatus[]     | COMPILING,SECONDARY      | false    |
+| status       | The status to set the request data silo job to                                                                              | SKIPPED or RESOLVED | SKIPPED                  | false    |
 
 #### Usage
 
