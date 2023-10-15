@@ -14,6 +14,10 @@ const TEST_HBS = `
   ({{#each parameters}}{{ name }} - {{slug}}, {{/each}}clarification).
 </p>
 
+{{> promptPartialTodaysDate }}
+
+{{> promptPartialTranscendProducts }}
+
 
 {{#with dog}}{{cat}} - {{fish}}{{/with}}
 
@@ -39,6 +43,8 @@ describe('getVariablesFromHandlebars', () => {
       description: null,
       parameters: [{ name: null, slug: null, description: null }],
       dog: { cat: null, fish: null, meow: null },
+      promptPartialTodaysDate: 'partial',
+      promptPartialTranscendProducts: 'partial',
     });
   });
 });

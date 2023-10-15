@@ -14,6 +14,14 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
     return {};
   }
 
+  if (statement.type === 'PartialStatement') {
+    const moustacheStatement = statement as hbs.AST.PartialStatement;
+    const pathStatement = moustacheStatement.name as hbs.AST.PathExpression;
+    return {
+      [pathStatement.original]: 'partial',
+    };
+  }
+
   // Parse variables from {{ var }}
   if (statement.type === 'MustacheStatement') {
     const moustacheStatement = statement as hbs.AST.MustacheStatement;
