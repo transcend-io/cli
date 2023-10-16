@@ -21,6 +21,12 @@ const TEST_HBS = `
 
 {{#with dog}}{{cat}} - {{fish}}{{/with}}
 
+{{#if (listLen extraContext)}}
+{{#each extraContext}}
+{{ name }}
+{{/each}}
+{{/if}}
+
 <p>
   The following rules define each of the input parameters:
   <ul>
@@ -43,6 +49,11 @@ describe('getVariablesFromHandlebars', () => {
       description: null,
       parameters: [{ name: null, slug: null, description: null }],
       dog: { cat: null, fish: null, meow: null },
+      extraContext: [
+        {
+          name: null,
+        },
+      ],
       promptPartialTodaysDate: 'partial',
       promptPartialTranscendProducts: 'partial',
     });
