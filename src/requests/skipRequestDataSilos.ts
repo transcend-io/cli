@@ -21,6 +21,7 @@ export async function skipRequestDataSilos({
   dataSiloId,
   auth,
   concurrency = 100,
+  status = 'SKIPPED',
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
 }: {
@@ -28,6 +29,8 @@ export async function skipRequestDataSilos({
   auth: string;
   /** Data Silo ID to pull down jobs for */
   dataSiloId: string;
+  /** Status to set */
+  status?: 'SKIPPED' | 'RESOLVED';
   /** Upload concurrency */
   concurrency?: number;
   /** API URL for Transcend backend */
@@ -71,7 +74,7 @@ export async function skipRequestDataSilos({
           success: boolean;
         }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
           requestDataSiloId: requestDataSilo.id,
-          status: 'SKIPPED',
+          status,
         });
       } catch (err) {
         if (!err.message.includes('Client error: Request must be active:')) {

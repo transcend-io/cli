@@ -14,6 +14,14 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
     return {};
   }
 
+  if (statement.type === 'PartialStatement') {
+    const moustacheStatement = statement as hbs.AST.PartialStatement;
+    const pathStatement = moustacheStatement.name as hbs.AST.PathExpression;
+    return {
+      [pathStatement.original]: 'partial',
+    };
+  }
+
   // Parse variables from {{ var }}
   if (statement.type === 'MustacheStatement') {
     const moustacheStatement = statement as hbs.AST.MustacheStatement;
@@ -34,8 +42,16 @@ function parseHandlebarsAst(statement: hbs.AST.Statement): {
       moustacheStatement.params as hbs.AST.PathExpression[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const program = (moustacheStatement as any).program as hbs.AST.Program;
-    const param = paramsExpressionList[0];
+    const param = paramsExpressionList[0] as unknown as
+      | hbs.AST.PathExpression
+      | hbs.AST.SubExpression;
     const pathExpression = moustacheStatement.path as hbs.AST.PathExpression;
+    if (param.type === 'SubExpression') {
+      return program.body
+        .map(parseHandlebarsAst)
+        .reduce((acc, obj) => Object.assign(acc, obj), {});
+    }
+
     if (pathExpression.original === 'each') {
       return {
         [param.original]: [
