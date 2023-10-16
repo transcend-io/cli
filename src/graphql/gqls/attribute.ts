@@ -16,6 +16,8 @@ const ENABLED_ON_CREATE_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
   .join('\n');
 
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
+// # TODO: https://transcend.height.app/T-27909 - enable optimizations
+//       # isExportCsv: true
 export const ATTRIBUTES = gql`
   query TranscendCliAttributes($first: Int!, $offset: Int!) {
     attributeKeys(first: $first, offset: $offset, useMaster: false) {
@@ -51,6 +53,8 @@ export const ATTRIBUTE_VALUES = gql`
     attributeValues(
       first: $first
       offset: $offset
+      # TODO: https://transcend.height.app/T-27909 - enable optimizations
+      # isExportCsv: true
       useMaster: false
       filterBy: { attributeKeys: [$attributeKeyId] }
     ) {
