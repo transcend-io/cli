@@ -8,9 +8,7 @@ export const ASSESSMENTS = gql`
   ) {
     assessments(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
+      useMaster: false
       # TODO: https://transcend.height.app/T-27909 - order by createdAt
       # orderBy: [{ field: title, direction: ASC }]
       offset: $offset
@@ -55,9 +53,7 @@ export const ASSESSMENT_TEMPLATES = gql`
   query TranscendCliAssessmentTEmplates($first: Int!, $offset: Int!) {
     assessmentTemplates(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
+      useMaster: false
       # TODO: https://transcend.height.app/T-27909 - order by createdAt
       # orderBy: [{ field: title, direction: ASC }]
       offset: $offset

@@ -9,8 +9,6 @@ export const BUSINESS_ENTITIES = gql`
         { field: createdAt, direction: ASC }
         { field: title, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {
