@@ -409,6 +409,7 @@ __metadata:
   resolution: "@transcend-io/cli@workspace:."
   dependencies:
     "@transcend-io/airgap.js-types": ^10.4.4
+    "@transcend-io/handlebars-utils": ^1.0.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.2
     "@transcend-io/privacy-types": ^4.43.0
@@ -499,6 +500,19 @@ __metadata:
     tr-upload-data-flows-from-csv: ./build/cli-upload-data-flows-from-csv.js
   languageName: unknown
   linkType: soft
+
+"@transcend-io/handlebars-utils@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@transcend-io/handlebars-utils@npm:1.0.0"
+  dependencies:
+    "@transcend-io/type-utils": ^1.1.1
+    change-case: ^4.1.2
+    handlebars: ^4.7.8
+    lodash: ^4.17.21
+    pluralize: ^8.0.0
+  checksum: 29469dfddd5d20b89b7d8599f8ed18e667961f1541703b8d7ca5327ba11b16837e65d0fe0fa10c712d4dd1abb9c726e4d0735a9d943deeeeca2c25c4005ee119
+  languageName: node
+  linkType: hard
 
 "@transcend-io/internationalization@npm:^1.6.0":
   version: 1.6.0
@@ -4863,6 +4877,13 @@ fsevents@~2.3.2:
   dependencies:
     semver-compare: ^1.0.0
   checksum: d87c41581a2a022fbe25965a97006238cd9b8cbbf49b39f78d262548149a9d30bd2bdf35fec3d810e0001e630cd46ef13c7e19c389dea8de7e64db271a2381bb
+  languageName: node
+  linkType: hard
+
+"pluralize@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "pluralize@npm:8.0.0"
+  checksum: 08931d4a6a4a5561a7f94f67a31c17e6632cb21e459ab3ff4f6f629d9a822984cf8afef2311d2005fbea5d7ef26016ebb090db008e2d8bce39d0a9a9d218736e
   languageName: node
   linkType: hard
 

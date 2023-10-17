@@ -10,11 +10,11 @@ import {
   fetchAllAttributes,
   fetchAllBusinessEntities,
 } from '../graphql';
-import { getVariablesFromHandlebarsTemplate } from '../helpers/getVariablesFromHandlebarsTemplate';
 import {
   HandlebarsInput,
   createHandlebarsWithHelpers,
-} from './createHandlebarsWithHelpers';
+  getVariablesFromHandlebarsTemplate,
+} from '@transcend-io/handlebars-utils';
 import camelCase from 'lodash/camelCase';
 import keyBy from 'lodash/keyBy';
 

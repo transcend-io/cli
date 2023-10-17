@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@transcend-io/airgap.js-types", "npm:10.4.4"],\
+            ["@transcend-io/handlebars-utils", "npm:1.0.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
             ["@transcend-io/privacy-types", "npm:4.43.0"],\
@@ -570,6 +571,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@transcend-io/cli", "workspace:."],\
             ["@transcend-io/airgap.js-types", "npm:10.4.4"],\
+            ["@transcend-io/handlebars-utils", "npm:1.0.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
             ["@transcend-io/privacy-types", "npm:4.43.0"],\
@@ -630,6 +632,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs-parser", "npm:21.1.1"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@transcend-io/handlebars-utils", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-handlebars-utils-npm-1.0.0-479f7c44d7-29469dfddd.zip/node_modules/@transcend-io/handlebars-utils/",\
+          "packageDependencies": [\
+            ["@transcend-io/handlebars-utils", "npm:1.0.0"],\
+            ["@transcend-io/type-utils", "npm:1.1.1"],\
+            ["change-case", "npm:4.1.2"],\
+            ["handlebars", "npm:4.7.8"],\
+            ["lodash", "npm:4.17.21"],\
+            ["pluralize", "npm:8.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@transcend-io/internationalization", [\
@@ -5800,6 +5816,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["please-upgrade-node", "npm:3.2.0"],\
             ["semver-compare", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["pluralize", [\
+        ["npm:8.0.0", {\
+          "packageLocation": "./.yarn/cache/pluralize-npm-8.0.0-f5f044ed52-08931d4a6a.zip/node_modules/pluralize/",\
+          "packageDependencies": [\
+            ["pluralize", "npm:8.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
