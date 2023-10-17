@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@transcend-io/airgap.js-types", "npm:10.4.4"],\
+            ["@transcend-io/handlebars-utils", "npm:1.0.1"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
             ["@transcend-io/privacy-types", "npm:4.43.0"],\
@@ -36,7 +37,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/type-utils", "npm:1.1.1"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
-            ["@types/change-case", "npm:2.3.1"],\
             ["@types/cli-progress", "npm:3.11.0"],\
             ["@types/colors", "npm:1.2.1"],\
             ["@types/fuzzysearch", "npm:1.0.0"],\
@@ -54,7 +54,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:3.0.0-rc.42"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.7"],\
-            ["change-case", "npm:4.1.2"],\
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
@@ -73,7 +72,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
-            ["handlebars", "npm:4.7.8"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
@@ -667,6 +665,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@transcend-io/cli", "workspace:."],\
             ["@transcend-io/airgap.js-types", "npm:10.4.4"],\
+            ["@transcend-io/handlebars-utils", "npm:1.0.1"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
             ["@transcend-io/privacy-types", "npm:4.43.0"],\
@@ -674,7 +673,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/type-utils", "npm:1.1.1"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
-            ["@types/change-case", "npm:2.3.1"],\
             ["@types/cli-progress", "npm:3.11.0"],\
             ["@types/colors", "npm:1.2.1"],\
             ["@types/fuzzysearch", "npm:1.0.0"],\
@@ -692,7 +690,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:3.0.0-rc.42"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.7"],\
-            ["change-case", "npm:4.1.2"],\
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
             ["csv-parse", "npm:4.9.1"],\
@@ -711,7 +708,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.5"],\
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
-            ["handlebars", "npm:4.7.8"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
@@ -727,6 +723,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs-parser", "npm:21.1.1"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@transcend-io/handlebars-utils", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-handlebars-utils-npm-1.0.1-b5a14fde6d-908e45c1fd.zip/node_modules/@transcend-io/handlebars-utils/",\
+          "packageDependencies": [\
+            ["@transcend-io/handlebars-utils", "npm:1.0.1"],\
+            ["@transcend-io/type-utils", "npm:1.1.1"],\
+            ["change-case", "npm:4.1.2"],\
+            ["handlebars", "npm:4.7.8"],\
+            ["lodash", "npm:4.17.21"],\
+            ["pluralize", "npm:8.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@transcend-io/internationalization", [\
@@ -857,16 +867,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-chai-npm-4.3.4-fc230290e8-571184967b.zip/node_modules/@types/chai/",\
           "packageDependencies": [\
             ["@types/chai", "npm:4.3.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/change-case", [\
-        ["npm:2.3.1", {\
-          "packageLocation": "./.yarn/cache/@types-change-case-npm-2.3.1-fa45eead0c-73fc8d2f4e.zip/node_modules/@types/change-case/",\
-          "packageDependencies": [\
-            ["@types/change-case", "npm:2.3.1"],\
-            ["change-case", "npm:5.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2117,13 +2117,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["sentence-case", "npm:3.0.4"],\
             ["snake-case", "npm:3.0.4"],\
             ["tslib", "npm:2.6.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:5.0.1", {\
-          "packageLocation": "./.yarn/cache/change-case-npm-5.0.1-49bd28a47b-fcd23950ab.zip/node_modules/change-case/",\
-          "packageDependencies": [\
-            ["change-case", "npm:5.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5897,6 +5890,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["please-upgrade-node", "npm:3.2.0"],\
             ["semver-compare", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["pluralize", [\
+        ["npm:8.0.0", {\
+          "packageLocation": "./.yarn/cache/pluralize-npm-8.0.0-f5f044ed52-08931d4a6a.zip/node_modules/pluralize/",\
+          "packageDependencies": [\
+            ["pluralize", "npm:8.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1,5 +1,5 @@
 import { ObjByString, decodeCodec } from '@transcend-io/type-utils';
-import type handlebars from 'handlebars';
+import type { Handlebars } from '@transcend-io/handlebars-utils';
 import { AssessmentStatus } from '@transcend-io/privacy-types';
 import { Secret } from '@transcend-io/secret-value';
 import * as t from 'io-ts';
@@ -10,11 +10,11 @@ import {
   fetchAllAttributes,
   fetchAllBusinessEntities,
 } from '../graphql';
-import { getVariablesFromHandlebarsTemplate } from '../helpers/getVariablesFromHandlebarsTemplate';
 import {
   HandlebarsInput,
   createHandlebarsWithHelpers,
-} from './createHandlebarsWithHelpers';
+  getVariablesFromHandlebarsTemplate,
+} from '@transcend-io/handlebars-utils';
 import camelCase from 'lodash/camelCase';
 import keyBy from 'lodash/keyBy';
 
@@ -35,7 +35,7 @@ export class TranscendAiPrompt<
   public codec: TOutputCodec;
 
   /** Handlebars compiler */
-  public handlebars: typeof handlebars;
+  public handlebars: typeof Handlebars;
 
   /** Extract response from this tag */
   public extractFromTagRegex?: RegExp;
