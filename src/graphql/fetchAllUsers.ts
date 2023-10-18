@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { TEAMS } from './gqls';
+import { USERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface User {
@@ -35,7 +35,7 @@ export async function fetchAllUsers(client: GraphQLClient): Promise<User[]> {
         /** List */
         nodes: User[];
       };
-    }>(client, TEAMS, {
+    }>(client, USERS, {
       first: PAGE_SIZE,
       offset,
     });

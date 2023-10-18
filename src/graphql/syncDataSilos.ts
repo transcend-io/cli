@@ -10,7 +10,6 @@ import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
 import { mapSeries, map } from 'bluebird';
-import keyBy from 'lodash/keyBy';
 import {
   DATA_SILOS,
   CREATE_DATA_SILOS,
@@ -38,7 +37,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
 import { fetchAllUsers } from './fetchAllUsers';
 import { fetchAllTeams } from './fetchAllTeams';
-import { pickBy } from 'lodash';
+import { keyBy } from 'lodash';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -799,11 +798,11 @@ export async function syncDataSilos(
   let teamNameToTeamId: { [k in string]: string } = {};
   if (ownerEmails.length > 0) {
     const users = await fetchAllUsers(client);
-    emailToUserId = apply(pickBy(users, 'email'), ({ id }) => id);
+    emailToUserId = apply(keyBy(users, 'email'), ({ id }) => id);
   }
   if (teamNames.length > 0) {
     const teams = await fetchAllTeams(client);
-    teamNameToTeamId = apply(pickBy(teams, 'name'), ({ id }) => id);
+    teamNameToTeamId = apply(keyBy(teams, 'name'), ({ id }) => id);
   }
 
   await map(
@@ -856,14 +855,14 @@ export async function syncDataSilos(
               description: datapoint.description,
               ...(datapoint.owners
                 ? {
-                    owners: datapoint.owners
+                    ownerIds: datapoint.owners
                       .map((email) => emailToUserId[email])
                       .filter((x) => !!x),
                   }
                 : {}),
               ...(datapoint.teams
                 ? {
-                    teams: datapoint.teams
+                    teamIds: datapoint.teams
                       .map((name) => teamNameToTeamId[name])
                       .filter((x) => !!x),
                   }

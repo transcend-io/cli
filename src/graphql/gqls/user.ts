@@ -7,7 +7,7 @@ export const USERS = gql`
   query TranscendCliUsers(
     $first: Int!
     $offset: Int!
-    $input: TeamFiltersInput
+    $input: UserFiltersInput
   ) {
     users(
       first: $first
@@ -15,7 +15,7 @@ export const USERS = gql`
       filterBy: $input
       orderBy: [
         { field: createdAt, direction: ASC }
-        { field: email, direction: ASC }
+        { field: name, direction: ASC }
       ]
     ) {
       nodes {
