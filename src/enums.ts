@@ -16,4 +16,8 @@ export enum TranscendPullResource {
   Identifiers = 'identifiers',
   Cookies = 'cookies',
   ConsentManager = 'consentManager',
+  Prompts = 'prompts',
+  PromptTemplates = 'promptTemplates',
+  PromptPartials = 'promptPartials',
+  PromptGroups = 'promptGroups',
 }

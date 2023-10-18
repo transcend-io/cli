@@ -266,6 +266,68 @@ export const AssessmentInput = t.type({
 export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
 
 /**
+ * Prompt definition inputs
+ */
+export const PromptInput = t.type({
+  /** The title of the prompt. */
+  title: t.string,
+  /** The content of the prompt. */
+  content: t.string,
+});
+
+/**
+ * Type override
+ */
+export type PromptInput = t.TypeOf<typeof PromptInput>;
+
+/**
+ * Prompt template definition inputs
+ */
+export const PromptTemplateInput = t.type({
+  /** The title of the prompt template. */
+  title: t.string,
+  /** The content of the prompt template. */
+  content: t.string,
+});
+
+/**
+ * Type override
+ */
+export type PromptTemplateInput = t.TypeOf<typeof PromptTemplateInput>;
+
+/**
+ * Prompt partial definition inputs
+ */
+export const PromptPartialInput = t.type({
+  /** The title of the prompt partial. */
+  title: t.string,
+  /** The content of the prompt partial. */
+  content: t.string,
+});
+
+/**
+ * Type override
+ */
+export type PromptPartialInput = t.TypeOf<typeof PromptPartialInput>;
+
+/**
+ * Prompt partial definition inputs
+ */
+export const PromptGroupInput = t.type({
+  /** The title of the prompt group. */
+  title: t.string,
+  /** The description of the prompt group. */
+  description: t.string,
+  /** The titles of the prompts included. */
+  prompts: t.array(t.string),
+});
+
+/**
+ * Type override
+ */
+export type PromptGroupInput = t.TypeOf<typeof PromptGroupInput>;
+
+/**
  * Annotate specific fields within a datapoint. These are often database table columns.
  * Fields can also be a JSON object or separate file.
  */
@@ -857,9 +919,25 @@ export const TranscendInput = t.partial({
    */
   'assessment-templates': t.array(AssessmentTemplateInput),
   /**
-   * Consent manager definition
+   * Assessment definitions
    */
   assessments: t.array(AssessmentInput),
+  /**
+   * Prompt definitions
+   */
+  prompts: t.array(PromptInput),
+  /**
+   * Prompt template definitions
+   */
+  'prompt-templates': t.array(PromptTemplateInput),
+  /**
+   * Prompt partial definitions
+   */
+  'prompt-partials': t.array(PromptPartialInput),
+  /**
+   * Prompt group definitions
+   */
+  'prompt-groups': t.array(PromptGroupInput),
 });
 
 /** Type override */

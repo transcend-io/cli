@@ -1,12 +1,18 @@
 import { expect } from 'chai';
 import * as t from 'io-ts';
-import { TranscendAiPrompt } from '../ai/TranscendAiPrompt';
+import { TranscendPromptManager } from '../ai/TranscendPromptManager';
 
-describe('TranscendAiPrompt', () => {
-  const aiPrompt = new TranscendAiPrompt({
-    title: 'test',
-    codec: t.array(t.string),
-    extractFromTag: 'json',
+describe('TranscendPromptManager', () => {
+  const aiPrompt = new TranscendPromptManager({
+    prompts: {
+      test: {
+        title: 'test',
+        paramCodec: t.type({ test: t.string }),
+        outputCodec: t.array(t.string),
+        extractFromTag: 'json',
+      },
+    },
+    transcendApiKey: '1234',
   });
 
   const TEST_DATA = `
@@ -19,7 +25,7 @@ These fields like name, title, department, salary, and tenure co
 `;
 
   it('should remove links', () => {
-    expect(aiPrompt.parseAiResponse(TEST_DATA)).to.deep.equal([
+    expect(aiPrompt.parseAiResponse('test', TEST_DATA)).to.deep.equal([
       'Name',
       'Title',
       'Department',
@@ -41,14 +47,20 @@ These fields like name, title, department, salary, and tenure co
   </json>
   `;
 
-  const aiPrompt2 = new TranscendAiPrompt({
-    title: 'test',
-    codec: t.record(t.string, t.string),
-    extractFromTag: 'json',
+  const aiPrompt2 = new TranscendPromptManager({
+    prompts: {
+      test: {
+        title: 'test',
+        paramCodec: t.type({ test: t.string }),
+        outputCodec: t.record(t.string, t.string),
+        extractFromTag: 'json',
+      },
+    },
+    transcendApiKey: '1234',
   });
 
   it('should remove links', () => {
-    expect(aiPrompt2.parseAiResponse(TEST2_DATA)).to.deep.equal({
+    expect(aiPrompt2.parseAiResponse('test', TEST2_DATA)).to.deep.equal({
       title: 'Ai usage of cli should not require assessment template title',
       description:
         'The note indicates that the AI usage of the CLI should not require an assessment template title.',

@@ -12,6 +12,7 @@ export * from './organization';
 export * from './attributeKey';
 export * from './request';
 export * from './RequestIdentifier';
+export * from './prompt';
 export * from './RequestEnricher';
 export * from './RequestDataSilo';
 export * from './attribute';
