@@ -5,6 +5,7 @@ import {
   DataSiloInput,
   ProcessingPurposeInput,
 } from '../codecs';
+import uniq from 'lodash/uniq';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -35,6 +36,9 @@ import sortBy from 'lodash/sortBy';
 import chunk from 'lodash/chunk';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
+import { fetchAllUsers } from './fetchAllUsers';
+import { fetchAllTeams } from './fetchAllTeams';
+import { pickBy } from 'lodash';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -773,6 +777,35 @@ export async function syncDataSilos(
   progressBar.start(totalDataPoints, 0);
   let total = 0;
 
+  // Grab owners and teams if needed
+  // TODO: https://transcend.height.app/T-30514 - avoid additional lookup by upserting these by email and mae
+  const ownerEmails = uniq(
+    dataSilosWithDataPoints
+      .map(({ datapoints }) =>
+        (datapoints || []).map(({ owners }) => owners).flat(),
+      )
+      .flat()
+      .filter((x): x is string => !!x),
+  );
+  const teamNames = uniq(
+    dataSilosWithDataPoints
+      .map(({ datapoints }) =>
+        (datapoints || []).map(({ teams }) => teams).flat(),
+      )
+      .flat()
+      .filter((x): x is string => !!x),
+  );
+  let emailToUserId: { [k in string]: string } = {};
+  let teamNameToTeamId: { [k in string]: string } = {};
+  if (ownerEmails.length > 0) {
+    const users = await fetchAllUsers(client);
+    emailToUserId = apply(pickBy(users, 'email'), ({ id }) => id);
+  }
+  if (teamNames.length > 0) {
+    const teams = await fetchAllTeams(client);
+    teamNameToTeamId = apply(pickBy(teams, 'name'), ({ id }) => id);
+  }
+
   await map(
     dataSilosWithDataPoints,
     async ({ datapoints, title }) => {
@@ -821,6 +854,20 @@ export async function syncDataSilos(
               name: datapoint.key,
               title: datapoint.title,
               description: datapoint.description,
+              ...(datapoint.owners
+                ? {
+                    owners: datapoint.owners
+                      .map((email) => emailToUserId[email])
+                      .filter((x) => !!x),
+                  }
+                : {}),
+              ...(datapoint.teams
+                ? {
+                    teams: datapoint.teams
+                      .map((name) => teamNameToTeamId[name])
+                      .filter((x) => !!x),
+                  }
+                : {}),
               ...(datapoint['data-collection-tag']
                 ? { dataCollectionTag: datapoint['data-collection-tag'] }
                 : {}),
