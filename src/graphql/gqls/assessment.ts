@@ -52,7 +52,7 @@ export const CREATE_ASSESSMENT = gql`
 `;
 
 export const ASSESSMENT_TEMPLATES = gql`
-  query TranscendCliAssessmentTEmplates($first: Int!, $offset: Int!) {
+  query TranscendCliAssessmentTemplates($first: Int!, $offset: Int!) {
     assessmentTemplates(
       first: $first
       # TODO: https://transcend.height.app/T-27909 - enable optimizations

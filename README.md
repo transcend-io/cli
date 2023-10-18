@@ -125,6 +125,7 @@
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
+- [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -351,7 +352,11 @@ The API key permissions for this command vary based on the value to the `resourc
 | cookies             | Consent Manager Cookie definitions.                                                                                                  | View Data Flows                                  | false      | [Consent Manager -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                               |
 | consentManager      | Consent Manager general settings, including domain list.                                                                             | View Consent Manager                             | false      | [Consent Manager -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                  |
 | assessments         | The Transcend assessments                                                                                                            | View Assessments                                 | false      | [Assessments -> Browse](https://app.transcend.io/assessments/browse)                                                                                                                                  |
-| assessmentTemplates | The Transcend assessment tempaltes                                                                                                   | View Assessments                                 | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                            |
+| assessmentTemplates | The Transcend assessment templates                                                                                                   | View Assessments                                 | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                            |
+| prompts             | The Transcend AI prompts                                                                                                             | View Prompts                                     | false      | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                   |
+| promptTemplates     | The Transcend AI prompt templates                                                                                                    | View Prompts                                     | false      | [Prompt Manager -> Templates](https://app.transcend.io/prompts/templates)                                                                                                                             |
+| promptPartials      | The Transcend AI prompt partials                                                                                                     | View Prompts                                     | false      | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)                                                                                                                              |
+| promptGroups        | The Transcend AI prompt groups                                                                                                       | View Prompts                                     | false      | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                   |
 
 _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
@@ -469,6 +474,12 @@ Pull in assessments and assessment templates (see [this example](./examples/asse
 tr-pull --auth=$TRANSCEND_API_KEY --resources=assessment,assessmentTemplate
 ```
 
+Pull in prompts, prompt templates, prompt partials and prompt groups (see [this example](./examples/prompts.yml)):
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=prompts,promptTemplates,promptPartials,promptGroups
+```
+
 Pull everything:
 
 ```sh
@@ -522,7 +533,11 @@ The API key needs the following scopes when pushing the various resource types:
 | cookies             | Consent Manager Cookie definitions.                                                                           | Manage Data Flows                         | false      | [Consent Manager -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                               |
 | consentManager      | Consent Manager general settings, including domain list.                                                      | Manage Consent Manager Developer Settings | false      | [Consent Manager -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                  |
 | assessments         | The Transcend assessments                                                                                     | Manage Assessments                        | false      | [Assessments -> Browse](https://app.transcend.io/assessments/browse)                                                                                                                                  |
-| assessmentTemplates | The Transcend assessment tempaltes                                                                            | Manage Assessments                        | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                            |
+| assessmentTemplates | The Transcend assessment templates                                                                            | Manage Assessments                        | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                            |
+| prompts             | The Transcend AI prompts                                                                                      | View Prompts                              | false      | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                   |
+| promptTemplates     | The Transcend AI prompt templates                                                                             | Manage Prompts                            | false      | [Prompt Manager -> Templates](https://app.transcend.io/prompts/templates)                                                                                                                             |
+| promptPartials      | The Transcend AI prompt partials                                                                              | Manage Prompts                            | false      | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)                                                                                                                              |
+| promptGroups        | The Transcend AI prompt groups                                                                                | Manage Prompts                            | false      | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                   |
 
 #### Arguments
 
@@ -1891,7 +1906,7 @@ to grab your encryption and signing keys.
 Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
 
 ```sh
-yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY  --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
 Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726` from file `./consent.csv`
@@ -2283,6 +2298,91 @@ Configuring additional variables:
 
 ```sh
 yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing" --variables=description:"testt test"
+```
+
+## Prompt Manager
+
+If you are integrating Transcend's Prompt Manager into your code, it may look like:
+
+```ts
+import * as t from 'io-ts';
+import { TranscendPromptManager } from '@transcend-io/cli';
+
+/**
+ * Example prompt integration
+ */
+export async function main(): Promise<void> {
+  const promptManager = new TranscendPromptManager({
+    // API key
+    transcendApiKey: process.env.TRANSCEND_API_KEY,
+    // Define the prompts that are stored in Transcend
+    prompts: {
+      test: {
+        // identify by ID
+        id: '30bcaa79-889a-4af3-842d-2e8ba443d36d',
+        // no runtime variables
+        paramCodec: t.type({}),
+        // response is list of strings
+        outputCodec: t.array(t.string),
+      },
+      json: {
+        // identify by title
+        title: 'test',
+        // one runtime variable "test"
+        paramCodec: t.type({ test: t.string }),
+        // runtime is json object
+        outputCodec: t.record(t.string, t.string),
+        // response is stored in <json></json> atg
+        extractFromTag: 'json',
+      },
+      predictProductLine: {
+        // identify by title
+        title: 'Predict Product Line',
+        // runtime parameter for slack channel name
+        paramCodec: t.type({
+          slackChannelName: t.string,
+        }),
+        // response is specific JSON shape
+        outputCodec: t.type({
+          product: t.union([t.string, t.null]),
+          clarification: t.union([t.string, t.null]),
+        }),
+        // response is stored in <json></json> atg
+        extractFromTag: 'json',
+      },
+    },
+    // Optional arguments
+    //  transcendUrl: 'https://api.us.transcend.io', // defaults to 'https://api.transcend.io'
+    //  requireApproval: false, // defaults to true
+    //  cacheDuration: 1000 * 60 * 60, // defaults to undefined, no cache
+    //  defaultVariables: { myVariable: 'this is custom', other: [{ name: 'custom' }] }, // defaults to {}
+    //  handlebarsOptions: { helpers, templates }, // defaults to {}
+  });
+
+  // Fetch the prompt from Transcend and template any variables
+  // in this case, we template the slack channel name in the LLM prompt
+  const systemPrompt = await promptManager.compilePrompt('predictProductLine', {
+    slackChannelName: channelName,
+  });
+
+  // Pass the prompt into your LLM of choice
+  const response = await openai.createCompletion([
+    {
+      role: 'system',
+      content: systemPrompt,
+    },
+    {
+      role: 'user',
+      content: input,
+    },
+  ]);
+
+  // Parsed response as JSON
+  const parsedResponse = promptManager.parseAiResponse(
+    'predictProductLine',
+    response,
+  );
+}
 ```
 
 ## Proxy usage

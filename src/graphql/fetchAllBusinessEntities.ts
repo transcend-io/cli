@@ -49,7 +49,7 @@ export async function fetchAllBusinessEntities(
   const businessEntities: BusinessEntity[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     const {

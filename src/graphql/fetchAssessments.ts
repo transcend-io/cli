@@ -50,7 +50,7 @@ export async function fetchAllAssessments(
   const assessments: Assessment[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     const {

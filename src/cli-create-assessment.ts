@@ -6,7 +6,10 @@ import { logger } from './logger';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { fetchAllAssessmentTemplates } from './graphql/fetchAssessmentTemplates';
 import { buildTranscendGraphQLClient } from './graphql';
-import { getVariablesFromHandlebarsTemplate } from './helpers/getVariablesFromHandlebarsTemplate';
+import {
+  createHandlebarsWithHelpers,
+  getVariablesFromHandlebarsTemplate,
+} from '@transcend-io/handlebars-utils';
 import { mapSeries } from 'bluebird';
 import {
   inquirerAutoComplete,
@@ -15,7 +18,6 @@ import {
 } from './helpers/inquirer';
 import { parseVariablesFromString } from './helpers/parseVariablesFromString';
 import { createAssessment, updateAssessment } from './graphql/syncAssessments';
-import { createHandlebarsWithHelpers } from './ai';
 
 /**
  * Create a new assessment from an assessment template

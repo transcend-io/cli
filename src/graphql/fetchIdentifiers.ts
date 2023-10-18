@@ -59,7 +59,7 @@ export async function fetchAllIdentifiers(
   const identifiers: Identifier[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     const {
