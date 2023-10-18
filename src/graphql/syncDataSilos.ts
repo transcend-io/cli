@@ -104,7 +104,7 @@ export async function fetchAllDataSilos<TDataSilo extends DataSilo>(
   const dataSilos: TDataSilo[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     const {
@@ -321,7 +321,7 @@ export async function fetchAllDataPoints(
   const dataPoints: DataPointWithSubDataPoint[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     if (debug) {

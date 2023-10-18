@@ -21,6 +21,7 @@ import {
 } from './fetchDataSubjects';
 import { syncDataSubject } from './syncDataSubject';
 import { fetchApiKeys } from './fetchApiKeys';
+import { syncPrompts } from './syncPrompts';
 import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { syncBusinessEntities } from './syncBusinessEntities';
@@ -28,6 +29,9 @@ import { syncDataFlows } from './syncDataFlows';
 import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
+import { syncPromptPartials } from './syncPromptPartials';
+import { syncPromptTemplates } from './syncPromptTemplates';
+import { syncPromptGroups } from './syncPromptGroups';
 
 const CONCURRENCY = 10;
 
@@ -77,6 +81,10 @@ export async function syncConfigurationToTranscend(
     'consent-manager': consentManager,
     'data-silos': dataSilos,
     'data-flows': dataFlows,
+    prompts,
+    'prompt-templates': promptTemplates,
+    'prompt-groups': promptGroups,
+    'prompt-partials': promptPartials,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -109,6 +117,24 @@ export async function syncConfigurationToTranscend(
         colors.red(`Failed to sync consent manager! - ${err.message}`),
       );
     }
+  }
+
+  // Sync prompts
+  if (prompts) {
+    const promptsSuccess = await syncPrompts(client, prompts);
+    encounteredError = encounteredError || !promptsSuccess;
+  }
+  if (promptPartials) {
+    const promptsSuccess = await syncPromptPartials(client, promptPartials);
+    encounteredError = encounteredError || !promptsSuccess;
+  }
+  if (promptTemplates) {
+    const promptsSuccess = await syncPromptTemplates(client, promptTemplates);
+    encounteredError = encounteredError || !promptsSuccess;
+  }
+  if (promptGroups) {
+    const promptsSuccess = await syncPromptGroups(client, promptGroups);
+    encounteredError = encounteredError || !promptsSuccess;
   }
 
   // Sync email templates
