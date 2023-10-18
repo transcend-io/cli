@@ -17,6 +17,7 @@ import {
   AssessmentTemplateInput,
   AssessmentInput,
   PromptInput,
+  DatapointInput,
 } from '../codecs';
 import { ENABLED_ON_TO_ATTRIBUTE_KEY } from '../tmp-attribute-key';
 import {
@@ -688,53 +689,57 @@ export async function pullTranscendConfiguration(
             : undefined,
 
         datapoints: dataPoints
-          .map((dataPoint) => ({
-            key: dataPoint.name,
-            title: dataPoint.title?.defaultMessage,
-            description: dataPoint.description?.defaultMessage,
-            ...(dataPoint.path.length > 0 ? { path: dataPoint.path } : {}),
-            ...(dataPoint.dataCollection?.title
-              ? {
-                  'data-collection-tag':
-                    dataPoint.dataCollection.title.defaultMessage,
-                }
-              : {}),
-            ...(dataPoint.dbIntegrationQueries.length > 0
-              ? {
-                  'privacy-action-queries': mapValues(
-                    keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
-                    (databaseIntegrationQuery) =>
-                      databaseIntegrationQuery.suggestedQuery ||
-                      databaseIntegrationQuery.query ||
-                      undefined,
-                  ),
-                }
-              : {}),
-            ...(dataPoint.subDataPoints.length > 0
-              ? {
-                  fields: dataPoint.subDataPoints
-                    .map((field) => ({
-                      key: field.name,
-                      description: field.description,
-                      purposes: field.purposes,
-                      categories: field.categories,
-                      'access-request-visibility-enabled':
-                        field.accessRequestVisibilityEnabled,
-                      'erasure-request-redaction-enabled':
-                        field.erasureRequestRedactionEnabled,
-                      attributes:
-                        field.attributeValues !== undefined &&
-                        field.attributeValues.length > 0
-                          ? formatAttributeValues(field.attributeValues)
-                          : undefined,
-                    }))
-                    .sort((a, b) => a.key.localeCompare(b.key)),
-                }
-              : {}),
-            'privacy-actions': dataPoint.actionSettings
-              .filter(({ active }) => active)
-              .map(({ type }) => type),
-          }))
+          .map(
+            (dataPoint): DatapointInput => ({
+              key: dataPoint.name,
+              title: dataPoint.title?.defaultMessage,
+              description: dataPoint.description?.defaultMessage,
+              owners: dataPoint.owners.map(({ email }) => email),
+              teams: dataPoint.teams.map(({ name }) => name),
+              ...(dataPoint.path.length > 0 ? { path: dataPoint.path } : {}),
+              ...(dataPoint.dataCollection?.title
+                ? {
+                    'data-collection-tag':
+                      dataPoint.dataCollection.title.defaultMessage,
+                  }
+                : {}),
+              ...(dataPoint.dbIntegrationQueries.length > 0
+                ? {
+                    'privacy-action-queries': mapValues(
+                      keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
+                      (databaseIntegrationQuery) =>
+                        databaseIntegrationQuery.suggestedQuery ||
+                        databaseIntegrationQuery.query ||
+                        undefined,
+                    ),
+                  }
+                : {}),
+              ...(dataPoint.subDataPoints.length > 0
+                ? {
+                    fields: dataPoint.subDataPoints
+                      .map((field) => ({
+                        key: field.name,
+                        description: field.description,
+                        purposes: field.purposes,
+                        categories: field.categories,
+                        'access-request-visibility-enabled':
+                          field.accessRequestVisibilityEnabled,
+                        'erasure-request-redaction-enabled':
+                          field.erasureRequestRedactionEnabled,
+                        attributes:
+                          field.attributeValues !== undefined &&
+                          field.attributeValues.length > 0
+                            ? formatAttributeValues(field.attributeValues)
+                            : undefined,
+                      }))
+                      .sort((a, b) => a.key.localeCompare(b.key)),
+                  }
+                : {}),
+              'privacy-actions': dataPoint.actionSettings
+                .filter(({ active }) => active)
+                .map(({ type }) => type),
+            }),
+          )
           .sort((a, b) =>
             [...(a.path ?? []), a.key]
               .join('.')

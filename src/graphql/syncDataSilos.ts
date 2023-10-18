@@ -206,6 +206,16 @@ interface DataPoint {
     /** Whether the data silo supports automated vendor coordination */
     hasAvcFunctionality: boolean;
   };
+  /** Owners of the datapoint */
+  owners: {
+    /** Email address of the owner */
+    email: string;
+  }[];
+  /** Teams that own the datapoint */
+  teams: {
+    /** Name of the team */
+    name: string;
+  }[];
   /** Database integration queries */
   dbIntegrationQueries: {
     /** Approved query */

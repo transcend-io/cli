@@ -27,6 +27,12 @@ export const DATA_POINTS = gql`
         description {
           defaultMessage
         }
+        owners {
+          email
+        }
+        teams {
+          name
+        }
         name
         path
         actionSettings {
