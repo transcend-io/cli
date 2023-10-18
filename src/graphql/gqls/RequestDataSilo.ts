@@ -1,5 +1,7 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const REQUEST_DATA_SILOS = gql`
   query TranscendCliRequestDataSilos(
     $first: Int!
@@ -10,8 +12,6 @@ export const REQUEST_DATA_SILOS = gql`
       filterBy: $filterBy
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
       orderBy: [
         { field: createdAt, direction: DESC }

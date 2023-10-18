@@ -1,12 +1,12 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const IDENTIFIERS = gql`
   query TranscendCliIdentifiers($first: Int!, $offset: Int!) {
     identifiers(
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }

@@ -1,14 +1,14 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
 export const ACTIONS = gql`
   query TranscendCliActions($first: Int!, $offset: Int!) {
     actions(
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
       orderBy: [{ field: type, direction: ASC }]
     ) {
       nodes {

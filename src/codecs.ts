@@ -427,6 +427,19 @@ export const DatapointInput = t.intersection([
      * This is often the column metadata
      */
     fields: t.array(FieldInput),
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this datapoint
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this datapoint
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
   }),
 ]);
 

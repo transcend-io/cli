@@ -22391,6 +22391,18 @@
                               }
                             ]
                           }
+                        },
+                        "owners": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "teams": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }

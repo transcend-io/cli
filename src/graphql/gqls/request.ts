@@ -1,5 +1,7 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const REQUESTS = gql`
   query TranscendCliRequests(
     $first: Int!
@@ -14,8 +16,6 @@ export const REQUESTS = gql`
         { field: createdAt, direction: ASC }
         { field: id, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

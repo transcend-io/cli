@@ -1,5 +1,8 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+// useMaster: false
 export const PROMPTS = gql`
   query TranscendCliPrompts(
     $first: Int!
@@ -8,9 +11,6 @@ export const PROMPTS = gql`
   ) {
     prompts(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
       orderBy: [{ field: title, direction: ASC }]
       offset: $offset
       filterBy: $filterBy
@@ -29,11 +29,11 @@ export const PROMPT_TEMPLATES = gql`
   query TranscendCliPromptTemplates($first: Int!, $offset: Int!) {
     promptTemplates(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
-      # orderBy: [{ field: title, direction: ASC }]
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
       offset: $offset
     ) {
       nodes {
@@ -49,11 +49,11 @@ export const PROMPT_PARTIALS = gql`
   query TranscendCliPromptPartials($first: Int!, $offset: Int!) {
     promptPartials(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
-      # orderBy: [{ field: title, direction: ASC }]
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
       offset: $offset
     ) {
       nodes {
@@ -69,11 +69,11 @@ export const PROMPT_GROUPS = gql`
   query TranscendCliPromptGroups($first: Int!, $offset: Int!) {
     promptGroups(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      # useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
-      # orderBy: [{ field: title, direction: ASC }]
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
       offset: $offset
     ) {
       nodes {

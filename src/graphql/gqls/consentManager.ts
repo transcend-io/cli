@@ -13,8 +13,8 @@ export const PURPOSES = gql`
 `;
 
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
-// # TODO: https://transcend.height.app/T-27909 - enable optimizations
-//       # isExportCsv: true
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const EXPERIENCES = gql`
   query TranscendCliExperiences($first: Int!, $offset: Int!) {
     experiences(first: $first, offset: $offset, useMaster: false) {
@@ -95,6 +95,8 @@ export const UPDATE_OR_CREATE_COOKIES = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const DATA_FLOWS = gql`
   query TranscendCliDataFlows(
     $first: Int!
@@ -112,8 +114,6 @@ export const DATA_FLOWS = gql`
         { field: createdAt, direction: ASC }
         { field: value, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {
@@ -144,6 +144,8 @@ export const DATA_FLOWS = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const COOKIES = gql`
   query TranscendCliCookies(
     $first: Int!
@@ -160,8 +162,6 @@ export const COOKIES = gql`
         { field: createdAt, direction: ASC }
         { field: name, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

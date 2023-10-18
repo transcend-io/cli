@@ -38,6 +38,8 @@ export * from './syncAction';
 export * from './syncAssessmentTemplates';
 export * from './syncAssessments';
 export * from './loginUser';
+export * from './fetchAllTeams';
+export * from './fetchAllUsers';
 export * from './manageApiKeys';
 export * from './syncCookies';
 export * from './fetchPrivacyCenterId';
