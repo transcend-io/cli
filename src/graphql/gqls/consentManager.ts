@@ -15,10 +15,9 @@ export const PURPOSES = gql`
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
 // # TODO: https://transcend.height.app/T-27909 - enable optimizations
 //       # isExportCsv: true
-//       # useMaster: false
 export const EXPERIENCES = gql`
   query TranscendCliExperiences($first: Int!, $offset: Int!) {
-    experiences(first: $first, offset: $offset) {
+    experiences(first: $first, offset: $offset, useMaster: false) {
       nodes {
         id
         name

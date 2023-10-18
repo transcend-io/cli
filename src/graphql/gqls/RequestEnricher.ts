@@ -12,7 +12,7 @@ export const REQUEST_ENRICHERS = gql`
       offset: $offset
       # TODO: https://transcend.height.app/T-27909 - enable optimizations
       # isExportCsv: true
-      # useMaster: false
+      useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: title, direction: ASC, model: enricher }
