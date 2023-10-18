@@ -46,6 +46,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Assessment]: [ScopeName.ManageAssessments],
   [TranscendPullResource.AssessmentTemplate]: [ScopeName.ManageAssessments],
+  [TranscendPullResource.Prompts]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.PromptTemplates]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.PromptPartials]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.PromptGroups]: [ScopeName.ManagePrompts],
 };
 
 /**
@@ -73,4 +77,8 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Assessment]: [ScopeName.ViewAssessments],
   [TranscendPullResource.AssessmentTemplate]: [ScopeName.ViewAssessments],
+  [TranscendPullResource.Prompts]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.PromptTemplates]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.PromptPartials]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.PromptGroups]: [ScopeName.ViewPrompts],
 };

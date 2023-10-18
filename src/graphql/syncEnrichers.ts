@@ -70,7 +70,7 @@ export async function fetchAllEnrichers(
   const enrichers: Enricher[] = [];
   let offset = 0;
 
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   let shouldContinue = false;
   do {
     const {
@@ -116,7 +116,7 @@ export async function syncEnricher(
     dataSubjectsByName: { [name in string]: DataSubject };
   },
 ): Promise<void> {
-  // Try to fetch an enricher with the same title
+  // Whether to continue looping
   const matches = await fetchAllEnrichers(client, enricher.title);
   const existingEnricher = matches.find(
     ({ title }) => title === enricher.title,

@@ -8,11 +8,15 @@ import {
   IdentifierInput,
   BusinessEntityInput,
   EnricherInput,
+  PromptTemplateInput,
+  PromptGroupInput,
   DataFlowInput,
+  PromptPartialInput,
   DataSubjectInput,
   CookieInput,
   AssessmentTemplateInput,
   AssessmentInput,
+  PromptInput,
 } from '../codecs';
 import { ENABLED_ON_TO_ATTRIBUTE_KEY } from '../tmp-attribute-key';
 import {
@@ -42,6 +46,10 @@ import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
 import { fetchAllActions } from './fetchAllActions';
 import { fetchAllIdentifiers } from './fetchIdentifiers';
+import { fetchAllPrompts } from './fetchPrompts';
+import { fetchAllPromptTemplates } from './fetchPromptTemplates';
+import { fetchAllPromptPartials } from './fetchPromptPartials';
+import { fetchAllPromptGroups } from './fetchPromptGroups';
 import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
@@ -121,6 +129,10 @@ export async function pullTranscendConfiguration(
     businessEntities,
     consentManager,
     consentManagerExperiences,
+    prompts,
+    promptTemplates,
+    promptPartials,
+    promptGroups,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -203,6 +215,22 @@ export async function pullTranscendConfiguration(
     // Fetch consent manager experiences
     resources.includes(TranscendPullResource.ConsentManager)
       ? fetchConsentManagerExperiences(client)
+      : [],
+    // Fetch prompts
+    resources.includes(TranscendPullResource.Prompts)
+      ? fetchAllPrompts(client)
+      : [],
+    // Fetch promptTemplates
+    resources.includes(TranscendPullResource.PromptTemplates)
+      ? fetchAllPromptTemplates(client)
+      : [],
+    // Fetch promptPartials
+    resources.includes(TranscendPullResource.PromptPartials)
+      ? fetchAllPromptPartials(client)
+      : [],
+    // Fetch promptGroups
+    resources.includes(TranscendPullResource.PromptGroups)
+      ? fetchAllPromptGroups(client)
       : [],
   ]);
 
@@ -301,6 +329,47 @@ export async function pullTranscendConfiguration(
         title,
         content,
         'assessment-template': assessmentTemplate.title,
+      }),
+    );
+  }
+
+  // Save prompts
+  if (prompts.length > 0) {
+    result.prompts = prompts.map(
+      ({ title, content }): PromptInput => ({
+        title,
+        content,
+      }),
+    );
+  }
+
+  // Save promptTemplates
+  if (promptTemplates.length > 0) {
+    result['prompt-templates'] = promptTemplates.map(
+      ({ title, content }): PromptTemplateInput => ({
+        title,
+        content,
+      }),
+    );
+  }
+
+  // Save promptPartials
+  if (promptPartials.length > 0) {
+    result['prompt-partials'] = promptPartials.map(
+      ({ title, content }): PromptPartialInput => ({
+        title,
+        content,
+      }),
+    );
+  }
+
+  // Save promptGroups
+  if (promptGroups.length > 0) {
+    result['prompt-groups'] = promptGroups.map(
+      ({ title, description, prompts }): PromptGroupInput => ({
+        title,
+        description,
+        prompts: prompts.map(({ title }) => title),
       }),
     );
   }
