@@ -1,13 +1,13 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const ENRICHERS = gql`
   query TranscendCliEnrichers($title: String, $first: Int!, $offset: Int!) {
     enrichers(
       filterBy: { text: $title }
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }

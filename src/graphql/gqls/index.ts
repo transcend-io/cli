@@ -15,6 +15,8 @@ export * from './RequestIdentifier';
 export * from './prompt';
 export * from './RequestEnricher';
 export * from './RequestDataSilo';
+export * from './team';
+export * from './user';
 export * from './attribute';
 export * from './consentManager';
 export * from './consentManagerMetrics';

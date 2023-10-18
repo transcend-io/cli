@@ -1,5 +1,7 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const DATA_SILOS = gql`
   query TranscendCliDataSilos(
     $filterBy: DataSiloFiltersInput!
@@ -14,8 +16,6 @@ export const DATA_SILOS = gql`
         { field: createdAt, direction: ASC }
         { field: title, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {
@@ -31,6 +31,8 @@ export const DATA_SILOS = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const DATA_SILOS_ENRICHED = gql`
   query TranscendCliDataSilosEnriched(
     $filterBy: DataSiloFiltersInput!
@@ -45,8 +47,6 @@ export const DATA_SILOS_ENRICHED = gql`
         { field: createdAt, direction: ASC }
         { field: title, direction: ASC }
       ]
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
     ) {
       nodes {

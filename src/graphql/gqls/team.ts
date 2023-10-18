@@ -2,17 +2,17 @@ import { gql } from 'graphql-request';
 
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true
-export const REQUEST_IDENTIFIERS = gql`
-  query TranscendCliRequestIdentifiers(
+// useMaster: false
+export const TEAMS = gql`
+  query TranscendCliTeams(
     $first: Int!
     $offset: Int!
-    $requestId: ID!
+    $input: TeamFiltersInput
   ) {
-    requestIdentifiers(
-      input: { requestId: $requestId }
+    teams(
       first: $first
       offset: $offset
-      useMaster: false
+      filterBy: $input
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: name, direction: ASC }
@@ -21,14 +21,7 @@ export const REQUEST_IDENTIFIERS = gql`
       nodes {
         id
         name
-        value
-        identifier {
-          type
-        }
-        isVerifiedAtLeastOnce
-        isVerified
       }
-      totalCount
     }
   }
 `;

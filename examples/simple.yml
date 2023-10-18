@@ -121,6 +121,11 @@ data-silos:
         description: The centralized user model user
         # AKA table name
         key: users
+        owners:
+          - test@transcend.io
+        teams:
+          - Platform
+          - Customer Experience
         # The types of privacy actions that this datapoint can implement
         # See "InternalDataSiloObjectResolver": https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
         #   ACCESS: Data Download request

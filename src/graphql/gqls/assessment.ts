@@ -1,5 +1,9 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
+// orderBy: [{ field: title, direction: ASC }]
 export const ASSESSMENTS = gql`
   query TranscendCliAssessments(
     $first: Int!
@@ -8,11 +12,7 @@ export const ASSESSMENTS = gql`
   ) {
     assessments(
       first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
-      # orderBy: [{ field: title, direction: ASC }]
       offset: $offset
       filterBy: $filterBy
     ) {
@@ -51,17 +51,13 @@ export const CREATE_ASSESSMENT = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
+// orderBy: [{ field: title, direction: ASC }]
 export const ASSESSMENT_TEMPLATES = gql`
   query TranscendCliAssessmentTemplates($first: Int!, $offset: Int!) {
-    assessmentTemplates(
-      first: $first
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
-      useMaster: false
-      # TODO: https://transcend.height.app/T-27909 - order by createdAt
-      # orderBy: [{ field: title, direction: ASC }]
-      offset: $offset
-    ) {
+    assessmentTemplates(first: $first, useMaster: false, offset: $offset) {
       nodes {
         id
         title

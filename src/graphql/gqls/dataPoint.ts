@@ -1,5 +1,7 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const DATA_POINTS = gql`
   query TranscendCliDataPoints(
     $dataSiloIds: [ID!]
@@ -10,8 +12,6 @@ export const DATA_POINTS = gql`
       filterBy: { dataSilos: $dataSiloIds }
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - enable optimizations
-      # isExportCsv: true
       useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }
@@ -26,6 +26,12 @@ export const DATA_POINTS = gql`
         }
         description {
           defaultMessage
+        }
+        owners {
+          email
+        }
+        teams {
+          name
         }
         name
         path
@@ -48,6 +54,8 @@ export const DATA_POINTS = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - add orderBy
+// isExportCsv: true
 export const SUB_DATA_POINTS = gql`
   query TranscendCliDataPoints(
     $dataPointIds: [ID!]
@@ -58,8 +66,6 @@ export const SUB_DATA_POINTS = gql`
       filterBy: { dataPoints: $dataPointIds }
       first: $first
       offset: $offset
-      # TODO: https://transcend.height.app/T-27909 - add orderBy
-      # isExportCsv: true
       useMaster: false
     ) {
       totalCount
@@ -95,6 +101,8 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $path: [String!]
     $title: String
     $description: String
+    $ownerIds: [ID!]
+    $teamIds: [ID!]
     $dataCollectionTag: String
     $querySuggestions: [DbIntegrationQuerySuggestionInput!]
     $enabledActions: [RequestActionObjectResolver!]
@@ -108,6 +116,8 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         title: $title
         dataCollectionTag: $dataCollectionTag
         description: $description
+        ownerIds: $ownerIds
+        teamIds: $teamIds
         querySuggestions: $querySuggestions
         enabledActions: $enabledActions
         subDataPoints: $subDataPoints
