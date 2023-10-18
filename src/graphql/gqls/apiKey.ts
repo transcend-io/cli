@@ -8,7 +8,7 @@ export const API_KEYS = gql`
       filterBy: { titles: $titles }
       # TODO: https://transcend.height.app/T-27909 - enable optimizations
       # isExportCsv: true
-      # useMaster: false
+      useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: title, direction: ASC }
