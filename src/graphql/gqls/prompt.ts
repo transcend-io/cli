@@ -92,6 +92,11 @@ export const PROMPTS_WITH_VARIABLES = gql`
         content
         status
       }
+      promptPartials {
+        id
+        title
+        content
+      }
       calculatedVariables {
         data
         name
