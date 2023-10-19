@@ -92,6 +92,8 @@ export type TranscendPromptPartialTemplated = {
   id: string;
   /** Title of prompt */
   title: string;
+  /** Slug of prompt */
+  slug: string;
   /** Content of prompt */
   content: string;
 };
