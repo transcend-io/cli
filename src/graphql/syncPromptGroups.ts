@@ -24,7 +24,7 @@ export async function createPromptGroup(
     /** Prompt group description */
     description: string;
     /** Prompt IDs */
-    prompts: string[];
+    promptIds: string[];
   },
 ): Promise<string> {
   const {
@@ -115,7 +115,7 @@ export async function syncPromptGroups(
       async (prompt) => {
         await createPromptGroup(client, {
           ...prompt,
-          prompts: prompt.prompts.map((title) => {
+          promptIds: prompt.prompts.map((title) => {
             const prompt = promptByTitle[title];
             if (!prompt) {
               throw new Error(`Failed to find prompt with title: "${title}"`);
