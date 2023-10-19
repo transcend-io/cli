@@ -60,6 +60,19 @@ export function createRegexForTag(tagName: string): RegExp {
 }
 
 /**
+ * Helper function to declare prompts
+ *
+ * @param prompts - Prompt config
+ * @returns Prompts as identity function - but type enforced
+ */
+export function defineTranscendPrompts<
+  TPromptNames extends string,
+  TPrompts extends { [k in TPromptNames]: TranscendPrompt<t.Any, t.Any> },
+>(prompts: TPrompts): TPrompts {
+  return prompts;
+}
+
+/**
  * A class that is capable of loading and insert variables into prompts from
  * Transcend's Prompt Manager
  */
