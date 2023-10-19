@@ -84,7 +84,7 @@ export const PROMPT_GROUPS = gql`
 `;
 
 export const PROMPTS_WITH_VARIABLES = gql`
-  query TranscendCliPromptsWithVariables($input: PromptsWithVariablesInput) {
+  query TranscendCliPromptsWithVariables($input: PromptsWithVariablesInput!) {
     promptsWithVariables(input: $input) {
       prompts {
         id
