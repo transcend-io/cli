@@ -85,6 +85,18 @@ export type TranscendPromptTemplated = {
 };
 
 /**
+ * The basic metadata needed to use a prompt partial at runtime
+ */
+export type TranscendPromptPartialTemplated = {
+  /** ID of prompt */
+  id: string;
+  /** Title of prompt */
+  title: string;
+  /** Content of prompt */
+  content: string;
+};
+
+/**
  * Calculated variables
  */
 export type PromptCalculatedVariable = {
@@ -110,6 +122,8 @@ export type PromptRuntimeVariable = {
 export type TranscendPromptsAndVariables = {
   /** Prompts ready to be templated */
   prompts: TranscendPromptTemplated[];
+  /** Prompt partials */
+  promptPartials: TranscendPromptPartialTemplated[];
   /** Calculated variables to be templated */
   calculatedVariables: PromptCalculatedVariable[];
   /** Runtime variables to be templated */

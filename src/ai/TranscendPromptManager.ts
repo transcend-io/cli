@@ -9,11 +9,13 @@ import {
   createHandlebarsWithHelpers,
 } from '@transcend-io/handlebars-utils';
 import {
+  TranscendPromptTemplated,
   TranscendPromptsAndVariables,
   fetchPromptsWithVariables,
 } from '../graphql/fetchPrompts';
 import { GraphQLClient } from 'graphql-request';
 import keyBy from 'lodash/keyBy';
+import { AssessmentStatus } from '@transcend-io/privacy-types';
 
 /**
  * An LLM Prompt definition
@@ -83,8 +85,11 @@ export class TranscendPromptManager<
   /** Prompt definitions */
   public prompts: TPrompts;
 
+  /** Options for configuring handlebars */
+  public handlebarsOptions!: HandlebarsInput;
+
   /** Prompt name -> content map, populated by call to Transcend API */
-  public promptContentMap?: { [k in TPromptNames]: string };
+  public promptContentMap?: { [k in TPromptNames]: TranscendPromptTemplated };
 
   /** The GraphQL client that can be used to call Transcend */
   public graphQLClient: GraphQLClient;
@@ -130,7 +135,7 @@ export class TranscendPromptManager<
    */
   constructor({
     prompts,
-    handlebarsOptions,
+    handlebarsOptions = {},
     transcendUrl = DEFAULT_TRANSCEND_API,
     transcendApiKey,
     requireApproval = true,
@@ -170,6 +175,7 @@ export class TranscendPromptManager<
     );
     this.requireApproval = requireApproval;
     this.cacheDuration = cacheDuration;
+    this.handlebarsOptions = handlebarsOptions;
     this.handlebars = createHandlebarsWithHelpers(handlebarsOptions);
   }
 
@@ -213,6 +219,18 @@ export class TranscendPromptManager<
       ...this.defaultVariables,
     };
 
+    // Update partials
+    this.handlebars = createHandlebarsWithHelpers({
+      ...this.handlebarsOptions,
+      templates: [
+        ...(this.handlebarsOptions.templates || []),
+        ...response.promptPartials.map((partial) => ({
+          name: partial.title,
+          content: partial.content,
+        })),
+      ],
+    });
+
     // Create mapping from prompt to content
     this.promptContentMap = apply(this.prompts, ({ id, title }) => {
       const result = id
@@ -225,7 +243,7 @@ export class TranscendPromptManager<
           `Failed to find prompt with title: "${title}" and id: "${id}"`,
         );
       }
-      return result.content;
+      return result;
     });
 
     // For cache
@@ -274,11 +292,28 @@ export class TranscendPromptManager<
       throw new Error(`Expected this.prompts[${promptName}] to be defined`);
     }
 
+    // Ensure prompt is approved
+    if (
+      this.requireApproval &&
+      promptTemplate.status !== AssessmentStatus.Approved
+    ) {
+      throw new Error(
+        `Assessment "${promptTemplate.title}" cannot be used because its in status: "${promptTemplate.status}"`,
+      );
+    }
+
+    // If prompt is rejected, throw error
+    if (promptTemplate.status === AssessmentStatus.Rejected) {
+      throw new Error(
+        `Assessment "${promptTemplate.title}" cannot be used because it's in status: "${promptTemplate.status}"`,
+      );
+    }
+
     // Validate params
     decodeCodec(promptInput.paramCodec, params);
 
     // Compile prompt and template
-    return this.handlebars.compile(promptTemplate)({
+    return this.handlebars.compile(promptTemplate.content)({
       // template in currentDate by default
       currentDate: new Date().toISOString(),
       ...this.variables,
