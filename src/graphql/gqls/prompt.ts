@@ -25,17 +25,14 @@ export const PROMPTS = gql`
   }
 `;
 
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
 export const PROMPT_TEMPLATES = gql`
   query TranscendCliPromptTemplates($first: Int!, $offset: Int!) {
-    promptTemplates(
-      first: $first
-//  TODO: https://transcend.height.app/T-27909 - enable optimizations
-//  isExportCsv: true
-//  useMaster: false
-//  TODO: https://transcend.height.app/T-27909 - order by createdAt
-//  orderBy: [{ field: title, direction: ASC }]
-      offset: $offset
-    ) {
+    promptTemplates(first: $first, offset: $offset) {
       nodes {
         id
         title
@@ -45,17 +42,14 @@ export const PROMPT_TEMPLATES = gql`
   }
 `;
 
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
 export const PROMPT_PARTIALS = gql`
   query TranscendCliPromptPartials($first: Int!, $offset: Int!) {
-    promptPartials(
-      first: $first
-//  TODO: https://transcend.height.app/T-27909 - enable optimizations
-//  isExportCsv: true
-//  useMaster: false
-//  TODO: https://transcend.height.app/T-27909 - order by createdAt
-//  orderBy: [{ field: title, direction: ASC }]
-      offset: $offset
-    ) {
+    promptPartials(first: $first, offset: $offset) {
       nodes {
         id
         title
@@ -65,15 +59,16 @@ export const PROMPT_PARTIALS = gql`
   }
 `;
 
+//  TODO: https://transcend.height.app/T-27909 - enable optimizations
+//  isExportCsv: true
+//  useMaster: false
+//  TODO: https://transcend.height.app/T-27909 - order by createdAt
+//  orderBy: [{ field: title, direction: ASC }]
 export const PROMPT_GROUPS = gql`
   query TranscendCliPromptGroups($first: Int!, $offset: Int!) {
     promptGroups(
       first: $first
-//  TODO: https://transcend.height.app/T-27909 - enable optimizations
-//  isExportCsv: true
-//  useMaster: false
-//  TODO: https://transcend.height.app/T-27909 - order by createdAt
-//  orderBy: [{ field: title, direction: ASC }]
+
       offset: $offset
     ) {
       nodes {
