@@ -225,7 +225,7 @@ export class TranscendPromptManager<
       templates: [
         ...(this.handlebarsOptions.templates || []),
         ...response.promptPartials.map((partial) => ({
-          name: partial.title,
+          name: partial.slug,
           content: partial.content,
         })),
       ],

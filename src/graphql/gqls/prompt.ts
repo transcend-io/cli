@@ -96,6 +96,7 @@ export const PROMPTS_WITH_VARIABLES = gql`
         id
         title
         content
+        slug
       }
       calculatedVariables {
         data
