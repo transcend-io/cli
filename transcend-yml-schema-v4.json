@@ -5598,7 +5598,13 @@
                     "vendor",
                     "businessEntity",
                     "dataSubCategory",
-                    "processingPurposeSubCategory"
+                    "processingPurposeSubCategory",
+                    "assessment",
+                    "assessmentTemplate",
+                    "prompt",
+                    "promptGroup",
+                    "promptRun",
+                    "promptTemplate"
                   ]
                 }
               },
