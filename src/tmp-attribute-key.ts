@@ -20,6 +20,12 @@ export const ATTRIBUTE_KEY_SINGULAR_TO_PLURAL: Record<
   [AttributeSupportedResourceType.AirgapCookie]: 'airgapCookies',
   [AttributeSupportedResourceType.AirgapDataFlow]: 'airgapDataFlows',
   [AttributeSupportedResourceType.Vendor]: 'vendors',
+  [AttributeSupportedResourceType.Assessment]: 'assessment',
+  [AttributeSupportedResourceType.AssessmentTemplate]: 'assessmentTemplate',
+  [AttributeSupportedResourceType.Prompt]: 'prompt',
+  [AttributeSupportedResourceType.PromptGroup]: 'promptGroup',
+  [AttributeSupportedResourceType.PromptRun]: 'promptRun',
+  [AttributeSupportedResourceType.PromptTemplate]: 'promptTemplate',
 };
 
 /**
