@@ -104,7 +104,6 @@ export const PROMPTS_WITH_VARIABLES = gql`
       }
       runtimeVariables {
         name
-        type
       }
     }
   }
