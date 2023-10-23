@@ -5,7 +5,6 @@ import {
   DataSiloInput,
   ProcessingPurposeInput,
 } from '../codecs';
-import uniq from 'lodash/uniq';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
@@ -35,8 +34,6 @@ import sortBy from 'lodash/sortBy';
 import chunk from 'lodash/chunk';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
-import { fetchAllUsers } from './fetchAllUsers';
-import { fetchAllTeams } from './fetchAllTeams';
 import { keyBy } from 'lodash';
 
 export interface DataSiloAttributeValue {
@@ -776,35 +773,6 @@ export async function syncDataSilos(
   progressBar.start(totalDataPoints, 0);
   let total = 0;
 
-  // Grab owners and teams if needed
-  // TODO: https://transcend.height.app/T-30514 - avoid additional lookup by upserting these by email and mae
-  const ownerEmails = uniq(
-    dataSilosWithDataPoints
-      .map(({ datapoints }) =>
-        (datapoints || []).map(({ owners }) => owners).flat(),
-      )
-      .flat()
-      .filter((x): x is string => !!x),
-  );
-  const teamNames = uniq(
-    dataSilosWithDataPoints
-      .map(({ datapoints }) =>
-        (datapoints || []).map(({ teams }) => teams).flat(),
-      )
-      .flat()
-      .filter((x): x is string => !!x),
-  );
-  let emailToUserId: { [k in string]: string } = {};
-  let teamNameToTeamId: { [k in string]: string } = {};
-  if (ownerEmails.length > 0) {
-    const users = await fetchAllUsers(client);
-    emailToUserId = apply(keyBy(users, 'email'), ({ id }) => id);
-  }
-  if (teamNames.length > 0) {
-    const teams = await fetchAllTeams(client);
-    teamNameToTeamId = apply(keyBy(teams, 'name'), ({ id }) => id);
-  }
-
   await map(
     dataSilosWithDataPoints,
     async ({ datapoints, title }) => {
@@ -855,16 +823,12 @@ export async function syncDataSilos(
               description: datapoint.description,
               ...(datapoint.owners
                 ? {
-                    ownerIds: datapoint.owners
-                      .map((email) => emailToUserId[email])
-                      .filter((x) => !!x),
+                    ownerEmails: datapoint.owners,
                   }
                 : {}),
               ...(datapoint.teams
                 ? {
-                    teamIds: datapoint.teams
-                      .map((name) => teamNameToTeamId[name])
-                      .filter((x) => !!x),
+                    teamNames: datapoint.teams,
                   }
                 : {}),
               ...(datapoint['data-collection-tag']

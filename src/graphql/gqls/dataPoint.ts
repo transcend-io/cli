@@ -102,6 +102,8 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
     $title: String
     $description: String
     $ownerIds: [ID!]
+    $ownerEmails: [String!]
+    $teamNames: [String!]
     $teamIds: [ID!]
     $dataCollectionTag: String
     $querySuggestions: [DbIntegrationQuerySuggestionInput!]
@@ -114,6 +116,8 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
         name: $name
         path: $path
         title: $title
+        teamNames: $teamNames
+        ownerEmails: $ownerEmails
         dataCollectionTag: $dataCollectionTag
         description: $description
         ownerIds: $ownerIds
