@@ -26,6 +26,8 @@ import {
   RegionDetectionMethod,
   PreflightRequestStatus,
   AttributeSupportedResourceType,
+  ConfidenceLabel,
+  SubDataPointDataSubCategoryGuessStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -182,6 +184,25 @@ export const DataCategoryInput = t.intersection([
 
 /** Type override */
 export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
+
+/**
+ * A guessed data category from the content classifier
+ */
+export const DataCategoryGuessInput = t.type({
+  /** The parent category */
+  category: DataCategoryInput,
+  /** Status of guess */
+  status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
+  /** Confidence label */
+  confidenceLabel: valuesOf(ConfidenceLabel),
+  /** Confidence level of guess */
+  confidence: t.number,
+  /** classifier version that produced the guess */
+  classifierVersion: t.number,
+});
+
+/** Type override */
+export type DataCategoryGuessInput = t.TypeOf<typeof DataCategoryGuessInput>;
 
 export const AttributeValueInput = t.intersection([
   t.type({
@@ -353,6 +374,12 @@ export const FieldInput = t.intersection([
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
     categories: t.array(DataCategoryInput),
+    /**
+     * The category of personal data that have been guessed by the classifier this datapoint
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    'guessed-categories': t.array(DataCategoryGuessInput),
     /**
      * When true, this subdatapoint should be revealed in a data access request.
      * When false, this field should be redacted

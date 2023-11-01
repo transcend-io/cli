@@ -38,6 +38,7 @@ async function main(): Promise<void> {
     integrationNames = '',
     skipDatapoints,
     skipSubDatapoints,
+    includeGuessedCategories = 'false',
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES.join(','),
     pageSize = '',
     debug = '',
@@ -176,6 +177,7 @@ async function main(): Promise<void> {
           pageSize: pageSizeParsed,
           skipDatapoints: shouldSkipDataPoints,
           skipSubDatapoints: shouldSkipSubDataPoints,
+          includeGuessedCategories: includeGuessedCategories === 'true',
           debug: isDebug,
           trackerStatuses: parsedTrackerStatuses,
         });
