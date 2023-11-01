@@ -18,6 +18,7 @@ import {
   AssessmentInput,
   PromptInput,
   DatapointInput,
+  FieldInput,
 } from '../codecs';
 import { ENABLED_ON_TO_ATTRIBUTE_KEY } from '../tmp-attribute-key';
 import {
@@ -83,6 +84,8 @@ export interface TranscendPullConfigurationInput {
   skipDatapoints?: boolean;
   /** Skip fetching of subdatapoints */
   skipSubDatapoints?: boolean;
+  /** When true, metadata around guessed data categories should be included */
+  includeGuessedCategories?: boolean;
 }
 
 /**
@@ -101,6 +104,7 @@ export async function pullTranscendConfiguration(
     resources = DEFAULT_TRANSCEND_PULL_RESOURCES,
     pageSize,
     skipDatapoints,
+    includeGuessedCategories,
     skipSubDatapoints,
     trackerStatuses = Object.values(ConsentTrackerStatus),
   }: TranscendPullConfigurationInput,
@@ -159,6 +163,7 @@ export async function pullTranscendConfiguration(
           integrationNames,
           pageSize,
           debug,
+          includeGuessedCategories,
           skipDatapoints,
           skipSubDatapoints,
         })
@@ -717,21 +722,44 @@ export async function pullTranscendConfiguration(
               ...(dataPoint.subDataPoints.length > 0
                 ? {
                     fields: dataPoint.subDataPoints
-                      .map((field) => ({
-                        key: field.name,
-                        description: field.description,
-                        purposes: field.purposes,
-                        categories: field.categories,
-                        'access-request-visibility-enabled':
-                          field.accessRequestVisibilityEnabled,
-                        'erasure-request-redaction-enabled':
-                          field.erasureRequestRedactionEnabled,
-                        attributes:
-                          field.attributeValues !== undefined &&
-                          field.attributeValues.length > 0
-                            ? formatAttributeValues(field.attributeValues)
-                            : undefined,
-                      }))
+                      .map(
+                        (field): FieldInput => ({
+                          key: field.name,
+                          description: field.description,
+                          purposes: field.purposes,
+                          categories: field.categories,
+                          ...(includeGuessedCategories &&
+                          field.pendingCategoryGuesses
+                            ? {
+                                'guessed-categories':
+                                  field.pendingCategoryGuesses
+                                    .filter(
+                                      (guess) => guess.status === 'PENDING',
+                                    )
+                                    .map((guess) => ({
+                                      category: {
+                                        name: guess.category.name,
+                                        category: guess.category.category,
+                                      },
+                                      status: guess.status,
+                                      confidenceLabel: guess.confidenceLabel,
+                                      confidence: guess.confidence,
+                                      classifierVersion:
+                                        guess.classifierVersion,
+                                    })),
+                              }
+                            : {}),
+                          'access-request-visibility-enabled':
+                            field.accessRequestVisibilityEnabled,
+                          'erasure-request-redaction-enabled':
+                            field.erasureRequestRedactionEnabled,
+                          attributes:
+                            field.attributeValues !== undefined &&
+                            field.attributeValues.length > 0
+                              ? formatAttributeValues(field.attributeValues)
+                              : undefined,
+                        }),
+                      )
                       .sort((a, b) => a.key.localeCompare(b.key)),
                   }
                 : {}),

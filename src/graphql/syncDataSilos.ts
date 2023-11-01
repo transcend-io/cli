@@ -17,6 +17,7 @@ import {
   SUB_DATA_POINTS,
   UPDATE_DATA_SILOS,
   DATA_SILOS_ENRICHED,
+  SUB_DATA_POINTS_WITH_GUESSES,
 } from './gqls';
 import {
   convertToDataSubjectBlockList,
@@ -28,7 +29,9 @@ import {
   IsoCountrySubdivisionCode,
   PromptAVendorEmailCompletionLinkType,
   PromptAVendorEmailSendType,
+  ConfidenceLabel,
   RequestActionObjectResolver,
+  SubDataPointDataSubCategoryGuessStatus,
 } from '@transcend-io/privacy-types';
 import sortBy from 'lodash/sortBy';
 import chunk from 'lodash/chunk';
@@ -167,6 +170,19 @@ interface SubDataPoint {
   erasureRequestRedactionEnabled: boolean;
   /** Attribute attached to subdatapoint */
   attributeValues: DataSiloAttributeValue[];
+  /** Data category guesses that are output by the classifier */
+  pendingCategoryGuesses?: {
+    /** Data category being guessed */
+    category: DataCategoryInput;
+    /** Status of guess */
+    status: SubDataPointDataSubCategoryGuessStatus;
+    /** Confidence level of guess */
+    confidence: number;
+    /** Confidence label */
+    confidenceLabel: ConfidenceLabel;
+    /** classifier version that produced the guess */
+    classifierVersion: number;
+  }[];
 }
 
 interface DataPoint {
@@ -245,12 +261,15 @@ export async function fetchAllSubDataPoints(
   dataPointId: string,
   {
     debug,
+    includeGuessedCategories,
     pageSize,
   }: {
     /** Debug logs */
     debug: boolean;
     /** Page size */
     pageSize: number;
+    /** When true, metadata around guessed data categories should be included */
+    includeGuessedCategories?: boolean;
   },
 ): Promise<SubDataPoint[]> {
   const subDataPoints: SubDataPoint[] = [];
@@ -275,11 +294,17 @@ export async function fetchAllSubDataPoints(
           /** List of matches */
           nodes: SubDataPoint[];
         };
-      }>(client, SUB_DATA_POINTS, {
-        first: pageSize,
-        dataPointIds: [dataPointId],
-        offset,
-      });
+      }>(
+        client,
+        includeGuessedCategories
+          ? SUB_DATA_POINTS_WITH_GUESSES
+          : SUB_DATA_POINTS,
+        {
+          first: pageSize,
+          dataPointIds: [dataPointId],
+          offset,
+        },
+      );
 
       subDataPoints.push(...nodes);
       offset += pageSize;
@@ -319,6 +344,7 @@ export async function fetchAllDataPoints(
     debug,
     pageSize,
     skipSubDatapoints,
+    includeGuessedCategories,
   }: {
     /** Debug logs */
     debug: boolean;
@@ -326,6 +352,8 @@ export async function fetchAllDataPoints(
     pageSize: number;
     /** Skip fetching of subdatapoints */
     skipSubDatapoints?: boolean;
+    /** When true, metadata around guessed data categories should be included */
+    includeGuessedCategories?: boolean;
   },
 ): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
@@ -379,6 +407,7 @@ export async function fetchAllDataPoints(
             const subDataPoints = await fetchAllSubDataPoints(client, node.id, {
               pageSize,
               debug,
+              includeGuessedCategories,
             });
             dataPoints.push({
               ...node,
@@ -527,6 +556,7 @@ export async function fetchEnrichedDataSilos(
     debug,
     skipDatapoints,
     skipSubDatapoints,
+    includeGuessedCategories,
     integrationNames,
   }: {
     /** Page size */
@@ -543,6 +573,8 @@ export async function fetchEnrichedDataSilos(
     skipDatapoints?: boolean;
     /** Skip fetching of subdatapoints */
     skipSubDatapoints?: boolean;
+    /** When true, metadata around guessed data categories should be included */
+    includeGuessedCategories?: boolean;
   },
 ): Promise<[DataSiloEnriched, DataPointWithSubDataPoint[]][]> {
   const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
@@ -569,6 +601,7 @@ export async function fetchEnrichedDataSilos(
         debug,
         pageSize,
         skipSubDatapoints,
+        includeGuessedCategories,
       });
 
       if (debug) {
@@ -890,7 +923,7 @@ export async function syncDataSilos(
       }
     },
     {
-      concurrency: 5,
+      concurrency: pageSize,
     },
   );
 

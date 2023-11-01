@@ -94,6 +94,54 @@ export const SUB_DATA_POINTS = gql`
   }
 `;
 
+export const SUB_DATA_POINTS_WITH_GUESSES = gql`
+  query TranscendCliDataPoints(
+    $dataPointIds: [ID!]
+    $first: Int!
+    $offset: Int!
+  ) {
+    subDataPoints(
+      filterBy: { dataPoints: $dataPointIds }
+      first: $first
+      offset: $offset
+      useMaster: false
+    ) {
+      totalCount
+      nodes {
+        id
+        name
+        description
+        purposes {
+          name
+          purpose
+        }
+        categories {
+          name
+          category
+        }
+        pendingCategoryGuesses {
+          category {
+            name
+            category
+          }
+          status
+          confidence
+          confidenceLabel
+          classifierVersion
+        }
+        accessRequestVisibilityEnabled
+        erasureRequestRedactionEnabled
+        attributeValues {
+          attributeKey {
+            name
+          }
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const UPDATE_OR_CREATE_DATA_POINT = gql`
   mutation TranscendCliUpdateOrCreateDataPoint(
     $dataSiloId: ID!
