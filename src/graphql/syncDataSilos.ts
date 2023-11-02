@@ -284,7 +284,6 @@ export async function fetchAllSubDataPoints(
           colors.magenta(`Pulling in subdatapoints for offset ${offset}`),
         );
       }
-
       const {
         subDataPoints: { nodes },
         // eslint-disable-next-line no-await-in-loop
