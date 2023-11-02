@@ -1,6 +1,4 @@
 import { AttributeInput } from '../codecs';
-import { ATTRIBUTE_KEY_TO_ENABLED_ON } from '../tmp-attribute-key';
-import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
 import { GraphQLClient } from 'graphql-request';
 import {
@@ -10,7 +8,6 @@ import {
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { Attribute } from './fetchAllAttributes';
-import { AttributeSupportedResourceType } from '@transcend-io/privacy-types';
 
 /**
  * Sync attribute
@@ -27,23 +24,7 @@ export async function syncAttribute(
   // attribute key input
   const input = {
     name: attribute.name,
-    ...attribute.resources?.reduce(
-      (acc, resource) =>
-        Object.assign(acc, {
-          [ATTRIBUTE_KEY_TO_ENABLED_ON[resource]]: true,
-        }),
-      {},
-    ),
-    ...difference(
-      Object.values(AttributeSupportedResourceType),
-      attribute.resources || [],
-    ).reduce(
-      (acc, resource) =>
-        Object.assign(acc, {
-          [ATTRIBUTE_KEY_TO_ENABLED_ON[resource]]: false,
-        }),
-      {},
-    ),
+    enabledOn: attribute.resources || [],
   };
 
   // create or update attribute key

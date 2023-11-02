@@ -153,7 +153,7 @@ export async function syncPromptGroups(
       existingPromptGroups.map(([input, id]) => [
         {
           ...input,
-          prompts: input.prompts.map((title) => {
+          promptIds: input.prompts.map((title) => {
             const prompt = promptByTitle[title];
             if (!prompt) {
               throw new Error(`Failed to find prompt with title: "${title}"`);
