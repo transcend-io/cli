@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { CREATE_PROMPT } from './gqls';
+import { REPORT_PROMPT_RUN } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   QueueStatus,
@@ -65,7 +65,7 @@ export async function reportPromptRun(
         id: string;
       };
     };
-  }>(client, CREATE_PROMPT, {
+  }>(client, REPORT_PROMPT_RUN, {
     input: {
       ...input,
       promptRunMessages: input.promptRunMessages.map(

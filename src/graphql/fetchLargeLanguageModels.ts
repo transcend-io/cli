@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { LargeLanguageModelClient } from '@transcend-io/privacy-types';
-import { PROMPT_TEMPLATES } from './gqls';
+import { LARGE_LANGUAGE_MODELS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface LargeLanguageModel {
@@ -40,7 +40,7 @@ export async function fetchAllLargeLanguageModels(
         /** List */
         nodes: LargeLanguageModel[];
       };
-    }>(client, PROMPT_TEMPLATES, {
+    }>(client, LARGE_LANGUAGE_MODELS, {
       first: PAGE_SIZE,
       offset,
     });
