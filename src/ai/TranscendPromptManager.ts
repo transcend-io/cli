@@ -1,9 +1,20 @@
-import { apply, decodeCodec, getValues } from '@transcend-io/type-utils';
+/* eslint-disable max-lines */
+import {
+  Optionalize,
+  Requirize,
+  apply,
+  decodeCodec,
+  getValues,
+} from '@transcend-io/type-utils';
 import type { Handlebars } from '@transcend-io/handlebars-utils';
 import { Secret } from '@transcend-io/secret-value';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_API } from '../constants';
-import { buildTranscendGraphQLClient } from '../graphql';
+import {
+  ReportPromptRunInput,
+  buildTranscendGraphQLClient,
+  reportPromptRun,
+} from '../graphql';
 import {
   HandlebarsInput,
   createHandlebarsWithHelpers,
@@ -15,7 +26,12 @@ import {
 } from '../graphql/fetchPrompts';
 import { GraphQLClient } from 'graphql-request';
 import keyBy from 'lodash/keyBy';
-import { AssessmentStatus } from '@transcend-io/privacy-types';
+import {
+  AssessmentStatus,
+  ChatCompletionRole,
+  PromptRunProductArea,
+  QueueStatus,
+} from '@transcend-io/privacy-types';
 
 /**
  * An LLM Prompt definition
@@ -347,4 +363,141 @@ export class TranscendPromptManager<
     // Parse via codec
     return decodeCodec(promptInput.outputCodec, extracted);
   }
+
+  /**
+   * Parse the AI response and  report back to Transcend
+   *
+   * @param promptName - Prompt to parse
+   * @param options - Options for reporting
+   * @returns Parsed content
+   */
+  async reportAndParsePromptRun<TPromptName extends TPromptNames>(
+    promptName: TPromptName,
+    options: Optionalize<
+      Omit<ReportPromptRunInput, 'status' | 'promptId'>,
+      'name' | 'productArea'
+    >,
+  ): Promise<t.TypeOf<TPrompts[TPromptName]['outputCodec']>> {
+    const name =
+      options.name ||
+      `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
+
+    if (!this.promptContentMap) {
+      throw new Error('Expected this.promptContentMap to be defined');
+    }
+    // Look up prompt info
+    const promptInput = this.promptContentMap[promptName];
+    if (!promptInput) {
+      throw new Error(`Expected this.prompts[${promptName}] to be defined`);
+    }
+
+    // Ensure the first message in `promptRunMessages` is of type=system
+    if (options.promptRunMessages.length === 0) {
+      throw new Error('promptRunMessages is expected to have length > 0');
+    }
+    if (options.promptRunMessages[0].role !== ChatCompletionRole.System) {
+      throw new Error(
+        `promptRunMessages[0].role is expected to be = ${ChatCompletionRole.System}`,
+      );
+    }
+    if (
+      options.promptRunMessages[options.promptRunMessages.length - 1].role !==
+      ChatCompletionRole.Assistant
+    ) {
+      throw new Error(
+        `promptRunMessages[${
+          options.promptRunMessages.length - 1
+        }].role is expected to be = ${ChatCompletionRole.Assistant}`,
+      );
+    }
+    const response =
+      options.promptRunMessages[options.promptRunMessages.length - 1].message;
+
+    let parsed: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
+    try {
+      // Parse the response
+      parsed = this.parseAiResponse(promptName, response);
+    } catch (err) {
+      await reportPromptRun(this.graphQLClient, {
+        productArea: PromptRunProductArea.PromptManager,
+        ...options,
+        name,
+        status: QueueStatus.Error,
+        promptId: promptInput.id,
+        promptRunMessages: options.promptRunMessages.map((message, ind) => ({
+          ...message,
+          ...(ind === 0 ? { template: promptInput.content } : {}),
+        })),
+      });
+      throw err;
+    }
+
+    // report successful run
+    await reportPromptRun(this.graphQLClient, {
+      productArea: PromptRunProductArea.PromptManager,
+      ...options,
+      name,
+      status: QueueStatus.Resolved,
+      promptId: promptInput.id,
+      promptRunMessages: options.promptRunMessages.map((message, ind) => ({
+        ...message,
+        ...(ind === 0 ? { template: promptInput.content } : {}),
+      })),
+    });
+
+    return parsed;
+  }
+
+  /**
+   * Report an error for a particular prompt
+   *
+   * @param promptName - Prompt to parse
+   * @param options - Options for reporting
+   * @returns Parsed content
+   */
+  async reportPromptRunError<TPromptName extends TPromptNames>(
+    promptName: TPromptName,
+    options: Requirize<
+      Optionalize<
+        Omit<ReportPromptRunInput, 'status' | 'promptId'>,
+        'name' | 'productArea'
+      >,
+      'error'
+    >,
+  ): Promise<void> {
+    const name =
+      options.name ||
+      `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
+
+    if (!this.promptContentMap) {
+      throw new Error('Expected this.promptContentMap to be defined');
+    }
+    // Look up prompt info
+    const promptInput = this.promptContentMap[promptName];
+    if (!promptInput) {
+      throw new Error(`Expected this.prompts[${promptName}] to be defined`);
+    }
+
+    // Ensure the first message in `promptRunMessages` is of type=system
+    if (options.promptRunMessages.length === 0) {
+      throw new Error('promptRunMessages is expected to have length > 0');
+    }
+    if (options.promptRunMessages[0].role !== ChatCompletionRole.System) {
+      throw new Error(
+        `promptRunMessages[0].role is expected to be = ${ChatCompletionRole.System}`,
+      );
+    }
+    await reportPromptRun(this.graphQLClient, {
+      productArea: PromptRunProductArea.PromptManager,
+      ...options,
+      name,
+      status: QueueStatus.Error,
+      promptId: promptInput.id,
+      promptRunMessages: options.promptRunMessages.map((message, ind) => ({
+        ...message,
+        ...(ind === 0 ? { template: promptInput.content } : {}),
+      })),
+    });
+  }
 }
+/* eslint-enable max-lines */
