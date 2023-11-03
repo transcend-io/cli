@@ -15,7 +15,7 @@ export interface ReportPromptRunInput {
   /** Messages reported on */
   promptRunMessages: {
     /** Message reported */
-    message: string;
+    content: string;
     /** Role of message */
     role: ChatCompletionRole;
     /** Template used if created from prompt */
@@ -36,7 +36,7 @@ export interface ReportPromptRunInput {
   /** TopP parameter used when running prompt */
   topP?: number;
   /** Max tokens ot sample parameter used when running prompt */
-  maxTokensToSample?: string;
+  maxTokensToSample?: number;
   /** The prompt group being reported */
   promptGroupId?: string;
   /** The LLM Id being reported on */
@@ -66,7 +66,15 @@ export async function reportPromptRun(
       };
     };
   }>(client, CREATE_PROMPT, {
-    input,
+    input: {
+      ...input,
+      promptRunMessages: input.promptRunMessages.map(
+        ({ content, ...rest }) => ({
+          ...rest,
+          message: content,
+        }),
+      ),
+    },
   });
   return promptRun.id;
 }

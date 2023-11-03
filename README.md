@@ -2390,7 +2390,7 @@ export async function main(): Promise<void> {
   ];
   const largeLanguageModel = {
     name: 'gpt-4',
-    client: 'openai',
+    client: 'openai' as const,
   };
   const temperature = 1;
   const topP = 1;
@@ -2409,7 +2409,7 @@ export async function main(): Promise<void> {
     // report error upon failure
     await promptManager.reportPromptRunError('predictProductLine', {
       promptRunMessages: input,
-      duration: t1 - new Date().getTime(),
+      duration: new Date().getTime() - t0,
       temperature,
       topP,
       error: err.message,
