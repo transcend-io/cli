@@ -468,7 +468,7 @@ export class TranscendPromptManager<
       );
     }
     const response =
-      options.promptRunMessages[options.promptRunMessages.length - 1].message;
+      options.promptRunMessages[options.promptRunMessages.length - 1].content;
 
     // Look up the large language model being report on
     const largeLanguageModel = this.getLargeLanguageModel(
