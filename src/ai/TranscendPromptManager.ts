@@ -114,6 +114,14 @@ export interface ReportPromptRunOptions
       };
 }
 
+const jsonParseSafe = (obj: string): unknown => {
+  try {
+    return JSON.parse(obj);
+  } catch (e) {
+    return obj;
+  }
+};
+
 /**
  * A class that is capable of loading and insert variables into prompts from
  * Transcend's Prompt Manager
@@ -421,7 +429,11 @@ export class TranscendPromptManager<
       : response;
 
     // Parse via codec
-    return decodeCodec(promptInput.outputCodec, extracted);
+    return decodeCodec(
+      promptInput.outputCodec,
+      jsonParseSafe(extracted),
+      false,
+    );
   }
 
   /**
@@ -433,7 +445,7 @@ export class TranscendPromptManager<
    */
   async reportAndParsePromptRun<TPromptName extends TPromptNames>(
     promptName: TPromptName,
-    options: Requirize<ReportPromptRunOptions, 'error'>,
+    { largeLanguageModel, ...options }: ReportPromptRunOptions,
   ): Promise<t.TypeOf<TPrompts[TPromptName]['outputCodec']>> {
     const name =
       options.name ||
@@ -471,9 +483,8 @@ export class TranscendPromptManager<
       options.promptRunMessages[options.promptRunMessages.length - 1].content;
 
     // Look up the large language model being report on
-    const largeLanguageModel = this.getLargeLanguageModel(
-      options.largeLanguageModel,
-    );
+    const largeLanguageModelInstance =
+      this.getLargeLanguageModel(largeLanguageModel);
 
     let parsed: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
     try {
@@ -484,8 +495,9 @@ export class TranscendPromptManager<
         productArea: PromptRunProductArea.PromptManager,
         ...options,
         name,
+        error: err.message,
         status: QueueStatus.Error,
-        largeLanguageModelId: largeLanguageModel.id,
+        largeLanguageModelId: largeLanguageModelInstance.id,
         promptId: promptInput.id,
         promptRunMessages: options.promptRunMessages.map((message, ind) => ({
           ...message,
@@ -501,7 +513,7 @@ export class TranscendPromptManager<
       ...options,
       name,
       status: QueueStatus.Resolved,
-      largeLanguageModelId: largeLanguageModel.id,
+      largeLanguageModelId: largeLanguageModelInstance.id,
       promptId: promptInput.id,
       promptRunMessages: options.promptRunMessages.map((message, ind) => ({
         ...message,
@@ -521,7 +533,10 @@ export class TranscendPromptManager<
    */
   async reportPromptRunError<TPromptName extends TPromptNames>(
     promptName: TPromptName,
-    options: ReportPromptRunOptions,
+    {
+      largeLanguageModel,
+      ...options
+    }: Requirize<ReportPromptRunOptions, 'error'>,
   ): Promise<void> {
     const name =
       options.name ||
@@ -547,16 +562,15 @@ export class TranscendPromptManager<
     }
 
     // Look up the large language model being report on
-    const largeLanguageModel = this.getLargeLanguageModel(
-      options.largeLanguageModel,
-    );
+    const largeLanguageModelInstance =
+      this.getLargeLanguageModel(largeLanguageModel);
 
     await reportPromptRun(this.graphQLClient, {
       productArea: PromptRunProductArea.PromptManager,
       ...options,
       name,
       status: QueueStatus.Error,
-      largeLanguageModelId: largeLanguageModel.id,
+      largeLanguageModelId: largeLanguageModelInstance.id,
       promptId: promptInput.id,
       promptRunMessages: options.promptRunMessages.map((message, ind) => ({
         ...message,

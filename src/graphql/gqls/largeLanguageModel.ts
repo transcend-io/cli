@@ -7,7 +7,7 @@ export const LARGE_LANGUAGE_MODELS = gql`
   query TranscendCliLargeLanguageModels(
     $first: Int!
     $offset: Int!
-    $filterBy: PromptFiltersInput
+    $filterBy: LargeLanguageModelFiltersInput
   ) {
     largeLanguageModels(
       first: $first
