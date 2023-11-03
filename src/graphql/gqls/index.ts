@@ -25,3 +25,4 @@ export * from './businessEntity';
 export * from './action';
 export * from './privacyCenter';
 export * from './auth';
+export * from './largeLanguageModel';

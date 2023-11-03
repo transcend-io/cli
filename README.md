@@ -2388,6 +2388,10 @@ export async function main(): Promise<void> {
       content: input,
     },
   ];
+  const largeLanguageModel = {
+    name: 'gpt-4',
+    client: 'openai',
+  };
   const temperature = 1;
   const topP = 1;
   const maxTokensToSample = 1000;
@@ -2410,6 +2414,7 @@ export async function main(): Promise<void> {
       topP,
       error: err.message,
       maxTokensToSample,
+      largeLanguageModel,
     });
   }
   const t1 = new Date().getTime();
@@ -2435,12 +2440,12 @@ export async function main(): Promise<void> {
       temperature,
       topP,
       maxTokensToSample,
+      largeLanguageModel,
       // Optional parameters
       // name, // unique identifier for this run
       // productArea, // Transcend product area that the prompt relates to
       // runByEmployeeEmail, // Employee email that is executing the request
       // promptGroupId, // The prompt group being reported
-      // largeLanguageModelId, The LLM Id being reported on
     },
   );
 }
