@@ -2314,11 +2314,16 @@ If you are integrating Transcend's Prompt Manager into your code, it may look li
 ```ts
 import * as t from 'io-ts';
 import { TranscendPromptManager } from '@transcend-io/cli';
+import {
+  ChatCompletionMessage,
+  PromptRunProductArea,
+} from '@transcend-io/privacy-types';
 
 /**
  * Example prompt integration
  */
 export async function main(): Promise<void> {
+  // Instantiate the Transcend Prompt Manager instance
   const promptManager = new TranscendPromptManager({
     // API key
     transcendApiKey: process.env.TRANSCEND_API_KEY,
@@ -2372,8 +2377,8 @@ export async function main(): Promise<void> {
     slackChannelName: channelName,
   });
 
-  // Pass the prompt into your LLM of choice
-  const response = await openai.createCompletion([
+  // Parameters to pass to the LLM
+  const input: ChatCompletionMessage[] = [
     {
       role: 'system',
       content: systemPrompt,
@@ -2382,12 +2387,66 @@ export async function main(): Promise<void> {
       role: 'user',
       content: input,
     },
-  ]);
+  ];
+  const largeLanguageModel = {
+    name: 'gpt-4',
+    client: 'openai',
+  };
+  const temperature = 1;
+  const topP = 1;
+  const maxTokensToSample = 1000;
 
-  // Parsed response as JSON
-  const parsedResponse = promptManager.parseAiResponse(
+  // Run prompt against LLM
+  let response: string;
+  const t0 = new Date().getTime();
+  try {
+    response = await openai.createCompletion(input, {
+      temperature,
+      top_p: topP,
+      max_tokens: maxTokensToSample,
+    });
+  } catch (err) {
+    // report error upon failure
+    await promptManager.reportPromptRunError('predictProductLine', {
+      promptRunMessages: input,
+      duration: t1 - new Date().getTime(),
+      temperature,
+      topP,
+      error: err.message,
+      maxTokensToSample,
+      largeLanguageModel,
+    });
+  }
+  const t1 = new Date().getTime();
+
+  // Parsed response as JSON and do not report to Transcend
+  //   const parsedResponse = promptManager.parseAiResponse(
+  //     'predictProductLine',
+  //     response,
+  //   );
+
+  // Parsed response as JSON and report output to Transcend
+  const parsedResponse = await promptManager.reportAndParsePromptRun(
     'predictProductLine',
-    response,
+    {
+      promptRunMessages: [
+        ...input,
+        {
+          role: 'assistant',
+          content: response,
+        },
+      ],
+      duration: t1 - t0,
+      temperature,
+      topP,
+      maxTokensToSample,
+      largeLanguageModel,
+      // Optional parameters
+      // name, // unique identifier for this run
+      // productArea, // Transcend product area that the prompt relates to
+      // runByEmployeeEmail, // Employee email that is executing the request
+      // promptGroupId, // The prompt group being reported
+    },
   );
 }
 ```
