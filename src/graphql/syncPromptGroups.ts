@@ -9,6 +9,15 @@ import keyBy from 'lodash/keyBy';
 import { logger } from '../logger';
 import { fetchAllPrompts } from './fetchPrompts';
 
+export interface EditPromptGroupInput {
+  /** Title of prompt group */
+  title: string;
+  /** Prompt group description */
+  description: string;
+  /** Prompt IDs */
+  promptIds: string[];
+}
+
 /**
  * Create a new prompt group
  *
@@ -18,14 +27,7 @@ import { fetchAllPrompts } from './fetchPrompts';
  */
 export async function createPromptGroup(
   client: GraphQLClient,
-  input: {
-    /** Title of prompt group */
-    title: string;
-    /** Prompt group description */
-    description: string;
-    /** Prompt IDs */
-    promptIds: string[];
-  },
+  input: EditPromptGroupInput,
 ): Promise<string> {
   const {
     createPromptGroup: { promptGroup },
@@ -55,7 +57,7 @@ export async function createPromptGroup(
  */
 export async function updatePromptGroups(
   client: GraphQLClient,
-  input: [PromptGroupInput, string][],
+  input: [EditPromptGroupInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_PROMPT_GROUPS, {
     input: {
@@ -150,10 +152,10 @@ export async function syncPromptGroups(
     );
     await updatePromptGroups(
       client,
-      existingPromptGroups.map(([input, id]) => [
+      existingPromptGroups.map(([{ prompts, ...input }, id]) => [
         {
           ...input,
-          prompts: input.prompts.map((title) => {
+          promptIds: prompts.map((title) => {
             const prompt = promptByTitle[title];
             if (!prompt) {
               throw new Error(`Failed to find prompt with title: "${title}"`);
