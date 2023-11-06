@@ -69,6 +69,13 @@ export type TranscendPrompt<
   extractFromTag?: string;
 };
 
+export interface PromptRunResult {
+  /** The ID of the prompt run created on Transcend */
+  promptRunId: string;
+  /** The URL of the prompt run on Transcend */
+  promptRunUrl: string;
+}
+
 /**
  * Create a regex to extract data from a tag
  *
@@ -446,14 +453,12 @@ export class TranscendPromptManager<
   async reportAndParsePromptRun<TPromptName extends TPromptNames>(
     promptName: TPromptName,
     { largeLanguageModel, ...options }: ReportPromptRunOptions,
-  ): Promise<{
-    /** The ID of the prompt run created on Transcend */
-    promptRunId: string;
-    /** The URL of the prompt run on Transcend */
-    promptRunUrl: string;
-    /** Resulting prompt run */
-    result: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
-  }> {
+  ): Promise<
+    PromptRunResult & {
+      /** Resulting prompt run */
+      result: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
+    }
+  > {
     const name =
       options.name ||
       `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
@@ -548,7 +553,7 @@ export class TranscendPromptManager<
       largeLanguageModel,
       ...options
     }: Requirize<ReportPromptRunOptions, 'error'>,
-  ): Promise<void> {
+  ): Promise<PromptRunResult> {
     const name =
       options.name ||
       `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
@@ -576,7 +581,7 @@ export class TranscendPromptManager<
     const largeLanguageModelInstance =
       this.getLargeLanguageModel(largeLanguageModel);
 
-    await reportPromptRun(this.graphQLClient, {
+    const promptRunId = await reportPromptRun(this.graphQLClient, {
       productArea: PromptRunProductArea.PromptManager,
       ...options,
       name,
@@ -588,6 +593,11 @@ export class TranscendPromptManager<
         ...(ind === 0 ? { template: promptInput.content } : {}),
       })),
     });
+
+    return {
+      promptRunId,
+      promptRunUrl: `https://app.transcend.io/prompts/runs/${promptRunId}`,
+    };
   }
 }
 /* eslint-enable max-lines */
