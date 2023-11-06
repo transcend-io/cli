@@ -12,6 +12,12 @@ export interface Prompt {
   status: AssessmentStatus;
   /** The content of the prompt */
   content: string;
+  /** Temperature to use with prompt */
+  temperature: number;
+  /** Top P to use with prompt */
+  topP: number;
+  /** Max tokens to sample for prompt */
+  maxTokensToSample: number;
 }
 
 const PAGE_SIZE = 20;
