@@ -446,7 +446,14 @@ export class TranscendPromptManager<
   async reportAndParsePromptRun<TPromptName extends TPromptNames>(
     promptName: TPromptName,
     { largeLanguageModel, ...options }: ReportPromptRunOptions,
-  ): Promise<t.TypeOf<TPrompts[TPromptName]['outputCodec']>> {
+  ): Promise<{
+    /** The ID of the prompt run created on Transcend */
+    promptRunId: string;
+    /** The URL of the prompt run on Transcend */
+    promptRunUrl: string;
+    /** Resulting prompt run */
+    result: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
+  }> {
     const name =
       options.name ||
       `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
@@ -508,7 +515,7 @@ export class TranscendPromptManager<
     }
 
     // report successful run
-    await reportPromptRun(this.graphQLClient, {
+    const promptRunId = await reportPromptRun(this.graphQLClient, {
       productArea: PromptRunProductArea.PromptManager,
       ...options,
       name,
@@ -521,7 +528,11 @@ export class TranscendPromptManager<
       })),
     });
 
-    return parsed;
+    return {
+      result: parsed,
+      promptRunId,
+      promptRunUrl: `https://app.transcend.io/prompts/runs/${promptRunId}`,
+    };
   }
 
   /**
