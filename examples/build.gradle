@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        applicationId "com.yourcompany.yourapp"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    // Braze (formerly Appboy) SDK for marketing
+    implementation 'com.appboy:android-sdk-ui:14.0.0'
+
+    // Branch SDK for deep linking and attribution
+    implementation 'io.branch.sdk.android:library:5.0.1'
+
+    // Google Firebase Analytics
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+
+    // Google Mobile Ads SDK
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
+
+    // Facebook Ads SDK
+    implementation 'com.facebook.android:audience-network-sdk:6.2.0'
+
+    // Mixpanel for analytics
+    implementation 'com.mixpanel.android:mixpanel-android:5.8.7'
+
+    // Amplitude for event tracking
+    implementation 'com.amplitude:android-sdk:2.30.0'
+
+    // Other common libraries for network requests, image loading, etc.
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Add more dependencies as needed
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin

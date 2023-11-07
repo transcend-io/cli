@@ -713,6 +713,12 @@ Then, you'll need to grab that `dataSiloId` and a Transcend API key and pass it 
 yarn tr-discover-silos --scanPath=./myJavascriptProject --auth={{api_key}} ---dataSiloId=abcdefg
 ```
 
+Here are some examples of a [Podfile](./examples/Podfile) and [gradle file](./examples/build.gradle). These are scanned like:
+
+```sh
+yarn tr-discover-silos --scanPath=./examples/ --auth=$TRANSCEND_API_KEY ---dataSiloId=b6776589-0b7d-466f-8aad-4378ffd3a321
+```
+
 This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
 
 You can include additional arguments as well:

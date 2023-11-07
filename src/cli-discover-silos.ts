@@ -64,7 +64,9 @@ async function main(): Promise<void> {
   logger.info(
     colors.green(
       `Scan found ${results.length} potential data silos at ${scanPath}! ` +
-        `View at ${ADMIN_DASH}/data-map/data-inventory/silo-discovery/triage`,
+        `View at ${ADMIN_DASH}/data-map/data-inventory/silo-discovery/triage` +
+        `?filters=%7B"pluginIds"%3A%5B${plugin.id}"%5D%7D ` +
+        '\n\n NOTE: it may take 2-3 minutes for scan results to appear in the UI.',
     ),
   );
 }
