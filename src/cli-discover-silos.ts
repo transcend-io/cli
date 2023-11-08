@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import { stringify } from 'query-string';
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
@@ -60,12 +60,17 @@ async function main(): Promise<void> {
 
   await uploadSiloDiscoveryResults(client, plugin.id, results);
 
+  const newUrl = new URL(ADMIN_DASH);
+  newUrl.pathname = '/data-map/data-inventory/silo-discovery/triage';
+  newUrl.search = stringify({
+    filters: JSON.stringify({ pluginIds: [plugin.id] }),
+  });
+
   // Indicate success
   logger.info(
     colors.green(
       `Scan found ${results.length} potential data silos at ${scanPath}! ` +
-        `View at ${ADMIN_DASH}/data-map/data-inventory/silo-discovery/triage` +
-        `?filters=%7B"pluginIds"%3A%5B${plugin.id}"%5D%7D ` +
+        `View at '${newUrl.href}' ` +
         '\n\n NOTE: it may take 2-3 minutes for scan results to appear in the UI.',
     ),
   );
