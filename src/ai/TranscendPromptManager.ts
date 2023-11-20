@@ -459,6 +459,19 @@ export class TranscendPromptManager<
       result: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
     }
   > {
+    // Determine if prompts need to be fetched
+    if (
+      // never been fetched
+      !this.lastUpdatedAt ||
+      // fetch every run
+      this.cacheDuration === 0 ||
+      // If cache duration met
+      (this.cacheDuration &&
+        Date.now() - this.lastUpdatedAt.getTime() > this.cacheDuration)
+    ) {
+      await this.fetchPromptsAndMetadata();
+    }
+
     const name =
       options.name ||
       `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
@@ -554,6 +567,19 @@ export class TranscendPromptManager<
       ...options
     }: Requirize<ReportPromptRunOptions, 'error'>,
   ): Promise<PromptRunResult> {
+    // Determine if prompts need to be fetched
+    if (
+      // never been fetched
+      !this.lastUpdatedAt ||
+      // fetch every run
+      this.cacheDuration === 0 ||
+      // If cache duration met
+      (this.cacheDuration &&
+        Date.now() - this.lastUpdatedAt.getTime() > this.cacheDuration)
+    ) {
+      await this.fetchPromptsAndMetadata();
+    }
+
     const name =
       options.name ||
       `@transcend-io/cli-prompt-run-${new Date().toISOString()}`;
