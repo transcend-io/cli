@@ -210,6 +210,8 @@ export const AttributeValueInput = t.intersection([
     name: t.string,
   }),
   t.partial({
+    /** Description */
+    description: t.string,
     /** Color */
     color: t.string,
   }),

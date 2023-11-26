@@ -51,6 +51,7 @@ export async function syncConfigurationToTranscend(
     // TODO: https://transcend.height.app/T-23779
     publishToPrivacyCenter = true,
     classifyService = false,
+    deleteExtraAttributeValues = false,
     creatorId,
   }: {
     /** Page size */
@@ -59,6 +60,8 @@ export async function syncConfigurationToTranscend(
     creatorId?: string;
     /** When true, skip publishing to privacy center */
     publishToPrivacyCenter?: boolean;
+    /** When true, delete any attributes being synced up */
+    deleteExtraAttributeValues?: boolean;
     /** classify data flow service if missing */
     classifyService?: boolean;
   },
@@ -367,7 +370,10 @@ export async function syncConfigurationToTranscend(
 
         logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
         try {
-          await syncAttribute(client, attribute, existing);
+          await syncAttribute(client, attribute, {
+            existingAttribute: existing,
+            deleteExtraAttributeValues,
+          });
           logger.info(
             colors.green(`Successfully synced attribute "${attribute.name}"!`),
           );

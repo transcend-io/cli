@@ -20,11 +20,9 @@ import {
   DatapointInput,
   FieldInput,
 } from '../codecs';
-import { ENABLED_ON_TO_ATTRIBUTE_KEY } from '../tmp-attribute-key';
 import {
   RequestAction,
   ConsentTrackerStatus,
-  AttributeSupportedResourceType,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
@@ -552,18 +550,21 @@ export async function pullTranscendConfiguration(
   // Save attributes
   if (attributes.length > 0) {
     result.attributes = attributes.map(
-      ({ description, name, type, values, ...rest }): AttributeInput => ({
-        description: description || undefined,
-        resources: Object.entries(rest)
-          .filter(([key, value]) => value && key.startsWith('enabledOn'))
-          .map(
-            ([key]) => ENABLED_ON_TO_ATTRIBUTE_KEY[key],
-          ) as AttributeSupportedResourceType[],
+      ({
+        description,
         name,
         type,
-        values: values.map(({ name, color }) => ({
+        values,
+        enabledOn = [],
+      }): AttributeInput => ({
+        description: description || undefined,
+        resources: enabledOn,
+        name,
+        type,
+        values: values.map(({ name, color, description }) => ({
           name,
           color: color || undefined,
+          description,
         })),
       }),
     );
