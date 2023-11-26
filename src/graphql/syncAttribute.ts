@@ -1,25 +1,40 @@
 import { AttributeInput } from '../codecs';
+import colors from 'colors';
 import keyBy from 'lodash/keyBy';
 import { GraphQLClient } from 'graphql-request';
 import {
   CREATE_ATTRIBUTE,
   CREATE_ATTRIBUTE_VALUES,
+  DELETE_ATTRIBUTE_VALUE,
   UPDATE_ATTRIBUTE,
+  UPDATE_ATTRIBUTE_VALUES,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { Attribute } from './fetchAllAttributes';
+import difference from 'lodash/difference';
+import groupBy from 'lodash/groupBy';
+import { map } from 'bluebird';
+import { logger } from '../logger';
 
 /**
  * Sync attribute
  *
  * @param client - GraphQL client
  * @param attribute - The attribute input
- * @param existingAttribute - The existing attribute configuration if it exists
+ * @param options - Options
  */
 export async function syncAttribute(
   client: GraphQLClient,
   attribute: AttributeInput,
-  existingAttribute?: Attribute,
+  {
+    existingAttribute,
+    deleteExtraAttributeValues,
+  }: {
+    /** The existing attribute configuration if it exists */
+    existingAttribute?: Attribute;
+    /** When true, delete extra attributes not specified in the list of values */
+    deleteExtraAttributeValues?: boolean;
+  },
 ): Promise<void> {
   // attribute key input
   const input = {
@@ -60,17 +75,60 @@ export async function syncAttribute(
 
   // upsert attribute values
   const existingAttributeMap = keyBy(existingAttribute?.values || [], 'name');
-  const missingAttributes = !existingAttribute
-    ? attribute.values || []
-    : attribute.values?.filter((value) => !existingAttributeMap[value.name]) ||
-      [];
-  if (missingAttributes.length > 0) {
+  const { existingValues = [], newValues = [] } = groupBy(
+    attribute.values || [],
+    (field) =>
+      existingAttributeMap[field.name] ? 'existingValues' : 'newValue',
+  );
+  const removedValues = difference(
+    (existingAttribute?.values || []).map(({ name }) => name),
+    (attribute.values || []).map(({ name }) => name),
+  );
+
+  // Create new attribute values
+  if (newValues.length > 0) {
     await makeGraphQLRequest(client, CREATE_ATTRIBUTE_VALUES, {
-      input: missingAttributes.map(({ color, name }) => ({
-        color: color || undefined,
+      input: newValues.map(({ name, ...rest }) => ({
         name,
+        attributeKeyId,
+        ...rest,
+      })),
+    });
+    logger.info(colors.green(`Created ${newValues.length} attribute values`));
+  }
+
+  // Update existing attribute values
+  if (existingValues.length > 0) {
+    await makeGraphQLRequest(client, UPDATE_ATTRIBUTE_VALUES, {
+      input: existingValues.map(({ name, ...rest }) => ({
+        id: existingAttributeMap[name].id,
+        name,
+        description: existingAttributeMap[name].description,
+        color: existingAttributeMap[name].color,
+        ...rest,
         attributeKeyId,
       })),
     });
+    logger.info(
+      colors.green(`Updated ${existingValues.length} attribute values`),
+    );
+  }
+
+  // Delete removed attribute values
+  if (removedValues.length > 0 && deleteExtraAttributeValues) {
+    await map(
+      removedValues,
+      async (value) => {
+        await makeGraphQLRequest(client, DELETE_ATTRIBUTE_VALUE, {
+          id: existingAttributeMap[value].id,
+        });
+      },
+      {
+        concurrency: 10,
+      },
+    );
+    logger.info(
+      colors.green(`Deleted ${removedValues.length} attribute values`),
+    );
   }
 }

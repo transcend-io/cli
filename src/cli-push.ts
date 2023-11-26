@@ -31,6 +31,7 @@ async function syncConfiguration({
   publishToPrivacyCenter,
   contents,
   creatorId,
+  deleteExtraAttributeValues = false,
   classifyService = false,
 }: {
   /** Transcend YAML */
@@ -45,6 +46,8 @@ async function syncConfiguration({
   publishToPrivacyCenter: boolean;
   /** classify data flow service if missing */
   classifyService?: boolean;
+  /** Delete attributes when syncing */
+  deleteExtraAttributeValues?: boolean;
   /** Creator ID for assessments TODO: https://transcend.height.app/T-29850 - remove this  */
   creatorId?: string;
 }): Promise<boolean> {
@@ -55,7 +58,13 @@ async function syncConfiguration({
     const encounteredError = await syncConfigurationToTranscend(
       contents,
       client,
-      { pageSize, publishToPrivacyCenter, classifyService, creatorId },
+      {
+        pageSize,
+        publishToPrivacyCenter,
+        classifyService,
+        creatorId,
+        deleteExtraAttributeValues,
+      },
     );
     return !encounteredError;
   } catch (err) {
@@ -87,6 +96,7 @@ async function main(): Promise<void> {
     pageSize = '',
     publishToPrivacyCenter,
     classifyService = '',
+    deleteExtraAttributeValues = '',
     /** Creator ID of user for assessment templates TODO: https://transcend.height.app/T-29850 */
     creatorId = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -158,6 +168,7 @@ async function main(): Promise<void> {
       auth: apiKeyOrList,
       contents,
       publishToPrivacyCenter: publishToPrivacyCenter === 'true',
+      deleteExtraAttributeValues: deleteExtraAttributeValues === 'true',
       pageSize: parsedPageSize,
       classifyService: !!classifyService,
       creatorId,
@@ -225,6 +236,7 @@ async function main(): Promise<void> {
         contents: useContents,
         pageSize: parsedPageSize,
         publishToPrivacyCenter: publishToPrivacyCenter === 'true',
+        deleteExtraAttributeValues: deleteExtraAttributeValues === 'true',
         classifyService: !!classifyService,
         creatorId,
       });

@@ -17,6 +17,7 @@ function sleepPromise(sleepTime: number): Promise<number> {
 }
 
 const KNOWN_ERRORS = [
+  'syntax error',
   'got invalid value',
   'Client error',
   'cannot affect row a second time',

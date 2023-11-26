@@ -28,6 +28,24 @@ export const CREATE_ATTRIBUTE_VALUES = gql`
   }
 `;
 
+export const UPDATE_ATTRIBUTE_VALUES = gql`
+  mutation TranscendCliUpdateAttributeValues(
+    $input: [UpdateAttributeValueInput!]!
+  ) {
+    updateAttributeValues(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const DELETE_ATTRIBUTE_VALUE = gql`
+  mutation TranscendCliDeleteAttributeValue($id: ID!) {
+    deleteAttributeValue(id: $id) {
+      clientMutationId
+    }
+  }
+`;
+
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true

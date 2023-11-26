@@ -548,14 +548,15 @@ The API key needs the following scopes when pushing the various resource types:
 
 #### Arguments
 
-| Argument        | Description                                                                                                 | Type                                                         | Default                  | Required |
-| --------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ | -------- |
-| auth            | The Transcend API key with the scopes necessary for the command.                                            | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
-| file            | Path to the YAML file to push from                                                                          | string - file-path                                           | ./transcend.yml          | false    |
-| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL                                                 | https://api.transcend.io | false    |
-| pageSize        | The page size to use when paginating over the API                                                           | number                                                       | 50                       | false    |
-| variables       | The variables to template into the YAML file when pushing configuration. e.g. domain:acme.com,stage:staging | string                                                       | N/A                      | false    |
-| classifyService | When true, automatically assign the service for a data flow based on the domain that is specified           | boolean                                                      | false                    | false    |
+| Argument                   | Description                                                                                                 | Type                                                         | Default                  | Required |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ | -------- |
+| auth                       | The Transcend API key with the scopes necessary for the command.                                            | string (API key or path to tr-generate-api-keys JSON output) | N/A                      | true     |
+| file                       | Path to the YAML file to push from                                                                          | string - file-path                                           | ./transcend.yml          | false    |
+| transcendUrl               | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                               | string - URL                                                 | https://api.transcend.io | false    |
+| pageSize                   | The page size to use when paginating over the API                                                           | number                                                       | 50                       | false    |
+| variables                  | The variables to template into the YAML file when pushing configuration. e.g. domain:acme.com,stage:staging | string                                                       | N/A                      | false    |
+| classifyService            | When true, automatically assign the service for a data flow based on the domain that is specified           | boolean                                                      | false                    | false    |
+| deleteExtraAttributeValues | When true and syncing attributes, delete any extra attributes instead of just upserting                     | boolean                                                      | false                    | false    |
 
 #### Usage
 
@@ -595,6 +596,13 @@ Apply service classifier to all data flows.
 ```sh
 tr-pull --auth=$TRANSCEND_API_KEY --resources=dataFlows
 tr-push --auth=$TRANSCEND_API_KEY --resources=dataFlows --classifyService=true
+```
+
+Push up attributes, deleting any attributes that are not specified in the transcend.yml file
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=attributes
+tr-push --auth=$TRANSCEND_API_KEY --resources=attributes --deleteExtraAttributeValues=true
 ```
 
 Some things to note about this sync process:

@@ -561,9 +561,10 @@ export async function pullTranscendConfiguration(
         resources: enabledOn,
         name,
         type,
-        values: values.map(({ name, color }) => ({
+        values: values.map(({ name, color, description }) => ({
           name,
           color: color || undefined,
+          description,
         })),
       }),
     );
