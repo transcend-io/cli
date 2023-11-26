@@ -515,7 +515,7 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.0.1
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.2
-    "@transcend-io/privacy-types": ^4.51.0
+    "@transcend-io/privacy-types": ^4.54.1
     "@transcend-io/secret-value": ^1.1.1
     "@transcend-io/type-utils": ^1.1.1
     "@types/bluebird": ^3.5.38
@@ -564,6 +564,7 @@ __metadata:
     lodash: ^4.17.21
     mocha: ^10.1.0
     prettier: ^2.8.7
+    query-string: =7.0.0
     ts-node: 10.9.1
     typescript: ^5.0.4
     undici: ^5.22.1
@@ -634,12 +635,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.51.0":
-  version: 4.51.0
-  resolution: "@transcend-io/privacy-types@npm:4.51.0"
+"@transcend-io/privacy-types@npm:^4.54.1":
+  version: 4.54.1
+  resolution: "@transcend-io/privacy-types@npm:4.54.1"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
-  checksum: a98ae3e216bdc849770a417df1cd49a534e4ae7b78eeac8aac9ef6fa855018fa47aec272caa061bbac1e2ebefc2870346d8be3dabb01c4827c69c9ad6fed9f16
+    fp-ts: ^2.11.4
+    io-ts: ^2.2.16
+  checksum: 0b4038b500e14decaf28c0adc2126010cea56fabc7141a0f18a91869660e920d693ff17b41032bd034c81f0540de17ed4585fe97b2d3e5c55eb6f9519cd4072e
   languageName: node
   linkType: hard
 
@@ -2085,6 +2088,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"decode-uri-component@npm:^0.2.0":
+  version: 0.2.2
+  resolution: "decode-uri-component@npm:0.2.2"
+  checksum: 95476a7d28f267292ce745eac3524a9079058bbb35767b76e3ee87d42e34cd0275d2eb19d9d08c3e167f97556e8a2872747f5e65cbebcac8b0c98d83e285f139
+  languageName: node
+  linkType: hard
+
 "decompress-response@npm:^6.0.0":
   version: 6.0.0
   resolution: "decompress-response@npm:6.0.0"
@@ -2861,6 +2871,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"filter-obj@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "filter-obj@npm:1.1.0"
+  checksum: cf2104a7c45ff48e7f505b78a3991c8f7f30f28bd8106ef582721f321f1c6277f7751aacd5d83026cb079d9d5091082f588d14a72e7c5d720ece79118fa61e10
+  languageName: node
+  linkType: hard
+
 "find-up@npm:5.0.0, find-up@npm:^5.0.0":
   version: 5.0.0
   resolution: "find-up@npm:5.0.0"
@@ -2921,6 +2938,13 @@ __metadata:
   version: 2.11.8
   resolution: "fp-ts@npm:2.11.8"
   checksum: 481b824797ba59f3f5549810e8f6688b27554790d11a470ccdf4fc086a1cb4993ffb9060131b054abccca703f2776993e12f649865143e178e9b7c9e5b295ea7
+  languageName: node
+  linkType: hard
+
+"fp-ts@npm:^2.11.4":
+  version: 2.16.1
+  resolution: "fp-ts@npm:2.16.1"
+  checksum: 94e8bb1d037fdc44414ac93bbabecc3f94fb798d6564e77427ae2ecfa0f77681ec35968598d7b0cbf8274566469c7b42e8727390eb889e1121c199341939c2a3
   languageName: node
   linkType: hard
 
@@ -5039,6 +5063,18 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"query-string@npm:=7.0.0":
+  version: 7.0.0
+  resolution: "query-string@npm:7.0.0"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    filter-obj: ^1.1.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 6e3c4376ff01f49bf2300b36e37291e2d3be8df4fe1839d048dd89d4166b92ecd67525c88ca66b61cbc5612ca29fa4e40002d25a74f59b99f7022045b9e7abd2
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -5534,6 +5570,13 @@ resolve@^1.18.1:
   languageName: node
   linkType: hard
 
+"split-on-first@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "split-on-first@npm:1.1.0"
+  checksum: 16ff85b54ddcf17f9147210a4022529b343edbcbea4ce977c8f30e38408b8d6e0f25f92cd35b86a524d4797f455e29ab89eb8db787f3c10708e0b47ebf528d30
+  languageName: node
+  linkType: hard
+
 "sprintf-js@npm:^1.1.2":
   version: 1.1.2
   resolution: "sprintf-js@npm:1.1.2"
@@ -5554,6 +5597,13 @@ resolve@^1.18.1:
   dependencies:
     minipass: ^3.1.1
   checksum: bc447f5af814fa9713aa201ec2522208ae0f4d8f3bda7a1f445a797c7b929a02720436ff7c478fb5edc4045adb02b1b88d2341b436a80798734e2494f1067b36
+  languageName: node
+  linkType: hard
+
+"strict-uri-encode@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "strict-uri-encode@npm:2.0.0"
+  checksum: eaac4cf978b6fbd480f1092cab8b233c9b949bcabfc9b598dd79a758f7243c28765ef7639c876fa72940dac687181b35486ea01ff7df3e65ce3848c64822c581
   languageName: node
   linkType: hard
 

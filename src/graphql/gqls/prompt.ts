@@ -20,6 +20,9 @@ export const PROMPTS = gql`
         title
         status
         content
+        temperature
+        topP
+        maxTokensToSample
       }
     }
   }
@@ -91,6 +94,9 @@ export const PROMPTS_WITH_VARIABLES = gql`
         title
         content
         status
+        temperature
+        topP
+        maxTokensToSample
       }
       promptPartials {
         id

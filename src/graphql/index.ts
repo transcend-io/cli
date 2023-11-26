@@ -49,3 +49,4 @@ export * from './fetchPromptPartials';
 export * from './fetchPromptGroups';
 export * from './syncPrompts';
 export * from './deployConsentManager';
+export * from './reportPromptRun';

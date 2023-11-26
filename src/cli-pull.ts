@@ -126,6 +126,7 @@ async function main(): Promise<void> {
         debug: isDebug,
         skipDatapoints: shouldSkipDataPoints,
         skipSubDatapoints: shouldSkipSubDataPoints,
+        includeGuessedCategories: includeGuessedCategories === 'true',
         trackerStatuses: parsedTrackerStatuses,
       });
 

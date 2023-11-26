@@ -58,7 +58,7 @@ export const CREATE_ATTRIBUTE = gql`
     $name: String!
     $type: AttributeKeyType!
     $description: String
-    $enabledOn: [AttributeSupportedResourceType]!
+    $enabledOn: [AttributeSupportedResourceType!]!
   ) {
     createAttributeKey(
       input: {
@@ -80,7 +80,7 @@ export const UPDATE_ATTRIBUTE = gql`
   mutation TranscendCliCreateAttribute(
     $attributeKeyId: ID!
     $description: String
-    $enabledOn: [AttributeSupportedResourceType]
+    $enabledOn: [AttributeSupportedResourceType!]
   ) {
     updateAttributeKey(
       input: {
