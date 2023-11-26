@@ -1,19 +1,4 @@
 import { gql } from 'graphql-request';
-import { ATTRIBUTE_KEY_TO_ENABLED_ON } from '../../tmp-attribute-key';
-
-// TODO: https://transcend.height.app/T-23527 - remove these when GraphQL schema is re-designed
-const ENABLED_ON_QUERY_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
-  .map((enabledOn) => `    $${enabledOn}: Boolean`)
-  .join('\n');
-const ENABLED_ON_RESPONSE = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
-  .map((enabledOn) => `        ${enabledOn}`)
-  .join('\n');
-const ENABLED_ON_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
-  .map((enabledOn) => `        ${enabledOn}: $${enabledOn}`)
-  .join('\n');
-const ENABLED_ON_CREATE_INPUT = Object.values(ATTRIBUTE_KEY_TO_ENABLED_ON)
-  .map((enabledOn) => `    $${enabledOn}: Boolean`)
-  .join('\n');
 
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
@@ -25,7 +10,7 @@ export const ATTRIBUTES = gql`
         id
         isCustom
         description
-        ${ENABLED_ON_RESPONSE}
+        enabledOn
         name
         type
       }
@@ -38,6 +23,24 @@ export const CREATE_ATTRIBUTE_VALUES = gql`
     $input: [CreateAttributeValuesInput!]!
   ) {
     createAttributeValues(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const UPDATE_ATTRIBUTE_VALUES = gql`
+  mutation TranscendCliUpdateAttributeValues(
+    $input: [UpdateAttributeValueInput!]!
+  ) {
+    updateAttributeValues(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const DELETE_ATTRIBUTE_VALUE = gql`
+  mutation TranscendCliDeleteAttributeValue($id: ID!) {
+    deleteAttributeValue(id: $id) {
       clientMutationId
     }
   }
@@ -73,14 +76,14 @@ export const CREATE_ATTRIBUTE = gql`
     $name: String!
     $type: AttributeKeyType!
     $description: String
-${ENABLED_ON_CREATE_INPUT}
+    $enabledOn: [AttributeSupportedResourceType!]!
   ) {
     createAttributeKey(
       input: {
         name: $name
         type: $type
         description: $description
-${ENABLED_ON_INPUT}
+        enabledOn: $enabledOn
       }
     ) {
       clientMutationId
@@ -95,13 +98,13 @@ export const UPDATE_ATTRIBUTE = gql`
   mutation TranscendCliCreateAttribute(
     $attributeKeyId: ID!
     $description: String
-${ENABLED_ON_QUERY_INPUT}
+    $enabledOn: [AttributeSupportedResourceType!]
   ) {
     updateAttributeKey(
       input: {
         id: $attributeKeyId
         description: $description
-${ENABLED_ON_INPUT}
+        enabledOn: $enabledOn
       }
     ) {
       clientMutationId

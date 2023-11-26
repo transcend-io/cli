@@ -3,7 +3,10 @@ import { ATTRIBUTES, ATTRIBUTE_VALUES } from './gqls';
 
 import { logger } from '../logger';
 import colors from 'colors';
-import { AttributeKeyType } from '@transcend-io/privacy-types';
+import {
+  AttributeKeyType,
+  AttributeSupportedResourceType,
+} from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface AttributeValue {
@@ -30,23 +33,8 @@ export interface Attribute {
   type: AttributeKeyType;
   /** Values */
   values: AttributeValue[];
-  // TODO: https://transcend.height.app/T-23527 - re-design GraphQL schema to remove the need for this
-  /** Enabled on data silos */
-  enabledOnDataSilos: boolean;
-  /** Enabled on data requests */
-  enabledOnRequests: boolean;
-  /** Enabled on sub datapoints */
-  enabledOnSubDataPoints: boolean;
-  /** Enabled on airgap cookies */
-  enabledOnAirgapCookies: boolean;
-  /** Enabled on data flows */
-  enabledOnAirgapDataFlows: boolean;
-  /** Enabled on business entities */
-  enabledOnBusinessEntities: boolean;
-  /** Enabled on data sub categories */
-  enabledOnDataSubCategories: boolean;
-  /** Enabled on processing purposes */
-  enabledOnProcessingPurposeSubCategories: boolean;
+  /** The different fields that the attribute is enabled on  */
+  enabledOn: AttributeSupportedResourceType[];
 }
 
 const PAGE_SIZE = 100;

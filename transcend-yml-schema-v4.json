@@ -5624,6 +5624,9 @@
                     {
                       "type": "object",
                       "properties": {
+                        "description": {
+                          "type": "string"
+                        },
                         "color": {
                           "type": "string"
                         }
