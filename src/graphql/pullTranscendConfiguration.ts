@@ -8,7 +8,6 @@ import {
   IdentifierInput,
   BusinessEntityInput,
   EnricherInput,
-  PromptTemplateInput,
   PromptGroupInput,
   DataFlowInput,
   PromptPartialInput,
@@ -47,7 +46,6 @@ import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
 import { fetchAllActions } from './fetchAllActions';
 import { fetchAllIdentifiers } from './fetchIdentifiers';
 import { fetchAllPrompts } from './fetchPrompts';
-import { fetchAllPromptTemplates } from './fetchPromptTemplates';
 import { fetchAllPromptPartials } from './fetchPromptPartials';
 import { fetchAllPromptGroups } from './fetchPromptGroups';
 import { fetchAllCookies } from './fetchAllCookies';
@@ -133,7 +131,6 @@ export async function pullTranscendConfiguration(
     consentManager,
     consentManagerExperiences,
     prompts,
-    promptTemplates,
     promptPartials,
     promptGroups,
   ] = await Promise.all([
@@ -223,10 +220,6 @@ export async function pullTranscendConfiguration(
     // Fetch prompts
     resources.includes(TranscendPullResource.Prompts)
       ? fetchAllPrompts(client)
-      : [],
-    // Fetch promptTemplates
-    resources.includes(TranscendPullResource.PromptTemplates)
-      ? fetchAllPromptTemplates(client)
       : [],
     // Fetch promptPartials
     resources.includes(TranscendPullResource.PromptPartials)
@@ -341,16 +334,6 @@ export async function pullTranscendConfiguration(
   if (prompts.length > 0) {
     result.prompts = prompts.map(
       ({ title, content }): PromptInput => ({
-        title,
-        content,
-      }),
-    );
-  }
-
-  // Save promptTemplates
-  if (promptTemplates.length > 0) {
-    result['prompt-templates'] = promptTemplates.map(
-      ({ title, content }): PromptTemplateInput => ({
         title,
         content,
       }),

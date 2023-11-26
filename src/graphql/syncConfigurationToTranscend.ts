@@ -30,7 +30,6 @@ import { syncAction } from './syncAction';
 import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
 import { syncPromptPartials } from './syncPromptPartials';
-import { syncPromptTemplates } from './syncPromptTemplates';
 import { syncPromptGroups } from './syncPromptGroups';
 
 const CONCURRENCY = 10;
@@ -85,7 +84,6 @@ export async function syncConfigurationToTranscend(
     'data-silos': dataSilos,
     'data-flows': dataFlows,
     prompts,
-    'prompt-templates': promptTemplates,
     'prompt-groups': promptGroups,
     'prompt-partials': promptPartials,
   } = input;
@@ -129,10 +127,6 @@ export async function syncConfigurationToTranscend(
   }
   if (promptPartials) {
     const promptsSuccess = await syncPromptPartials(client, promptPartials);
-    encounteredError = encounteredError || !promptsSuccess;
-  }
-  if (promptTemplates) {
-    const promptsSuccess = await syncPromptTemplates(client, promptTemplates);
     encounteredError = encounteredError || !promptsSuccess;
   }
   if (promptGroups) {
