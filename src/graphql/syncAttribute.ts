@@ -78,7 +78,7 @@ export async function syncAttribute(
   const { existingValues = [], newValues = [] } = groupBy(
     attribute.values || [],
     (field) =>
-      existingAttributeMap[field.name] ? 'existingValues' : 'newValue',
+      existingAttributeMap[field.name] ? 'existingValues' : 'newValues',
   );
   const removedValues = difference(
     (existingAttribute?.values || []).map(({ name }) => name),
