@@ -304,21 +304,6 @@ export const PromptInput = t.type({
 export type PromptInput = t.TypeOf<typeof PromptInput>;
 
 /**
- * Prompt template definition inputs
- */
-export const PromptTemplateInput = t.type({
-  /** The title of the prompt template. */
-  title: t.string,
-  /** The content of the prompt template. */
-  content: t.string,
-});
-
-/**
- * Type override
- */
-export type PromptTemplateInput = t.TypeOf<typeof PromptTemplateInput>;
-
-/**
  * Prompt partial definition inputs
  */
 export const PromptPartialInput = t.type({
@@ -968,10 +953,6 @@ export const TranscendInput = t.partial({
    * Prompt definitions
    */
   prompts: t.array(PromptInput),
-  /**
-   * Prompt template definitions
-   */
-  'prompt-templates': t.array(PromptTemplateInput),
   /**
    * Prompt partial definitions
    */

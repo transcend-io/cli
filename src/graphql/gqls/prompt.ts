@@ -33,23 +33,6 @@ export const PROMPTS = gql`
 //  useMaster: false
 //  TODO: https://transcend.height.app/T-27909 - order by createdAt
 //  orderBy: [{ field: title, direction: ASC }]
-export const PROMPT_TEMPLATES = gql`
-  query TranscendCliPromptTemplates($first: Int!, $offset: Int!) {
-    promptTemplates(first: $first, offset: $offset) {
-      nodes {
-        id
-        title
-        content
-      }
-    }
-  }
-`;
-
-//  TODO: https://transcend.height.app/T-27909 - enable optimizations
-//  isExportCsv: true
-//  useMaster: false
-//  TODO: https://transcend.height.app/T-27909 - order by createdAt
-//  orderBy: [{ field: title, direction: ASC }]
 export const PROMPT_PARTIALS = gql`
   query TranscendCliPromptPartials($first: Int!, $offset: Int!) {
     promptPartials(first: $first, offset: $offset) {
@@ -128,29 +111,6 @@ export const CREATE_PROMPT = gql`
     createPrompt(input: $input) {
       clientMutationId
       prompt {
-        id
-      }
-    }
-  }
-`;
-
-export const UPDATE_PROMPT_TEMPLATES = gql`
-  mutation TranscendCliUpdatePromptTemplates(
-    $input: UpdatePromptTemplatesInput!
-  ) {
-    updatePromptTemplates(input: $input) {
-      clientMutationId
-    }
-  }
-`;
-
-export const CREATE_PROMPT_TEMPLATE = gql`
-  mutation TranscendCliCreatePromptTemplate(
-    $input: CreatePromptTemplateInput!
-  ) {
-    createPromptTemplate(input: $input) {
-      clientMutationId
-      promptTemplate {
         id
       }
     }

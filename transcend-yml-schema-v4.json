@@ -5603,8 +5603,7 @@
                     "assessmentTemplate",
                     "prompt",
                     "promptGroup",
-                    "promptRun",
-                    "promptTemplate"
+                    "promptRun"
                   ]
                 }
               },
@@ -34359,21 +34358,6 @@
       }
     },
     "prompts": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["title", "content"],
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "prompt-templates": {
       "type": "array",
       "items": {
         "type": "object",
