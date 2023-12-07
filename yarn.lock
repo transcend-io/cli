@@ -514,10 +514,10 @@ __metadata:
     "@transcend-io/airgap.js-types": ^10.4.4
     "@transcend-io/handlebars-utils": ^1.0.1
     "@transcend-io/internationalization": ^1.6.0
-    "@transcend-io/persisted-state": ^1.0.2
-    "@transcend-io/privacy-types": ^4.59.0
+    "@transcend-io/persisted-state": ^1.0.4
+    "@transcend-io/privacy-types": ^4.59.1
     "@transcend-io/secret-value": ^1.1.1
-    "@transcend-io/type-utils": ^1.1.1
+    "@transcend-io/type-utils": ^1.2.2
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
     "@types/cli-progress": ^3.11.0
@@ -622,27 +622,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/persisted-state@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@transcend-io/persisted-state@npm:1.0.2"
+"@transcend-io/persisted-state@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@transcend-io/persisted-state@npm:1.0.4"
   dependencies:
-    "@transcend-io/type-utils": ^1.0.5
-    "@types/node": ^18.11.0
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
+    "@transcend-io/type-utils": ^1.2.2
+    fp-ts: ^2.16.1
+    io-ts: ^2.2.21
     mkdirp: ^1.0.4
-  checksum: 4390fdd5859b2307adc234631d562e2479a2d53c60da73b6a9737c98bd3d5babd999e1a9686a6562c487f5ba96371ec329b624ce62baa38cdc5c6412ae752fb5
+  checksum: d92088f1b860c10c9a5d4c8051aeb95178d9d1371b45c72aec0ebf065535bac953f4e755e49f4bcd7d78c96826c1193cd8d8a0075e7a6244a3a0bdb90e03b147
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.59.0":
-  version: 4.59.0
-  resolution: "@transcend-io/privacy-types@npm:4.59.0"
+"@transcend-io/privacy-types@npm:^4.59.1":
+  version: 4.59.1
+  resolution: "@transcend-io/privacy-types@npm:4.59.1"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 9193dd075349c57766468519ef1a23bc9329b3e95efcb53e53feaa3a4ca182b6d75fd56a558d93d0ae1dbf0d9a000ab3244e18c529654b2bbf28b611e8eaeb7c
+  checksum: b0065ba3d98f33c0ce45c11fc3b4655c871fcb7ea5a43f640ba8866c671e9567a598f64b6dbe91a5fc9c1f37476f3c1266d8f3f77ab2adea08de388d88fbdf5f
   languageName: node
   linkType: hard
 
@@ -674,6 +673,16 @@ __metadata:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
   checksum: 259cc508230cde93ade630ffa2bf10e95070cc81af56a52d0e0b955115d17cc7dc2ee521bc5da825e856d3f601fdd2683cb052e7f4ce87fc2ca2cf3d9803e07a
+  languageName: node
+  linkType: hard
+
+"@transcend-io/type-utils@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@transcend-io/type-utils@npm:1.2.2"
+  dependencies:
+    fp-ts: ^2.16.1
+    io-ts: ^2.2.21
+  checksum: c2e21d432eb7626907e63d1cb00af6bb4d336dc5a1c65229c33a93de37b72622bdde4d58eb3d607d7929eaed123f9a00e37c2673c48ca972c13dcf1f9982f9be
   languageName: node
   linkType: hard
 
@@ -877,13 +886,6 @@ __metadata:
   version: 14.18.34
   resolution: "@types/node@npm:14.18.34"
   checksum: 25ac3b456a0b7b82c76b37276ec86845849e8276fc81d1470a87227c105c619e299aa7165b6148aa11a4ea156b1452f6d3327935f3e7dc0067ff54dde0e3d4e0
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^18.11.0":
-  version: 18.11.10
-  resolution: "@types/node@npm:18.11.10"
-  checksum: 0f60cb090b2ee91fcd3dc4311bc1ed7889b92f14644c0069f100776f86474c12eebbcc6c75bc0d7d96b975a103b4d5d6b3c22b4e88bea6e7f4e2b1bb0daf5ea8
   languageName: node
   linkType: hard
 
