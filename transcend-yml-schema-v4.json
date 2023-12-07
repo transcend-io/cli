@@ -33565,10 +33565,12 @@
                       "AcceptOrRejectAdvertising",
                       "NoticeAndDoNotSell",
                       "DoNotSellExplainer",
+                      "CompleteOptionsToggles",
                       "PrivacyPolicyNotice",
                       "CompleteOptions",
                       "CompleteOptionsInverted",
-                      "Hidden"
+                      "Hidden",
+                      "TCF_EU"
                     ]
                   },
                   "purposes": {
