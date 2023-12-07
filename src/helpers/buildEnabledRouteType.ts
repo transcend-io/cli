@@ -1,5 +1,7 @@
 import * as t from 'io-ts';
-import { EnabledRouteC, Policy } from '../codecs';
+import { EnabledRouteC } from '../codecs';
+import { valuesOf } from '@transcend-io/type-utils';
+import { PathfinderPolicyName } from '../enums';
 
 /**
  * Builds a custom io-ts type that represents a route allowed by the proxy
@@ -15,5 +17,5 @@ export const buildEnabledRouteType = <T extends t.Mixed>({
 }): EnabledRouteC<T> =>
   t.type({
     routeName: TRouteName,
-    enabledPolicies: t.array(Policy),
+    enabledPolicies: t.array(valuesOf(PathfinderPolicyName)),
   });
