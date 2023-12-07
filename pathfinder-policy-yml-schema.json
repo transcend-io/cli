@@ -19,28 +19,22 @@
                 "required": ["routeName", "enabledPolicies"],
                 "properties": {
                   "routeName": {
-                    "anyOf": [
-                      {
-                        "const": "/v1/chat/completions"
-                      },
-                      {
-                        "const": "/v1/embeddings"
-                      },
-                      {
-                        "const": "/v1/completions"
-                      }
+                    "type": "string",
+                    "enum": [
+                      "/v1/chat/completions",
+                      "/v1/embeddings",
+                      "/v1/completions"
                     ]
                   },
                   "enabledPolicies": {
                     "type": "array",
                     "items": {
-                      "anyOf": [
-                        {
-                          "const": "redactEmail"
-                        },
-                        {
-                          "const": "log"
-                        }
+                      "type": "string",
+                      "enum": [
+                        "redactEmail",
+                        "log",
+                        "logToTranscend",
+                        "applyTranscendPolicies"
                       ]
                     }
                   }
