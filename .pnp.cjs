@@ -66,7 +66,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsdoc", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:41.1.1"],\
             ["fast-csv", "npm:4.3.6"],\
             ["fast-glob", "npm:3.2.12"],\
-            ["fp-ts", "npm:2.11.8"],\
+            ["fp-ts", "npm:2.16.1"],\
             ["fuzzysearch", "npm:1.0.3"],\
             ["global-agent", "npm:3.0.0"],\
             ["got", "npm:11.8.5"],\
@@ -74,7 +74,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
-            ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
+            ["io-ts", "virtual:a876d12a662a2681f138f0a68799145c21dda1f8e0f76ec1148e48a9153a3620cd89a24dd815d1009d40bea273e090a007f51ef12fa48329b3285b1023d75802#npm:2.2.21"],\
             ["js-yaml", "npm:4.1.0"],\
             ["json2csv", "npm:6.0.0-alpha.2"],\
             ["jsonwebtoken", "npm:9.0.2"],\
@@ -712,7 +712,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsdoc", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:41.1.1"],\
             ["fast-csv", "npm:4.3.6"],\
             ["fast-glob", "npm:3.2.12"],\
-            ["fp-ts", "npm:2.11.8"],\
+            ["fp-ts", "npm:2.16.1"],\
             ["fuzzysearch", "npm:1.0.3"],\
             ["global-agent", "npm:3.0.0"],\
             ["got", "npm:11.8.5"],\
@@ -720,7 +720,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.0.0"],\
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
-            ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
+            ["io-ts", "virtual:a876d12a662a2681f138f0a68799145c21dda1f8e0f76ec1148e48a9153a3620cd89a24dd815d1009d40bea273e090a007f51ef12fa48329b3285b1023d75802#npm:2.2.21"],\
             ["js-yaml", "npm:4.1.0"],\
             ["json2csv", "npm:6.0.0-alpha.2"],\
             ["jsonwebtoken", "npm:9.0.2"],\
