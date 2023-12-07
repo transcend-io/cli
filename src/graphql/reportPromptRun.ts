@@ -29,6 +29,10 @@ export interface PathfinderPromptRunMetadata {
   applicationId?: string;
   /** Name of the application calling pathfinder  */
   applicationName?: string;
+  /** Core identifier of the application user being reported on  */
+  applicationUserCoreIdentifier?: string;
+  /** Name of the application user being reported on  */
+  applicationUserName?: string;
 }
 
 export interface ReportPromptRunInput {
@@ -81,6 +85,10 @@ export interface ReportPromptRunInput {
   pathfinderId?: string;
   /** Name of the pathfinder applying policies  */
   pathfinderName?: string;
+  /** Core identifier of the application user being reported on  */
+  applicationUserCoreIdentifier?: string;
+  /** Name of the application user being reported on  */
+  applicationUserName?: string;
 }
 
 /**
