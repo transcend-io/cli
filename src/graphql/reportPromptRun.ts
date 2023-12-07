@@ -8,6 +8,25 @@ import {
   LargeLanguageModelClient,
 } from '@transcend-io/privacy-types';
 
+/**
+ * Interface of metadata that can be passed for logging purposes
+ * via the Transcend Pathfinder
+ */
+export interface PathfinderPromptRunMetadata {
+  /** Unique name for the current prompt run */
+  promptRunName?: string;
+  /** ID of the Transcend prompt being reported */
+  promptId?: string;
+  /** Title of the prompt being reported on */
+  promptTitle?: string;
+  /** The ID of the prompt group being reported */
+  promptGroupId?: string;
+  /** The title of the prompt group being reported */
+  promptGroupTitle?: string;
+  /** Employee email that is executing the request */
+  runByEmployeeEmail?: string;
+}
+
 export interface ReportPromptRunInput {
   /** Name of run */
   name: string;

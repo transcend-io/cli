@@ -31,8 +31,6 @@ export interface AddMessagesToPromptRunInput {
   error?: string;
   /** The status of the run */
   status?: QueueStatus;
-  /** Employee email that is executing the request */
-  runByEmployeeEmail?: string;
   /** Duration of time that it took to execute the prompt */
   duration?: number;
 }
