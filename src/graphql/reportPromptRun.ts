@@ -25,6 +25,10 @@ export interface PathfinderPromptRunMetadata {
   promptGroupTitle?: string;
   /** Employee email that is executing the request */
   runByEmployeeEmail?: string;
+  /** ID of the application calling pathfinder  */
+  applicationId?: string;
+  /** Name of the application calling pathfinder  */
+  applicationName?: string;
 }
 
 export interface ReportPromptRunInput {
@@ -69,6 +73,14 @@ export interface ReportPromptRunInput {
   largeLanguageModelName?: string;
   /** The name of the large language model client reported on */
   largeLanguageModelClient?: LargeLanguageModelClient;
+  /** ID of the application calling pathfinder  */
+  applicationId?: string;
+  /** Name of the application calling pathfinder  */
+  applicationName?: string;
+  /** ID of the pathfinder applying policies  */
+  pathfinderId?: string;
+  /** Name of the pathfinder applying policies  */
+  pathfinderName?: string;
 }
 
 /**
