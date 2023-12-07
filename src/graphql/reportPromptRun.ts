@@ -5,6 +5,7 @@ import {
   QueueStatus,
   ChatCompletionRole,
   PromptRunProductArea,
+  LargeLanguageModelClient,
 } from '@transcend-io/privacy-types';
 
 export interface ReportPromptRunInput {
@@ -22,7 +23,9 @@ export interface ReportPromptRunInput {
     template?: string;
   }[];
   /** ID of the Transcend prompt being reported */
-  promptId: string;
+  promptId?: string;
+  /** Title of the prompt being reported on */
+  promptTitle?: string;
   /** Error message (if one exists) */
   error?: string;
   /** The status of the run */
@@ -37,10 +40,16 @@ export interface ReportPromptRunInput {
   topP?: number;
   /** Max tokens ot sample parameter used when running prompt */
   maxTokensToSample?: number;
-  /** The prompt group being reported */
+  /** The ID of the prompt group being reported */
   promptGroupId?: string;
+  /** The title of the prompt group being reported */
+  promptGroupTitle?: string;
   /** The LLM Id being reported on */
   largeLanguageModelId?: string;
+  /** The name of the large language model being reported on */
+  largeLanguageModelName?: string;
+  /** The name of the large language model client reported on */
+  largeLanguageModelClient?: LargeLanguageModelClient;
 }
 
 /**
