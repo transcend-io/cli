@@ -32,7 +32,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/handlebars-utils", "npm:1.0.1"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
-            ["@transcend-io/privacy-types", "npm:4.56.0"],\
+            ["@transcend-io/privacy-types", "npm:4.59.0"],\
             ["@transcend-io/secret-value", "npm:1.1.1"],\
             ["@transcend-io/type-utils", "npm:1.1.1"],\
             ["@types/bluebird", "npm:3.5.38"],\
@@ -678,7 +678,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/handlebars-utils", "npm:1.0.1"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.2"],\
-            ["@transcend-io/privacy-types", "npm:4.56.0"],\
+            ["@transcend-io/privacy-types", "npm:4.59.0"],\
             ["@transcend-io/secret-value", "npm:1.1.1"],\
             ["@transcend-io/type-utils", "npm:1.1.1"],\
             ["@types/bluebird", "npm:3.5.38"],\
@@ -774,13 +774,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@transcend-io/privacy-types", [\
-        ["npm:4.56.0", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.56.0-21761ecb4d-f9494c20aa.zip/node_modules/@transcend-io/privacy-types/",\
+        ["npm:4.59.0", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.59.0-a876d12a66-9193dd0753.zip/node_modules/@transcend-io/privacy-types/",\
           "packageDependencies": [\
-            ["@transcend-io/privacy-types", "npm:4.56.0"],\
+            ["@transcend-io/privacy-types", "npm:4.59.0"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["fp-ts", "npm:2.16.1"],\
-            ["io-ts", "virtual:21761ecb4d395e64e55668a9d6d2e81c63fc27121cc78e6416bdb81018673549cb4628c15741e9561a79fad6a87ea04dfc61241a6cf93605fbcb64f9ef429bdb#npm:2.2.16"]\
+            ["io-ts", "virtual:a876d12a662a2681f138f0a68799145c21dda1f8e0f76ec1148e48a9153a3620cd89a24dd815d1009d40bea273e090a007f51ef12fa48329b3285b1023d75802#npm:2.2.21"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4370,18 +4370,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:21761ecb4d395e64e55668a9d6d2e81c63fc27121cc78e6416bdb81018673549cb4628c15741e9561a79fad6a87ea04dfc61241a6cf93605fbcb64f9ef429bdb#npm:2.2.16", {\
-          "packageLocation": "./.yarn/__virtual__/io-ts-virtual-7420370343/0/cache/io-ts-npm-2.2.16-b76df10271-1b5855682e.zip/node_modules/io-ts/",\
+        ["npm:2.2.21", {\
+          "packageLocation": "./.yarn/cache/io-ts-npm-2.2.21-07353b7269-c6ae5237e3.zip/node_modules/io-ts/",\
           "packageDependencies": [\
-            ["io-ts", "virtual:21761ecb4d395e64e55668a9d6d2e81c63fc27121cc78e6416bdb81018673549cb4628c15741e9561a79fad6a87ea04dfc61241a6cf93605fbcb64f9ef429bdb#npm:2.2.16"],\
-            ["@types/fp-ts", null],\
-            ["fp-ts", "npm:2.16.1"]\
+            ["io-ts", "npm:2.2.21"]\
           ],\
-          "packagePeers": [\
-            "@types/fp-ts",\
-            "fp-ts"\
-          ],\
-          "linkType": "HARD"\
+          "linkType": "SOFT"\
         }],\
         ["virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16", {\
           "packageLocation": "./.yarn/__virtual__/io-ts-virtual-981fdbc7ba/0/cache/io-ts-npm-2.2.16-b76df10271-1b5855682e.zip/node_modules/io-ts/",\
@@ -4389,6 +4383,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["io-ts", "virtual:53d562f9656f9223c4532e7e2b6feefabcf4bfa2c0659bc8d6557c1f9633b17688cca8b3d2effb8a926da81d6d2f2353092c812bd38f1a03f5ff9a9a3e1b3408#npm:2.2.16"],\
             ["@types/fp-ts", null],\
             ["fp-ts", "npm:2.11.8"]\
+          ],\
+          "packagePeers": [\
+            "@types/fp-ts",\
+            "fp-ts"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:a876d12a662a2681f138f0a68799145c21dda1f8e0f76ec1148e48a9153a3620cd89a24dd815d1009d40bea273e090a007f51ef12fa48329b3285b1023d75802#npm:2.2.21", {\
+          "packageLocation": "./.yarn/__virtual__/io-ts-virtual-b5a543721d/0/cache/io-ts-npm-2.2.21-07353b7269-c6ae5237e3.zip/node_modules/io-ts/",\
+          "packageDependencies": [\
+            ["io-ts", "virtual:a876d12a662a2681f138f0a68799145c21dda1f8e0f76ec1148e48a9153a3620cd89a24dd815d1009d40bea273e090a007f51ef12fa48329b3285b1023d75802#npm:2.2.21"],\
+            ["@types/fp-ts", null],\
+            ["fp-ts", "npm:2.16.1"]\
           ],\
           "packagePeers": [\
             "@types/fp-ts",\
