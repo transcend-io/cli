@@ -21,6 +21,12 @@ export enum TranscendPullResource {
   Prompts = 'prompts',
   PromptPartials = 'promptPartials',
   PromptGroups = 'promptGroups',
+  Agents = 'agents',
+  AgentFunctions = 'agentFunctions',
+  AgentFiles = 'agentFiles',
+  Vendors = 'vendors',
+  DataCategories = 'dataCategories',
+  ProcessingPurposes = 'processingPurposes',
 }
 
 /**

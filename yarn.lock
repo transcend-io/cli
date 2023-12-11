@@ -515,7 +515,7 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.59.1
+    "@transcend-io/privacy-types": ^4.61.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.2.2
     "@types/bluebird": ^3.5.38
@@ -527,6 +527,7 @@ __metadata:
     "@types/inquirer": ^7.3.1
     "@types/inquirer-autocomplete-prompt": ^3.0.0
     "@types/js-yaml": ^4.0.5
+    "@types/json-schema": ^7.0.15
     "@types/jsonwebtoken": ^9
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.1
@@ -634,14 +635,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.59.1":
-  version: 4.59.1
-  resolution: "@transcend-io/privacy-types@npm:4.59.1"
+"@transcend-io/privacy-types@npm:^4.61.0":
+  version: 4.61.0
+  resolution: "@transcend-io/privacy-types@npm:4.61.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: b0065ba3d98f33c0ce45c11fc3b4655c871fcb7ea5a43f640ba8866c671e9567a598f64b6dbe91a5fc9c1f37476f3c1266d8f3f77ab2adea08de388d88fbdf5f
+  checksum: 652cfea2ff1fc27c987e3552e6bab8bb89a49c177a34caeec066f7cc3bab1c25393c277c2f0e86e597d86ff389c20a33a946d9d1c948dc244155f8d84e423bb5
   languageName: node
   linkType: hard
 
@@ -819,6 +820,13 @@ __metadata:
   version: 4.0.5
   resolution: "@types/js-yaml@npm:4.0.5"
   checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
+  languageName: node
+  linkType: hard
+
+"@types/json-schema@npm:^7.0.15":
+  version: 7.0.15
+  resolution: "@types/json-schema@npm:7.0.15"
+  checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
   languageName: node
   linkType: hard
 

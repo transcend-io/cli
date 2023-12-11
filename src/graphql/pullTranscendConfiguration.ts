@@ -18,6 +18,12 @@ import {
   PromptInput,
   DatapointInput,
   FieldInput,
+  ProcessingPurposeInput,
+  DataCategoryInput,
+  VendorInput,
+  AgentFileInput,
+  AgentFunctionInput,
+  AgentInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -44,6 +50,12 @@ import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
 import { fetchAllActions } from './fetchAllActions';
+import { fetchAllAgents } from './fetchAllAgents';
+import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
+import { fetchAllAgentFiles } from './fetchAllAgentFiles';
+import { fetchAllVendors } from './fetchAllVendors';
+import { fetchAllDataCategories } from './fetchAllDataCategories';
+import { fetchAllProcessingPurposes } from './fetchAllProcessingPurposes';
 import { fetchAllIdentifiers } from './fetchIdentifiers';
 import { fetchAllPrompts } from './fetchPrompts';
 import { fetchAllPromptPartials } from './fetchPromptPartials';
@@ -133,6 +145,12 @@ export async function pullTranscendConfiguration(
     prompts,
     promptPartials,
     promptGroups,
+    agents,
+    agentFunctions,
+    agentFiles,
+    vendors,
+    dataCategories,
+    processingPurposes,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -228,6 +246,30 @@ export async function pullTranscendConfiguration(
     // Fetch promptGroups
     resources.includes(TranscendPullResource.PromptGroups)
       ? fetchAllPromptGroups(client)
+      : [],
+    // Fetch agents
+    resources.includes(TranscendPullResource.Agents)
+      ? fetchAllAgents(client)
+      : [],
+    // Fetch agentFunctions
+    resources.includes(TranscendPullResource.AgentFunctions)
+      ? fetchAllAgentFunctions(client)
+      : [],
+    // Fetch agentFiles
+    resources.includes(TranscendPullResource.AgentFiles)
+      ? fetchAllAgentFiles(client)
+      : [],
+    // Fetch vendors
+    resources.includes(TranscendPullResource.Vendors)
+      ? fetchAllVendors(client)
+      : [],
+    // Fetch dataCategories
+    resources.includes(TranscendPullResource.DataCategories)
+      ? fetchAllDataCategories(client)
+      : [],
+    // Fetch dataCategories
+    resources.includes(TranscendPullResource.ProcessingPurposes)
+      ? fetchAllProcessingPurposes(client)
       : [],
   ]);
 
@@ -466,6 +508,172 @@ export async function pullTranscendConfiguration(
             : undefined,
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
+      }),
+    );
+  }
+
+  // Save agents
+  if (agents.length > 0) {
+    result.agents = agents.map(
+      ({
+        name,
+        description,
+        codeInterpreterEnabled,
+        retrievalEnabled,
+        prompt,
+        largeLanguageModel,
+        teams,
+        owners,
+        agentFunctions,
+        agentFiles,
+      }): AgentInput => ({
+        name,
+        description: description || undefined,
+        codeInterpreterEnabled,
+        retrievalEnabled,
+        prompt: prompt.title,
+        'large-language-model': {
+          name: largeLanguageModel.name,
+          client: largeLanguageModel.client,
+        },
+        teams:
+          teams && teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        owners:
+          owners && owners.length > 0
+            ? owners.map(({ email }) => email)
+            : undefined,
+        'agent-functions':
+          agentFunctions && agentFunctions.length > 0
+            ? agentFunctions.map(({ name }) => name)
+            : undefined,
+        'agent-files':
+          agentFiles && agentFiles.length > 0
+            ? agentFiles.map(({ name }) => name)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save agent functions
+  if (agentFunctions.length > 0) {
+    result['agent-functions'] = agentFunctions.map(
+      ({ name, description, parameters }): AgentFunctionInput => ({
+        name,
+        description,
+        parameters: JSON.stringify(parameters),
+      }),
+    );
+  }
+
+  // Save agent files
+  if (agentFiles.length > 0) {
+    result['agent-files'] = agentFiles.map(
+      ({ name, description, fileId, size, purpose }): AgentFileInput => ({
+        name,
+        description,
+        fileId,
+        size,
+        purpose,
+      }),
+    );
+  }
+
+  // Save vendors
+  if (vendors.length > 0) {
+    result.vendors = vendors.map(
+      ({
+        title,
+        description,
+        dataProcessingAgreementLink,
+        contactName,
+        contactPhone,
+        address,
+        headquarterCountry,
+        headquarterSubDivision,
+        websiteUrl,
+        businessEntity,
+        teams,
+        owners,
+        attributeValues,
+      }): VendorInput => ({
+        title,
+        description: description || undefined,
+        dataProcessingAgreementLink: dataProcessingAgreementLink || undefined,
+        contactName: contactName || undefined,
+        contactPhone: contactPhone || undefined,
+        address: address || undefined,
+        headquarterCountry: headquarterCountry || undefined,
+        headquarterSubDivision: headquarterSubDivision || undefined,
+        websiteUrl: websiteUrl || undefined,
+        businessEntity: businessEntity?.title,
+        teams:
+          teams && teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        owners:
+          owners && owners.length > 0
+            ? owners.map(({ email }) => email)
+            : undefined,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save data categories
+  if (dataCategories.length > 0) {
+    result['data-categories'] = dataCategories.map(
+      ({
+        name,
+        category,
+        description,
+        regex,
+        owners,
+        teams,
+        attributeValues,
+      }): DataCategoryInput => ({
+        name,
+        category,
+        description: description || undefined,
+        regex: regex || undefined,
+        owners:
+          owners && owners.length > 0
+            ? owners.map(({ email }) => email)
+            : undefined,
+        teams:
+          teams && teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save processing purposes
+  if (processingPurposes.length > 0) {
+    result['processing-purposes'] = processingPurposes.map(
+      ({
+        name,
+        purpose,
+        description,
+        owners,
+        teams,
+        attributeValues,
+      }): ProcessingPurposeInput => ({
+        name,
+        purpose,
+        description: description || undefined,
+        owners:
+          owners && owners.length > 0
+            ? owners.map(({ email }) => email)
+            : undefined,
+        teams:
+          teams && teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
       }),
     );
   }

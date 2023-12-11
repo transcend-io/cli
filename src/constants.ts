@@ -49,6 +49,12 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Prompts]: [ScopeName.ManagePrompts],
   [TranscendPullResource.PromptPartials]: [ScopeName.ManagePrompts],
   [TranscendPullResource.PromptGroups]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.Agents]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.AgentFunctions]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.AgentFiles]: [ScopeName.ManagePrompts],
+  [TranscendPullResource.Vendors]: [ScopeName.ManageDataInventory],
+  [TranscendPullResource.DataCategories]: [ScopeName.ManageDataInventory],
+  [TranscendPullResource.ProcessingPurposes]: [ScopeName.ManageDataInventory],
 };
 
 /**
@@ -79,4 +85,10 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Prompts]: [ScopeName.ViewPrompts],
   [TranscendPullResource.PromptPartials]: [ScopeName.ViewPrompts],
   [TranscendPullResource.PromptGroups]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.Agents]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.AgentFunctions]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.AgentFiles]: [ScopeName.ViewPrompts],
+  [TranscendPullResource.Vendors]: [ScopeName.ViewDataInventory],
+  [TranscendPullResource.DataCategories]: [ScopeName.ViewDataInventory],
+  [TranscendPullResource.ProcessingPurposes]: [ScopeName.ViewDataInventory],
 };
