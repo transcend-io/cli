@@ -360,16 +360,14 @@ export class TranscendPromptManager<
   }
 
   /**
-   * Validate the shape of the response from AI
+   * Get a prompt definition by name
    *
    * @param promptName - Prompt to compile
-   * @param params - Runtime parameters
    * @returns Parsed content
    */
-  async compilePrompt<TPromptName extends TPromptNames>(
+  async getPromptDefinition<TPromptName extends TPromptNames>(
     promptName: TPromptName,
-    params: t.TypeOf<TPrompts[TPromptName]['paramCodec']>,
-  ): Promise<string> {
+  ): Promise<TranscendPromptTemplated> {
     // Determine if prompts need to be fetched
     if (
       // never been fetched
@@ -389,11 +387,27 @@ export class TranscendPromptManager<
       throw new Error('Expected this.promptContentMap to be defined');
     }
     const promptTemplate = promptContentMap[promptName];
-    if (!promptContentMap) {
+    if (!promptTemplate) {
       throw new Error(
         `Expected this.promptContentMap[${promptName}] to be defined`,
       );
     }
+    return promptTemplate;
+  }
+
+  /**
+   * Validate the shape of the response from AI
+   *
+   * @param promptName - Prompt to compile
+   * @param params - Runtime parameters
+   * @returns Parsed content
+   */
+  async compilePrompt<TPromptName extends TPromptNames>(
+    promptName: TPromptName,
+    params: t.TypeOf<TPrompts[TPromptName]['paramCodec']>,
+  ): Promise<string> {
+    // Grab the prompt
+    const promptTemplate = await this.getPromptDefinition(promptName);
     const promptInput = this.prompts[promptName];
     if (!promptInput) {
       throw new Error(`Expected this.prompts[${promptName}] to be defined`);
