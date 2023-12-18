@@ -1,7 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
 import { PROMPTS, PROMPTS_WITH_VARIABLES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { AssessmentStatus } from '@transcend-io/privacy-types';
+import {
+  AssessmentStatus,
+  PromptResponseFormat,
+} from '@transcend-io/privacy-types';
 
 export interface Prompt {
   /** ID of prompt */
@@ -88,6 +91,14 @@ export type TranscendPromptTemplated = {
   content: string;
   /** Status of prompt */
   status: AssessmentStatus;
+  /** Temperature */
+  temperature?: number;
+  /** Top P */
+  topP?: number;
+  /** Max tokens to sample */
+  maxTokensToSample?: number;
+  /** Response format */
+  responseFormat?: PromptResponseFormat;
 };
 
 /**

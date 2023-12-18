@@ -103,6 +103,22 @@ export function defineTranscendPrompts<
 }
 
 /**
+ * Helper to get the type of the parameter for a given prompt
+ */
+export type GetPromptParamType<
+  TPromptName extends keyof TPrompts,
+  TPrompts extends { [k in TPromptName]: TranscendPrompt<t.Any, t.Any> },
+> = t.TypeOf<TPrompts[TPromptName]['paramCodec']>;
+
+/**
+ * Helper to get the type of the parameter for a given prompt
+ */
+export type GetPromptResponseType<
+  TPromptName extends keyof TPrompts,
+  TPrompts extends { [k in TPromptName]: TranscendPrompt<t.Any, t.Any> },
+> = t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
+
+/**
  * Input for reporting a prompt run
  */
 export interface ReportPromptRunOptions
