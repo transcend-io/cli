@@ -33544,6 +33544,13 @@
                       }
                     }
                   },
+                  "onConsentExpiry": {
+                    "type": "string",
+                    "enum": ["Prompt", "ResetAll", "ResetOptIns"]
+                  },
+                  "consentExpiry": {
+                    "type": "number"
+                  },
                   "operator": {
                     "type": "string",
                     "enum": ["IN", "NOT_IN"]

@@ -32,6 +32,7 @@ import {
 import {
   InitialViewState,
   BrowserLanguage,
+  OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
 import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
@@ -728,6 +729,10 @@ export const ConsentManageExperienceInput = t.intersection([
         country: valuesOf(IsoCountryCode),
       }),
     ),
+    /** How to handle consent expiry */
+    onConsentExpiry: valuesOf(OnConsentExpiry),
+    /** Consent expiration lever */
+    consentExpiry: t.number,
     /** In vs not in operator */
     operator: valuesOf(RegionsOperator),
     /** Priority of experience */

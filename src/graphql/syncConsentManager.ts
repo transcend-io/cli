@@ -24,7 +24,10 @@ import {
 } from './fetchConsentManagerId';
 import keyBy from 'lodash/keyBy';
 import { map } from 'bluebird';
-import { InitialViewState } from '@transcend-io/airgap.js-types';
+import {
+  InitialViewState,
+  OnConsentExpiry,
+} from '@transcend-io/airgap.js-types';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -82,6 +85,8 @@ export async function syncConsentManagerExperiences(
             name: exp.displayName,
             regions: exp.regions,
             operator: exp.operator,
+            onConsentExpiry: exp.onConsentExpiry,
+            consentExpiry: exp.consentExpiry,
             displayPriority:
               exp.displayPriority !== existingExperience.displayPriority
                 ? exp.displayPriority
@@ -101,6 +106,8 @@ export async function syncConsentManagerExperiences(
             displayName: exp.displayName,
             regions: exp.regions,
             operator: exp.operator,
+            onConsentExpiry: exp.onConsentExpiry || OnConsentExpiry.Prompt,
+            consentExpiry: exp.consentExpiry,
             displayPriority: exp.displayPriority,
             viewState: exp.viewState || InitialViewState.Hidden,
             purposes: purposeIds || [],
