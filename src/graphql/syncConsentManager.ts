@@ -86,6 +86,7 @@ export async function syncConsentManagerExperiences(
             regions: exp.regions,
             operator: exp.operator,
             onConsentExpiry: exp.onConsentExpiry,
+            consentExpiry: exp.consentExpiry,
             displayPriority:
               exp.displayPriority !== existingExperience.displayPriority
                 ? exp.displayPriority
@@ -106,6 +107,7 @@ export async function syncConsentManagerExperiences(
             regions: exp.regions,
             operator: exp.operator,
             onConsentExpiry: exp.onConsentExpiry || OnConsentExpiry.Prompt,
+            consentExpiry: exp.consentExpiry,
             displayPriority: exp.displayPriority,
             viewState: exp.viewState || InitialViewState.Hidden,
             purposes: purposeIds || [],

@@ -29,6 +29,7 @@ export const EXPERIENCES = gql`
         operator
         displayPriority
         onConsentExpiry
+        consentExpiry
         viewState
         purposes {
           name

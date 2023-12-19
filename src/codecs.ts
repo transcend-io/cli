@@ -731,6 +731,8 @@ export const ConsentManageExperienceInput = t.intersection([
     ),
     /** How to handle consent expiry */
     onConsentExpiry: valuesOf(OnConsentExpiry),
+    /** Consent expiration lever */
+    consentExpiry: t.number,
     /** In vs not in operator */
     operator: valuesOf(RegionsOperator),
     /** Priority of experience */

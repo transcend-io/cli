@@ -161,6 +161,8 @@ export interface ConsentExperience {
   viewState: InitialViewState;
   /** Consent expiry setting */
   onConsentExpiry: OnConsentExpiry;
+  /** Consent expiry */
+  consentExpiry: number;
   /** Purposes that can be opted out of in a particular experience */
   purposes: {
     /** Name of purpose */
