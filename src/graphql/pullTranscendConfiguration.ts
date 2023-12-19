@@ -293,6 +293,7 @@ export async function pullTranscendConfiguration(
           countrySubDivision: region.countrySubDivision || undefined,
           country: region.country || undefined,
         })),
+        onConsentExpiry: experience.onConsentExpiry || undefined,
         operator: experience.operator,
         displayPriority: experience.displayPriority,
         viewState: experience.viewState,
