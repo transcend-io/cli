@@ -13,6 +13,7 @@ import {
 import {
   InitialViewState,
   BrowserLanguage,
+  OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
 import {
   FETCH_CONSENT_MANAGER_ID,
@@ -158,6 +159,10 @@ export interface ConsentExperience {
   displayPriority: number;
   /** View state to prompt when auto prompting is enabled */
   viewState: InitialViewState;
+  /** Consent expiry setting */
+  onConsentExpiry: OnConsentExpiry;
+  /** Consent expiry */
+  consentExpiry: number;
   /** Purposes that can be opted out of in a particular experience */
   purposes: {
     /** Name of purpose */
