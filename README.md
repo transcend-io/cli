@@ -17,114 +17,118 @@
     - [Usage](#usage-2)
     - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
-  - [tr-discover-silos](#tr-discover-silos)
+  - [tr-scan-packages](#tr-scan-packages)
     - [Authentication](#authentication-2)
-    - [Usage](#usage-3)
     - [Arguments](#arguments-2)
-  - [tr-request-approve](#tr-request-approve)
+    - [Usage](#usage-3)
+  - [tr-discover-silos](#tr-discover-silos)
     - [Authentication](#authentication-3)
     - [Arguments](#arguments-3)
     - [Usage](#usage-4)
-  - [tr-request-cancel](#tr-request-cancel)
+  - [tr-request-approve](#tr-request-approve)
     - [Authentication](#authentication-4)
     - [Arguments](#arguments-4)
     - [Usage](#usage-5)
-  - [tr-request-mark-silent](#tr-request-mark-silent)
+  - [tr-request-cancel](#tr-request-cancel)
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-mark-silent](#tr-request-mark-silent)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-create-assessment](#tr-create-assessment)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
+  - [tr-create-assessment](#tr-create-assessment)
+    - [Authentication](#authentication-29)
+    - [Arguments](#arguments-29)
+    - [Usage](#usage-30)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -147,6 +151,7 @@ yarn add -D @transcend-io/cli
 # cli commands available within package
 yarn tr-pull --auth=$TRANSCEND_API_KEY
 yarn tr-push --auth=$TRANSCEND_API_KEY
+yarn tr-scan-packages --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY
@@ -184,6 +189,7 @@ npm i -D @transcend-io/cli
 # cli commands available within package
 tr-pull --auth=$TRANSCEND_API_KEY
 tr-push --auth=$TRANSCEND_API_KEY
+tr-scan-packages --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
 tr-request-approve --auth=$TRANSCEND_API_KEY
 tr-request-cancel --auth=$TRANSCEND_API_KEY
@@ -695,6 +701,60 @@ data-silos:
     api-key-title: Webhook Key
 ```
 
+### tr-scan-packages
+
+Transcend can scan your codebase to inventory your code packages and dependencies. Currently we support scanning for discovering packages and dependencies for the following frameworks:
+
+- package.json
+- requirements.txt & setup.py
+- Podfile
+- build.gradle
+- pubspec.yaml
+- Gemfile & .gemspec
+
+The command will scan the folder you point at to look for any of these files. Once found, the build file will be parsed in search of dependencies. Those code packages and dependencies will be uploaded to [Transcend](https://app.transcend.io/code-scanning/code-packages). The only information shared with Transcend includes:
+
+- repository name
+- package names
+- dependency names and versions
+- package descriptions
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Code Scanning
+
+#### Arguments
+
+| Argument   | Description                           | Type     | Default | Required |
+| ---------- | ------------------------------------- | -------- | ------- | -------- |
+| auth       | Transcend API key.                    | string   | N/A     | true     |
+| scanPath   | File path in the project to scan.     | string   | ./      | false    |
+| ignoreDirs | List of directories to ignore in scan | string[] | []      | false    |
+
+#### Usage
+
+Scan the current directory
+
+```sh
+yarn tr-scan-packages --auth=$TRANSCEND_API_KEY
+```
+
+Scan a specific directory
+
+```sh
+yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --scanPath=./examples/
+```
+
+Ignore certain folders
+
+```sh
+yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --ignoreDirs=./test,./build
+```
+
 ### tr-discover-silos
 
 Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data. Currently we support scanning for new data silos in Javascript, Python, Gradle, and CocoaPods projects.
@@ -709,6 +769,15 @@ The API key needs the following scopes:
 
 - Manage Assigned Data Inventory
 - [Data Silo for Scanner]
+
+#### Arguments
+
+| Argument   | Description                                                                                                                                                          | Type   | Default | Required |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- | -------- |
+| scanPath   | File path in the project to scan.                                                                                                                                    | string | N/A     | true     |
+| dataSiloID | The UUID of the corresponding data silo.                                                                                                                             | string | N/A     | true     |
+| auth       | Transcend API key.                                                                                                                                                   | string | N/A     | true     |
+| fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). | string | N/A     | false    |
 
 #### Usage
 
@@ -728,15 +797,6 @@ yarn tr-discover-silos --scanPath=./examples/ --auth=$TRANSCEND_API_KEY ---dataS
 This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
 
 You can include additional arguments as well:
-
-#### Arguments
-
-| Argument   | Description                                                                                                                                                          | Type   | Default | Required |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- | -------- |
-| scanPath   | File path in the project to scan.                                                                                                                                    | string | N/A     | true     |
-| dataSiloID | The UUID of the corresponding data silo.                                                                                                                             | string | N/A     | true     |
-| auth       | Transcend API key.                                                                                                                                                   | string | N/A     | true     |
-| fileGlobs  | You can pass a [glob syntax pattern(s)](https://github.com/mrmlnc/fast-glob) to specify additional file paths to scan in addition to the default (ex: package.json). | string | N/A     | false    |
 
 ### tr-request-approve
 

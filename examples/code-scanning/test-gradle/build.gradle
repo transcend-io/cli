@@ -37,6 +37,9 @@ dependencies {
     // Facebook Ads SDK
     implementation 'com.facebook.android:audience-network-sdk:6.2.0'
 
+
+    implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.28.0'
+
     // Mixpanel for analytics
     implementation 'com.mixpanel.android:mixpanel-android:5.8.7'
 

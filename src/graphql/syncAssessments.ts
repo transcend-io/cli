@@ -5,7 +5,7 @@ import { UPDATE_ASSESSMENT, CREATE_ASSESSMENT } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { map } from 'bluebird';
 import { fetchAllAssessments } from './fetchAssessments';
-import { keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
 import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import { logger } from '../logger';
 

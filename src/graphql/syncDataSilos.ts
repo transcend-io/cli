@@ -37,7 +37,7 @@ import sortBy from 'lodash/sortBy';
 import chunk from 'lodash/chunk';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
-import { keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */

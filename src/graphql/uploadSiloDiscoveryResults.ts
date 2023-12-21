@@ -1,9 +1,9 @@
-import { chunk } from 'lodash';
+import chunk from 'lodash/chunk';
 import { mapSeries } from 'bluebird';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
-import { SiloDiscoveryRawResults } from '../plugins';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { SiloDiscoveryRawResults } from '../code-scanning/findFilesToScan';
 
 const CHUNK_SIZE = 1000;
 
