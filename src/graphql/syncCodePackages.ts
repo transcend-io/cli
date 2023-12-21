@@ -1,4 +1,5 @@
 import chunk from 'lodash/chunk';
+import uniq from 'lodash/uniq';
 import keyBy from 'lodash/keyBy';
 import uniqBy from 'lodash/uniqBy';
 import colors from 'colors';
@@ -205,8 +206,8 @@ export async function syncCodePackages(
           ...codePackage,
           ...(softwareDevelopmentKits
             ? {
-                softwareDevelopmentKitIds: softwareDevelopmentKits.map(
-                  ({ name }) => {
+                softwareDevelopmentKitIds: uniq(
+                  softwareDevelopmentKits.map(({ name }) => {
                     const sdk =
                       softwareDevelopmentKitLookup[
                         `${name}${LOOKUP_SPLIT_KEY}${codePackage.type}`
@@ -217,7 +218,7 @@ export async function syncCodePackages(
                       );
                     }
                     return sdk.id;
-                  },
+                  }),
                 ),
               }
             : {}),
@@ -252,28 +253,31 @@ export async function syncCodePackages(
     try {
       await updateCodePackages(
         client,
-        chunk.map(([{ softwareDevelopmentKits, ...input }, id]) => ({
-          ...input,
-          ...(softwareDevelopmentKits
-            ? {
-                softwareDevelopmentKitIds: softwareDevelopmentKits.map(
-                  ({ name }) => {
-                    const sdk =
-                      softwareDevelopmentKitLookup[
-                        `${name}${LOOKUP_SPLIT_KEY}${input.type}`
-                      ];
-                    if (!sdk) {
-                      throw new Error(
-                        `Failed to find SDK with name: "${name}"`,
-                      );
-                    }
-                    return sdk.id;
-                  },
-                ),
-              }
-            : {}),
-          id,
-        })),
+        chunk.map(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          ([{ softwareDevelopmentKits, repositoryName, ...input }, id]) => ({
+            ...input,
+            ...(softwareDevelopmentKits
+              ? {
+                  softwareDevelopmentKitIds: uniq(
+                    softwareDevelopmentKits.map(({ name }) => {
+                      const sdk =
+                        softwareDevelopmentKitLookup[
+                          `${name}${LOOKUP_SPLIT_KEY}${input.type}`
+                        ];
+                      if (!sdk) {
+                        throw new Error(
+                          `Failed to find SDK with name: "${name}"`,
+                        );
+                      }
+                      return sdk.id;
+                    }),
+                  ),
+                }
+              : {}),
+            id,
+          }),
+        ),
       );
       logger.info(
         colors.green(`Successfully updated "${chunk.length}" code packages!`),

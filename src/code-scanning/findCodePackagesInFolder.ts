@@ -1,4 +1,5 @@
 import fastGlob from 'fast-glob';
+import colors from 'colors';
 import { CodePackageInput } from '../codecs';
 import { getEntries } from '@transcend-io/type-utils';
 import { CODE_SCANNING_CONFIGS } from './constants';
@@ -42,7 +43,9 @@ export async function findCodePackagesInFolder({
           },
         );
         logger.info(
-          `Scanning: ${filesToScan.length} files of type ${codePackageType}`,
+          colors.magenta(
+            `Scanning: ${filesToScan.length} files of type ${codePackageType}`,
+          ),
         );
         const allPackages = filesToScan
           .map((filePath) =>
@@ -53,13 +56,15 @@ export async function findCodePackagesInFolder({
           )
           .flat();
         logger.info(
-          `Found: ${allPackages.length} packages and ${
-            allPackages
-              .map(
-                ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits,
-              )
-              .flat().length
-          } sdks`,
+          colors.green(
+            `Found: ${allPackages.length} packages and ${
+              allPackages
+                .map(
+                  ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits,
+                )
+                .flat().length
+            } sdks`,
+          ),
         );
 
         return allPackages.map(
