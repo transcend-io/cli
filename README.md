@@ -729,11 +729,12 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument   | Description                           | Type     | Default | Required |
-| ---------- | ------------------------------------- | -------- | ------- | -------- |
-| auth       | Transcend API key.                    | string   | N/A     | true     |
-| scanPath   | File path in the project to scan.     | string   | ./      | false    |
-| ignoreDirs | List of directories to ignore in scan | string[] | []      | false    |
+| Argument    | Description                                                   | Type     | Default                                                   | Required |
+| ----------- | ------------------------------------------------------------- | -------- | --------------------------------------------------------- | -------- |
+| auth        | Transcend API key.                                            | string   | N/A                                                       | true     |
+| scanPath    | File path in the project to scan.                             | string   | ./                                                        | false    |
+| ignoreDirs  | List of directories to ignore in scan                         | string[] | []                                                        | false    |
+| packageName | Name of the git repository that the package should be tied to | string   | $(`cd ${scanPath} && git config --get remote.origin.url`) | false    |
 
 #### Usage
 
@@ -753,6 +754,12 @@ Ignore certain folders
 
 ```sh
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --ignoreDirs=./test,./build
+```
+
+Specify the name of the repository
+
+```sh
+yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --repositoryName="transcend-io/test"
 ```
 
 ### tr-discover-silos

@@ -149,6 +149,7 @@ export async function syncSoftwareDevelopmentKits(
 }> {
   let encounteredError = false;
   const sdks: SoftwareDevelopmentKit[] = [];
+  logger.info(colors.magenta('Syncing software development kits...'));
 
   // Index existing software development kits
   const existing = await fetchAllSoftwareDevelopmentKits(client);
