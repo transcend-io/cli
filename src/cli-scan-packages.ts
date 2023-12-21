@@ -6,6 +6,7 @@ import { ADMIN_DASH, DEFAULT_TRANSCEND_API } from './constants';
 import { findCodePackagesInFolder } from './code-scanning';
 import { buildTranscendGraphQLClient, syncCodePackages } from './graphql';
 import { execSync } from 'child_process';
+import { splitCsvToList } from './requests';
 
 const REPO_ERROR =
   'A repository name must be provided. ' +
@@ -21,8 +22,6 @@ const REPO_ERROR =
  * yarn ts-node ./src/cli-scan-packages.ts --auth=$TRANSCEND_API_KEY \
  *   --scanPath=./ \
  *   --ignoreDirs=build_directories_to_ignore
- *
- * Note: the data silo ID has to belong to a data silo that has an active plugin of type SILO_DISCOVERY
  *
  * Standard usage
  * yarn tr-scan-packages --auth=$TRANSCEND_API_KE --scanPath=./
@@ -71,7 +70,7 @@ async function main(): Promise<void> {
   // Scan the codebase to discovery packages
   const results = await findCodePackagesInFolder({
     scanPath,
-    ignoreDirs,
+    ignoreDirs: ignoreDirs ? splitCsvToList(ignoreDirs) : [],
     repositoryName: gitRepositoryName,
   });
 
