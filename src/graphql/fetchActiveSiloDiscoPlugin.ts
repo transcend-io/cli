@@ -1,5 +1,4 @@
 import { GraphQLClient } from 'graphql-request';
-import { isSupportedPlugin, SupportedPlugin } from '../plugins';
 import { logger } from '../logger';
 import { ENABLED_PLUGINS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -8,7 +7,7 @@ export interface Plugin {
   /** Associated data silo */
   dataSilo: {
     /** The type of plugin */
-    type: SupportedPlugin;
+    type: string;
   };
   /** The ID of this plugin */
   id: string;
@@ -25,7 +24,7 @@ export interface PluginResponse {
 }
 
 /**
- * async
+ * Fetch a data silo discovery plugin
  *
  * @param client - GraphQL client
  * @param dataSiloId - The data silo to look up plugins for
@@ -51,11 +50,5 @@ export async function fetchActiveSiloDiscoPlugin(
   }
 
   const plugin = plugins[0];
-  const resolvedPlugin = isSupportedPlugin(plugin.dataSilo.type);
-  if (!resolvedPlugin) {
-    logger.error('This plugin is not supported for offline silo discovery.');
-    process.exit(1);
-  }
-
   return plugin;
 }

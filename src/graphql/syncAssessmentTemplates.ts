@@ -5,7 +5,7 @@ import { GraphQLClient } from 'graphql-request';
 import { UPDATE_ASSESSMENT_TEMPLATE, CREATE_ASSESSMENT_TEMPLATE } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { map } from 'bluebird';
-import { keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
 import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import { logger } from '../logger';
 

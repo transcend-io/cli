@@ -1,0 +1,27 @@
+platform :ios
+
+target 'ExampleBootstrap' do
+  # Refer to the parent folder to grab the podspec locally
+  # this means we can edit it and changes will be made in that folder.
+  pod "ExampleLib", :path => "../"
+
+  # Other dependencies often used in conjunction with marketing and advertising
+  pod 'AppsFlyerFramework' # AppsFlyer for app tracking and attribution
+  pod 'Adjust' # Adjust for attribution and analytics
+  pod 'Flurry-iOS-SDK/FlurrySDK' # Flurry for analytics and ads
+end
+
+target 'ExampleBootstrapTests' do
+  # Expose the ExampleLib to the test target too.
+  pod "ExampleLib", :path => "../"
+
+  # Marketing
+  pod 'Braze-iOS-SDK' # Braze (formerly Appboy) for marketing automation
+  pod 'Branch' # Branch for deep linking and attribution
+
+  # Analytics
+  pod 'Firebase/Analytics' # Firebase for analytics and other Google services
+  pod 'Mixpanel' # Mixpanel for advanced analytics
+  pod 'Amplitude-iOS', '~> 8.0' # Amplitude for event tracking
+
+end
