@@ -1,3 +1,3 @@
 export * from './constants';
-export * from './typeguards';
 export * from './types';
+export * from './findCodePackagesInFolder';

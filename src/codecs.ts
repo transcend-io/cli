@@ -28,6 +28,7 @@ import {
   AttributeSupportedResourceType,
   ConfidenceLabel,
   SubDataPointDataSubCategoryGuessStatus,
+  CodePackageType,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -527,6 +528,114 @@ export const BusinessEntityInput = t.intersection([
 
 /** Type override */
 export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
+
+/**
+ * Software development kit inputs
+ *
+ * @see https://app.transcend.io/code-scanning/sdks
+ */
+export const SoftwareDevelopmentKitInput = t.intersection([
+  t.type({
+    /** Title of software development kit */
+    name: t.string,
+    /** Code package type */
+    codePackageType: valuesOf(CodePackageType),
+  }),
+  t.partial({
+    /** Description of the SDK */
+    description: t.string,
+    /** Github repository */
+    repositoryUrl: t.string,
+    /** Integration name */
+    catalogIntegrationName: t.string,
+    /** Doc links */
+    documentationLinks: t.array(t.string),
+    /** Emails of owners */
+    ownerEmails: t.array(t.string),
+    /** Team names */
+    teamNames: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type SoftwareDevelopmentKitInput = t.TypeOf<
+  typeof SoftwareDevelopmentKitInput
+>;
+
+/**
+ * SDK defined for a code package
+ */
+export const CodePackageSdk = t.intersection([
+  t.type({
+    /** Name of SDK */
+    name: t.string,
+  }),
+  t.partial({
+    /** Version of SDK */
+    version: t.string,
+    /** Indicate if dependency is a dev dependency */
+    isDevDependency: t.boolean,
+  }),
+]);
+
+/** Type override */
+export type CodePackageSdk = t.TypeOf<typeof CodePackageSdk>;
+
+/**
+ * Input to define a code package
+ *
+ * @see https://app.transcend.io/code-scanning/code-packages
+ */
+export const CodePackageInput = t.intersection([
+  t.type({
+    /** The name of the package */
+    name: t.string,
+    /** Type of code package */
+    type: valuesOf(CodePackageType),
+    /** Relative path to code package within the repository */
+    relativePath: t.string,
+    /** Name of repository that the code packages are being uploaded to */
+    repositoryName: t.string,
+  }),
+  t.partial({
+    /** Description of the code package */
+    description: t.string,
+    /** Software development kits in the repository */
+    softwareDevelopmentKits: t.array(CodePackageSdk),
+    /** Names of the teams that manage the code package */
+    teamNames: t.array(t.string),
+    /** Names of the owner emails that manage the code package */
+    ownerEmails: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type CodePackageInput = t.TypeOf<typeof CodePackageInput>;
+
+/**
+ * Input to define a repository
+ *
+ * @see https://app.transcend.io/code-scanning/repositories
+ */
+export const RepositoryInput = t.intersection([
+  t.type({
+    /** The name of the repo */
+    name: t.string,
+    /** URL of repository */
+    url: t.string,
+  }),
+  t.partial({
+    /** Description of the repository */
+    description: t.string,
+    /** Names of the teams that manage the repository */
+    teamNames: t.array(t.string),
+    /** Names of the owner emails that manage the repository */
+    ownerEmails: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type RepositoryInput = t.TypeOf<typeof RepositoryInput>;
 
 /**
  * Input to define a data subject

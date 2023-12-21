@@ -4,16 +4,18 @@ import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
 import { ADMIN_DASH, DEFAULT_TRANSCEND_API } from './constants';
-import { SILO_DISCOVERY_FUNCTIONS } from './plugins';
 import {
   fetchActiveSiloDiscoPlugin,
   buildTranscendGraphQLClient,
   uploadSiloDiscoveryResults,
 } from './graphql';
-import { findFilesToScan } from './plugins/findFilesToScan';
+import { findFilesToScan } from './code-scanning/findFilesToScan';
+import { SILO_DISCOVERY_CONFIGS } from './code-scanning';
 
 /**
  * Scan dependency files for new data silos.
+ *
+ * @deprecated TODO: https://transcend.height.app/T-32325 - use code scanning instead
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
@@ -50,13 +52,23 @@ async function main(): Promise<void> {
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   const plugin = await fetchActiveSiloDiscoPlugin(client, dataSiloId);
-  const config = SILO_DISCOVERY_FUNCTIONS[plugin.dataSilo.type];
-  const results = await findFilesToScan(
+
+  const config = SILO_DISCOVERY_CONFIGS[plugin.dataSilo.type];
+  if (!config) {
+    logger.error(
+      colors.red(
+        `This plugin "${plugin.dataSilo.type}" is not supported for offline silo discovery.`,
+      ),
+    );
+    process.exit(1);
+  }
+
+  const results = await findFilesToScan({
     scanPath,
     fileGlobs,
     ignoreDirs,
     config,
-  );
+  });
 
   await uploadSiloDiscoveryResults(client, plugin.id, results);
 
