@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/transcend-io/cli.git"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "main": "build/index",
   "bin": {
     "tr-build-xdi-sync-endpoint": "./build/cli-build-xdi-sync-endpoint.js",
