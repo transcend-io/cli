@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "short summary"
   spec.description   = "description of gem"
   spec.homepage      = "http://example.com/gem"
-  spec.license       = "MIT"
+  spec.license       = "UNLICENSED"
 
   # Specify which files should be added to the gem when it is released.
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/test-example/test.git"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "dependencies": {
     "dd-trace": "2.45.1",
     "fast-csv": "^4.3.6"

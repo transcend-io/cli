@@ -7,7 +7,7 @@ setup(
     url='http://github.com/username/test_requirements_txt',
     author='Your Name',
     author_email='your.email@example.com',
-    license='MIT',
+    license='UNLICENSED',
     packages=['test_requirements_txt'],
     zip_safe=False
 )
