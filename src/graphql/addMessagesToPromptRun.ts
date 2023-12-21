@@ -14,9 +14,9 @@ export interface AddMessagesToPromptRunInput {
       }
     | {
         /** Don't report by name */
-        name: undefined;
+        name?: undefined;
         /** Report by prompt run ID */
-        id?: string;
+        id: string;
       };
   /** Messages to report on */
   promptRunMessages?: {
