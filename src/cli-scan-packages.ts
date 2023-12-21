@@ -50,7 +50,9 @@ async function main(): Promise<void> {
   let gitRepositoryName = repositoryName;
   if (!gitRepositoryName) {
     try {
-      const name = execSync('git config --get remote.origin.url');
+      const name = execSync(
+        `cd ${scanPath} && git config --get remote.origin.url`,
+      );
       // Trim and parse the URL
       const url = name.toString('utf-8').trim();
       [gitRepositoryName] = (url.split(':').pop() || '').split('.');

@@ -38,18 +38,18 @@ export async function createRepository(
   },
 ): Promise<Repository> {
   const {
-    createRepository: { softwareDevelopmentKit },
+    createRepository: { repository },
   } = await makeGraphQLRequest<{
     /** createRepository mutation */
     createRepository: {
       /** Software development kit */
-      softwareDevelopmentKit: Repository;
+      repository: Repository;
     };
   }>(client, CREATE_REPOSITORY, {
     input,
   });
   logger.info(colors.green(`Successfully created repository "${input.name}"!`));
-  return softwareDevelopmentKit;
+  return repository;
 }
 
 /**
@@ -80,22 +80,22 @@ export async function updateRepositories(
   }[],
 ): Promise<Repository[]> {
   const {
-    updateRepositories: { softwareDevelopmentKits },
+    updateRepositories: { repositories },
   } = await makeGraphQLRequest<{
     /** updateRepositories mutation */
     updateRepositories: {
       /** Software development kit */
-      softwareDevelopmentKits: Repository[];
+      repositories: Repository[];
     };
   }>(client, UPDATE_REPOSITORIES, {
     input: {
-      softwareDevelopmentKits: inputs,
+      repositories: inputs,
     },
   });
   logger.info(
     colors.green(`Successfully updated ${inputs.length} repositories!`),
   );
-  return softwareDevelopmentKits;
+  return repositories;
 }
 
 /**
@@ -172,8 +172,9 @@ export async function syncRepositories(
     try {
       const updatedRepos = await updateRepositories(
         client,
-
-        chunk.map(([input, id]) => ({
+        // TODO: https://transcend.height.app/T-32352
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        chunk.map(([{ url, ...input }, id]) => ({
           ...input,
           id,
         })),
