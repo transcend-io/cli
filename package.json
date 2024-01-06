@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.121.2",
+  "version": "4.122.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -98,6 +98,7 @@
     "@types/inquirer": "^7.3.1",
     "@types/inquirer-autocomplete-prompt": "^3.0.0",
     "@types/js-yaml": "^4.0.5",
+    "@types/json-schema": "^7.0.15",
     "@types/jsonwebtoken": "^9",
     "@types/lodash": "^4.14.186",
     "@types/mocha": "^10.0.1",
