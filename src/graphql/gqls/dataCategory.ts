@@ -1,5 +1,10 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// orderBy: [
+//   { field: createdAt, direction: ASC }
+//   { field: name, direction: ASC }
+// ]
 export const DATA_SUB_CATEGORIES = gql`
   query TranscendCliDataSubCategories($first: Int!, $offset: Int!) {
     dataSubCategories(
@@ -7,10 +12,6 @@ export const DATA_SUB_CATEGORIES = gql`
       offset: $offset
       isExportCsv: true
       useMaster: false
-      orderBy: [
-        { field: createdAt, direction: ASC }
-        { field: name, direction: ASC }
-      ]
     ) {
       nodes {
         id
@@ -36,10 +37,14 @@ export const DATA_SUB_CATEGORIES = gql`
 `;
 
 export const CREATE_DATA_SUB_CATEGORY = gql`
-  mutation TranscendCliCreateDataSubCategory($input: DataSubCategoryInput!) {
+  mutation TranscendCliCreateDataSubCategory(
+    $input: CreateDataInventorySubCategoryInput!
+  ) {
     createDataSubCategory(input: $input) {
       dataSubCategory {
         id
+        name
+        category
       }
     }
   }

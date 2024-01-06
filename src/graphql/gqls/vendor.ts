@@ -45,10 +45,11 @@ export const VENDORS = gql`
 `;
 
 export const CREATE_VENDOR = gql`
-  mutation TranscendCliCreateVendor($input: VendorInput!) {
+  mutation TranscendCliCreateVendor($input: CreateVendorInput!) {
     createVendor(input: $input) {
       vendor {
         id
+        title
       }
     }
   }

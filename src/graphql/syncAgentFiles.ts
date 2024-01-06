@@ -17,13 +17,15 @@ import { fetchAllAgentFiles, AgentFile } from './fetchAllAgentFiles';
 export async function createAgentFile(
   client: GraphQLClient,
   agentFile: AgentFileInput,
-): Promise<AgentFile> {
+): Promise<Pick<AgentFile, 'id' | 'name' | 'fileId'>> {
   const input = {
     name: agentFile.name,
     description: agentFile.description,
     fileId: agentFile.fileId,
     size: agentFile.size,
     purpose: agentFile.purpose,
+    fileUploadedAt: new Date(),
+    agentIds: [],
   };
 
   const { createAgentFile } = await makeGraphQLRequest<{
@@ -49,14 +51,16 @@ export async function updateAgentFiles(
   agentFileIdPairs: [AgentFileInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENT_FILES, {
-    input: agentFileIdPairs.map(([agentFile, id]) => ({
-      id,
-      name: agentFile.name,
-      description: agentFile.description,
-      fileId: agentFile.fileId,
-      size: agentFile.size,
-      purpose: agentFile.purpose,
-    })),
+    input: {
+      agentFiles: agentFileIdPairs.map(([agentFile, id]) => ({
+        id,
+        name: agentFile.name,
+        description: agentFile.description,
+        fileId: agentFile.fileId,
+        size: agentFile.size,
+        purpose: agentFile.purpose,
+      })),
+    },
   });
 }
 
@@ -80,7 +84,9 @@ export async function syncAgentFiles(
   const existingAgentFiles = await fetchAllAgentFiles(client);
 
   // Look up by name
-  const agentFileByName = keyBy(existingAgentFiles, 'name');
+  const agentFileByName: {
+    [k in string]: Pick<AgentFile, 'id' | 'name' | 'fileId'>;
+  } = keyBy(existingAgentFiles, 'name');
 
   // Create new agent files
   const newAgentFiles = inputs.filter((input) => !agentFileByName[input.name]);

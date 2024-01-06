@@ -23,7 +23,7 @@ import {
 export async function createProcessingPurpose(
   client: GraphQLClient,
   processingPurpose: ProcessingPurposeInput,
-): Promise<ProcessingPurposeSubCategory> {
+): Promise<Pick<ProcessingPurposeSubCategory, 'id' | 'name' | 'purpose'>> {
   const input = {
     name: processingPurpose.name,
     purpose: processingPurpose.purpose,
@@ -31,16 +31,16 @@ export async function createProcessingPurpose(
     // TODO: https://transcend.height.app/T-31994 - add attributes, teams, owners
   };
 
-  const { createProcessingPurpose } = await makeGraphQLRequest<{
+  const { createProcessingPurposeSubCategory } = await makeGraphQLRequest<{
     /** Create processing purpose mutation */
-    createProcessingPurpose: {
+    createProcessingPurposeSubCategory: {
       /** Created processing purpose */
-      processingPurpose: ProcessingPurposeSubCategory;
+      processingPurposeSubCategory: ProcessingPurposeSubCategory;
     };
   }>(client, CREATE_PROCESSING_PURPOSE_SUB_CATEGORY, {
     input,
   });
-  return createProcessingPurpose.processingPurpose;
+  return createProcessingPurposeSubCategory.processingPurposeSubCategory;
 }
 
 /**
@@ -54,14 +54,16 @@ export async function updateProcessingPurposes(
   processingPurposeIdPairs: [ProcessingPurposeInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES, {
-    input: processingPurposeIdPairs.map(([processingPurpose, id]) => ({
-      id,
-      name: processingPurpose.name,
-      purpose: processingPurpose.purpose,
-      description: processingPurpose.description,
-      // TODO: https://transcend.height.app/T-31994 - add  teams, owners
-      attributes: processingPurpose.attributes,
-    })),
+    input: {
+      processingPurposeSubCategories: processingPurposeIdPairs.map(
+        ([processingPurpose, id]) => ({
+          id,
+          description: processingPurpose.description,
+          // TODO: https://transcend.height.app/T-31994 - add  teams, owners
+          attributes: processingPurpose.attributes,
+        }),
+      ),
+    },
   });
 }
 
@@ -87,11 +89,16 @@ export async function syncProcessingPurposes(
   const existingProcessingPurposes = await fetchAllProcessingPurposes(client);
 
   // Look up by name
-  const processingPurposeByName = keyBy(existingProcessingPurposes, 'name');
+  const processingPurposeByName: {
+    [k in string]: Pick<ProcessingPurposeSubCategory, 'id' | 'name'>;
+  } = keyBy(
+    existingProcessingPurposes,
+    ({ name, purpose }) => `${name}:${purpose}`,
+  );
 
   // Create new processing purposes
   const newProcessingPurposes = inputs.filter(
-    (input) => !processingPurposeByName[input.name],
+    (input) => !processingPurposeByName[`${input.name}:${input.purpose}`],
   );
 
   // Create new processing purposes
@@ -101,7 +108,9 @@ export async function syncProcessingPurposes(
         client,
         processingPurpose,
       );
-      processingPurposeByName[newProcessingPurpose.name] = newProcessingPurpose;
+      processingPurposeByName[
+        `${newProcessingPurpose.name}:${newProcessingPurpose.purpose}`
+      ] = newProcessingPurpose;
       logger.info(
         colors.green(
           `Successfully synced processing purpose "${processingPurpose.name}"!`,
@@ -124,7 +133,10 @@ export async function syncProcessingPurposes(
     );
     await updateProcessingPurposes(
       client,
-      inputs.map((input) => [input, processingPurposeByName[input.name].id]),
+      inputs.map((input) => [
+        input,
+        processingPurposeByName[`${input.name}:${input.purpose}`].id,
+      ]),
     );
     logger.info(
       colors.green(

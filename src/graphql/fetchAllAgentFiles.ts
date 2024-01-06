@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { AGENT_FUNCTIONS } from './gqls';
+import { AGENT_FILES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { PromptFilePurpose } from '@transcend-io/privacy-types';
 
@@ -44,7 +44,7 @@ export async function fetchAllAgentFiles(
         /** List */
         nodes: AgentFile[];
       };
-    }>(client, AGENT_FUNCTIONS, {
+    }>(client, AGENT_FILES, {
       first: PAGE_SIZE,
       offset,
     });

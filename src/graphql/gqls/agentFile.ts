@@ -26,10 +26,12 @@ export const AGENT_FILES = gql`
 `;
 
 export const CREATE_AGENT_FILE = gql`
-  mutation TranscendCliCreateAgentFile($input: AgentFileInput!) {
+  mutation TranscendCliCreateAgentFile($input: CreateAgentFileInput!) {
     createAgentFile(input: $input) {
       agentFile {
         id
+        name
+        fileId
       }
     }
   }

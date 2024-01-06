@@ -7,22 +7,36 @@ import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllAgents, Agent } from './fetchAllAgents';
+import { Prompt, fetchAllPrompts } from './fetchPrompts';
+import {
+  LargeLanguageModel,
+  fetchAllLargeLanguageModels,
+} from './fetchLargeLanguageModels';
 
 /**
  * Input to create a new agent
  *
  * @param client - GraphQL client
  * @param agent - Input
+ * @param promptByTitle - Prompt lookup
+ * @param largeLanguageModelLookup - Model lookup
  */
 export async function createAgent(
   client: GraphQLClient,
   agent: AgentInput,
-): Promise<Agent> {
+  promptByTitle: { [k in string]: Prompt },
+  largeLanguageModelLookup: { [k in string]: LargeLanguageModel },
+): Promise<Pick<Agent, 'id' | 'name'>> {
   const input = {
     name: agent.name,
     description: agent.description,
     codeInterpreterEnabled: agent.codeInterpreterEnabled,
     retrievalEnabled: agent.retrievalEnabled,
+    promptId: promptByTitle[agent.prompt].id,
+    largeLanguageModelId:
+      largeLanguageModelLookup[
+        `${agent['large-language-model'].name}:${agent['large-language-model'].client}`
+      ].id,
     // TODO: https://transcend.height.app/T-31995 - prompt, largeLanguageModel, agentFunction, agentFile
   };
 
@@ -49,14 +63,16 @@ export async function updateAgents(
   agentIdParis: [AgentInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENTS, {
-    input: agentIdParis.map(([agent, id]) => ({
-      id,
-      name: agent.name,
-      description: agent.description,
-      codeInterpreterEnabled: agent.codeInterpreterEnabled,
-      retrievalEnabled: agent.retrievalEnabled,
-      // TODO: https://transcend.height.app/T-31995 - prompt, largeLanguageModel, agentFunction, agentFile
-    })),
+    input: {
+      agents: agentIdParis.map(([agent, id]) => ({
+        id,
+        name: agent.name,
+        description: agent.description,
+        codeInterpreterEnabled: agent.codeInterpreterEnabled,
+        retrievalEnabled: agent.retrievalEnabled,
+        // TODO: https://transcend.height.app/T-31995 - prompt, largeLanguageModel, agentFunction, agentFile
+      })),
+    },
   });
 }
 
@@ -80,7 +96,19 @@ export async function syncAgents(
   const existingAgents = await fetchAllAgents(client);
 
   // Look up by name
-  const agentByName = keyBy(existingAgents, 'name');
+  const agentByName: {
+    [k in string]: Pick<Agent, 'id' | 'name'>;
+  } = keyBy(existingAgents, 'name');
+
+  // index prompts & models
+  // TODO: https://transcend.height.app/T-31995 - remove this
+  const prompts = await fetchAllPrompts(client);
+  const promptByTitle = keyBy(prompts, 'title');
+  const models = await fetchAllLargeLanguageModels(client);
+  const largeLanguageModelLookup = keyBy(
+    models,
+    ({ name, client }) => `${name}:${client}`,
+  );
 
   // Create new agents
   const newAgents = inputs.filter((input) => !agentByName[input.name]);
@@ -88,7 +116,12 @@ export async function syncAgents(
   // Create new agents
   await mapSeries(newAgents, async (agent) => {
     try {
-      const newAgent = await createAgent(client, agent);
+      const newAgent = await createAgent(
+        client,
+        agent,
+        promptByTitle,
+        largeLanguageModelLookup,
+      );
       agentByName[newAgent.name] = newAgent;
       logger.info(colors.green(`Successfully synced agent "${agent.name}"!`));
     } catch (err) {

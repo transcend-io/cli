@@ -17,7 +17,7 @@ import { fetchAllVendors, Vendor } from './fetchAllVendors';
 export async function createVendor(
   client: GraphQLClient,
   vendor: VendorInput,
-): Promise<Vendor> {
+): Promise<Pick<Vendor, 'id' | 'title'>> {
   const input = {
     title: vendor.title,
     description: vendor.description,
@@ -54,20 +54,22 @@ export async function updateVendors(
   vendorIdParis: [VendorInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_VENDORS, {
-    input: vendorIdParis.map(([vendor, id]) => ({
-      id,
-      title: vendor.title,
-      description: vendor.description,
-      address: vendor.address,
-      headquarterCountry: vendor.headquarterCountry,
-      headquarterSubDivision: vendor.headquarterSubDivision,
-      dataProcessingAgreementLink: vendor.dataProcessingAgreementLink,
-      contactName: vendor.contactName,
-      contactPhone: vendor.contactPhone,
-      websiteUrl: vendor.websiteUrl,
-      // TODO: https://transcend.height.app/T-31994 - add teams, owners
-      attributes: vendor.attributes,
-    })),
+    input: {
+      vendors: vendorIdParis.map(([vendor, id]) => ({
+        id,
+        title: vendor.title,
+        description: vendor.description,
+        address: vendor.address,
+        headquarterCountry: vendor.headquarterCountry,
+        headquarterSubDivision: vendor.headquarterSubDivision,
+        dataProcessingAgreementLink: vendor.dataProcessingAgreementLink,
+        contactName: vendor.contactName,
+        contactPhone: vendor.contactPhone,
+        websiteUrl: vendor.websiteUrl,
+        // TODO: https://transcend.height.app/T-31994 - add teams, owners
+        attributes: vendor.attributes,
+      })),
+    },
   });
 }
 
@@ -91,7 +93,10 @@ export async function syncVendors(
   const existingVendors = await fetchAllVendors(client);
 
   // Look up by title
-  const vendorByTitle = keyBy(existingVendors, 'title');
+  const vendorByTitle: { [k in string]: Pick<Vendor, 'id' | 'title'> } = keyBy(
+    existingVendors,
+    'title',
+  );
 
   // Create new vendors
   const newVendors = inputs.filter((input) => !vendorByTitle[input.title]);

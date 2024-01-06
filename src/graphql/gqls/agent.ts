@@ -5,7 +5,7 @@ import { gql } from 'graphql-request';
 // useMaster: false
 export const AGENTS = gql`
   query TranscendCliAgents($first: Int!, $offset: Int!) {
-    vendors(
+    agents(
       first: $first
       offset: $offset
       orderBy: [
@@ -26,7 +26,7 @@ export const AGENTS = gql`
           name
           client
         }
-        team {
+        teams {
           name
         }
         owners {
@@ -44,10 +44,11 @@ export const AGENTS = gql`
 `;
 
 export const CREATE_AGENT = gql`
-  mutation TranscendCliCreateAgent($input: AgentInput!) {
+  mutation TranscendCliCreateAgent($input: CreateAgentInput!) {
     createAgent(input: $input) {
-      vendor {
+      agent {
         id
+        name
       }
     }
   }

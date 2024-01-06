@@ -24,10 +24,11 @@ export const AGENT_FUNCTIONS = gql`
 `;
 
 export const CREATE_AGENT_FUNCTION = gql`
-  mutation TranscendCliCreateAgentFunction($input: AgentFunctionInput!) {
+  mutation TranscendCliCreateAgentFunction($input: CreateAgentFunctionInput!) {
     createAgentFunction(input: $input) {
       agentFunction {
         id
+        name
       }
     }
   }

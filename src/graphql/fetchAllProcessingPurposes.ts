@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { VENDORS } from './gqls';
+import { PROCESSING_PURPOSE_SUB_CATEGORIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { ProcessingPurpose } from '@transcend-io/privacy-types';
 
@@ -60,7 +60,7 @@ export async function fetchAllProcessingPurposes(
         /** List */
         nodes: ProcessingPurposeSubCategory[];
       };
-    }>(client, VENDORS, {
+    }>(client, PROCESSING_PURPOSE_SUB_CATEGORIES, {
       first: PAGE_SIZE,
       offset,
     });

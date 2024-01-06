@@ -20,7 +20,7 @@ import {
 export async function createDataCategory(
   client: GraphQLClient,
   dataCategory: DataCategoryInput,
-): Promise<DataSubCategory> {
+): Promise<Pick<DataSubCategory, 'id' | 'name' | 'category'>> {
   const input = {
     name: dataCategory.name,
     category: dataCategory.category,
@@ -51,14 +51,14 @@ export async function updateDataCategories(
   dataCategoryIdPairs: [DataCategoryInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_DATA_SUB_CATEGORIES, {
-    input: dataCategoryIdPairs.map(([dataCategory, id]) => ({
-      id,
-      name: dataCategory.name,
-      category: dataCategory.category,
-      description: dataCategory.description,
-      // TODO: https://transcend.height.app/T-31994 - add  teams, owners
-      attributes: dataCategory.attributes,
-    })),
+    input: {
+      dataSubCategories: dataCategoryIdPairs.map(([dataCategory, id]) => ({
+        id,
+        description: dataCategory.description,
+        // TODO: https://transcend.height.app/T-31994 - add  teams, owners
+        attributes: dataCategory.attributes,
+      })),
+    },
   });
 }
 
@@ -82,18 +82,25 @@ export async function syncDataCategories(
   const existingDataCategories = await fetchAllDataCategories(client);
 
   // Look up by name
-  const dataCategoryByName = keyBy(existingDataCategories, 'name');
+  const dataCategoryByName: {
+    [k in string]: Pick<DataSubCategory, 'id' | 'name' | 'category'>;
+  } = keyBy(
+    existingDataCategories,
+    ({ name, category }) => `${name}:${category}`,
+  );
 
   // Create new data categories
   const newDataCategories = inputs.filter(
-    (input) => !dataCategoryByName[input.name],
+    (input) => !dataCategoryByName[`${input.name}:${input.category}`],
   );
 
   // Create new data categories
   await mapSeries(newDataCategories, async (dataCategory) => {
     try {
       const newDataCategory = await createDataCategory(client, dataCategory);
-      dataCategoryByName[newDataCategory.name] = newDataCategory;
+      dataCategoryByName[
+        `${newDataCategory.name}:${newDataCategory.category}`
+      ] = newDataCategory;
       logger.info(
         colors.green(
           `Successfully synced data category "${dataCategory.name}"!`,
@@ -114,7 +121,10 @@ export async function syncDataCategories(
     logger.info(colors.magenta(`Updating "${inputs.length}" data categories!`));
     await updateDataCategories(
       client,
-      inputs.map((input) => [input, dataCategoryByName[input.name].id]),
+      inputs.map((input) => [
+        input,
+        dataCategoryByName[`${input.name}:${input.category}`].id,
+      ]),
     );
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" data categories!`),

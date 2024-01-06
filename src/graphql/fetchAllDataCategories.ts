@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { VENDORS } from './gqls';
+import { DATA_SUB_CATEGORIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { DataCategoryType } from '@transcend-io/privacy-types';
 
@@ -62,7 +62,7 @@ export async function fetchAllDataCategories(
         /** List */
         nodes: DataSubCategory[];
       };
-    }>(client, VENDORS, {
+    }>(client, DATA_SUB_CATEGORIES, {
       first: PAGE_SIZE,
       offset,
     });

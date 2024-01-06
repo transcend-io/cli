@@ -1,5 +1,10 @@
 import { gql } from 'graphql-request';
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// orderBy: [
+//   { field: createdAt, direction: ASC }
+//   { field: name, direction: ASC }
+// ]
 export const PROCESSING_PURPOSE_SUB_CATEGORIES = gql`
   query TranscendCliProcessingPurposeSubCategories(
     $first: Int!
@@ -10,10 +15,6 @@ export const PROCESSING_PURPOSE_SUB_CATEGORIES = gql`
       offset: $offset
       isExportCsv: true
       useMaster: false
-      orderBy: [
-        { field: createdAt, direction: ASC }
-        { field: name, direction: ASC }
-      ]
     ) {
       nodes {
         id
@@ -39,11 +40,13 @@ export const PROCESSING_PURPOSE_SUB_CATEGORIES = gql`
 
 export const CREATE_PROCESSING_PURPOSE_SUB_CATEGORY = gql`
   mutation TranscendCliCreateProcessingPurposeSubCategory(
-    $input: ProcessingPurposeSubCategoryInput!
+    $input: CreateProcessingPurposeCategoryInput!
   ) {
     createProcessingPurposeSubCategory(input: $input) {
       processingPurposeSubCategory {
         id
+        name
+        purpose
       }
     }
   }

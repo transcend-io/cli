@@ -20,11 +20,12 @@ import {
 export async function createAgentFunction(
   client: GraphQLClient,
   agentFunction: AgentFunctionInput,
-): Promise<AgentFunction> {
+): Promise<Pick<AgentFunction, 'id' | 'name'>> {
   const input = {
     name: agentFunction.name,
     description: agentFunction.description,
     parameters: agentFunction.parameters,
+    agentIds: [],
   };
 
   const { createAgentFunction } = await makeGraphQLRequest<{
@@ -50,12 +51,14 @@ export async function updateAgentFunctions(
   agentFunctionIdPairs: [AgentFunctionInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENT_FUNCTIONS, {
-    input: agentFunctionIdPairs.map(([agentFunction, id]) => ({
-      id,
-      name: agentFunction.name,
-      description: agentFunction.description,
-      parameters: agentFunction.parameters,
-    })),
+    input: {
+      agentFunctions: agentFunctionIdPairs.map(([agentFunction, id]) => ({
+        id,
+        name: agentFunction.name,
+        description: agentFunction.description,
+        parameters: agentFunction.parameters,
+      })),
+    },
   });
 }
 
@@ -79,7 +82,9 @@ export async function syncAgentFunctions(
   const existingAgentFunctions = await fetchAllAgentFunctions(client);
 
   // Look up by name
-  const agentFunctionByName = keyBy(existingAgentFunctions, 'name');
+  const agentFunctionByName: {
+    [k in string]: Pick<AgentFunction, 'id' | 'name'>;
+  } = keyBy(existingAgentFunctions, 'name');
 
   // Create new agent functions
   const newAgentFunctions = inputs.filter(
