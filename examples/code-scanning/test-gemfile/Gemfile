@@ -1,0 +1,39 @@
+source 'https://rubygems.org'
+
+gem 'rails', '~> 6.1.4' # or the version of Rails you are using
+
+# Analytics
+gem 'ahoy_matey' # For tracking visits and events
+gem 'rack-tracker' # Middleware for tracking pixels
+
+# Advertising
+gem 'adroll' # For AdRoll integration
+gem 'google-ads-googleads' # For Google Ads API
+gem 'facebookads', require: 'facebook_ads' # For Facebook Ads API
+
+# User tracking for better ad targeting
+gem 'devise' # For user authentication
+gem 'impressionist' # To log impressions
+
+# Background processing for analytics jobs
+gem 'sidekiq' # For background processing
+gem 'sidekiq-cron', '~> 1.2' # To manage periodic jobs
+
+group :development, :test do
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+end
+
+group :development do
+  gem 'listen', '~> 3.3'
+end
+
+group :test do
+  gem 'capybara', '>= 2.15'
+  gem 'selenium-webdriver'
+  gem 'webdrivers'
+end
+
+# Use this gem to debug potential issues with gem versions
+gem 'bundler-audit'
+
+# Add your other application gems here

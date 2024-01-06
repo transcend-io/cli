@@ -2,13 +2,13 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.120.0",
+  "version": "4.122.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
     "url": "https://github.com/transcend-io/cli.git"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "main": "build/index",
   "bin": {
     "tr-build-xdi-sync-endpoint": "./build/cli-build-xdi-sync-endpoint.js",
@@ -35,6 +35,7 @@
     "tr-request-restart": "./build/cli-request-restart.js",
     "tr-request-upload": "./build/cli-request-upload.js",
     "tr-retry-request-data-silos": "./build/cli-retry-request-data-silos.js",
+    "tr-scan-packages": "./build/cli-scan-packages.js",
     "tr-skip-request-data-silos": "./build/cli-skip-request-data-silos.js",
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
     "tr-upload-consent-preferences": "./build/cli-upload-consent-preferences.js",
@@ -57,13 +58,13 @@
     "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
   },
   "dependencies": {
-    "@transcend-io/airgap.js-types": "^10.10.0",
+    "@transcend-io/airgap.js-types": "^10.11.3",
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.61.0",
+    "@transcend-io/privacy-types": "^4.64.0",
     "@transcend-io/secret-value": "^1.2.0",
-    "@transcend-io/type-utils": "^1.2.2",
+    "@transcend-io/type-utils": "^1.3.0",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
     "colors": "^1.4.0",

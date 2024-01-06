@@ -80,6 +80,7 @@ export const PROMPTS_WITH_VARIABLES = gql`
         temperature
         topP
         maxTokensToSample
+        responseFormat
       }
       promptPartials {
         id

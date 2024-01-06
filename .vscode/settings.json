@@ -34,7 +34,7 @@
     "**/.pnp.*": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "cSpell.words": [
     "Airgap",
@@ -58,6 +58,7 @@
     "Parens",
     "pipeable",
     "preact",
+    "pubspec",
     "Requirize",
     "sombra",
     "subdatapoint",
@@ -66,6 +67,7 @@
     "Timeseries",
     "tsbuildinfo",
     "undici",
+    "upserted",
     "Upserting",
     "uspapi",
     "yaml",
