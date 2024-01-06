@@ -44,6 +44,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/json-schema", "npm:7.0.15"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
@@ -690,6 +691,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer", "npm:7.3.3"],\
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/json-schema", "npm:7.0.15"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
@@ -997,6 +999,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/json-schema", [\
+        ["npm:7.0.15", {\
+          "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.15-fd16381786-97ed0cb44d.zip/node_modules/@types/json-schema/",\
+          "packageDependencies": [\
+            ["@types/json-schema", "npm:7.0.15"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:7.0.9", {\
           "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.9-361918cff3-259d0e25f1.zip/node_modules/@types/json-schema/",\
           "packageDependencies": [\

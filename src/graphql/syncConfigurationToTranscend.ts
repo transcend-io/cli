@@ -31,6 +31,12 @@ import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
 import { syncPromptPartials } from './syncPromptPartials';
 import { syncPromptGroups } from './syncPromptGroups';
+import { syncAgents } from './syncAgents';
+import { syncAgentFunctions } from './syncAgentFunctions';
+import { syncAgentFiles } from './syncAgentFiles';
+import { syncVendors } from './syncVendors';
+import { syncDataCategories } from './syncDataCategories';
+import { syncProcessingPurposes } from './syncProcessingPurposes';
 
 const CONCURRENCY = 10;
 
@@ -86,6 +92,12 @@ export async function syncConfigurationToTranscend(
     prompts,
     'prompt-groups': promptGroups,
     'prompt-partials': promptPartials,
+    agents,
+    'agent-functions': agentFunctions,
+    'agent-files': agentFiles,
+    vendors,
+    'data-categories': dataCategories,
+    'processing-purposes': processingPurposes,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -171,6 +183,51 @@ export async function syncConfigurationToTranscend(
       businessEntities,
     );
     encounteredError = encounteredError || !businessEntitySuccess;
+  }
+
+  // Sync vendors
+  if (vendors) {
+    const vendorsSuccess = await syncVendors(client, vendors);
+    encounteredError = encounteredError || !vendorsSuccess;
+  }
+
+  // Sync data categories
+  if (dataCategories) {
+    const dataCategoriesSuccess = await syncDataCategories(
+      client,
+      dataCategories,
+    );
+    encounteredError = encounteredError || !dataCategoriesSuccess;
+  }
+
+  // Sync processing purposes
+  if (processingPurposes) {
+    const processingPurposesSuccess = await syncProcessingPurposes(
+      client,
+      processingPurposes,
+    );
+    encounteredError = encounteredError || !processingPurposesSuccess;
+  }
+
+  // Sync agents
+  if (agents) {
+    const agentsSuccess = await syncAgents(client, agents);
+    encounteredError = encounteredError || !agentsSuccess;
+  }
+
+  // Sync agent functions
+  if (agentFunctions) {
+    const agentFunctionsSuccess = await syncAgentFunctions(
+      client,
+      agentFunctions,
+    );
+    encounteredError = encounteredError || !agentFunctionsSuccess;
+  }
+
+  // Sync agent files
+  if (agentFiles) {
+    const agentFilesSuccess = await syncAgentFiles(client, agentFiles);
+    encounteredError = encounteredError || !agentFilesSuccess;
   }
 
   // Sync cookies

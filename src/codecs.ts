@@ -28,6 +28,8 @@ import {
   AttributeSupportedResourceType,
   ConfidenceLabel,
   SubDataPointDataSubCategoryGuessStatus,
+  LargeLanguageModelClient,
+  PromptFilePurpose,
   CodePackageType,
 } from '@transcend-io/privacy-types';
 import {
@@ -161,7 +163,7 @@ export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 /**
  * The processing purpose for a field
  */
-export const ProcessingPurposeInput = t.type({
+export const ProcessingPurposePreviewInput = t.type({
   /** The parent purpose */
   purpose: valuesOf(ProcessingPurpose),
   /** User-defined name for this processing purpose sub category */
@@ -169,12 +171,14 @@ export const ProcessingPurposeInput = t.type({
 });
 
 /** Type override */
-export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
+export type ProcessingPurposePreviewInput = t.TypeOf<
+  typeof ProcessingPurposePreviewInput
+>;
 
 /**
  * The data category for a field
  */
-export const DataCategoryInput = t.intersection([
+export const DataCategoryPreviewInput = t.intersection([
   t.type({
     /** The parent category */
     category: valuesOf(DataCategoryType),
@@ -186,14 +190,16 @@ export const DataCategoryInput = t.intersection([
 ]);
 
 /** Type override */
-export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
+export type DataCategoryPreviewInput = t.TypeOf<
+  typeof DataCategoryPreviewInput
+>;
 
 /**
  * A guessed data category from the content classifier
  */
 export const DataCategoryGuessInput = t.type({
   /** The parent category */
-  category: DataCategoryInput,
+  category: DataCategoryPreviewInput,
   /** Status of guess */
   status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
   /** Confidence label */
@@ -243,7 +249,7 @@ export const AttributeInput = t.intersection([
 /** Type override */
 export type AttributeInput = t.TypeOf<typeof AttributeInput>;
 
-export const Attributes = t.type({
+export const AttributePreview = t.type({
   /** Attribute key */
   key: t.string,
   /** Attribute values */
@@ -251,7 +257,232 @@ export const Attributes = t.type({
 });
 
 /** Type override */
-export type Attributes = t.TypeOf<typeof Attributes>;
+export type AttributePreview = t.TypeOf<typeof AttributePreview>;
+
+/**
+ * Agent type definition.
+ */
+export const AgentInput = t.intersection([
+  t.type({
+    /** The name of the agent. */
+    name: t.string,
+    /** Whether the agent has code interpreter enabled */
+    codeInterpreterEnabled: t.boolean,
+    /** Whether the agent has retrieval enabled */
+    retrievalEnabled: t.boolean,
+    /** The title of the prompt that the agent is based on */
+    prompt: t.string,
+    /** Large language model powering the agent */
+    'large-language-model': t.type({
+      /** Name of the model */
+      name: t.string,
+      /** Client of the model */
+      client: valuesOf(LargeLanguageModelClient),
+    }),
+  }),
+  t.partial({
+    /** The description of the agent. */
+    description: t.string,
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this agent
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this agent
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * The names of the functions that the agent has access to
+     */
+    'agent-functions': t.array(t.string),
+    /**
+     * The names of the files that the agent has access to for retrieval
+     */
+    'agent-files': t.array(t.string),
+  }),
+]);
+
+/**
+ * Type override
+ */
+export type AgentInput = t.TypeOf<typeof AgentInput>;
+
+/**
+ * AgentFunction type definition.
+ */
+export const AgentFunctionInput = t.type({
+  /** Name of the agentFunction */
+  name: t.string,
+  /** Description of the agentFunction */
+  description: t.string,
+  /** The JSON schema */
+  parameters: t.string,
+});
+
+/**
+ * Type override
+ */
+export type AgentFunctionInput = t.TypeOf<typeof AgentFunctionInput>;
+
+/**
+ * AgentFile type definition.
+ */
+export const AgentFileInput = t.intersection([
+  t.type({
+    /** Name of the agentFile */
+    name: t.string,
+    /** File ID */
+    fileId: t.string,
+    /** File size */
+    size: t.number,
+    /** File purpose */
+    purpose: valuesOf(PromptFilePurpose),
+  }),
+  t.partial({
+    /** Description of the agentFile */
+    description: t.string,
+  }),
+]);
+
+/**
+ * Type override
+ */
+export type AgentFileInput = t.TypeOf<typeof AgentFileInput>;
+
+/**
+ * Vendor type definition.
+ */
+export const VendorInput = t.intersection([
+  t.type({
+    /** Title of vendor */
+    title: t.string,
+  }),
+  t.partial({
+    /** Description of vendor */
+    description: t.string,
+    /** DPA link */
+    dataProcessingAgreementLink: t.string,
+    /** Contract email */
+    contactName: t.string,
+    /** Contract phone */
+    contactPhone: t.string,
+    /** Address */
+    address: t.string,
+    /** Headquarters country */
+    headquarterCountry: valuesOf(IsoCountryCode),
+    /** Headquarters subdivision */
+    headquarterSubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** Website URL */
+    websiteUrl: t.string,
+    /** Business entity */
+    businessEntity: t.string,
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this vendor
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this vendor
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/**
+ * Type override
+ */
+export type VendorInput = t.TypeOf<typeof VendorInput>;
+
+/**
+ * DataCategory type definition.
+ */
+export const DataCategoryInput = t.intersection([
+  t.type({
+    /** Name of data category */
+    name: t.string,
+    /** Type of data category */
+    category: valuesOf(DataCategoryType),
+  }),
+  t.partial({
+    /** Description of data category */
+    description: t.string,
+    /** Regex for data category */
+    regex: t.string,
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data category
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data category.
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/**
+ * Type override
+ */
+export type DataCategoryInput = t.TypeOf<typeof DataCategoryInput>;
+
+/**
+ * ProcessingPurpose type definition.
+ */
+export const ProcessingPurposeInput = t.intersection([
+  t.type({
+    /** Name of processing purpose */
+    name: t.string,
+    /** Type of processing purpose */
+    purpose: valuesOf(ProcessingPurpose),
+  }),
+  t.partial({
+    /** Description of processing purpose */
+    description: t.string,
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this processing purpose
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this processing purpose.
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/**
+ * Type override
+ */
+export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
 
 /**
  * AssessmentTemplate type definition.
@@ -357,13 +588,13 @@ export const FieldInput = t.intersection([
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
-    purposes: t.array(ProcessingPurposeInput),
+    purposes: t.array(ProcessingPurposePreviewInput),
     /**
      * The category of personal data for this datapoint
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
-    categories: t.array(DataCategoryInput),
+    categories: t.array(DataCategoryPreviewInput),
     /**
      * The category of personal data that have been guessed by the classifier this datapoint
      *
@@ -383,7 +614,7 @@ export const FieldInput = t.intersection([
      */
     'erasure-request-redaction-enabled': t.boolean,
     /** Attributes tagged to subdatapoint */
-    attributes: t.array(Attributes),
+    attributes: t.array(AttributePreview),
   }),
 ]);
 
@@ -522,7 +753,7 @@ export const BusinessEntityInput = t.intersection([
     /**
      * Attribute value and its corresponding attribute key
      */
-    attributes: t.array(Attributes),
+    attributes: t.array(AttributePreview),
   }),
 ]);
 
@@ -773,7 +1004,7 @@ export const DataFlowInput = t.intersection([
     /**
      * Attribute value and its corresponding attribute key
      */
-    attributes: t.array(Attributes),
+    attributes: t.array(AttributePreview),
   }),
 ]);
 
@@ -816,7 +1047,7 @@ export const CookieInput = t.intersection([
     /**
      * Attribute value and its corresponding attribute key
      */
-    attributes: t.array(Attributes),
+    attributes: t.array(AttributePreview),
   }),
 ]);
 
@@ -1000,7 +1231,7 @@ export const DataSiloInput = t.intersection([
     /**
      * Attribute value and its corresponding attribute key
      */
-    attributes: t.array(Attributes),
+    attributes: t.array(AttributePreview),
   }),
 ]);
 
@@ -1028,6 +1259,18 @@ export const TranscendInput = t.partial({
    * Business entity definitions
    */
   'business-entities': t.array(BusinessEntityInput),
+  /**
+   * Vendor definitions
+   */
+  vendors: t.array(VendorInput),
+  /**
+   * Data categories definitions
+   */
+  'data-categories': t.array(DataCategoryInput),
+  /**
+   * Vendor definitions
+   */
+  'processing-purposes': t.array(ProcessingPurposeInput),
   /**
    * Data subject definitions
    */
@@ -1076,6 +1319,18 @@ export const TranscendInput = t.partial({
    * Prompt group definitions
    */
   'prompt-groups': t.array(PromptGroupInput),
+  /**
+   * Agent definitions
+   */
+  agents: t.array(AgentInput),
+  /**
+   * Agent function definitions
+   */
+  'agent-functions': t.array(AgentFunctionInput),
+  /**
+   * Agent file definitions
+   */
+  'agent-files': t.array(AgentFileInput),
 });
 
 /** Type override */
