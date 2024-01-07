@@ -16,6 +16,7 @@ export const AGENTS = gql`
       nodes {
         id
         name
+        agentId
         description
         codeInterpreterEnabled
         retrievalEnabled
@@ -49,6 +50,7 @@ export const CREATE_AGENT = gql`
       agent {
         id
         name
+        agentId
       }
     }
   }
