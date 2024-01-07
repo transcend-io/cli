@@ -31,6 +31,8 @@ export interface PathfinderPromptRunMetadata {
   applicationName?: string;
   /** Name of the code package calling pathfinder  */
   codePackageName?: string;
+  /** Name of the repository calling pathfinder  */
+  repositoryName?: string;
   /** Core identifier of the application user being reported on  */
   applicationUserCoreIdentifier?: string;
   /** Name of the application user being reported on  */
@@ -85,6 +87,8 @@ export interface ReportPromptRunInput {
   applicationName?: string;
   /** Name of the code package calling pathfinder  */
   codePackageName?: string;
+  /** Name of the repository calling pathfinder  */
+  repositoryName?: string;
   /** ID of the pathfinder applying policies  */
   pathfinderId?: string;
   /** Name of the pathfinder applying policies  */
