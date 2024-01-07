@@ -12,7 +12,6 @@ import { CodePackageInput } from '../codecs';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
-import { syncRepositories } from './syncRepositories';
 
 const CHUNK_SIZE = 100;
 
@@ -159,15 +158,6 @@ export async function syncCodePackages(
           `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`,
       ),
       concurrency,
-    ),
-    // ensure repositories are created
-    // TODO: https://transcend.height.app/T-32342 - handle this in createCodePackage
-    syncRepositories(
-      client,
-      uniqBy(codePackages, 'repositoryName').map(({ repositoryName }) => ({
-        name: repositoryName,
-        url: `https://github.com/${repositoryName}`,
-      })),
     ),
   ]);
 
