@@ -519,6 +519,7 @@ export async function pullTranscendConfiguration(
     result.agents = agents.map(
       ({
         name,
+        agentId,
         description,
         codeInterpreterEnabled,
         retrievalEnabled,
@@ -530,6 +531,7 @@ export async function pullTranscendConfiguration(
         agentFiles,
       }): AgentInput => ({
         name,
+        agentId,
         description: description || undefined,
         codeInterpreterEnabled,
         retrievalEnabled,

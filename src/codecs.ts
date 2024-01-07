@@ -266,6 +266,8 @@ export const AgentInput = t.intersection([
   t.type({
     /** The name of the agent. */
     name: t.string,
+    /** The ID of the agent */
+    agentId: t.string,
     /** Whether the agent has code interpreter enabled */
     codeInterpreterEnabled: t.boolean,
     /** Whether the agent has retrieval enabled */
