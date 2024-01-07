@@ -26,7 +26,7 @@ export async function createAgent(
   agent: AgentInput,
   promptByTitle: { [k in string]: Prompt },
   largeLanguageModelLookup: { [k in string]: LargeLanguageModel },
-): Promise<Pick<Agent, 'id' | 'name'>> {
+): Promise<Pick<Agent, 'id' | 'name' | 'agentId'>> {
   const input = {
     name: agent.name,
     description: agent.description,
@@ -97,7 +97,7 @@ export async function syncAgents(
 
   // Look up by name
   const agentByName: {
-    [k in string]: Pick<Agent, 'id' | 'name'>;
+    [k in string]: Pick<Agent, 'id' | 'name' | 'agentId'>;
   } = keyBy(existingAgents, 'name');
 
   // index prompts & models

@@ -40041,6 +40041,7 @@
             "type": "object",
             "required": [
               "name",
+              "agentId",
               "codeInterpreterEnabled",
               "retrievalEnabled",
               "prompt",
@@ -40048,6 +40049,9 @@
             ],
             "properties": {
               "name": {
+                "type": "string"
+              },
+              "agentId": {
                 "type": "string"
               },
               "codeInterpreterEnabled": {
