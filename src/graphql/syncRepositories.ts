@@ -172,9 +172,7 @@ export async function syncRepositories(
     try {
       const updatedRepos = await updateRepositories(
         client,
-        // TODO: https://transcend.height.app/T-32352
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        chunk.map(([{ url, ...input }, id]) => ({
+        chunk.map(([input, id]) => ({
           ...input,
           id,
         })),
