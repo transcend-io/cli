@@ -53,6 +53,7 @@ export const OpenAIRouteName = makeEnum({
   ChatCompletion: '/v1/chat/completions',
   Embeddings: '/v1/embeddings',
   Completions: '/v1/completions',
+  Agents: '/v1/assistants',
 });
 
 /**
