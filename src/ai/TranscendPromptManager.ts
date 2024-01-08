@@ -361,7 +361,7 @@ export class TranscendPromptManager<
    * @param name - Name of the agent to grab
    * @returns Large language model configuration
    */
-  async getAgentByName(name: string): Promise<Agent> {
+  async getAgentByName(name: string): Promise<Agent | undefined> {
     const agent = this.agentsByName[name];
     if (agent) {
       return agent;
@@ -370,7 +370,7 @@ export class TranscendPromptManager<
       names: [name],
     });
     if (!remoteAgent) {
-      throw new Error(`Failed to find agent with name: "${name}"`);
+      return undefined;
     }
     this.agentsByName[remoteAgent.name] = remoteAgent;
     this.agentsByAgentId[remoteAgent.agentId] = remoteAgent;
