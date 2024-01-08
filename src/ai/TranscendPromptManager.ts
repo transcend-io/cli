@@ -410,7 +410,7 @@ export class TranscendPromptManager<
    * @param filterBy - Filter by parameters
    * @returns The files found matching the filter
    */
-  ageAgentFiles(filterBy: AgentFileFilterBy): Promise<AgentFile[]> {
+  getAgentFiles(filterBy: AgentFileFilterBy): Promise<AgentFile[]> {
     return fetchAllAgentFiles(this.graphQLClient, filterBy);
   }
 
