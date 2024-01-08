@@ -298,7 +298,7 @@ export class TranscendPromptManager<
         promptTitles,
       }),
       fetchAllLargeLanguageModels(this.graphQLClient),
-      fetchAllAgents(this.graphQLClient, { agentNames }),
+      fetchAllAgents(this.graphQLClient, { names: agentNames }),
     ]);
     this.agentsByName = keyBy(agents, 'name');
     this.agentsByAgentId = keyBy(agents, 'agentId');
@@ -367,7 +367,7 @@ export class TranscendPromptManager<
       return agent;
     }
     const [remoteAgent] = await fetchAllAgents(this.graphQLClient, {
-      agentNames: [name],
+      names: [name],
     });
     if (!remoteAgent) {
       throw new Error(`Failed to find agent with name: "${name}"`);
@@ -400,7 +400,7 @@ export class TranscendPromptManager<
     const remoteAgents: Agent[] = [];
     await mapSeries(chunkedNames, async (chunkedName) => {
       const pageOfAgents = await fetchAllAgents(this.graphQLClient, {
-        agentNames: chunkedName,
+        names: chunkedName,
       });
       pageOfAgents.forEach((agent) => {
         this.agentsByName[agent.name] = agent;

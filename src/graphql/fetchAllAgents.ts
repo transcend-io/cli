@@ -63,7 +63,9 @@ export async function fetchAllAgents(
   client: GraphQLClient,
   filterBy: {
     /** Names of the agents to filter for */
-    agentNames?: string[];
+    names?: string[];
+    /** IDs of agents */
+    agentIds?: string[];
   } = {},
 ): Promise<Agent[]> {
   const agents: Agent[] = [];
