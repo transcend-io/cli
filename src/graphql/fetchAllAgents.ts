@@ -56,14 +56,12 @@ const PAGE_SIZE = 20;
  * Fetch all agents in the organization
  *
  * @param client - GraphQL client
- * @param options - Options
+ * @param filterBy - Filter by
  * @returns All agents in the organization
  */
 export async function fetchAllAgents(
   client: GraphQLClient,
-  {
-    agentNames = [],
-  }: {
+  filterBy: {
     /** Names of the agents to filter for */
     agentNames?: string[];
   } = {},
@@ -86,7 +84,7 @@ export async function fetchAllAgents(
     }>(client, AGENTS, {
       first: PAGE_SIZE,
       offset,
-      ...(agentNames.length > 0 ? { input: { names: agentNames } } : {}),
+      filterBy,
     });
     agents.push(...nodes);
     offset += PAGE_SIZE;

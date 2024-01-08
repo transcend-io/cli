@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import chunk from 'lodash/chunk';
 import uniq from 'lodash/uniq';
 import {
   Optionalize,
@@ -44,6 +45,7 @@ import {
   fetchAllLargeLanguageModels,
 } from '../graphql/fetchLargeLanguageModels';
 import groupBy from 'lodash/groupBy';
+import { mapSeries } from 'bluebird';
 
 /**
  * An LLM Prompt definition
@@ -394,12 +396,17 @@ export class TranscendPromptManager<
     if (missingCache.length === 0) {
       return cachedAgents;
     }
-    const remoteAgents = await fetchAllAgents(this.graphQLClient, {
-      agentNames: missingCache,
-    });
-    remoteAgents.forEach((agent) => {
-      this.agentsByName[agent.name] = agent;
-      this.agentsByAgentId[agent.agentId] = agent;
+    const chunkedNames = chunk(missingCache, 50);
+    const remoteAgents: Agent[] = [];
+    await mapSeries(chunkedNames, async (chunkedName) => {
+      const pageOfAgents = await fetchAllAgents(this.graphQLClient, {
+        agentNames: chunkedName,
+      });
+      pageOfAgents.forEach((agent) => {
+        this.agentsByName[agent.name] = agent;
+        this.agentsByAgentId[agent.agentId] = agent;
+      });
+      remoteAgents.push(...pageOfAgents);
     });
     return [...cachedAgents, ...remoteAgents];
   }
