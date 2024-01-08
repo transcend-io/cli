@@ -20,6 +20,7 @@ export const AGENT_FILES = gql`
         fileId
         size
         purpose
+        initialFileName
       }
     }
   }
@@ -32,6 +33,7 @@ export const CREATE_AGENT_FILE = gql`
         id
         name
         fileId
+        initialFileName
       }
     }
   }
