@@ -13,8 +13,11 @@ import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import {
   Agent,
+  AgentFile,
+  AgentFileFilterBy,
   ReportPromptRunInput,
   buildTranscendGraphQLClient,
+  fetchAllAgentFiles,
   fetchAllAgents,
   reportPromptRun,
 } from '../graphql';
@@ -399,6 +402,16 @@ export class TranscendPromptManager<
       this.agentsByAgentId[agent.agentId] = agent;
     });
     return [...cachedAgents, ...remoteAgents];
+  }
+
+  /**
+   * Fetch metadata on agent files
+   *
+   * @param filterBy - Filter by parameters
+   * @returns The files found matching the filter
+   */
+  ageAgentFiles(filterBy: AgentFileFilterBy): Promise<AgentFile[]> {
+    return fetchAllAgentFiles(this.graphQLClient, filterBy);
   }
 
   /**
