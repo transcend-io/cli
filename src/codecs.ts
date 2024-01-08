@@ -266,14 +266,14 @@ export const AgentInput = t.intersection([
   t.type({
     /** The name of the agent. */
     name: t.string,
+    /** The instructions of the agent. */
+    instructions: t.string,
     /** The ID of the agent */
     agentId: t.string,
     /** Whether the agent has code interpreter enabled */
     codeInterpreterEnabled: t.boolean,
     /** Whether the agent has retrieval enabled */
     retrievalEnabled: t.boolean,
-    /** The title of the prompt that the agent is based on */
-    prompt: t.string,
     /** Large language model powering the agent */
     'large-language-model': t.type({
       /** Name of the model */
@@ -285,6 +285,8 @@ export const AgentInput = t.intersection([
   t.partial({
     /** The description of the agent. */
     description: t.string,
+    /** The title of the prompt that the agent is based on */
+    prompt: t.string,
     /**
      * The email addresses of the employees within your company that are the go-to individuals
      * for managing this agent
