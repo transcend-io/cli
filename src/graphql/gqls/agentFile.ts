@@ -4,10 +4,15 @@ import { gql } from 'graphql-request';
 // isExportCsv: true
 // useMaster: false
 export const AGENT_FILES = gql`
-  query TranscendCliAgentFiles($first: Int!, $offset: Int!) {
+  query TranscendCliAgentFiles(
+    $first: Int!
+    $offset: Int!
+    $filterBy: AgentFileFiltersInput
+  ) {
     agentFiles(
       first: $first
       offset: $offset
+      filterBy: $filterBy
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: name, direction: ASC }
