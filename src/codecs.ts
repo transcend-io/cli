@@ -1501,3 +1501,39 @@ export const PathfinderPolicy = t.partial({
 
 /** Type override */
 export type PathfinderPolicy = t.TypeOf<typeof PathfinderPolicy>;
+
+/**
+ * Interface of metadata that can be passed for logging purposes
+ * via the Transcend Pathfinder
+ */
+export const PathfinderPromptRunMetadata = t.partial({
+  /** Unique name for the current prompt run */
+  promptRunName: t.string,
+  /** ID of the Transcend prompt being reported */
+  promptId: t.string,
+  /** Title of the prompt being reported on */
+  promptTitle: t.string,
+  /** The ID of the prompt group being reported */
+  promptGroupId: t.string,
+  /** The title of the prompt group being reported */
+  promptGroupTitle: t.string,
+  /** Employee email that is executing the request */
+  runByEmployeeEmail: t.string,
+  /** ID of the application calling pathfinder  */
+  applicationId: t.string,
+  /** Name of the application calling pathfinder  */
+  applicationName: t.string,
+  /** Name of the code package calling pathfinder  */
+  codePackageName: t.string,
+  /** Name of the repository calling pathfinder  */
+  repositoryName: t.string,
+  /** Core identifier of the application user being reported on  */
+  applicationUserCoreIdentifier: t.string,
+  /** Name of the application user being reported on  */
+  applicationUserName: t.string,
+});
+
+/** Type override */
+export type PathfinderPromptRunMetadata = t.TypeOf<
+  typeof PathfinderPromptRunMetadata
+>;
