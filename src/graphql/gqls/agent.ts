@@ -22,6 +22,7 @@ export const AGENTS = gql`
         id
         name
         agentId
+        instructions
         description
         codeInterpreterEnabled
         retrievalEnabled

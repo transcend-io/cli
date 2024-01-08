@@ -8,6 +8,8 @@ export interface Agent {
   id: string;
   /** Name of agent */
   name: string;
+  /** Agent instructions */
+  instructions: string;
   /** The ID of the agent */
   agentId: string;
   /** Description of the agent */
@@ -17,7 +19,7 @@ export interface Agent {
   /** Whether the agent has retrieval enabled */
   retrievalEnabled: boolean;
   /** The prompt that the agent is based on */
-  prompt: {
+  prompt?: {
     /** Title of the prompt */
     title: string;
   };
