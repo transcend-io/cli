@@ -7,37 +7,26 @@ import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllAgents, Agent } from './fetchAllAgents';
-import { Prompt, fetchAllPrompts } from './fetchPrompts';
-import {
-  LargeLanguageModel,
-  fetchAllLargeLanguageModels,
-} from './fetchLargeLanguageModels';
 
 /**
  * Input to create a new agent
  *
  * @param client - GraphQL client
  * @param agent - Input
- * @param promptByTitle - Prompt lookup
- * @param largeLanguageModelLookup - Model lookup
  */
 export async function createAgent(
   client: GraphQLClient,
   agent: AgentInput,
-  promptByTitle: { [k in string]: Prompt },
-  largeLanguageModelLookup: { [k in string]: LargeLanguageModel },
 ): Promise<Pick<Agent, 'id' | 'name' | 'agentId'>> {
   const input = {
     name: agent.name,
     description: agent.description,
     codeInterpreterEnabled: agent.codeInterpreterEnabled,
     retrievalEnabled: agent.retrievalEnabled,
-    promptId: promptByTitle[agent.prompt].id,
-    largeLanguageModelId:
-      largeLanguageModelLookup[
-        `${agent['large-language-model'].name}:${agent['large-language-model'].client}`
-      ].id,
-    // TODO: https://transcend.height.app/T-31995 - prompt, largeLanguageModel, agentFunction, agentFile
+    promptTitle: agent.prompt,
+    largeLanguageModelName: agent['large-language-model'].name,
+    largeLanguageModelClient: agent['large-language-model'].client,
+    // TODO: https://transcend.height.app/T-32760 - agentFunction, agentFile
   };
 
   const { createAgent } = await makeGraphQLRequest<{
@@ -100,28 +89,13 @@ export async function syncAgents(
     [k in string]: Pick<Agent, 'id' | 'name' | 'agentId'>;
   } = keyBy(existingAgents, 'name');
 
-  // index prompts & models
-  // TODO: https://transcend.height.app/T-31995 - remove this
-  const prompts = await fetchAllPrompts(client);
-  const promptByTitle = keyBy(prompts, 'title');
-  const models = await fetchAllLargeLanguageModels(client);
-  const largeLanguageModelLookup = keyBy(
-    models,
-    ({ name, client }) => `${name}:${client}`,
-  );
-
   // Create new agents
   const newAgents = inputs.filter((input) => !agentByName[input.name]);
 
   // Create new agents
   await mapSeries(newAgents, async (agent) => {
     try {
-      const newAgent = await createAgent(
-        client,
-        agent,
-        promptByTitle,
-        largeLanguageModelLookup,
-      );
+      const newAgent = await createAgent(client, agent);
       agentByName[newAgent.name] = newAgent;
       logger.info(colors.green(`Successfully synced agent "${agent.name}"!`));
     } catch (err) {
