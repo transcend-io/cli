@@ -29,7 +29,7 @@ export async function createBusinessEntity(
     headquarterSubDivision: businessEntity.headquarterSubDivision,
     dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
     dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
-    // TODO: https://transcend.height.app/T-31994 - add attributes
+    // TODO: https://transcend.height.app/T-31994 - add attributes, teams, owners
   };
 
   const { createBusinessEntity } = await makeGraphQLRequest<{
