@@ -27,6 +27,7 @@ export async function createAgent(
     largeLanguageModelName: agent['large-language-model'].name,
     largeLanguageModelClient: agent['large-language-model'].client,
     // TODO: https://transcend.height.app/T-32760 - agentFunction, agentFile
+    // TODO: https://transcend.height.app/T-31994 - owners and teams
   };
 
   const { createAgent } = await makeGraphQLRequest<{
