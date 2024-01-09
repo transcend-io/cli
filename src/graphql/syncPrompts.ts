@@ -36,6 +36,7 @@ export async function createPrompt(
       };
     };
   }>(client, CREATE_PROMPT, {
+    // TODO: https://transcend.height.app/T-31994 - include models and groups, teams, users
     input,
   });
   logger.info(colors.green(`Successfully created prompt "${input.title}"!`));

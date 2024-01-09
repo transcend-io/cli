@@ -26,6 +26,7 @@ export async function createAgentFile(
     purpose: agentFile.purpose,
     fileUploadedAt: new Date(),
     agentIds: [],
+    // TODO: https://transcend.height.app/T-31994 - sync agents
   };
 
   const { createAgentFile } = await makeGraphQLRequest<{
