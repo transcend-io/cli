@@ -1,4 +1,6 @@
 /* eslint-disable max-lines */
+import chunk from 'lodash/chunk';
+import uniq from 'lodash/uniq';
 import {
   Optionalize,
   Requirize,
@@ -11,8 +13,13 @@ import { Secret } from '@transcend-io/secret-value';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import {
+  Agent,
+  AgentFile,
+  AgentFileFilterBy,
   ReportPromptRunInput,
   buildTranscendGraphQLClient,
+  fetchAllAgentFiles,
+  fetchAllAgents,
   reportPromptRun,
 } from '../graphql';
 import {
@@ -37,6 +44,8 @@ import {
   LargeLanguageModel,
   fetchAllLargeLanguageModels,
 } from '../graphql/fetchLargeLanguageModels';
+import groupBy from 'lodash/groupBy';
+import { mapSeries } from 'bluebird';
 
 /**
  * An LLM Prompt definition
@@ -58,6 +67,8 @@ export type TranscendPrompt<
       title: string;
     }
 ) & {
+  /** The names of the agents that should be loaded along with the prompt */
+  agentNames?: string[];
   /** Codec to validate runtime input shape */
   paramCodec: TInputParams;
   /** Codec to validate output response */
@@ -165,6 +176,12 @@ export class TranscendPromptManager<
   /** The large language models that are registered to this organization for reporting */
   public largeLanguageModels: LargeLanguageModel[] = [];
 
+  /** The agent definitions registered to this organization */
+  private agentsByName: { [name in string]: Agent } = {};
+
+  /** The agent definitions registered to this organization */
+  private agentsByAgentId: { [id in string]: Agent } = {};
+
   /** The GraphQL client that can be used to call Transcend */
   public graphQLClient: GraphQLClient;
 
@@ -270,15 +287,21 @@ export class TranscendPromptManager<
     const promptTitles = promptDefinitions
       .map(({ title }) => title)
       .filter((x): x is string => !!x);
+    const agentNames = uniq(
+      promptDefinitions.map(({ agentNames }) => agentNames || []).flat(),
+    );
 
     // Fetch prompts and data
-    const [response, largeLanguageModels] = await Promise.all([
+    const [response, largeLanguageModels, agents] = await Promise.all([
       fetchPromptsWithVariables(this.graphQLClient, {
         promptIds,
         promptTitles,
       }),
       fetchAllLargeLanguageModels(this.graphQLClient),
+      fetchAllAgents(this.graphQLClient, { names: agentNames }),
     ]);
+    this.agentsByName = keyBy(agents, 'name');
+    this.agentsByAgentId = keyBy(agents, 'agentId');
     this.largeLanguageModels = largeLanguageModels.filter(
       (model) => model.isTranscendHosted === false,
     );
@@ -330,6 +353,72 @@ export class TranscendPromptManager<
     this.lastUpdatedAt = new Date();
 
     return response;
+  }
+
+  /**
+   * Get an agent definition by name
+   *
+   * @param name - Name of the agent to grab
+   * @returns Large language model configuration
+   */
+  async getAgentByName(name: string): Promise<Agent | undefined> {
+    const agent = this.agentsByName[name];
+    if (agent) {
+      return agent;
+    }
+    const [remoteAgent] = await fetchAllAgents(this.graphQLClient, {
+      names: [name],
+    });
+    if (!remoteAgent) {
+      return undefined;
+    }
+    this.agentsByName[remoteAgent.name] = remoteAgent;
+    this.agentsByAgentId[remoteAgent.agentId] = remoteAgent;
+    return remoteAgent;
+  }
+
+  /**
+   * Get a list of agent definitions by name.
+   * Pulls from cache and may return less agents
+   * than requested if some are not found
+   *
+   * @param names - Names of agents to fetch
+   * @returns The agents that were found matching the names
+   */
+  async getAgentsByName(names: string[]): Promise<Agent[]> {
+    if (names.length < 1) {
+      throw new Error('Expected at least one name to be provided');
+    }
+    const { hasCache = [], missingCache = [] } = groupBy(names, (name) =>
+      this.agentsByName[name] ? 'hasCache' : 'missingCache',
+    );
+    const cachedAgents = hasCache.map((name) => this.agentsByName[name]);
+    if (missingCache.length === 0) {
+      return cachedAgents;
+    }
+    const chunkedNames = chunk(missingCache, 50);
+    const remoteAgents: Agent[] = [];
+    await mapSeries(chunkedNames, async (chunkedName) => {
+      const pageOfAgents = await fetchAllAgents(this.graphQLClient, {
+        names: chunkedName,
+      });
+      pageOfAgents.forEach((agent) => {
+        this.agentsByName[agent.name] = agent;
+        this.agentsByAgentId[agent.agentId] = agent;
+      });
+      remoteAgents.push(...pageOfAgents);
+    });
+    return [...cachedAgents, ...remoteAgents];
+  }
+
+  /**
+   * Fetch metadata on agent files
+   *
+   * @param filterBy - Filter by parameters
+   * @returns The files found matching the filter
+   */
+  getAgentFiles(filterBy: AgentFileFilterBy): Promise<AgentFile[]> {
+    return fetchAllAgentFiles(this.graphQLClient, filterBy);
   }
 
   /**

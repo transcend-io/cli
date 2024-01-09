@@ -8,6 +8,10 @@ export interface Agent {
   id: string;
   /** Name of agent */
   name: string;
+  /** Agent instructions */
+  instructions: string;
+  /** The ID of the agent */
+  agentId: string;
   /** Description of the agent */
   description: string;
   /** Whether the agent has code interpreter enabled */
@@ -15,7 +19,7 @@ export interface Agent {
   /** Whether the agent has retrieval enabled */
   retrievalEnabled: boolean;
   /** The prompt that the agent is based on */
-  prompt: {
+  prompt?: {
     /** Title of the prompt */
     title: string;
   };
@@ -54,9 +58,18 @@ const PAGE_SIZE = 20;
  * Fetch all agents in the organization
  *
  * @param client - GraphQL client
+ * @param filterBy - Filter by
  * @returns All agents in the organization
  */
-export async function fetchAllAgents(client: GraphQLClient): Promise<Agent[]> {
+export async function fetchAllAgents(
+  client: GraphQLClient,
+  filterBy: {
+    /** Names of the agents to filter for */
+    names?: string[];
+    /** IDs of agents */
+    agentIds?: string[];
+  } = {},
+): Promise<Agent[]> {
   const agents: Agent[] = [];
   let offset = 0;
 
@@ -75,6 +88,7 @@ export async function fetchAllAgents(client: GraphQLClient): Promise<Agent[]> {
     }>(client, AGENTS, {
       first: PAGE_SIZE,
       offset,
+      filterBy,
     });
     agents.push(...nodes);
     offset += PAGE_SIZE;

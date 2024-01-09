@@ -266,12 +266,14 @@ export const AgentInput = t.intersection([
   t.type({
     /** The name of the agent. */
     name: t.string,
+    /** The instructions of the agent. */
+    instructions: t.string,
+    /** The ID of the agent */
+    agentId: t.string,
     /** Whether the agent has code interpreter enabled */
     codeInterpreterEnabled: t.boolean,
     /** Whether the agent has retrieval enabled */
     retrievalEnabled: t.boolean,
-    /** The title of the prompt that the agent is based on */
-    prompt: t.string,
     /** Large language model powering the agent */
     'large-language-model': t.type({
       /** Name of the model */
@@ -283,6 +285,8 @@ export const AgentInput = t.intersection([
   t.partial({
     /** The description of the agent. */
     description: t.string,
+    /** The title of the prompt that the agent is based on */
+    prompt: t.string,
     /**
      * The email addresses of the employees within your company that are the go-to individuals
      * for managing this agent
@@ -1499,3 +1503,39 @@ export const PathfinderPolicy = t.partial({
 
 /** Type override */
 export type PathfinderPolicy = t.TypeOf<typeof PathfinderPolicy>;
+
+/**
+ * Interface of metadata that can be passed for logging purposes
+ * via the Transcend Pathfinder
+ */
+export const PathfinderPromptRunMetadata = t.partial({
+  /** Unique name for the current prompt run */
+  promptRunName: t.string,
+  /** ID of the Transcend prompt being reported */
+  promptId: t.string,
+  /** Title of the prompt being reported on */
+  promptTitle: t.string,
+  /** The ID of the prompt group being reported */
+  promptGroupId: t.string,
+  /** The title of the prompt group being reported */
+  promptGroupTitle: t.string,
+  /** Employee email that is executing the request */
+  runByEmployeeEmail: t.string,
+  /** ID of the application calling pathfinder  */
+  applicationId: t.string,
+  /** Name of the application calling pathfinder  */
+  applicationName: t.string,
+  /** Name of the code package calling pathfinder  */
+  codePackageName: t.string,
+  /** Name of the repository calling pathfinder  */
+  repositoryName: t.string,
+  /** Core identifier of the application user being reported on  */
+  applicationUserCoreIdentifier: t.string,
+  /** Name of the application user being reported on  */
+  applicationUserName: t.string,
+});
+
+/** Type override */
+export type PathfinderPromptRunMetadata = t.TypeOf<
+  typeof PathfinderPromptRunMetadata
+>;

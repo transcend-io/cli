@@ -10,6 +10,8 @@ export interface AgentFile {
   name: string;
   /** Description of the agentFile */
   description: string;
+  /** Initial file name, useful to track if a file was split into multiple chunks */
+  initialFileName?: string;
   /** File ID */
   fileId: string;
   /** File size */
@@ -20,14 +22,25 @@ export interface AgentFile {
 
 const PAGE_SIZE = 20;
 
+export interface AgentFileFilterBy {
+  /** Filter by remote file IDs */
+  fileIds?: string[];
+  /** Filter by file names */
+  names?: string[];
+  /** Filter by initial file names (when split into chunks) */
+  initialFileNames?: string[];
+}
+
 /**
  * Fetch all agentFiles in the organization
  *
  * @param client - GraphQL client
+ * @param filterBy - Filter by options
  * @returns All agentFiles in the organization
  */
 export async function fetchAllAgentFiles(
   client: GraphQLClient,
+  filterBy: AgentFileFilterBy = {},
 ): Promise<AgentFile[]> {
   const agentFiles: AgentFile[] = [];
   let offset = 0;
@@ -47,6 +60,7 @@ export async function fetchAllAgentFiles(
     }>(client, AGENT_FILES, {
       first: PAGE_SIZE,
       offset,
+      filterBy,
     });
     agentFiles.push(...nodes);
     offset += PAGE_SIZE;

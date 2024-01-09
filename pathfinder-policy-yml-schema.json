@@ -23,7 +23,8 @@
                     "enum": [
                       "/v1/chat/completions",
                       "/v1/embeddings",
-                      "/v1/completions"
+                      "/v1/completions",
+                      "/v1/assistants"
                     ]
                   },
                   "enabledPolicies": {

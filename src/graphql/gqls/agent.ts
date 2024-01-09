@@ -4,10 +4,15 @@ import { gql } from 'graphql-request';
 // isExportCsv: true
 // useMaster: false
 export const AGENTS = gql`
-  query TranscendCliAgents($first: Int!, $offset: Int!) {
+  query TranscendCliAgents(
+    $first: Int!
+    $offset: Int!
+    $filterBy: AgentFiltersInput
+  ) {
     agents(
       first: $first
       offset: $offset
+      filterBy: $filterBy
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: name, direction: ASC }
@@ -16,6 +21,8 @@ export const AGENTS = gql`
       nodes {
         id
         name
+        agentId
+        instructions
         description
         codeInterpreterEnabled
         retrievalEnabled
@@ -49,6 +56,7 @@ export const CREATE_AGENT = gql`
       agent {
         id
         name
+        agentId
       }
     }
   }

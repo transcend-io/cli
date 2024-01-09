@@ -40041,13 +40041,20 @@
             "type": "object",
             "required": [
               "name",
+              "instructions",
+              "agentId",
               "codeInterpreterEnabled",
               "retrievalEnabled",
-              "prompt",
               "large-language-model"
             ],
             "properties": {
               "name": {
+                "type": "string"
+              },
+              "instructions": {
+                "type": "string"
+              },
+              "agentId": {
                 "type": "string"
               },
               "codeInterpreterEnabled": {
@@ -40055,9 +40062,6 @@
               },
               "retrievalEnabled": {
                 "type": "boolean"
-              },
-              "prompt": {
-                "type": "string"
               },
               "large-language-model": {
                 "type": "object",
@@ -40078,6 +40082,9 @@
             "type": "object",
             "properties": {
               "description": {
+                "type": "string"
+              },
+              "prompt": {
                 "type": "string"
               },
               "owners": {
