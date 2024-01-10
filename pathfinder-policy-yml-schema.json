@@ -24,7 +24,14 @@
                       "/v1/chat/completions",
                       "/v1/embeddings",
                       "/v1/completions",
-                      "/v1/assistants"
+                      "/v1/assistants",
+                      "/v1/assistants/:assistantId",
+                      "/v1/threads",
+                      "/v1/threads/:threadId",
+                      "/v1/threads/:threadId/messages",
+                      "/v1/threads/:threadId/messages/:messageId",
+                      "/v1/threads/:threadId/runs",
+                      "/v1/threads/:threadId/runs/:runId"
                     ]
                   },
                   "enabledPolicies": {
