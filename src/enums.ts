@@ -54,6 +54,13 @@ export const OpenAIRouteName = makeEnum({
   Embeddings: '/v1/embeddings',
   Completions: '/v1/completions',
   Agents: '/v1/assistants',
+  Agent: '/v1/assistants/:assistantId',
+  Threads: '/v1/threads',
+  Thread: '/v1/threads/:threadId',
+  Messages: '/v1/threads/:threadId/messages',
+  Message: '/v1/threads/:threadId/messages/:messageId',
+  Runs: '/v1/threads/:threadId/runs',
+  Run: '/v1/threads/:threadId/runs/:runId',
 });
 
 /**
