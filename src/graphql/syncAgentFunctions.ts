@@ -26,7 +26,7 @@ export async function createAgentFunction(
     description: agentFunction.description,
     parameters: agentFunction.parameters,
     agentIds: [],
-    // TODO: https://transcend.height.app/T-31994 - owners and teams
+    // TODO: https://transcend.height.app/T-31994 - sync agents
   };
 
   const { createAgentFunction } = await makeGraphQLRequest<{
