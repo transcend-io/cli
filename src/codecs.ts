@@ -1533,6 +1533,14 @@ export const PathfinderPromptRunMetadata = t.partial({
   applicationUserCoreIdentifier: t.string,
   /** Name of the application user being reported on  */
   applicationUserName: t.string,
+  /** Slack message ts that is in context of the API call */
+  slackMessageTs: t.string,
+  /** Slack team ID in context of the API call */
+  slackTeamId: t.string,
+  /** Slack channel ID in context of the API call */
+  slackChannelId: t.string,
+  /** Slack channel name in context of the API call */
+  slackChannelName: t.string,
 });
 
 /** Type override */
