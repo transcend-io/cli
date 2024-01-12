@@ -46,6 +46,10 @@ import {
 } from '../graphql/fetchLargeLanguageModels';
 import groupBy from 'lodash/groupBy';
 import { mapSeries } from 'bluebird';
+import {
+  PromptThread,
+  fetchAllPromptThreads,
+} from '../graphql/fetchPromptThreads';
 
 /**
  * An LLM Prompt definition
@@ -375,6 +379,21 @@ export class TranscendPromptManager<
     this.agentsByName[remoteAgent.name] = remoteAgent;
     this.agentsByAgentId[remoteAgent.agentId] = remoteAgent;
     return remoteAgent;
+  }
+
+  /**
+   * Get a prompt thread by ts
+   *
+   * @param ts - the slack message timestamp to look up thread for
+   * @returns Large language model configuration
+   */
+  async getPromptThreadBySlackTs(
+    ts: string,
+  ): Promise<PromptThread | undefined> {
+    const [thread] = await fetchAllPromptThreads(this.graphQLClient, {
+      slackMessageTs: [ts],
+    });
+    return thread;
   }
 
   /**

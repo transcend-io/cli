@@ -13,6 +13,7 @@ export * from './organization';
 export * from './attributeKey';
 export * from './softwareDevelopmentKit';
 export * from './codePackage';
+export * from './promptThread';
 export * from './request';
 export * from './RequestIdentifier';
 export * from './prompt';
