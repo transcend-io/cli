@@ -1656,6 +1656,12 @@ Only mark as completed requests in "removing data" phase
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --statuses=SECONDARY
 ```
 
+Set to status "RESOLVED" instead of status "SKIPPED"
+
+```sh
+yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --status=RESOLVED
+```
+
 ### tr-retry-request-data-silos
 
 This command allows for bulk restarting a set of data silos jobs for open privacy requests. This is equivalent to clicking the "Wipe and Retry" button for a particular data silo across a set of privacy requests.

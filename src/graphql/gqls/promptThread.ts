@@ -6,7 +6,7 @@ export const PROMPT_THREADS = gql`
     $offset: Int!
     $filterBy: PromptThreadFiltersInput!
   ) {
-    promptThreads(filterBy: $filterBy) {
+    promptThreads(first: $first, offset: $offset, filterBy: $filterBy) {
       nodes {
         id
         threadId
