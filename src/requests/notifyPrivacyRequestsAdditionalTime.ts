@@ -1,55 +1,57 @@
 import { map } from 'bluebird';
 import colors from 'colors';
 import { logger } from '../logger';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { RequestAction } from '@transcend-io/privacy-types';
 import {
-  UPDATE_PRIVACY_REQUEST,
+  NOTIFY_ADDITIONAL_TIME,
   fetchAllRequests,
   makeGraphQLRequest,
   buildTranscendGraphQLClient,
+  fetchAllTemplates,
 } from '../graphql';
 import cliProgress from 'cli-progress';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
- * Mark a set of privacy requests to be in silent mode
+ * Mark a set of privacy requests to be in silent mode.
+ * Note requests in silent mode are ignored
  *
  * @param options - Options
  * @returns The number of requests marked silent
  */
-export async function markSilentPrivacyRequests({
-  requestActions,
+export async function notifyPrivacyRequestsAdditionalTime({
+  requestActions = Object.values(RequestAction),
   auth,
   requestIds,
-  statuses = [
-    RequestStatus.Compiling,
-    RequestStatus.RequestMade,
-    RequestStatus.Delayed,
-    RequestStatus.Approving,
-    RequestStatus.Secondary,
-    RequestStatus.Enriching,
-    RequestStatus.Waiting,
-    RequestStatus.SecondaryApproving,
-  ],
-  createdAtAfter,
   createdAtBefore,
+  days = 45,
+  daysLeft = 10,
+  createdAtAfter,
+  emailTemplate = 'Additional Time Needed',
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */
-  requestActions: RequestAction[];
-  /** Transcend API key authentication */
-  auth: string;
-  /** Concurrency limit for approving */
-  concurrency?: number;
-  /** The request statuses to mark silent */
-  statuses?: RequestStatus[];
-  /** The set of privacy requests to mark silent */
-  requestIds?: string[];
+  requestActions?: RequestAction[];
   /** Filter for requests created before this date */
-  createdAtBefore?: Date;
+  createdAtBefore: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Email template */
+  emailTemplate?: string;
+  /** Transcend API key authentication */
+  auth: string;
+  /** Number of days to extend request by */
+  days?: number;
+  /**
+   * Only notify requests that have less than this number of days until they are considered expired.
+   * This allows for re-running the command without notifying the same users multiple times
+   */
+  daysLeft?: number;
+  /** Concurrency limit for approving */
+  concurrency?: number;
+  /** The set of privacy requests to notify */
+  requestIds?: string[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<number> {
@@ -64,13 +66,22 @@ export async function markSilentPrivacyRequests({
     cliProgress.Presets.shades_classic,
   );
 
+  // Grab the template with that title
+  const matchingTemplates = await fetchAllTemplates(client, emailTemplate);
+  const exactTemplateMatch = matchingTemplates.find(
+    (template) => template.title === emailTemplate,
+  );
+  if (!exactTemplateMatch) {
+    throw new Error(`Failed to find a template with title: "${emailTemplate}"`);
+  }
+
   // Pull in the requests
   let allRequests = await fetchAllRequests(client, {
     actions: requestActions,
-    statuses,
     createdAtBefore,
     createdAtAfter,
     isSilent: false,
+    isClosed: false,
   });
 
   // Filter down requests by request ID
@@ -80,20 +91,31 @@ export async function markSilentPrivacyRequests({
     );
   }
 
+  // Filter requests by daysLeft
+  allRequests = allRequests.filter(
+    (request) =>
+      typeof request.daysRemaining === 'number' &&
+      request.daysRemaining < daysLeft,
+  );
+
   // Notify Transcend
   logger.info(
-    colors.magenta(`Marking "${allRequests.length}" as silent mode.`),
+    colors.magenta(
+      `Notifying "${allRequests.length}" that more time is needed.`,
+    ),
   );
 
   let total = 0;
   progressBar.start(allRequests.length, 0);
   await map(
     allRequests,
-    async (requestToMarkSilent) => {
-      await makeGraphQLRequest(client, UPDATE_PRIVACY_REQUEST, {
+    async (requestToNotify) => {
+      await makeGraphQLRequest(client, NOTIFY_ADDITIONAL_TIME, {
         input: {
-          id: requestToMarkSilent.id,
-          isSilent: true,
+          requestId: requestToNotify.id,
+          template: exactTemplateMatch.template.defaultMessage,
+          subject: exactTemplateMatch.subject.defaultMessage,
+          additionalTime: days,
         },
       });
 

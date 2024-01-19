@@ -12,6 +12,7 @@ export * from './mapRequestEnumValues';
 export * from './mapCsvRowsToRequestInputs';
 export * from './submitPrivacyRequest';
 export * from './approvePrivacyRequests';
+export * from './notifyPrivacyRequestsAdditionalTime';
 export * from './mapColumnsToIdentifiers';
 export * from './cancelPrivacyRequests';
 export * from './mapColumnsToAttributes';

@@ -52,7 +52,9 @@ export async function pullPrivacyRequests({
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
   /** Requests that are formatted for CSV */
-  requestsFormattedForCsv: { [k in string]: string | null | boolean }[];
+  requestsFormattedForCsv: {
+    [k in string]: string | null | number | boolean;
+  }[];
 }> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
