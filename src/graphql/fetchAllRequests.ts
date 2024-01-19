@@ -15,46 +15,52 @@ import {
 import { logger } from '../logger';
 import { LanguageKey } from '@transcend-io/internationalization';
 
-export const PrivacyRequest = t.type({
-  /** Request ID */
-  id: t.string,
-  /** Time request was made */
-  createdAt: t.string,
-  /** Email of request */
-  email: t.string,
-  /** The type of request */
-  type: valuesOf(RequestAction),
-  /** Link to request in Transcend dashboard */
-  link: t.string,
-  /** Whether request is in silent mode */
-  isSilent: t.boolean,
-  /** Where request was made */
-  origin: valuesOf(RequestOrigin),
-  /** Whether request is a test request */
-  isTest: t.boolean,
-  /** The core identifier of the request */
-  coreIdentifier: t.string,
-  /** Request details */
-  details: t.string,
-  /** Locale of request */
-  locale: valuesOf(LanguageKey),
-  /** Status of request */
-  status: valuesOf(RequestStatus),
-  /** Type of data subject */
-  subjectType: t.string,
-  /** Country of request */
-  country: t.union([t.null, valuesOf(IsoCountryCode)]),
-  /** Subdivision of request */
-  countrySubDivision: t.union([t.null, valuesOf(IsoCountrySubdivisionCode)]),
-  /** Request attributes */
-  attributeValues: t.array(
-    t.type({
-      id: t.string,
-      attributeKey: t.type({ name: t.string, id: t.string }),
-      name: t.string,
-    }),
-  ),
-});
+export const PrivacyRequest = t.intersection([
+  t.type({
+    /** Request ID */
+    id: t.string,
+    /** Time request was made */
+    createdAt: t.string,
+    /** Email of request */
+    email: t.string,
+    /** The type of request */
+    type: valuesOf(RequestAction),
+    /** Link to request in Transcend dashboard */
+    link: t.string,
+    /** Whether request is in silent mode */
+    isSilent: t.boolean,
+    /** Where request was made */
+    origin: valuesOf(RequestOrigin),
+    /** Whether request is a test request */
+    isTest: t.boolean,
+    /** The core identifier of the request */
+    coreIdentifier: t.string,
+    /** Request details */
+    details: t.string,
+    /** Locale of request */
+    locale: valuesOf(LanguageKey),
+    /** Status of request */
+    status: valuesOf(RequestStatus),
+    /** Type of data subject */
+    subjectType: t.string,
+    /** Country of request */
+    country: t.union([t.null, valuesOf(IsoCountryCode)]),
+    /** Subdivision of request */
+    countrySubDivision: t.union([t.null, valuesOf(IsoCountrySubdivisionCode)]),
+    /** Request attributes */
+    attributeValues: t.array(
+      t.type({
+        id: t.string,
+        attributeKey: t.type({ name: t.string, id: t.string }),
+        name: t.string,
+      }),
+    ),
+  }),
+  t.partial({
+    /** Days remaining until expired */
+    daysRemaining: t.union([t.null, t.number]),
+  }),
+]);
 
 /** Type override */
 export type PrivacyRequest = t.TypeOf<typeof PrivacyRequest>;
@@ -77,6 +83,7 @@ export async function fetchAllRequests(
     createdAtAfter,
     isTest,
     isSilent,
+    isClosed,
   }: {
     /** Actions to filter on */
     actions?: RequestAction[];
@@ -90,6 +97,8 @@ export async function fetchAllRequests(
     isTest?: boolean;
     /** Return silent mode requests */
     isSilent?: boolean;
+    /** Filter by whether request is active */
+    isClosed?: boolean;
   } = {},
 ): Promise<PrivacyRequest[]> {
   // create a new progress bar instance and use shades_classic theme
@@ -125,6 +134,7 @@ export async function fetchAllRequests(
         status: statuses.length > 0 ? statuses : undefined,
         isTest,
         isSilent,
+        isClosed,
         createdAtBefore: createdAtBefore
           ? createdAtBefore.toISOString()
           : undefined,
