@@ -30,6 +30,7 @@ export const REQUESTS = gql`
         origin
         isSilent
         coreIdentifier
+        daysRemaining
         type
         subjectType
         country
@@ -73,6 +74,14 @@ export const UPDATE_PRIVACY_REQUEST = gql`
       request {
         id
       }
+    }
+  }
+`;
+
+export const NOTIFY_ADDITIONAL_TIME = gql`
+  mutation TranscendCliNotifyAdditionalTime($input: AdditionalTimeInput!) {
+    notifyAdditionalTime(input: $input) {
+      clientMutationId
     }
   }
 `;

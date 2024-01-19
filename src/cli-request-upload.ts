@@ -34,7 +34,7 @@ async function main(): Promise<void> {
     cacheFilepath = './transcend-privacy-requests-cache.json',
     requestReceiptFolder = './privacy-request-upload-receipts',
     sombraAuth,
-    concurrency = '100',
+    concurrency = '50',
     isTest = 'false',
     isSilent = 'true',
     skipSendingReceipt = 'false',

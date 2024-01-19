@@ -33,102 +33,106 @@
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-request-mark-silent](#tr-request-mark-silent)
+  - [tr-request-notify-additional-time](#tr-request-notify-additional-time)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-mark-silent](#tr-request-mark-silent)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-create-assessment](#tr-create-assessment)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
     - [Authentication](#authentication-29)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
+  - [tr-create-assessment](#tr-create-assessment)
+    - [Authentication](#authentication-30)
+    - [Arguments](#arguments-30)
+    - [Usage](#usage-31)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -155,7 +159,8 @@ yarn tr-scan-packages --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY
-yarn tr-mark-silent --auth=$TRANSCEND_API_KEY
+yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
@@ -193,6 +198,7 @@ tr-scan-packages --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
 tr-request-approve --auth=$TRANSCEND_API_KEY
 tr-request-cancel --auth=$TRANSCEND_API_KEY
+tr-request-mark-silent --auth=$TRANSCEND_API_KEY
 tr-request-mark-silent --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
@@ -841,7 +847,7 @@ The API key needs the following scopes:
 | createdAtBefore  | Approve requests that were submitted before this time                                                                                      | Date            | N/A                      | false    |
 | createdAtAfter   | Approve requests that were submitted after this time                                                                                       | Date            | N/A                      | false    |
 | transcendUrl     | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                              | string - URL    | https://api.transcend.io | false    |
-| concurrency      | The concurrency to use when uploading requests in parallel.                                                                                | number          | 100                      | false    |
+| concurrency      | The concurrency to use when uploading requests in parallel.                                                                                | number          | 50                       | false    |
 
 #### Usage
 
@@ -863,10 +869,10 @@ Approve all requests, but mark any request made before 05/03/2023 as silent mode
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
 ```
 
-Increase the concurrency (defaults to 100)
+Increase the concurrency (defaults to 50)
 
 ```sh
-yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=100
 ```
 
 Approve ERASURE requests created within a specific time frame
@@ -901,7 +907,7 @@ The API key needs the following scopes:
 | createdAtAfter    | Cancel requests that were submitted after this time                                                                                                                                                | Date            | N/A                                                                                      | false    |
 | cancellationTitle | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests upon cancelation. Any request in silent mode will not be emailed. | string          | Request Canceled                                                                         | false    |
 | transcendUrl      | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                                      | string - URL    | https://api.transcend.io                                                                 | false    |
-| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 100                                                                                      | false    |
+| concurrency       | The concurrency to use when uploading requests in parallel.                                                                                                                                        | number          | 50                                                                                       | false    |
 
 #### Usage
 
@@ -948,10 +954,95 @@ Cancel all open SALE_OPT_OUT, within a specific time frame
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
 ```
 
-Increase the concurrency (defaults to 100)
+Increase the concurrency (defaults to 50)
 
 ```sh
 yarn tr-request-cancel --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
+```
+
+### tr-request-notify-additional-time
+
+Bulk notify a set of privacy requests from the [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Request Approval and Communication
+- View Incoming Requests
+
+#### Arguments
+
+| Argument        | Description                                                                                                                                                                            | Type            | Default                  | Required |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth            | The Transcend API key with the scopes necessary for the command.                                                                                                                       | string          | N/A                      | true     |
+| createdAtBefore | Notify requests that are open but submitted before this time                                                                                                                           | Date            | N/A                      | true     |
+| createdAtAfter  | Notify requests that are open but submitted after this time.                                                                                                                           | Date            | now()                    | false    |
+| actions         | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to notify.                                              | RequestAction[] | RequestAction[]          | false    |
+| daysLeft        | Only notify requests that have less than this number of days until they are considered expired. This allows for re-running the command without notifying the same users multiple times | number          | 10                       | false    |
+| days            | The number of days to adjust the expiration of the request to                                                                                                                          | number          | 45                       | false    |
+| requestIds      | Specify the specific request IDs to notify                                                                                                                                             | string[]        | []                       | false    |
+| emailTemplate   | The title of the [email template](https://app.transcend.io/privacy-requests/email-templates) that should be sent to the requests.                                                      | string          | Additional Time Needed   | false    |
+| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                                                          | string - URL    | https://api.transcend.io | false    |
+| concurrency     | The concurrency to use when uploading requests in parallel.                                                                                                                            | number          | 50                       | false    |
+
+#### Usage
+
+Notify all request types that were made before 01/01/2024
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024
+```
+
+Notify all request types that were made during a date range
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024  --createdAtAfter=12/15/2023
+```
+
+Notify certain request types
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --actions=SALE_OPT_OUT,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn  tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --transcendUrl=https://api.us.transcend.io
+```
+
+Bulk notify requests by ID
+
+```sh
+yarn  tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 \
+  --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
+```
+
+Only notify requests that are expiring in the next 3 days or less
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --daysLeft=3
+```
+
+Change number of days to extend request by
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --days=30
+```
+
+Send a specific email template to the request that instead of the default
+
+```sh
+yarn  tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --emailTemplate="Custom Email Template"
+```
+
+Increase the concurrency (defaults to 50)
+
+```sh
+yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY --createdAtBefore=01/01/2024 --concurrency=500
 ```
 
 ### tr-request-mark-silent
@@ -977,7 +1068,7 @@ The API key needs the following scopes:
 | createdAtBefore | Mark silent requests that were submitted before this time                                                                                      | Date            | N/A                                                                                      | false    |
 | createdAtAfter  | Mark silent requests that were submitted after this time                                                                                       | Date            | N/A                                                                                      | false    |
 | transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                                  | string - URL    | https://api.transcend.io                                                                 | false    |
-| concurrency     | The concurrency to use when uploading requests in parallel.                                                                                    | number          | 100                                                                                      | false    |
+| concurrency     | The concurrency to use when uploading requests in parallel.                                                                                    | number          | 50                                                                                       | false    |
 
 #### Usage
 
@@ -1012,7 +1103,7 @@ Mark sale opt out requests as silent within a certain date range
 yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
 ```
 
-Increase the concurrency (defaults to 100)
+Increase the concurrency (defaults to 50)
 
 ```sh
 yarn tr-request-mark-silent --auth=$TRANSCEND_API_KEY --actions=ERASURE --concurrency=500
@@ -1055,7 +1146,7 @@ The API key needs the following scopes:
 | cacheFilepath           | The path to the JSON file encoding the metadata used to map the CSV shape to Transcend API.                             | string             | ./transcend-privacy-requests-cache.json | false    |
 | requestReceiptFolder    | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                   | string             | ./privacy-request-upload-receipts       | false    |
 | sombraAuth              | The sombra internal key, use for additional authentication when self-hosting sombra.                                    | string             | N/A                                     | false    |
-| concurrency             | The concurrency to use when uploading requests in parallel.                                                             | number             | 100                                     | false    |
+| concurrency             | The concurrency to use when uploading requests in parallel.                                                             | number             | 50                                      | false    |
 | attributes              | Tag all of the requests with the following attributes. Format: key1:value1;value2,key2:value3;value4                    | string             | Tags:transcend-cli                      | false    |
 | isTest                  | Flag whether the requests being uploaded are test requests or regular requests.                                         | boolean            | false                                   | false    |
 | isSilent                | Flag whether the requests being uploaded should be submitted in silent mode.                                            | boolean            | true                                    | false    |
@@ -1122,7 +1213,7 @@ yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop
    --isSilent=false --emailIsVerified=false
 ```
 
-Increase the concurrency (defaults to 100)
+Increase the concurrency (defaults to 50)
 
 ```sh
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY --file=/Users/transcend/Desktop/test.csv --concurrency=100
