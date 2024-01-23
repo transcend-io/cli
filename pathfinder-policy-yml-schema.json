@@ -31,7 +31,9 @@
                       "/v1/threads/:threadId/messages",
                       "/v1/threads/:threadId/messages/:messageId",
                       "/v1/threads/:threadId/runs",
-                      "/v1/threads/:threadId/runs/:runId"
+                      "/v1/threads/:threadId/runs/:runId",
+                      "/v1/files",
+                      "/v1/files/:fileId"
                     ]
                   },
                   "enabledPolicies": {
