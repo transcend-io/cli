@@ -61,6 +61,8 @@ export const OpenAIRouteName = makeEnum({
   Message: '/v1/threads/:threadId/messages/:messageId',
   Runs: '/v1/threads/:threadId/runs',
   Run: '/v1/threads/:threadId/runs/:runId',
+  Files: '/v1/files',
+  File: '/v1/files/:fileId',
 });
 
 /**
