@@ -55,7 +55,9 @@ async function main(): Promise<void> {
       );
       // Trim and parse the URL
       const url = name.toString('utf-8').trim();
-      [gitRepositoryName] = (url.split(':').pop() || '').split('.');
+      [gitRepositoryName] = !url.includes('https:')
+        ? (url.split(':').pop() || '').split('.')
+        : url.split('/').slice(3).join('/').split('.');
       if (!gitRepositoryName) {
         logger.error(colors.red(REPO_ERROR));
         process.exit(1);
