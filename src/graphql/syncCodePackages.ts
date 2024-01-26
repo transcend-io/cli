@@ -8,10 +8,11 @@ import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { logger } from '../logger';
 import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
 import { map, mapSeries } from 'bluebird';
-import { CodePackageInput } from '../codecs';
+import { CodePackageInput, RepositoryInput } from '../codecs';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
+import { syncRepositories } from './syncRepositories';
 
 const CHUNK_SIZE = 100;
 
@@ -158,6 +159,17 @@ export async function syncCodePackages(
           `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`,
       ),
       concurrency,
+    ),
+    // make sure all Repositories exist
+    syncRepositories(
+      client,
+      uniqBy(codePackages, 'repositoryName').map(
+        ({ repositoryName }) =>
+          ({
+            name: repositoryName,
+            url: `https://github.com/${repositoryName}`,
+          } as RepositoryInput),
+      ),
     ),
   ]);
 
