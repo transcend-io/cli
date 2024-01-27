@@ -645,10 +645,6 @@ export class TranscendPromptManager<
     const response =
       options.promptRunMessages[options.promptRunMessages.length - 1].content;
 
-    // Look up the large language model being report on
-    const largeLanguageModelInstance =
-      this.getLargeLanguageModel(largeLanguageModel);
-
     let parsed: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
     try {
       // Parse the response
@@ -660,7 +656,12 @@ export class TranscendPromptManager<
         name,
         error: err.message,
         status: QueueStatus.Error,
-        largeLanguageModelId: largeLanguageModelInstance.id,
+        ...(typeof largeLanguageModel === 'string'
+          ? { largeLanguageModelId: largeLanguageModel }
+          : {
+              largeLanguageModelName: largeLanguageModel.name,
+              largeLanguageModelClient: largeLanguageModel.client,
+            }),
         promptId: promptInput.id,
         promptRunMessages: options.promptRunMessages.map((message, ind) => ({
           ...message,
@@ -676,7 +677,12 @@ export class TranscendPromptManager<
       ...options,
       name,
       status: QueueStatus.Resolved,
-      largeLanguageModelId: largeLanguageModelInstance.id,
+      ...(typeof largeLanguageModel === 'string'
+        ? { largeLanguageModelId: largeLanguageModel }
+        : {
+            largeLanguageModelName: largeLanguageModel.name,
+            largeLanguageModelClient: largeLanguageModel.client,
+          }),
       promptId: promptInput.id,
       promptRunMessages: options.promptRunMessages.map((message, ind) => ({
         ...message,
@@ -741,16 +747,17 @@ export class TranscendPromptManager<
       );
     }
 
-    // Look up the large language model being report on
-    const largeLanguageModelInstance =
-      this.getLargeLanguageModel(largeLanguageModel);
-
     const promptRunId = await reportPromptRun(this.graphQLClient, {
       productArea: PromptRunProductArea.PromptManager,
       ...options,
       name,
       status: QueueStatus.Error,
-      largeLanguageModelId: largeLanguageModelInstance.id,
+      ...(typeof largeLanguageModel === 'string'
+        ? { largeLanguageModelId: largeLanguageModel }
+        : {
+            largeLanguageModelName: largeLanguageModel.name,
+            largeLanguageModelClient: largeLanguageModel.client,
+          }),
       promptId: promptInput.id,
       promptRunMessages: options.promptRunMessages.map((message, ind) => ({
         ...message,
