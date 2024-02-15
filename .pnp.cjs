@@ -76,6 +76,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"],\
+            ["io-ts-types", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:0.5.19"],\
             ["js-yaml", "npm:4.1.0"],\
             ["json2csv", "npm:6.0.0-alpha.2"],\
             ["jsonwebtoken", "npm:9.0.2"],\
@@ -723,6 +724,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["inquirer", "npm:7.3.3"],\
             ["inquirer-autocomplete-prompt", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:1.3.0"],\
             ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"],\
+            ["io-ts-types", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:0.5.19"],\
             ["js-yaml", "npm:4.1.0"],\
             ["json2csv", "npm:6.0.0-alpha.2"],\
             ["jsonwebtoken", "npm:9.0.2"],\
@@ -4419,6 +4421,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [\
             "@types/fp-ts",\
             "fp-ts"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["io-ts-types", [\
+        ["npm:0.5.19", {\
+          "packageLocation": "./.yarn/cache/io-ts-types-npm-0.5.19-9e47b2e79f-4cf8688b9f.zip/node_modules/io-ts-types/",\
+          "packageDependencies": [\
+            ["io-ts-types", "npm:0.5.19"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:0.5.19", {\
+          "packageLocation": "./.yarn/__virtual__/io-ts-types-virtual-f9831d3577/0/cache/io-ts-types-npm-0.5.19-9e47b2e79f-4cf8688b9f.zip/node_modules/io-ts-types/",\
+          "packageDependencies": [\
+            ["io-ts-types", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:0.5.19"],\
+            ["@types/fp-ts", null],\
+            ["@types/io-ts", null],\
+            ["@types/monocle-ts", null],\
+            ["@types/newtype-ts", null],\
+            ["fp-ts", "npm:2.16.1"],\
+            ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"],\
+            ["monocle-ts", null],\
+            ["newtype-ts", null]\
+          ],\
+          "packagePeers": [\
+            "@types/fp-ts",\
+            "@types/io-ts",\
+            "@types/monocle-ts",\
+            "@types/newtype-ts",\
+            "fp-ts",\
+            "io-ts",\
+            "monocle-ts",\
+            "newtype-ts"\
           ],\
           "linkType": "HARD"\
         }]\

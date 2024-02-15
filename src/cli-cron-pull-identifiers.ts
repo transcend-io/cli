@@ -49,6 +49,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  if (!actions) {
+    logger.error(
+      colors.red(
+        'At least one action must be provided. You can specify using --actions=ERASURE',
+      ),
+    );
+    process.exit(1);
+  }
+
   // Validate actions
   const parsedActions = splitCsvToList(actions) as RequestAction[];
   const invalidActions = parsedActions.filter(
