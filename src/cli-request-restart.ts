@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     /** Restart requests matching these request statuses */
     statuses,
     /** Concurrency to restart requests at */
-    concurrency = '20',
+    concurrency = '15',
     /** List of request IDs */
     requestIds = '',
     /** Filter for requests that were submitted before this date */

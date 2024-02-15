@@ -1,4 +1,7 @@
 import { LanguageKey } from '@transcend-io/internationalization';
+import { DateFromISOString } from 'io-ts-types/lib/DateFromISOString';
+
+import * as t from 'io-ts';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   NORMALIZE_PHONE_NUMBER,
@@ -8,7 +11,7 @@ import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
-import { ObjByString } from '@transcend-io/type-utils';
+import { ObjByString, valuesOf } from '@transcend-io/type-utils';
 
 import {
   CachedFileState,
@@ -20,48 +23,69 @@ import {
 import { AttributeKey } from '../graphql';
 import { ColumnNameMap } from './mapCsvColumnsToApi';
 import { splitCsvToList } from './splitCsvToList';
-import type { ParsedAttributeInput } from './parseAttributesFromString';
+import { ParsedAttributeInput } from './parseAttributesFromString';
 import { AttributeNameMap } from './mapColumnsToAttributes';
 import { IdentifierNameMap } from './mapColumnsToIdentifiers';
 
 /**
  * Shape of additional identifiers
+ *
+ * key of object is IdentifierType
  */
-export type AttestedExtraIdentifiers = {
-  [k in IdentifierType]?: {
-    /** Name of identifier */
-    name?: string;
-    /** Value of identifier */
-    value: string;
-  }[];
-};
+export const AttestedExtraIdentifiers = t.record(
+  t.string,
+  t.array(
+    t.intersection([
+      t.type({
+        /** Value of identifier */
+        value: t.string,
+      }),
+      t.partial({
+        /** Name of identifier - option for non-custom identifier types */
+        name: t.string,
+      }),
+    ]),
+  ),
+);
 
-export interface PrivacyRequestInput {
-  /** Email of user */
-  email: string;
-  /** Extra identifiers */
-  attestedExtraIdentifiers: AttestedExtraIdentifiers;
-  /** Core identifier for user */
-  coreIdentifier: string;
-  /** Action type being submitted  */
-  requestType: RequestAction;
-  /** Type of data subject */
-  subjectType: string;
-  /** Country */
-  country?: IsoCountryCode;
-  /** Country sub division */
-  countrySubDivision?: IsoCountrySubdivisionCode;
-  /** Attribute inputs */
-  attributes?: ParsedAttributeInput[];
-  /** The status that the request should be created as */
-  status?: CompletedRequestStatus;
-  /** The time that the request was created */
-  createdAt?: Date;
-  /** Data silo IDs to submit for */
-  dataSiloIds?: string[];
-  /** Language key to map to */
-  locale?: LanguageKey;
-}
+/** Type override */
+export type AttestedExtraIdentifiers = t.TypeOf<
+  typeof AttestedExtraIdentifiers
+>;
+
+export const PrivacyRequestInput = t.intersection([
+  t.type({
+    /** Email of user */
+    email: t.string,
+    /** Extra identifiers */
+    attestedExtraIdentifiers: AttestedExtraIdentifiers,
+    /** Core identifier for user */
+    coreIdentifier: t.string,
+    /** Action type being submitted  */
+    requestType: valuesOf(RequestAction),
+    /** Type of data subject */
+    subjectType: t.string,
+  }),
+  t.partial({
+    /** Country */
+    country: valuesOf(IsoCountryCode),
+    /** Country sub division */
+    countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** Attribute inputs */
+    attributes: t.array(ParsedAttributeInput),
+    /** The status that the request should be created as */
+    status: valuesOf(CompletedRequestStatus),
+    /** The time that the request was created */
+    createdAt: DateFromISOString,
+    /** Data silo IDs to submit for */
+    dataSiloIds: t.array(t.string),
+    /** Language key to map to */
+    locale: valuesOf(LanguageKey),
+  }),
+]);
+
+/** Type override */
+export type PrivacyRequestInput = t.TypeOf<typeof PrivacyRequestInput>;
 
 /**
  * Transform the identifier value based on type

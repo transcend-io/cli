@@ -58,21 +58,27 @@ export async function pullCronPageOfIdentifiers(
     offset?: number;
   },
 ): Promise<CronIdentifier[]> {
-  // Make the GraphQL request
-  const response = await sombra
-    .get(`v1/data-silo/${dataSiloId}/pending-requests/${requestType}`, {
-      searchParams: {
-        offset,
-        limit,
-      },
-    })
-    .json();
+  try {
+    // Make the GraphQL request
+    const response = await sombra
+      .get(`v1/data-silo/${dataSiloId}/pending-requests/${requestType}`, {
+        searchParams: {
+          offset,
+          limit,
+        },
+      })
+      .json();
 
-  const { items } = decodeCodec(
-    t.type({
-      items: t.array(CronIdentifier),
-    }),
-    response,
-  );
-  return items;
+    const { items } = decodeCodec(
+      t.type({
+        items: t.array(CronIdentifier),
+      }),
+      response,
+    );
+    return items;
+  } catch (err) {
+    throw new Error(
+      `Received an error from server: ${err?.response?.body || err?.message}`,
+    );
+  }
 }
