@@ -1,12 +1,16 @@
 import colors from 'colors';
+import * as t from 'io-ts';
 import { logger } from '../logger';
 
-export interface ParsedAttributeInput {
+export const ParsedAttributeInput = t.type({
   /** Attribute key */
-  key: string;
+  key: t.string,
   /** Attribute values */
-  values: string[];
-}
+  values: t.array(t.string),
+});
+
+/** Type override */
+export type ParsedAttributeInput = t.TypeOf<typeof ParsedAttributeInput>;
 
 /**
  * Parse out the extra attributes to apply to all requests uploaded
