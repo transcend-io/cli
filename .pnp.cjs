@@ -86,7 +86,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["query-string", "npm:7.0.0"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
-            ["undici", "npm:5.26.3"],\
+            ["undici", "npm:5.28.3"],\
             ["yargs-parser", "npm:21.1.1"]\
           ],\
           "linkType": "SOFT"\
@@ -734,7 +734,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["query-string", "npm:7.0.0"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
-            ["undici", "npm:5.26.3"],\
+            ["undici", "npm:5.28.3"],\
             ["yargs-parser", "npm:21.1.1"]\
           ],\
           "linkType": "SOFT"\
@@ -7211,10 +7211,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["undici", [\
-        ["npm:5.26.3", {\
-          "packageLocation": "./.yarn/cache/undici-npm-5.26.3-bdeea4fdde-aaa9aadb71.zip/node_modules/undici/",\
+        ["npm:5.28.3", {\
+          "packageLocation": "./.yarn/cache/undici-npm-5.28.3-fb5b0fbd18-fa1e65aff8.zip/node_modules/undici/",\
           "packageDependencies": [\
-            ["undici", "npm:5.26.3"],\
+            ["undici", "npm:5.28.3"],\
             ["@fastify/busboy", "npm:2.0.0"]\
           ],\
           "linkType": "HARD"\
