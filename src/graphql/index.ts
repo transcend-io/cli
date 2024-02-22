@@ -27,6 +27,7 @@ export * from './fetchAllAttributes';
 export * from './syncAttribute';
 export * from './fetchAllDataFlows';
 export * from './fetchAllCookies';
+export * from './fetchAllActionItems';
 export * from './fetchConsentManagerId';
 export * from './createTranscendConsentGotInstance';
 export * from './fetchAllBusinessEntities';

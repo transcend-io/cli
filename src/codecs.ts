@@ -31,6 +31,8 @@ import {
   LargeLanguageModelClient,
   PromptFilePurpose,
   CodePackageType,
+  ActionItemPriorityOverride,
+  ActionItemCode,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1242,7 +1244,57 @@ export const DataSiloInput = t.intersection([
 /** Type override */
 export type DataSiloInput = t.TypeOf<typeof DataSiloInput>;
 
+/**
+ * Input to define an action item
+ */
+export const ActionItemInput = t.intersection([
+  t.type({
+    /** The display title of the enricher */
+    title: t.string,
+    /** Action item type */
+    type: valuesOf(ActionItemCode),
+  }),
+  t.partial({
+    /** Count of action items */
+    count: t.number,
+    /** Priority of the action item */
+    priority: valuesOf(ActionItemPriorityOverride),
+    /** Due date of the action item */
+    dueDate: t.string,
+    /** Whether action item has been resolved */
+    resolved: t.boolean,
+    /** Titles of action item */
+    titles: t.array(t.string),
+    /** Notes */
+    notes: t.array(t.string),
+    /** Links to action items */
+    links: t.array(t.string),
+    /**
+     * The email addresses of the employees assigned to the action item
+     */
+    users: t.array(t.string),
+    /**
+     * The names of teams assigned to the action item
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/** Type override */
+export type ActionItemInput = t.TypeOf<typeof ActionItemInput>;
+
 export const TranscendInput = t.partial({
+  /**
+   * Action items
+   */
+  'action-items': t.array(ActionItemInput),
   /**
    * API key definitions
    */

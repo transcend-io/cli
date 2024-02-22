@@ -24,10 +24,12 @@ import {
   AgentFileInput,
   AgentFunctionInput,
   AgentInput,
+  ActionItemInput,
 } from '../codecs';
 import {
   RequestAction,
   ConsentTrackerStatus,
+  ActionItemCode,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
@@ -67,6 +69,7 @@ import { formatAttributeValues } from './formatAttributeValues';
 import { logger } from '../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../enums';
+import { fetchAllActionItems } from './fetchAllActionItems';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -151,6 +154,7 @@ export async function pullTranscendConfiguration(
     vendors,
     dataCategories,
     processingPurposes,
+    actionItems,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -270,6 +274,10 @@ export async function pullTranscendConfiguration(
     // Fetch dataCategories
     resources.includes(TranscendPullResource.ProcessingPurposes)
       ? fetchAllProcessingPurposes(client)
+      : [],
+    // Fetch actionItems
+    resources.includes(TranscendPullResource.ActionItems)
+      ? fetchAllActionItems(client, { type: [ActionItemCode.Onboarding] })
       : [],
   ]);
 
@@ -555,6 +563,41 @@ export async function pullTranscendConfiguration(
         'agent-files':
           agentFiles && agentFiles.length > 0
             ? agentFiles.map(({ name }) => name)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save action items
+  if (actionItems.length > 0) {
+    result['action-items'] = actionItems.map(
+      ({
+        teams,
+        users,
+        dueDate,
+        priority,
+        count,
+        titles,
+        resolved,
+        notes,
+        links,
+        type,
+        attributeValues,
+      }): ActionItemInput => ({
+        teams: teams.map(({ name }) => name),
+        users: users.map(({ email }) => email),
+        dueDate,
+        title: titles[0],
+        priority,
+        titles,
+        resolved,
+        count,
+        notes,
+        links,
+        type,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
             : undefined,
       }),
     );
