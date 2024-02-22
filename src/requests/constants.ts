@@ -7,6 +7,7 @@ import {
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
+import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 
 export const NONE = '[NONE]' as const;
 export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]' as const;
@@ -113,6 +114,14 @@ export type SuccessfulRequest = t.TypeOf<typeof SuccessfulRequest>;
 export const CachedRequestState = t.type({
   /** Set of privacy requests that failed to upload */
   failingRequests: t.array(t.record(t.string, t.any)),
+  // FIXME partial
+  /** Set of privacy requests that are pending being uploaded */
+  pendingRequests: t.array(
+    t.type({
+      rawRow: t.record(t.string, t.any),
+      requestInput: PrivacyRequestInput,
+    }),
+  ),
   /** Successfully uploaded requests */
   successfulRequests: t.array(SuccessfulRequest),
   /** Duplicate requests */
