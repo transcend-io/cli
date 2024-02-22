@@ -24,17 +24,27 @@ export async function markCronIdentifierCompleted(
   sombra: Got,
   { nonce, identifier }: CronIdentifierPush,
 ): Promise<void> {
-  // Make the GraphQL request
-  await sombra.put('v1/data-silo', {
-    headers: {
-      'x-transcend-nonce': nonce,
-    },
-    json: {
-      profiles: [
-        {
-          profileId: identifier,
-        },
-      ],
-    },
-  });
+  try {
+    // Make the GraphQL request
+    await sombra.put('v1/data-silo', {
+      headers: {
+        'x-transcend-nonce': nonce,
+      },
+      json: {
+        profiles: [
+          {
+            profileId: identifier,
+          },
+        ],
+      },
+    });
+  } catch (err) {
+    // handle gracefully
+    if (err.statusCode === 409) {
+      return;
+    }
+    throw new Error(
+      `Received an error from server: ${err?.response?.body || err?.message}`,
+    );
+  }
 }
