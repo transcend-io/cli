@@ -50,3 +50,20 @@ export const RETRY_REQUEST_DATA_SILO = gql`
     }
   }
 `;
+
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+// useMaster: false
+// orderBy: [
+//   { field: createdAt, direction: DESC }
+//   { field: title, direction: ASC, model: dataSilo }
+// ]
+export const REDUCED_REQUESTS_FOR_DATA_SILO_COUNT = gql`
+  query TranscendCliListReducedRequestsForDataSiloCount(
+    $input: BulkCompletionReducedRequestInput!
+  ) {
+    listReducedRequestsForDataSilo(input: $input) {
+      totalCount
+    }
+  }
+`;

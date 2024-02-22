@@ -18,6 +18,7 @@ export * from './setResourceAttributes';
 export * from './buildTranscendGraphQLClient';
 export * from './gqls';
 export * from './fetchPromptThreads';
+export * from './fetchRequestDataSiloActiveCount';
 export * from './fetchAllAttributeKeys';
 export * from './fetchAllRequests';
 export * from './fetchAllRequestIdentifiers';
