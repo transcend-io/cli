@@ -18,23 +18,34 @@ export type CronIdentifierPush = t.TypeOf<typeof CronIdentifierPush>;
  * @see https://docs.transcend.io/docs/api-reference/PUT/v1/data-silo
  * @param sombra - Sombra instance configured to make requests
  * @param options - Additional options
- * @returns Successfully submitted request
+ * @returns Successfully submitted request, false if not in a state to update
  */
 export async function markCronIdentifierCompleted(
   sombra: Got,
   { nonce, identifier }: CronIdentifierPush,
-): Promise<void> {
-  // Make the GraphQL request
-  await sombra.put('v1/data-silo', {
-    headers: {
-      'x-transcend-nonce': nonce,
-    },
-    json: {
-      profiles: [
-        {
-          profileId: identifier,
-        },
-      ],
-    },
-  });
+): Promise<boolean> {
+  try {
+    // Make the GraphQL request
+    await sombra.put('v1/data-silo', {
+      headers: {
+        'x-transcend-nonce': nonce,
+      },
+      json: {
+        profiles: [
+          {
+            profileId: identifier,
+          },
+        ],
+      },
+    });
+    return true;
+  } catch (err) {
+    // handle gracefully
+    if (err.response?.statusCode === 409) {
+      return false;
+    }
+    throw new Error(
+      `Received an error from server: ${err?.response?.body || err?.message}`,
+    );
+  }
 }

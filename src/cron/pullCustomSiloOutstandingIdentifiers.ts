@@ -1,8 +1,7 @@
 import {
+  buildTranscendGraphQLClient,
   createSombraGotInstance,
-  // FIXME
-  // buildTranscendGraphQLClient,
-  // fetchRequestDataSiloActiveCount,
+  fetchRequestDataSiloActiveCount,
 } from '../graphql';
 import colors from 'colors';
 import cliProgress from 'cli-progress';
@@ -70,25 +69,20 @@ export async function pullCustomSiloOutstandingIdentifiers({
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   // Create GraphQL client to connect to Transcend backend
-  // FIXME
-  // const client = buildTranscendGraphQLClient(transcendUrl, auth);
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  const totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
+    dataSiloId,
+  });
 
   logger.info(
     colors.magenta(
-      `Pulling outstanding request identifiers for data silo: "${dataSiloId}" for requests of types "${actions.join(
-        '", "',
-      )}"`,
+      `Pulling ${totalRequestCount} outstanding request identifiers ` +
+        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+          '", "',
+        )}"`,
     ),
   );
-
-  // identifiers found in total
-  const identifiers: CronIdentifierWithAction[] = [];
-
-  // FIXME
-  // const totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
-  //   dataSiloId,
-  // });
-  const totalRequestCount = 69134;
 
   // Time duration
   const t0 = new Date().getTime();
@@ -97,11 +91,13 @@ export async function pullCustomSiloOutstandingIdentifiers({
     {},
     cliProgress.Presets.shades_classic,
   );
-
-  progressBar.start(totalRequestCount, 0);
   const foundRequestIds = new Set<string>();
 
+  // identifiers found in total
+  const identifiers: CronIdentifierWithAction[] = [];
+
   // map over each action
+  progressBar.start(totalRequestCount, 0);
   await mapSeries(actions, async (action) => {
     let offset = 0;
     let shouldContinue = true;
@@ -118,7 +114,6 @@ export async function pullCustomSiloOutstandingIdentifiers({
       identifiers.push(
         ...pageIdentifiers.map((identifier) => {
           foundRequestIds.add(identifier.requestId);
-
           return {
             ...identifier,
             action,
@@ -127,7 +122,6 @@ export async function pullCustomSiloOutstandingIdentifiers({
       );
       shouldContinue = pageIdentifiers.length === pageLimit;
       offset += pageLimit;
-
       progressBar.update(foundRequestIds.size);
     }
   });
