@@ -1,0 +1,40 @@
+teams:
+  - name: Product
+    description: Team for bill
+    sso-department: /Product
+    users:
+      - bill@acme.com
+      - alice@acme.com
+    scopes:
+      - connectDataSilos
+      - deployPrivacyCenter
+      - makeDataSubjectRequest
+      - manageAccessControl
+      - manageApiKeys
+      - manageConsentManager
+      - manageDataFlow
+      - manageDataInventory
+      - manageDataMap
+      - manageDataSubjectRequestSettings
+      - manageEmailDomains
+      - manageEmailTemplates
+      - manageOrganizationInfo
+      - managePrivacyCenter
+      - manageRequestCompilation
+      - manageRequestIdentities
+      - manageRequestSecurity
+      - manageSombraRootKeys
+      - manageSSO
+      - requestApproval
+      - viewApiKeys
+  - name: Sales
+    description: 'Sales team'
+    sso-department: /Sales and Marketing/Sales
+    users:
+      - test@acme.com
+    scopes:
+      - manageContractScanning
+      - manageDataInventory
+      - managePromptRuns
+      - managePrompts
+      - readOnly
