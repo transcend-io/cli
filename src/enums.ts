@@ -27,6 +27,7 @@ export enum TranscendPullResource {
   Vendors = 'vendors',
   DataCategories = 'dataCategories',
   ProcessingPurposes = 'processingPurposes',
+  Teams = 'teams',
 }
 
 /**
