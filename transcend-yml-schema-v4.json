@@ -17,6 +17,134 @@
         }
       }
     },
+    "teams": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sso-department": {
+                "type": "string"
+              },
+              "sso-group": {
+                "type": "string"
+              },
+              "sso-title": {
+                "type": "string"
+              },
+              "users": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "readOnly",
+                    "fullAdmin",
+                    "makeDataSubjectRequest",
+                    "connectDataSilos",
+                    "deployPrivacyCenter",
+                    "manageConsentManager",
+                    "viewConsentManager",
+                    "manageConsentManagerDisplaySettings",
+                    "manageConsentManagerDeveloperSettings",
+                    "manageDataFlow",
+                    "deployConsentManager",
+                    "deployTestConsentManager",
+                    "viewCustomerDataDataMapping",
+                    "viewCustomerDataPrivacyRequests",
+                    "manageAccessControl",
+                    "manageApiKeys",
+                    "manageBilling",
+                    "manageDataMap",
+                    "managedAssignedIntegrations",
+                    "managedAssignedDataInventory",
+                    "managedAssignedConsentManager",
+                    "managedAssignedRequests",
+                    "viewAssignedIntegrations",
+                    "viewAssignedDataInventory",
+                    "viewAssignedConsentManager",
+                    "viewAssignedRequests",
+                    "manageDataSubjectRequestSettings",
+                    "manageEmailTemplates",
+                    "manageOrganizationInfo",
+                    "managePrivacyCenter",
+                    "viewPrivacyCenter",
+                    "manageLegalHold",
+                    "manageRequestCompilation",
+                    "manageRequestIdentities",
+                    "manageRequestSecurity",
+                    "manageSombraRootKeys",
+                    "manageSSO",
+                    "manageEmailDomains",
+                    "requestApproval",
+                    "viewApiKeys",
+                    "viewDataFlow",
+                    "viewDataMap",
+                    "viewLegalHold",
+                    "viewDataSubjectRequestSettings",
+                    "viewEmailTemplates",
+                    "viewEmailDomains",
+                    "viewRequestCompilation",
+                    "viewRequestIdentitySettings",
+                    "viewRequests",
+                    "viewScopes",
+                    "viewSSO",
+                    "viewEmployees",
+                    "viewOptOutStatus",
+                    "viewDataInventory",
+                    "manageDataInventory",
+                    "manageGlobalAttributes",
+                    "viewGlobalAttributes",
+                    "viewAssessments",
+                    "manageAssessments",
+                    "viewAssignedAssessments",
+                    "manageAssignedAssessments",
+                    "approveAssessments",
+                    "managePrompts",
+                    "managePromptRuns",
+                    "executePrompt",
+                    "viewPromptRuns",
+                    "viewPrompts",
+                    "approvePrompts",
+                    "manageAuditor",
+                    "executeAuditor",
+                    "viewCodeScanning",
+                    "manageCodeScanning",
+                    "viewPathfinder",
+                    "managePathfinder",
+                    "viewContractScanning",
+                    "manageContractScanning",
+                    "viewAuditorRuns",
+                    "viewAuditEvents",
+                    "manageActionItemCollections",
+                    "viewManagedConsentDatabaseAdminApi",
+                    "manageStoredPreferences"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "templates": {
       "type": "array",
       "items": {

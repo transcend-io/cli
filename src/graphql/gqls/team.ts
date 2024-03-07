@@ -21,6 +21,42 @@ export const TEAMS = gql`
       nodes {
         id
         name
+        description
+        ssoDepartment
+        ssoGroup
+        ssoTitle
+        users {
+          id
+          email
+          name
+        }
+        scopes {
+          id
+          name
+          title
+        }
+      }
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation TranscendCliCreateTeam($input: TeamInput!) {
+    createTeam(input: $input) {
+      team {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_TEAM = gql`
+  mutation TranscendCliUpdateTeam($input: UpdateTeamInput!) {
+    updateTeam(input: $input) {
+      team {
+        id
+        name
       }
     }
   }
