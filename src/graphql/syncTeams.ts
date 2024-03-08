@@ -25,7 +25,7 @@ export async function createTeam(
     ssoDepartment: team['sso-department'],
     ssoGroup: team['sso-group'],
     scopes: team.scopes,
-    // TODO: https://transcend.height.app/T-31574 - add users
+    userEmails: team.users,
   };
 
   const { createTeam } = await makeGraphQLRequest<{
@@ -67,7 +67,7 @@ export async function updateTeam(
       ssoDepartment: input['sso-department'],
       ssoGroup: input['sso-group'],
       scopes: input.scopes,
-      // TODO: https://transcend.height.app/T-31574 - add users
+      userEmails: input.users,
     },
   });
   return updateTeam.team;
