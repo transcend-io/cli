@@ -27,6 +27,7 @@ export * from './consentManager';
 export * from './consentManagerMetrics';
 export * from './businessEntity';
 export * from './action';
+export * from './actionItem';
 export * from './privacyCenter';
 export * from './auth';
 export * from './largeLanguageModel';
