@@ -25,6 +25,7 @@ import {
   AgentFunctionInput,
   AgentInput,
   ActionItemInput,
+  TeamInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -70,6 +71,7 @@ import { logger } from '../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../enums';
 import { fetchAllActionItems } from './fetchAllActionItems';
+import { fetchAllTeams } from './fetchAllTeams';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -155,6 +157,7 @@ export async function pullTranscendConfiguration(
     dataCategories,
     processingPurposes,
     actionItems,
+    teams,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -278,6 +281,10 @@ export async function pullTranscendConfiguration(
     // Fetch actionItems
     resources.includes(TranscendPullResource.ActionItems)
       ? fetchAllActionItems(client, { type: [ActionItemCode.Onboarding] })
+      : [],
+    // Fetch teams
+    resources.includes(TranscendPullResource.Teams)
+      ? fetchAllTeams(client)
       : [],
   ]);
 
@@ -409,6 +416,29 @@ export async function pullTranscendConfiguration(
         title,
         description,
         prompts: prompts.map(({ title }) => title),
+      }),
+    );
+  }
+
+  // Save teams
+  if (teams.length > 0) {
+    result.teams = teams.map(
+      ({
+        name,
+        description,
+        ssoDepartment,
+        ssoGroup,
+        ssoTitle,
+        users,
+        scopes,
+      }): TeamInput => ({
+        name,
+        description,
+        'sso-department': ssoDepartment || undefined,
+        'sso-group': ssoGroup || undefined,
+        'sso-title': ssoTitle || undefined,
+        users: users.map(({ email }) => email),
+        scopes: scopes.map(({ name }) => name),
       }),
     );
   }

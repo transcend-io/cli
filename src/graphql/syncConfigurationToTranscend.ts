@@ -19,6 +19,7 @@ import {
   fetchAllDataSubjects,
   ensureAllDataSubjectsExist,
 } from './fetchDataSubjects';
+import { syncTeams } from './syncTeams';
 import { syncDataSubject } from './syncDataSubject';
 import { fetchApiKeys } from './fetchApiKeys';
 import { syncPrompts } from './syncPrompts';
@@ -98,6 +99,7 @@ export async function syncConfigurationToTranscend(
     vendors,
     'data-categories': dataCategories,
     'processing-purposes': processingPurposes,
+    teams,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -144,6 +146,11 @@ export async function syncConfigurationToTranscend(
   if (promptGroups) {
     const promptsSuccess = await syncPromptGroups(client, promptGroups);
     encounteredError = encounteredError || !promptsSuccess;
+  }
+
+  if (teams) {
+    const teamsSuccess = await syncTeams(client, teams);
+    encounteredError = encounteredError || !teamsSuccess;
   }
 
   // Sync email templates

@@ -1,5 +1,10 @@
-import { createSombraGotInstance } from '../graphql';
+import {
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchRequestDataSiloActiveCount,
+} from '../graphql';
 import colors from 'colors';
+import cliProgress from 'cli-progress';
 import {
   pullCronPageOfIdentifiers,
   CronIdentifier,
@@ -50,18 +55,36 @@ export async function pullCustomSiloOutstandingIdentifiers({
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
+  // Create GraphQL client to connect to Transcend backend
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  const totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
+    dataSiloId,
+  });
+
   logger.info(
     colors.magenta(
-      `Pulling outstanding request identifiers for data silo: "${dataSiloId}" for requests of types "${actions.join(
-        '", "',
-      )}"`,
+      `Pulling ${totalRequestCount} outstanding request identifiers ` +
+        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+          '", "',
+        )}"`,
     ),
   );
+
+  // Time duration
+  const t0 = new Date().getTime();
+  // create a new progress bar instance and use shades_classic theme
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+  const foundRequestIds = new Set<string>();
 
   // identifiers found in total
   const identifiers: CronIdentifierWithAction[] = [];
 
   // map over each action
+  progressBar.start(totalRequestCount, 0);
   await mapSeries(actions, async (action) => {
     let offset = 0;
     let shouldContinue = true;
@@ -76,19 +99,29 @@ export async function pullCustomSiloOutstandingIdentifiers({
         requestType: action,
       });
       identifiers.push(
-        ...pageIdentifiers.map((identifier) => ({
-          ...identifier,
-          action,
-        })),
+        ...pageIdentifiers.map((identifier) => {
+          foundRequestIds.add(identifier.requestId);
+          return {
+            ...identifier,
+            action,
+          };
+        }),
       );
       shouldContinue = pageIdentifiers.length === pageLimit;
       offset += pageLimit;
+      progressBar.update(foundRequestIds.size);
     }
   });
 
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+
   logger.info(
-    colors.magenta(
-      `Found: ${identifiers.length} outstanding identifiers to parse`,
+    colors.green(
+      `Successfully pulled ${identifiers.length} outstanding identifiers from ${
+        foundRequestIds.size
+      } requests in "${totalTime / 1000}" seconds!`,
     ),
   );
 

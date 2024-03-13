@@ -33,6 +33,7 @@ import {
   CodePackageType,
   ActionItemPriorityOverride,
   ActionItemCode,
+  ScopeName,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -72,6 +73,7 @@ export const WebhookHeader = t.intersection([
 
 /** Type override */
 export type WebhookHeader = t.TypeOf<typeof WebhookHeader>;
+
 /**
  * Input to define API keys that may be shared across data silos
  * in the data map. When creating new data silos through the yaml
@@ -87,6 +89,36 @@ export const ApiKeyInput = t.type({
 
 /** Type override */
 export type ApiKeyInput = t.TypeOf<typeof ApiKeyInput>;
+
+/**
+ * Input to define teams in Transcend
+ * Users belong to teams and teams can be assigned to various resources
+ *
+ * @see https://docs.transcend.io/docs/security/access-control
+ */
+export const TeamInput = t.intersection([
+  t.type({
+    /** The display name of the team */
+    name: t.string,
+    /** Team description */
+    description: t.string,
+  }),
+  t.partial({
+    /** SSO department for automated provisioning */
+    'sso-department': t.string,
+    /** SSO group name for automated provisioning */
+    'sso-group': t.string,
+    /** SSO title mapping for automated provisioning */
+    'sso-title': t.string,
+    /** List of user emails on the team */
+    users: t.array(t.string),
+    /** List of scopes that the team should have */
+    scopes: t.array(valuesOf(ScopeName)),
+  }),
+]);
+
+/** Type override */
+export type TeamInput = t.TypeOf<typeof TeamInput>;
 
 /**
  * Input to define an enricher
@@ -1299,6 +1331,8 @@ export const TranscendInput = t.partial({
    * API key definitions
    */
   'api-keys': t.array(ApiKeyInput),
+  /** Team definitions */
+  teams: t.array(TeamInput),
   /**
    * Email template definitions
    */

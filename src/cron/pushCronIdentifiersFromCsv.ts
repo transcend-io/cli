@@ -5,6 +5,7 @@ import {
   markCronIdentifierCompleted,
   CronIdentifierPush,
 } from './markCronIdentifierCompleted';
+import cliProgress from 'cli-progress';
 import { logger } from '../logger';
 import { readCsv } from '../requests';
 import { DEFAULT_TRANSCEND_API } from '../constants';
@@ -46,17 +47,53 @@ export async function pushCronIdentifiersFromCsv({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Notifying Transcend for data silo "${dataSiloId}" marking "${activeResults.length}" requests as completed.`,
+      `Notifying Transcend for data silo "${dataSiloId}" marking "${activeResults.length}" identifiers as completed.`,
     ),
   );
+
+  // Time duration
+  const t0 = new Date().getTime();
+  // create a new progress bar instance and use shades_classic theme
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+
+  let successCount = 0;
+  let failureCount = 0;
+  progressBar.start(activeResults.length, 0);
   await map(
     activeResults,
     async (identifier) => {
-      await markCronIdentifierCompleted(sombra, identifier);
+      const success = await markCronIdentifierCompleted(sombra, identifier);
+      if (success) {
+        successCount += 1;
+      } else {
+        failureCount += 1;
+      }
+      progressBar.update(successCount + failureCount);
     },
     { concurrency },
   );
 
-  logger.info(colors.green('Successfully notified Transcend!'));
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+
+  logger.info(
+    colors.green(
+      `Successfully notified Transcend for ${successCount} identifiers in "${
+        totalTime / 1000
+      }" seconds!`,
+    ),
+  );
+  if (failureCount) {
+    logger.info(
+      colors.magenta(
+        `There were ${failureCount} identifiers that were not in a state to be updated.` +
+          'They likely have already been resolved.',
+      ),
+    );
+  }
   return activeResults.length;
 }
