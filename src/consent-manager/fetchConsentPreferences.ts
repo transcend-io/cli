@@ -68,7 +68,7 @@ export async function fetchConsentPreferences(
       .post('v1/consent-preferences', {
         json: {
           partition,
-          ...(Object.values(filterBy).length > 0 ? { filterBy } : {}),
+          ...filterBy,
           // using lastKey to paginate if it exists (will not for first iteration)
           startKey: currentLastKey || undefined,
           limit,
