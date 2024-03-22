@@ -2083,6 +2083,8 @@ Each row in the CSV must include:
 | prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
 | usp       | US Privacy string                                                                                         | string - USP              | N/A     | false    |
 
+An sample CSV can be found [here](./examples/preference-upload.csv).
+
 #### Authentication
 
 In order to use this cli, you will first need to follow [this guide](https://docs.transcend.io/docs/consent/reference/managed-consent-database#authenticate-a-user's-consent) in order
