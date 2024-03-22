@@ -2079,7 +2079,8 @@ Each row in the CSV must include:
 | timestamp | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
 | purposes  | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | false    |
 | confirmed | Whether consent preferences have been explicitly confirmed or inferred                                    | boolean                   | true    | false    |
-| updated   | Time consent preferences were last updated                                                                | string - timestamp        | N/A     | false    |
+| updated   | Has the consent been updated (including no-change confirmation) since default resolution                  | boolean                   | N/A     | false    |
+| prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
 | usp       | US Privacy string                                                                                         | string - USP              | N/A     | false    |
 
 #### Authentication
