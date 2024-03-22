@@ -6,8 +6,14 @@ import { map } from 'bluebird';
 import { createConsentToken } from './createConsentToken';
 import { logger } from '../logger';
 import cliProgress from 'cli-progress';
+import { decodeCodec } from '@transcend-io/type-utils';
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
+
+export const PurposeMap = t.record(
+  t.string,
+  t.union([t.boolean, t.literal('Auto')]),
+);
 
 export const ManagedConsentDatabaseConsentPreference = t.intersection([
   t.type({
@@ -17,14 +23,21 @@ export const ManagedConsentDatabaseConsentPreference = t.intersection([
     timestamp: t.string,
   }),
   t.partial({
-    /** Purpose map */
-    purposes: t.record(t.string, t.union([t.boolean, t.literal('Auto')])),
+    /**
+     * Purpose map
+     * This is a JSON object with keys as purpose names and values as booleans or 'Auto'
+     */
+    purposes: t.string,
     /** Was tracking consent confirmed by the user? If this is false, the consent was resolved from defaults & is not yet confirmed */
-    confirmed: t.boolean,
-    /** Time updated */
-    updated: t.boolean,
-    /** Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js) */
-    prompted: t.boolean,
+    confirmed: t.union([t.literal('true'), t.literal('false')]),
+    /**
+     * Has the consent been updated (including no-change confirmation) since default resolution
+     */
+    updated: t.union([t.literal('true'), t.literal('false')]),
+    /**
+     * Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)
+     */
+    prompted: t.union([t.literal('true'), t.literal('false')]),
     /** US Privacy (USP) String */
     usp: t.string,
   }),
@@ -78,6 +91,33 @@ export async function uploadConsentPreferences({
     );
   }
 
+  // Ensure purpose maps are valid
+  const invalidPurposeMaps = preferences
+    .map(
+      (pref, ind) =>
+        [pref, ind] as [ManagedConsentDatabaseConsentPreference, number],
+    )
+    .filter(([pref]) => {
+      if (!pref.purposes) {
+        return false;
+      }
+      try {
+        decodeCodec(PurposeMap, pref.purposes);
+        return false;
+      } catch {
+        return true;
+      }
+    });
+  if (invalidPurposeMaps.length > 0) {
+    throw new Error(
+      `Received invalid purpose maps: ${JSON.stringify(
+        invalidPurposeMaps,
+        null,
+        2,
+      )}`,
+    );
+  }
+
   // Ensure usp or preferences are provided
   const invalidInputs = preferences.filter(
     (pref) => !pref.usp && !pref.purposes,
@@ -111,7 +151,14 @@ export async function uploadConsentPreferences({
   progressBar.start(preferences.length, 0);
   await map(
     preferences,
-    async ({ userId, confirmed = true, purposes, ...consent }) => {
+    async ({
+      userId,
+      confirmed = 'true',
+      updated,
+      prompted,
+      purposes,
+      ...consent
+    }) => {
       const token = createConsentToken(
         userId,
         base64EncryptionKey,
@@ -127,19 +174,40 @@ export async function uploadConsentPreferences({
         token,
         partition,
         consent: {
-          confirmed,
-          purposes:
-            purposes || (consent.usp ? { SaleOfInfo: saleStatus === 'Y' } : {}),
+          confirmed: confirmed === 'true',
+          purposes: purposes
+            ? decodeCodec(PurposeMap, purposes)
+            : consent.usp
+            ? { SaleOfInfo: saleStatus === 'Y' }
+            : {},
+          ...(updated ? { updated: updated === 'true' } : {}),
+          ...(prompted ? { prompted: prompted === 'true' } : {}),
           ...consent,
         },
       };
 
       // Make the request
-      await transcendConsentApi
-        .post('sync', {
-          json: input,
-        })
-        .json();
+      try {
+        await transcendConsentApi
+          .post('sync', {
+            json: input,
+          })
+          .json();
+      } catch (err) {
+        try {
+          const parsed = JSON.parse(err?.response?.body || '{}');
+          if (parsed.error) {
+            logger.error(colors.red(`Error: ${parsed.error}`));
+          }
+        } catch (e) {
+          // continue
+        }
+        throw new Error(
+          `Received an error from server: ${
+            err?.response?.body || err?.message
+          }`,
+        );
+      }
 
       total += 1;
       progressBar.update(total);
