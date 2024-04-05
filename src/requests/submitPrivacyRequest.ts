@@ -83,45 +83,52 @@ export async function submitPrivacyRequest(
   });
 
   // Make the GraphQL request
-  const response = await sombra
-    .post('v1/data-subject-request', {
-      json: {
-        type: input.requestType,
-        subject: {
-          coreIdentifier: input.coreIdentifier,
-          email: input.email,
-          emailIsVerified,
-          attestedExtraIdentifiers: input.attestedExtraIdentifiers,
+  let response: unknown;
+  try {
+    response = await sombra
+      .post('v1/data-subject-request', {
+        json: {
+          type: input.requestType,
+          subject: {
+            coreIdentifier: input.coreIdentifier,
+            email: input.email,
+            emailIsVerified,
+            attestedExtraIdentifiers: input.attestedExtraIdentifiers,
+          },
+          subjectType: input.subjectType,
+          isSilent,
+          isTest,
+          skipSendingReceipt,
+          ...(input.locale ? { locale: input.locale } : {}),
+          details,
+          attributes: mergedAttributes,
+          ...(input.country || input.countrySubDivision
+            ? {
+                region: {
+                  ...(input.country
+                    ? {
+                        country: input.country,
+                      }
+                    : input.countrySubDivision
+                    ? { country: input.countrySubDivision.split('-')[0] }
+                    : {}),
+                  ...(input.countrySubDivision
+                    ? { countrySubDivision: input.countrySubDivision }
+                    : {}),
+                },
+              }
+            : {}),
+          ...(input.createdAt ? { createdAt: input.createdAt } : {}),
+          ...(input.dataSiloIds ? { dataSiloIds: input.dataSiloIds } : {}),
+          ...(input.status ? { completedRequestStatus: input.status } : {}),
         },
-        subjectType: input.subjectType,
-        isSilent,
-        isTest,
-        skipSendingReceipt,
-        ...(input.locale ? { locale: input.locale } : {}),
-        details,
-        attributes: mergedAttributes,
-        ...(input.country || input.countrySubDivision
-          ? {
-              region: {
-                ...(input.country
-                  ? {
-                      country: input.country,
-                    }
-                  : input.countrySubDivision
-                  ? { country: input.countrySubDivision.split('-')[0] }
-                  : {}),
-                ...(input.countrySubDivision
-                  ? { countrySubDivision: input.countrySubDivision }
-                  : {}),
-              },
-            }
-          : {}),
-        ...(input.createdAt ? { createdAt: input.createdAt } : {}),
-        ...(input.dataSiloIds ? { dataSiloIds: input.dataSiloIds } : {}),
-        ...(input.status ? { completedRequestStatus: input.status } : {}),
-      },
-    })
-    .json();
+      })
+      .json();
+  } catch (err) {
+    throw new Error(
+      `Received an error from server: ${err?.response?.body || err?.message}`,
+    );
+  }
 
   const { request: requestResponse } = decodeCodec(
     t.type({
