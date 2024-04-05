@@ -36,28 +36,34 @@ export const RequestIdentifiersResponse = t.type({
 /**
  * Fetch all request identifiers for a particular request
  *
- * @param client - GraphQL client, used if options.decrypt is false
- * @param sombra - Sombra client, used if options.decrypt is true
- * @param options - Filter options
+ * @param options - Options
  * @returns List of request identifiers
  */
-export async function fetchAllRequestIdentifiers(
-  client: GraphQLClient,
-  sombra: Got,
-  {
-    requestId,
-    decrypt = false,
-  }: {
-    /** ID of request to filter on */
-    requestId: string;
-    /** Whether or not to decrypt identifier values */
-    decrypt?: boolean;
-  },
-): Promise<RequestIdentifier[]> {
+export async function fetchAllRequestIdentifiers({
+  client,
+  sombra,
+  requestId,
+  decrypt = false,
+}: {
+  /** ID of request to filter on */
+  requestId: string;
+  /** GraphQL client, used when not decrypting */
+  client?: GraphQLClient;
+  /** Sombra client, used for decryption */
+  sombra?: Got;
+  /** Whether or not to decrypt identifier values */
+  decrypt?: boolean;
+}): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
 
   if (decrypt) {
+    if (!sombra) {
+      throw new Error(
+        'Sombra client must be provided when decrypting identifiers',
+      );
+    }
+
     // Decrypt
     const response = await sombra
       .post<{
@@ -73,6 +79,12 @@ export async function fetchAllRequestIdentifiers(
 
     requestIdentifiers.push(...identifiers);
   } else {
+    if (!client) {
+      throw new Error(
+        'Client must be provided when not decrypting identifiers',
+      );
+    }
+
     // Paginate
     let shouldContinue = false;
     do {

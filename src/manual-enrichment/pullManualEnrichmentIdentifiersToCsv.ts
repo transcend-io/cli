@@ -16,6 +16,7 @@ import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { writeCsv } from '../cron/writeCsv';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
+import type { Got } from 'got';
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */
@@ -56,8 +57,11 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  // Create sombra instance to communicate with
-  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+  let sombra: Got | undefined;
+  if (decrypt) {
+    // Create sombra instance to communicate with
+    sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+  }
 
   logger.info(
     colors.magenta(
@@ -92,14 +96,12 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
       // Save request to queue
       if (hasManualEnrichment) {
-        const requestIdentifiers = await fetchAllRequestIdentifiers(
+        const requestIdentifiers = await fetchAllRequestIdentifiers({
           client,
           sombra,
-          {
-            requestId: request.id,
-            decrypt,
-          },
-        );
+          requestId: request.id,
+          decrypt,
+        });
         savedRequests.push({
           ...request,
           requestIdentifiers,
