@@ -6,6 +6,7 @@ import {
   PrivacyRequest,
   fetchAllRequestIdentifiers,
   fetchAllRequestEnrichers,
+  createSombraGotInstance,
 } from '../graphql';
 import colors from 'colors';
 import groupBy from 'lodash/groupBy';
@@ -31,23 +32,33 @@ export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
 export async function pullManualEnrichmentIdentifiersToCsv({
   file,
   auth,
+  sombraAuth,
   requestActions,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
+  decrypt = false,
 }: {
   /** CSV file path */
   file: string;
   /** Transcend API key authentication */
   auth: string;
+  /** Sombra API key */
+  sombraAuth?: string;
   /** Concurrency */
   concurrency?: number;
   /** The request actions to fetch */
   requestActions: RequestAction[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
+  /** Whether or not to decrypt identifiers */
+  decrypt?: boolean;
 }): Promise<PrivacyRequestWithIdentifiers[]> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  // Create sombra instance to communicate with
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+
   logger.info(
     colors.magenta(
       `Pulling manual enrichment requests, filtered for actions: ${requestActions.join(
@@ -81,9 +92,14 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
       // Save request to queue
       if (hasManualEnrichment) {
-        const requestIdentifiers = await fetchAllRequestIdentifiers(client, {
-          requestId: request.id,
-        });
+        const requestIdentifiers = await fetchAllRequestIdentifiers(
+          client,
+          sombra,
+          {
+            requestId: request.id,
+            decrypt,
+          },
+        );
         savedRequests.push({
           ...request,
           requestIdentifiers,

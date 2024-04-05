@@ -16,12 +16,14 @@ import { DEFAULT_TRANSCEND_API } from './constants';
  * Dev Usage:
  * yarn ts-node ./src/cli-manual-enrichment-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --decrypt
  *
  * Standard usage:
  * yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --decrypt
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -29,15 +31,27 @@ async function main(): Promise<void> {
     file = './manual-enrichment-identifiers.csv',
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
+    sombraAuth,
     actions = '',
     concurrency = '100',
+    decrypt = false,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
-  // Ensure auth is passed
-  if (!auth) {
+  // Ensure auth is passed if not decrypting
+  if (!decrypt && !auth) {
     logger.error(
       colors.red(
         'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
+      ),
+    );
+    process.exit(1);
+  }
+
+  // Ensure sombraAuth is passed if decrypting
+  if (decrypt && !sombraAuth) {
+    logger.error(
+      colors.red(
+        'A Sombra API key must be provided. You can specify using --sombraAuth=$SOMBRA_API_KEY',
       ),
     );
     process.exit(1);
@@ -66,6 +80,8 @@ async function main(): Promise<void> {
     concurrency: parseInt(concurrency, 10),
     requestActions,
     auth,
+    sombraAuth,
+    decrypt: decrypt !== false,
   });
 }
 
