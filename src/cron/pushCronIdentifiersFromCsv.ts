@@ -61,15 +61,25 @@ export async function pushCronIdentifiersFromCsv({
 
   let successCount = 0;
   let failureCount = 0;
+  let errorCount = 0;
   progressBar.start(activeResults.length, 0);
   await map(
     activeResults,
     async (identifier) => {
-      const success = await markCronIdentifierCompleted(sombra, identifier);
-      if (success) {
-        successCount += 1;
-      } else {
-        failureCount += 1;
+      try {
+        const success = await markCronIdentifierCompleted(sombra, identifier);
+        if (success) {
+          successCount += 1;
+        } else {
+          failureCount += 1;
+        }
+      } catch (e) {
+        logger.error(
+          colors.red(
+            `Error notifying Transcend for identifier "${identifier.identifier}"`,
+          ),
+        );
+        errorCount += 1;
       }
       progressBar.update(successCount + failureCount);
     },
@@ -94,6 +104,14 @@ export async function pushCronIdentifiersFromCsv({
           'They likely have already been resolved.',
       ),
     );
+  }
+  if (errorCount) {
+    logger.error(
+      colors.red(
+        `There were ${errorCount} identifiers that failed to be updated. Please review the logs for more information.`,
+      ),
+    );
+    throw new Error('Failed to update all identifiers');
   }
   return activeResults.length;
 }
