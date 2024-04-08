@@ -76,7 +76,7 @@ export async function pushCronIdentifiersFromCsv({
       } catch (e) {
         logger.error(
           colors.red(
-            `Error notifying Transcend for identifier "${identifier.identifier}"`,
+            `Error notifying Transcend for identifier "${identifier.identifier}" - ${e.message}`,
           ),
         );
         errorCount += 1;
