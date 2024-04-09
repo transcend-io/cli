@@ -30,6 +30,7 @@ export async function fetchRequestDataSilos(
     dataSiloId,
     requestStatuses,
     statuses,
+    skipLog = false,
   }: {
     /** ID of request to filter on */
     requestId?: string;
@@ -41,6 +42,8 @@ export async function fetchRequestDataSilos(
     statuses?: RequestDataSiloStatus[];
     /** The request statuses to filter on */
     requestStatuses?: RequestStatus[];
+    /** When true, skip logging */
+    skipLog?: boolean;
   },
 ): Promise<RequestDataSilo[]> {
   // create a new progress bar instance and use shades_classic theme
@@ -94,13 +97,15 @@ export async function fetchRequestDataSilos(
   const totalTime = t1 - t0;
 
   // Log completion time
-  logger.info(
-    colors.green(
-      `Completed fetching of ${
-        requestDataSilos.length
-      } request data silos in "${totalTime / 1000}" seconds.`,
-    ),
-  );
+  if (!skipLog) {
+    logger.info(
+      colors.green(
+        `Completed fetching of ${
+          requestDataSilos.length
+        } request data silos in "${totalTime / 1000}" seconds.`,
+      ),
+    );
+  }
 
   return requestDataSilos;
 }
@@ -127,6 +132,7 @@ export async function fetchRequestDataSilo(
   const nodes = await fetchRequestDataSilos(client, {
     requestId,
     dataSiloId,
+    skipLog: true,
   });
   if (nodes.length !== 1) {
     throw new Error(
