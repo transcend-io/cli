@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import yargs from 'yargs-parser';
 import colors from 'colors';
+import yargs from 'yargs-parser';
 
-import { logger } from './logger';
-import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { logger } from './logger';
+import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
 
 /**
  * Pull the the set of requests that actively require manual enrichment.
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
     sombraAuth,
     actions = '',
     concurrency = '100',
-    decrypt = false,
+    decrypt = 'false',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed if not decrypting
@@ -42,16 +42,6 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
-      ),
-    );
-    process.exit(1);
-  }
-
-  // Ensure sombraAuth is passed if decrypting
-  if (decrypt && !sombraAuth) {
-    logger.error(
-      colors.red(
-        'A Sombra API key must be provided. You can specify using --sombraAuth=$SOMBRA_API_KEY',
       ),
     );
     process.exit(1);
@@ -81,7 +71,7 @@ async function main(): Promise<void> {
     requestActions,
     auth,
     sombraAuth,
-    decrypt: decrypt !== false,
+    decrypt: decrypt === 'true',
   });
 }
 

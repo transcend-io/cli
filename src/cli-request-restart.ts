@@ -58,6 +58,8 @@ async function main(): Promise<void> {
     createdAtBefore,
     /** Filter for requests created after this date */
     createdAtAfter,
+    /** Whether or not to decrypt request identifiers */
+    decrypt = 'false',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -131,6 +133,7 @@ async function main(): Promise<void> {
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
     createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
     concurrency: parseInt(concurrency, 10),
+    decrypt: decrypt === 'true',
     transcendUrl,
   });
 }

@@ -1,22 +1,22 @@
-import {
-  buildTranscendGraphQLClient,
-  RequestEnricher,
-  fetchAllRequests,
-  RequestIdentifier,
-  PrivacyRequest,
-  fetchAllRequestIdentifiers,
-  fetchAllRequestEnrichers,
-  createSombraGotInstance,
-} from '../graphql';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { map } from 'bluebird';
 import colors from 'colors';
+import type { Got } from 'got';
 import groupBy from 'lodash/groupBy';
 import uniq from 'lodash/uniq';
-import { map } from 'bluebird';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { writeCsv } from '../cron/writeCsv';
-import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
-import type { Got } from 'got';
+import { writeCsv } from '../cron/writeCsv';
+import {
+  PrivacyRequest,
+  RequestEnricher,
+  RequestIdentifier,
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchAllRequestEnrichers,
+  fetchAllRequestIdentifiers,
+  fetchAllRequests,
+} from '../graphql';
+import { logger } from '../logger';
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */

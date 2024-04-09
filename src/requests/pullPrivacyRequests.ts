@@ -1,16 +1,16 @@
-import {
-  buildTranscendGraphQLClient,
-  fetchAllRequests,
-  RequestIdentifier,
-  PrivacyRequest,
-  fetchAllRequestIdentifiers,
-} from '../graphql';
-import colors from 'colors';
-import { map } from 'bluebird';
-import groupBy from 'lodash/groupBy';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { logger } from '../logger';
+import { map } from 'bluebird';
+import colors from 'colors';
+import groupBy from 'lodash/groupBy';
 import { DEFAULT_TRANSCEND_API } from '../constants';
+import {
+  PrivacyRequest,
+  RequestIdentifier,
+  buildTranscendGraphQLClient,
+  fetchAllRequestIdentifiers,
+  fetchAllRequests,
+} from '../graphql';
+import { logger } from '../logger';
 
 export interface ExportedPrivacyRequest extends PrivacyRequest {
   /** Request identifiers */
@@ -65,18 +65,16 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${
-      dateRange ? ', and' : ''
-    } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${dateRange ? ', and' : ''
+      } after ${createdAtAfter.toISOString()}`;
   }
 
   // Log out
   logger.info(
     colors.magenta(
-      `${
-        actions.length > 0
-          ? `Pulling requests of type "${actions.join('" , "')}"`
-          : 'Pulling all requests'
+      `${actions.length > 0
+        ? `Pulling requests of type "${actions.join('" , "')}"`
+        : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -94,8 +92,9 @@ export async function pullPrivacyRequests({
   const requestsWithRequestIdentifiers = await map(
     requests,
     async (request) => {
-      const requestIdentifiers = await fetchAllRequestIdentifiers(client, {
+      const requestIdentifiers = await fetchAllRequestIdentifiers({
         requestId: request.id,
+        client
       });
       return {
         ...request,

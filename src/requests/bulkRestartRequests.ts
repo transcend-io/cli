@@ -1,22 +1,22 @@
-import * as t from 'io-ts';
-import difference from 'lodash/difference';
+import { PersistedState } from '@transcend-io/persisted-state';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from 'bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
+import * as t from 'io-ts';
+import difference from 'lodash/difference';
 import { join } from 'path';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { PersistedState } from '@transcend-io/persisted-state';
-import { logger } from '../logger';
-import { restartPrivacyRequest } from './restartPrivacyRequest';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
-  fetchAllRequests,
   fetchAllRequestIdentifiers,
+  fetchAllRequests,
 } from '../graphql';
-import { extractClientError } from './extractClientError';
+import { logger } from '../logger';
 import { SuccessfulRequest } from './constants';
-import { DEFAULT_TRANSCEND_API } from '../constants';
+import { extractClientError } from './extractClientError';
+import { restartPrivacyRequest } from './restartPrivacyRequest';
 
 /** Minimal state we need to keep a list of requests */
 const ErrorRequest = t.intersection([
@@ -57,6 +57,7 @@ export async function bulkRestartRequests({
   copyIdentifiers = false,
   skipWaitingPeriod = false,
   concurrency = 20,
+  decrypt = false,
 }: {
   /** Actions to filter for */
   requestActions: RequestAction[];
@@ -90,6 +91,8 @@ export async function bulkRestartRequests({
   createdAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
+  /** Whether or not to decrypt request identifiers */
+  decrypt?: boolean;
 }): Promise<void> {
   // Time duration
   const t0 = new Date().getTime();
@@ -167,9 +170,12 @@ export async function bulkRestartRequests({
       try {
         // Pull the request identifiers
         const requestIdentifiers = copyIdentifiers
-          ? await fetchAllRequestIdentifiers(client, {
-              requestId: request.id,
-            })
+          ? await fetchAllRequestIdentifiers({
+            requestId: request.id,
+            client,
+            sombra,
+            decrypt
+          })
           : [];
 
         // Make the GraphQL request to restart the request
@@ -180,7 +186,7 @@ export async function bulkRestartRequests({
             // override silent mode
             isSilent:
               !!silentModeBefore &&
-              new Date(request.createdAt) < silentModeBefore
+                new Date(request.createdAt) < silentModeBefore
                 ? true
                 : request.isSilent,
           },
@@ -243,7 +249,7 @@ export async function bulkRestartRequests({
     logger.error(
       colors.red(
         `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
+        `See "${cacheFile}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);
