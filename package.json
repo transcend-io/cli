@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "4.132.5",
+  "version": "4.132.6",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -59,13 +59,13 @@
     "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
   },
   "dependencies": {
-    "@transcend-io/airgap.js-types": "^10.11.3",
+    "@transcend-io/airgap.js-types": "^10.12.2",
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.69.0",
+    "@transcend-io/privacy-types": "^4.76.4",
     "@transcend-io/secret-value": "^1.2.0",
-    "@transcend-io/type-utils": "^1.3.0",
+    "@transcend-io/type-utils": "^1.4.2",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
     "colors": "^1.4.0",
