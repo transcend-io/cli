@@ -37,7 +37,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   requestActions,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
-  decrypt = false,
+  decrypt,
 }: {
   /** CSV file path */
   file: string;
@@ -52,7 +52,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Whether or not to decrypt identifiers */
-  decrypt?: boolean;
+  decrypt: boolean;
 }): Promise<PrivacyRequestWithIdentifiers[]> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);

@@ -57,7 +57,7 @@ export async function bulkRestartRequests({
   copyIdentifiers = false,
   skipWaitingPeriod = false,
   concurrency = 20,
-  decrypt = false,
+  decrypt,
 }: {
   /** Actions to filter for */
   requestActions: RequestAction[];
@@ -92,7 +92,7 @@ export async function bulkRestartRequests({
   /** Concurrency to upload requests at */
   concurrency?: number;
   /** Whether or not to decrypt request identifiers */
-  decrypt?: boolean;
+  decrypt: boolean;
 }): Promise<void> {
   // Time duration
   const t0 = new Date().getTime();

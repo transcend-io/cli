@@ -1,12 +1,15 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from 'bluebird';
 import colors from 'colors';
+import type { Got } from 'got';
 import groupBy from 'lodash/groupBy';
+
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import {
   PrivacyRequest,
   RequestIdentifier,
   buildTranscendGraphQLClient,
+  createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
 } from '../graphql';
@@ -24,6 +27,7 @@ export interface ExportedPrivacyRequest extends PrivacyRequest {
  */
 export async function pullPrivacyRequests({
   auth,
+  sombraAuth,
   actions = [],
   statuses = [],
   pageLimit = 100,
@@ -31,9 +35,12 @@ export async function pullPrivacyRequests({
   createdAtBefore,
   createdAtAfter,
   isTest,
+  decrypt,
 }: {
   /** Transcend API key authentication */
   auth: string;
+  /** Sombra API key authentication */
+  sombraAuth?: string;
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Statuses to filter on */
@@ -48,6 +55,8 @@ export async function pullPrivacyRequests({
   createdAtAfter?: Date;
   /** Return test requests */
   isTest?: boolean;
+  /** Whether or not to decrypt request identifiers */
+  decrypt: boolean;
 }): Promise<{
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
@@ -58,6 +67,11 @@ export async function pullPrivacyRequests({
 }> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  let sombra: Got | undefined;
+  if (decrypt) {
+    sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+  }
 
   // Log date range
   let dateRange = '';
@@ -94,7 +108,9 @@ export async function pullPrivacyRequests({
     async (request) => {
       const requestIdentifiers = await fetchAllRequestIdentifiers({
         requestId: request.id,
-        client
+        client,
+        sombra,
+        decrypt
       });
       return {
         ...request,
