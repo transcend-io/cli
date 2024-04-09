@@ -58,6 +58,8 @@
                   "enum": [
                     "readOnly",
                     "fullAdmin",
+                    "viewAllActionItems",
+                    "manageAllActionItems",
                     "makeDataSubjectRequest",
                     "connectDataSilos",
                     "deployPrivacyCenter",
@@ -39318,6 +39320,7 @@
                       "DoNotSellExplainer",
                       "CompleteOptionsToggles",
                       "PrivacyPolicyNotice",
+                      "PrivacyPolicyNoticeWithCloseButton",
                       "CompleteOptions",
                       "CompleteOptionsInverted",
                       "Hidden",
@@ -40281,7 +40284,12 @@
               },
               "purpose": {
                 "type": "string",
-                "enum": ["ASSISTANTS", "FINE_TUNE"]
+                "enum": [
+                  "ASSISTANTS",
+                  "FINE_TUNE",
+                  "FINE_TUNE_RESULTS",
+                  "ASSISTANTS_OUTPUT"
+                ]
               }
             }
           },
