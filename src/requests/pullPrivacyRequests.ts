@@ -1,7 +1,6 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from 'bluebird';
 import colors from 'colors';
-import type { Got } from 'got';
 import groupBy from 'lodash/groupBy';
 
 import { DEFAULT_TRANSCEND_API } from '../constants';
@@ -67,11 +66,7 @@ export async function pullPrivacyRequests({
 }> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
-
-  let sombra: Got | undefined;
-  if (decrypt) {
-    sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
-  }
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   // Log date range
   let dateRange = '';
@@ -79,18 +74,16 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${
-      dateRange ? ', and' : ''
-    } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${dateRange ? ', and' : ''
+      } after ${createdAtAfter.toISOString()}`;
   }
 
   // Log out
   logger.info(
     colors.magenta(
-      `${
-        actions.length > 0
-          ? `Pulling requests of type "${actions.join('" , "')}"`
-          : 'Pulling all requests'
+      `${actions.length > 0
+        ? `Pulling requests of type "${actions.join('" , "')}"`
+        : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -108,10 +101,8 @@ export async function pullPrivacyRequests({
   const requestsWithRequestIdentifiers = await map(
     requests,
     async (request) => {
-      const requestIdentifiers = await fetchAllRequestIdentifiers({
+      const requestIdentifiers = await fetchAllRequestIdentifiers(client, sombra, {
         requestId: request.id,
-        client,
-        sombra,
         decrypt,
       });
       return {

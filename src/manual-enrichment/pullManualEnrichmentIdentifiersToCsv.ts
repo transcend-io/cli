@@ -1,7 +1,6 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from 'bluebird';
 import colors from 'colors';
-import type { Got } from 'got';
 import groupBy from 'lodash/groupBy';
 import uniq from 'lodash/uniq';
 import { DEFAULT_TRANSCEND_API } from '../constants';
@@ -56,12 +55,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 }): Promise<PrivacyRequestWithIdentifiers[]> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
-
-  let sombra: Got | undefined;
-  if (decrypt) {
-    // Create sombra instance to communicate with
-    sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
-  }
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   logger.info(
     colors.magenta(
@@ -96,9 +90,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
       // Save request to queue
       if (hasManualEnrichment) {
-        const requestIdentifiers = await fetchAllRequestIdentifiers({
-          client,
-          sombra,
+        const requestIdentifiers = await fetchAllRequestIdentifiers(client, sombra, {
           requestId: request.id,
           decrypt,
         });

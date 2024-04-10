@@ -44,34 +44,19 @@ export const RequestIdentifiersResponse = t.type({
  * @param options - Options
  * @returns List of request identifiers
  */
-export async function fetchAllRequestIdentifiers({
-  client,
-  sombra,
+export async function fetchAllRequestIdentifiers(client: GraphQLClient, sombra: Got, {
   requestId,
   decrypt,
 }: {
   /** ID of request to filter on */
   requestId: string;
-  /** GraphQL client, used when not decrypting */
-  client?: GraphQLClient;
-  /** Sombra client, used for decryption */
-  sombra?: Got;
   /** Whether or not to decrypt identifier values */
   decrypt: boolean;
 }): Promise<RequestIdentifier[]> {
-  if (decrypt && !sombra) {
-    throw new Error(
-      'Sombra client must be provided when decrypting identifiers',
-    );
-  }
-
-  if (!decrypt && !client) {
-    throw new Error('Client must be provided when not decrypting identifiers');
-  }
-
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
   let shouldContinue = false;
+
   do {
     let nodes: RequestIdentifier[] = [];
 

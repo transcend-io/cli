@@ -170,12 +170,10 @@ export async function bulkRestartRequests({
       try {
         // Pull the request identifiers
         const requestIdentifiers = copyIdentifiers
-          ? await fetchAllRequestIdentifiers({
-              requestId: request.id,
-              client,
-              sombra,
-              decrypt,
-            })
+          ? await fetchAllRequestIdentifiers(client, sombra, {
+            requestId: request.id,
+            decrypt,
+          })
           : [];
 
         // Make the GraphQL request to restart the request
@@ -186,7 +184,7 @@ export async function bulkRestartRequests({
             // override silent mode
             isSilent:
               !!silentModeBefore &&
-              new Date(request.createdAt) < silentModeBefore
+                new Date(request.createdAt) < silentModeBefore
                 ? true
                 : request.isSilent,
           },
@@ -249,7 +247,7 @@ export async function bulkRestartRequests({
     logger.error(
       colors.red(
         `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
+        `See "${cacheFile}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);
