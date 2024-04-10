@@ -16,14 +16,12 @@ import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
  * Dev Usage:
  * yarn ts-node ./src/cli-manual-enrichment-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv \
- *   --decrypt
+ *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:
  * yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv \
- *   --decrypt
+ *   --file=/Users/michaelfarrell/Desktop/test.csv
  */
 async function main(): Promise<void> {
   // Parse command line arguments
