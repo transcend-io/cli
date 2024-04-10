@@ -59,41 +59,41 @@ export async function fetchAllRequestIdentifiers({
   /** Whether or not to decrypt identifier values */
   decrypt?: boolean;
 }): Promise<RequestIdentifier[]> {
+  if (decrypt && !sombra) {
+    throw new Error(
+      'Sombra client must be provided when decrypting identifiers',
+    );
+  }
+
+  if (!decrypt && !client) {
+    throw new Error(
+      'Client must be provided when not decrypting identifiers',
+    );
+  }
+
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
+  let shouldContinue = false;
+  do {
+    let nodes: RequestIdentifier[] = [];
 
-  if (decrypt) {
-    if (!sombra) {
-      throw new Error(
-        'Sombra client must be provided when decrypting identifiers',
-      );
-    }
-
-    // Decrypt
-    const response = await sombra
-      .post<{
-        /** Decrypted identifiers */
-        identifiers: RequestIdentifier[];
-      }>('v1/request-identifiers', {
-        json: {
-          requestId,
-        },
-      })
-      .json();
-    const { identifiers } = decodeCodec(RequestIdentifiersResponse, response);
-
-    requestIdentifiers.push(...identifiers);
-  } else {
-    if (!client) {
-      throw new Error(
-        'Client must be provided when not decrypting identifiers',
-      );
-    }
-
-    // Paginate
-    let shouldContinue = false;
-    do {
-      const {
+    if (decrypt) {
+      // Get decrypted identifiers via Sombra
+      const response = await sombra!
+        .post<{
+          /** Decrypted identifiers */
+          identifiers: RequestIdentifier[];
+        }>('v1/request-identifiers', {
+          json: {
+            first: PAGE_SIZE,
+            offset,
+            requestId,
+          },
+        })
+        .json();
+      ({ identifiers: nodes } = decodeCodec(RequestIdentifiersResponse, response));
+    } else {
+      ({
         requestIdentifiers: { nodes },
         // eslint-disable-next-line no-await-in-loop
       } = await makeGraphQLRequest<{
@@ -102,18 +102,18 @@ export async function fetchAllRequestIdentifiers({
           /** List */
           nodes: RequestIdentifier[];
         };
-      }>(client, REQUEST_IDENTIFIERS, {
+      }>(client!, REQUEST_IDENTIFIERS, {
         first: PAGE_SIZE,
         offset,
         requestId,
-      });
+      }));
+    }
 
-      requestIdentifiers.push(...nodes);
+    requestIdentifiers.push(...nodes);
 
-      offset += PAGE_SIZE;
-      shouldContinue = nodes.length === PAGE_SIZE;
-    } while (shouldContinue);
-  }
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
 
   return requestIdentifiers;
 }
