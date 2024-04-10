@@ -50,7 +50,7 @@ async function main(): Promise<void> {
     /** Page limit when paginating */
     pageLimit = '100',
     /** Whether or not to decrypt request identifiers */
-    decrypt = 'false'
+    decrypt = 'false',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -73,7 +73,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse statuses:"${invalidStatuses.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
       ),
     );
     process.exit(1);

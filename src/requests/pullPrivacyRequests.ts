@@ -79,16 +79,18 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${dateRange ? ', and' : ''
-      } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${
+      dateRange ? ', and' : ''
+    } after ${createdAtAfter.toISOString()}`;
   }
 
   // Log out
   logger.info(
     colors.magenta(
-      `${actions.length > 0
-        ? `Pulling requests of type "${actions.join('" , "')}"`
-        : 'Pulling all requests'
+      `${
+        actions.length > 0
+          ? `Pulling requests of type "${actions.join('" , "')}"`
+          : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -110,7 +112,7 @@ export async function pullPrivacyRequests({
         requestId: request.id,
         client,
         sombra,
-        decrypt
+        decrypt,
       });
       return {
         ...request,

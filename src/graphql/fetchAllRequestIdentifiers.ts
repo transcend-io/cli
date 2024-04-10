@@ -6,12 +6,12 @@ import * as t from 'io-ts';
 import { REQUEST_IDENTIFIERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-const literalUnion = <T extends t.Mixed>(values: T[]): t.UnionC<[T, T, ...T[]]> => {
-  return t.union(values as [T, T, ...T[]]);
-};
+const literalUnion = <T extends t.Mixed>(
+  values: T[],
+): t.UnionC<[T, T, ...T[]]> => t.union(values as [T, T, ...T[]]);
 
 const IdentifierTypeValues = literalUnion(
-  Object.values(IdentifierType).map((v) => t.literal(v))
+  Object.values(IdentifierType).map((v) => t.literal(v)),
 );
 
 const RequestIdentifier = t.type({
@@ -66,9 +66,7 @@ export async function fetchAllRequestIdentifiers({
   }
 
   if (!decrypt && !client) {
-    throw new Error(
-      'Client must be provided when not decrypting identifiers',
-    );
+    throw new Error('Client must be provided when not decrypting identifiers');
   }
 
   const requestIdentifiers: RequestIdentifier[] = [];
@@ -91,7 +89,10 @@ export async function fetchAllRequestIdentifiers({
           },
         })
         .json();
-      ({ identifiers: nodes } = decodeCodec(RequestIdentifiersResponse, response));
+      ({ identifiers: nodes } = decodeCodec(
+        RequestIdentifiersResponse,
+        response,
+      ));
     } else {
       ({
         requestIdentifiers: { nodes },
