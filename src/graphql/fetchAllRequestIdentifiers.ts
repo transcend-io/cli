@@ -48,7 +48,7 @@ export async function fetchAllRequestIdentifiers({
   client,
   sombra,
   requestId,
-  decrypt = false,
+  decrypt,
 }: {
   /** ID of request to filter on */
   requestId: string;
@@ -57,7 +57,7 @@ export async function fetchAllRequestIdentifiers({
   /** Sombra client, used for decryption */
   sombra?: Got;
   /** Whether or not to decrypt identifier values */
-  decrypt?: boolean;
+  decrypt: boolean;
 }): Promise<RequestIdentifier[]> {
   if (decrypt && !sombra) {
     throw new Error(
