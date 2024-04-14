@@ -112,7 +112,8 @@ export async function fetchAllRequestIdentifiers(
       } catch (error) {
         if (error.response.statusCode === 400) {
           throw new Error(
-            "Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. Please ensure Sombra is the correct version to use this feature.",
+            "Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. " +
+              'Please ensure Sombra is the correct version to use this feature.',
           );
         }
         throw error;
