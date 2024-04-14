@@ -45,30 +45,44 @@ export const RequestIdentifiersResponse = t.type({
 /**
  * Fetch all request identifiers for a particular request
  *
+ * @param client - GraphQL client
+ * @param sombra - Sombra client
  * @param options - Options
  * @returns List of request identifiers
  */
-export async function fetchAllRequestIdentifiers(client: GraphQLClient, sombra: Got, {
-  requestId,
-}: {
-  /** ID of request to filter on */
-  requestId: string;
-}): Promise<RequestIdentifier[]> {
+export async function fetchAllRequestIdentifiers(
+  client: GraphQLClient,
+  sombra: Got,
+  {
+    requestId,
+  }: {
+    /** ID of request to filter on */
+    requestId: string;
+  },
+): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
   let shouldContinue = false;
 
   // determine sombra version
-  const { organization: { sombra: { version } } } = await makeGraphQLRequest<{
+  const {
     organization: {
+      sombra: { version },
+    },
+  } = await makeGraphQLRequest<{
+    /** The organization */
+    organization: {
+      /** Sombra */
       sombra: {
+        /** Version string */
         version: string;
-      }
-    }
+      };
+    };
   }>(client!, SOMBRA_VERSION);
 
   // Null here represents multi-tenant Sombra
-  const decrypt = version === null || semver.gte(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
+  const decrypt =
+    version === null || semver.gte(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
 
   do {
     let nodes: RequestIdentifier[] = [];
@@ -97,7 +111,9 @@ export async function fetchAllRequestIdentifiers(client: GraphQLClient, sombra: 
         ));
       } catch (error) {
         if (error.response.statusCode === 400) {
-          throw new Error("Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. Please ensure Sombra is the correct version to use this feature.")
+          throw new Error(
+            "Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. Please ensure Sombra is the correct version to use this feature.",
+          );
         }
         throw error;
       }
