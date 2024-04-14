@@ -8,7 +8,7 @@ import semver from 'semver';
 import { REQUEST_IDENTIFIERS, SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.179';
+const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
 
 const literalUnion = <T extends t.Mixed>(
   values: T[],
@@ -68,7 +68,7 @@ export async function fetchAllRequestIdentifiers(client: GraphQLClient, sombra: 
   }>(client!, SOMBRA_VERSION);
 
   // Null here represents multi-tenant Sombra
-  const decrypt = version === null || semver.gt(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
+  const decrypt = version === null || semver.gte(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
 
   do {
     let nodes: RequestIdentifier[] = [];
