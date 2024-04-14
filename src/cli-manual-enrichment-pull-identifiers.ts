@@ -32,11 +32,10 @@ async function main(): Promise<void> {
     sombraAuth,
     actions = '',
     concurrency = '100',
-    decrypt = 'false',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
-  // Ensure auth is passed if not decrypting
-  if (!decrypt && !auth) {
+  // Ensure auth is provided
+  if (!auth) {
     logger.error(
       colors.red(
         'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
@@ -69,7 +68,6 @@ async function main(): Promise<void> {
     requestActions,
     auth,
     sombraAuth,
-    decrypt: decrypt === 'true',
   });
 }
 

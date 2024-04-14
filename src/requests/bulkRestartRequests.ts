@@ -57,7 +57,6 @@ export async function bulkRestartRequests({
   copyIdentifiers = false,
   skipWaitingPeriod = false,
   concurrency = 20,
-  decrypt,
 }: {
   /** Actions to filter for */
   requestActions: RequestAction[];
@@ -91,8 +90,6 @@ export async function bulkRestartRequests({
   createdAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
-  /** Whether or not to decrypt request identifiers */
-  decrypt: boolean;
 }): Promise<void> {
   // Time duration
   const t0 = new Date().getTime();
@@ -172,7 +169,6 @@ export async function bulkRestartRequests({
         const requestIdentifiers = copyIdentifiers
           ? await fetchAllRequestIdentifiers(client, sombra, {
             requestId: request.id,
-            decrypt,
           })
           : [];
 

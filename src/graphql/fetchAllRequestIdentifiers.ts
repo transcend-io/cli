@@ -3,8 +3,12 @@ import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
-import { REQUEST_IDENTIFIERS } from './gqls';
+import semver from 'semver';
+
+import { REQUEST_IDENTIFIERS, SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+
+const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.179';
 
 const literalUnion = <T extends t.Mixed>(
   values: T[],
@@ -46,35 +50,59 @@ export const RequestIdentifiersResponse = t.type({
  */
 export async function fetchAllRequestIdentifiers(client: GraphQLClient, sombra: Got, {
   requestId,
-  decrypt,
 }: {
   /** ID of request to filter on */
   requestId: string;
-  /** Whether or not to decrypt identifier values */
-  decrypt: boolean;
 }): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
   let shouldContinue = false;
 
+  // determine sombra version
+  const { organization: { sombra: { version } } } = await makeGraphQLRequest<{
+    organization: {
+      sombra: {
+        version: string;
+      }
+    }
+  }>(client!, SOMBRA_VERSION);
+
+  // Null here represents multi-tenant Sombra
+  const decrypt = version === null || semver.gt(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
+
   do {
     let nodes: RequestIdentifier[] = [];
 
     if (decrypt) {
+      let response;
+
       // Get decrypted identifiers via Sombra
-      // eslint-disable-next-line no-await-in-loop
-      const response = await sombra!
-        .post<{
-          /** Decrypted identifiers */
-          identifiers: RequestIdentifier[];
-        }>('v1/request-identifiers', {
-          json: {
-            first: PAGE_SIZE,
-            offset,
-            requestId,
-          },
-        })
-        .json();
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        response = await sombra!
+          .post<{
+            /** Decrypted identifiers */
+            identifiers: RequestIdentifier[];
+          }>('v1/request-identifiers', {
+            json: {
+              first: PAGE_SIZE,
+              offset,
+              requestId,
+            },
+          })
+          .json();
+        ({ identifiers: nodes } = decodeCodec(
+          RequestIdentifiersResponse,
+          response,
+        ));
+      } catch (error) {
+        if (error.response.statusCode === 400) {
+          throw new Error("Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. Please ensure Sombra is the correct version to use this feature.")
+        }
+        throw error;
+      }
+
+      // decode response
       ({ identifiers: nodes } = decodeCodec(
         RequestIdentifiersResponse,
         response,

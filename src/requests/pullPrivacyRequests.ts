@@ -34,7 +34,6 @@ export async function pullPrivacyRequests({
   createdAtBefore,
   createdAtAfter,
   isTest,
-  decrypt,
 }: {
   /** Transcend API key authentication */
   auth: string;
@@ -54,8 +53,6 @@ export async function pullPrivacyRequests({
   createdAtAfter?: Date;
   /** Return test requests */
   isTest?: boolean;
-  /** Whether or not to decrypt request identifiers */
-  decrypt: boolean;
 }): Promise<{
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
@@ -103,7 +100,6 @@ export async function pullPrivacyRequests({
     async (request) => {
       const requestIdentifiers = await fetchAllRequestIdentifiers(client, sombra, {
         requestId: request.id,
-        decrypt,
       });
       return {
         ...request,
