@@ -35,6 +35,8 @@ async function main(): Promise<void> {
     transcendUrl = DEFAULT_TRANSCEND_API,
     /** API key */
     auth,
+    /** Sombra API key */
+    sombraAuth,
     /** Request actions to export */
     actions = '',
     /** Request statuses to export */
@@ -69,7 +71,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -85,7 +87,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse statuses:"${invalidStatuses.join(',')}".\n` +
-          `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
+        `Expected one of: \n${Object.values(RequestStatus).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -98,6 +100,7 @@ async function main(): Promise<void> {
     actions: parsedActions,
     statuses: parsedStatuses,
     auth,
+    sombraAuth,
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
     createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
     isTest:

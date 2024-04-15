@@ -1,20 +1,21 @@
-import {
-  buildTranscendGraphQLClient,
-  RequestEnricher,
-  fetchAllRequests,
-  RequestIdentifier,
-  PrivacyRequest,
-  fetchAllRequestIdentifiers,
-  fetchAllRequestEnrichers,
-} from '../graphql';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { map } from 'bluebird';
 import colors from 'colors';
 import groupBy from 'lodash/groupBy';
 import uniq from 'lodash/uniq';
-import { map } from 'bluebird';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { writeCsv } from '../cron/writeCsv';
-import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
+import { writeCsv } from '../cron/writeCsv';
+import {
+  PrivacyRequest,
+  RequestEnricher,
+  RequestIdentifier,
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchAllRequestEnrichers,
+  fetchAllRequestIdentifiers,
+  fetchAllRequests,
+} from '../graphql';
+import { logger } from '../logger';
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */
@@ -31,6 +32,7 @@ export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
 export async function pullManualEnrichmentIdentifiersToCsv({
   file,
   auth,
+  sombraAuth,
   requestActions,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
@@ -39,6 +41,8 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   file: string;
   /** Transcend API key authentication */
   auth: string;
+  /** Sombra API key */
+  sombraAuth?: string;
   /** Concurrency */
   concurrency?: number;
   /** The request actions to fetch */
@@ -48,6 +52,8 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 }): Promise<PrivacyRequestWithIdentifiers[]> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
+  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+
   logger.info(
     colors.magenta(
       `Pulling manual enrichment requests, filtered for actions: ${requestActions.join(
@@ -81,7 +87,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
       // Save request to queue
       if (hasManualEnrichment) {
-        const requestIdentifiers = await fetchAllRequestIdentifiers(client, {
+        const requestIdentifiers = await fetchAllRequestIdentifiers(client, sombra, {
           requestId: request.id,
         });
         savedRequests.push({

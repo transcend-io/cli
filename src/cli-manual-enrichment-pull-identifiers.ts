@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import yargs from 'yargs-parser';
 import colors from 'colors';
+import yargs from 'yargs-parser';
 
-import { logger } from './logger';
-import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
+import { logger } from './logger';
+import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
 
 /**
  * Pull the the set of requests that actively require manual enrichment.
@@ -29,11 +29,12 @@ async function main(): Promise<void> {
     file = './manual-enrichment-identifiers.csv',
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
+    sombraAuth,
     actions = '',
     concurrency = '100',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
-  // Ensure auth is passed
+  // Ensure auth is provided
   if (!auth) {
     logger.error(
       colors.red(
@@ -66,6 +67,7 @@ async function main(): Promise<void> {
     concurrency: parseInt(concurrency, 10),
     requestActions,
     auth,
+    sombraAuth,
   });
 }
 
