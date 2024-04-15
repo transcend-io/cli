@@ -36,3 +36,4 @@ export * from './agentFunction';
 export * from './vendor';
 export * from './dataCategory';
 export * from './processingPurpose';
+export * from './sombraVersion';
