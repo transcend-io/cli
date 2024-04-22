@@ -79,36 +79,24 @@ export async function fetchAllRequestIdentifiers(
   }
 
   do {
-    let nodes: RequestIdentifier[] = [];
+    // eslint-disable-next-line no-await-in-loop
+    const response = await sombra!
+      .post<{
+        /** Decrypted identifiers */
+        identifiers: RequestIdentifier[];
+      }>('v1/request-identifiers', {
+        json: {
+          first: PAGE_SIZE,
+          offset,
+          requestId,
+        },
+      })
+      .json();
 
-    // Get decrypted identifiers via Sombra
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      const response = await sombra!
-        .post<{
-          /** Decrypted identifiers */
-          identifiers: RequestIdentifier[];
-        }>('v1/request-identifiers', {
-          json: {
-            first: PAGE_SIZE,
-            offset,
-            requestId,
-          },
-        })
-        .json();
-      ({ identifiers: nodes } = decodeCodec(
-        RequestIdentifiersResponse,
-        response,
-      ));
-    } catch (error) {
-      if (error.response.statusCode === 400) {
-        throw new Error(
-          "Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. " +
-            'Please ensure Sombra is the correct version to use this feature.',
-        );
-      }
-      throw error;
-    }
+    const { identifiers: nodes } = decodeCodec(
+      RequestIdentifiersResponse,
+      response,
+    );
 
     requestIdentifiers.push(...nodes);
 
