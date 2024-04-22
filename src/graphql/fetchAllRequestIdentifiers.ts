@@ -1,5 +1,5 @@
 import { IdentifierType } from '@transcend-io/privacy-types';
-import { decodeCodec } from '@transcend-io/type-utils';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
@@ -10,14 +10,6 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
 
-const literalUnion = <T extends t.Mixed>(
-  values: T[],
-): t.UnionC<[T, T, ...T[]]> => t.union(values as [T, T, ...T[]]);
-
-const IdentifierTypeValues = literalUnion(
-  Object.values(IdentifierType).map((v) => t.literal(v)),
-);
-
 const RequestIdentifier = t.type({
   /** ID of request */
   id: t.string,
@@ -26,7 +18,7 @@ const RequestIdentifier = t.type({
   /** The underlying identifier value */
   value: t.string,
   /** Type of identifier */
-  type: IdentifierTypeValues,
+  type: valuesOf(IdentifierType),
   /** Whether request identifier has been verified at least one */
   isVerifiedAtLeastOnce: t.boolean,
   /** Whether request identifier has been verified */
