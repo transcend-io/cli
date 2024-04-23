@@ -2665,4 +2665,4 @@ If you are trying to use the cli inside a corporate firewall and need to send tr
 
 ## Changelog
 
-To stay up to date on the latest changes, please refer to [CHANGELOG.md](CHANGELOG.md).
+To stay up to date on breaking changes to the cli between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
