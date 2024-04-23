@@ -135,6 +135,7 @@
     - [Usage](#usage-31)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
+- [Changelog](#changelog)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1262,7 +1263,7 @@ The API key needs the following scopes:
 | statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[] | N/A                               | true     |
 | transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io          | false    |
 | requestReceiptFolder | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                                     | string          | ./privacy-request-upload-receipts | false    |
-| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string          | N/A                               | false    |
+| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra. Only required when `copyIdentifiers` flag used.      | string          | N/A                               | false    |
 | concurrency          | The concurrency to use when uploading requests in parallel.                                                                               | number          | 15                                | false    |
 | requestIds           | Specify the specific request IDs to restart                                                                                               | string[]        | []                                | false    |
 | emailIsVerified      | Indicate whether the primary email address is verified. Set to false to send a verification email.                                        | boolean         | true                              | false    |
@@ -2661,3 +2662,7 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
+
+## Changelog
+
+To stay up to date on the latest changes, please refer to [CHANGELOG.md](CHANGELOG.md).

@@ -10,4 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added logic to decrypt encrypted request identifiers to `cli-manual-enrichment-pull-identifiers`,
-  `cli-request-export` and `cli-request-restart`. These commands now require minimum Sombra version of 7.180, and you must provide `sombraAuth` argument if using single-tenant Sombra.
+  `cli-request-export` and `cli-request-restart`. These commands now require minimum Sombra version of 7.180, and you must provide `sombraAuth` argument if using self-hosted Sombra.
