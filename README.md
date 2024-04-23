@@ -3,6 +3,7 @@
 
 ## Table of Contents
 
+- [Changelog](#changelog)
 - [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
@@ -135,9 +136,12 @@
     - [Usage](#usage-31)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
-- [Changelog](#changelog)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Changelog
+
+To stay up to date on breaking changes to the cli between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
 
 ## Overview
 
@@ -2662,7 +2666,3 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
-
-## Changelog
-
-To stay up to date on breaking changes to the cli between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
