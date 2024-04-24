@@ -20,5 +20,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Added logic to decrypt encrypted request identifiers to `cli-manual-enrichment-pull-identifiers`,
-  `cli-request-export` and `cli-request-restart`. These commands now require minimum Sombra version of 7.180, and you must provide `sombraAuth` argument if using self-hosted Sombra.
+- Added support for encrypted identifiers to `tr-manual-enricher-pull-identifiers` command.
+
+  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
+
+  ```
+  Before:
+    yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
+      --actions=ERASURE \
+      --file=/Users/michaelfarrell/Desktop/test.csv
+
+  Now:
+    yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
+      --sombraAuth=$SOMBRA_INTERNAL_KEY \
+      --actions=ERASURE \
+      --file=/Users/michaelfarrell/Desktop/test.csv
+  ```
+
+- Added support for encrypted identifiers to `tr-request-export` command.
+
+  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
+
+  ```
+  Before:
+    yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
+      --actions=ERASURE \
+      --file=/Users/michaelfarrell/Desktop/test.csv
+
+  Now:
+    yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
+      --sombraAuth=$SOMBRA_INTERNAL_KEY \
+      --actions=ERASURE \
+      --file=/Users/michaelfarrell/Desktop/test.csv
+  ```
+
+- Added support for encrypted identifiers to `tr-request-restart` command, used only when `--copyIdentifiers` argument is specified.
+
+  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required only when using `--copyIdentifiers` AND self-hosted Sombra, but is otherwise not required.
+
+  ```
+  Before:
+    yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
+      --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
+
+  Now:
+    yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
+      --sombraAuth=$SOMBRA_INTERNAL_KEY \
+      --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
+  ```
