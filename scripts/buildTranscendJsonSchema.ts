@@ -18,9 +18,10 @@ import { toJsonSchema } from '@transcend-io/type-utils';
 import * as packageJson from '../package.json';
 import { TranscendInput } from '../src/codecs';
 
+const majorVersion = packageJson.version.split('.')[0];
 const schemaDefaults = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v5.json',
+  $id: `https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v${majorVersion}.json`,
   title: 'transcend.yml',
   description:
     'Define personal data schema and Transcend config as code with the Transcend CLI.',
@@ -29,7 +30,6 @@ const schemaDefaults = {
 // Build the JSON schema from io-ts codec
 const jsonSchema = { ...schemaDefaults, ...toJsonSchema(TranscendInput) };
 
-const majorVersion = packageJson.version.split('.')[0];
 const schemaFilePath = join(
   process.cwd(),
   `transcend-yml-schema-v${majorVersion}.json`,
