@@ -28,13 +28,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@transcend-io/airgap.js-types", "npm:10.11.3"],\
+            ["@transcend-io/airgap.js-types", "npm:10.12.2"],\
             ["@transcend-io/handlebars-utils", "npm:1.1.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.4"],\
-            ["@transcend-io/privacy-types", "npm:4.76.1"],\
+            ["@transcend-io/privacy-types", "npm:4.76.4"],\
             ["@transcend-io/secret-value", "npm:1.2.0"],\
-            ["@transcend-io/type-utils", "npm:1.3.0"],\
+            ["@transcend-io/type-utils", "npm:1.4.2"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -49,6 +49,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
             ["@types/node", "npm:18.15.11"],\
+            ["@types/semver", "npm:7.5.8"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
@@ -84,6 +85,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.8.7"],\
             ["query-string", "npm:7.0.0"],\
+            ["semver", "npm:7.6.0"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
             ["undici", "npm:5.26.3"],\
@@ -660,10 +662,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@transcend-io/airgap.js-types", [\
-        ["npm:10.11.3", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-airgap.js-types-npm-10.11.3-41756bf7b7-96d0defd49.zip/node_modules/@transcend-io/airgap.js-types/",\
+        ["npm:10.12.2", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-airgap.js-types-npm-10.12.2-a6b8d791be-b6d6716d6f.zip/node_modules/@transcend-io/airgap.js-types/",\
           "packageDependencies": [\
-            ["@transcend-io/airgap.js-types", "npm:10.11.3"],\
+            ["@transcend-io/airgap.js-types", "npm:10.12.2"],\
             ["@transcend-io/type-utils", "npm:1.2.2"],\
             ["fp-ts", "npm:2.16.1"],\
             ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"]\
@@ -676,13 +678,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@transcend-io/cli", "workspace:."],\
-            ["@transcend-io/airgap.js-types", "npm:10.11.3"],\
+            ["@transcend-io/airgap.js-types", "npm:10.12.2"],\
             ["@transcend-io/handlebars-utils", "npm:1.1.0"],\
             ["@transcend-io/internationalization", "npm:1.6.0"],\
             ["@transcend-io/persisted-state", "npm:1.0.4"],\
-            ["@transcend-io/privacy-types", "npm:4.76.1"],\
+            ["@transcend-io/privacy-types", "npm:4.76.4"],\
             ["@transcend-io/secret-value", "npm:1.2.0"],\
-            ["@transcend-io/type-utils", "npm:1.3.0"],\
+            ["@transcend-io/type-utils", "npm:1.4.2"],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -697,6 +699,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
             ["@types/node", "npm:18.15.11"],\
+            ["@types/semver", "npm:7.5.8"],\
             ["@types/yargs-parser", "npm:21.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
@@ -732,6 +735,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mocha", "npm:10.1.0"],\
             ["prettier", "npm:2.8.7"],\
             ["query-string", "npm:7.0.0"],\
+            ["semver", "npm:7.6.0"],\
             ["ts-node", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
             ["undici", "npm:5.26.3"],\
@@ -777,10 +781,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@transcend-io/privacy-types", [\
-        ["npm:4.76.1", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.76.1-2a828c0aa8-a314410dcf.zip/node_modules/@transcend-io/privacy-types/",\
+        ["npm:4.76.4", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-privacy-types-npm-4.76.4-b5d8e3d858-00a3f38c74.zip/node_modules/@transcend-io/privacy-types/",\
           "packageDependencies": [\
-            ["@transcend-io/privacy-types", "npm:4.76.1"],\
+            ["@transcend-io/privacy-types", "npm:4.76.4"],\
             ["@transcend-io/type-utils", "npm:1.0.5"],\
             ["fp-ts", "npm:2.16.1"],\
             ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"]\
@@ -828,10 +832,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:1.3.0", {\
-          "packageLocation": "./.yarn/cache/@transcend-io-type-utils-npm-1.3.0-93eaa9efdd-be63d9db53.zip/node_modules/@transcend-io/type-utils/",\
+        ["npm:1.4.2", {\
+          "packageLocation": "./.yarn/cache/@transcend-io-type-utils-npm-1.4.2-647270e91e-898aeac6ee.zip/node_modules/@transcend-io/type-utils/",\
           "packageDependencies": [\
-            ["@transcend-io/type-utils", "npm:1.3.0"],\
+            ["@transcend-io/type-utils", "npm:1.4.2"],\
             ["fp-ts", "npm:2.16.1"],\
             ["io-ts", "virtual:a57afaf9d13087a7202de8c93ac4854c9e2828bad7709250829ec4c7bc9dc95ecc2858c25612aa1774c986aedc232c76957076a1da3156fd2ab63ae5551b086f#npm:2.2.21"]\
           ],\
@@ -1126,6 +1130,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-semver-npm-7.3.9-eb0d8b7243-60bfcfdfa7.zip/node_modules/@types/semver/",\
           "packageDependencies": [\
             ["@types/semver", "npm:7.3.9"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.5.8", {\
+          "packageLocation": "./.yarn/cache/@types-semver-npm-7.5.8-26073743d7-ea6f5276f5.zip/node_modules/@types/semver/",\
+          "packageDependencies": [\
+            ["@types/semver", "npm:7.5.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6433,6 +6444,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/semver-npm-7.5.4-c4ad957fcd-12d8ad952f.zip/node_modules/semver/",\
           "packageDependencies": [\
             ["semver", "npm:7.5.4"],\
+            ["lru-cache", "npm:6.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.6.0", {\
+          "packageLocation": "./.yarn/cache/semver-npm-7.6.0-f4630729f6-7427f05b70.zip/node_modules/semver/",\
+          "packageDependencies": [\
+            ["semver", "npm:7.6.0"],\
             ["lru-cache", "npm:6.0.0"]\
           ],\
           "linkType": "HARD"\

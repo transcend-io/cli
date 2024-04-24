@@ -496,14 +496,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/airgap.js-types@npm:^10.11.3":
-  version: 10.11.3
-  resolution: "@transcend-io/airgap.js-types@npm:10.11.3"
+"@transcend-io/airgap.js-types@npm:^10.12.2":
+  version: 10.12.2
+  resolution: "@transcend-io/airgap.js-types@npm:10.12.2"
   dependencies:
     "@transcend-io/type-utils": ^1.2.0
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 96d0defd4972f72490136d58e38d39526ada8e7962b5cc88087dbb9dc158f961793f6bfa4094142e5e48c85b7501760c066e42774df43cb2a7af78be819b69e3
+  checksum: b6d6716d6f7b305df6308f9eaf74140dabf32a225951c8222a89848c56fb43cd8d8f47bed13262fbab6e245ab5addfa64a7a850f58ea9f1f2648b4fe7b7c1c09
   languageName: node
   linkType: hard
 
@@ -511,13 +511,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@transcend-io/cli@workspace:."
   dependencies:
-    "@transcend-io/airgap.js-types": ^10.11.3
+    "@transcend-io/airgap.js-types": ^10.12.2
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.76.1
+    "@transcend-io/privacy-types": ^4.76.4
     "@transcend-io/secret-value": ^1.2.0
-    "@transcend-io/type-utils": ^1.3.0
+    "@transcend-io/type-utils": ^1.4.2
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
     "@types/cli-progress": ^3.11.0
@@ -532,6 +532,7 @@ __metadata:
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.1
     "@types/node": ^18.15.11
+    "@types/semver": ^7
     "@types/yargs-parser": ^21.0.0
     "@typescript-eslint/eslint-plugin": ^5.58.0
     "@typescript-eslint/parser": ^5.58.0
@@ -567,6 +568,7 @@ __metadata:
     mocha: ^10.1.0
     prettier: ^2.8.7
     query-string: =7.0.0
+    semver: ^7.6.0
     ts-node: 10.9.1
     typescript: ^5.0.4
     undici: ^5.22.1
@@ -638,14 +640,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.76.1":
-  version: 4.76.1
-  resolution: "@transcend-io/privacy-types@npm:4.76.1"
+"@transcend-io/privacy-types@npm:^4.76.4":
+  version: 4.76.4
+  resolution: "@transcend-io/privacy-types@npm:4.76.4"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: a314410dcf5adc69c3bb2a7db38864b244b8a2a7f2cf9d7bd091df60464cfabb03cfe4ad1ac8c0fb94837679cefa1d89d39fae5a9722c3dae31284293ca1e6f6
+  checksum: 00a3f38c74a926df5495e3bfda83893f536ef06eedbd980f15304682b3d8ae2365cc74a38f21dfd20b1b51275843e93f536c8d530b4f113a886ab95ae589e2d9
   languageName: node
   linkType: hard
 
@@ -690,13 +692,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/type-utils@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@transcend-io/type-utils@npm:1.3.0"
+"@transcend-io/type-utils@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@transcend-io/type-utils@npm:1.4.2"
   dependencies:
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: be63d9db5304c1ccfa7233dfca6b6f24917ee18f1531e058d83bd2425edb4b0dec4b3d9ef3c19edd8b8aad90e7d8b5f27ac69112446d944a277e41a59a55fa3e
+  checksum: 898aeac6eeeeafc0589a02e8932ca5cdc6cf4296d77207a423c9d8da014a24a85ff0cd18a4d3f084314897daf362c59b95a06f6e4a49a04a13154f84f729077e
   languageName: node
   linkType: hard
 
@@ -930,6 +932,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e99fc7cc6265407987b30deda54c1c24bb1478803faf6037557a774b2f034c5b097ffd65847daa87e82a61a250d919f35c3588654b0fdaa816906650f596d1b0
+  languageName: node
+  linkType: hard
+
+"@types/semver@npm:^7":
+  version: 7.5.8
+  resolution: "@types/semver@npm:7.5.8"
+  checksum: ea6f5276f5b84c55921785a3a27a3cd37afee0111dfe2bcb3e03c31819c197c782598f17f0b150a69d453c9584cd14c4c4d7b9a55d2c5e6cacd4d66fdb3b3663
   languageName: node
   linkType: hard
 
@@ -5437,6 +5446,17 @@ resolve@^1.18.1:
   bin:
     semver: bin/semver.js
   checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "semver@npm:7.6.0"
+  dependencies:
+    lru-cache: ^6.0.0
+  bin:
+    semver: bin/semver.js
+  checksum: 7427f05b70786c696640edc29fdd4bc33b2acf3bbe1740b955029044f80575fc664e1a512e4113c3af21e767154a94b4aa214bf6cd6e42a1f6dba5914e0b208c
   languageName: node
   linkType: hard
 

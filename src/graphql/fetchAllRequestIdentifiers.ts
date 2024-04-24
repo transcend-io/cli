@@ -1,37 +1,50 @@
-import { GraphQLClient } from 'graphql-request';
-import { REQUEST_IDENTIFIERS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { IdentifierType } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import type { Got } from 'got';
+import { GraphQLClient } from 'graphql-request';
+import * as t from 'io-ts';
+import semver from 'semver';
 
-export interface RequestIdentifier {
+import { SOMBRA_VERSION } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
+
+const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
+
+const RequestIdentifier = t.type({
   /** ID of request */
-  id: string;
+  id: t.string,
   /** Name of identifier */
-  name: string;
+  name: t.string,
   /** The underlying identifier value */
-  value: string;
-  /** Identifier metadata */
-  identifier: {
-    /** Type of identifier */
-    type: IdentifierType;
-  };
+  value: t.string,
+  /** Type of identifier */
+  type: valuesOf(IdentifierType),
   /** Whether request identifier has been verified at least one */
-  isVerifiedAtLeastOnce: boolean;
+  isVerifiedAtLeastOnce: t.boolean,
   /** Whether request identifier has been verified */
-  isVerified: boolean;
-}
+  isVerified: t.boolean,
+});
+
+/** Type override */
+export type RequestIdentifier = t.TypeOf<typeof RequestIdentifier>;
 
 const PAGE_SIZE = 50;
+
+export const RequestIdentifiersResponse = t.type({
+  identifiers: t.array(RequestIdentifier),
+});
 
 /**
  * Fetch all request identifiers for a particular request
  *
  * @param client - GraphQL client
- * @param options - Filter options
+ * @param sombra - Sombra client
+ * @param options - Options
  * @returns List of request identifiers
  */
 export async function fetchAllRequestIdentifiers(
   client: GraphQLClient,
+  sombra: Got,
   {
     requestId,
   }: {
@@ -41,25 +54,52 @@ export async function fetchAllRequestIdentifiers(
 ): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
-
-  // Paginate
   let shouldContinue = false;
-  do {
-    const {
-      requestIdentifiers: { nodes },
-      // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest<{
-      /** Request Identifiers */
-      requestIdentifiers: {
-        /** List */
-        nodes: RequestIdentifier[];
+
+  // determine sombra version
+  const {
+    organization: {
+      sombra: { version },
+    },
+  } = await makeGraphQLRequest<{
+    /** The organization */
+    organization: {
+      /** Sombra */
+      sombra: {
+        /** Version string */
+        version: string;
       };
-    }>(client, REQUEST_IDENTIFIERS, {
-      first: PAGE_SIZE,
-      offset,
-      requestId,
-    });
+    };
+  }>(client!, SOMBRA_VERSION);
+
+  if (version && semver.lt(version, MIN_SOMBRA_VERSION_TO_DECRYPT)) {
+    throw new Error(
+      `Please upgrade Sombra to ${MIN_SOMBRA_VERSION_TO_DECRYPT} or greater to use this command.`,
+    );
+  }
+
+  do {
+    // eslint-disable-next-line no-await-in-loop
+    const response = await sombra!
+      .post<{
+        /** Decrypted identifiers */
+        identifiers: RequestIdentifier[];
+      }>('v1/request-identifiers', {
+        json: {
+          first: PAGE_SIZE,
+          offset,
+          requestId,
+        },
+      })
+      .json();
+
+    const { identifiers: nodes } = decodeCodec(
+      RequestIdentifiersResponse,
+      response,
+    );
+
     requestIdentifiers.push(...nodes);
+
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);

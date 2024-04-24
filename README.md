@@ -3,6 +3,7 @@
 
 ## Table of Contents
 
+- [Changelog](#changelog)
 - [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
@@ -137,6 +138,10 @@
 - [Proxy usage](#proxy-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Changelog
+
+To stay up to date on breaking changes to the cli between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
 
 ## Overview
 
@@ -1263,7 +1268,7 @@ The API key needs the following scopes:
 | statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[] | N/A                               | true     |
 | transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io          | false    |
 | requestReceiptFolder | The path to the folder where receipts of each upload are stored. This allows for debugging of errors.                                     | string          | ./privacy-request-upload-receipts | false    |
-| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string          | N/A                               | false    |
+| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra. Only required when `copyIdentifiers` flag used.      | string          | N/A                               | false    |
 | concurrency          | The concurrency to use when uploading requests in parallel.                                                                               | number          | 15                                | false    |
 | requestIds           | Specify the specific request IDs to restart                                                                                               | string[]        | []                                | false    |
 | emailIsVerified      | Indicate whether the primary email address is verified. Set to false to send a verification email.                                        | boolean         | true                              | false    |
@@ -1366,6 +1371,7 @@ The API key needs the following scopes:
 | Argument        | Description                                                                                                                               | Type               | Default                        | Required |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------ | -------- |
 | auth            | The Transcend API key with the scopes necessary for the command.                                                                          | string             | N/A                            | true     |
+| sombraAuth      | The sombra internal key, use for additional authentication when self-hosting sombra.                                                      | string             | N/A                            | false    |
 | actions         | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]    | N/A                            | false    |
 | statuses        | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to restart.                             | RequestStatus[]    | N/A                            | false    |
 | transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL       | https://api.transcend.io       | false    |
@@ -1393,6 +1399,12 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-request-export --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+With Sombra authentication
+
+```sh
+yarn tr-request-export --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY
 ```
 
 Increase the concurrency (defaults to 100)
@@ -1562,6 +1574,7 @@ The API key must have the following scopes:
 | Argument     | Description                                                                                                                                | Type               | Default                             | Required |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----------------------------------- | -------- |
 | auth         | The Transcend API key with the scopes necessary for the command.                                                                           | string             | N/A                                 | true     |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra.                                                       | string             | N/A                                 | false    |
 | transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                              | string - URL       | https://api.transcend.io            | false    |
 | file         | Path to the CSV file where requests will be written to.                                                                                    | string - file-path | ./manual-enrichment-identifiers.csv | false    |
 | actions      | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to pull for. | RequestAction[]    | N/A                                 | false    |
@@ -1590,6 +1603,12 @@ For US hosted infrastructure
 
 ```sh
 yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+With Sombra authentication
+
+```sh
+yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY
 ```
 
 With specific concurrency
@@ -2080,8 +2099,11 @@ Each row in the CSV must include:
 | timestamp | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
 | purposes  | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | false    |
 | confirmed | Whether consent preferences have been explicitly confirmed or inferred                                    | boolean                   | true    | false    |
-| updated   | Time consent preferences were last updated                                                                | string - timestamp        | N/A     | false    |
+| updated   | Has the consent been updated (including no-change confirmation) since default resolution                  | boolean                   | N/A     | false    |
+| prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
 | usp       | US Privacy string                                                                                         | string - USP              | N/A     | false    |
+
+An sample CSV can be found [here](./examples/preference-upload.csv).
 
 #### Authentication
 
