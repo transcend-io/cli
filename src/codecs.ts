@@ -34,6 +34,7 @@ import {
   ActionItemPriorityOverride,
   ActionItemCode,
   ScopeName,
+  ActionItemCollectionLocation,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1276,6 +1277,26 @@ export const DataSiloInput = t.intersection([
 /** Type override */
 export type DataSiloInput = t.TypeOf<typeof DataSiloInput>;
 
+export const ActionItemCollectionInput = t.intersection([
+  t.type({
+    /** The display title of the enricher */
+    title: t.string,
+    /** Locations where collection is shown */
+    visibleLocations: t.array(valuesOf(ActionItemCollectionLocation)),
+  }),
+  t.partial({
+    /** Description of collection */
+    description: t.string,
+    /** Whether hidden */
+    hidden: t.boolean,
+  }),
+]);
+
+/** Type override */
+export type ActionItemCollectionInput = t.TypeOf<
+  typeof ActionItemCollectionInput
+>;
+
 /**
  * Input to define an action item
  */
@@ -1287,20 +1308,16 @@ export const ActionItemInput = t.intersection([
     type: valuesOf(ActionItemCode),
   }),
   t.partial({
-    /** Count of action items */
-    count: t.number,
     /** Priority of the action item */
     priority: valuesOf(ActionItemPriorityOverride),
     /** Due date of the action item */
     dueDate: t.string,
     /** Whether action item has been resolved */
     resolved: t.boolean,
-    /** Titles of action item */
-    titles: t.array(t.string),
     /** Notes */
-    notes: t.array(t.string),
+    notes: t.string,
     /** Links to action items */
-    links: t.array(t.string),
+    link: t.string,
     /**
      * The email addresses of the employees assigned to the action item
      */
@@ -1327,6 +1344,10 @@ export const TranscendInput = t.partial({
    * Action items
    */
   'action-items': t.array(ActionItemInput),
+  /**
+   * Action item collections
+   */
+  'action-item-collections': t.array(ActionItemCollectionInput),
   /**
    * API key definitions
    */

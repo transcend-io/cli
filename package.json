@@ -55,7 +55,7 @@
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
     "test": "yarn mocha './src/**/*.test.ts'",
-    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v4.json --write",
+    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v5.json --write",
     "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
   },
   "dependencies": {
@@ -63,7 +63,7 @@
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.76.4",
+    "@transcend-io/privacy-types": "^4.77.0",
     "@transcend-io/secret-value": "^1.2.0",
     "@transcend-io/type-utils": "^1.4.2",
     "bluebird": "^3.7.2",

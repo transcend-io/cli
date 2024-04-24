@@ -6,7 +6,7 @@ import {
   ActionItemPriorityOverride,
 } from '@transcend-io/privacy-types';
 
-export interface ActionItem {
+export interface ActionItemRaw {
   /** ID of action item */
   ids: string[];
   /** Count of action items */
@@ -66,6 +66,18 @@ export interface ActionItem {
   };
 }
 
+export interface ActionItem
+  extends Omit<ActionItemRaw, 'ids' | 'titles' | 'links' | 'notes'> {
+  /** ID of action item */
+  id: string;
+  /** Title of action item */
+  title: string;
+  /** Notes */
+  notes: string;
+  /** Links */
+  link: string;
+}
+
 const PAGE_SIZE = 20;
 
 /**
@@ -97,13 +109,13 @@ export async function fetchAllActionItems(
   let shouldContinue = false;
   do {
     const {
-      actionItems: { nodes },
+      globalActionItems: { nodes },
       // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** ActionItems */
-      actionItems: {
+      globalActionItems: {
         /** List */
-        nodes: ActionItem[];
+        nodes: ActionItemRaw[];
       };
     }>(client, GLOBAL_ACTION_ITEMS, {
       first: PAGE_SIZE,
@@ -118,7 +130,15 @@ export async function fetchAllActionItems(
           : {}),
       },
     });
-    actionItems.push(...nodes);
+    actionItems.push(
+      ...nodes.map((node) => ({
+        ...node,
+        id: node.ids[0],
+        title: node.titles[0],
+        notes: node.notes[0],
+        link: node.links[0],
+      })),
+    );
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);

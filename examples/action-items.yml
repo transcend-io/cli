@@ -1,0 +1,103 @@
+action-items:
+  - teams:
+      - Design
+    users:
+      - utsav@transcend.io
+    dueDate: '2024-04-25T01:20:08.623Z'
+    title: new
+    notes: meow
+    link: https://docs.transcend.io
+    priority: MEDIUM
+    resolved: false
+    type: ONBOARDING
+  - teams: []
+    users: []
+    dueDate: '2023-09-08T16:36:34.612Z'
+    title: Create  SFDC data silo
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: configure airgap
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: do some things
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: Hello
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: Add API Keys to data silo integrations
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: blah blah
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: Hello Word
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: Data Retention
+    notes: ''
+    link: ''
+    priority: LOW
+    resolved: true
+    type: ONBOARDING
+  - teams: []
+    users: []
+    title: Set up correct dataflows for google ads
+    notes: ''
+    link: ''
+    resolved: true
+    type: ONBOARDING
+action-item-collections:
+  - title: Test checklist
+    description: test checklist description
+    hidden: false
+    visibleLocations:
+      - PRIVACY_CENTER_SETTINGS
+      - PRIVACY_REQUESTS_DASHBOARD
+      - DATA_MAPPING_DASHBOARD
+  - title: Wario team onboarding
+    description: do some stuff
+    hidden: true
+    visibleLocations:
+      - PRIVACY_REQUESTS_DASHBOARD
+      - DATA_MAPPING_DASHBOARD
+  - title: test
+    description: test
+    hidden: true
+    visibleLocations:
+      - CONSENT_DASHBOARD

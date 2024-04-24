@@ -20,7 +20,7 @@ import { TranscendInput } from '../src/codecs';
 
 const schemaDefaults = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json',
+  $id: 'https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v5.json',
   title: 'transcend.yml',
   description:
     'Define personal data schema and Transcend config as code with the Transcend CLI.',

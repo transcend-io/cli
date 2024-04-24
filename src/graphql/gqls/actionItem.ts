@@ -50,3 +50,23 @@ export const GLOBAL_ACTION_ITEMS = gql`
     }
   }
 `;
+
+export const UPDATE_ACTION_ITEMS = gql`
+  mutation TranscendCliUpdateActionItems(
+    $input: UpdateActionItemsInput!
+  ) {
+    updateActionItems(input: $input!) {
+      clientMutationId
+    }
+  }
+`;
+
+export const CREATE_ACTION_ITEMS = gql`
+  mutation TranscendCliCreateActionItems(
+    $input: [UpdateActionItemsInput!]!
+  ) {
+    createActionItems(input: $input!) {
+      clientMutationId
+    }
+  }
+`;

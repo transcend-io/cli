@@ -26,6 +26,7 @@ import {
   AgentInput,
   ActionItemInput,
   TeamInput,
+  ActionItemCollectionInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -72,6 +73,7 @@ import colors from 'colors';
 import { TranscendPullResource } from '../enums';
 import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
+import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -157,6 +159,7 @@ export async function pullTranscendConfiguration(
     dataCategories,
     processingPurposes,
     actionItems,
+    actionItemCollections,
     teams,
   ] = await Promise.all([
     // Grab all data subjects in the organization
@@ -281,6 +284,10 @@ export async function pullTranscendConfiguration(
     // Fetch actionItems
     resources.includes(TranscendPullResource.ActionItems)
       ? fetchAllActionItems(client, { type: [ActionItemCode.Onboarding] })
+      : [],
+    // Fetch actionItemCollections
+    resources.includes(TranscendPullResource.ActionItemCollections)
+      ? fetchAllActionItemCollections(client)
       : [],
     // Fetch teams
     resources.includes(TranscendPullResource.Teams)
@@ -606,29 +613,43 @@ export async function pullTranscendConfiguration(
         users,
         dueDate,
         priority,
-        count,
-        titles,
         resolved,
         notes,
-        links,
+        link,
+        title,
         type,
         attributeValues,
       }): ActionItemInput => ({
         teams: teams.map(({ name }) => name),
         users: users.map(({ email }) => email),
-        dueDate,
-        title: titles[0],
-        priority,
-        titles,
-        resolved,
-        count,
+        dueDate: dueDate || undefined,
+        title,
         notes,
-        links,
+        link,
+        priority: priority || undefined,
+        resolved,
         type,
         attributes:
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
+      }),
+    );
+  }
+
+  // Save action item collections
+  if (actionItemCollections.length > 0) {
+    result['action-item-collections'] = actionItemCollections.map(
+      ({
+        title,
+        description,
+        hidden,
+        visibleLocations,
+      }): ActionItemCollectionInput => ({
+        title,
+        description: description || undefined,
+        hidden,
+        visibleLocations,
       }),
     );
   }

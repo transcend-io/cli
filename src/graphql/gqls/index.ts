@@ -21,6 +21,7 @@ export * from './RequestDataSilo';
 export * from './team';
 export * from './user';
 export * from './promptRun';
+export * from './actionItemCollection';
 export * from './attribute';
 export * from './consentManager';
 export * from './consentManagerMetrics';
