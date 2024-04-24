@@ -1,22 +1,14 @@
 import { IdentifierType } from '@transcend-io/privacy-types';
-import { decodeCodec } from '@transcend-io/type-utils';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
 import semver from 'semver';
 
-import { REQUEST_IDENTIFIERS, SOMBRA_VERSION } from './gqls';
+import { SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
-
-const literalUnion = <T extends t.Mixed>(
-  values: T[],
-): t.UnionC<[T, T, ...T[]]> => t.union(values as [T, T, ...T[]]);
-
-const IdentifierTypeValues = literalUnion(
-  Object.values(IdentifierType).map((v) => t.literal(v)),
-);
 
 const RequestIdentifier = t.type({
   /** ID of request */
@@ -26,7 +18,7 @@ const RequestIdentifier = t.type({
   /** The underlying identifier value */
   value: t.string,
   /** Type of identifier */
-  type: IdentifierTypeValues,
+  type: valuesOf(IdentifierType),
   /** Whether request identifier has been verified at least one */
   isVerifiedAtLeastOnce: t.boolean,
   /** Whether request identifier has been verified */
@@ -80,66 +72,31 @@ export async function fetchAllRequestIdentifiers(
     };
   }>(client!, SOMBRA_VERSION);
 
-  // Null here represents multi-tenant Sombra
-  const decrypt =
-    version === null || semver.gte(version, MIN_SOMBRA_VERSION_TO_DECRYPT);
+  if (version && semver.lt(version, MIN_SOMBRA_VERSION_TO_DECRYPT)) {
+    throw new Error(
+      `Please upgrade Sombra to ${MIN_SOMBRA_VERSION_TO_DECRYPT} or greater to use this command.`,
+    );
+  }
 
   do {
-    let nodes: RequestIdentifier[] = [];
+    // eslint-disable-next-line no-await-in-loop
+    const response = await sombra!
+      .post<{
+        /** Decrypted identifiers */
+        identifiers: RequestIdentifier[];
+      }>('v1/request-identifiers', {
+        json: {
+          first: PAGE_SIZE,
+          offset,
+          requestId,
+        },
+      })
+      .json();
 
-    if (decrypt) {
-      let response;
-
-      // Get decrypted identifiers via Sombra
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        response = await sombra!
-          .post<{
-            /** Decrypted identifiers */
-            identifiers: RequestIdentifier[];
-          }>('v1/request-identifiers', {
-            json: {
-              first: PAGE_SIZE,
-              offset,
-              requestId,
-            },
-          })
-          .json();
-        ({ identifiers: nodes } = decodeCodec(
-          RequestIdentifiersResponse,
-          response,
-        ));
-      } catch (error) {
-        if (error.response.statusCode === 400) {
-          throw new Error(
-            "Transcend CLI can't reach the Sombra endpoint to decrypt the identifiers. " +
-              'Please ensure Sombra is the correct version to use this feature.',
-          );
-        }
-        throw error;
-      }
-
-      // decode response
-      ({ identifiers: nodes } = decodeCodec(
-        RequestIdentifiersResponse,
-        response,
-      ));
-    } else {
-      ({
-        requestIdentifiers: { nodes },
-        // eslint-disable-next-line no-await-in-loop
-      } = await makeGraphQLRequest<{
-        /** Request Identifiers */
-        requestIdentifiers: {
-          /** List */
-          nodes: RequestIdentifier[];
-        };
-      }>(client!, REQUEST_IDENTIFIERS, {
-        first: PAGE_SIZE,
-        offset,
-        requestId,
-      }));
-    }
+    const { identifiers: nodes } = decodeCodec(
+      RequestIdentifiersResponse,
+      response,
+    );
 
     requestIdentifiers.push(...nodes);
 
