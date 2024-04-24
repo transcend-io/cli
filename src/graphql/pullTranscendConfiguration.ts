@@ -24,11 +24,14 @@ import {
   AgentFileInput,
   AgentFunctionInput,
   AgentInput,
+  ActionItemInput,
   TeamInput,
+  ActionItemCollectionInput,
 } from '../codecs';
 import {
   RequestAction,
   ConsentTrackerStatus,
+  ActionItemCode,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import flatten from 'lodash/flatten';
@@ -68,7 +71,9 @@ import { formatAttributeValues } from './formatAttributeValues';
 import { logger } from '../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../enums';
+import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
+import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -153,6 +158,8 @@ export async function pullTranscendConfiguration(
     vendors,
     dataCategories,
     processingPurposes,
+    actionItems,
+    actionItemCollections,
     teams,
   ] = await Promise.all([
     // Grab all data subjects in the organization
@@ -273,6 +280,14 @@ export async function pullTranscendConfiguration(
     // Fetch dataCategories
     resources.includes(TranscendPullResource.ProcessingPurposes)
       ? fetchAllProcessingPurposes(client)
+      : [],
+    // Fetch actionItems
+    resources.includes(TranscendPullResource.ActionItems)
+      ? fetchAllActionItems(client, { type: [ActionItemCode.Onboarding] })
+      : [],
+    // Fetch actionItemCollections
+    resources.includes(TranscendPullResource.ActionItemCollections)
+      ? fetchAllActionItemCollections(client)
       : [],
     // Fetch teams
     resources.includes(TranscendPullResource.Teams)
@@ -586,6 +601,57 @@ export async function pullTranscendConfiguration(
           agentFiles && agentFiles.length > 0
             ? agentFiles.map(({ name }) => name)
             : undefined,
+      }),
+    );
+  }
+
+  // Save action items
+  if (actionItems.length > 0) {
+    result['action-items'] = actionItems.map(
+      ({
+        teams,
+        users,
+        dueDate,
+        priority,
+        resolved,
+        collections,
+        notes,
+        link,
+        title,
+        type,
+        attributeValues,
+      }): ActionItemInput => ({
+        teams: teams.map(({ name }) => name),
+        users: users.map(({ email }) => email),
+        dueDate: dueDate || undefined,
+        title,
+        notes,
+        collections: collections.map(({ title }) => title),
+        link,
+        priority: priority || undefined,
+        resolved,
+        type,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+      }),
+    );
+  }
+
+  // Save action item collections
+  if (actionItemCollections.length > 0) {
+    result['action-item-collections'] = actionItemCollections.map(
+      ({
+        title,
+        description,
+        hidden,
+        visibleLocations,
+      }): ActionItemCollectionInput => ({
+        title,
+        description: description || undefined,
+        hidden,
+        'visible-locations': visibleLocations,
       }),
     );
   }

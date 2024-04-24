@@ -55,6 +55,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Vendors]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.DataCategories]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.ProcessingPurposes]: [ScopeName.ManageDataInventory],
+  [TranscendPullResource.ActionItems]: [ScopeName.ManageAllActionItems],
+  [TranscendPullResource.ActionItemCollections]: [
+    ScopeName.ManageActionItemCollections,
+  ],
   [TranscendPullResource.Teams]: [ScopeName.ManageAccessControl],
 };
 
@@ -92,5 +96,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Vendors]: [ScopeName.ViewDataInventory],
   [TranscendPullResource.DataCategories]: [ScopeName.ViewDataInventory],
   [TranscendPullResource.ProcessingPurposes]: [ScopeName.ViewDataInventory],
+  [TranscendPullResource.ActionItemCollections]: [ScopeName.ViewAllActionItems],
+  [TranscendPullResource.ActionItems]: [ScopeName.ViewAllActionItems],
   [TranscendPullResource.Teams]: [ScopeName.ViewScopes],
 };
