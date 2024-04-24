@@ -31,7 +31,10 @@ import {
   LargeLanguageModelClient,
   PromptFilePurpose,
   CodePackageType,
+  ActionItemPriorityOverride,
+  ActionItemCode,
   ScopeName,
+  ActionItemCollectionLocation,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1274,7 +1277,79 @@ export const DataSiloInput = t.intersection([
 /** Type override */
 export type DataSiloInput = t.TypeOf<typeof DataSiloInput>;
 
+export const ActionItemCollectionInput = t.intersection([
+  t.type({
+    /** The display title of the enricher */
+    title: t.string,
+    /** Locations where collection is shown */
+    'visible-locations': t.array(valuesOf(ActionItemCollectionLocation)),
+  }),
+  t.partial({
+    /** Description of collection */
+    description: t.string,
+    /** Whether hidden */
+    hidden: t.boolean,
+  }),
+]);
+
+/** Type override */
+export type ActionItemCollectionInput = t.TypeOf<
+  typeof ActionItemCollectionInput
+>;
+
+/**
+ * Input to define an action item
+ */
+export const ActionItemInput = t.intersection([
+  t.type({
+    /** The display title of the enricher */
+    title: t.string,
+    /** Action item type */
+    type: valuesOf(ActionItemCode),
+    /** The titles of the collections that the action item is grouped within */
+    collections: t.array(t.string),
+  }),
+  t.partial({
+    /** Priority of the action item */
+    priority: valuesOf(ActionItemPriorityOverride),
+    /** Due date of the action item */
+    dueDate: t.string,
+    /** Whether action item has been resolved */
+    resolved: t.boolean,
+    /** Notes */
+    notes: t.string,
+    /** Links to action items */
+    link: t.string,
+    /**
+     * The email addresses of the employees assigned to the action item
+     */
+    users: t.array(t.string),
+    /**
+     * The names of teams assigned to the action item
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/** Type override */
+export type ActionItemInput = t.TypeOf<typeof ActionItemInput>;
+
 export const TranscendInput = t.partial({
+  /**
+   * Action items
+   */
+  'action-items': t.array(ActionItemInput),
+  /**
+   * Action item collections
+   */
+  'action-item-collections': t.array(ActionItemCollectionInput),
   /**
    * API key definitions
    */

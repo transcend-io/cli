@@ -27,6 +27,8 @@ export enum TranscendPullResource {
   Vendors = 'vendors',
   DataCategories = 'dataCategories',
   ProcessingPurposes = 'processingPurposes',
+  ActionItems = 'actionItems',
+  ActionItemCollections = 'actionItemCollections',
   Teams = 'teams',
 }
 
