@@ -27,6 +27,8 @@ export * from './fetchRequestDataSilo';
 export * from './fetchAllAttributes';
 export * from './syncAttribute';
 export * from './fetchAllDataFlows';
+export * from './syncActionItems';
+export * from './syncActionItemCollections';
 export * from './fetchAllCookies';
 export * from './fetchAllActionItems';
 export * from './fetchConsentManagerId';

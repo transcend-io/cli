@@ -57,7 +57,7 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.ProcessingPurposes]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.ActionItems]: [ScopeName.ManageAllActionItems],
   [TranscendPullResource.ActionItemCollections]: [
-    ScopeName.ManageAllActionItems,
+    ScopeName.ManageActionItemCollections,
   ],
   [TranscendPullResource.Teams]: [ScopeName.ManageAccessControl],
 };

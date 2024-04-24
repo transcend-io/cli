@@ -11,7 +11,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": ["title", "type"],
+            "required": ["title", "type", "collections"],
             "properties": {
               "title": {
                 "type": "string"
@@ -66,6 +66,12 @@
                   "BUSINESS_ENTITY_NEEDS_DOCUMENTATION",
                   "DATA_POINT_DATABASE_QUERY_NEEDS_APPROVAL"
                 ]
+              },
+              "collections": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           },
@@ -129,12 +135,12 @@
         "allOf": [
           {
             "type": "object",
-            "required": ["title", "visibleLocations"],
+            "required": ["title", "visible-locations"],
             "properties": {
               "title": {
                 "type": "string"
               },
-              "visibleLocations": {
+              "visible-locations": {
                 "type": "array",
                 "items": {
                   "type": "string",

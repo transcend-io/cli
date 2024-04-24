@@ -1,4 +1,5 @@
 import { ActionItemInput } from '../codecs';
+import uniq from 'lodash/uniq';
 import chunk from 'lodash/chunk';
 import { GraphQLClient } from 'graphql-request';
 import { mapSeries } from 'bluebird';
@@ -8,34 +9,42 @@ import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllActionItems, ActionItem } from './fetchAllActionItems';
+import {
+  ActionItemCollection,
+  fetchAllActionItemCollections,
+} from './fetchAllActionItemCollections';
 
 /**
  * Input to create a new actionItem
  *
  * @param client - GraphQL client
  * @param actionItems - Action item inputs
+ * @param actionItemCollectionByTitle - Action item collections indexed by title
  */
 export async function createActionItems(
   client: GraphQLClient,
   actionItems: ActionItemInput[],
+  actionItemCollectionByTitle: { [k in string]: ActionItemCollection },
 ): Promise<void> {
   const chunked = chunk(actionItems, 100);
   await mapSeries(chunked, async (chunkToUpload) => {
     await makeGraphQLRequest(client, CREATE_ACTION_ITEMS, {
-      input: {
-        actionItems: chunkToUpload.map((actionItem) => ({
-          title: actionItem.title,
-          type: actionItem.type,
-          priorityOverride: actionItem.priority,
-          dueDate: actionItem.dueDate,
-          resolved: actionItem.resolved,
-          notes: actionItem.notes,
-          link: actionItem.link,
-          assigneesUserEmails: actionItem.users,
-          assigneesTeamNames: actionItem.teams,
-          attributes: actionItem.attributes,
-        })),
-      },
+      input: chunkToUpload.map((actionItem) => ({
+        title: actionItem.title,
+        type: actionItem.type,
+        priorityOverride: actionItem.priority,
+        dueDate: actionItem.dueDate,
+        resolved: actionItem.resolved,
+        notes: actionItem.notes,
+        link: actionItem.link,
+        assigneesUserEmails: actionItem.users,
+        assigneesTeamNames: actionItem.teams,
+        // TODO: https://transcend.height.app/T-21660
+        // attributes: actionItem.attributes,
+        collectionIds: actionItem.collections.map(
+          (collectionTitle) => actionItemCollectionByTitle[collectionTitle].id,
+        ),
+      })),
     });
   });
 }
@@ -64,7 +73,8 @@ export async function updateActionItem(
       link: input.link,
       assigneesUserEmails: input.users,
       assigneesTeamNames: input.teams,
-      attributes: input.attributes,
+      // TODO: https://transcend.height.app/T-21660
+      // attributes: input.attributes,
     },
   });
 }
@@ -85,18 +95,45 @@ export async function syncActionItems(
   logger.info(colors.magenta(`Syncing "${inputs.length}" actionItems...`));
 
   // Fetch existing
-  const existingActionItems = await fetchAllActionItems(client);
+  const [existingActionItems, existingActionItemCollections] =
+    await Promise.all([
+      fetchAllActionItems(client),
+      fetchAllActionItemCollections(client),
+    ]);
 
   // Look up by title
-  // FIXME is this unique?
+  const actionItemCollectionByTitle: { [k in string]: ActionItemCollection } =
+    keyBy(existingActionItemCollections, 'title');
   const actionItemByTitle: { [k in string]: ActionItem } = keyBy(
     existingActionItems,
-    'title',
+    ({ title, collections }) =>
+      `${title}-${collections
+        .map((c) => c.title)
+        .sort()
+        .join('-')}`,
   );
+
+  // Ensure all collections exist
+  const missingCollections = uniq(
+    inputs.map((input) => input.collections).flat(),
+  ).filter((collectionTitle) => !actionItemCollectionByTitle[collectionTitle]);
+  if (missingCollections.length > 0) {
+    logger.info(
+      colors.red(
+        `Missing action item collections: "${missingCollections.join(
+          '", "',
+        )}" - please create them first!`,
+      ),
+    );
+    return false;
+  }
 
   // Create new actionItems
   const newActionItems = inputs.filter(
-    (input) => !actionItemByTitle[input.title],
+    (input) =>
+      !actionItemByTitle[
+        `${input.title}-${input.collections.sort().join('-')}`
+      ],
   );
 
   // Create new actionItems
@@ -105,7 +142,11 @@ export async function syncActionItems(
       logger.info(
         colors.magenta(`Creating "${newActionItems.length}" actionItems...`),
       );
-      await createActionItems(client, newActionItems);
+      await createActionItems(
+        client,
+        newActionItems,
+        actionItemCollectionByTitle,
+      );
       logger.info(
         colors.green(
           `Successfully created "${newActionItems.length}" actionItems!`,
@@ -121,7 +162,11 @@ export async function syncActionItems(
 
   // Update all actionItems
   const actionItemsToUpdate = inputs
-    .map((input) => [input, actionItemByTitle[input.title]?.id])
+    .map((input) => [
+      input,
+      actionItemByTitle[`${input.title}-${input.collections.sort().join('-')}`]
+        ?.id,
+    ])
     .filter((x): x is [ActionItemInput, string] => !!x[1]);
   await mapSeries(actionItemsToUpdate, async ([input, actionItemId]) => {
     try {

@@ -21,3 +21,26 @@ export const GLOBAL_ACTION_ITEM_COLLECTIONS = gql`
     }
   }
 `;
+
+export const CREATE_ACTION_ITEM_COLLECTION = gql`
+  mutation TranscendCliCreateActionItemCollection(
+    $input: CreateActionItemCollectionInput!
+  ) {
+    createActionItemCollection(input: $input) {
+      created {
+        id
+        title
+      }
+    }
+  }
+`;
+
+export const UPDATE_ACTION_ITEM_COLLECTION = gql`
+  mutation TranscendCliUpdateActionItemCollection(
+    $input: UpdateActionItemCollectionInput!
+  ) {
+    updateActionItemCollection(input: $input) {
+      clientMutationId
+    }
+  }
+`;

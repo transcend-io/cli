@@ -614,6 +614,7 @@ export async function pullTranscendConfiguration(
         dueDate,
         priority,
         resolved,
+        collections,
         notes,
         link,
         title,
@@ -625,6 +626,7 @@ export async function pullTranscendConfiguration(
         dueDate: dueDate || undefined,
         title,
         notes,
+        collections: collections.map(({ title }) => title),
         link,
         priority: priority || undefined,
         resolved,
@@ -649,7 +651,7 @@ export async function pullTranscendConfiguration(
         title,
         description: description || undefined,
         hidden,
-        visibleLocations,
+        'visible-locations': visibleLocations,
       }),
     );
   }

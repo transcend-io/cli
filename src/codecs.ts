@@ -1282,7 +1282,7 @@ export const ActionItemCollectionInput = t.intersection([
     /** The display title of the enricher */
     title: t.string,
     /** Locations where collection is shown */
-    visibleLocations: t.array(valuesOf(ActionItemCollectionLocation)),
+    'visible-locations': t.array(valuesOf(ActionItemCollectionLocation)),
   }),
   t.partial({
     /** Description of collection */
@@ -1306,6 +1306,8 @@ export const ActionItemInput = t.intersection([
     title: t.string,
     /** Action item type */
     type: valuesOf(ActionItemCode),
+    /** The titles of the collections that the action item is grouped within */
+    collections: t.array(t.string),
   }),
   t.partial({
     /** Priority of the action item */

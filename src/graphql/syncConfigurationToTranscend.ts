@@ -33,6 +33,7 @@ import { fetchAllActions } from './fetchAllActions';
 import { syncPromptPartials } from './syncPromptPartials';
 import { syncPromptGroups } from './syncPromptGroups';
 import { syncAgents } from './syncAgents';
+import { syncActionItemCollections } from './syncActionItemCollections';
 import { syncActionItems } from './syncActionItems';
 import { syncAgentFunctions } from './syncAgentFunctions';
 import { syncAgentFiles } from './syncAgentFiles';
@@ -101,6 +102,7 @@ export async function syncConfigurationToTranscend(
     'data-categories': dataCategories,
     'processing-purposes': processingPurposes,
     'action-items': actionItems,
+    'action-item-collections': actionItemCollections,
     teams,
   } = input;
 
@@ -243,6 +245,15 @@ export async function syncConfigurationToTranscend(
   if (cookies) {
     const cookiesSuccess = await syncCookies(client, cookies);
     encounteredError = encounteredError || !cookiesSuccess;
+  }
+
+  // Sync action item collections
+  if (actionItemCollections) {
+    const actionItemCollectionsSuccess = await syncActionItemCollections(
+      client,
+      actionItemCollections,
+    );
+    encounteredError = encounteredError || !actionItemCollectionsSuccess;
   }
 
   // Sync action items
