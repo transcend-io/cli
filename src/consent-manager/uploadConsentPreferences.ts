@@ -40,6 +40,10 @@ export const ManagedConsentDatabaseConsentPreference = t.intersection([
     prompted: t.union([t.literal('true'), t.literal('false')]),
     /** US Privacy (USP) String */
     usp: t.string,
+    /** IAB TCF String */
+    tcf: t.string,
+    /** IAB GPP String */
+    gpp: t.string,
   }),
 ]);
 

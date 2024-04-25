@@ -2082,6 +2082,8 @@ Each row in the CSV must include:
 | updated   | Has the consent been updated (including no-change confirmation) since default resolution                  | boolean                   | N/A     | false    |
 | prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
 | usp       | US Privacy string                                                                                         | string - USP              | N/A     | false    |
+| tcf       | IAB TCF string                                                                                            | string - TCF              | N/A     | false    |
+| gpp       | IAB GPP string                                                                                            | string - GPP              | N/A     | false    |
 
 An sample CSV can be found [here](./examples/preference-upload.csv).
 
