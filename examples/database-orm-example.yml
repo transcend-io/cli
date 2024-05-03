@@ -1,0 +1,32 @@
+data-silos:
+  - title: Postgres RDS Database
+    integrationName: server
+    description: Main database that powers the backend monolith
+    datapoints:
+      - title: Team
+        key: access-control-models.team
+        description: A team of users sharing the same scopes
+        fields:
+          - key: description
+            description: The description of the team
+            title: description
+          - key: name
+            description: The name of the team
+            title: name
+      - title: User
+        key: access-control-models.user
+        description: A user to the admin dashboard
+        fields:
+          - key: digestRate
+            title: digestRate
+          - key: isAdmin
+            title: isAdmin
+          - key: isInviteSent
+            title: isInviteSent
+          - key: email
+            title: email
+            description: The email of the user
+          - key: name
+            title: name
+          - key: onboarded
+            title: onboarded
