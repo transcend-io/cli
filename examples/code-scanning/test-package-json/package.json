@@ -11,9 +11,12 @@
   "license": "UNLICENSED",
   "dependencies": {
     "dd-trace": "2.45.1",
-    "fast-csv": "^4.3.6"
+    "fast-csv": "^4.3.6",
+    "sequelize": "^6.37.3",
+    "sequelize-mock": "^0.10.2"
   },
   "devDependencies": {
+    "@types/sequelize": "^4.28.20",
     "typescript": "^5.0.4"
   },
   "packageManager": "yarn@3.5.0"

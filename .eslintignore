@@ -11,4 +11,5 @@
 **/.yarn/*
 *.testjs
 *.testts
+examples/code-scanning/test-package-json/src/*
 LICENSE

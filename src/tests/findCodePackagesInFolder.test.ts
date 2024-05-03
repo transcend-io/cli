@@ -210,6 +210,19 @@ describe('findCodePackagesInFolder', () => {
             version: '^4.3.6',
           },
           {
+            name: 'sequelize',
+            version: '^6.37.3',
+          },
+          {
+            name: 'sequelize-mock',
+            version: '^0.10.2',
+          },
+          {
+            isDevDependency: true,
+            name: '@types/sequelize',
+            version: '^4.28.20',
+          },
+          {
             name: 'typescript',
             version: '^5.0.4',
             isDevDependency: true,
