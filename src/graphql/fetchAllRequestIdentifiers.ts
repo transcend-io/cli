@@ -79,19 +79,28 @@ export async function fetchAllRequestIdentifiers(
   }
 
   do {
-    // eslint-disable-next-line no-await-in-loop
-    const response = await sombra!
-      .post<{
-        /** Decrypted identifiers */
-        identifiers: RequestIdentifier[];
-      }>('v1/request-identifiers', {
-        json: {
-          first: PAGE_SIZE,
-          offset,
-          requestId,
-        },
-      })
-      .json();
+    let response: unknown;
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      response = await sombra!
+        .post<{
+          /** Decrypted identifiers */
+          identifiers: RequestIdentifier[];
+        }>('v1/request-identifiers', {
+          json: {
+            first: PAGE_SIZE,
+            offset,
+            requestId,
+          },
+        })
+        .json();
+    } catch (err) {
+      throw new Error(
+        `Failed to fetch request identifiers: ${
+          err?.response?.body || err?.message
+        }`,
+      );
+    }
 
     const { identifiers: nodes } = decodeCodec(
       RequestIdentifiersResponse,
