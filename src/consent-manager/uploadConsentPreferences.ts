@@ -123,7 +123,6 @@ export async function uploadConsentPreferences({
       updated,
       prompted,
       purposes,
-      metadata,
       ...consent
     }) => {
       const token = createConsentToken(
