@@ -1,25 +1,17 @@
 import * as t from 'io-ts';
 import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
-
-export const ConsentPreference = t.type({
-  userId: t.string,
-  partition: t.string,
-  timestamp: t.string,
-  purposes: t.record(t.string, t.boolean),
-});
-
-/** Type override */
-export type ConsentPreference = t.TypeOf<typeof ConsentPreference>;
+import { ConsentPreferenceFetch } from './types';
 
 export const ConsentPreferenceResponse = t.intersection([
   t.type({
-    nodes: t.array(ConsentPreference),
+    nodes: t.array(ConsentPreferenceFetch),
   }),
   t.partial({
     lastKey: t.partial({
       userId: t.string,
       partition: t.string,
+      timestamp: t.string,
     }),
   }),
 ]);
@@ -57,9 +49,9 @@ export async function fetchConsentPreferences(
     /** Number of items to pull back at once */
     limit?: number;
   },
-): Promise<ConsentPreference[]> {
+): Promise<ConsentPreferenceFetch[]> {
   let currentLastKey: ConsentPreferenceResponse['lastKey'];
-  const data: ConsentPreference[] = [];
+  const data: ConsentPreferenceFetch[] = [];
   let shouldContinue = true;
 
   while (shouldContinue) {
