@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 
-export const ConsentPreferenceUpload = t.intersection([
+export const ConsentPreferenceBase = t.intersection([
   t.type({
     /** User ID */
     userId: t.string,
@@ -18,15 +18,26 @@ export const ConsentPreferenceUpload = t.intersection([
      * Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)
      */
     prompted: t.union([t.literal('true'), t.literal('false')]),
+    /** Consent metadata */
+    metadata: t.string,
+    /** US Privacy (USP) String */
+    usp: t.union([t.string, t.null]),
+    /** IAB GPP String */
+    gpp: t.union([t.string, t.null]),
+  }),
+]);
+
+/** Type override */
+export type ConsentPreferenceBase = t.TypeOf<typeof ConsentPreferenceUpload>;
+
+export const ConsentPreferenceUpload = t.intersection([
+  ConsentPreferenceBase,
+  t.partial({
     /**
      * Purpose map
      * This is a stringified JSON object with keys as purpose names and values as booleans or 'Auto'
      */
     purposes: t.string,
-    /** Consent metadata */
-    metadata: t.string,
-    /** IAB GPP String */
-    gpp: t.union([t.string, t.null]),
   }),
 ]);
 
@@ -34,18 +45,19 @@ export const ConsentPreferenceUpload = t.intersection([
 export type ConsentPreferenceUpload = t.TypeOf<typeof ConsentPreferenceUpload>;
 
 export const ConsentPreferenceFetch = t.intersection([
-  ConsentPreferenceUpload,
+  ConsentPreferenceBase,
   t.type({
     /** This is the partition key used for the dynamo entry  */
     partition: t.string,
   }),
   t.partial({
-    /** US Privacy (USP) String */
-    usp: t.union([t.string, t.null]),
     /** IAB TCF String */
     tcf: t.union([t.string, t.null]),
-    /** IAB GPP String */
-    gpp: t.union([t.string, t.null]),
+    /**
+     * Purpose map
+     * This is a JSON object with keys as purpose names and values as booleans or 'Auto'
+     */
+    purposes: t.record(t.string, t.union([t.boolean, t.string])),
   }),
 ]);
 
