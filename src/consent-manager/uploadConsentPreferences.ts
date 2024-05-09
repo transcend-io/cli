@@ -7,6 +7,8 @@ import { createConsentToken } from './createConsentToken';
 import { logger } from '../logger';
 import cliProgress from 'cli-progress';
 import { decodeCodec } from '@transcend-io/type-utils';
+import type { ConsentPreferenceUpload } from './types';
+import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
 
@@ -14,39 +16,6 @@ export const PurposeMap = t.record(
   t.string,
   t.union([t.boolean, t.literal('Auto')]),
 );
-
-export const ManagedConsentDatabaseConsentPreference = t.intersection([
-  t.type({
-    /** User ID */
-    userId: t.string,
-    /** Has the consent been updated (including no-change confirmation) since default resolution */
-    timestamp: t.string,
-  }),
-  t.partial({
-    /**
-     * Purpose map
-     * This is a JSON object with keys as purpose names and values as booleans or 'Auto'
-     */
-    purposes: t.string,
-    /** Was tracking consent confirmed by the user? If this is false, the consent was resolved from defaults & is not yet confirmed */
-    confirmed: t.union([t.literal('true'), t.literal('false')]),
-    /**
-     * Has the consent been updated (including no-change confirmation) since default resolution
-     */
-    updated: t.union([t.literal('true'), t.literal('false')]),
-    /**
-     * Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)
-     */
-    prompted: t.union([t.literal('true'), t.literal('false')]),
-    /** US Privacy (USP) String */
-    usp: t.string,
-  }),
-]);
-
-/** Type override */
-export type ManagedConsentDatabaseConsentPreference = t.TypeOf<
-  typeof ManagedConsentDatabaseConsentPreference
->;
 
 /**
  * Upload a set of consent preferences
@@ -68,7 +37,7 @@ export async function uploadConsentPreferences({
   /** Partition key */
   partition: string;
   /** Sombra API key authentication */
-  preferences: ManagedConsentDatabaseConsentPreference[];
+  preferences: ConsentPreferenceUpload[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Concurrency limit for approving */
@@ -93,10 +62,7 @@ export async function uploadConsentPreferences({
 
   // Ensure purpose maps are valid
   const invalidPurposeMaps = preferences
-    .map(
-      (pref, ind) =>
-        [pref, ind] as [ManagedConsentDatabaseConsentPreference, number],
-    )
+    .map((pref, ind) => [pref, ind] as [ConsentPreferenceUpload, number])
     .filter(([pref]) => {
       if (!pref.purposes) {
         return false;
@@ -184,7 +150,7 @@ export async function uploadConsentPreferences({
           ...(prompted ? { prompted: prompted === 'true' } : {}),
           ...consent,
         },
-      };
+      } as ConsentPreferencesBody;
 
       // Make the request
       try {
