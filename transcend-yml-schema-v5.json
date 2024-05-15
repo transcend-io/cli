@@ -34009,6 +34009,30 @@
             "type": "string"
           }
         },
+        "partitions": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "partition": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        },
         "partition": {
           "type": "string"
         },

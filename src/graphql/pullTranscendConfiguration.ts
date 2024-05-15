@@ -48,6 +48,7 @@ import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
+  fetchConsentManagerPartitions,
   fetchConsentManagerTheme,
 } from './fetchConsentManagerId';
 import { fetchAllEnrichers } from './syncEnrichers';
@@ -149,6 +150,7 @@ export async function pullTranscendConfiguration(
     businessEntities,
     consentManager,
     consentManagerExperiences,
+    consentManagerPartitions,
     prompts,
     promptPartials,
     promptGroups,
@@ -244,6 +246,10 @@ export async function pullTranscendConfiguration(
     // Fetch consent manager experiences
     resources.includes(TranscendPullResource.ConsentManager)
       ? fetchConsentManagerExperiences(client)
+      : [],
+    // Fetch consent manager partitions
+    resources.includes(TranscendPullResource.ConsentManager)
+      ? fetchConsentManagerPartitions(client)
       : [],
     // Fetch prompts
     resources.includes(TranscendPullResource.Prompts)
@@ -350,6 +356,13 @@ export async function pullTranscendConfiguration(
             privacyPolicy: consentManagerTheme.privacyPolicy || undefined,
             prompt: consentManagerTheme.prompt,
           },
+      partitions:
+        consentManagerPartitions.length > 0
+          ? consentManagerPartitions.map(({ name, partition }) => ({
+              name,
+              partition,
+            }))
+          : undefined,
       experiences: consentManagerExperiences.map((experience) => ({
         name: experience.name,
         displayName: experience.displayName || undefined,

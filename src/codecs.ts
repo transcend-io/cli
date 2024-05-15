@@ -1146,6 +1146,20 @@ export type ConsentManageExperienceInput = t.TypeOf<
   typeof ConsentManageExperienceInput
 >;
 
+export const ConsentPartition = t.intersection([
+  t.type({
+    /** Name of partition */
+    name: t.string,
+  }),
+  t.partial({
+    /** Value of partition, cannot be pushed, can only be pulled */
+    partition: t.string,
+  }),
+]);
+
+/** Type override */
+export type ConsentPartition = t.TypeOf<typeof ConsentPartition>;
+
 export const ConsentManagerInput = t.partial({
   /** Airgap version */
   version: t.string,
@@ -1153,6 +1167,8 @@ export const ConsentManagerInput = t.partial({
   bundleUrls: t.record(valuesOf(ConsentBundleType), t.string),
   /** The consent manager domains in the instance */
   domains: t.array(t.string),
+  /** The full list of consent manager partitions (e.g. dev vs staging vs prod) */
+  partitions: t.array(ConsentPartition),
   /** Key used to partition consent records */
   partition: t.string,
   /** Precedence of signals vs user input */
