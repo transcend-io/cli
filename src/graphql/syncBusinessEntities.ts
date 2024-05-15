@@ -30,7 +30,9 @@ export async function createBusinessEntity(
     headquarterSubDivision: businessEntity.headquarterSubDivision,
     dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
     dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
-    // TODO: https://transcend.height.app/T-31994 - add attributes, teams, owners
+    attributes: businessEntity.attributes,
+    teamNames: businessEntity.teams,
+    ownerEmails: businessEntity.owners,
   };
 
   const { createBusinessEntity } = await makeGraphQLRequest<{
@@ -68,6 +70,8 @@ export async function updateBusinessEntities(
         dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
         dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
         attributes: businessEntity.attributes,
+        teamNames: businessEntity.teams,
+        ownerEmails: businessEntity.owners,
       })),
     });
   });

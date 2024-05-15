@@ -793,6 +793,19 @@ export const BusinessEntityInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
+    /**
+     * The email addresses of the employees within your company that are the go-to individuals
+     * for managing this data silo
+     */
+    owners: t.array(t.string),
+    /**
+     * The names of teams within your Transcend instance that should be responsible
+     * for managing this data silo.
+     *
+     * @see https://docs.transcend.io/docs/security/access-control#teams
+     * for more information about how to create and manage teams
+     */
+    teams: t.array(t.string),
   }),
 ]);
 
