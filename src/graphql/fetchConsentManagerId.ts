@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { GraphQLClient } from 'graphql-request';
 import {
   ConsentPrecedenceOption,
@@ -20,10 +21,12 @@ import {
   FETCH_CONSENT_MANAGER,
   EXPERIENCES,
   PURPOSES,
+  CONSENT_PARTITIONS,
   CONSENT_MANAGER_ANALYTICS_DATA,
   FETCH_CONSENT_MANAGER_THEME,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { ConsentPartition } from '../codecs';
 
 export interface ConsentManager {
   /** ID of consent manager */
@@ -315,3 +318,40 @@ export async function fetchConsentManagerTheme(
   });
   return theme;
 }
+
+/**
+ * Fetch the list of consent manager partitions
+ *
+ * @param client - GraphQL client
+ * @returns Consent manager ID in organization
+ */
+export async function fetchConsentManagerPartitions(
+  client: GraphQLClient,
+): Promise<ConsentPartition[]> {
+  const partitions: ConsentPartition[] = [];
+  let offset = 0;
+
+  // Fetch all partitions
+  let shouldContinue = false;
+  do {
+    const {
+      consentPartitions: { nodes },
+      // eslint-disable-next-line no-await-in-loop
+    } = await makeGraphQLRequest<{
+      /** Consent experience */
+      consentPartitions: {
+        /** List */
+        nodes: ConsentPartition[];
+      };
+    }>(client, CONSENT_PARTITIONS, {
+      first: PAGE_SIZE,
+      offset,
+    });
+    partitions.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return partitions.sort((a, b) => a.name.localeCompare(b.name));
+}
+/* eslint-enable max-lines */
