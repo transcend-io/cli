@@ -44,6 +44,22 @@ export const EXPERIENCES = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - order by createdAt
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// useMaster: false
+// isExportCsv: true
+export const CONSENT_PARTITIONS = gql`
+  query TranscendCliConsentPartitions($first: Int!, $offset: Int!) {
+    consentPartitions(first: $first, offset: $offset) {
+      nodes {
+        id
+        name
+        partition
+      }
+    }
+  }
+`;
+
 export const CREATE_DATA_FLOWS = gql`
   mutation TranscendCliCreateDataFlows(
     $dataFlows: [DataFlowInput!]!
@@ -388,6 +404,16 @@ export const UPDATE_CONSENT_EXPERIENCE = gql`
 export const CREATE_CONSENT_EXPERIENCE = gql`
   mutation TranscendCliCreateConsentExperience($input: CreateExperienceInput!) {
     createExperience(input: $input) {
+      clientMutationId
+    }
+  }
+`;
+
+export const CREATE_CONSENT_PARTITION = gql`
+  mutation TranscendCliCreateConsentPartition(
+    $input: CreateConsentPartitionInput!
+  ) {
+    createConsentPartition(input: $input) {
       clientMutationId
     }
   }

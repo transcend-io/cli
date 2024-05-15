@@ -10,6 +10,7 @@ import {
   BusinessEntity,
 } from './fetchAllBusinessEntities';
 import colors from 'colors';
+import chunk from 'lodash/chunk';
 
 /**
  * Input to create a new business entity
@@ -29,7 +30,9 @@ export async function createBusinessEntity(
     headquarterSubDivision: businessEntity.headquarterSubDivision,
     dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
     dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
-    // TODO: https://transcend.height.app/T-31994 - add attributes, teams, owners
+    attributes: businessEntity.attributes,
+    teamNames: businessEntity.teams,
+    ownerEmails: businessEntity.owners,
   };
 
   const { createBusinessEntity } = await makeGraphQLRequest<{
@@ -54,18 +57,23 @@ export async function updateBusinessEntities(
   client: GraphQLClient,
   businessEntityIdParis: [BusinessEntityInput, string][],
 ): Promise<void> {
-  await makeGraphQLRequest(client, UPDATE_BUSINESS_ENTITIES, {
-    input: businessEntityIdParis.map(([businessEntity, id]) => ({
-      id,
-      title: businessEntity.title,
-      description: businessEntity.description,
-      address: businessEntity.address,
-      headquarterCountry: businessEntity.headquarterCountry,
-      headquarterSubDivision: businessEntity.headquarterSubDivision,
-      dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
-      dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
-      attributes: businessEntity.attributes,
-    })),
+  const chunkedUpdates = chunk(businessEntityIdParis, 100);
+  await mapSeries(chunkedUpdates, async (chunked) => {
+    await makeGraphQLRequest(client, UPDATE_BUSINESS_ENTITIES, {
+      input: chunked.map(([businessEntity, id]) => ({
+        id,
+        title: businessEntity.title,
+        description: businessEntity.description,
+        address: businessEntity.address,
+        headquarterCountry: businessEntity.headquarterCountry,
+        headquarterSubDivision: businessEntity.headquarterSubDivision,
+        dataProtectionOfficerName: businessEntity.dataProtectionOfficerName,
+        dataProtectionOfficerEmail: businessEntity.dataProtectionOfficerEmail,
+        attributes: businessEntity.attributes,
+        teamNames: businessEntity.teams,
+        ownerEmails: businessEntity.owners,
+      })),
+    });
   });
 }
 
