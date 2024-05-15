@@ -697,7 +697,7 @@ export async function syncDataSilos(
         };
       }>(client, CREATE_DATA_SILOS, {
         input: dependencyUpdateChunk.map((input) => ({
-          name: input.integrationName,
+          name: input['outer-type'] || input.integrationName,
           title: input.title,
           country: input.country,
           countrySubDivision: input.countrySubDivision,
