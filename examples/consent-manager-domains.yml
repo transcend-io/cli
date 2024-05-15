@@ -10,6 +10,11 @@ consent-manager:
     - localhost:3000
     - localhost:8084
   consentPrecedence: user
+  partitions:
+    - name: Staging
+      partition: 1dd7cfef9578d0375c8eec63f364ef72c5429f4e6b732cff8ace1e65b23320a2
+    - name: Dev
+      partition: 3ead9290e548883c3f6e3b5899957290a6468310fb1998373bb62230a1c19a0f
   unknownRequestPolicy: BLOCK
   unknownCookiePolicy: ALLOW
   syncEndpoint: >-
