@@ -103,6 +103,9 @@ export async function syncConsentManagerExperiences(
             browserTimeZones: exp.browserTimeZones,
           },
         });
+        logger.info(
+          colors.green(`Successfully synced consent experience "${exp.name}"!`),
+        );
       } else {
         // create new experience
         await makeGraphQLRequest(client, CREATE_CONSENT_EXPERIENCE, {
@@ -121,6 +124,11 @@ export async function syncConsentManagerExperiences(
             browserTimeZones: exp.browserTimeZones,
           },
         });
+        logger.info(
+          colors.green(
+            `Successfully created consent experience "${exp.name}"!`,
+          ),
+        );
       }
     },
     {

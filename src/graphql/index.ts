@@ -16,6 +16,7 @@ export * from './createSombraGotInstance';
 export * from './syncRepositories';
 export * from './setResourceAttributes';
 export * from './buildTranscendGraphQLClient';
+export * from './retryRequestEnricher';
 export * from './gqls';
 export * from './fetchPromptThreads';
 export * from './fetchRequestDataSiloActiveCount';

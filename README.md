@@ -50,90 +50,94 @@
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-enricher-restart](#tr-request-enricher-restart)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-29)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-create-assessment](#tr-create-assessment)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
     - [Authentication](#authentication-30)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
+  - [tr-create-assessment](#tr-create-assessment)
+    - [Authentication](#authentication-31)
+    - [Arguments](#arguments-31)
+    - [Usage](#usage-32)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -169,6 +173,7 @@ yarn tr-request-notify-additional-time --auth=$TRANSCEND_API_KEY
 yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY
 yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
@@ -208,6 +213,7 @@ tr-request-mark-silent --auth=$TRANSCEND_API_KEY
 tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
+tr-request-enricher-restart --auth=$TRANSCEND_API_KEY
 tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
@@ -1360,6 +1366,62 @@ Skip queued state of request and go straight to compiling
 
 ```sh
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY --statuses=COMPILING,ENRICHING --actions=ACCESS,ERASURE --skipWaitingPeriod=true
+```
+
+### tr-request-enricher-restart
+
+Bulk restart a particular enricher across a series of DSRs.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Request Compilation
+
+#### Arguments
+
+| Argument              | Description                                                                                                                               | Type                    | Default                  | Required |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------ | -------- |
+| auth                  | The Transcend API key with the scopes necessary for the command.                                                                          | string                  | N/A                      | true     |
+| enricherId            | The ID of the enricher to restart                                                                                                         | string                  | N/A                      | true     |
+| actions               | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]         | N/A                      | false    |
+| requestEnricherStatus | The [request enricher statuses](https://github.com/transcend-io/privacy-types/blob/main/src/request.ts#L157) to restart.                  | RequestEnricherStatus[] | N/A                      | false    |
+| transcendUrl          | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL            | https://api.transcend.io | false    |
+| concurrency           | The concurrency to use when uploading requests in parallel.                                                                               | number                  | 15                       | false    |
+| requestIds            | Specify the specific request IDs to restart                                                                                               | string[]                | []                       | false    |
+| createdAtBefore       | Restart requests that were submitted before this time                                                                                     | Date                    | N/A                      | false    |
+| createdAtAfter        | Restart requests that were submitted after this time                                                                                      | Date                    | N/A                      | false    |
+
+#### Usage
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY --enricherId=3be5e898-fea9-4614-84de-88cd5265c557
+```
+
+Restart specific request types
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY ---enricherId=3be5e898-fea9-4614-84de-88cd5265c557 --actions=ACCESS,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY ---enricherId=3be5e898-fea9-4614-84de-88cd5265c557 --transcendUrl=https://api.us.transcend.io
+```
+
+Increase the concurrency (defaults to 20)
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY ---enricherId=3be5e898-fea9-4614-84de-88cd5265c557 --concurrency=100
+```
+
+Restart requests within a specific timeframe
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 ---createdAtBefore="04/05/2023" --createdAtAfter="02/21/2023"
 ```
 
 ### tr-request-export

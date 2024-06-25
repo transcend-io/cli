@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
+import { RequestEnricherStatus } from '@transcend-io/privacy-types';
 import { REQUEST_ENRICHERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -15,7 +16,7 @@ export interface RequestEnricher {
     type: string;
   };
   /** The status of the enricher */
-  status: string;
+  status: RequestEnricherStatus;
 }
 
 const PAGE_SIZE = 50;
