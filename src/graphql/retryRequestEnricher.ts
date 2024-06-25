@@ -13,6 +13,6 @@ export async function retryRequestEnricher(
   id: string,
 ): Promise<void> {
   await makeGraphQLRequest(client, RETRY_REQUEST_ENRICHER, {
-    id,
+    requestEnricherId: id,
   });
 }

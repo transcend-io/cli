@@ -33,7 +33,7 @@ async function main(): Promise<void> {
     /** API key */
     auth,
     /** Restart requests matching these request actions */
-    actions,
+    actions = '',
     /** The ID of the enricher to restart */
     enricherId,
     /** Restart specified request enricher statuses */
@@ -59,7 +59,9 @@ async function main(): Promise<void> {
   }
 
   // Parse request actions
-  const requestActions = actions.split(',') as RequestAction[];
+  const requestActions = actions
+    .split(',')
+    .filter((x) => !!x) as RequestAction[];
   const invalidActions = requestActions.filter(
     (action) => !Object.values(RequestAction).includes(action),
   );
@@ -73,9 +75,9 @@ async function main(): Promise<void> {
   }
 
   // Parse request enrichers
-  const requestEnricherStatusesParsed = requestEnricherStatuses.split(
-    ',',
-  ) as RequestEnricherStatus[];
+  const requestEnricherStatusesParsed = requestEnricherStatuses
+    .split(',')
+    .filter((x) => !!x) as RequestEnricherStatus[];
   const invalidRequestEnricherStatusesParsed = requestActions.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (status) => !Object.values(RequestEnricherStatus).includes(status as any),
