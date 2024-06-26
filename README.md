@@ -1382,17 +1382,17 @@ The API key needs the following scopes:
 
 #### Arguments
 
-| Argument              | Description                                                                                                                               | Type                    | Default                  | Required |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------ | -------- |
-| auth                  | The Transcend API key with the scopes necessary for the command.                                                                          | string                  | N/A                      | true     |
-| enricherId            | The ID of the enricher to restart                                                                                                         | string                  | N/A                      | true     |
-| actions               | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]         | N/A                      | false    |
-| requestEnricherStatus | The [request enricher statuses](https://github.com/transcend-io/privacy-types/blob/main/src/request.ts#L157) to restart.                  | RequestEnricherStatus[] | N/A                      | false    |
-| transcendUrl          | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL            | https://api.transcend.io | false    |
-| concurrency           | The concurrency to use when uploading requests in parallel.                                                                               | number                  | 15                       | false    |
-| requestIds            | Specify the specific request IDs to restart                                                                                               | string[]                | []                       | false    |
-| createdAtBefore       | Restart requests that were submitted before this time                                                                                     | Date                    | N/A                      | false    |
-| createdAtAfter        | Restart requests that were submitted after this time                                                                                      | Date                    | N/A                      | false    |
+| Argument                | Description                                                                                                                               | Type                    | Default                  | Required |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------ | -------- |
+| auth                    | The Transcend API key with the scopes necessary for the command.                                                                          | string                  | N/A                      | true     |
+| enricherId              | The ID of the enricher to restart                                                                                                         | string                  | N/A                      | true     |
+| actions                 | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[]         | N/A                      | false    |
+| requestEnricherStatuses | The [request enricher statuses](https://github.com/transcend-io/privacy-types/blob/main/src/request.ts#L157) to restart.                  | RequestEnricherStatus[] | N/A                      | false    |
+| transcendUrl            | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL            | https://api.transcend.io | false    |
+| concurrency             | The concurrency to use when uploading requests in parallel.                                                                               | number                  | 15                       | false    |
+| requestIds              | Specify the specific request IDs to restart                                                                                               | string[]                | []                       | false    |
+| createdAtBefore         | Restart requests that were submitted before this time                                                                                     | Date                    | N/A                      | false    |
+| createdAtAfter          | Restart requests that were submitted after this time                                                                                      | Date                    | N/A                      | false    |
 
 #### Usage
 
@@ -1422,6 +1422,12 @@ Restart requests within a specific timeframe
 
 ```sh
 yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 ---createdAtBefore="04/05/2023" --createdAtAfter="02/21/2023"
+```
+
+Restart requests that are in an error state
+
+```sh
+yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 ---requestEnricherStatuses=ERROR
 ```
 
 ### tr-request-export

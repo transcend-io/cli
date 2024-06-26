@@ -142,6 +142,7 @@ export async function syncDataFlows(
 
   // Fetch existing data flows to determine whether we are creating a new data flow
   // or updating an existing data flow
+  logger.info(colors.magenta('Fetching data flows...'));
   const [existingLiveDataFlows, existingInReviewDataFlows] = await Promise.all([
     fetchAllDataFlows(client, ConsentTrackerStatus.Live),
     fetchAllDataFlows(client, ConsentTrackerStatus.NeedsReview),
