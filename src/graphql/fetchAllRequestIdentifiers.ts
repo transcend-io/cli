@@ -19,10 +19,6 @@ const RequestIdentifier = t.type({
   value: t.string,
   /** Type of identifier */
   type: valuesOf(IdentifierType),
-  /** Whether request identifier has been verified at least one */
-  isVerifiedAtLeastOnce: t.boolean,
-  /** Whether request identifier has been verified */
-  isVerified: t.boolean,
 });
 
 /** Type override */
