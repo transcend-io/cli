@@ -13,28 +13,38 @@ data-silos:
           - key: createdAt
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories: []
           - key: email
             description: null
             purposes: []
+            access-request-visibility-enabled: false
+            erasure-request-redaction-enabled: true
             categories:
               - name: Email
                 category: CONTACT
           - key: id
             description: null
             purposes: []
+            access-request-visibility-enabled: false
+            erasure-request-redaction-enabled: true
             categories:
               - name: Other
                 category: ID
           - key: name
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Name
                 category: ID
           - key: updatedAt
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories: []
         privacy-actions: []
       - key: test
@@ -42,29 +52,41 @@ data-silos:
           - key: createdAt
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories: []
           - key: email
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Email
                 category: CONTACT
           - key: id
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Other
                 category: ID
           - key: isTest
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories: []
           - key: 'n'
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories: []
           - key: name
             description: null
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             purposes: []
             categories:
               - name: Name
@@ -72,6 +94,8 @@ data-silos:
           - key: rand
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Passport Number
                 category: ID
@@ -79,10 +103,14 @@ data-silos:
                 category: ID
           - key: updatedAt
             description: null
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             purposes: []
             categories: []
           - key: void
             description: null
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             purposes: []
             categories: []
         privacy-actions: []
@@ -91,23 +119,31 @@ data-silos:
           - key: email
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Email
                 category: CONTACT
           - key: id
             description: null
             purposes: []
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             categories:
               - name: Other
                 category: ID
           - key: name
             description: null
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             purposes: []
             categories:
               - name: Name
                 category: ID
           - key: testId
             description: null
+            access-request-visibility-enabled: true
+            erasure-request-redaction-enabled: true
             purposes: []
             categories: []
         privacy-actions: []
