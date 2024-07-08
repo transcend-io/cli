@@ -28301,74 +28301,82 @@
                                   "guessed-categories": {
                                     "type": "array",
                                     "items": {
-                                      "type": "object",
-                                      "required": [
-                                        "category",
-                                        "status",
-                                        "confidenceLabel",
-                                        "confidence",
-                                        "classifierVersion"
-                                      ],
-                                      "properties": {
-                                        "category": {
-                                          "allOf": [
-                                            {
-                                              "type": "object",
-                                              "required": ["category"],
-                                              "properties": {
-                                                "category": {
-                                                  "type": "string",
-                                                  "enum": [
-                                                    "FINANCIAL",
-                                                    "HEALTH",
-                                                    "CONTACT",
-                                                    "LOCATION",
-                                                    "DEMOGRAPHIC",
-                                                    "ID",
-                                                    "ONLINE_ACTIVITY",
-                                                    "USER_PROFILE",
-                                                    "SOCIAL_MEDIA",
-                                                    "CONNECTION",
-                                                    "TRACKING",
-                                                    "DEVICE",
-                                                    "SURVEY",
-                                                    "OTHER",
-                                                    "UNSPECIFIED",
-                                                    "NOT_PERSONAL_DATA",
-                                                    "INTEGRATION_IDENTIFIER"
-                                                  ]
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "required": [
+                                            "category",
+                                            "status",
+                                            "confidenceLabel",
+                                            "confidence"
+                                          ],
+                                          "properties": {
+                                            "category": {
+                                              "allOf": [
+                                                {
+                                                  "type": "object",
+                                                  "required": ["category"],
+                                                  "properties": {
+                                                    "category": {
+                                                      "type": "string",
+                                                      "enum": [
+                                                        "FINANCIAL",
+                                                        "HEALTH",
+                                                        "CONTACT",
+                                                        "LOCATION",
+                                                        "DEMOGRAPHIC",
+                                                        "ID",
+                                                        "ONLINE_ACTIVITY",
+                                                        "USER_PROFILE",
+                                                        "SOCIAL_MEDIA",
+                                                        "CONNECTION",
+                                                        "TRACKING",
+                                                        "DEVICE",
+                                                        "SURVEY",
+                                                        "OTHER",
+                                                        "UNSPECIFIED",
+                                                        "NOT_PERSONAL_DATA",
+                                                        "INTEGRATION_IDENTIFIER"
+                                                      ]
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "name": {
+                                                      "type": "string"
+                                                    }
+                                                  }
                                                 }
-                                              }
+                                              ]
                                             },
-                                            {
-                                              "type": "object",
-                                              "properties": {
-                                                "name": {
-                                                  "type": "string"
-                                                }
-                                              }
+                                            "status": {
+                                              "type": "string",
+                                              "enum": [
+                                                "APPROVED",
+                                                "PENDING",
+                                                "REJECTED"
+                                              ]
+                                            },
+                                            "confidenceLabel": {
+                                              "type": "string",
+                                              "enum": ["HIGH", "MEDIUM", "LOW"]
+                                            },
+                                            "confidence": {
+                                              "type": "number"
                                             }
-                                          ]
+                                          }
                                         },
-                                        "status": {
-                                          "type": "string",
-                                          "enum": [
-                                            "APPROVED",
-                                            "PENDING",
-                                            "REJECTED"
-                                          ]
-                                        },
-                                        "confidenceLabel": {
-                                          "type": "string",
-                                          "enum": ["HIGH", "MEDIUM", "LOW"]
-                                        },
-                                        "confidence": {
-                                          "type": "number"
-                                        },
-                                        "classifierVersion": {
-                                          "type": "number"
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "classifierVersion": {
+                                              "type": "number"
+                                            }
+                                          }
                                         }
-                                      }
+                                      ]
                                     }
                                   },
                                   "access-request-visibility-enabled": {
