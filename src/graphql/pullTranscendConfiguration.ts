@@ -1052,7 +1052,7 @@ export async function pullTranscendConfiguration(
                                       confidenceLabel: guess.confidenceLabel,
                                       confidence: guess.confidence,
                                       classifierVersion:
-                                        guess.classifierVersion,
+                                        guess.classifierVersion || undefined,
                                     })),
                               }
                             : {}),

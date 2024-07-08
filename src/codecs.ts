@@ -232,18 +232,22 @@ export type DataCategoryPreviewInput = t.TypeOf<
 /**
  * A guessed data category from the content classifier
  */
-export const DataCategoryGuessInput = t.type({
-  /** The parent category */
-  category: DataCategoryPreviewInput,
-  /** Status of guess */
-  status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
-  /** Confidence label */
-  confidenceLabel: valuesOf(ConfidenceLabel),
-  /** Confidence level of guess */
-  confidence: t.number,
-  /** classifier version that produced the guess */
-  classifierVersion: t.number,
-});
+export const DataCategoryGuessInput = t.intersection([
+  t.type({
+    /** The parent category */
+    category: DataCategoryPreviewInput,
+    /** Status of guess */
+    status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
+    /** Confidence label */
+    confidenceLabel: valuesOf(ConfidenceLabel),
+    /** Confidence level of guess */
+    confidence: t.number,
+  }),
+  t.partial({
+    /** classifier version that produced the guess */
+    classifierVersion: t.number,
+  }),
+]);
 
 /** Type override */
 export type DataCategoryGuessInput = t.TypeOf<typeof DataCategoryGuessInput>;
