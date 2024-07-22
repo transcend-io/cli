@@ -5,9 +5,9 @@ import { makeEnum } from '@transcend-io/type-utils';
  */
 export enum TranscendPullResource {
   ApiKeys = 'apiKeys',
-  AssessmentTemplate = 'assessmentTemplate',
-  Assessment = 'assessment',
-  Attributes = 'attributes',
+  AssessmentTemplate = 'assessmentTemplates',
+  Assessment = 'assessments',
+  Attributes = 'customFields',
   Templates = 'templates',
   DataSilos = 'dataSilos',
   Enrichers = 'enrichers',
