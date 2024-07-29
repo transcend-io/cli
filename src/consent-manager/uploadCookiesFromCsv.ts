@@ -49,6 +49,7 @@ export async function uploadCookiesFromCsv({
   // Convert these  inputs into a format that the other function can use
   const validatedCookieInputs = cookieInputs.map(
     ({
+      'Is Regex?': isRegex,
       Notes,
       // TODO: https://transcend.height.app/T-26391 - export in CSV
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,6 +61,9 @@ export async function uploadCookiesFromCsv({
       Name,
       ...rest
     }): CookieInput => ({
+      ...(typeof isRegex === 'string'
+        ? { isRegex: isRegex.toLowerCase() === 'true' }
+        : {}),
       name: Name,
       description: Notes,
       trackingPurposes: splitCsvToList(Purpose),
