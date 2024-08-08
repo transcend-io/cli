@@ -39,7 +39,7 @@ export async function syncAttribute(
   // attribute key input
   const input = {
     name: attribute.name,
-    enabledOn: attribute.resources || [],
+    enabledOn: attribute.resources,
   };
 
   // create or update attribute key
