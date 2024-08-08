@@ -433,7 +433,7 @@ export async function fetchAllDataPoints(
         },
         /* eslint-enable no-loop-func */
         {
-          concurrency: 10,
+          concurrency: 5,
         },
       );
 
@@ -809,116 +809,110 @@ export async function syncDataSilos(
     dataSilosWithDataPoints,
     async ({ datapoints, title }) => {
       if (datapoints) {
-        await map(
-          datapoints,
-          async (datapoint) => {
-            const fields = datapoint.fields
-              ? datapoint.fields.map(
+        await mapSeries(datapoints, async (datapoint) => {
+          const fields = datapoint.fields
+            ? datapoint.fields.map(
+                ({
+                  key,
+                  description,
+                  categories,
+                  purposes,
+                  attributes,
+                  ...rest
+                }) =>
+                  // TODO: Support setting title separately from the 'key/name'
                   ({
-                    key,
+                    name: key,
                     description,
-                    categories,
-                    purposes,
+                    categories: !categories
+                      ? undefined
+                      : categories.map((category) => ({
+                          ...category,
+                          name: category.name || 'Other',
+                        })),
+                    purposes: !purposes
+                      ? undefined
+                      : purposes.map((purpose) => ({
+                          ...purpose,
+                          name: purpose.name || 'Other',
+                        })),
                     attributes,
-                    ...rest
-                  }) =>
-                    // TODO: Support setting title separately from the 'key/name'
-                    ({
-                      name: key,
-                      description,
-                      categories: !categories
-                        ? undefined
-                        : categories.map((category) => ({
-                            ...category,
-                            name: category.name || 'Other',
-                          })),
-                      purposes: !purposes
-                        ? undefined
-                        : purposes.map((purpose) => ({
-                            ...purpose,
-                            name: purpose.name || 'Other',
-                          })),
-                      attributes,
-                      accessRequestVisibilityEnabled:
-                        rest['access-request-visibility-enabled'],
-                      erasureRequestRedactionEnabled:
-                        rest['erasure-request-redaction-enabled'],
-                    }),
-                )
-              : undefined;
+                    accessRequestVisibilityEnabled:
+                      rest['access-request-visibility-enabled'],
+                    erasureRequestRedactionEnabled:
+                      rest['erasure-request-redaction-enabled'],
+                  }),
+              )
+            : undefined;
 
-            const payload = {
-              dataSiloId: existingDataSiloByTitle[title].id,
-              path: datapoint.path,
-              name: datapoint.key,
-              title: datapoint.title,
-              description: datapoint.description,
-              ...(datapoint.owners
-                ? {
-                    ownerEmails: datapoint.owners,
-                  }
-                : {}),
-              ...(datapoint.teams
-                ? {
-                    teamNames: datapoint.teams,
-                  }
-                : {}),
-              ...(datapoint['data-collection-tag']
-                ? { dataCollectionTag: datapoint['data-collection-tag'] }
-                : {}),
-              querySuggestions: !datapoint['privacy-action-queries']
-                ? undefined
-                : Object.entries(datapoint['privacy-action-queries']).map(
-                    ([key, value]) => ({
-                      requestType: key,
-                      suggestedQuery: value,
-                    }),
-                  ),
-              enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
-              subDataPoints: fields,
-            };
+          const payload = {
+            dataSiloId: existingDataSiloByTitle[title].id,
+            path: datapoint.path,
+            name: datapoint.key,
+            title: datapoint.title,
+            description: datapoint.description,
+            ...(datapoint.owners
+              ? {
+                  ownerEmails: datapoint.owners,
+                }
+              : {}),
+            ...(datapoint.teams
+              ? {
+                  teamNames: datapoint.teams,
+                }
+              : {}),
+            ...(datapoint['data-collection-tag']
+              ? { dataCollectionTag: datapoint['data-collection-tag'] }
+              : {}),
+            querySuggestions: !datapoint['privacy-action-queries']
+              ? undefined
+              : Object.entries(datapoint['privacy-action-queries']).map(
+                  ([key, value]) => ({
+                    requestType: key,
+                    suggestedQuery: value,
+                  }),
+                ),
+            enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
+            subDataPoints: fields,
+          };
 
-            // Ensure no duplicate sub-datapoints are provided
-            const subDataPointsToUpdate = (payload.subDataPoints || []).map(
-              ({ name }) => name,
+          // Ensure no duplicate sub-datapoints are provided
+          const subDataPointsToUpdate = (payload.subDataPoints || []).map(
+            ({ name }) => name,
+          );
+          const duplicateDataPoints = subDataPointsToUpdate.filter(
+            (name, index) => subDataPointsToUpdate.indexOf(name) !== index,
+          );
+          if (duplicateDataPoints.length > 0) {
+            logger.info(
+              colors.red(
+                `\nCannot update datapoint "${
+                  datapoint.key
+                }" as it has duplicate sub-datapoints with the same name: \n${duplicateDataPoints.join(
+                  '\n',
+                )}`,
+              ),
             );
-            const duplicateDataPoints = subDataPointsToUpdate.filter(
-              (name, index) => subDataPointsToUpdate.indexOf(name) !== index,
-            );
-            if (duplicateDataPoints.length > 0) {
+            encounteredError = true;
+          } else {
+            try {
+              await makeGraphQLRequest(
+                client,
+                UPDATE_OR_CREATE_DATA_POINT,
+                payload,
+              );
+            } catch (err) {
               logger.info(
                 colors.red(
-                  `\nCannot update datapoint "${
-                    datapoint.key
-                  }" as it has duplicate sub-datapoints with the same name: \n${duplicateDataPoints.join(
-                    '\n',
-                  )}`,
+                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
                 ),
               );
               encounteredError = true;
-            } else {
-              try {
-                await makeGraphQLRequest(
-                  client,
-                  UPDATE_OR_CREATE_DATA_POINT,
-                  payload,
-                );
-              } catch (err) {
-                logger.info(
-                  colors.red(
-                    `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
-                  ),
-                );
-                encounteredError = true;
-              }
             }
-            total += 1;
-            progressBar.update(total);
-          },
-          {
-            concurrency: 5,
-          },
-        );
+          }
+          total += 1;
+          progressBar.update(total);
+        });
       }
     },
     {
