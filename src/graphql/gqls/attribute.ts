@@ -76,7 +76,7 @@ export const CREATE_ATTRIBUTE = gql`
     $name: String!
     $type: AttributeKeyType!
     $description: String
-    $enabledOn: [AttributeSupportedResourceType!]!
+    $enabledOn: [AttributeSupportedResourceType!]
   ) {
     createAttributeKey(
       input: {
