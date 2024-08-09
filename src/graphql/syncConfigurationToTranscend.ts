@@ -121,7 +121,12 @@ export async function syncConfigurationToTranscend(
         ? ensureAllDataSubjectsExist(input, client)
         : {},
       // Grab API keys
-      dataSilos ? fetchApiKeys(input, client) : {},
+      dataSilos &&
+      dataSilos
+        .map((dataSilo) => dataSilo['api-key-title'] || [])
+        .reduce((acc, lst) => acc + lst.length, 0) > 0
+        ? fetchApiKeys(input, client)
+        : {},
     ]);
 
   // Sync consent manager
