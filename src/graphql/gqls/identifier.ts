@@ -31,6 +31,7 @@ export const IDENTIFIERS = gql`
         displayDescription {
           defaultMessage
         }
+        displayOrder
       }
     }
   }

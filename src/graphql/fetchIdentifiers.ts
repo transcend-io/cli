@@ -43,6 +43,8 @@ export interface Identifier {
     /** Default */
     defaultMessage: string;
   };
+  /** Display order */
+  displayOrder: number;
 }
 
 const PAGE_SIZE = 20;

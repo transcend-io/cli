@@ -44,6 +44,7 @@ import {
 import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
+import { LanguageKey } from '@transcend-io/internationalization';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -165,6 +166,11 @@ export const EnricherInput = t.intersection([
      * For looker integration - the title of the looker query to run
      */
     lookerQueryTitle: t.string,
+    // FIXME
+    /**
+     * For looker integration - the slug of the looker query to run
+     */
+    lookerQuerySlug: t.string,
     /**
      * The duration (in ms) that the enricher should take to execute.
      */
@@ -189,6 +195,24 @@ export const EnricherInput = t.intersection([
     headers: t.array(WebhookHeader),
     /** The privacy actions that the enricher should run against */
     'privacy-actions': t.array(valuesOf(RequestAction)),
+    // FIXME
+    /** The title of the related data silo */
+    'data-silo': t.string,
+    /** The time after which a first reminder email is sent */
+    reminderTemplate1Duration: t.string,
+    /** The time after which a second reminder email is sent */
+    reminderTemplate2Duration: t.string,
+    /** The time after which a third reminder email is sent */
+    reminderTemplate3Duration: t.string,
+    /** The title of the email template to use upon trigger */
+    template: t.string,
+    /** The title of the email template to use upon continuation of the request but verification failed */
+    continuationTemplate: t.string,
+    /** The title of the email template to use upon verification failed and request cancelation */
+    requestVerificationFailedTemplate: t.string,
+    // FIXME field to identifier mapping
+    // FIXME dependency
+    // FIXME cross-check identifiers against verification results
   }),
 ]);
 
@@ -1013,6 +1037,8 @@ export const IdentifierInput = t.intersection([
     displayTitle: t.string,
     /** Display description for identifier */
     displayDescription: t.string,
+    /** The display order for the identifier */
+    displayOrder: t.number,
   }),
 ]);
 
@@ -1224,6 +1250,99 @@ export const ConsentManagerInput = t.partial({
 export type ConsentManagerInput = t.TypeOf<typeof ConsentManagerInput>;
 
 /**
+ * Input to define a privacy center
+ */
+export const PrivacyCenterInput = t.partial({
+  /** Description of the privacy center */
+  description: t.string,
+  /** Whether or not the entire privacy center is enabled or disabled */
+  isDisabled: t.boolean,
+  /** Whether or not to show the privacy requests button */
+  showPrivacyRequestButton: t.boolean,
+  /** Whether or not to show the data practices page */
+  showDataPractices: t.boolean,
+  /** Whether or not to show the policies page */
+  showPolicies: t.boolean,
+  /** Whether or not to show the tracking technologies page */
+  showTrackingTechnologies: t.boolean,
+  /** Whether or not to show the cookies on the tracking technologies page */
+  showCookies: t.boolean,
+  /** Whether or not to show the data flows on the tracking technologies page */
+  showDataFlows: t.boolean,
+  /** Whether or not to show the consent manager opt out options on the tracking technologies page */
+  showConsentManager: t.boolean,
+  /** Whether or not to show the manage your privacy page */
+  showManageYourPrivacy: t.boolean,
+  /** Whether or not to show the privacy preferences page */
+  showPrivacyPreferences: t.boolean,
+  /** Whether or not to show the marketing preferences page */
+  showMarketingPreferences: t.boolean,
+  /** Whether or not to show the data subject rights page */
+  showRequestsProcessedStats: t.boolean,
+  /** What languages are supported for the privacy center */
+  locales: t.array(valuesOf(LanguageKey)),
+  /** The default locale for the privacy center */
+  defaultLocale: valuesOf(LanguageKey),
+  /** Whether or not to prefer the browser default locale */
+  preferBrowserDefaultLocale: t.boolean,
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  supportEmail: t.string,
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  replyToEmail: t.string,
+  /** Whether or not to send emails from a no reply email */
+  useNoReplyEmailAddress: t.boolean,
+  /** Whether or not to use a custom email domain */
+  useCustomEmailDomain: t.boolean,
+  /** Whether or not to transcend access requests from JSON to CSV */
+  transformAccessReportJsonToCsv: t.boolean,
+  /** The theme object of colors to display on the privacy center */
+  theme: 'FIXME',
+});
+
+/** Type override */
+export type PrivacyCenterInput = t.TypeOf<typeof PrivacyCenterInput>;
+
+/**
+ * Input to define a policy
+ */
+export const PolicyInput = t.intersection([
+  t.type({
+    /** The title of the policy */
+    title: t.string,
+  }),
+  t.partial({
+    /** Content of the policy */
+    content: t.string,
+    /** The languages for which the policy is disabled for */
+    disabledLocales: t.array(valuesOf(LanguageKey)),
+  }),
+]);
+
+/** Type override */
+export type PolicyInput = t.TypeOf<typeof PolicyInput>;
+
+/**
+ * Input to define an internationalized message defined in Transcend
+ */
+export const IntlMessageInput = t.intersection([
+  t.type({
+    /** The ID of the message */
+    id: t.string,
+  }),
+  t.partial({
+    /** The hard-coded ID that the message refers to in the Privacy Center or Consent Manager UI, null if message is dynamic */
+    targetReactIntlId: t.string,
+    /** The default message to use */
+    defaultMessage: t.string,
+    /** The translations */
+    translations: t.record(valuesOf(LanguageKey), t.string),
+  }),
+]);
+
+/** Type override */
+export type IntlMessageInput = t.TypeOf<typeof IntlMessageInput>;
+
+/**
  * Input to define a data silo
  *
  * Define the data silos in your data map. A data silo can be a database,
@@ -1304,6 +1423,19 @@ export const DataSiloInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
+    // FIXME implement
+    /**
+     * The privacy center configuration
+     */
+    'privacy-center': PrivacyCenterInput,
+    /**
+     * The policies configuration
+     */
+    policies: t.array(PolicyInput),
+    /**
+     * The internationalized messages configuration
+     */
+    messages: t.array(IntlMessageInput),
   }),
 ]);
 
