@@ -1,41 +1,57 @@
 import { GraphQLClient } from 'graphql-request';
-import { PRIVACY_CENTERS } from './gqls';
+import { DEPLOYED_PRIVACY_CENTER_URL, PRIVACY_CENTER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import {
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
-} from '@transcend-io/privacy-types';
+import { LanguageKey } from '@transcend-io/internationalization';
+import { PrivacyCenterTheme } from '@transcend-io/privacy-types';
 
 export interface PrivacyCenter {
-  /** ID of privacy center */
+  /** ID of the privacy center */
   id: string;
-  /** Title of privacy center */
-  title: string;
-  /** Description of privacy center */
-  description?: string;
-  /** Data protection officer name */
-  dataProtectionOfficerName?: string;
-  /** Data protection officer email */
-  dataProtectionOfficerEmail?: string;
-  /** Address of privacy center */
-  address?: string;
-  /** Headquarters of privacy center */
-  headquarterCountry?: IsoCountryCode;
-  /** Subdivision of privacy center */
-  headquarterSubDivision?: IsoCountrySubdivisionCode;
-  /** Attributes */
-  attributeValues: {
-    /** Name of attribute value */
-    name: string;
-    /** Attribute key */
-    attributeKey: {
-      /** Name of attribute key */
-      name: string;
-    };
-  }[];
+  /** The URL of the privacy center */
+  url: string;
+  /** Whether or not the entire privacy center is enabled or disabled */
+  isDisabled: boolean;
+  /** Whether or not to show the privacy requests button */
+  showPrivacyRequestButton: boolean;
+  /** Whether or not to show the data practices page */
+  hideDataPractices: boolean;
+  /** Whether or not to show the policies page */
+  showPolicies: boolean;
+  /** Whether or not to show the tracking technologies page */
+  showTrackingTechnologies: boolean;
+  /** Whether or not to show the cookies on the tracking technologies page */
+  showCookies: boolean;
+  /** Whether or not to show the data flows on the tracking technologies page */
+  showDataFlows: boolean;
+  /** Whether or not to show the consent manager opt out options on the tracking technologies page */
+  showConsentManager: boolean;
+  /** Whether or not to show the manage your privacy page */
+  showManageYourPrivacy: boolean;
+  /** Whether or not to show the privacy preferences page */
+  showPrivacyPreferences: boolean;
+  /** Whether or not to show the marketing preferences page */
+  showMarketingPreferences: boolean;
+  /** Whether or not to show the data subject rights page */
+  showRequestsProcessedStats: boolean;
+  /** What languages are supported for the privacy center */
+  locales: LanguageKey[];
+  /** The default locale for the privacy center */
+  defaultLocale: LanguageKey;
+  /** Whether or not to prefer the browser default locale */
+  preferBrowserDefaultLocale: boolean;
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  supportEmail: string;
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  replyToEmail: string;
+  /** Whether or not to send emails from a no reply email */
+  useNoReplyEmailAddress: boolean;
+  /** Whether or not to use a custom email domain */
+  useCustomEmailDomain: boolean;
+  /** Whether or not to transcend access requests from JSON to CSV */
+  transformAccessReportJsonToCsv: boolean;
+  /** The theme object of colors to display on the privacy center */
+  theme: PrivacyCenterTheme;
 }
-
-const PAGE_SIZE = 20;
 
 /**
  * Fetch all privacy centers in the organization
@@ -46,29 +62,30 @@ const PAGE_SIZE = 20;
 export async function fetchAllPrivacyCenters(
   client: GraphQLClient,
 ): Promise<PrivacyCenter[]> {
-  const privacyCenters: PrivacyCenter[] = [];
-  let offset = 0;
+  const { organization } = await makeGraphQLRequest<{
+    /** Organization */
+    organization: {
+      /** URL */
+      deployedPrivacyCenterUrl: string;
+    };
+  }>(client, DEPLOYED_PRIVACY_CENTER_URL);
+  const {
+    privacyCenter: { themeStr, ...rest },
+    // eslint-disable-next-line no-await-in-loop
+  } = await makeGraphQLRequest<{
+    /** Privacy centers */
+    privacyCenter: Omit<PrivacyCenter, 'theme'> & {
+      /** Theme string */
+      themeStr: string;
+    };
+  }>(client, PRIVACY_CENTER, {
+    url: organization.deployedPrivacyCenterUrl,
+  });
 
-  // Whether to continue looping
-  let shouldContinue = false;
-  do {
-    const {
-      privacyCenters: { nodes },
-      // eslint-disable-next-line no-await-in-loop
-    } = await makeGraphQLRequest<{
-      /** Privacy centers */
-      privacyCenters: {
-        /** List */
-        nodes: PrivacyCenter[];
-      };
-    }>(client, PRIVACY_CENTERS, {
-      first: PAGE_SIZE,
-      offset,
-    });
-    privacyCenters.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
-  } while (shouldContinue);
-
-  return privacyCenters.sort((a, b) => a.title.localeCompare(b.title));
+  return [
+    {
+      ...rest,
+      theme: JSON.parse(themeStr),
+    },
+  ];
 }

@@ -60,6 +60,9 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
     ScopeName.ManageActionItemCollections,
   ],
   [TranscendPullResource.Teams]: [ScopeName.ManageAccessControl],
+  [TranscendPullResource.Messages]: [ScopeName.ManageIntlMessages],
+  [TranscendPullResource.PrivacyCenters]: [ScopeName.ManagePrivacyCenter],
+  [TranscendPullResource.Policies]: [ScopeName.ManagePolicies],
 };
 
 /**
@@ -99,4 +102,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.ActionItemCollections]: [ScopeName.ViewAllActionItems],
   [TranscendPullResource.ActionItems]: [ScopeName.ViewAllActionItems],
   [TranscendPullResource.Teams]: [ScopeName.ViewScopes],
+  [TranscendPullResource.Messages]: [ScopeName.ViewIntlMessages],
+  [TranscendPullResource.PrivacyCenters]: [ScopeName.ViewPrivacyCenter],
+  [TranscendPullResource.Policies]: [ScopeName.ViewPolicies],
 };

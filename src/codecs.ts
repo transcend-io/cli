@@ -35,6 +35,7 @@ import {
   ActionItemCode,
   ScopeName,
   ActionItemCollectionLocation,
+  PrivacyCenterTheme,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1253,8 +1254,6 @@ export type ConsentManagerInput = t.TypeOf<typeof ConsentManagerInput>;
  * Input to define a privacy center
  */
 export const PrivacyCenterInput = t.partial({
-  /** Description of the privacy center */
-  description: t.string,
   /** Whether or not the entire privacy center is enabled or disabled */
   isDisabled: t.boolean,
   /** Whether or not to show the privacy requests button */
@@ -1285,7 +1284,7 @@ export const PrivacyCenterInput = t.partial({
   defaultLocale: valuesOf(LanguageKey),
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: t.boolean,
-  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  /** The email addresses of the employees within your company that are the go-to indåividuals for managing this privacy center */
   supportEmail: t.string,
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
   replyToEmail: t.string,
@@ -1296,7 +1295,7 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to transcend access requests from JSON to CSV */
   transformAccessReportJsonToCsv: t.boolean,
   /** The theme object of colors to display on the privacy center */
-  theme: 'FIXME',
+  theme: PrivacyCenterTheme,
 });
 
 /** Type override */
@@ -1335,7 +1334,7 @@ export const IntlMessageInput = t.intersection([
     /** The default message to use */
     defaultMessage: t.string,
     /** The translations */
-    translations: t.record(valuesOf(LanguageKey), t.string),
+    translations: t.partial(applyEnum(LanguageKey, () => t.string)),
   }),
 ]);
 
@@ -1423,19 +1422,6 @@ export const DataSiloInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
-    // FIXME implement
-    /**
-     * The privacy center configuration
-     */
-    'privacy-center': PrivacyCenterInput,
-    /**
-     * The policies configuration
-     */
-    policies: t.array(PolicyInput),
-    /**
-     * The internationalized messages configuration
-     */
-    messages: t.array(IntlMessageInput),
   }),
 ]);
 
@@ -1609,6 +1595,19 @@ export const TranscendInput = t.partial({
    * Agent file definitions
    */
   'agent-files': t.array(AgentFileInput),
+  // FIXME implement push
+  /**
+   * The privacy center configuration
+   */
+  'privacy-center': PrivacyCenterInput,
+  /**
+   * The policies configuration
+   */
+  policies: t.array(PolicyInput),
+  /**
+   * The internationalized messages configuration
+   */
+  messages: t.array(IntlMessageInput),
 });
 
 /** Type override */
