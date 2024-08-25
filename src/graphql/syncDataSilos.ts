@@ -916,7 +916,7 @@ export async function syncDataSilos(
       }
     },
     {
-      concurrency: pageSize,
+      concurrency: 10,
     },
   );
 
