@@ -17,7 +17,7 @@ export async function syncPrivacyCenter(
   privacyCenter: PrivacyCenterInput,
 ): Promise<boolean> {
   let encounteredError = false;
-  logger.info(colors.magenta(`Syncing privacy center...`));
+  logger.info(colors.magenta('Syncing privacy center...'));
 
   // Grab the privacy center ID
   const privacyCenterId = await fetchPrivacyCenterId(client);
@@ -57,7 +57,7 @@ export async function syncPrivacyCenter(
           : {}),
       },
     });
-    logger.info(colors.green(`Successfully synced privacy center!`));
+    logger.info(colors.green('Successfully synced privacy center!'));
   } catch (err) {
     encounteredError = true;
     logger.info(
