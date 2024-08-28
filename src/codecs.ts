@@ -1253,8 +1253,6 @@ export const PrivacyCenterInput = t.partial({
   showPrivacyPreferences: t.boolean,
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: t.boolean,
-  /** Whether or not to show the data subject rights page */
-  showRequestsProcessedStats: t.boolean,
   /** What languages are supported for the privacy center */
   locales: t.array(valuesOf(LanguageKey)),
   /** The default locale for the privacy center */
@@ -1287,6 +1285,10 @@ export const PolicyInput = t.intersection([
     title: t.string,
   }),
   t.partial({
+    /** Effective date of policy */
+    effectiveOn: t.string,
+    /** Whether or not to disable the effective date */
+    disableEffectiveOn: t.boolean,
     /** Content of the policy */
     content: t.string,
     /** The languages for which the policy is disabled for */

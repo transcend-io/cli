@@ -7,12 +7,31 @@ export const POLICIES = gql`
       title {
         defaultMessage
       }
+      disableEffectiveOn
       disabledLocales
       versions {
+        effectiveOn
         content {
           defaultMessage
         }
       }
+    }
+  }
+`;
+
+export const UPDATE_POLICIES = gql`
+  mutation TranscendCliUpdatePolicies(
+    $policies: [PolicyInput!]!
+    $privacyCenterId: ID!
+  ) {
+    updatePolicies(
+      input: {
+        privacyCenterId: $privacyCenterId
+        policies: $policies
+        skipPublish: true
+      }
+    ) {
+      clientMutationId
     }
   }
 `;

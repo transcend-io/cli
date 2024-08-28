@@ -40562,9 +40562,6 @@
         "showMarketingPreferences": {
           "type": "boolean"
         },
-        "showRequestsProcessedStats": {
-          "type": "boolean"
-        },
         "locales": {
           "type": "array",
           "items": {

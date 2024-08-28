@@ -32,7 +32,6 @@ export const PRIVACY_CENTER = gql`
       showManageYourPrivacy
       showPrivacyPreferences
       showMarketingPreferences
-      showRequestsProcessedStats
       locales
       defaultLocale
       preferBrowserDefaultLocale
@@ -42,6 +41,14 @@ export const PRIVACY_CENTER = gql`
       useCustomEmailDomain
       transformAccessReportJsonToCsv
       themeStr
+    }
+  }
+`;
+
+export const UPDATE_PRIVACY_CENTER = gql`
+  mutation TranscendCliUpdatePrivacyCenter($input: UpdatePrivacyCenterInput!) {
+    updatePrivacyCenter(input: $input) {
+      clientMutationId
     }
   }
 `;

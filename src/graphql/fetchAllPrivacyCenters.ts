@@ -1,8 +1,9 @@
 import { GraphQLClient } from 'graphql-request';
-import { DEPLOYED_PRIVACY_CENTER_URL, PRIVACY_CENTER } from './gqls';
+import { PRIVACY_CENTER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { LanguageKey } from '@transcend-io/internationalization';
 import { PrivacyCenterThemePartial } from '@transcend-io/privacy-types';
+import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 
 export interface PrivacyCenter {
   /** ID of the privacy center */
@@ -31,8 +32,6 @@ export interface PrivacyCenter {
   showPrivacyPreferences: boolean;
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: boolean;
-  /** Whether or not to show the data subject rights page */
-  showRequestsProcessedStats: boolean;
   /** What languages are supported for the privacy center */
   locales: LanguageKey[];
   /** The default locale for the privacy center */
@@ -62,13 +61,7 @@ export interface PrivacyCenter {
 export async function fetchAllPrivacyCenters(
   client: GraphQLClient,
 ): Promise<PrivacyCenter[]> {
-  const { organization } = await makeGraphQLRequest<{
-    /** Organization */
-    organization: {
-      /** URL */
-      deployedPrivacyCenterUrl: string;
-    };
-  }>(client, DEPLOYED_PRIVACY_CENTER_URL);
+  const deployedPrivacyCenterUrl = await fetchPrivacyCenterUrl(client);
   const {
     privacyCenter: { themeStr, ...rest },
   } = await makeGraphQLRequest<{
@@ -78,7 +71,7 @@ export async function fetchAllPrivacyCenters(
       themeStr: string;
     };
   }>(client, PRIVACY_CENTER, {
-    url: organization.deployedPrivacyCenterUrl,
+    url: deployedPrivacyCenterUrl,
   });
 
   return [

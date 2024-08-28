@@ -570,7 +570,6 @@ export async function pullTranscendConfiguration(
       showManageYourPrivacy: privacyCenter.showManageYourPrivacy,
       showPrivacyPreferences: privacyCenter.showPrivacyPreferences,
       showMarketingPreferences: privacyCenter.showMarketingPreferences,
-      showRequestsProcessedStats: privacyCenter.showRequestsProcessedStats,
       locales: privacyCenter.locales,
       defaultLocale: privacyCenter.defaultLocale,
       preferBrowserDefaultLocale: privacyCenter.preferBrowserDefaultLocale,

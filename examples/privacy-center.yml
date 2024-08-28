@@ -277,7 +277,6 @@ privacy-center:
   showManageYourPrivacy: true
   showPrivacyPreferences: true
   showMarketingPreferences: true
-  showRequestsProcessedStats: false
   locales:
     - en
     - de

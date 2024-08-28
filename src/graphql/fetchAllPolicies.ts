@@ -1,7 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
-import { DEPLOYED_PRIVACY_CENTER_URL, POLICIES } from './gqls';
+import { POLICIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { LanguageKey } from '@transcend-io/internationalization';
+import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 
 export interface Policy {
   /** ID of policy */
@@ -32,19 +33,12 @@ export interface Policy {
 export async function fetchAllPolicies(
   client: GraphQLClient,
 ): Promise<Policy[]> {
-  const { organization } = await makeGraphQLRequest<{
-    /** Organization */
-    organization: {
-      /** URL */
-      deployedPrivacyCenterUrl: string;
-    };
-  }>(client, DEPLOYED_PRIVACY_CENTER_URL);
-
+  const deployedPrivacyCenterUrl = await fetchPrivacyCenterUrl(client);
   const { privacyCenterPolicies } = await makeGraphQLRequest<{
     /** Policies */
     privacyCenterPolicies: Policy[];
   }>(client, POLICIES, {
-    url: organization.deployedPrivacyCenterUrl,
+    url: deployedPrivacyCenterUrl,
   });
 
   return privacyCenterPolicies.sort((a, b) =>

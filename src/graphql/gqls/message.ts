@@ -13,3 +13,11 @@ export const MESSAGES = gql`
     }
   }
 `;
+
+export const UPDATE_INTL_MESSAGES = gql`
+  mutation TranscendCliUpdateIntlMessages($messages: [MessageInput!]!) {
+    updateIntlMessages(input: { messages: $messages, skipPublish: true }) {
+      clientMutationId
+    }
+  }
+`;
