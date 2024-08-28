@@ -3,7 +3,6 @@ import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import {
   UPDATE_CONSENT_MANAGER_DOMAINS,
-  FETCH_PRIVACY_CENTER_ID,
   CREATE_CONSENT_MANAGER,
   UPDATE_TOGGLE_USP_API,
   UPDATE_CONSENT_MANAGER_PARTITION,
@@ -33,6 +32,7 @@ import {
 } from '@transcend-io/airgap.js-types';
 import difference from 'lodash/difference';
 import { logger } from '../logger';
+import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -163,15 +163,10 @@ export async function syncConsentManager(
         };
       }>(client, DEPLOYED_PRIVACY_CENTER_URL);
 
-      const { privacyCenter } = await makeGraphQLRequest<{
-        /** Privacy center */
-        privacyCenter: {
-          /** ID */
-          id: string;
-        };
-      }>(client, FETCH_PRIVACY_CENTER_ID, {
-        url: organization.deployedPrivacyCenterUrl,
-      });
+      const privacyCenterId = await fetchPrivacyCenterId(
+        client,
+        organization.deployedPrivacyCenterUrl,
+      );
 
       const { createConsentManager } = await makeGraphQLRequest<{
         /** Create consent manager */
@@ -184,7 +179,7 @@ export async function syncConsentManager(
         };
       }>(client, CREATE_CONSENT_MANAGER, {
         domains: consentManager.domains,
-        privacyCenterId: privacyCenter.id,
+        privacyCenterId,
       });
       airgapBundleId = createConsentManager.consentManager.id;
     } else {

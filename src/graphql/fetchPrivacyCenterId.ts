@@ -6,10 +6,12 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  * Fetch privacy center ID
  *
  * @param client - GraphQL client
+ * @param url - URLto lookup
  * @returns Privacy Center ID in organization
  */
 export async function fetchPrivacyCenterId(
   client: GraphQLClient,
+  url?: string,
 ): Promise<string> {
   const { privacyCenter } = await makeGraphQLRequest<{
     /** Privacy Center query */
@@ -17,6 +19,8 @@ export async function fetchPrivacyCenterId(
       /** ID of bundle */
       id: string;
     };
-  }>(client, FETCH_PRIVACY_CENTER_ID);
+  }>(client, FETCH_PRIVACY_CENTER_ID, {
+    url,
+  });
   return privacyCenter.id;
 }

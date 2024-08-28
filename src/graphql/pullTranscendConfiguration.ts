@@ -578,6 +578,7 @@ export async function pullTranscendConfiguration(
         displayTitle,
         dataSubjects,
         displayDescription,
+        displayOrder,
       }): IdentifierInput => ({
         name,
         type,
@@ -595,6 +596,7 @@ export async function pullTranscendConfiguration(
             : undefined,
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
+        displayOrder,
       }),
     );
   }

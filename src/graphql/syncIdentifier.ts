@@ -37,6 +37,7 @@ export async function syncIdentifier(
       placeholder: identifier.placeholder,
       displayTitle: identifier.displayTitle,
       displayDescription: identifier.displayDescription,
+      displayOrder: identifier.displayOrder,
       privacyCenterVisibility: identifier.privacyCenterVisibility,
       dataSubjectIds: identifier.dataSubjects
         ? identifier.dataSubjects.map((type) => dataSubjectsByName[type].id)
