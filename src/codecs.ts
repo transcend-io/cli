@@ -1013,6 +1013,8 @@ export const IdentifierInput = t.intersection([
     displayTitle: t.string,
     /** Display description for identifier */
     displayDescription: t.string,
+    /** The display order for the identifier */
+    displayOrder: t.number,
   }),
 ]);
 

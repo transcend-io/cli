@@ -309,7 +309,11 @@
                     "viewManagedConsentDatabaseAdminApi",
                     "manageStoredPreferences",
                     "managePreferenceStoreSettings",
-                    "viewPreferenceStoreSettings"
+                    "viewPreferenceStoreSettings",
+                    "managePolicies",
+                    "viewPolicies",
+                    "manageIntlMessages",
+                    "viewIntlMessages"
                   ]
                 }
               }
@@ -27981,6 +27985,9 @@
               },
               "displayDescription": {
                 "type": "string"
+              },
+              "displayOrder": {
+                "type": "number"
               }
             }
           }
