@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "5.5.2",
+  "version": "5.7.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -64,7 +64,7 @@
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.82.0",
+    "@transcend-io/privacy-types": "^4.82.4",
     "@transcend-io/secret-value": "^1.2.0",
     "@transcend-io/type-utils": "^1.4.2",
     "bluebird": "^3.7.2",

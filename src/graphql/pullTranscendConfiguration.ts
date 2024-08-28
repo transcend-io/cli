@@ -338,7 +338,10 @@ export async function pullTranscendConfiguration(
       ? true
       : apiKeyTitles.includes(title),
   );
-  if (relevantApiKeys.length > 0) {
+  if (
+    relevantApiKeys.length > 0 &&
+    resources.includes(TranscendPullResource.ApiKeys)
+  ) {
     result['api-keys'] = relevantApiKeys.map(
       ({ title }): ApiKeyInput => ({
         title,
@@ -347,7 +350,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save Consent Manager
-  if (consentManager) {
+  if (
+    consentManager &&
+    resources.includes(TranscendPullResource.ConsentManager)
+  ) {
     result['consent-manager'] = {
       bundleUrls: {
         TEST: consentManager.testBundleURL,
@@ -409,7 +415,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save assessment templates
-  if (assessmentTemplate.length > 0) {
+  if (
+    assessmentTemplate.length > 0 &&
+    resources.includes(TranscendPullResource.AssessmentTemplate)
+  ) {
     result['assessment-templates'] = assessmentTemplate.map(
       ({ title, content, attributeKeys }): AssessmentTemplateInput => ({
         title,
@@ -420,7 +429,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save assessments
-  if (assessments.length > 0) {
+  if (
+    assessments.length > 0 &&
+    resources.includes(TranscendPullResource.Assessment)
+  ) {
     result.assessments = assessments.map(
       ({ title, assessmentTemplate, content }): AssessmentInput => ({
         title,
@@ -431,7 +443,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save prompts
-  if (prompts.length > 0) {
+  if (prompts.length > 0 && resources.includes(TranscendPullResource.Prompts)) {
     result.prompts = prompts.map(
       ({ title, content }): PromptInput => ({
         title,
@@ -441,7 +453,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save promptPartials
-  if (promptPartials.length > 0) {
+  if (
+    promptPartials.length > 0 &&
+    resources.includes(TranscendPullResource.PromptPartials)
+  ) {
     result['prompt-partials'] = promptPartials.map(
       ({ title, content }): PromptPartialInput => ({
         title,
@@ -451,7 +466,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save promptGroups
-  if (promptGroups.length > 0) {
+  if (
+    promptGroups.length > 0 &&
+    resources.includes(TranscendPullResource.PromptGroups)
+  ) {
     result['prompt-groups'] = promptGroups.map(
       ({ title, description, prompts }): PromptGroupInput => ({
         title,
@@ -462,7 +480,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save teams
-  if (teams.length > 0) {
+  if (teams.length > 0 && resources.includes(TranscendPullResource.Teams)) {
     result.teams = teams.map(
       ({
         name,
@@ -485,7 +503,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save Data Subjects
-  if (dataSubjects.length > 0) {
+  if (
+    dataSubjects.length > 0 &&
+    resources.includes(TranscendPullResource.DataSubjects)
+  ) {
     result['data-subjects'] = dataSubjects.map(
       ({
         type,
@@ -564,7 +585,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save business entities
-  if (businessEntities.length > 0) {
+  if (
+    businessEntities.length > 0 &&
+    resources.includes(TranscendPullResource.BusinessEntities)
+  ) {
     result['business-entities'] = businessEntities.map(
       ({
         title,
@@ -592,7 +616,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save Actions
-  if (actions.length > 0) {
+  if (actions.length > 0 && resources.includes(TranscendPullResource.Actions)) {
     result.actions = actions.map(
       ({
         type,
@@ -619,7 +643,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save identifiers
-  if (identifiers.length > 0) {
+  if (
+    identifiers.length > 0 &&
+    resources.includes(TranscendPullResource.Identifiers)
+  ) {
     result.identifiers = identifiers.map(
       ({
         name,
@@ -656,7 +683,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save agents
-  if (agents.length > 0) {
+  if (agents.length > 0 && resources.includes(TranscendPullResource.Agents)) {
     result.agents = agents.map(
       ({
         name,
@@ -702,7 +729,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save action items
-  if (actionItems.length > 0) {
+  if (
+    actionItems.length > 0 &&
+    resources.includes(TranscendPullResource.ActionItems)
+  ) {
     result['action-items'] = actionItems.map(
       ({
         teams,
@@ -736,7 +766,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save action item collections
-  if (actionItemCollections.length > 0) {
+  if (
+    actionItemCollections.length > 0 &&
+    resources.includes(TranscendPullResource.ActionItemCollections)
+  ) {
     result['action-item-collections'] = actionItemCollections.map(
       ({
         title,
@@ -753,7 +786,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save agent functions
-  if (agentFunctions.length > 0) {
+  if (
+    agentFunctions.length > 0 &&
+    resources.includes(TranscendPullResource.AgentFunctions)
+  ) {
     result['agent-functions'] = agentFunctions.map(
       ({ name, description, parameters }): AgentFunctionInput => ({
         name,
@@ -764,7 +800,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save agent files
-  if (agentFiles.length > 0) {
+  if (
+    agentFiles.length > 0 &&
+    resources.includes(TranscendPullResource.AgentFiles)
+  ) {
     result['agent-files'] = agentFiles.map(
       ({ name, description, fileId, size, purpose }): AgentFileInput => ({
         name,
@@ -777,7 +816,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save vendors
-  if (vendors.length > 0) {
+  if (vendors.length > 0 && resources.includes(TranscendPullResource.Vendors)) {
     result.vendors = vendors.map(
       ({
         title,
@@ -819,7 +858,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save data categories
-  if (dataCategories.length > 0) {
+  if (
+    dataCategories.length > 0 &&
+    resources.includes(TranscendPullResource.DataCategories)
+  ) {
     result['data-categories'] = dataCategories.map(
       ({
         name,
@@ -849,7 +891,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save processing purposes
-  if (processingPurposes.length > 0) {
+  if (
+    processingPurposes.length > 0 &&
+    resources.includes(TranscendPullResource.ProcessingPurposes)
+  ) {
     result['processing-purposes'] = processingPurposes.map(
       ({
         name,
@@ -877,7 +922,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save data flows
-  if (dataFlows.length > 0) {
+  if (
+    dataFlows.length > 0 &&
+    resources.includes(TranscendPullResource.DataFlows)
+  ) {
     result['data-flows'] = dataFlows.map(
       ({
         value,
@@ -907,7 +955,7 @@ export async function pullTranscendConfiguration(
   }
 
   // Save cookies
-  if (cookies.length > 0) {
+  if (cookies.length > 0 && resources.includes(TranscendPullResource.Cookies)) {
     result.cookies = cookies.map(
       ({
         name,
@@ -937,7 +985,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save attributes
-  if (attributes.length > 0) {
+  if (
+    attributes.length > 0 &&
+    resources.includes(TranscendPullResource.Attributes)
+  ) {
     result.attributes = attributes.map(
       ({
         description,
@@ -960,12 +1011,19 @@ export async function pullTranscendConfiguration(
   }
 
   // save email templates
-  if (dataSiloIds.length === 0 && templates.length > 0) {
+  if (
+    dataSiloIds.length === 0 &&
+    templates.length > 0 &&
+    resources.includes(TranscendPullResource.Templates)
+  ) {
     result.templates = templates.map(({ title }) => ({ title }));
   }
 
   // Save enrichers
-  if (enrichers.length > 0) {
+  if (
+    enrichers.length > 0 &&
+    resources.includes(TranscendPullResource.Enrichers)
+  ) {
     result.enrichers = enrichers.map(
       ({
         title,
@@ -1005,7 +1063,10 @@ export async function pullTranscendConfiguration(
   }
 
   // Save data silos
-  if (dataSilos.length > 0) {
+  if (
+    dataSilos.length > 0 &&
+    resources.includes(TranscendPullResource.DataSilos)
+  ) {
     const indexedDataSubjects = keyBy(dataSubjects, 'type');
     result['data-silos'] = dataSilos.map(
       ([
