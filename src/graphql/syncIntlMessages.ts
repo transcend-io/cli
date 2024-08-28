@@ -7,7 +7,7 @@ import chunk from 'lodash/chunk';
 import { mapSeries } from 'bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-const MAX_PAGE_SIZE = 5;
+const MAX_PAGE_SIZE = 100;
 
 /**
  * Update or create intl messages
