@@ -40728,197 +40728,180 @@
           "type": "boolean"
         },
         "theme": {
-          "allOf": [
-            {
+          "type": "object",
+          "properties": {
+            "colors": {
               "type": "object",
-              "required": ["name", "colors"],
               "properties": {
-                "name": {
+                "primary": {
                   "type": "string"
                 },
-                "colors": {
+                "secondary": {
+                  "type": "string"
+                },
+                "sidebarNavBg": {
+                  "type": "string"
+                },
+                "heroBg": {
+                  "type": "string"
+                },
+                "widgetBg": {
+                  "type": "string"
+                },
+                "textOnBg": {
+                  "type": "string"
+                },
+                "textLightOnBg": {
+                  "type": "string"
+                },
+                "textOnPrimary": {
+                  "type": "string"
+                },
+                "textOnSidebar": {
+                  "type": "string"
+                },
+                "accentOnSidebar": {
+                  "type": "string"
+                },
+                "textOnHero": {
+                  "type": "string"
+                },
+                "textOnAboutTranscend": {
+                  "type": "string"
+                },
+                "highlight": {
+                  "type": "string"
+                },
+                "tableOutline": {
+                  "type": "string"
+                },
+                "bgAccent": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "componentStyles": {
+              "type": "object",
+              "properties": {
+                "h1": {
+                  "type": "string"
+                },
+                "h2": {
+                  "type": "string"
+                },
+                "h3": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                },
+                "sideMenuText": {
+                  "type": "string"
+                },
+                "primaryButton": {
+                  "type": "string"
+                },
+                "secondaryButton": {
+                  "type": "string"
+                },
+                "emailButton": {
+                  "type": "string"
+                },
+                "emailContainer": {
+                  "type": "string"
+                },
+                "hero": {
+                  "type": "string"
+                },
+                "heroBackground": {
+                  "type": "string"
+                },
+                "takeControlConfirmation": {
+                  "type": "string"
+                }
+              }
+            },
+            "textStyles": {
+              "type": "object",
+              "properties": {
+                "fontFamilyHeader": {
                   "allOf": [
                     {
                       "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
+                      "required": ["name", "url"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
                       }
                     },
                     {
                       "type": "object",
                       "properties": {
-                        "sidebarNavBg": {
+                        "assets": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["name", "url"],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "fontFamilyBody": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": ["name", "url"],
+                      "properties": {
+                        "name": {
                           "type": "string"
                         },
-                        "heroBg": {
+                        "url": {
                           "type": "string"
-                        },
-                        "widgetBg": {
-                          "type": "string"
-                        },
-                        "textOnBg": {
-                          "type": "string"
-                        },
-                        "textLightOnBg": {
-                          "type": "string"
-                        },
-                        "textOnPrimary": {
-                          "type": "string"
-                        },
-                        "textOnSidebar": {
-                          "type": "string"
-                        },
-                        "accentOnSidebar": {
-                          "type": "string"
-                        },
-                        "textOnHero": {
-                          "type": "string"
-                        },
-                        "textOnAboutTranscend": {
-                          "type": "string"
-                        },
-                        "highlight": {
-                          "type": "string"
-                        },
-                        "tableOutline": {
-                          "type": "string"
-                        },
-                        "bgAccent": {
-                          "type": "string"
-                        },
-                        "error": {
-                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "assets": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["name", "url"],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            }
+                          }
                         }
                       }
                     }
                   ]
                 }
               }
-            },
-            {
-              "type": "object",
-              "properties": {
-                "componentStyles": {
-                  "type": "object",
-                  "properties": {
-                    "h1": {
-                      "type": "string"
-                    },
-                    "h2": {
-                      "type": "string"
-                    },
-                    "h3": {
-                      "type": "string"
-                    },
-                    "body": {
-                      "type": "string"
-                    },
-                    "sideMenuText": {
-                      "type": "string"
-                    },
-                    "primaryButton": {
-                      "type": "string"
-                    },
-                    "secondaryButton": {
-                      "type": "string"
-                    },
-                    "emailButton": {
-                      "type": "string"
-                    },
-                    "emailContainer": {
-                      "type": "string"
-                    },
-                    "hero": {
-                      "type": "string"
-                    },
-                    "heroBackground": {
-                      "type": "string"
-                    },
-                    "takeControlConfirmation": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "textStyles": {
-                  "type": "object",
-                  "properties": {
-                    "fontFamilyHeader": {
-                      "allOf": [
-                        {
-                          "type": "object",
-                          "required": ["name", "url"],
-                          "properties": {
-                            "name": {
-                              "type": "string"
-                            },
-                            "url": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "assets": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "required": ["name", "url"],
-                                "properties": {
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "url": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    },
-                    "fontFamilyBody": {
-                      "allOf": [
-                        {
-                          "type": "object",
-                          "required": ["name", "url"],
-                          "properties": {
-                            "name": {
-                              "type": "string"
-                            },
-                            "url": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "assets": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "required": ["name", "url"],
-                                "properties": {
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "url": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
             }
-          ]
+          }
         }
       }
     },

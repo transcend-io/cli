@@ -35,7 +35,9 @@ import {
   ActionItemCode,
   ScopeName,
   ActionItemCollectionLocation,
-  PrivacyCenterThemePartial,
+  PrivacyCenterComponentStyles,
+  PrivacyCenterTextStyles,
+  ConfigurableColorPaletteColor,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1270,7 +1272,14 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to transcend access requests from JSON to CSV */
   transformAccessReportJsonToCsv: t.boolean,
   /** The theme object of colors to display on the privacy center */
-  theme: PrivacyCenterThemePartial,
+  theme: t.partial({
+    /** The theme colors */
+    colors: t.partial(applyEnum(ConfigurableColorPaletteColor, () => t.string)),
+    /** Styles to apply to components */
+    componentStyles: PrivacyCenterComponentStyles,
+    /** Override styles */
+    textStyles: PrivacyCenterTextStyles,
+  }),
 });
 
 /** Type override */
