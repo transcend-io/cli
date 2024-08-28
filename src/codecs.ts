@@ -35,6 +35,7 @@ import {
   ActionItemCode,
   ScopeName,
   ActionItemCollectionLocation,
+  PrivacyCenterThemePartial,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -44,6 +45,7 @@ import {
 import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
+import { LanguageKey } from '@transcend-io/internationalization';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -1226,6 +1228,99 @@ export const ConsentManagerInput = t.partial({
 export type ConsentManagerInput = t.TypeOf<typeof ConsentManagerInput>;
 
 /**
+ * Input to define a privacy center
+ */
+export const PrivacyCenterInput = t.partial({
+  /** Whether or not the entire privacy center is enabled or disabled */
+  isDisabled: t.boolean,
+  /** Whether or not to show the privacy requests button */
+  showPrivacyRequestButton: t.boolean,
+  /** Whether or not to show the data practices page */
+  showDataPractices: t.boolean,
+  /** Whether or not to show the policies page */
+  showPolicies: t.boolean,
+  /** Whether or not to show the tracking technologies page */
+  showTrackingTechnologies: t.boolean,
+  /** Whether or not to show the cookies on the tracking technologies page */
+  showCookies: t.boolean,
+  /** Whether or not to show the data flows on the tracking technologies page */
+  showDataFlows: t.boolean,
+  /** Whether or not to show the consent manager opt out options on the tracking technologies page */
+  showConsentManager: t.boolean,
+  /** Whether or not to show the manage your privacy page */
+  showManageYourPrivacy: t.boolean,
+  /** Whether or not to show the privacy preferences page */
+  showPrivacyPreferences: t.boolean,
+  /** Whether or not to show the marketing preferences page */
+  showMarketingPreferences: t.boolean,
+  /** What languages are supported for the privacy center */
+  locales: t.array(valuesOf(LanguageKey)),
+  /** The default locale for the privacy center */
+  defaultLocale: valuesOf(LanguageKey),
+  /** Whether or not to prefer the browser default locale */
+  preferBrowserDefaultLocale: t.boolean,
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  supportEmail: t.string,
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
+  replyToEmail: t.string,
+  /** Whether or not to send emails from a no reply email */
+  useNoReplyEmailAddress: t.boolean,
+  /** Whether or not to use a custom email domain */
+  useCustomEmailDomain: t.boolean,
+  /** Whether or not to transcend access requests from JSON to CSV */
+  transformAccessReportJsonToCsv: t.boolean,
+  /** The theme object of colors to display on the privacy center */
+  theme: PrivacyCenterThemePartial,
+});
+
+/** Type override */
+export type PrivacyCenterInput = t.TypeOf<typeof PrivacyCenterInput>;
+
+/**
+ * Input to define a policy
+ */
+export const PolicyInput = t.intersection([
+  t.type({
+    /** The title of the policy */
+    title: t.string,
+  }),
+  t.partial({
+    /** Effective date of policy */
+    effectiveOn: t.string,
+    /** Whether or not to disable the effective date */
+    disableEffectiveOn: t.boolean,
+    /** Content of the policy */
+    content: t.string,
+    /** The languages for which the policy is disabled for */
+    disabledLocales: t.array(valuesOf(LanguageKey)),
+  }),
+]);
+
+/** Type override */
+export type PolicyInput = t.TypeOf<typeof PolicyInput>;
+
+/**
+ * Input to define an internationalized message defined in Transcend
+ */
+export const IntlMessageInput = t.intersection([
+  t.type({
+    /** The ID of the message */
+    id: t.string,
+  }),
+  t.partial({
+    /** The hard-coded ID that the message refers to in the Privacy Center or Consent Manager UI, null if message is dynamic */
+    targetReactIntlId: t.string,
+    /** The default message to use */
+    defaultMessage: t.string,
+    /** The translations */
+    translations: t.partial(applyEnum(LanguageKey, () => t.string)),
+  }),
+]);
+
+/** Type override */
+export type IntlMessageInput = t.TypeOf<typeof IntlMessageInput>;
+
+/**
  * Input to define a data silo
  *
  * Define the data silos in your data map. A data silo can be a database,
@@ -1479,6 +1574,18 @@ export const TranscendInput = t.partial({
    * Agent file definitions
    */
   'agent-files': t.array(AgentFileInput),
+  /**
+   * The privacy center configuration
+   */
+  'privacy-center': PrivacyCenterInput,
+  /**
+   * The policies configuration
+   */
+  policies: t.array(PolicyInput),
+  /**
+   * The internationalized messages configuration
+   */
+  messages: t.array(IntlMessageInput),
 });
 
 /** Type override */

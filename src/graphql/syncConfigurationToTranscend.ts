@@ -23,6 +23,9 @@ import { syncTeams } from './syncTeams';
 import { syncDataSubject } from './syncDataSubject';
 import { fetchApiKeys } from './fetchApiKeys';
 import { syncPrompts } from './syncPrompts';
+import { syncPolicies } from './syncPolicies';
+import { syncIntlMessages } from './syncIntlMessages';
+import { syncPrivacyCenter } from './syncPrivacyCenter';
 import { syncConsentManager } from './syncConsentManager';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { syncBusinessEntities } from './syncBusinessEntities';
@@ -104,6 +107,9 @@ export async function syncConfigurationToTranscend(
     'action-items': actionItems,
     'action-item-collections': actionItemCollections,
     teams,
+    'privacy-center': privacyCenter,
+    messages,
+    policies,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -503,6 +509,24 @@ export async function syncConfigurationToTranscend(
       { concurrency: CONCURRENCY, creatorId },
     );
     encounteredError = encounteredError || !syncedAssessmentTemplates;
+  }
+
+  // Sync privacy center
+  if (privacyCenter) {
+    const privacyCenterSuccess = await syncPrivacyCenter(client, privacyCenter);
+    encounteredError = encounteredError || !privacyCenterSuccess;
+  }
+
+  // Sync messages
+  if (messages) {
+    const messagesSuccess = await syncIntlMessages(client, messages);
+    encounteredError = encounteredError || !messagesSuccess;
+  }
+
+  // Sync policies
+  if (policies) {
+    const policiesSuccess = await syncPolicies(client, policies);
+    encounteredError = encounteredError || !policiesSuccess;
   }
 
   // Store dependency updates

@@ -11,7 +11,6 @@ import {
   TOGGLE_UNKNOWN_COOKIE_POLICY,
   TOGGLE_CONSENT_PRECEDENCE,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
-  DEPLOYED_PRIVACY_CENTER_URL,
   UPDATE_CONSENT_EXPERIENCE,
   CREATE_CONSENT_PARTITION,
   CREATE_CONSENT_EXPERIENCE,
@@ -155,18 +154,7 @@ export async function syncConsentManager(
   } catch (err) {
     // TODO: https://transcend.height.app/T-23778
     if (err.message.includes('AirgapBundle not found')) {
-      const { organization } = await makeGraphQLRequest<{
-        /** Organization */
-        organization: {
-          /** URL */
-          deployedPrivacyCenterUrl: string;
-        };
-      }>(client, DEPLOYED_PRIVACY_CENTER_URL);
-
-      const privacyCenterId = await fetchPrivacyCenterId(
-        client,
-        organization.deployedPrivacyCenterUrl,
-      );
+      const privacyCenterId = await fetchPrivacyCenterId(client);
 
       const { createConsentManager } = await makeGraphQLRequest<{
         /** Create consent manager */

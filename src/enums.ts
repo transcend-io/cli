@@ -30,6 +30,9 @@ export enum TranscendPullResource {
   ActionItems = 'actionItems',
   ActionItemCollections = 'actionItemCollections',
   Teams = 'teams',
+  PrivacyCenters = 'privacyCenters',
+  Policies = 'policies',
+  Messages = 'messages',
 }
 
 /**
@@ -46,7 +49,7 @@ export const PathfinderPolicyName = makeEnum({
  * Type override
  */
 export type PathfinderPolicyName =
-  typeof PathfinderPolicyName[keyof typeof PathfinderPolicyName];
+  (typeof PathfinderPolicyName)[keyof typeof PathfinderPolicyName];
 
 /**
  * The names of the OpenAI routes that we support setting policies for
@@ -72,4 +75,4 @@ export const OpenAIRouteName = makeEnum({
  * Type override
  */
 export type OpenAIRouteName =
-  typeof OpenAIRouteName[keyof typeof OpenAIRouteName];
+  (typeof OpenAIRouteName)[keyof typeof OpenAIRouteName];

@@ -24,6 +24,8 @@ import {
   AgentFileInput,
   AgentFunctionInput,
   AgentInput,
+  PolicyInput,
+  IntlMessageInput,
   ActionItemInput,
   TeamInput,
   ActionItemCollectionInput,
@@ -64,6 +66,9 @@ import { fetchAllProcessingPurposes } from './fetchAllProcessingPurposes';
 import { fetchAllIdentifiers } from './fetchIdentifiers';
 import { fetchAllPrompts } from './fetchPrompts';
 import { fetchAllPromptPartials } from './fetchPromptPartials';
+import { fetchAllPolicies } from './fetchAllPolicies';
+import { fetchAllPrivacyCenters } from './fetchAllPrivacyCenters';
+import { fetchAllMessages } from './fetchAllMessages';
 import { fetchAllPromptGroups } from './fetchPromptGroups';
 import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
@@ -75,6 +80,7 @@ import { TranscendPullResource } from '../enums';
 import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
 import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
+import { LanguageKey } from '@transcend-io/internationalization';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -163,6 +169,9 @@ export async function pullTranscendConfiguration(
     actionItems,
     actionItemCollections,
     teams,
+    policies,
+    privacyCenters,
+    messages,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -298,6 +307,18 @@ export async function pullTranscendConfiguration(
     // Fetch teams
     resources.includes(TranscendPullResource.Teams)
       ? fetchAllTeams(client)
+      : [],
+    // Fetch policies
+    resources.includes(TranscendPullResource.Policies)
+      ? fetchAllPolicies(client)
+      : [],
+    // Fetch privacy centers
+    resources.includes(TranscendPullResource.PrivacyCenters)
+      ? fetchAllPrivacyCenters(client)
+      : [],
+    // Fetch messages
+    resources.includes(TranscendPullResource.Messages)
+      ? fetchAllMessages(client)
       : [],
   ]);
 
@@ -501,6 +522,65 @@ export async function pullTranscendConfiguration(
         actions: actions.map(({ type }) => type),
       }),
     );
+  }
+
+  // Save privacy policies
+  if (policies.length > 0) {
+    result.policies = policies.map(
+      ({ title, versions, disabledLocales }): PolicyInput => ({
+        title: title?.defaultMessage,
+        content: versions?.[0]?.content?.defaultMessage,
+        disabledLocales,
+      }),
+    );
+  }
+
+  // Save messages
+  if (messages.length > 0) {
+    result.messages = messages.map(
+      ({
+        id,
+        defaultMessage,
+        targetReactIntlId,
+        translations,
+      }): IntlMessageInput => ({
+        id,
+        defaultMessage,
+        targetReactIntlId: targetReactIntlId || undefined,
+        translations: translations.reduce(
+          (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),
+          {} as Record<LanguageKey, string>,
+        ),
+      }),
+    );
+  }
+
+  // Save privacy center
+  if (privacyCenters.length > 0) {
+    const privacyCenter = privacyCenters[0];
+    result['privacy-center'] = {
+      isDisabled: privacyCenter.isDisabled,
+      showPrivacyRequestButton: privacyCenter.showPrivacyRequestButton,
+      showDataPractices: !privacyCenter.hideDataPractices,
+      showPolicies: privacyCenter.showPolicies,
+      showTrackingTechnologies: privacyCenter.showTrackingTechnologies,
+      showCookies: privacyCenter.showCookies,
+      showDataFlows: privacyCenter.showDataFlows,
+      showConsentManager: privacyCenter.showConsentManager,
+      showManageYourPrivacy: privacyCenter.showManageYourPrivacy,
+      showPrivacyPreferences: privacyCenter.showPrivacyPreferences,
+      showMarketingPreferences: privacyCenter.showMarketingPreferences,
+      locales: privacyCenter.locales,
+      defaultLocale: privacyCenter.defaultLocale,
+      preferBrowserDefaultLocale: privacyCenter.preferBrowserDefaultLocale,
+      supportEmail: privacyCenter.supportEmail || undefined,
+      replyToEmail: privacyCenter.replyToEmail || undefined,
+      useNoReplyEmailAddress: privacyCenter.useNoReplyEmailAddress,
+      useCustomEmailDomain: privacyCenter.useCustomEmailDomain,
+      transformAccessReportJsonToCsv:
+        privacyCenter.transformAccessReportJsonToCsv,
+      theme: privacyCenter.theme,
+    };
   }
 
   // Save business entities
