@@ -40,10 +40,7 @@ export async function fetchAllPolicies(
     };
   }>(client, DEPLOYED_PRIVACY_CENTER_URL);
 
-  const {
-    privacyCenterPolicies,
-    // eslint-disable-next-line no-await-in-loop
-  } = await makeGraphQLRequest<{
+  const { privacyCenterPolicies } = await makeGraphQLRequest<{
     /** Policies */
     privacyCenterPolicies: Policy[];
   }>(client, POLICIES, {

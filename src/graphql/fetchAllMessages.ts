@@ -12,7 +12,9 @@ export interface Message {
   targetReactIntlId: string | null;
   /** Disabled locales */
   translations: {
+    /** Locale */
     locale: LanguageKey;
+    /** Value */
     value: string;
   }[];
 }
@@ -26,10 +28,7 @@ export interface Message {
 export async function fetchAllMessages(
   client: GraphQLClient,
 ): Promise<Message[]> {
-  const {
-    translatedMessages,
-    // eslint-disable-next-line no-await-in-loop
-  } = await makeGraphQLRequest<{
+  const { translatedMessages } = await makeGraphQLRequest<{
     /** Messages */
     translatedMessages: Message[];
   }>(client, MESSAGES, {});

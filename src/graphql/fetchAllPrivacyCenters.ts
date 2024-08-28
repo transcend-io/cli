@@ -71,7 +71,6 @@ export async function fetchAllPrivacyCenters(
   }>(client, DEPLOYED_PRIVACY_CENTER_URL);
   const {
     privacyCenter: { themeStr, ...rest },
-    // eslint-disable-next-line no-await-in-loop
   } = await makeGraphQLRequest<{
     /** Privacy centers */
     privacyCenter: Omit<PrivacyCenter, 'theme'> & {
