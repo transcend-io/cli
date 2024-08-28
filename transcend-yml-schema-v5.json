@@ -40525,6 +40525,740 @@
           }
         ]
       }
+    },
+    "privacy-center": {
+      "type": "object",
+      "properties": {
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "showPrivacyRequestButton": {
+          "type": "boolean"
+        },
+        "showDataPractices": {
+          "type": "boolean"
+        },
+        "showPolicies": {
+          "type": "boolean"
+        },
+        "showTrackingTechnologies": {
+          "type": "boolean"
+        },
+        "showCookies": {
+          "type": "boolean"
+        },
+        "showDataFlows": {
+          "type": "boolean"
+        },
+        "showConsentManager": {
+          "type": "boolean"
+        },
+        "showManageYourPrivacy": {
+          "type": "boolean"
+        },
+        "showPrivacyPreferences": {
+          "type": "boolean"
+        },
+        "showMarketingPreferences": {
+          "type": "boolean"
+        },
+        "locales": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "en",
+              "ar",
+              "fr",
+              "es",
+              "de",
+              "it",
+              "ja",
+              "ru",
+              "ar-AE",
+              "fr-FR",
+              "de-DE",
+              "de-AT",
+              "de-CH",
+              "it-IT",
+              "it-CH",
+              "af-ZA",
+              "bg-BG",
+              "zh-CN",
+              "hr-HR",
+              "cs-CZ",
+              "da-DK",
+              "en-GB",
+              "en-CA",
+              "en-AE",
+              "fi-FI",
+              "el-GR",
+              "hi-IN",
+              "hu-HU",
+              "id-ID",
+              "ja-JP",
+              "ko-KR",
+              "lt-LT",
+              "ms-MY",
+              "mr-IN",
+              "nb-NO",
+              "pl-PL",
+              "pt-BR",
+              "pt-PT",
+              "ro-RO",
+              "ru-RU",
+              "sr-Latn-RS",
+              "sv-SE",
+              "ta-IN",
+              "th-TH",
+              "tr-TR",
+              "uk-UA",
+              "vi-VN",
+              "zu-ZA",
+              "en-US",
+              "en-AU",
+              "fr-BE",
+              "fr-CA",
+              "fr-CH",
+              "en-IE",
+              "nl-NL",
+              "nl-BE",
+              "es-ES",
+              "es-419",
+              "zh-HK",
+              "he-IL",
+              "en-NZ",
+              "et-EE",
+              "is-IS",
+              "lv-LV",
+              "mt-MT",
+              "sk-SK",
+              "sl-SL"
+            ]
+          }
+        },
+        "defaultLocale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar",
+            "fr",
+            "es",
+            "de",
+            "it",
+            "ja",
+            "ru",
+            "ar-AE",
+            "fr-FR",
+            "de-DE",
+            "de-AT",
+            "de-CH",
+            "it-IT",
+            "it-CH",
+            "af-ZA",
+            "bg-BG",
+            "zh-CN",
+            "hr-HR",
+            "cs-CZ",
+            "da-DK",
+            "en-GB",
+            "en-CA",
+            "en-AE",
+            "fi-FI",
+            "el-GR",
+            "hi-IN",
+            "hu-HU",
+            "id-ID",
+            "ja-JP",
+            "ko-KR",
+            "lt-LT",
+            "ms-MY",
+            "mr-IN",
+            "nb-NO",
+            "pl-PL",
+            "pt-BR",
+            "pt-PT",
+            "ro-RO",
+            "ru-RU",
+            "sr-Latn-RS",
+            "sv-SE",
+            "ta-IN",
+            "th-TH",
+            "tr-TR",
+            "uk-UA",
+            "vi-VN",
+            "zu-ZA",
+            "en-US",
+            "en-AU",
+            "fr-BE",
+            "fr-CA",
+            "fr-CH",
+            "en-IE",
+            "nl-NL",
+            "nl-BE",
+            "es-ES",
+            "es-419",
+            "zh-HK",
+            "he-IL",
+            "en-NZ",
+            "et-EE",
+            "is-IS",
+            "lv-LV",
+            "mt-MT",
+            "sk-SK",
+            "sl-SL"
+          ]
+        },
+        "preferBrowserDefaultLocale": {
+          "type": "boolean"
+        },
+        "supportEmail": {
+          "type": "string"
+        },
+        "replyToEmail": {
+          "type": "string"
+        },
+        "useNoReplyEmailAddress": {
+          "type": "boolean"
+        },
+        "useCustomEmailDomain": {
+          "type": "boolean"
+        },
+        "transformAccessReportJsonToCsv": {
+          "type": "boolean"
+        },
+        "theme": {
+          "allOf": [
+            {
+              "type": "object",
+              "required": ["name", "colors"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "colors": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "sidebarNavBg": {
+                          "type": "string"
+                        },
+                        "heroBg": {
+                          "type": "string"
+                        },
+                        "widgetBg": {
+                          "type": "string"
+                        },
+                        "textOnBg": {
+                          "type": "string"
+                        },
+                        "textLightOnBg": {
+                          "type": "string"
+                        },
+                        "textOnPrimary": {
+                          "type": "string"
+                        },
+                        "textOnSidebar": {
+                          "type": "string"
+                        },
+                        "accentOnSidebar": {
+                          "type": "string"
+                        },
+                        "textOnHero": {
+                          "type": "string"
+                        },
+                        "textOnAboutTranscend": {
+                          "type": "string"
+                        },
+                        "highlight": {
+                          "type": "string"
+                        },
+                        "tableOutline": {
+                          "type": "string"
+                        },
+                        "bgAccent": {
+                          "type": "string"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "componentStyles": {
+                  "type": "object",
+                  "properties": {
+                    "h1": {
+                      "type": "string"
+                    },
+                    "h2": {
+                      "type": "string"
+                    },
+                    "h3": {
+                      "type": "string"
+                    },
+                    "body": {
+                      "type": "string"
+                    },
+                    "sideMenuText": {
+                      "type": "string"
+                    },
+                    "primaryButton": {
+                      "type": "string"
+                    },
+                    "secondaryButton": {
+                      "type": "string"
+                    },
+                    "emailButton": {
+                      "type": "string"
+                    },
+                    "emailContainer": {
+                      "type": "string"
+                    },
+                    "hero": {
+                      "type": "string"
+                    },
+                    "heroBackground": {
+                      "type": "string"
+                    },
+                    "takeControlConfirmation": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "textStyles": {
+                  "type": "object",
+                  "properties": {
+                    "fontFamilyHeader": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "required": ["name", "url"],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "assets": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": ["name", "url"],
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "fontFamilyBody": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "required": ["name", "url"],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "assets": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": ["name", "url"],
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["title"],
+            "properties": {
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "effectiveOn": {
+                "type": "string"
+              },
+              "disableEffectiveOn": {
+                "type": "boolean"
+              },
+              "content": {
+                "type": "string"
+              },
+              "disabledLocales": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "en",
+                    "ar",
+                    "fr",
+                    "es",
+                    "de",
+                    "it",
+                    "ja",
+                    "ru",
+                    "ar-AE",
+                    "fr-FR",
+                    "de-DE",
+                    "de-AT",
+                    "de-CH",
+                    "it-IT",
+                    "it-CH",
+                    "af-ZA",
+                    "bg-BG",
+                    "zh-CN",
+                    "hr-HR",
+                    "cs-CZ",
+                    "da-DK",
+                    "en-GB",
+                    "en-CA",
+                    "en-AE",
+                    "fi-FI",
+                    "el-GR",
+                    "hi-IN",
+                    "hu-HU",
+                    "id-ID",
+                    "ja-JP",
+                    "ko-KR",
+                    "lt-LT",
+                    "ms-MY",
+                    "mr-IN",
+                    "nb-NO",
+                    "pl-PL",
+                    "pt-BR",
+                    "pt-PT",
+                    "ro-RO",
+                    "ru-RU",
+                    "sr-Latn-RS",
+                    "sv-SE",
+                    "ta-IN",
+                    "th-TH",
+                    "tr-TR",
+                    "uk-UA",
+                    "vi-VN",
+                    "zu-ZA",
+                    "en-US",
+                    "en-AU",
+                    "fr-BE",
+                    "fr-CA",
+                    "fr-CH",
+                    "en-IE",
+                    "nl-NL",
+                    "nl-BE",
+                    "es-ES",
+                    "es-419",
+                    "zh-HK",
+                    "he-IL",
+                    "en-NZ",
+                    "et-EE",
+                    "is-IS",
+                    "lv-LV",
+                    "mt-MT",
+                    "sk-SK",
+                    "sl-SL"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "targetReactIntlId": {
+                "type": "string"
+              },
+              "defaultMessage": {
+                "type": "string"
+              },
+              "translations": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string"
+                  },
+                  "ar": {
+                    "type": "string"
+                  },
+                  "fr": {
+                    "type": "string"
+                  },
+                  "es": {
+                    "type": "string"
+                  },
+                  "de": {
+                    "type": "string"
+                  },
+                  "it": {
+                    "type": "string"
+                  },
+                  "ja": {
+                    "type": "string"
+                  },
+                  "ru": {
+                    "type": "string"
+                  },
+                  "ar-AE": {
+                    "type": "string"
+                  },
+                  "fr-FR": {
+                    "type": "string"
+                  },
+                  "de-DE": {
+                    "type": "string"
+                  },
+                  "de-AT": {
+                    "type": "string"
+                  },
+                  "de-CH": {
+                    "type": "string"
+                  },
+                  "it-IT": {
+                    "type": "string"
+                  },
+                  "it-CH": {
+                    "type": "string"
+                  },
+                  "af-ZA": {
+                    "type": "string"
+                  },
+                  "bg-BG": {
+                    "type": "string"
+                  },
+                  "zh-CN": {
+                    "type": "string"
+                  },
+                  "hr-HR": {
+                    "type": "string"
+                  },
+                  "cs-CZ": {
+                    "type": "string"
+                  },
+                  "da-DK": {
+                    "type": "string"
+                  },
+                  "en-GB": {
+                    "type": "string"
+                  },
+                  "en-CA": {
+                    "type": "string"
+                  },
+                  "en-AE": {
+                    "type": "string"
+                  },
+                  "fi-FI": {
+                    "type": "string"
+                  },
+                  "el-GR": {
+                    "type": "string"
+                  },
+                  "hi-IN": {
+                    "type": "string"
+                  },
+                  "hu-HU": {
+                    "type": "string"
+                  },
+                  "id-ID": {
+                    "type": "string"
+                  },
+                  "ja-JP": {
+                    "type": "string"
+                  },
+                  "ko-KR": {
+                    "type": "string"
+                  },
+                  "lt-LT": {
+                    "type": "string"
+                  },
+                  "ms-MY": {
+                    "type": "string"
+                  },
+                  "mr-IN": {
+                    "type": "string"
+                  },
+                  "nb-NO": {
+                    "type": "string"
+                  },
+                  "pl-PL": {
+                    "type": "string"
+                  },
+                  "pt-BR": {
+                    "type": "string"
+                  },
+                  "pt-PT": {
+                    "type": "string"
+                  },
+                  "ro-RO": {
+                    "type": "string"
+                  },
+                  "ru-RU": {
+                    "type": "string"
+                  },
+                  "sr-Latn-RS": {
+                    "type": "string"
+                  },
+                  "sv-SE": {
+                    "type": "string"
+                  },
+                  "ta-IN": {
+                    "type": "string"
+                  },
+                  "th-TH": {
+                    "type": "string"
+                  },
+                  "tr-TR": {
+                    "type": "string"
+                  },
+                  "uk-UA": {
+                    "type": "string"
+                  },
+                  "vi-VN": {
+                    "type": "string"
+                  },
+                  "zu-ZA": {
+                    "type": "string"
+                  },
+                  "en-US": {
+                    "type": "string"
+                  },
+                  "en-AU": {
+                    "type": "string"
+                  },
+                  "fr-BE": {
+                    "type": "string"
+                  },
+                  "fr-CA": {
+                    "type": "string"
+                  },
+                  "fr-CH": {
+                    "type": "string"
+                  },
+                  "en-IE": {
+                    "type": "string"
+                  },
+                  "nl-NL": {
+                    "type": "string"
+                  },
+                  "nl-BE": {
+                    "type": "string"
+                  },
+                  "es-ES": {
+                    "type": "string"
+                  },
+                  "es-419": {
+                    "type": "string"
+                  },
+                  "zh-HK": {
+                    "type": "string"
+                  },
+                  "he-IL": {
+                    "type": "string"
+                  },
+                  "en-NZ": {
+                    "type": "string"
+                  },
+                  "et-EE": {
+                    "type": "string"
+                  },
+                  "is-IS": {
+                    "type": "string"
+                  },
+                  "lv-LV": {
+                    "type": "string"
+                  },
+                  "mt-MT": {
+                    "type": "string"
+                  },
+                  "sk-SK": {
+                    "type": "string"
+                  },
+                  "sl-SL": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   }
 }
