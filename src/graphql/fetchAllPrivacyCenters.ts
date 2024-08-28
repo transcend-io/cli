@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import { DEPLOYED_PRIVACY_CENTER_URL, PRIVACY_CENTER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { LanguageKey } from '@transcend-io/internationalization';
-import { PrivacyCenterTheme } from '@transcend-io/privacy-types';
+import { PrivacyCenterThemePartial } from '@transcend-io/privacy-types';
 
 export interface PrivacyCenter {
   /** ID of the privacy center */
@@ -50,7 +50,7 @@ export interface PrivacyCenter {
   /** Whether or not to transcend access requests from JSON to CSV */
   transformAccessReportJsonToCsv: boolean;
   /** The theme object of colors to display on the privacy center */
-  theme: PrivacyCenterTheme;
+  theme: PrivacyCenterThemePartial;
 }
 
 /**

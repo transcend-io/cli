@@ -35,7 +35,7 @@ import {
   ActionItemCode,
   ScopeName,
   ActionItemCollectionLocation,
-  PrivacyCenterTheme,
+  PrivacyCenterThemePartial,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1261,7 +1261,7 @@ export const PrivacyCenterInput = t.partial({
   defaultLocale: valuesOf(LanguageKey),
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: t.boolean,
-  /** The email addresses of the employees within your company that are the go-to indåividuals for managing this privacy center */
+  /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
   supportEmail: t.string,
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
   replyToEmail: t.string,
@@ -1272,7 +1272,7 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to transcend access requests from JSON to CSV */
   transformAccessReportJsonToCsv: t.boolean,
   /** The theme object of colors to display on the privacy center */
-  theme: PrivacyCenterTheme,
+  theme: PrivacyCenterThemePartial,
 });
 
 /** Type override */
