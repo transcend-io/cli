@@ -36,7 +36,7 @@ async function main(): Promise<void> {
     /** Cancel these specific actions */
     actions = '',
     /** Concurrency to notify requests at */
-    concurrency = '50',
+    concurrency = '25',
     /** Number of days to extend by */
     days = '45',
     /**

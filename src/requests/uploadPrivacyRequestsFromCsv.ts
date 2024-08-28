@@ -36,7 +36,7 @@ export async function uploadPrivacyRequestsFromCsv({
   file,
   auth,
   sombraAuth,
-  concurrency = 100,
+  concurrency = 25,
   defaultPhoneCountryCode = '1', // USA
   transcendUrl = DEFAULT_TRANSCEND_API,
   attributes = [],

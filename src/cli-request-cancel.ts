@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     /** Email template title to sue when canceling requests */
     cancellationTitle,
     /** Concurrency to cancel requests at */
-    concurrency = '50',
+    concurrency = '25',
     /** Filter for requests created before this date */
     createdAtBefore,
     /** Filter for requests created after this date */

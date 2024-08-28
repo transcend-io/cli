@@ -28,7 +28,7 @@ export async function notifyPrivacyRequestsAdditionalTime({
   daysLeft = 10,
   createdAtAfter,
   emailTemplate = 'Additional Time Needed',
-  concurrency = 100,
+  concurrency = 25,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */

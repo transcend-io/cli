@@ -34,7 +34,7 @@ async function main(): Promise<void> {
     /** Make these statuses silent mode - defaults to statuses for active requests */
     statuses = '',
     /** Concurrency to mark silent */
-    concurrency = '50',
+    concurrency = '25',
     /** Filter for requests created before this date */
     createdAtBefore,
     /** Filter for requests created after this date */

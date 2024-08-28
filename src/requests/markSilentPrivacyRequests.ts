@@ -33,7 +33,7 @@ export async function markSilentPrivacyRequests({
   ],
   createdAtAfter,
   createdAtBefore,
-  concurrency = 100,
+  concurrency = 25,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
   /** The request actions that should be restarted */

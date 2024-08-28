@@ -36,7 +36,7 @@ async function main(): Promise<void> {
     /** Mark as silent mode when made before this date */
     silentModeBefore,
     /** Concurrency to approve requests at */
-    concurrency = '50',
+    concurrency = '25',
     /** Filter for requests created before this date */
     createdAtBefore,
     /** Filter for requests created after this date */
