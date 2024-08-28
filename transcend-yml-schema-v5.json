@@ -40938,6 +40938,12 @@
           {
             "type": "object",
             "properties": {
+              "effectiveOn": {
+                "type": "string"
+              },
+              "disableEffectiveOn": {
+                "type": "boolean"
+              },
               "content": {
                 "type": "string"
               },
