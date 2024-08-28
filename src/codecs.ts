@@ -1572,7 +1572,6 @@ export const TranscendInput = t.partial({
    * Agent file definitions
    */
   'agent-files': t.array(AgentFileInput),
-  // FIXME implement push
   /**
    * The privacy center configuration
    */
