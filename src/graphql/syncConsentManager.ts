@@ -179,7 +179,7 @@ export async function syncConsentManager(
         };
       }>(client, CREATE_CONSENT_MANAGER, {
         domains: consentManager.domains,
-        privacyCenterId: privacyCenterId,
+        privacyCenterId,
       });
       airgapBundleId = createConsentManager.consentManager.id;
     } else {

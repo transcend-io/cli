@@ -6,6 +6,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  * Fetch privacy center ID
  *
  * @param client - GraphQL client
+ * @param url - URLto lookup
  * @returns Privacy Center ID in organization
  */
 export async function fetchPrivacyCenterId(
