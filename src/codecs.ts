@@ -167,11 +167,6 @@ export const EnricherInput = t.intersection([
      * For looker integration - the title of the looker query to run
      */
     lookerQueryTitle: t.string,
-    // FIXME
-    /**
-     * For looker integration - the slug of the looker query to run
-     */
-    lookerQuerySlug: t.string,
     /**
      * The duration (in ms) that the enricher should take to execute.
      */
@@ -196,24 +191,6 @@ export const EnricherInput = t.intersection([
     headers: t.array(WebhookHeader),
     /** The privacy actions that the enricher should run against */
     'privacy-actions': t.array(valuesOf(RequestAction)),
-    // FIXME
-    /** The title of the related data silo */
-    'data-silo': t.string,
-    /** The time after which a first reminder email is sent */
-    reminderTemplate1Duration: t.string,
-    /** The time after which a second reminder email is sent */
-    reminderTemplate2Duration: t.string,
-    /** The time after which a third reminder email is sent */
-    reminderTemplate3Duration: t.string,
-    /** The title of the email template to use upon trigger */
-    template: t.string,
-    /** The title of the email template to use upon continuation of the request but verification failed */
-    continuationTemplate: t.string,
-    /** The title of the email template to use upon verification failed and request cancelation */
-    requestVerificationFailedTemplate: t.string,
-    // FIXME field to identifier mapping
-    // FIXME dependency
-    // FIXME cross-check identifiers against verification results
   }),
 ]);
 
