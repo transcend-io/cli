@@ -43,6 +43,7 @@ import { syncAgentFiles } from './syncAgentFiles';
 import { syncVendors } from './syncVendors';
 import { syncDataCategories } from './syncDataCategories';
 import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncPartitions } from './syncPartitions';
 
 const CONCURRENCY = 10;
 
@@ -110,6 +111,7 @@ export async function syncConfigurationToTranscend(
     'privacy-center': privacyCenter,
     messages,
     policies,
+    partitions,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -229,6 +231,12 @@ export async function syncConfigurationToTranscend(
       processingPurposes,
     );
     encounteredError = encounteredError || !processingPurposesSuccess;
+  }
+
+  // Sync partitions
+  if (partitions) {
+    const partitionsSuccess = await syncPartitions(client, partitions);
+    encounteredError = encounteredError || !partitionsSuccess;
   }
 
   // Sync agents

@@ -12,7 +12,6 @@ import {
   TOGGLE_CONSENT_PRECEDENCE,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
   UPDATE_CONSENT_EXPERIENCE,
-  CREATE_CONSENT_PARTITION,
   CREATE_CONSENT_EXPERIENCE,
   UPDATE_CONSENT_MANAGER_THEME,
 } from './gqls';
@@ -21,15 +20,13 @@ import {
   fetchConsentManagerId,
   fetchConsentManagerExperiences,
   fetchPurposes,
-  fetchConsentManagerPartitions,
 } from './fetchConsentManagerId';
 import keyBy from 'lodash/keyBy';
-import { map, mapSeries } from 'bluebird';
+import { map } from 'bluebird';
 import {
   InitialViewState,
   OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
-import difference from 'lodash/difference';
 import { logger } from '../logger';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 
@@ -173,24 +170,6 @@ export async function syncConsentManager(
     } else {
       throw err;
     }
-  }
-
-  if (consentManager.partitions) {
-    const partitions = await fetchConsentManagerPartitions(client);
-    const newPartitionNames = difference(
-      consentManager.partitions.map(({ name }) => name),
-      partitions.map(({ name }) => name),
-    );
-    await mapSeries(newPartitionNames, async (name) => {
-      await makeGraphQLRequest(client, CREATE_CONSENT_PARTITION, {
-        input: {
-          name,
-        },
-      });
-      logger.info(
-        colors.green(`Successfully created consent partition: ${name}!`),
-      );
-    });
   }
 
   // sync domains

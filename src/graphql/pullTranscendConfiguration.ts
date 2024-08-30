@@ -50,7 +50,6 @@ import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
-  fetchConsentManagerPartitions,
   fetchConsentManagerTheme,
 } from './fetchConsentManagerId';
 import { fetchAllEnrichers } from './syncEnrichers';
@@ -81,6 +80,7 @@ import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
 import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
 import { LanguageKey } from '@transcend-io/internationalization';
+import { fetchPartitions } from './syncPartitions';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -156,7 +156,6 @@ export async function pullTranscendConfiguration(
     businessEntities,
     consentManager,
     consentManagerExperiences,
-    consentManagerPartitions,
     prompts,
     promptPartials,
     promptGroups,
@@ -172,6 +171,7 @@ export async function pullTranscendConfiguration(
     policies,
     privacyCenters,
     messages,
+    partitions,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -256,10 +256,6 @@ export async function pullTranscendConfiguration(
     resources.includes(TranscendPullResource.ConsentManager)
       ? fetchConsentManagerExperiences(client)
       : [],
-    // Fetch consent manager partitions
-    resources.includes(TranscendPullResource.ConsentManager)
-      ? fetchConsentManagerPartitions(client)
-      : [],
     // Fetch prompts
     resources.includes(TranscendPullResource.Prompts)
       ? fetchAllPrompts(client)
@@ -320,6 +316,10 @@ export async function pullTranscendConfiguration(
     resources.includes(TranscendPullResource.Messages)
       ? fetchAllMessages(client)
       : [],
+    // Fetch partitions
+    resources.includes(TranscendPullResource.Partitions)
+      ? fetchPartitions(client)
+      : [],
   ]);
 
   const consentManagerTheme =
@@ -347,6 +347,17 @@ export async function pullTranscendConfiguration(
         title,
       }),
     );
+  }
+
+  // Save Partitions
+  if (
+    partitions.length > 0 &&
+    resources.includes(TranscendPullResource.Partitions)
+  ) {
+    result.partitions = partitions.map(({ name, partition }) => ({
+      name,
+      partition,
+    }));
   }
 
   // Save Consent Manager
@@ -383,13 +394,6 @@ export async function pullTranscendConfiguration(
             privacyPolicy: consentManagerTheme.privacyPolicy || undefined,
             prompt: consentManagerTheme.prompt,
           },
-      partitions:
-        consentManagerPartitions.length > 0
-          ? consentManagerPartitions.map(({ name, partition }) => ({
-              name,
-              partition,
-            }))
-          : undefined,
       experiences: consentManagerExperiences.map((experience) => ({
         name: experience.name,
         displayName: experience.displayName || undefined,

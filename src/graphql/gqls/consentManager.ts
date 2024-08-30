@@ -325,10 +325,10 @@ export const UPDATE_CONSENT_MANAGER_DOMAINS = gql`
 export const UPDATE_CONSENT_MANAGER_PARTITION = gql`
   mutation TranscendCliUpdateConsentManagerPartition(
     $airgapBundleId: ID!
-    $partition: String!
+    $partitionId: ID!
   ) {
     updateConsentManagerPartition(
-      input: { id: $airgapBundleId, partition: $partition }
+      input: { id: $airgapBundleId, partitionId: $partitionId }
     ) {
       clientMutationId
     }
