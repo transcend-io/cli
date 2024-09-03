@@ -52,7 +52,7 @@ export async function syncConsentManagerExperiences(
 
   // Fetch existing purposes
   const purposes = await fetchPurposes(client);
-  const purposeLookup = keyBy(purposes, 'name');
+  const purposeLookup = keyBy(purposes, 'trackingType');
 
   // Bulk update or create experiences
   await map(
@@ -60,21 +60,21 @@ export async function syncConsentManagerExperiences(
     async (exp, ind) => {
       // Purpose IDs
       const purposeIds = exp.purposes?.map((purpose, ind2) => {
-        const existingPurpose = purposeLookup[purpose.name];
+        const existingPurpose = purposeLookup[purpose.trackingType];
         if (!existingPurpose) {
           throw new Error(
-            `Invalid purpose name provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
-              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+            `Invalid purpose trackingType provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
           );
         }
         return existingPurpose.id;
       });
       const optedOutPurposeIds = exp.optedOutPurposes?.map((purpose, ind2) => {
-        const existingPurpose = purposeLookup[purpose.name];
+        const existingPurpose = purposeLookup[purpose.trackingType];
         if (!existingPurpose) {
           throw new Error(
-            `Invalid purpose name provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
-              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+            `Invalid purpose trackingType provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
           );
         }
         return existingPurpose.id;

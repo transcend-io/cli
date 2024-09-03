@@ -403,10 +403,10 @@ export async function pullTranscendConfiguration(
         displayPriority: experience.displayPriority,
         viewState: experience.viewState,
         purposes: experience.purposes.map((purpose) => ({
-          name: purpose.name,
+          trackingType: purpose.trackingType,
         })),
         optedOutPurposes: experience.optedOutPurposes.map((purpose) => ({
-          name: purpose.name,
+          trackingType: purpose.trackingType,
         })),
         browserLanguages: experience.browserLanguages,
         browserTimeZones: experience.browserTimeZones,

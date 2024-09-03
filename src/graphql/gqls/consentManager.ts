@@ -7,6 +7,7 @@ export const PURPOSES = gql`
       purposes {
         id
         name
+        trackingType
       }
     }
   }
@@ -33,9 +34,11 @@ export const EXPERIENCES = gql`
         viewState
         purposes {
           name
+          trackingType
         }
         optedOutPurposes {
           name
+          trackingType
         }
         browserLanguages
         browserTimeZones

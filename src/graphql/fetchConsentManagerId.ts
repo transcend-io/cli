@@ -117,6 +117,8 @@ export interface ConsentPurpose {
   id: string;
   /** Name of purpose */
   name: string;
+  /** Tracking type of purpose */
+  trackingType: string;
 }
 
 /**
@@ -170,11 +172,15 @@ export interface ConsentExperience {
   purposes: {
     /** Name of purpose */
     name: string;
+    /** Purpose slug */
+    trackingType: string;
   }[];
   /** Purposes that are opted out by default in a particular experience */
   optedOutPurposes: {
     /** Name of purpose */
     name: string;
+    /** Purpose slug */
+    trackingType: string;
   }[];
   /**
    * Browser languages that define this regional experience
