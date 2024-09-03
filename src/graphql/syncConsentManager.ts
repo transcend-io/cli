@@ -12,7 +12,6 @@ import {
   TOGGLE_CONSENT_PRECEDENCE,
   TOGGLE_UNKNOWN_REQUEST_POLICY,
   UPDATE_CONSENT_EXPERIENCE,
-  CREATE_CONSENT_PARTITION,
   CREATE_CONSENT_EXPERIENCE,
   UPDATE_CONSENT_MANAGER_THEME,
 } from './gqls';
@@ -21,17 +20,16 @@ import {
   fetchConsentManagerId,
   fetchConsentManagerExperiences,
   fetchPurposes,
-  fetchConsentManagerPartitions,
 } from './fetchConsentManagerId';
 import keyBy from 'lodash/keyBy';
-import { map, mapSeries } from 'bluebird';
+import { map } from 'bluebird';
 import {
   InitialViewState,
   OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
-import difference from 'lodash/difference';
 import { logger } from '../logger';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+import { fetchPartitions } from './syncPartitions';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -52,7 +50,7 @@ export async function syncConsentManagerExperiences(
 
   // Fetch existing purposes
   const purposes = await fetchPurposes(client);
-  const purposeLookup = keyBy(purposes, 'name');
+  const purposeLookup = keyBy(purposes, 'trackingType');
 
   // Bulk update or create experiences
   await map(
@@ -60,21 +58,21 @@ export async function syncConsentManagerExperiences(
     async (exp, ind) => {
       // Purpose IDs
       const purposeIds = exp.purposes?.map((purpose, ind2) => {
-        const existingPurpose = purposeLookup[purpose.name];
+        const existingPurpose = purposeLookup[purpose.trackingType];
         if (!existingPurpose) {
           throw new Error(
-            `Invalid purpose name provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
-              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+            `Invalid purpose trackingType provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
           );
         }
         return existingPurpose.id;
       });
       const optedOutPurposeIds = exp.optedOutPurposes?.map((purpose, ind2) => {
-        const existingPurpose = purposeLookup[purpose.name];
+        const existingPurpose = purposeLookup[purpose.trackingType];
         if (!existingPurpose) {
           throw new Error(
-            `Invalid purpose name provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
-              `${purpose.name}. See list of valid purposes ${PURPOSES_LINK}`,
+            `Invalid purpose trackingType provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
           );
         }
         return existingPurpose.id;
@@ -175,24 +173,6 @@ export async function syncConsentManager(
     }
   }
 
-  if (consentManager.partitions) {
-    const partitions = await fetchConsentManagerPartitions(client);
-    const newPartitionNames = difference(
-      consentManager.partitions.map(({ name }) => name),
-      partitions.map(({ name }) => name),
-    );
-    await mapSeries(newPartitionNames, async (name) => {
-      await makeGraphQLRequest(client, CREATE_CONSENT_PARTITION, {
-        input: {
-          name,
-        },
-      });
-      logger.info(
-        colors.green(`Successfully created consent partition: ${name}!`),
-      );
-    });
-  }
-
   // sync domains
   if (consentManager.domains) {
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_DOMAINS, {
@@ -203,8 +183,17 @@ export async function syncConsentManager(
 
   // sync partition
   if (consentManager.partition) {
+    const partitions = await fetchPartitions(client);
+    const partitionToUpdate = partitions.find(
+      (part) => part.name === consentManager.partition,
+    );
+    if (!partitionToUpdate) {
+      throw new Error(
+        `Partition "${consentManager.partition}" not found. Please create the partition first.`,
+      );
+    }
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_PARTITION, {
-      partition: consentManager.partition,
+      partitionId: partitionToUpdate.id,
       airgapBundleId,
     });
   }

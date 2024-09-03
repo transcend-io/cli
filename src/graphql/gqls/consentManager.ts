@@ -7,6 +7,7 @@ export const PURPOSES = gql`
       purposes {
         id
         name
+        trackingType
       }
     }
   }
@@ -33,9 +34,11 @@ export const EXPERIENCES = gql`
         viewState
         purposes {
           name
+          trackingType
         }
         optedOutPurposes {
           name
+          trackingType
         }
         browserLanguages
         browserTimeZones
@@ -325,10 +328,10 @@ export const UPDATE_CONSENT_MANAGER_DOMAINS = gql`
 export const UPDATE_CONSENT_MANAGER_PARTITION = gql`
   mutation TranscendCliUpdateConsentManagerPartition(
     $airgapBundleId: ID!
-    $partition: String!
+    $partitionId: ID!
   ) {
     updateConsentManagerPartition(
-      input: { id: $airgapBundleId, partition: $partition }
+      input: { id: $airgapBundleId, partitionId: $partitionId }
     ) {
       clientMutationId
     }
