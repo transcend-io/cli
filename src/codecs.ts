@@ -1144,15 +1144,15 @@ export const ConsentManageExperienceInput = t.intersection([
     /** Purposes that can be opted out of in a particular experience */
     purposes: t.array(
       t.type({
-        /** Name of purpose */
-        name: t.string,
+        /** Slug of purpose */
+        trackingType: t.string,
       }),
     ),
     /** Purposes that are opted out by default in a particular experience */
     optedOutPurposes: t.array(
       t.type({
-        /** Name of purpose */
-        name: t.string,
+        /** Slug of purpose */
+        trackingType: t.string,
       }),
     ),
     /**
@@ -1169,7 +1169,7 @@ export type ConsentManageExperienceInput = t.TypeOf<
   typeof ConsentManageExperienceInput
 >;
 
-export const ConsentPartition = t.intersection([
+export const PartitionInput = t.intersection([
   t.type({
     /** Name of partition */
     name: t.string,
@@ -1181,7 +1181,7 @@ export const ConsentPartition = t.intersection([
 ]);
 
 /** Type override */
-export type ConsentPartition = t.TypeOf<typeof ConsentPartition>;
+export type PartitionInput = t.TypeOf<typeof PartitionInput>;
 
 export const ConsentManagerInput = t.partial({
   /** Airgap version */
@@ -1190,8 +1190,6 @@ export const ConsentManagerInput = t.partial({
   bundleUrls: t.record(valuesOf(ConsentBundleType), t.string),
   /** The consent manager domains in the instance */
   domains: t.array(t.string),
-  /** The full list of consent manager partitions (e.g. dev vs staging vs prod) */
-  partitions: t.array(ConsentPartition),
   /** Key used to partition consent records */
   partition: t.string,
   /** Precedence of signals vs user input */
@@ -1595,6 +1593,8 @@ export const TranscendInput = t.partial({
    * The internationalized messages configuration
    */
   messages: t.array(IntlMessageInput),
+  /** The full list of consent manager partitions (e.g. dev vs staging vs prod) */
+  partitions: t.array(PartitionInput),
 });
 
 /** Type override */

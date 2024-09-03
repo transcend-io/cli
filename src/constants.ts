@@ -40,6 +40,9 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.ConsentManager]: [
     ScopeName.ManageConsentManagerDeveloperSettings,
   ],
+  [TranscendPullResource.Partitions]: [
+    ScopeName.ManageConsentManagerDeveloperSettings,
+  ],
   [TranscendPullResource.Actions]: [ScopeName.ManageDataSubjectRequestSettings],
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ManageDataSubjectRequestSettings,
@@ -84,6 +87,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.DataFlows]: [ScopeName.ViewDataFlow],
   [TranscendPullResource.Cookies]: [ScopeName.ViewDataFlow],
   [TranscendPullResource.ConsentManager]: [ScopeName.ViewConsentManager],
+  [TranscendPullResource.Partitions]: [ScopeName.ViewConsentManager],
   [TranscendPullResource.Actions]: [ScopeName.ViewDataSubjectRequestSettings],
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ViewDataSubjectRequestSettings,

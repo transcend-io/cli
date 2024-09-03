@@ -4,8 +4,10 @@
 ## Table of Contents
 
 - [Changelog](#changelog)
-  - [[5.0.0] - 2024-04-23](#500---2024-04-23)
+  - [[6.0.0] - 2024-09-03](#600---2024-09-03)
     - [Changed](#changed)
+  - [[5.0.0] - 2024-04-23](#500---2024-04-23)
+    - [Changed](#changed-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -15,6 +17,59 @@ All notable changes to the Transcend CLI tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [6.0.0] - 2024-09-03
+
+### Changed
+
+- Updates the shape of `transcend.yml` for the `consent-manager.experiences[0].purposes[*]`
+
+Before:
+
+```yml
+consent-manager:
+  ...
+  experiences:
+    - name: Unknown
+      ...
+      purposes:
+        - name: Functional
+        - name: SaleOfInfo
+      optedOutPurposes:
+         - name: SaleOfInfo
+```
+
+After:
+
+```yml
+consent-manager:
+  ...
+  experiences:
+    - name: Unknown
+      ...
+      purposes:
+        - trackingType: Functional
+        - trackingType: SaleOfInfo
+      optedOutPurposes:
+        - trackingType: SaleOfInfo
+```
+
+- Updates the shape of `transcend.yml` for the `consent-manager.partitions` to be at top level `partitions`
+
+Before:
+
+```yml
+consent-manager:
+  ...
+  partitions:
+    - ...
+```
+
+After:
+
+```yml
+partitions: ...
+```
 
 ## [5.0.0] - 2024-04-23
 
