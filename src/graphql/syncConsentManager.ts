@@ -29,6 +29,7 @@ import {
 } from '@transcend-io/airgap.js-types';
 import { logger } from '../logger';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+import { fetchPartitions } from './syncPartitions';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -182,8 +183,17 @@ export async function syncConsentManager(
 
   // sync partition
   if (consentManager.partition) {
+    const partitions = await fetchPartitions(client);
+    const partitionToUpdate = partitions.find(
+      (part) => part.name === consentManager.partition,
+    );
+    if (!partitionToUpdate) {
+      throw new Error(
+        `Partition "${consentManager.partition}" not found. Please create the partition first.`,
+      );
+    }
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_PARTITION, {
-      partition: consentManager.partition,
+      partitionId: partitionToUpdate.id,
       airgapBundleId,
     });
   }

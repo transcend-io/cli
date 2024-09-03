@@ -10,6 +10,8 @@ import { PartitionInput } from '../codecs';
 const PAGE_SIZE = 50;
 
 export interface TranscendPartition {
+  /** ID of the partition */
+  id: string;
   /** Name of partition */
   name: string;
   /** Partition value */
