@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updates the shape of `transcend.yml` for the `consentManager.experiences[0].purposes[*]`
+- Updates the shape of `transcend.yml` for the `consent-manager.experiences[0].purposes[*]`
 
 Before:
 
@@ -52,6 +52,23 @@ consent-manager:
         - trackingType: SaleOfInfo
       optedOutPurposes:
         - trackingType: SaleOfInfo
+```
+
+- Updates the shape of `transcend.yml` for the `consent-manager.partitions` to be at top level `partitions`
+
+Before:
+
+```yml
+consent-manager:
+  ...
+  partitions:
+    - ...
+```
+
+After:
+
+```yml
+partitions: ...
 ```
 
 ## [5.0.0] - 2024-04-23
