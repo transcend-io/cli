@@ -145,16 +145,22 @@
                 "items": {
                   "type": "string",
                   "enum": [
-                    "CODE_SCANNING",
-                    "PRIVACY_REQUESTS_DASHBOARD",
-                    "DATA_MAPPING_DASHBOARD",
-                    "CONSENT_DASHBOARD",
-                    "PRIVACY_CENTER_SETTINGS",
-                    "ADMINISTRATION_SETTINGS",
+                    "DSR_AUTOMATION",
+                    "DATA_INVENTORY",
+                    "CONSENT_MANAGEMENT",
+                    "PRIVACY_CENTER",
+                    "ADMINISTRATION",
                     "ASSESSMENTS",
                     "PATHFINDER",
-                    "PROMPT_MANAGEMENT",
-                    "CONTRACT_SCANNING"
+                    "PREFERENCE_MANAGEMENT",
+                    "PROMPT_MANAGER",
+                    "CONTRACT_SCANNING",
+                    "WEB_AUDITOR",
+                    "SOMBRA",
+                    "SILO_DISCOVERY",
+                    "STRUCTURED_DISCOVERY",
+                    "UNSTRUCTURED_DISCOVERY",
+                    "DATA_LINEAGE"
                   ]
                 }
               }
