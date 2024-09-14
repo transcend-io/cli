@@ -58,7 +58,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Vendors]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.DataCategories]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.ProcessingPurposes]: [ScopeName.ManageDataInventory],
-  [TranscendPullResource.ActionItems]: [ScopeName.ManageAllActionItems],
+  [TranscendPullResource.ActionItems]: [
+    ScopeName.ManageAllActionItems,
+    ScopeName.ViewGlobalAttributes,
+  ],
   [TranscendPullResource.ActionItemCollections]: [
     ScopeName.ManageActionItemCollections,
   ],
