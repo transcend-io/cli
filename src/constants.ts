@@ -1,5 +1,6 @@
 import { ScopeName } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
+import { TranscendInput } from './codecs';
 
 export const ADMIN_DASH = 'https://app.transcend.io';
 
@@ -58,7 +59,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Vendors]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.DataCategories]: [ScopeName.ManageDataInventory],
   [TranscendPullResource.ProcessingPurposes]: [ScopeName.ManageDataInventory],
-  [TranscendPullResource.ActionItems]: [ScopeName.ManageAllActionItems],
+  [TranscendPullResource.ActionItems]: [
+    ScopeName.ManageAllActionItems,
+    ScopeName.ViewGlobalAttributes,
+  ],
   [TranscendPullResource.ActionItemCollections]: [
     ScopeName.ManageActionItemCollections,
   ],
@@ -109,4 +113,40 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Messages]: [ScopeName.ViewIntlMessages],
   [TranscendPullResource.PrivacyCenters]: [ScopeName.ViewPrivacyCenter],
   [TranscendPullResource.Policies]: [ScopeName.ViewPolicies],
+};
+
+export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
+  TranscendPullResource,
+  keyof TranscendInput
+> = {
+  [TranscendPullResource.ApiKeys]: 'api-keys',
+  [TranscendPullResource.Attributes]: 'attributes',
+  [TranscendPullResource.DataFlows]: 'data-flows',
+  [TranscendPullResource.Cookies]: 'cookies',
+  [TranscendPullResource.ConsentManager]: 'consent-manager',
+  [TranscendPullResource.Partitions]: 'partitions',
+  [TranscendPullResource.Actions]: 'actions',
+  [TranscendPullResource.DataSubjects]: 'data-subjects',
+  [TranscendPullResource.BusinessEntities]: 'business-entities',
+  [TranscendPullResource.Identifiers]: 'identifiers',
+  [TranscendPullResource.Enrichers]: 'enrichers',
+  [TranscendPullResource.DataSilos]: 'data-silos',
+  [TranscendPullResource.Templates]: 'templates',
+  [TranscendPullResource.Assessment]: 'assessments',
+  [TranscendPullResource.AssessmentTemplate]: 'assessment-templates',
+  [TranscendPullResource.Prompts]: 'prompts',
+  [TranscendPullResource.PromptPartials]: 'prompt-partials',
+  [TranscendPullResource.PromptGroups]: 'prompt-groups',
+  [TranscendPullResource.Agents]: 'agents',
+  [TranscendPullResource.AgentFunctions]: 'agent-functions',
+  [TranscendPullResource.AgentFiles]: 'agent-files',
+  [TranscendPullResource.Vendors]: 'vendors',
+  [TranscendPullResource.DataCategories]: 'data-categories',
+  [TranscendPullResource.ProcessingPurposes]: 'processing-purposes',
+  [TranscendPullResource.ActionItems]: 'action-items',
+  [TranscendPullResource.ActionItemCollections]: 'action-item-collections',
+  [TranscendPullResource.Teams]: 'teams',
+  [TranscendPullResource.Messages]: 'messages',
+  [TranscendPullResource.PrivacyCenters]: 'privacy-center',
+  [TranscendPullResource.Policies]: 'policies',
 };
