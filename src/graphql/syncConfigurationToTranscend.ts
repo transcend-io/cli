@@ -275,6 +275,43 @@ export async function syncConfigurationToTranscend(
     encounteredError = encounteredError || !actionItemCollectionsSuccess;
   }
 
+  // Sync attributes
+  if (attributes) {
+    // Fetch existing
+    logger.info(colors.magenta(`Syncing "${attributes.length}" attributes...`));
+    const existingAttributes = await fetchAllAttributes(client);
+    await map(
+      attributes,
+      async (attribute) => {
+        const existing = existingAttributes.find(
+          (attr) => attr.name === attribute.name,
+        );
+
+        logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
+        try {
+          await syncAttribute(client, attribute, {
+            existingAttribute: existing,
+            deleteExtraAttributeValues,
+          });
+          logger.info(
+            colors.green(`Successfully synced attribute "${attribute.name}"!`),
+          );
+        } catch (err) {
+          encounteredError = true;
+          logger.info(
+            colors.red(
+              `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
+            ),
+          );
+        }
+      },
+      {
+        concurrency: CONCURRENCY,
+      },
+    );
+    logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
+  }
+
   // Sync action items
   if (actionItems) {
     const actionItemsSuccess = await syncActionItems(client, actionItems);
@@ -450,43 +487,6 @@ export async function syncConfigurationToTranscend(
       },
     );
     logger.info(colors.green(`Synced "${dataSubjects.length}" data subjects!`));
-  }
-
-  // Sync attributes
-  if (attributes) {
-    // Fetch existing
-    logger.info(colors.magenta(`Syncing "${attributes.length}" attributes...`));
-    const existingAttributes = await fetchAllAttributes(client);
-    await map(
-      attributes,
-      async (attribute) => {
-        const existing = existingAttributes.find(
-          (attr) => attr.name === attribute.name,
-        );
-
-        logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
-        try {
-          await syncAttribute(client, attribute, {
-            existingAttribute: existing,
-            deleteExtraAttributeValues,
-          });
-          logger.info(
-            colors.green(`Successfully synced attribute "${attribute.name}"!`),
-          );
-        } catch (err) {
-          encounteredError = true;
-          logger.info(
-            colors.red(
-              `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
-            ),
-          );
-        }
-      },
-      {
-        concurrency: CONCURRENCY,
-      },
-    );
-    logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
   }
 
   // Sync data flows

@@ -740,7 +740,7 @@ export async function pullTranscendConfiguration(
       ({
         teams,
         users,
-        customerExperienceActionItemId,
+        customerExperienceActionItemIds: [customerExperienceActionItemId],
         dueDate,
         priority,
         resolved,
@@ -780,12 +780,12 @@ export async function pullTranscendConfiguration(
         title,
         description,
         hidden,
-        visibleLocations,
+        productLine,
       }): ActionItemCollectionInput => ({
         title,
         description: description || undefined,
         hidden,
-        'visible-locations': visibleLocations,
+        productLine,
       }),
     );
   }

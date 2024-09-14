@@ -13,6 +13,7 @@ import {
   ActionItemCollection,
   fetchAllActionItemCollections,
 } from './fetchAllActionItemCollections';
+import { Attribute, fetchAllAttributes } from './fetchAllAttributes';
 
 /**
  * Input to create a new actionItem
@@ -20,12 +21,21 @@ import {
  * @param client - GraphQL client
  * @param actionItems - Action item inputs
  * @param actionItemCollectionByTitle - Action item collections indexed by title
+ * @param attributeKeysByName - Lookup attribute by name
  */
 export async function createActionItems(
   client: GraphQLClient,
   actionItems: ActionItemInput[],
   actionItemCollectionByTitle: { [k in string]: ActionItemCollection },
+  attributeKeysByName: { [k in string]: Attribute } = {},
 ): Promise<void> {
+  const getAttribute = (key: string): string => {
+    const existing = attributeKeysByName[key];
+    if (!existing) {
+      throw new Error(`Attribute key "${key}" does not exist!`);
+    }
+    return existing.id;
+  };
   const chunked = chunk(actionItems, 100);
   await mapSeries(chunked, async (chunkToUpload) => {
     await makeGraphQLRequest(client, CREATE_ACTION_ITEMS, {
@@ -41,8 +51,14 @@ export async function createActionItems(
         link: actionItem.link,
         assigneesUserEmails: actionItem.users,
         assigneesTeamNames: actionItem.teams,
-        // TODO: https://transcend.height.app/T-21660
-        // attributes: actionItem.attributes,
+        ...(actionItem.attributes
+          ? {
+              attributes: actionItem.attributes.map(({ key, values }) => ({
+                attributeKeyId: getAttribute(key),
+                attributeValueNames: values,
+              })),
+            }
+          : {}),
         collectionIds: actionItem.collections.map(
           (collectionTitle) => actionItemCollectionByTitle[collectionTitle].id,
         ),
@@ -57,16 +73,26 @@ export async function createActionItems(
  * @param client - GraphQL client
  * @param input - Input to update
  * @param actionItemId - ID of action item to update
+ * @param attributeKeysByName - Attribute keys by name
  */
 export async function updateActionItem(
   client: GraphQLClient,
   input: ActionItemInput,
   actionItemId: string,
+  attributeKeysByName: {
+    [k in string]: Attribute;
+  } = {},
 ): Promise<void> {
+  const getAttribute = (key: string): string => {
+    const existing = attributeKeysByName[key];
+    if (!existing) {
+      throw new Error(`Attribute key "${key}" does not exist!`);
+    }
+    return existing.id;
+  };
   await makeGraphQLRequest(client, UPDATE_ACTION_ITEMS, {
     input: {
       ids: [actionItemId],
-      ...input,
       title: input.title,
       priorityOverride: input.priority,
       dueDate: input.dueDate,
@@ -76,10 +102,45 @@ export async function updateActionItem(
       link: input.link,
       assigneesUserEmails: input.users,
       assigneesTeamNames: input.teams,
-      // TODO: https://transcend.height.app/T-21660
-      // attributes: input.attributes,
+      ...(input.attributes
+        ? {
+            attributes: input.attributes.map(({ key, values }) => ({
+              attributeKeyId: getAttribute(key),
+              attributeValueNames: values,
+            })),
+          }
+        : {}),
     },
   });
+}
+
+/**
+ * Convert action item to a unique key
+ *
+ * @param actionItem - action item
+ * @returns Unique key
+ */
+function actionItemToUniqueCode({
+  title,
+  collections,
+}: Pick<ActionItem, 'title' | 'collections'>): string {
+  return `${title}-${collections
+    .map((c) => c.title)
+    .sort()
+    .join('-')}`;
+}
+
+/**
+ * Convert action item to a unique key
+ *
+ * @param actionItem - action item
+ * @returns Unique key
+ */
+function actionItemInputToUniqueCode({
+  title,
+  collections,
+}: Pick<ActionItemInput, 'title' | 'collections'>): string {
+  return `${title}-${collections.sort().join('-')}`;
 }
 
 /**
@@ -97,11 +158,17 @@ export async function syncActionItems(
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" actionItems...`));
 
+  // Determine if attributes are syncing
+  const hasAttributes = inputs.some(
+    (input) => input.attributes && input.attributes.length > 0,
+  );
+
   // Fetch existing
-  const [existingActionItems, existingActionItemCollections] =
+  const [existingActionItems, existingActionItemCollections, attributeKeys] =
     await Promise.all([
       fetchAllActionItems(client),
       fetchAllActionItemCollections(client),
+      hasAttributes ? fetchAllAttributes(client) : [],
     ]);
 
   // Look up by title
@@ -109,11 +176,12 @@ export async function syncActionItems(
     keyBy(existingActionItemCollections, 'title');
   const actionItemByTitle: { [k in string]: ActionItem } = keyBy(
     existingActionItems,
-    ({ title, collections }) =>
-      `${title}-${collections
-        .map((c) => c.title)
-        .sort()
-        .join('-')}`,
+    actionItemToUniqueCode,
+  );
+  const attributeKeysByName = keyBy(attributeKeys, 'name');
+  const actionItemByCxId: { [k in string]: ActionItem } = keyBy(
+    existingActionItems.filter((x) => !!x.customerExperienceActionItemIds),
+    ({ customerExperienceActionItemIds }) => customerExperienceActionItemIds[0],
   );
 
   // Ensure all collections exist
@@ -134,9 +202,8 @@ export async function syncActionItems(
   // Create new actionItems
   const newActionItems = inputs.filter(
     (input) =>
-      !actionItemByTitle[
-        `${input.title}-${input.collections.sort().join('-')}`
-      ],
+      !actionItemByTitle[actionItemInputToUniqueCode(input)] &&
+      !actionItemByCxId[input.customerExperienceActionItemId!],
   );
 
   // Create new actionItems
@@ -149,6 +216,7 @@ export async function syncActionItems(
         client,
         newActionItems,
         actionItemCollectionByTitle,
+        attributeKeysByName,
       );
       logger.info(
         colors.green(
@@ -167,13 +235,13 @@ export async function syncActionItems(
   const actionItemsToUpdate = inputs
     .map((input) => [
       input,
-      actionItemByTitle[`${input.title}-${input.collections.sort().join('-')}`]
-        ?.id,
+      actionItemByTitle[actionItemInputToUniqueCode(input)]?.id ||
+        actionItemByCxId[input.customerExperienceActionItemId!]?.id,
     ])
     .filter((x): x is [ActionItemInput, string] => !!x[1]);
   await mapSeries(actionItemsToUpdate, async ([input, actionItemId]) => {
     try {
-      await updateActionItem(client, input, actionItemId);
+      await updateActionItem(client, input, actionItemId, attributeKeysByName);
       logger.info(
         colors.green(`Successfully synced action item "${input.title}"!`),
       );

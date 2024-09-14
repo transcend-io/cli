@@ -82,6 +82,9 @@
                 "type": "string",
                 "enum": ["WONT_DO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
               },
+              "customerExperienceActionItemId": {
+                "type": "string"
+              },
               "dueDate": {
                 "type": "string"
               },
@@ -135,34 +138,31 @@
         "allOf": [
           {
             "type": "object",
-            "required": ["title", "visible-locations"],
+            "required": ["title", "productLine"],
             "properties": {
               "title": {
                 "type": "string"
               },
-              "visible-locations": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "enum": [
-                    "DSR_AUTOMATION",
-                    "DATA_INVENTORY",
-                    "CONSENT_MANAGEMENT",
-                    "PRIVACY_CENTER",
-                    "ADMINISTRATION",
-                    "ASSESSMENTS",
-                    "PATHFINDER",
-                    "PREFERENCE_MANAGEMENT",
-                    "PROMPT_MANAGER",
-                    "CONTRACT_SCANNING",
-                    "WEB_AUDITOR",
-                    "SOMBRA",
-                    "SILO_DISCOVERY",
-                    "STRUCTURED_DISCOVERY",
-                    "UNSTRUCTURED_DISCOVERY",
-                    "DATA_LINEAGE"
-                  ]
-                }
+              "productLine": {
+                "type": "string",
+                "enum": [
+                  "DSR_AUTOMATION",
+                  "DATA_INVENTORY",
+                  "CONSENT_MANAGEMENT",
+                  "PRIVACY_CENTER",
+                  "ADMINISTRATION",
+                  "ASSESSMENTS",
+                  "PATHFINDER",
+                  "PREFERENCE_MANAGEMENT",
+                  "PROMPT_MANAGER",
+                  "CONTRACT_SCANNING",
+                  "WEB_AUDITOR",
+                  "SOMBRA",
+                  "SILO_DISCOVERY",
+                  "STRUCTURED_DISCOVERY",
+                  "UNSTRUCTURED_DISCOVERY",
+                  "DATA_LINEAGE"
+                ]
               }
             }
           },

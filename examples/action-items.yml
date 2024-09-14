@@ -106,18 +106,12 @@ action-item-collections:
   - title: Test checklist
     description: test checklist description
     hidden: false
-    visible-locations:
-      - PRIVACY_CENTER_SETTINGS
-      - PRIVACY_REQUESTS_DASHBOARD
-      - DATA_MAPPING_DASHBOARD
+    productLine: PRIVACY_CENTER
   - title: Wario team onboarding
     description: do some stuff
     hidden: true
-    visible-locations:
-      - PRIVACY_REQUESTS_DASHBOARD
-      - DATA_MAPPING_DASHBOARD
+    productLine: DSR_AUTOMATION
   - title: test
     description: test
     hidden: true
-    visible-locations:
-      - CONSENT_DASHBOARD
+    productLine: CONSENT_MANAGEMENT

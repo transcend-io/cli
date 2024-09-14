@@ -1419,7 +1419,7 @@ export const ActionItemCollectionInput = t.intersection([
     /** The display title of the enricher */
     title: t.string,
     /** Locations where collection is shown */
-    'visible-locations': t.array(valuesOf(ActionItemCollectionLocation)),
+    productLine: valuesOf(ActionItemCollectionLocation),
   }),
   t.partial({
     /** Description of collection */
