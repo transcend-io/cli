@@ -27,15 +27,18 @@ export async function createActionItems(
   client: GraphQLClient,
   actionItems: ActionItemInput[],
   actionItemCollectionByTitle: { [k in string]: ActionItemCollection },
+  // TODO: https://transcend.height.app/T-38961 - insert attributes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   attributeKeysByName: { [k in string]: Attribute } = {},
 ): Promise<void> {
-  const getAttribute = (key: string): string => {
-    const existing = attributeKeysByName[key];
-    if (!existing) {
-      throw new Error(`Attribute key "${key}" does not exist!`);
-    }
-    return existing.id;
-  };
+  // TODO: https://transcend.height.app/T-38961 - insert attributes
+  // const getAttribute = (key: string): string => {
+  //   const existing = attributeKeysByName[key];
+  //   if (!existing) {
+  //     throw new Error(`Attribute key "${key}" does not exist!`);
+  //   }
+  //   return existing.id;
+  // };
   const chunked = chunk(actionItems, 100);
   await mapSeries(chunked, async (chunkToUpload) => {
     await makeGraphQLRequest(client, CREATE_ACTION_ITEMS, {
@@ -53,10 +56,11 @@ export async function createActionItems(
         assigneesTeamNames: actionItem.teams,
         ...(actionItem.attributes
           ? {
-              attributes: actionItem.attributes.map(({ key, values }) => ({
-                attributeKeyId: getAttribute(key),
-                attributeValueNames: values,
-              })),
+              // TODO: https://transcend.height.app/T-38961 - insert attributes
+              // attributes: actionItem.attributes.map(({ key, values }) => ({
+              //   attributeKeyId: getAttribute(key),
+              //   attributeValueNames: values,
+              // })),
             }
           : {}),
         collectionIds: actionItem.collections.map(
