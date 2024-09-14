@@ -16,7 +16,7 @@ export const GLOBAL_ACTION_ITEM_COLLECTIONS = gql`
         title
         description
         hidden
-        visibleLocations
+        productLine
       }
     }
   }

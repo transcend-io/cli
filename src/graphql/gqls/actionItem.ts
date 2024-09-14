@@ -21,9 +21,14 @@ export const GLOBAL_ACTION_ITEMS = gql`
           id
           name
         }
+        customerExperienceActionItemIds
         users {
           id
           email
+        }
+        collections {
+          title
+          id
         }
         dueDate
         priority
