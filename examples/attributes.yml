@@ -1,30 +1,103 @@
----
 attributes:
-  - name: Estimated Effort/Duration
-    description: Typically, how long should the customer expect this task to take?
-  - name: Recommended Project Week
-    description: Typically, which week in the project should this task be completed?
-action-item-collections:
-  - title: Preference Management - Configure DSR Workflow
-    productLine: PREFERENCE_MANAGEMENT
-action-items:
-  - title:
-      Configure your initial data subjects such as customers and employees under
-      DSR Automation -> Request Settings.
-    type: ONBOARDING
-    collections:
-      - Preference Management - Configure DSR Workflow
-    priority: HIGH
-    resolved: false
-    customerExperienceActionItemId: PM.1
-    notes: ''
-    link: https://docs.transcend.io/docs/dsr-automation/configuring-requests/data-subject-requests
-    teams:
-      - Legal/Privacy Ops
-    attributes:
-      - key: Estimated Effort/Duration
-        values:
-          - 15 min
-      - key: Recommended Project Week
-        values:
-          - '1'
+  - description: This field describes the current integration functionality in Transcend.
+    resources:
+      - dataSilo
+    name: Integration Type
+    type: SINGLE_SELECT
+    values:
+      - name: N/A for Privacy/Consent
+        color: purple1
+      - name: API connection
+        color: mint1
+      - name: Confirmed email integration
+        color: blue1
+      - name: API connection possible - needs supplemental routes
+        color: pink2
+      - name: No confirmed integration
+        color: yellow1
+  - description: >-
+      Tracking the status of additional work needed from the vendor and/or
+      Transcend  in order for the integration to be ready for connection across
+      Verizon's instances.
+    resources:
+      - dataSilo
+    name: Integration Update Status
+    type: SINGLE_SELECT
+    values:
+      - name: Pending vendor response
+        color: red1
+      - name: Transcend integration spec in progress
+        color: orange2
+      - name: Integration available for connection in Transcend
+        color: lime1
+      - name: Transcend is building integration
+        color: blue2
+      - name: Vendor has confirmed integration spec
+        color: purple2
+  - resources:
+      - businessEntity
+    name: Login Notes
+    type: TEXT
+    values: []
+  - description: >-
+      The technical and organizational security measures taken by the
+      organization to protect and secure the processing of personal information.
+    resources:
+      - dataSilo
+    name: Security Measures
+    type: MULTI_SELECT
+    values:
+      - name: Access controls
+        color: transcendNavy4
+      - name: Encrypted storage
+        color: transcendNavy4
+      - name: Encrypted transfer
+        color: transcendNavy4
+  - resources:
+      - dataSilo
+      - airgapCookie
+      - airgapDataFlow
+    name: Tech Type
+    type: SINGLE_SELECT
+    values:
+      - name: Site Tech
+        color: lime3
+      - name: Ad Tech
+        color: yellow2
+      - name: First Party
+        color: lime1
+  - description: >-
+      These are the possible methods for transferring data to a third country or
+      organization acceptable under GDPR
+    resources:
+      - vendor
+    name: Transfer Mechanism
+    type: SINGLE_SELECT
+    values:
+      - name: Adequacy
+        color: transcendNavy4
+      - name: Binding corporate rules
+        color: transcendNavy4
+      - name: Not applicable
+        color: transcendNavy4
+      - name: Privacy shield
+        color: transcendNavy4
+      - name: Processing occurs within EEA
+        color: transcendNavy4
+      - name: Standard contractual clauses
+        color: transcendNavy4
+  - description: >-
+      Status for communicating with vendor
+    resources:
+      - dataSilo
+    name: Vendor Communication Status
+    type: SINGLE_SELECT
+    values:
+      - name: Assistance required from VZ Legal
+        color: red2
+      - name: Initial email sent
+        color: blue2
+      - name: Pending Outreach
+        color: purple3
+      - name: Vendor response received
+        color: mint1
