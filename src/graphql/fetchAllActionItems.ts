@@ -18,6 +18,8 @@ export interface ActionItemRaw {
     /** Name of team */
     name: string;
   }[];
+  /** Customer experience action item ID */
+  customerExperienceActionItemIds: string[];
   /** Users assigned to the action item */
   users: {
     /** ID of user */
@@ -64,6 +66,13 @@ export interface ActionItemRaw {
     /** Parent title */
     parentTitle?: string;
   };
+  /** Sections where action item is grouped under */
+  collections: {
+    /** ID of collection that action item belongs to */
+    id: string;
+    /** Title of collection */
+    title: string;
+  }[];
 }
 
 export interface ActionItem
@@ -144,7 +153,6 @@ export async function fetchAllActionItems(
         title: node.titles[0],
         notes: node.notes[0],
         link: node.links[0],
-        collections: [], // TODO: https://transcend.height.app/T-21660 - pull in collections
       })),
     );
     offset += PAGE_SIZE;

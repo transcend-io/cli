@@ -13,7 +13,7 @@ export interface ActionItemCollection {
   /** Whether section is hidden */
   hidden: boolean;
   /** Which locations/products the action item shows up in */
-  visibleLocations: ActionItemCollectionLocation[];
+  productLine: ActionItemCollectionLocation;
 }
 
 /**

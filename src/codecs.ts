@@ -1419,7 +1419,7 @@ export const ActionItemCollectionInput = t.intersection([
     /** The display title of the enricher */
     title: t.string,
     /** Locations where collection is shown */
-    'visible-locations': t.array(valuesOf(ActionItemCollectionLocation)),
+    productLine: valuesOf(ActionItemCollectionLocation),
   }),
   t.partial({
     /** Description of collection */
@@ -1449,6 +1449,8 @@ export const ActionItemInput = t.intersection([
   t.partial({
     /** Priority of the action item */
     priority: valuesOf(ActionItemPriorityOverride),
+    /** Customer experience action item key */
+    customerExperienceActionItemId: t.string,
     /** Due date of the action item */
     dueDate: t.string,
     /** Whether action item has been resolved */

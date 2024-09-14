@@ -28,7 +28,7 @@ export async function createActionItemCollection(
     title: actionItemCollection.title,
     description: actionItemCollection.description || '',
     hidden: actionItemCollection.hidden || false,
-    visibleLocations: actionItemCollection['visible-locations'],
+    productLine: actionItemCollection.productLine,
   };
 
   const { createActionItemCollection } = await makeGraphQLRequest<{
@@ -61,7 +61,7 @@ export async function updateActionItemCollection(
       title: input.title,
       description: input.description,
       hidden: input.hidden,
-      visibleLocations: input['visible-locations'],
+      productLine: input.productLine,
     },
   });
 }
