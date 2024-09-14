@@ -34,6 +34,8 @@ export async function createActionItems(
         type: actionItem.type,
         priorityOverride: actionItem.priority,
         dueDate: actionItem.dueDate,
+        customerExperienceActionItemId:
+          actionItem.customerExperienceActionItemId,
         resolved: actionItem.resolved,
         notes: actionItem.notes,
         link: actionItem.link,
@@ -69,6 +71,7 @@ export async function updateActionItem(
       priorityOverride: input.priority,
       dueDate: input.dueDate,
       resolved: input.resolved,
+      customerExperienceActionItemId: input.customerExperienceActionItemId,
       notes: input.notes,
       link: input.link,
       assigneesUserEmails: input.users,

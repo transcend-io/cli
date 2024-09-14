@@ -18,6 +18,8 @@ export interface ActionItemRaw {
     /** Name of team */
     name: string;
   }[];
+  /** Customer experience action item ID */
+  customerExperienceActionItemId?: string;
   /** Users assigned to the action item */
   users: {
     /** ID of user */

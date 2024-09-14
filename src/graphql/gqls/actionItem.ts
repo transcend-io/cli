@@ -21,6 +21,7 @@ export const GLOBAL_ACTION_ITEMS = gql`
           id
           name
         }
+        customerExperienceActionItemId
         users {
           id
           email

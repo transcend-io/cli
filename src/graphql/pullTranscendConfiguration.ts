@@ -740,6 +740,7 @@ export async function pullTranscendConfiguration(
       ({
         teams,
         users,
+        customerExperienceActionItemId,
         dueDate,
         priority,
         resolved,
@@ -755,6 +756,7 @@ export async function pullTranscendConfiguration(
         dueDate: dueDate || undefined,
         title,
         notes,
+        customerExperienceActionItemId,
         collections: collections.map(({ title }) => title),
         link,
         priority: priority || undefined,

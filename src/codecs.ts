@@ -1449,6 +1449,8 @@ export const ActionItemInput = t.intersection([
   t.partial({
     /** Priority of the action item */
     priority: valuesOf(ActionItemPriorityOverride),
+    /** Customer experience action item key */
+    customerExperienceActionItemId: t.string,
     /** Due date of the action item */
     dueDate: t.string,
     /** Whether action item has been resolved */
