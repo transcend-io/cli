@@ -760,6 +760,7 @@ Transcend can scan your codebase to inventory your code packages and dependencie
 - build.gradle
 - pubspec.yaml
 - Gemfile & .gemspec
+- composer.json
 
 The command will scan the folder you point at to look for any of these files. Once found, the build file will be parsed in search of dependencies. Those code packages and dependencies will be uploaded to [Transcend](https://app.transcend.io/code-scanning/code-packages). The only information shared with Transcend includes:
 
@@ -796,19 +797,19 @@ yarn tr-scan-packages --auth=$TRANSCEND_API_KEY
 Scan a specific directory
 
 ```sh
-yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --scanPath=./examples/
+yarn tr-scan-packages --auth=$TRANSCEND_API_KEY --scanPath=./examples/
 ```
 
 Ignore certain folders
 
 ```sh
-yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --ignoreDirs=./test,./build
+yarn tr-scan-packages --auth=$TRANSCEND_API_KEY --ignoreDirs=./test,./build
 ```
 
 Specify the name of the repository
 
 ```sh
-yarn tr-discover-silos --auth=$TRANSCEND_API_KEY --repositoryName="transcend-io/test"
+yarn tr-scan-packages --auth=$TRANSCEND_API_KEY --repositoryName="transcend-io/test"
 ```
 
 ### tr-discover-silos
