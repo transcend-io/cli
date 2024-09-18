@@ -129,7 +129,7 @@ async function main(): Promise<void> {
 
   // Pull down target identifiers
   const results = await map(
-    requestIds,
+    uniq(requestIds),
     async (requestId) => {
       const results = await fetchRequestFilesForRequest(client, { requestId });
       return results.map(({ fileName, ...res }) => ({
