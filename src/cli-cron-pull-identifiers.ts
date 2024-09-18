@@ -49,6 +49,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  if (!dataSiloId) {
+    logger.error(
+      colors.red(
+        'A data silo ID must be provided. You can specify using --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc',
+      ),
+    );
+    process.exit(1);
+  }
+
   if (!actions) {
     logger.error(
       colors.red(

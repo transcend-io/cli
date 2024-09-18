@@ -23,6 +23,7 @@ export * from './RequestEnricher';
 export * from './RequestDataSilo';
 export * from './team';
 export * from './user';
+export * from './requestFile';
 export * from './promptRun';
 export * from './actionItemCollection';
 export * from './attribute';
