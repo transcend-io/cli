@@ -516,6 +516,129 @@ describe('findCodePackagesInFolder', () => {
         relativePath: 'test-pubspec/pubspec.yml',
         repositoryName: 'transcend-io/cli',
       },
+      {
+        name: 'composer/example',
+        description: 'Example app',
+        softwareDevelopmentKits: [
+          {
+            name: 'php',
+            version: '^7.2.5 || ^8.0',
+          },
+          {
+            name: 'composer/ca-bundle',
+            version: '^1.5',
+          },
+          {
+            name: 'composer/class-map-generator',
+            version: '^1.3.3',
+          },
+          {
+            name: 'composer/metadata-minifier',
+            version: '^1.0',
+          },
+          {
+            name: 'composer/semver',
+            version: '^3.3',
+          },
+          {
+            name: 'composer/spdx-licenses',
+            version: '^1.5.7',
+          },
+          {
+            name: 'composer/xdebug-handler',
+            version: '^2.0.2 || ^3.0.3',
+          },
+          {
+            name: 'justinrainbow/json-schema',
+            version: '^5.3',
+          },
+          {
+            name: 'psr/log',
+            version: '^1.0 || ^2.0 || ^3.0',
+          },
+          {
+            name: 'seld/jsonlint',
+            version: '^1.4',
+          },
+          {
+            name: 'seld/phar-utils',
+            version: '^1.2',
+          },
+          {
+            name: 'symfony/console',
+            version: '^5.4.35 || ^6.3.12 || ^7.0.3',
+          },
+          {
+            name: 'symfony/filesystem',
+            version: '^5.4.35 || ^6.3.12 || ^7.0.3',
+          },
+          {
+            name: 'symfony/finder',
+            version: '^5.4.35 || ^6.3.12 || ^7.0.3',
+          },
+          {
+            name: 'symfony/process',
+            version: '^5.4.35 || ^6.3.12 || ^7.0.3',
+          },
+          {
+            name: 'react/promise',
+            version: '^3.2',
+          },
+          {
+            name: 'composer/pcre',
+            version: '^2.2 || ^3.2',
+          },
+          {
+            name: 'symfony/polyfill-php73',
+            version: '^1.24',
+          },
+          {
+            name: 'symfony/polyfill-php80',
+            version: '^1.24',
+          },
+          {
+            name: 'symfony/polyfill-php81',
+            version: '^1.24',
+          },
+          {
+            name: 'seld/signal-handler',
+            version: '^2.0',
+          },
+          {
+            name: 'symfony/phpunit-bridge',
+            version: '^6.4.3 || ^7.0.1',
+            isDevDependency: true,
+          },
+          {
+            name: 'phpstan/phpstan',
+            version: '^1.11.8',
+            isDevDependency: true,
+          },
+          {
+            name: 'phpstan/phpstan-phpunit',
+            version: '^1.4.0',
+            isDevDependency: true,
+          },
+          {
+            name: 'phpstan/phpstan-deprecation-rules',
+            version: '^1.2.0',
+            isDevDependency: true,
+          },
+          {
+            name: 'phpstan/phpstan-strict-rules',
+            version: '^1.6.0',
+            isDevDependency: true,
+          },
+          {
+            name: 'phpstan/phpstan-symfony',
+            version: '^1.4.0',
+            isDevDependency: true,
+          },
+        ],
+        relativePath: 'test-php/composer.json',
+        type: 'COMPOSER_JSON',
+        repositoryName: 'transcend-io/cli',
+      },
     ]);
   });
 });
