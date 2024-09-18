@@ -132,14 +132,14 @@ async function main(): Promise<void> {
     uniq(requestIds),
     async (requestId) => {
       const results = await fetchRequestFilesForRequest(client, { requestId });
-      return results.map(({ fileName, ...res }) => ({
-        ...res,
-        requestId,
-        datapointName: fileName
+      return results.map(({ fileName, remoteId }) => ({
+        RecordId: remoteId,
+        Object: fileName
           .replace('.json', '')
           .split('/')
           .pop()
           ?.replace(' Information', ''),
+        Comment: 'Customer data deletion request submitted via transcend.io',
       }));
     },
     {
