@@ -580,6 +580,7 @@ __metadata:
     tr-create-assessment: ./build/cli-create-assessment.js
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
+    tr-cron-pull-profiles: ./build/cli-cron-pull-profiles.js
     tr-derive-data-silos-from-data-flows: ./build/cli-derive-data-silos-from-data-flows.js
     tr-derive-data-silos-from-data-flows-cross-instance: ./build/cli-derive-data-silos-from-data-flows-cross-instance.js
     tr-discover-silos: ./build/cli-discover-silos.js
