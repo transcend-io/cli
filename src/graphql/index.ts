@@ -61,6 +61,7 @@ export * from './fetchPromptGroups';
 export * from './fetchPromptPartials';
 export * from './fetchPromptGroups';
 export * from './syncPrompts';
+export * from './fetchRequestFilesForRequest';
 export * from './deployConsentManager';
 export * from './reportPromptRun';
 export * from './addMessagesToPromptRun';
