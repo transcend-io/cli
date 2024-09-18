@@ -4,6 +4,7 @@ import {
   gradle,
   javascriptPackageJson,
   gemfile,
+  composerJson,
   pubspec,
   pythonRequirementsTxt,
 } from './integrations';
@@ -32,4 +33,5 @@ export const CODE_SCANNING_CONFIGS: {
   [CodePackageType.RequirementsTxt]: pythonRequirementsTxt,
   [CodePackageType.Gemfile]: gemfile,
   [CodePackageType.Pubspec]: pubspec,
+  [CodePackageType.ComposerJson]: composerJson,
 };
