@@ -1,7 +1,11 @@
 import { map } from 'bluebird';
 import colors from 'colors';
 import { logger } from '../logger';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestOrigin,
+  RequestStatus,
+} from '@transcend-io/privacy-types';
 import {
   UPDATE_PRIVACY_REQUEST,
   fetchAllRequests,
@@ -20,6 +24,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  */
 export async function approvePrivacyRequests({
   requestActions,
+  requestOrigins,
   auth,
   silentModeBefore,
   createdAtAfter,
@@ -29,6 +34,8 @@ export async function approvePrivacyRequests({
 }: {
   /** The request actions that should be restarted */
   requestActions: RequestAction[];
+  /** The request origins that should be restarted */
+  requestOrigins?: RequestOrigin[];
   /** Transcend API key authentication */
   auth: string;
   /** Concurrency limit for approving */
@@ -58,6 +65,7 @@ export async function approvePrivacyRequests({
     actions: requestActions,
     statuses: [RequestStatus.Approving],
     createdAtAfter,
+    origins: requestOrigins,
     createdAtBefore,
   });
 
