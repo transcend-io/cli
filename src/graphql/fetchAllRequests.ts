@@ -79,6 +79,7 @@ export async function fetchAllRequests(
   {
     actions = [],
     statuses = [],
+    origins = [],
     createdAtBefore,
     createdAtAfter,
     isTest,
@@ -87,6 +88,8 @@ export async function fetchAllRequests(
   }: {
     /** Actions to filter on */
     actions?: RequestAction[];
+    /** Origins to filter on */
+    origins?: RequestOrigin[];
     /** Statuses to filter on */
     statuses?: RequestStatus[];
     /** Filter for requests created before this date */
@@ -132,6 +135,7 @@ export async function fetchAllRequests(
       filterBy: {
         type: actions.length > 0 ? actions : undefined,
         status: statuses.length > 0 ? statuses : undefined,
+        origin: origins.length > 0 ? origins : undefined,
         isTest,
         isSilent,
         isClosed,

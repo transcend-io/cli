@@ -875,6 +875,7 @@ The API key needs the following scopes:
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------- | ------------------------ | -------- |
 | auth             | The Transcend API key with the scopes necessary for the command.                                                                           | string          | N/A                      | true     |
 | actions          | The [request actions](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to approve. | RequestAction[] | N/A                      | true     |
+| origins          | The [request origins](https://github.com/transcend-io/privacy-types/blob/main/src/request.ts) to approve.                                  | RequestOrigin[] | N/A                      | false    |
 | silentModeBefore | Any requests made before this date should be marked as silent mode                                                                         | Date            | N/A                      | false    |
 | createdAtBefore  | Approve requests that were submitted before this time                                                                                      | Date            | N/A                      | false    |
 | createdAtAfter   | Approve requests that were submitted after this time                                                                                       | Date            | N/A                      | false    |
@@ -893,6 +894,12 @@ Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --transcendUrl=https://api.us.transcend.io
+```
+
+Approve all Erasure requests that came through the API
+
+```sh
+yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=ERASURE --origins=API
 ```
 
 Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests. When not provided, the existing silent mode state of that request will be used to determine if emails are sent.

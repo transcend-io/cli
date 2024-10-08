@@ -4,7 +4,7 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { RequestAction } from '@transcend-io/privacy-types';
+import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
 import { splitCsvToList, approvePrivacyRequests } from './requests';
 import { DEFAULT_TRANSCEND_API } from './constants';
 
@@ -33,6 +33,8 @@ async function main(): Promise<void> {
     auth,
     /** Approve these specific actions */
     actions = '',
+    /** Approve these specific origins */
+    origins,
     /** Mark as silent mode when made before this date */
     silentModeBefore,
     /** Concurrency to approve requests at */
@@ -69,11 +71,30 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Validate origins
+  const parsedOrigins = origins ? splitCsvToList(origins) : undefined;
+  if (parsedOrigins) {
+    const invalidOrigins = parsedOrigins.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (type) => !Object.values(RequestOrigin).includes(type as any),
+    );
+    if (invalidOrigins.length > 0) {
+      logger.error(
+        colors.red(
+          `Failed to parse origins:"${invalidOrigins.join(',')}".\n` +
+            `Expected one of: \n${Object.values(RequestOrigin).join('\n')}`,
+        ),
+      );
+      process.exit(1);
+    }
+  }
+
   // Pull privacy requests
   await approvePrivacyRequests({
     transcendUrl,
     requestActions: parsedActions,
     auth,
+    requestOrigins: parsedOrigins as RequestOrigin[],
     concurrency: parseInt(concurrency, 10),
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
