@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { GLOBAL_ACTION_ITEM_COLLECTIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { ActionItemCollectionLocation } from '@transcend-io/privacy-types';
+import { TranscendProduct } from '@transcend-io/privacy-types';
 
 export interface ActionItemCollection {
   /** ID of collection */
@@ -13,7 +13,7 @@ export interface ActionItemCollection {
   /** Whether section is hidden */
   hidden: boolean;
   /** Which locations/products the action item shows up in */
-  productLine: ActionItemCollectionLocation;
+  productLine: TranscendProduct;
 }
 
 /**
@@ -27,7 +27,7 @@ export async function fetchAllActionItemCollections(
   client: GraphQLClient,
   filterBy: {
     /** Filter on location */
-    location?: ActionItemCollectionLocation;
+    location?: TranscendProduct;
   } = {},
 ): Promise<ActionItemCollection[]> {
   const {
