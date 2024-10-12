@@ -34,7 +34,7 @@ import {
   ActionItemPriorityOverride,
   ActionItemCode,
   ScopeName,
-  ActionItemCollectionLocation,
+  TranscendProduct,
   PrivacyCenterComponentStyles,
   PrivacyCenterTextStyles,
   ConfigurableColorPaletteColor,
@@ -1419,7 +1419,7 @@ export const ActionItemCollectionInput = t.intersection([
     /** The display title of the enricher */
     title: t.string,
     /** Locations where collection is shown */
-    productLine: valuesOf(ActionItemCollectionLocation),
+    productLine: valuesOf(TranscendProduct),
   }),
   t.partial({
     /** Description of collection */
