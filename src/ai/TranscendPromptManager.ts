@@ -34,7 +34,7 @@ import {
 import { GraphQLClient } from 'graphql-request';
 import keyBy from 'lodash/keyBy';
 import {
-  AssessmentStatus,
+  PromptStatus,
   ChatCompletionRole,
   PromptRunProductArea,
   QueueStatus,
@@ -524,7 +524,7 @@ export class TranscendPromptManager<
     // Ensure prompt is approved
     if (
       this.requireApproval &&
-      promptTemplate.status !== AssessmentStatus.Approved
+      promptTemplate.status !== PromptStatus.Approved
     ) {
       throw new Error(
         `Assessment "${promptTemplate.title}" cannot be used because its in status: "${promptTemplate.status}"`,
@@ -532,7 +532,7 @@ export class TranscendPromptManager<
     }
 
     // If prompt is rejected, throw error
-    if (promptTemplate.status === AssessmentStatus.Rejected) {
+    if (promptTemplate.status === PromptStatus.Rejected) {
       throw new Error(
         `Assessment "${promptTemplate.title}" cannot be used because it's in status: "${promptTemplate.status}"`,
       );

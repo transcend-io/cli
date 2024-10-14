@@ -21,12 +21,8 @@
                 "enum": [
                   "ACTION_MISSING_SILOS",
                   "API_KEY_STALE",
-                  "ASSESSMENT_ASSIGNED",
-                  "ASSESSMENT_NEEDS_REVIEW",
                   "ASSESSMENT_FORM_ASSIGNED",
                   "ASSESSMENT_FORM_NEEDS_REVIEW",
-                  "ASSESSMENT_CHANGES_REQUESTED",
-                  "ASSESSMENT_REJECTED",
                   "REQUEST_DATA_SILO_MARKED_ACTIONABLE",
                   "REQUEST_DATA_SILO_FILES_NEED_REVIEW",
                   "COMMUNICATION_UNREAD",
@@ -5901,10 +5897,8 @@
                     "actionItem",
                     "airgapCookie",
                     "airgapDataFlow",
-                    "assessment",
                     "assessmentForm",
                     "assessmentGroup",
-                    "assessmentTemplate",
                     "auditorRun",
                     "auditorSchedule",
                     "businessEntity",
@@ -40275,54 +40269,6 @@
         },
         "syncGroups": {
           "type": "string"
-        }
-      }
-    },
-    "assessment-templates": {
-      "type": "array",
-      "items": {
-        "allOf": [
-          {
-            "type": "object",
-            "required": ["title", "content"],
-            "properties": {
-              "title": {
-                "type": "string"
-              },
-              "content": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "type": "object",
-            "properties": {
-              "attributeKeys": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ]
-      }
-    },
-    "assessments": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["title", "content", "assessment-template"],
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "assessment-template": {
-            "type": "string"
-          }
         }
       }
     },

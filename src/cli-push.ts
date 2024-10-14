@@ -30,7 +30,6 @@ async function syncConfiguration({
   pageSize,
   publishToPrivacyCenter,
   contents,
-  creatorId,
   deleteExtraAttributeValues = false,
   classifyService = false,
 }: {
@@ -48,8 +47,6 @@ async function syncConfiguration({
   classifyService?: boolean;
   /** Delete attributes when syncing */
   deleteExtraAttributeValues?: boolean;
-  /** Creator ID for assessments TODO: https://transcend.height.app/T-29850 - remove this  */
-  creatorId?: string;
 }): Promise<boolean> {
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
@@ -62,7 +59,6 @@ async function syncConfiguration({
         pageSize,
         publishToPrivacyCenter,
         classifyService,
-        creatorId,
         deleteExtraAttributeValues,
       },
     );
@@ -97,8 +93,6 @@ async function main(): Promise<void> {
     publishToPrivacyCenter,
     classifyService = '',
     deleteExtraAttributeValues = '',
-    /** Creator ID of user for assessment templates TODO: https://transcend.height.app/T-29850 */
-    creatorId = '',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Parse authentication as API key or path to list of API keys
@@ -171,7 +165,6 @@ async function main(): Promise<void> {
       deleteExtraAttributeValues: deleteExtraAttributeValues === 'true',
       pageSize: parsedPageSize,
       classifyService: !!classifyService,
-      creatorId,
     });
 
     // exist with error code
@@ -238,7 +231,6 @@ async function main(): Promise<void> {
         publishToPrivacyCenter: publishToPrivacyCenter === 'true',
         deleteExtraAttributeValues: deleteExtraAttributeValues === 'true',
         classifyService: !!classifyService,
-        creatorId,
       });
 
       if (success) {

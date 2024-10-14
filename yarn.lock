@@ -515,7 +515,7 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.90.0
+    "@transcend-io/privacy-types": ^4.91.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.5.0
     "@types/bluebird": ^3.5.38
@@ -577,7 +577,6 @@ __metadata:
     tr-build-xdi-sync-endpoint: ./build/cli-build-xdi-sync-endpoint.js
     tr-consent-manager-service-json-to-yml: ./build/cli-consent-manager-service-json-to-yml.js
     tr-consent-managers-to-business-entities: cli-consent-managers-to-business-entities.ts
-    tr-create-assessment: ./build/cli-create-assessment.js
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
     tr-cron-pull-identifiers: ./build/cli-cron-pull-identifiers.js
     tr-cron-pull-profiles: ./build/cli-cron-pull-profiles.js
@@ -642,14 +641,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.90.0":
-  version: 4.90.0
-  resolution: "@transcend-io/privacy-types@npm:4.90.0"
+"@transcend-io/privacy-types@npm:^4.91.0":
+  version: 4.91.0
+  resolution: "@transcend-io/privacy-types@npm:4.91.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 360e25a854ee017386635e74637faf4e2d1da858f3d0806d06aa67bc40649e52035719d14ccb302035f533f0f1171dd456e2e7cc8d4af3f559a02fb3b68aaac7
+  checksum: e338b15df40848a87a81d010aae09ecf52c3f89c95e7ce4141ece69432653f3fc36206ce647354a4f71fab9c52837ee9c817f71323d573c2d0fc97ee58243001
   languageName: node
   linkType: hard
 
