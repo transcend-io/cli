@@ -532,44 +532,6 @@ export const ProcessingPurposeInput = t.intersection([
 export type ProcessingPurposeInput = t.TypeOf<typeof ProcessingPurposeInput>;
 
 /**
- * AssessmentTemplate type definition.
- */
-export const AssessmentTemplateInput = t.intersection([
-  t.type({
-    /** The title of the assessment template. */
-    title: t.string,
-    /** The content of the assessment template. */
-    content: t.string,
-  }),
-  t.partial({
-    /** Attribute keys related to the assessment template. */
-    attributeKeys: t.array(t.string),
-  }),
-]);
-
-/**
- * Type override
- */
-export type AssessmentTemplateInput = t.TypeOf<typeof AssessmentTemplateInput>;
-
-/**
- * Assessment type definition.
- */
-export const AssessmentInput = t.type({
-  /** The title of the assessment template. */
-  title: t.string,
-  /** The content of the assessment template. */
-  content: t.string,
-  /** Title of the assessment template */
-  'assessment-template': t.string,
-});
-
-/**
- * Type override
- */
-export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
-
-/**
  * Prompt definition inputs
  */
 export const PromptInput = t.type({
@@ -1551,14 +1513,6 @@ export const TranscendInput = t.partial({
    * Consent manager definition
    */
   'consent-manager': ConsentManagerInput,
-  /**
-   * Assessment template definitions
-   */
-  'assessment-templates': t.array(AssessmentTemplateInput),
-  /**
-   * Assessment definitions
-   */
-  assessments: t.array(AssessmentInput),
   /**
    * Prompt definitions
    */
