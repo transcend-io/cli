@@ -134,10 +134,6 @@
     - [Authentication](#authentication-30)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-create-assessment](#tr-create-assessment)
-    - [Authentication](#authentication-31)
-    - [Arguments](#arguments-31)
-    - [Usage](#usage-32)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -192,7 +188,6 @@ yarn tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
 yarn tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
-yarn tr-create-assessment --auth=$TRANSCEND_API_KEY
 ```
 
 or
@@ -231,7 +226,6 @@ tr-derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 tr-upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 tr-generate-api-keys --auth=$TRANSCEND_API_KEY
 tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY
-tr-create-assessment --auth=$TRANSCEND_API_KEY
 
 ```
 
@@ -381,8 +375,6 @@ The API key permissions for this command vary based on the value to the `resourc
 | cookies               | Consent Manager Cookie definitions.                                                                                                  | View Data Flows                                  | false      | [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                                                    |
 | consentManager        | Consent Manager general settings, including domain list.                                                                             | View Consent Manager                             | false      | [Consent Management -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                                       |
 | partitions            | The partitions in the account (often representative of separate data controllers).                                                   | View Consent Manager                             | false      | [Consent Management -> Developer Settings -> Advanced Settings](https://app.transcend.io/consent-manager/developer-settings/advanced-settings)                                                                                |
-| assessments           | The Transcend assessments                                                                                                            | View Assessments                                 | false      | [Assessments -> Browse](https://app.transcend.io/assessments/browse)                                                                                                                                                          |
-| assessmentTemplates   | The Transcend assessment templates                                                                                                   | View Assessments                                 | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                                                    |
 | prompts               | The Transcend AI prompts                                                                                                             | View Prompts                                     | false      | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                                           |
 | promptPartials        | The Transcend AI prompt partials                                                                                                     | View Prompts                                     | false      | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)                                                                                                                                                      |
 | promptGroups          | The Transcend AI prompt groups                                                                                                       | View Prompts                                     | false      | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                                           |
@@ -516,12 +508,6 @@ Pull in request data subject configurations (see [this example](./examples/data-
 tr-pull --auth=$TRANSCEND_API_KEY --resources=dataSubjects
 ```
 
-Pull in assessments and assessment templates (see [this example](./examples/assessments.yml)):
-
-```sh
-tr-pull --auth=$TRANSCEND_API_KEY --resources=assessment,assessmentTemplate
-```
-
 Pull in prompts, prompt templates, prompt partials and prompt groups (see [this example](./examples/prompts.yml)):
 
 ```sh
@@ -587,8 +573,6 @@ The API key needs the following scopes when pushing the various resource types:
 | cookies               | Consent Manager Cookie definitions.                                                                           | Manage Data Flows                         | false      | [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                                                    |
 | consentManager        | Consent Manager general settings, including domain list.                                                      | Manage Consent Manager Developer Settings | false      | [Consent Management -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                                       |
 | partitions            | The partitions in the account (often representative of separate data controllers).                            | Manage Consent Manager Developer Settings | false      | [Consent Management -> Developer Settings -> Advanced Settings](https://app.transcend.io/consent-manager/developer-settings/advanced-settings)                                                                                |
-| assessments           | The Transcend assessments                                                                                     | Manage Assessments                        | false      | [Assessments -> Browse](https://app.transcend.io/assessments/browse)                                                                                                                                                          |
-| assessmentTemplates   | The Transcend assessment templates                                                                            | Manage Assessments                        | false      | [Assessments -> Templates](https://app.transcend.io/assessments/templates)                                                                                                                                                    |
 | prompts               | The Transcend AI prompts                                                                                      | View Prompts                              | false      | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                                           |
 | promptPartials        | The Transcend AI prompt partials                                                                              | Manage Prompts                            | false      | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)                                                                                                                                                      |
 | promptGroups          | The Transcend AI prompt groups                                                                                | Manage Prompts                            | false      | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                                           |
@@ -2569,49 +2553,6 @@ Override XDI allowed commands
 
 ```sh
 yarn tr-build-xdi-sync-endpoint --auth=$TRANSCEND_API_KEY --xdiLocation=https://cdn.your-site.com/xdi.js --xdiAllowedCommands="ExtractIdentifiers:Simple"
-```
-
-### tr-create-assessment
-
-This command allows for creating a new assessment form an assessment template.
-
-Assessment templates can be managed here: https://app.transcend.io/assessments/templates
-
-#### Authentication
-
-In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys) or by using the `yarn tr-generate-api-keys` command above.
-
-The API key must have the following scopes:
-
-- "Manage Assessments"
-
-#### Arguments
-
-| Argument  | Description                                                      | Type   | Default        | Required |
-| --------- | ---------------------------------------------------------------- | ------ | -------------- | -------- |
-| auth      | The Transcend API key with the scopes necessary for the command. | string | N/A            | true     |
-| template  | The title of the assessment template                             | string | N/A - Prompted | false    |
-| title     | The title of the new assessment                                  | string | N/A - Prompted | false    |
-| variables | Additional template variables to pre-fill the template           | string | N/A - Prompted | false    |
-
-#### Usage
-
-Create a new assessment, filling out more information by being prompted by the terminal line
-
-```sh
-yarn tr-create-assessment --auth=$TRANSCEND_API_KEY
-```
-
-Specifying the template and title
-
-```sh
-yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing"
-```
-
-Configuring additional variables:
-
-```sh
-yarn tr-create-assessment --auth=$TRANSCEND_API_KEY  --title="Test" --template="[AI Prompt] Product Manager Notes Parsing" --variables=description:"testt test"
 ```
 
 ## Prompt Manager

@@ -13,8 +13,6 @@ import {
   PromptPartialInput,
   DataSubjectInput,
   CookieInput,
-  AssessmentTemplateInput,
-  AssessmentInput,
   PromptInput,
   DatapointInput,
   FieldInput,
@@ -45,8 +43,6 @@ import {
   fetchAllDataSubjects,
 } from './fetchDataSubjects';
 import { fetchApiKeys } from './fetchApiKeys';
-import { fetchAllAssessments } from './fetchAssessments';
-import { fetchAllAssessmentTemplates } from './fetchAssessmentTemplates';
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
@@ -143,8 +139,6 @@ export async function pullTranscendConfiguration(
   const [
     dataSubjects,
     apiKeyTitleMap,
-    assessments,
-    assessmentTemplate,
     dataSilos,
     enrichers,
     dataFlows,
@@ -181,14 +175,6 @@ export async function pullTranscendConfiguration(
     // Grab API keys
     resources.includes(TranscendPullResource.ApiKeys)
       ? fetchApiKeys({}, client, true)
-      : [],
-    // Grab Assessments
-    resources.includes(TranscendPullResource.Assessment)
-      ? fetchAllAssessments(client)
-      : [],
-    // Grab Assessment Templates
-    resources.includes(TranscendPullResource.AssessmentTemplate)
-      ? fetchAllAssessmentTemplates(client)
       : [],
     // Fetch the data silos
     resources.includes(TranscendPullResource.DataSilos)
@@ -416,34 +402,6 @@ export async function pullTranscendConfiguration(
         browserTimeZones: experience.browserTimeZones,
       })),
     };
-  }
-
-  // Save assessment templates
-  if (
-    assessmentTemplate.length > 0 &&
-    resources.includes(TranscendPullResource.AssessmentTemplate)
-  ) {
-    result['assessment-templates'] = assessmentTemplate.map(
-      ({ title, content, attributeKeys }): AssessmentTemplateInput => ({
-        title,
-        content,
-        attributeKeys: attributeKeys.map(({ name }) => name),
-      }),
-    );
-  }
-
-  // Save assessments
-  if (
-    assessments.length > 0 &&
-    resources.includes(TranscendPullResource.Assessment)
-  ) {
-    result.assessments = assessments.map(
-      ({ title, assessmentTemplate, content }): AssessmentInput => ({
-        title,
-        content,
-        'assessment-template': assessmentTemplate.title,
-      }),
-    );
   }
 
   // Save prompts

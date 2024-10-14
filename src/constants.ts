@@ -48,8 +48,6 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ManageDataSubjectRequestSettings,
   ],
-  [TranscendPullResource.Assessment]: [ScopeName.ManageAssessments],
-  [TranscendPullResource.AssessmentTemplate]: [ScopeName.ManageAssessments],
   [TranscendPullResource.Prompts]: [ScopeName.ManagePrompts],
   [TranscendPullResource.PromptPartials]: [ScopeName.ManagePrompts],
   [TranscendPullResource.PromptGroups]: [ScopeName.ManagePrompts],
@@ -96,8 +94,6 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.DataSubjects]: [
     ScopeName.ViewDataSubjectRequestSettings,
   ],
-  [TranscendPullResource.Assessment]: [ScopeName.ViewAssessments],
-  [TranscendPullResource.AssessmentTemplate]: [ScopeName.ViewAssessments],
   [TranscendPullResource.Prompts]: [ScopeName.ViewPrompts],
   [TranscendPullResource.PromptPartials]: [ScopeName.ViewPrompts],
   [TranscendPullResource.PromptGroups]: [ScopeName.ViewPrompts],
@@ -132,8 +128,6 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Enrichers]: 'enrichers',
   [TranscendPullResource.DataSilos]: 'data-silos',
   [TranscendPullResource.Templates]: 'templates',
-  [TranscendPullResource.Assessment]: 'assessments',
-  [TranscendPullResource.AssessmentTemplate]: 'assessment-templates',
   [TranscendPullResource.Prompts]: 'prompts',
   [TranscendPullResource.PromptPartials]: 'prompt-partials',
   [TranscendPullResource.PromptGroups]: 'prompt-groups',

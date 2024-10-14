@@ -13,8 +13,6 @@ import { syncEnricher } from './syncEnrichers';
 import { syncAttribute } from './syncAttribute';
 import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
 import { syncCookies } from './syncCookies';
-import { syncAssessments } from './syncAssessments';
-import { syncAssessmentTemplates } from './syncAssessmentTemplates';
 import {
   fetchAllDataSubjects,
   ensureAllDataSubjectsExist,
@@ -64,12 +62,9 @@ export async function syncConfigurationToTranscend(
     publishToPrivacyCenter = true,
     classifyService = false,
     deleteExtraAttributeValues = false,
-    creatorId,
   }: {
     /** Page size */
     pageSize?: number;
-    /** Creator ID TODO: https://transcend.height.app/T-29850 - remove this  */
-    creatorId?: string;
     /** When true, skip publishing to privacy center */
     publishToPrivacyCenter?: boolean;
     /** When true, delete any attributes being synced up */
@@ -91,8 +86,6 @@ export async function syncConfigurationToTranscend(
     'business-entities': businessEntities,
     enrichers,
     cookies,
-    assessments,
-    'assessment-templates': assessmentTemplates,
     'consent-manager': consentManager,
     'data-silos': dataSilos,
     'data-flows': dataFlows,
@@ -497,26 +490,6 @@ export async function syncConfigurationToTranscend(
       classifyService,
     );
     encounteredError = encounteredError || !syncedDataFlows;
-  }
-
-  // Sync assessments
-  if (assessments) {
-    const syncedAssessments = await syncAssessments(
-      client,
-      assessments,
-      CONCURRENCY,
-    );
-    encounteredError = encounteredError || !syncedAssessments;
-  }
-
-  // Sync assessment templates
-  if (assessmentTemplates) {
-    const syncedAssessmentTemplates = await syncAssessmentTemplates(
-      client,
-      assessmentTemplates,
-      { concurrency: CONCURRENCY, creatorId },
-    );
-    encounteredError = encounteredError || !syncedAssessmentTemplates;
   }
 
   // Sync privacy center
