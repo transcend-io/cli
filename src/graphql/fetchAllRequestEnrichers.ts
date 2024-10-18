@@ -4,7 +4,7 @@ import { REQUEST_ENRICHERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface RequestEnricher {
-  /** ID of request */
+  /** ID of request enricher */
   id: string;
   /** Name of identifier */
   enricher: {

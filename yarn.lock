@@ -597,6 +597,7 @@ __metadata:
     tr-request-export: ./build/cli-request-export.js
     tr-request-mark-silent: ./build/cli-request-mark-silent.js
     tr-request-notify-additional-time: ./build/cli-request-notify-additional-time.js
+    tr-request-reject-unverified-identifiers: ./build/cli-request-reject-unverified-identifiers.js
     tr-request-restart: ./build/cli-request-restart.js
     tr-request-upload: ./build/cli-request-upload.js
     tr-retry-request-data-silos: ./build/cli-retry-request-data-silos.js

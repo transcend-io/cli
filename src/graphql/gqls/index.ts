@@ -21,6 +21,7 @@ export * from './prompt';
 export * from './RequestEnricher';
 export * from './RequestDataSilo';
 export * from './team';
+export * from './RequestIdentifier';
 export * from './user';
 export * from './requestFile';
 export * from './promptRun';
