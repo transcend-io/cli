@@ -21,6 +21,7 @@ export * from './retryRequestEnricher';
 export * from './gqls';
 export * from './fetchPromptThreads';
 export * from './fetchAllPolicies';
+export * from './fetchAllRequestIdentifierMetadata';
 export * from './fetchAllPrivacyCenters';
 export * from './fetchAllMessages';
 export * from './fetchRequestDataSiloActiveCount';
