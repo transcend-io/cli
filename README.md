@@ -54,86 +54,90 @@
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-reject-unverified-identifiers](#tr-request-reject-unverified-identifiers)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-29)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-30)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-31)
+    - [Arguments](#arguments-31)
+    - [Usage](#usage-32)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -170,6 +174,7 @@ yarn tr-request-upload --auth=$TRANSCEND_API_KEY
 yarn tr-request-export --auth=$TRANSCEND_API_KEY
 yarn tr-request-restart --auth=$TRANSCEND_API_KEY
 yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY
+yarn tr-request-reject-unverified-identifiers --auth-$TRANSCEND_API_KEY
 yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 yarn tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 yarn tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
@@ -209,6 +214,7 @@ tr-request-upload --auth=$TRANSCEND_API_KEY
 tr-request-export --auth=$TRANSCEND_API_KEY
 tr-request-restart --auth=$TRANSCEND_API_KEY
 tr-request-enricher-restart --auth=$TRANSCEND_API_KEY
+tr-request-reject-unverified-identifiers --auth=$TRANSCEND_API_KEY
 tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY
 tr-cron-mark-identifiers-completed --auth=$TRANSCEND_API_KEY
 tr-manual-enrichment-pull-identifiers --auth=$TRANSCEND_API_KEY
@@ -1428,6 +1434,45 @@ Restart requests that are in an error state
 
 ```sh
 yarn tr-request-enricher-restart --auth=$TRANSCEND_API_KEY --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 ---requestEnricherStatuses=ERROR
+```
+
+### tr-request-reject-unverified-identifiers
+
+Bulk clear out any request identifiers that are unverified
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Manage Request Compilation
+
+#### Arguments
+
+| Argument        | Description                                                                                                                               | Type            | Default                  | Required |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth            | The Transcend API key with the scopes necessary for the command.                                                                          | string          | N/A                      | true     |
+| identifierNames | The names of identifiers to clear out                                                                                                     | string[]        | N/A                      | true     |
+| actions         | The [request action](https://docs.transcend.io/docs/privacy-requests/configuring-requests/data-subject-requests#data-actions) to restart. | RequestAction[] | N/A                      | false    |
+| transcendUrl    | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                                             | string - URL    | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-request-reject-unverified-identifiers --auth=$TRANSCEND_API_KEY --identifierNames=phone
+```
+
+Restart specific request types
+
+```sh
+yarn tr-request-reject-unverified-identifiers --auth=$TRANSCEND_API_KEY --identifierNames=phone --actions=ACCESS,ERASURE
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-reject-unverified-identifiers --auth=$TRANSCEND_API_KEY --identifierNames=phone --transcendUrl=https://api.us.transcend.io
 ```
 
 ### tr-request-export
