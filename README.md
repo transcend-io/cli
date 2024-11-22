@@ -2215,7 +2215,7 @@ yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --bin=
 
 ### tr-pull-datapoints
 
-This command allows for pulling your Data Inventory -> Datapoints into
+This command allows for pulling your Data Inventory -> Datapoints into a CSV.
 
 #### Authentication
 
