@@ -141,6 +141,7 @@ async function pullSubDatapoints(
   let total = 0;
   let shouldContinue = false;
   let cursor;
+  let offset = 0;
   do {
     try {
       const {
@@ -158,10 +159,12 @@ async function pullSubDatapoints(
           query TranscendCliSubDataPointCsvExport(
             $filterBy: SubDataPointFiltersInput
             $first: Int!
+            $offset: Int!
           ) {
             subDataPoints(
               filterBy: $filterBy
               first: $first
+              offset: $offset
               useMaster: false
             ) {
               nodes {
@@ -206,21 +209,26 @@ async function pullSubDatapoints(
         `,
         {
           first: pageSize,
+          offset,
           filterBy: {
             ...filterBy,
-            ...(cursor ? { cursor: { id: cursor } } : {}),
+            // TODO: https://transcend.height.app/T-40484 - add cursor support
+            // ...(cursor ? { cursor: { id: cursor } } : {}),
           },
         },
       );
 
-      cursor = nodes[nodes.length - 1].id as string;
+      cursor = nodes[nodes.length - 1]?.id as string;
       subDataPoints.push(...nodes);
       shouldContinue = nodes.length === pageSize;
       total += nodes.length;
+      offset += nodes.length;
       progressBar.update(total);
     } catch (err) {
       logger.error(
-        colors.red(`An error fetching subdatapoints for cursor ${cursor}`),
+        colors.red(
+          `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`,
+        ),
       );
       throw err;
     }
