@@ -114,30 +114,34 @@
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-pull-datapoints](#tr-pull-datapoints)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-29)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-30)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-31)
     - [Arguments](#arguments-31)
     - [Usage](#usage-32)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-32)
+    - [Arguments](#arguments-32)
+    - [Usage](#usage-33)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -2207,6 +2211,75 @@ Bin data hourly vs daily
 
 ```sh
 yarn tr-pull-consent-metrics --auth=$TRANSCEND_API_KEY --start=01/01/2023 --bin=1h
+```
+
+### tr-pull-datapoints
+
+This command allows for pulling your Data Inventory -> Datapoints into
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "View Data Inventory"
+
+#### Arguments
+
+| Argument                 | Description                                                                   | Type          | Default                  | Required |
+| ------------------------ | ----------------------------------------------------------------------------- | ------------- | ------------------------ | -------- |
+| auth                     | The Transcend API key with the scopes necessary for the command.              | string        | N/A                      | true     |
+| file                     | The file to save datapoints to                                                | string - path | ./datapoints.csv         | false    |
+| transcendUrl             | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL  | https://api.transcend.io | false    |
+| dataSiloIds              | Comma-separated list of data silo IDs to filter by                            | string        | N/A                      | false    |
+| includeAttributes        | Whether to include attributes in the output                                   | boolean       | false                    | false    |
+| includeGuessedCategories | Whether to include guessed categories in the output                           | boolean       | false                    | false    |
+| parentCategories         | Comma-separated list of parent categories to filter by                        | string        | N/A                      | false    |
+| subCategories            | Comma-separated list of subcategories to filter by                            | string        | N/A                      | false    |
+
+#### Usage
+
+All arguments
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --includeGuessedCategories=true --parentCategories=CONTACT,ID,LOCATION --subCategories=79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1 --dataSiloIds=f956ccce-5534-4328-a78d-3a924b1fe429
+```
+
+Pull datapoints for specific data silos:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --dataSiloIds=f956ccce-5534-4328-a78d-3a924b1fe429
+```
+
+Include attributes in the output:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --includeAttributes=true
+```
+
+Include guessed categories in the output:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --includeGuessedCategories=true
+```
+
+Filter by parent categories:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --parentCategories=ID,LOCATION
+```
+
+Filter by subcategories:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --subCategories=79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1
+```
+
+Specify the backend URL, needed for US hosted backend infrastructure:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --transcendUrl=https://api.us.transcend.io
 ```
 
 ### tr-upload-consent-preferences

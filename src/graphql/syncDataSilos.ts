@@ -147,7 +147,7 @@ export async function fetchAllDataSilos<TDataSilo extends DataSilo>(
   return dataSilos.sort((a, b) => a.title.localeCompare(b.title));
 }
 
-interface SubDataPoint {
+export interface SubDataPoint {
   /** Name (or key) of the subdatapoint */
   name: string;
   /** The description */
@@ -300,7 +300,9 @@ export async function fetchAllSubDataPoints(
           : SUB_DATA_POINTS,
         {
           first: pageSize,
-          dataPointIds: [dataPointId],
+          filterBy: {
+            dataPoints: [dataPointId],
+          },
           offset,
         },
       );
@@ -327,6 +329,8 @@ export async function fetchAllSubDataPoints(
   } while (shouldContinue);
   return sortBy(subDataPoints, 'name');
 }
+
+// FIXME pagination and speed
 
 /**
  * Fetch all datapoints for a data silo
@@ -376,7 +380,9 @@ export async function fetchAllDataPoints(
       };
     }>(client, DATA_POINTS, {
       first: pageSize,
-      dataSiloIds: [dataSiloId],
+      filterBy: {
+        dataSilos: [dataSiloId],
+      },
       offset,
     });
 
@@ -404,7 +410,7 @@ export async function fetchAllDataPoints(
             }
 
             const subDataPoints = await fetchAllSubDataPoints(client, node.id, {
-              pageSize,
+              pageSize: 1000, // max page size
               debug,
               includeGuessedCategories,
             });

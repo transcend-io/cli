@@ -33,6 +33,22 @@ export const DATA_SILOS = gql`
 
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true
+export const DATA_SILO_EXPORT = gql`
+  query TranscendCliDataSiloExport(
+    $filterBy: DataSiloFiltersInput!
+    $first: Int!
+  ) {
+    dataSilos(filterBy: $filterBy, first: $first, useMaster: false) {
+      nodes {
+        id
+        title
+      }
+    }
+  }
+`;
+
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
 export const DATA_SILOS_ENRICHED = gql`
   query TranscendCliDataSilosEnriched(
     $filterBy: DataSiloFiltersInput!
