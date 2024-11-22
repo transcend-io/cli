@@ -73,7 +73,7 @@ async function main(): Promise<void> {
       includeGuessedCategories: includeGuessedCategories === 'true',
       parentCategories: parsedParentCategories,
       includeAttributes: includeAttributes === 'true',
-      subCategories: splitCsvToList(subCategories), // FIXME
+      subCategories: splitCsvToList(subCategories), // TODO: https://transcend.height.app/T-40482 - do by name not ID
     });
 
     logger.info(colors.magenta(`Writing datapoints to file "${file}"...`));
