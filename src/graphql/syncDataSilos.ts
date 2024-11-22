@@ -330,8 +330,6 @@ export async function fetchAllSubDataPoints(
   return sortBy(subDataPoints, 'name');
 }
 
-// FIXME pagination and speed
-
 /**
  * Fetch all datapoints for a data silo
  *
@@ -360,6 +358,8 @@ export async function fetchAllDataPoints(
   },
 ): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
+
+  // TODO: https://transcend.height.app/T-40481 - add cursor pagination
   let offset = 0;
 
   // Whether to continue looping

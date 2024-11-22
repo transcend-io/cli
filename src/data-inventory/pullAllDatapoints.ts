@@ -81,7 +81,7 @@ export interface DatapointFilterOptions {
   /** Parent categories to filter down for */
   parentCategories?: DataCategoryType[];
   /** Sub categories to filter down for */
-  subCategories?: string[]; // FIXME
+  subCategories?: string[]; // TODO: https://transcend.height.app/T-40482 - do by name not ID
 }
 
 /**
