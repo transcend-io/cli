@@ -4,12 +4,12 @@ import { gql } from 'graphql-request';
 // isExportCsv: true
 export const DATA_POINTS = gql`
   query TranscendCliDataPoints(
-    $dataSiloIds: [ID!]
+    $filterBy: DataPointFiltersInput
     $first: Int!
     $offset: Int!
   ) {
     dataPoints(
-      filterBy: { dataSilos: $dataSiloIds }
+      filterBy: $filterBy
       first: $first
       offset: $offset
       useMaster: false
@@ -18,7 +18,6 @@ export const DATA_POINTS = gql`
         { field: name, direction: ASC }
       ]
     ) {
-      totalCount
       nodes {
         id
         title {
@@ -54,21 +53,30 @@ export const DATA_POINTS = gql`
   }
 `;
 
+// TODO: https://transcend.height.app/T-27909 - enable optimizations
+// isExportCsv: true
+export const DATA_POINT_COUNT = gql`
+  query TranscendCliDataPointCount($filterBy: DataPointFiltersInput) {
+    dataPoints(filterBy: $filterBy, useMaster: false) {
+      totalCount
+    }
+  }
+`;
+
 // TODO: https://transcend.height.app/T-27909 - add orderBy
 // isExportCsv: true
 export const SUB_DATA_POINTS = gql`
-  query TranscendCliDataPoints(
-    $dataPointIds: [ID!]
+  query TranscendCliSubDataPoints(
+    $filterBy: SubDataPointFiltersInput
     $first: Int!
     $offset: Int!
   ) {
     subDataPoints(
-      filterBy: { dataPoints: $dataPointIds }
+      filterBy: $filterBy
       first: $first
       offset: $offset
       useMaster: false
     ) {
-      totalCount
       nodes {
         id
         name
@@ -94,19 +102,26 @@ export const SUB_DATA_POINTS = gql`
   }
 `;
 
+export const SUB_DATA_POINTS_COUNT = gql`
+  query TranscendCliSubDataPointsCount($filterBy: SubDataPointFiltersInput) {
+    subDataPoints(filterBy: $filterBy, useMaster: false) {
+      totalCount
+    }
+  }
+`;
+
 export const SUB_DATA_POINTS_WITH_GUESSES = gql`
-  query TranscendCliDataPoints(
-    $dataPointIds: [ID!]
+  query TranscendCliSubDataPointGuesses(
+    $filterBy: SubDataPointFiltersInput
     $first: Int!
     $offset: Int!
   ) {
     subDataPoints(
-      filterBy: { dataPoints: $dataPointIds }
+      filterBy: $filterBy
       first: $first
       offset: $offset
       useMaster: false
     ) {
-      totalCount
       nodes {
         id
         name
@@ -178,6 +193,33 @@ export const UPDATE_OR_CREATE_DATA_POINT = gql`
       dataPoint {
         id
         name
+      }
+    }
+  }
+`;
+
+export const DATAPOINT_EXPORT = gql`
+  query TranscendCliDataPointCsvExport(
+    $filterBy: DataPointFiltersInput
+    $first: Int!
+  ) {
+    dataPoints(filterBy: $filterBy, first: $first, useMaster: false) {
+      nodes {
+        id
+        title {
+          defaultMessage
+        }
+        description {
+          defaultMessage
+        }
+        owners {
+          email
+        }
+        teams {
+          name
+        }
+        name
+        path
       }
     }
   }

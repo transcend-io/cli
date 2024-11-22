@@ -71,16 +71,18 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${dateRange ? ', and' : ''
-      } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${
+      dateRange ? ', and' : ''
+    } after ${createdAtAfter.toISOString()}`;
   }
 
   // Log out
   logger.info(
     colors.magenta(
-      `${actions.length > 0
-        ? `Pulling requests of type "${actions.join('" , "')}"`
-        : 'Pulling all requests'
+      `${
+        actions.length > 0
+          ? `Pulling requests of type "${actions.join('" , "')}"`
+          : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -98,9 +100,13 @@ export async function pullPrivacyRequests({
   const requestsWithRequestIdentifiers = await map(
     requests,
     async (request) => {
-      const requestIdentifiers = await fetchAllRequestIdentifiers(client, sombra, {
-        requestId: request.id,
-      });
+      const requestIdentifiers = await fetchAllRequestIdentifiers(
+        client,
+        sombra,
+        {
+          requestId: request.id,
+        },
+      );
       return {
         ...request,
         requestIdentifiers,

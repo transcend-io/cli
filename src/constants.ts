@@ -5,6 +5,7 @@ import { TranscendInput } from './codecs';
 export const ADMIN_DASH = 'https://app.transcend.io';
 
 export const ADMIN_DASH_INTEGRATIONS = `${ADMIN_DASH}/infrastructure/integrations`;
+export const ADMIN_DASH_DATAPOINTS = `${ADMIN_DASH}/data-map/data-inventory/data-points`;
 
 /**
  * Override default transcend API url using
