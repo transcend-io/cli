@@ -313,7 +313,8 @@
                     "managePolicies",
                     "viewPolicies",
                     "manageIntlMessages",
-                    "viewIntlMessages"
+                    "viewIntlMessages",
+                    "llmLogTransfer"
                   ]
                 }
               }
