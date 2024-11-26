@@ -69,6 +69,8 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Messages]: [ScopeName.ManageIntlMessages],
   [TranscendPullResource.PrivacyCenters]: [ScopeName.ManagePrivacyCenter],
   [TranscendPullResource.Policies]: [ScopeName.ManagePolicies],
+  [TranscendPullResource.Assessments]: [ScopeName.ManageAssessments],
+  [TranscendPullResource.AssessmentTemplates]: [ScopeName.ManageAssessments],
 };
 
 /**
@@ -110,6 +112,8 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Messages]: [ScopeName.ViewIntlMessages],
   [TranscendPullResource.PrivacyCenters]: [ScopeName.ViewPrivacyCenter],
   [TranscendPullResource.Policies]: [ScopeName.ViewPolicies],
+  [TranscendPullResource.Assessments]: [ScopeName.ViewAssessments],
+  [TranscendPullResource.AssessmentTemplates]: [ScopeName.ViewAssessments],
 };
 
 export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
@@ -144,4 +148,6 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Messages]: 'messages',
   [TranscendPullResource.PrivacyCenters]: 'privacy-center',
   [TranscendPullResource.Policies]: 'policies',
+  [TranscendPullResource.Assessments]: 'assessments',
+  [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
 };

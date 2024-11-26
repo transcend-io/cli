@@ -73,6 +73,7 @@ export async function approvePrivacyRequests({
   logger.info(colors.magenta(`Approving "${allRequests.length}" requests.`));
 
   let total = 0;
+  let skipped = 0;
   progressBar.start(allRequests.length, 0);
   await map(
     allRequests,
@@ -91,10 +92,16 @@ export async function approvePrivacyRequests({
         });
       }
 
-      // approve the request
-      await makeGraphQLRequest(client, APPROVE_PRIVACY_REQUEST, {
-        input: { requestId: requestToApprove.id },
-      });
+      try {
+        // approve the request
+        await makeGraphQLRequest(client, APPROVE_PRIVACY_REQUEST, {
+          input: { requestId: requestToApprove.id },
+        });
+      } catch (err) {
+        if (err.message.includes('Request must be in an approving state,')) {
+          skipped += 1;
+        }
+      }
 
       total += 1;
       progressBar.update(total);
@@ -105,7 +112,9 @@ export async function approvePrivacyRequests({
   progressBar.stop();
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
-
+  if (skipped > 0) {
+    logger.info(colors.yellow(`${skipped} requests were skipped.`));
+  }
   logger.info(
     colors.green(
       `Successfully approved ${total} requests in "${

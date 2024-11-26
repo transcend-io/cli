@@ -38,6 +38,8 @@ import {
   PrivacyCenterComponentStyles,
   PrivacyCenterTextStyles,
   ConfigurableColorPaletteColor,
+  AssessmentFormTemplateStatus,
+  AssessmentFormStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1442,6 +1444,100 @@ export const ActionItemInput = t.intersection([
 /** Type override */
 export type ActionItemInput = t.TypeOf<typeof ActionItemInput>;
 
+export const AssessmentTemplateInput = t.intersection([
+  t.type({
+    /** The title of the assessment template */
+    title: t.string,
+  }),
+  t.partial({
+    /** The Assessment sections under this assessment template */
+    sections: t.array(AssessmentSectionInput),
+    /** Description of assessment template */
+    description: t.string,
+    /** The status of the assessment */
+    status: valuesOf(AssessmentFormTemplateStatus),
+    /** The source of the assessment */
+    source: valuesOf(AssessmentFormTemplateSource),
+    /** The email of the user that created the assessment */
+    creator: t.string,
+    /** Whether the template is in a locked status */
+    locked: t.boolean,
+    /** Whether the template is archived */
+    archived: t.boolean,
+    /** The date that the assessment was created */
+    'created-at': t.string,
+    /** The names of the custom fields associated to this assessment template */
+    'attribute-keys': t.array(t.string),
+    /** The retention schedule configuration */
+    'retention-schedule': AssessmentRetentionScheduleInput,
+    /** The titles of the email templates used in the assessment template */
+    templates: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type AssessmentTemplateInput = t.TypeOf<typeof AssessmentTemplateInput>;
+
+export const AssessmentInput = t.intersection([
+  t.type({
+    /** The title of the assessment */
+    title: t.string,
+    /** The title of the assessment group */
+    group: t.string, // FIXME unique?
+  }),
+  t.partial({
+    /** The assessment sections */
+    sections: t.array(AssessmentSectionInput),
+    /** The email of the user that created the assessment */
+    creator: t.string,
+    /** The title of the assessment template used for this assessment */
+    'assessment-template': t.string,
+    /** The description of the assessment */
+    description: t.string,
+    /** The status of the assessment */
+    status: valuesOf(AssessmentFormStatus),
+    /** The emails of the transcend users assigned to the assessment */
+    assignees: t.array(t.string),
+    /** The emails of the external emails assigned to the assessment */
+    'external-assignees': t.array(t.string),
+    /** The emails of the assessment reviewers */
+    reviewers: t.array(t.string),
+    /** Whether the assessment is in a locked status */
+    locked: t.boolean,
+    /** Whether the assessment is archived */
+    archived: t.boolean,
+    /** Whether the form is created by an external user */
+    external: t.boolean,
+    /**
+     * Whether the form title is an internal label only, and the group title should be used in communications with assignees
+     */
+    'title-is-internal': t.boolean,
+    /** The date that the assessment is due */
+    'due-date': t.string,
+    /** The date that the assessment was created */
+    'created-at': t.string,
+    /** The date that the assessment was assigned at */
+    'assigned-at': t.string,
+    /** The date that the assessment was submitted at */
+    'submitted-at': t.string,
+    /** The date that the assessment was approved at */
+    'approved-at': t.string,
+    /** The date that the assessment was rejected at */
+    'rejected-at': t.string,
+    /** The linked data inventory resources */
+    resources: t.array(AssessmentResourceInput),
+    /** The linked data inventory synced rows */
+    rows: t.array(AssessmentRowInput),
+    /** The assessment retention schedule */
+    'retention-schedule': AssessmentRetentionScheduleInput,
+    /** The assessment custom fields */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/** Type override */
+export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
+
 export const TranscendInput = t.partial({
   /**
    * Action items
@@ -1551,6 +1647,14 @@ export const TranscendInput = t.partial({
   messages: t.array(IntlMessageInput),
   /** The full list of consent manager partitions (e.g. dev vs staging vs prod) */
   partitions: t.array(PartitionInput),
+  /**
+   * The full list of assessment templates
+   */
+  'assessment-templates': t.array(AssessmentTemplateInput),
+  /**
+   * The full list of assessment results
+   */
+  assessments: t.array(AssessmentInput),
 });
 
 /** Type override */
