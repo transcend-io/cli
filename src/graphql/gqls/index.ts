@@ -17,6 +17,8 @@ export * from './policy';
 export * from './request';
 export * from './message';
 export * from './RequestEnricher';
+export * from './assessment';
+export * from './assessmentTemplate';
 export * from './prompt';
 export * from './RequestEnricher';
 export * from './RequestDataSilo';
