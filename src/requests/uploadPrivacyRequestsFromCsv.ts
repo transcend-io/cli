@@ -106,23 +106,6 @@ export async function uploadPrivacyRequestsFromCsv({
     regionToCountry: {},
   });
 
-  // Create a new state file to store the requests from this run
-  const requestCacheFile = join(
-    requestReceiptFolder,
-    `tr-request-upload-${new Date().toISOString()}-${file
-      .split('/')
-      .pop()}`.replace('.csv', '.json'),
-  );
-  const requestState = new PersistedState(
-    requestCacheFile,
-    CachedRequestState,
-    {
-      successfulRequests: [],
-      duplicateRequests: [],
-      failingRequests: [],
-    },
-  );
-
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
@@ -179,11 +162,33 @@ export async function uploadPrivacyRequestsFromCsv({
     requestAttributeKeys,
   });
 
+  // Create a new state file to store the requests from this run
+  const requestCacheFile = join(
+    requestReceiptFolder,
+    `tr-request-upload-${new Date().toISOString()}-${file
+      .split('/')
+      .pop()}`.replace('.csv', '.json'),
+  );
+  const requestState = new PersistedState(
+    requestCacheFile,
+    CachedRequestState,
+    {
+      successfulRequests: [],
+      duplicateRequests: [],
+      failingRequests: [],
+      pendingRequests: requestInputs.map(([rawRow, requestInput]) => ({
+        rawRow,
+        requestInput,
+      })),
+    },
+  );
+
   // start the progress bar with a total value of 200 and start value of 0
   if (!debug) {
     progressBar.start(requestInputs.length, 0);
   }
   let total = 0;
+
   // Submit each request
   await map(
     requestInputs,
@@ -251,6 +256,7 @@ export async function uploadPrivacyRequestsFromCsv({
         }
 
         // Cache successful upload
+        const pendingRequests = requestState.getValue('pendingRequests');
         const successfulRequests = requestState.getValue('successfulRequests');
         successfulRequests.push({
           id: requestResponse.id,
@@ -260,6 +266,14 @@ export async function uploadPrivacyRequestsFromCsv({
           attemptedAt: new Date().toISOString(),
         });
         requestState.setValue(successfulRequests, 'successfulRequests');
+        requestState.setValue(
+          pendingRequests.filter(
+            (request) =>
+              request.requestInput.coreIdentifier !==
+              requestResponse.coreIdentifier,
+          ),
+          'pendingRequests',
+        );
       } catch (err) {
         const msg = `${err.message} - ${JSON.stringify(
           err.response?.body,
@@ -280,6 +294,7 @@ export async function uploadPrivacyRequestsFromCsv({
               ),
             );
           }
+          const pendingRequests = requestState.getValue('pendingRequests');
           const duplicateRequests = requestState.getValue('duplicateRequests');
           duplicateRequests.push({
             coreIdentifier: requestInput.coreIdentifier,
@@ -287,6 +302,14 @@ export async function uploadPrivacyRequestsFromCsv({
             attemptedAt: new Date().toISOString(),
           });
           requestState.setValue(duplicateRequests, 'duplicateRequests');
+          requestState.setValue(
+            pendingRequests.filter(
+              (request) =>
+                request.requestInput.coreIdentifier !==
+                requestInput.coreIdentifier,
+            ),
+            'pendingRequests',
+          );
         } else {
           const failingRequests = requestState.getValue('failingRequests');
           failingRequests.push({

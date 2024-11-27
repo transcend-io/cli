@@ -13,10 +13,20 @@ import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { mapSeries } from 'bluebird';
+// FIXME
+// import groupBy from 'lodash/groupBy';
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
   action: RequestAction;
+}
+
+/**
+ * Cron identifier mode to pull
+ */
+export enum PullCronIdentifiersMode {
+  PerRequest = 'PER_REQUEST',
+  PerIdentifier = 'PER_IDENTIFIER',
 }
 
 /**
@@ -29,6 +39,7 @@ export async function pullCustomSiloOutstandingIdentifiers({
   auth,
   sombraAuth,
   actions,
+  format = PullCronIdentifiersMode.PerRequest,
   pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -38,6 +49,8 @@ export async function pullCustomSiloOutstandingIdentifiers({
   dataSiloId: string;
   /** The request actions to fetch */
   actions: RequestAction[];
+  /** The format */
+  format?: PullCronIdentifiersMode;
   /** Page limit when fetching identifiers */
   pageLimit?: number;
   /** API URL for Transcend backend */
@@ -126,6 +139,22 @@ export async function pullCustomSiloOutstandingIdentifiers({
   );
 
   // Write out to CSV
+  // FIXME
+  // const data =
+  //   format === PullCronIdentifiersMode.PerRequest
+  //     ? identifiers.map(({ attributes, ...identifier }) => ({
+  //         ...identifier,
+  //         ...attributes.reduce(
+  //           (acc, val) =>
+  //             Object.assign(acc, {
+  //               [val.key]: val.values.join(','),
+  //             }),
+  //           {},
+  //         ),
+  //       }))
+  //     : // FIXME
+  //       Object.entries(groupBy(identifiers, 'requestId'));
+
   const data = identifiers.map(({ attributes, ...identifier }) => ({
     ...identifier,
     ...attributes.reduce(
