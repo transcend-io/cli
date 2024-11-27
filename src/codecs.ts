@@ -1557,7 +1557,7 @@ export const AssessmentSectionQuestionInput = t.intersection([
     /** Display logic for the question */
     'display-logic': AssessmentDisplayLogicInput,
     /** Risk logic for the question */
-    'risk-logic': t.array(t.string),
+    'risk-logic': t.array(t.string), // FIXME
     /** Risk category titles for the question */
     'risk-categories': t.array(t.string),
     /** Risk framework titles for the question */
@@ -1680,8 +1680,6 @@ export const AssessmentInput = t.intersection([
     sections: t.array(AssessmentSectionInput),
     /** The email of the user that created the assessment */
     creator: t.string,
-    /** The title of the assessment template used for this assessment */
-    'assessment-template': t.string,
     /** The description of the assessment */
     description: t.string,
     /** The status of the assessment */

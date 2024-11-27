@@ -40,7 +40,7 @@ export interface AssessmentTemplate {
   /** The date when the assessment template was last updated */
   updatedAt: string;
   /** The retention schedule of the assessment template */
-  retentionSchedule: RetentionSchedule;
+  retentionSchedule?: RetentionSchedule;
   /** The sections of the assessment template */
   sections: AssessmentSection[];
 }

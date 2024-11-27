@@ -8,11 +8,8 @@ import {
   AssessmentQuestionType,
   AssessmentSyncColumn,
   AssessmentSyncModel,
-  AssessmentsDisplayLogicAction,
   AttributeSupportedResourceType,
-  ComparisonOperator,
   DataCategoryType,
-  LogicOperator,
   ProcessingPurpose,
   RetentionScheduleOperation,
   RetentionScheduleType,
@@ -63,7 +60,7 @@ export interface Assessment {
   /** Indicates if the title of the assessment is internal */
   titleIsInternal: boolean;
   /** The retention schedule of the assessment */
-  retentionSchedule: RetentionSchedule;
+  retentionSchedule?: RetentionSchedule;
   /** The attribute values associated with the assessment */
   attributeValues: AttributeValue[];
   /** The sections of the assessment */
@@ -155,14 +152,7 @@ export interface AssessmentQuestion {
   /** Indicates if the question is required */
   isRequired: boolean;
   /** Logic for displaying the question */
-  displayLogic?: {
-    /** Action to take */
-    action: AssessmentsDisplayLogicAction;
-    /** Rule logic */
-    rule?: AssessmentRuleInputResponse;
-    /** Nested rule logic */
-    nestedRule?: AssessmentNestedRuleInputResponse;
-  };
+  displayLogic: string;
   /** Logic for assessing risk related to the question */
   riskLogic: string[];
   /** Indicates if risk evaluation is required for the question */
@@ -244,30 +234,6 @@ export interface RiskFramework {
   riskMatrixRowTitle: string;
   /** Risk matrix column title */
   riskMatrixColumnTitle: string;
-}
-
-/**
- * Represents the input for an assessment rule.
- */
-export interface AssessmentRuleInputResponse {
-  /** Reference ID of the question this rule depends on */
-  dependsOnQuestionReferenceId: string;
-  /** Operator used for comparison */
-  comparisonOperator: ComparisonOperator;
-  /** Operands used for comparison */
-  comparisonOperands?: string[];
-}
-
-/**
- * Represents the input for a nested assessment rule.
- */
-export interface AssessmentNestedRuleInputResponse {
-  /** Logical operator for combining rules */
-  logicOperator: LogicOperator;
-  /** List of rules */
-  rules: AssessmentRuleInputResponse[];
-  /** List of nested rules */
-  nestedRules?: AssessmentNestedRuleInputResponse[];
 }
 
 export interface RiskLevel {

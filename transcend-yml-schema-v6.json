@@ -41922,9 +41922,6 @@
               "creator": {
                 "type": "string"
               },
-              "assessment-template": {
-                "type": "string"
-              },
               "description": {
                 "type": "string"
               },

@@ -14,30 +14,7 @@ export const ASSESSMENT_SECTION_FIELDS = `
     placeholder
     description
     isRequired
-    displayLogic {
-      action
-      rule {
-        dependsOnQuestionReferenceId
-        comparisonOperator
-        comparisonOperands
-      }
-      nestedRule {
-        logicOperator
-        rules {
-          dependsOnQuestionReferenceId
-          comparisonOperator
-          comparisonOperands
-        }
-        nestedRules {
-          logicOperator
-          rules {
-            dependsOnQuestionReferenceId
-            comparisonOperator
-            comparisonOperands
-          }
-        }
-      }
-    }
+    displayLogic
     riskLogic
     requireRiskEvaluation
     requireRiskMatrixEvaluation

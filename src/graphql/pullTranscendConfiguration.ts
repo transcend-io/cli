@@ -83,6 +83,10 @@ import { LanguageKey } from '@transcend-io/internationalization';
 import { fetchPartitions } from './syncPartitions';
 import { fetchAllAssessments } from './fetchAllAssessments';
 import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
+import {
+  AssessmentNestedRule,
+  parseAssessmentDisplayLogic,
+} from './parseAssessmentDisplayLogic';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -485,62 +489,80 @@ export async function pullTranscendConfiguration(
                 attributeKey,
                 requireRiskEvaluation,
                 requireRiskMatrixEvaluation,
-              }): AssessmentSectionQuestionInput => ({
-                title,
-                type,
-                'sub-type': subType,
-                placeholder,
-                description,
-                'is-required': isRequired,
-                'reference-id': referenceId,
-                'display-logic': displayLogic
-                  ? {
-                      action: displayLogic.action,
-                      rule: displayLogic.rule
-                        ? {
-                            'depends-on-question-reference-id':
-                              displayLogic.rule.dependsOnQuestionReferenceId,
-                            'comparison-operator':
-                              displayLogic.rule.comparisonOperator,
-                            'comparison-operands':
-                              displayLogic.rule.comparisonOperands,
-                          }
-                        : undefined,
-                      'nested-rule': displayLogic.nestedRule
-                        ? {
-                            'logic-operator':
-                              displayLogic.nestedRule.logicOperator,
-                            rules: displayLogic.nestedRule.rules.map(
-                              (rule) => ({
+              }): AssessmentSectionQuestionInput => {
+                const displayLogicParsed = displayLogic
+                  ? parseAssessmentDisplayLogic(displayLogic)
+                  : undefined;
+                return {
+                  title,
+                  type,
+                  'sub-type': subType,
+                  placeholder,
+                  description,
+                  'is-required': isRequired,
+                  'reference-id': referenceId,
+                  'display-logic':
+                    displayLogicParsed &&
+                    Object.keys(displayLogicParsed).length > 0
+                      ? {
+                          action: displayLogicParsed.action!,
+                          rule: displayLogicParsed.rule
+                            ? {
                                 'depends-on-question-reference-id':
-                                  rule.dependsOnQuestionReferenceId,
-                                'comparison-operator': rule.comparisonOperator,
-                                'comparison-operands': rule.comparisonOperands,
-                              }),
-                            ),
-                          }
-                        : undefined,
-                    }
-                  : undefined,
-                'risk-logic': riskLogic,
-                'risk-categories': riskCategories.map(({ title }) => title),
-                'risk-framework': riskFramework?.title,
-                'answer-options': answerOptions.map(({ value }) => ({ value })),
-                'allowed-mime-types': allowedMimeTypes,
-                'allow-select-other': allowSelectOther,
-                'sync-model': syncModel,
-                'sync-column': syncColumn,
-                'attribute-key': attributeKey?.name,
-                'require-risk-evaluation': requireRiskEvaluation,
-                'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
-              }),
+                                  displayLogicParsed.rule
+                                    .dependsOnQuestionReferenceId,
+                                'comparison-operator':
+                                  displayLogicParsed.rule.comparisonOperator,
+                                'comparison-operands':
+                                  displayLogicParsed.rule.comparisonOperands,
+                              }
+                            : undefined,
+                          'nested-rule': displayLogicParsed.nestedRule
+                            ? {
+                                'logic-operator':
+                                  displayLogicParsed.nestedRule.logicOperator,
+                                rules:
+                                  /* eslint-disable @typescript-eslint/no-explicit-any */
+                                  (
+                                    (
+                                      (displayLogicParsed as any)
+                                        .nestedRule as AssessmentNestedRule
+                                    ).rules || []
+                                  ).map((rule) => ({
+                                    'depends-on-question-reference-id':
+                                      rule.dependsOnQuestionReferenceId,
+                                    'comparison-operator':
+                                      rule.comparisonOperator,
+                                    'comparison-operands':
+                                      rule.comparisonOperands,
+                                  })),
+                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                              }
+                            : undefined,
+                        }
+                      : undefined,
+                  'risk-logic': riskLogic,
+                  'risk-categories': riskCategories.map(({ title }) => title),
+                  'risk-framework': riskFramework?.title,
+                  'answer-options': answerOptions.map(({ value }) => ({
+                    value,
+                  })),
+                  'allowed-mime-types': allowedMimeTypes,
+                  'allow-select-other': allowSelectOther,
+                  'sync-model': syncModel || undefined,
+                  'sync-column': syncColumn || undefined,
+                  'attribute-key': attributeKey?.name,
+                  'require-risk-evaluation': requireRiskEvaluation,
+                  'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+                };
+              },
             ),
             assignees: assignees.map(({ email }) => email),
             'external-assignees': externalAssignees.map(({ email }) => email),
             'is-reviewed': isReviewed,
           }),
         ),
-        creator: creator.email,
+        creator: creator?.email,
         description,
         status,
         assignees: assignees.map(({ email }) => email),
@@ -550,17 +572,19 @@ export async function pullTranscendConfiguration(
         archived: isArchived,
         external: isExternallyCreated,
         'title-is-internal': titleIsInternal,
-        'due-date': dueDate,
-        'created-at': createdAt,
-        'assigned-at': assignedAt,
-        'submitted-at': submittedAt,
-        'approved-at': approvedAt,
-        'rejected-at': rejectedAt,
-        'retention-schedule': {
-          type: retentionSchedule.type,
-          'duration-days': retentionSchedule.durationDays,
-          operand: retentionSchedule.operation,
-        },
+        'due-date': dueDate || undefined,
+        'created-at': createdAt || undefined,
+        'assigned-at': assignedAt || undefined,
+        'submitted-at': submittedAt || undefined,
+        'approved-at': approvedAt || undefined,
+        'rejected-at': rejectedAt || undefined,
+        'retention-schedule': retentionSchedule
+          ? {
+              type: retentionSchedule.type,
+              'duration-days': retentionSchedule.durationDays,
+              operand: retentionSchedule.operation,
+            }
+          : undefined,
         attributes:
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
@@ -633,69 +657,89 @@ export async function pullTranscendConfiguration(
                 attributeKey,
                 requireRiskEvaluation,
                 requireRiskMatrixEvaluation,
-              }): AssessmentSectionQuestionInput => ({
-                title,
-                type,
-                'sub-type': subType,
-                placeholder,
-                description,
-                'is-required': isRequired,
-                'reference-id': referenceId,
-                'display-logic': displayLogic
-                  ? {
-                      action: displayLogic.action,
-                      rule: displayLogic.rule
-                        ? {
-                            'depends-on-question-reference-id':
-                              displayLogic.rule.dependsOnQuestionReferenceId,
-                            'comparison-operator':
-                              displayLogic.rule.comparisonOperator,
-                            'comparison-operands':
-                              displayLogic.rule.comparisonOperands,
-                          }
-                        : undefined,
-                      'nested-rule': displayLogic.nestedRule
-                        ? {
-                            'logic-operator':
-                              displayLogic.nestedRule.logicOperator,
-                            rules: displayLogic.nestedRule.rules.map(
-                              (rule) => ({
+              }): AssessmentSectionQuestionInput => {
+                const displayLogicParsed = displayLogic
+                  ? parseAssessmentDisplayLogic(displayLogic)
+                  : undefined;
+                return {
+                  title,
+                  type,
+                  'sub-type': subType,
+                  placeholder,
+                  description,
+                  'is-required': isRequired,
+                  'reference-id': referenceId,
+                  'display-logic':
+                    displayLogicParsed &&
+                    Object.keys(displayLogicParsed).length > 0
+                      ? {
+                          action: displayLogicParsed.action!,
+                          rule: displayLogicParsed.rule
+                            ? {
                                 'depends-on-question-reference-id':
-                                  rule.dependsOnQuestionReferenceId,
-                                'comparison-operator': rule.comparisonOperator,
-                                'comparison-operands': rule.comparisonOperands,
-                              }),
-                            ),
-                          }
-                        : undefined,
-                    }
-                  : undefined,
-                'risk-logic': riskLogic,
-                'risk-categories': riskCategories.map(({ title }) => title),
-                'risk-framework': riskFramework?.title,
-                'answer-options': answerOptions.map(({ value }) => ({ value })),
-                'allowed-mime-types': allowedMimeTypes,
-                'allow-select-other': allowSelectOther,
-                'sync-model': syncModel,
-                'sync-column': syncColumn,
-                'attribute-key': attributeKey?.name,
-                'require-risk-evaluation': requireRiskEvaluation,
-                'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
-              }),
+                                  displayLogicParsed.rule
+                                    .dependsOnQuestionReferenceId,
+                                'comparison-operator':
+                                  displayLogicParsed.rule.comparisonOperator,
+                                'comparison-operands':
+                                  displayLogicParsed.rule.comparisonOperands,
+                              }
+                            : undefined,
+                          'nested-rule': displayLogicParsed.nestedRule
+                            ? {
+                                'logic-operator':
+                                  displayLogicParsed.nestedRule.logicOperator,
+                                rules:
+                                  /* eslint-disable @typescript-eslint/no-explicit-any */
+                                  (
+                                    (
+                                      (displayLogicParsed as any)
+                                        .nestedRule as AssessmentNestedRule
+                                    ).rules || []
+                                  ).map((rule) => ({
+                                    'depends-on-question-reference-id':
+                                      rule.dependsOnQuestionReferenceId,
+                                    'comparison-operator':
+                                      rule.comparisonOperator,
+                                    'comparison-operands':
+                                      rule.comparisonOperands,
+                                  })),
+                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                              }
+                            : undefined,
+                        }
+                      : undefined,
+                  'risk-logic': riskLogic,
+                  'risk-categories': riskCategories.map(({ title }) => title),
+                  'risk-framework': riskFramework?.title,
+                  'answer-options': answerOptions.map(({ value }) => ({
+                    value,
+                  })),
+                  'allowed-mime-types': allowedMimeTypes,
+                  'allow-select-other': allowSelectOther,
+                  'sync-model': syncModel || undefined,
+                  'sync-column': syncColumn || undefined,
+                  'attribute-key': attributeKey?.name,
+                  'require-risk-evaluation': requireRiskEvaluation,
+                  'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+                };
+              },
             ),
           }),
         ),
         status,
         source,
-        creator: creator.email,
+        creator: creator?.email,
         locked: isLocked,
         archived: isArchived,
-        'created-at': createdAt,
-        'retention-schedule': {
-          type: retentionSchedule.type,
-          'duration-days': retentionSchedule.durationDays,
-          operand: retentionSchedule.operation,
-        },
+        'created-at': createdAt || undefined,
+        'retention-schedule': retentionSchedule
+          ? {
+              type: retentionSchedule.type,
+              'duration-days': retentionSchedule.durationDays,
+              operand: retentionSchedule.operation,
+            }
+          : undefined,
       }),
     );
   }
