@@ -41204,6 +41204,914 @@
           }
         ]
       }
+    },
+    "assessment-templates": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["title"],
+            "properties": {
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sections": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": ["title", "questions"],
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "questions": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "type": "object",
+                                "required": ["title", "type"],
+                                "properties": {
+                                  "title": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "LONG_ANSWER_TEXT",
+                                      "SHORT_ANSWER_TEXT",
+                                      "SINGLE_SELECT",
+                                      "MULTI_SELECT",
+                                      "FILE",
+                                      "DESCRIPTION"
+                                    ]
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "sub-type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "NONE",
+                                      "CUSTOM",
+                                      "USER",
+                                      "TEAM",
+                                      "DATA_SUB_CATEGORY",
+                                      "PROCESSING_PURPOSE_SUB_CATEGORY",
+                                      "VENDOR",
+                                      "REGION",
+                                      "BUSINESS_ENTITY",
+                                      "SAA_S_CATEGORY",
+                                      "DATA_PROCESSING_AGREEMENT_STATUS",
+                                      "DEPRECATION_STATE",
+                                      "IDENTIFIER",
+                                      "DATA_SILO",
+                                      "RECOMMENDED_FOR_CONSENT",
+                                      "RECOMMENDED_FOR_PRIVACY",
+                                      "SUBJECT",
+                                      "RETENTION_TYPE",
+                                      "CONTROLLERSHIP",
+                                      "HAS_PERSONAL_DATA",
+                                      "ATTRIBUTE_KEY"
+                                    ]
+                                  },
+                                  "placeholder": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  },
+                                  "is-required": {
+                                    "type": "boolean"
+                                  },
+                                  "reference-id": {
+                                    "type": "string"
+                                  },
+                                  "display-logic": {
+                                    "allOf": [
+                                      {
+                                        "type": "object",
+                                        "required": ["action"],
+                                        "properties": {
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["SHOW", "SKIP"]
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "rule": {
+                                            "allOf": [
+                                              {
+                                                "type": "object",
+                                                "required": [
+                                                  "depends-on-question-reference-id",
+                                                  "comparison-operator"
+                                                ],
+                                                "properties": {
+                                                  "depends-on-question-reference-id": {
+                                                    "type": "string"
+                                                  },
+                                                  "comparison-operator": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "IS_EQUAL_TO",
+                                                      "IS_NOT_EQUAL_TO",
+                                                      "IS_ONE_OF",
+                                                      "IS_NOT_ONE_OF",
+                                                      "CONTAINS",
+                                                      "IS_SHOWN",
+                                                      "IS_NOT_SHOWN"
+                                                    ]
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "comparison-operands": {
+                                                    "type": "array",
+                                                    "items": {
+                                                      "type": "string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          "nested-rule": {}
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "risk-logic": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "risk-categories": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "risk-framework": {
+                                    "type": "string"
+                                  },
+                                  "answer-options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": ["value"],
+                                      "properties": {
+                                        "value": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "allowed-mime-types": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "allow-select-other": {
+                                    "type": "boolean"
+                                  },
+                                  "sync-model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "dataSilo",
+                                      "subDataPoint",
+                                      "vendor",
+                                      "dataSubCategory",
+                                      "processingPurposeSubCategory",
+                                      "businessEntity"
+                                    ]
+                                  },
+                                  "sync-column": {
+                                    "type": "string",
+                                    "enum": [
+                                      "TITLE",
+                                      "SLUG",
+                                      "DESCRIPTION",
+                                      "HEADQUARTER_COUNTRY",
+                                      "CONNECTION_STATE",
+                                      "CONNECT_START_TIME",
+                                      "CONTACT_EMAIL",
+                                      "CONTACT_NAME",
+                                      "COUNTRY",
+                                      "COUNTRY_SUB_DIVISION",
+                                      "CREDENTIALS_REFRESH_SCHEDULED_AT",
+                                      "DATA_PROCESSING_AGREEMENT_LINK",
+                                      "DATA_PROCESSING_AGREEMENT_STATUS",
+                                      "DATA_RETENTION_NOTE",
+                                      "DEFAULT_ACCESS_REQUEST_VISIBILITY",
+                                      "DELETED_AT",
+                                      "DEPRECATION_STATE",
+                                      "EMAIL_SENDING_LOCK",
+                                      "EXPIRED_AT",
+                                      "EXTERNAL_ID",
+                                      "HAS_PERSONAL_DATA",
+                                      "HEADERS",
+                                      "IS_LIVE",
+                                      "LAST_CONNECTED_AT",
+                                      "LAST_ENABLED_AT",
+                                      "LAST_LOOKUP_PROCESS_CREATION_TIME",
+                                      "MANUAL_WORK_RETRY_FREQUENCY",
+                                      "MANUAL_WORK_RETRY_START_AT",
+                                      "NOTES",
+                                      "NOTIFY_EMAIL_ADDRESS",
+                                      "NOTIFY_WEBHOOK_URL",
+                                      "OUTER_TYPE",
+                                      "PLAINTEXT_CONTEXT",
+                                      "PROMPT_A_VENDOR_EMAIL_COMPLETION_LINK_TYPE",
+                                      "PROMPT_A_VENDOR_EMAIL_INCLUDE_IDENTIFIERS_ATTACHMENT",
+                                      "PROMPT_A_VENDOR_EMAIL_SCHEDULED_AT",
+                                      "PROMPT_A_VENDOR_EMAIL_SEND_FREQUENCY",
+                                      "PROMPT_A_VENDOR_EMAIL_SEND_TYPE",
+                                      "PROMPT_A_VENDOR_EMAIL_START_AT",
+                                      "RECOMMENDED_FOR_CONSENT",
+                                      "RECOMMENDED_FOR_PRIVACY",
+                                      "RECONNECT_FORM_ITEMS",
+                                      "SAAS_CONTEXT",
+                                      "SECRET_HEADERS",
+                                      "SUBDOMAIN",
+                                      "TYPE",
+                                      "URL",
+                                      "WEBSITE_URL",
+                                      "TRANSFER_REGIONS",
+                                      "CONTROLLERSHIPS",
+                                      "NAME",
+                                      "DATA_POINT_ID",
+                                      "ENCRYPTED_SAMPLES_S3_KEY",
+                                      "ACCESS_REQUESTED_VISIBILITY_ENABLED",
+                                      "ENSURE_REQUEST_REDACTION_ENABLED",
+                                      "LAST_CLASSIFIED_AT",
+                                      "LAST_RUN_AT",
+                                      "ERROR",
+                                      "ERROR_COUNT",
+                                      "CONTEXT",
+                                      "CONTENT_CLASSIFICATION_STATUS",
+                                      "NON_NULL_CHECK_COMPLETED",
+                                      "CONTROLLERSHIP",
+                                      "RETENTION_TYPE",
+                                      "RETENTION_PERIOD",
+                                      "SCAN_RUN_ID",
+                                      "CONTACT_PHONE",
+                                      "ADDRESS",
+                                      "HEADQUARTER_SUB_DIVISION",
+                                      "PRIVACY_POLICY_URL",
+                                      "CATEGORY",
+                                      "IS_DEFAULT",
+                                      "REGEX",
+                                      "PURPOSE",
+                                      "DATA_PROTECTION_OFFICER_EMAIL",
+                                      "DATA_PROTECTION_OFFICER_NAME",
+                                      "DATA_TYPE",
+                                      "ENCRYPTION",
+                                      "IS_PRIMARY_KEY"
+                                    ]
+                                  },
+                                  "attribute-key": {
+                                    "type": "string"
+                                  },
+                                  "require-risk-evaluation": {
+                                    "type": "boolean"
+                                  },
+                                  "require-risk-matrix-evaluation": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "assignees": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "external-assignees": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "is-reviewed": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["DRAFT", "PUBLISHED"]
+              },
+              "source": {
+                "type": "string",
+                "enum": ["MANUAL", "DATA_INVENTORY", "IMPORT"]
+              },
+              "creator": {
+                "type": "string"
+              },
+              "locked": {
+                "type": "boolean"
+              },
+              "parent-id": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "created-at": {
+                "type": "string"
+              },
+              "attribute-keys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "retention-schedule": {
+                "type": "object",
+                "required": ["type", "duration-days", "operand"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "REQUESTS_CREATED_AT",
+                      "ASSESSMENT_FORM_COMPLETED_AT"
+                    ]
+                  },
+                  "duration-days": {
+                    "type": "number"
+                  },
+                  "operand": {
+                    "type": "string",
+                    "enum": ["FULL_DELETE", "PARTIAL_DELETE", "NONE"]
+                  }
+                }
+              },
+              "templates": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "assessments": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["title", "group"],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "group": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sections": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": ["title", "questions"],
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "questions": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "type": "object",
+                                "required": ["title", "type"],
+                                "properties": {
+                                  "title": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "LONG_ANSWER_TEXT",
+                                      "SHORT_ANSWER_TEXT",
+                                      "SINGLE_SELECT",
+                                      "MULTI_SELECT",
+                                      "FILE",
+                                      "DESCRIPTION"
+                                    ]
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "sub-type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "NONE",
+                                      "CUSTOM",
+                                      "USER",
+                                      "TEAM",
+                                      "DATA_SUB_CATEGORY",
+                                      "PROCESSING_PURPOSE_SUB_CATEGORY",
+                                      "VENDOR",
+                                      "REGION",
+                                      "BUSINESS_ENTITY",
+                                      "SAA_S_CATEGORY",
+                                      "DATA_PROCESSING_AGREEMENT_STATUS",
+                                      "DEPRECATION_STATE",
+                                      "IDENTIFIER",
+                                      "DATA_SILO",
+                                      "RECOMMENDED_FOR_CONSENT",
+                                      "RECOMMENDED_FOR_PRIVACY",
+                                      "SUBJECT",
+                                      "RETENTION_TYPE",
+                                      "CONTROLLERSHIP",
+                                      "HAS_PERSONAL_DATA",
+                                      "ATTRIBUTE_KEY"
+                                    ]
+                                  },
+                                  "placeholder": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  },
+                                  "is-required": {
+                                    "type": "boolean"
+                                  },
+                                  "reference-id": {
+                                    "type": "string"
+                                  },
+                                  "display-logic": {
+                                    "allOf": [
+                                      {
+                                        "type": "object",
+                                        "required": ["action"],
+                                        "properties": {
+                                          "action": {
+                                            "type": "string",
+                                            "enum": ["SHOW", "SKIP"]
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "rule": {
+                                            "allOf": [
+                                              {
+                                                "type": "object",
+                                                "required": [
+                                                  "depends-on-question-reference-id",
+                                                  "comparison-operator"
+                                                ],
+                                                "properties": {
+                                                  "depends-on-question-reference-id": {
+                                                    "type": "string"
+                                                  },
+                                                  "comparison-operator": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "IS_EQUAL_TO",
+                                                      "IS_NOT_EQUAL_TO",
+                                                      "IS_ONE_OF",
+                                                      "IS_NOT_ONE_OF",
+                                                      "CONTAINS",
+                                                      "IS_SHOWN",
+                                                      "IS_NOT_SHOWN"
+                                                    ]
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "comparison-operands": {
+                                                    "type": "array",
+                                                    "items": {
+                                                      "type": "string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          "nested-rule": {}
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "risk-logic": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "risk-categories": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "risk-framework": {
+                                    "type": "string"
+                                  },
+                                  "answer-options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": ["value"],
+                                      "properties": {
+                                        "value": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "allowed-mime-types": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "allow-select-other": {
+                                    "type": "boolean"
+                                  },
+                                  "sync-model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "dataSilo",
+                                      "subDataPoint",
+                                      "vendor",
+                                      "dataSubCategory",
+                                      "processingPurposeSubCategory",
+                                      "businessEntity"
+                                    ]
+                                  },
+                                  "sync-column": {
+                                    "type": "string",
+                                    "enum": [
+                                      "TITLE",
+                                      "SLUG",
+                                      "DESCRIPTION",
+                                      "HEADQUARTER_COUNTRY",
+                                      "CONNECTION_STATE",
+                                      "CONNECT_START_TIME",
+                                      "CONTACT_EMAIL",
+                                      "CONTACT_NAME",
+                                      "COUNTRY",
+                                      "COUNTRY_SUB_DIVISION",
+                                      "CREDENTIALS_REFRESH_SCHEDULED_AT",
+                                      "DATA_PROCESSING_AGREEMENT_LINK",
+                                      "DATA_PROCESSING_AGREEMENT_STATUS",
+                                      "DATA_RETENTION_NOTE",
+                                      "DEFAULT_ACCESS_REQUEST_VISIBILITY",
+                                      "DELETED_AT",
+                                      "DEPRECATION_STATE",
+                                      "EMAIL_SENDING_LOCK",
+                                      "EXPIRED_AT",
+                                      "EXTERNAL_ID",
+                                      "HAS_PERSONAL_DATA",
+                                      "HEADERS",
+                                      "IS_LIVE",
+                                      "LAST_CONNECTED_AT",
+                                      "LAST_ENABLED_AT",
+                                      "LAST_LOOKUP_PROCESS_CREATION_TIME",
+                                      "MANUAL_WORK_RETRY_FREQUENCY",
+                                      "MANUAL_WORK_RETRY_START_AT",
+                                      "NOTES",
+                                      "NOTIFY_EMAIL_ADDRESS",
+                                      "NOTIFY_WEBHOOK_URL",
+                                      "OUTER_TYPE",
+                                      "PLAINTEXT_CONTEXT",
+                                      "PROMPT_A_VENDOR_EMAIL_COMPLETION_LINK_TYPE",
+                                      "PROMPT_A_VENDOR_EMAIL_INCLUDE_IDENTIFIERS_ATTACHMENT",
+                                      "PROMPT_A_VENDOR_EMAIL_SCHEDULED_AT",
+                                      "PROMPT_A_VENDOR_EMAIL_SEND_FREQUENCY",
+                                      "PROMPT_A_VENDOR_EMAIL_SEND_TYPE",
+                                      "PROMPT_A_VENDOR_EMAIL_START_AT",
+                                      "RECOMMENDED_FOR_CONSENT",
+                                      "RECOMMENDED_FOR_PRIVACY",
+                                      "RECONNECT_FORM_ITEMS",
+                                      "SAAS_CONTEXT",
+                                      "SECRET_HEADERS",
+                                      "SUBDOMAIN",
+                                      "TYPE",
+                                      "URL",
+                                      "WEBSITE_URL",
+                                      "TRANSFER_REGIONS",
+                                      "CONTROLLERSHIPS",
+                                      "NAME",
+                                      "DATA_POINT_ID",
+                                      "ENCRYPTED_SAMPLES_S3_KEY",
+                                      "ACCESS_REQUESTED_VISIBILITY_ENABLED",
+                                      "ENSURE_REQUEST_REDACTION_ENABLED",
+                                      "LAST_CLASSIFIED_AT",
+                                      "LAST_RUN_AT",
+                                      "ERROR",
+                                      "ERROR_COUNT",
+                                      "CONTEXT",
+                                      "CONTENT_CLASSIFICATION_STATUS",
+                                      "NON_NULL_CHECK_COMPLETED",
+                                      "CONTROLLERSHIP",
+                                      "RETENTION_TYPE",
+                                      "RETENTION_PERIOD",
+                                      "SCAN_RUN_ID",
+                                      "CONTACT_PHONE",
+                                      "ADDRESS",
+                                      "HEADQUARTER_SUB_DIVISION",
+                                      "PRIVACY_POLICY_URL",
+                                      "CATEGORY",
+                                      "IS_DEFAULT",
+                                      "REGEX",
+                                      "PURPOSE",
+                                      "DATA_PROTECTION_OFFICER_EMAIL",
+                                      "DATA_PROTECTION_OFFICER_NAME",
+                                      "DATA_TYPE",
+                                      "ENCRYPTION",
+                                      "IS_PRIMARY_KEY"
+                                    ]
+                                  },
+                                  "attribute-key": {
+                                    "type": "string"
+                                  },
+                                  "require-risk-evaluation": {
+                                    "type": "boolean"
+                                  },
+                                  "require-risk-matrix-evaluation": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "assignees": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "external-assignees": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "is-reviewed": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "creator": {
+                "type": "string"
+              },
+              "assessment-template": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "SHARED",
+                  "IN_PROGRESS",
+                  "IN_REVIEW",
+                  "CHANGES_REQUESTED",
+                  "REJECTED",
+                  "APPROVED"
+                ]
+              },
+              "assignees": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "external-assignees": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "reviewers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "locked": {
+                "type": "boolean"
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "external": {
+                "type": "boolean"
+              },
+              "title-is-internal": {
+                "type": "boolean"
+              },
+              "due-date": {
+                "type": "string"
+              },
+              "created-at": {
+                "type": "string"
+              },
+              "assigned-at": {
+                "type": "string"
+              },
+              "submitted-at": {
+                "type": "string"
+              },
+              "approved-at": {
+                "type": "string"
+              },
+              "rejected-at": {
+                "type": "string"
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["title", "type"],
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "actionItem",
+                        "airgapCookie",
+                        "airgapDataFlow",
+                        "assessmentForm",
+                        "assessmentGroup",
+                        "auditorRun",
+                        "auditorSchedule",
+                        "businessEntity",
+                        "dataSubCategory",
+                        "dataPoint",
+                        "dataPointLevel",
+                        "dataSilo",
+                        "enricher",
+                        "identifier",
+                        "legalHold",
+                        "legalMatter",
+                        "processingPurposeSubCategory",
+                        "prompt",
+                        "promptGroup",
+                        "promptRun",
+                        "request",
+                        "subject",
+                        "subDataPoint",
+                        "vendor"
+                      ]
+                    }
+                  }
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["title", "type"],
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "actionItem",
+                        "airgapCookie",
+                        "airgapDataFlow",
+                        "assessmentForm",
+                        "assessmentGroup",
+                        "auditorRun",
+                        "auditorSchedule",
+                        "businessEntity",
+                        "dataSubCategory",
+                        "dataPoint",
+                        "dataPointLevel",
+                        "dataSilo",
+                        "enricher",
+                        "identifier",
+                        "legalHold",
+                        "legalMatter",
+                        "processingPurposeSubCategory",
+                        "prompt",
+                        "promptGroup",
+                        "promptRun",
+                        "request",
+                        "subject",
+                        "subDataPoint",
+                        "vendor"
+                      ]
+                    }
+                  }
+                }
+              },
+              "retention-schedule": {
+                "type": "object",
+                "required": ["type", "duration-days", "operand"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "REQUESTS_CREATED_AT",
+                      "ASSESSMENT_FORM_COMPLETED_AT"
+                    ]
+                  },
+                  "duration-days": {
+                    "type": "number"
+                  },
+                  "operand": {
+                    "type": "string",
+                    "enum": ["FULL_DELETE", "PARTIAL_DELETE", "NONE"]
+                  }
+                }
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["key", "values"],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   }
 }
