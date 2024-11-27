@@ -31,6 +31,7 @@ import {
   AssessmentTemplateInput,
   AssessmentSectionInput,
   AssessmentSectionQuestionInput,
+  RiskLogicInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -87,6 +88,7 @@ import {
   AssessmentNestedRule,
   parseAssessmentDisplayLogic,
 } from './parseAssessmentDisplayLogic';
+import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -541,7 +543,14 @@ export async function pullTranscendConfiguration(
                             : undefined,
                         }
                       : undefined,
-                  'risk-logic': riskLogic,
+                  'risk-logic': riskLogic.map((logic): RiskLogicInput => {
+                    const parsed = parseAssessmentRiskLogic(logic);
+                    return {
+                      'risk-level': parsed.riskAssignment?.riskLevelId,
+                      'comparison-operands': parsed.comparisonOperands,
+                      'comparison-operator': parsed.comparisonOperator,
+                    };
+                  }),
                   'risk-categories': riskCategories.map(({ title }) => title),
                   'risk-framework': riskFramework?.title,
                   'answer-options': answerOptions.map(({ value }) => ({
@@ -709,7 +718,14 @@ export async function pullTranscendConfiguration(
                             : undefined,
                         }
                       : undefined,
-                  'risk-logic': riskLogic,
+                  'risk-logic': riskLogic.map((logic): RiskLogicInput => {
+                    const parsed = parseAssessmentRiskLogic(logic);
+                    return {
+                      'risk-level': parsed.riskAssignment?.riskLevelId,
+                      'comparison-operands': parsed.comparisonOperands,
+                      'comparison-operator': parsed.comparisonOperator,
+                    };
+                  }),
                   'risk-categories': riskCategories.map(({ title }) => title),
                   'risk-framework': riskFramework?.title,
                   'answer-options': answerOptions.map(({ value }) => ({

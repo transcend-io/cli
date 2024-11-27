@@ -41359,7 +41359,43 @@
                                   "risk-logic": {
                                     "type": "array",
                                     "items": {
-                                      "type": "string"
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "required": [
+                                            "comparison-operands",
+                                            "comparison-operator"
+                                          ],
+                                          "properties": {
+                                            "comparison-operands": {
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "comparison-operator": {
+                                              "type": "string",
+                                              "enum": [
+                                                "IS_EQUAL_TO",
+                                                "IS_NOT_EQUAL_TO",
+                                                "IS_ONE_OF",
+                                                "IS_NOT_ONE_OF",
+                                                "CONTAINS",
+                                                "IS_SHOWN",
+                                                "IS_NOT_SHOWN"
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "risk-level": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   "risk-categories": {
@@ -41749,7 +41785,43 @@
                                   "risk-logic": {
                                     "type": "array",
                                     "items": {
-                                      "type": "string"
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "required": [
+                                            "comparison-operands",
+                                            "comparison-operator"
+                                          ],
+                                          "properties": {
+                                            "comparison-operands": {
+                                              "type": "array",
+                                              "items": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "comparison-operator": {
+                                              "type": "string",
+                                              "enum": [
+                                                "IS_EQUAL_TO",
+                                                "IS_NOT_EQUAL_TO",
+                                                "IS_ONE_OF",
+                                                "IS_NOT_ONE_OF",
+                                                "CONTAINS",
+                                                "IS_SHOWN",
+                                                "IS_NOT_SHOWN"
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "risk-level": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   "risk-categories": {

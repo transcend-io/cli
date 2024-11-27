@@ -39,6 +39,8 @@ export * from './syncActionItems';
 export * from './syncActionItemCollections';
 export * from './fetchAllCookies';
 export * from './fetchAllActionItems';
+export * from './parseAssessmentRiskLogic';
+export * from './parseAssessmentDisplayLogic';
 export * from './fetchConsentManagerId';
 export * from './createTranscendConsentGotInstance';
 export * from './fetchAllBusinessEntities';

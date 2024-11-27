@@ -1526,6 +1526,22 @@ export const RiskAssignmentInput = t.partial({
 /** Type override */
 export type RiskAssignmentInput = t.TypeOf<typeof RiskAssignmentInput>;
 
+export const RiskLogicInput = t.intersection([
+  t.type({
+    /** The values to compare */
+    'comparison-operands': t.array(t.string),
+    /** The operator */
+    'comparison-operator': valuesOf(ComparisonOperator),
+  }),
+  t.partial({
+    /** The risk level to assign to the question */
+    'risk-level': t.string,
+  }),
+]);
+
+/** Type override */
+export type RiskLogicInput = t.TypeOf<typeof RiskLogicInput>;
+
 export const AssessmentAnswerOptionInput = t.type({
   /** Value of answer */
   value: t.string,
@@ -1557,7 +1573,7 @@ export const AssessmentSectionQuestionInput = t.intersection([
     /** Display logic for the question */
     'display-logic': AssessmentDisplayLogicInput,
     /** Risk logic for the question */
-    'risk-logic': t.array(t.string), // FIXME
+    'risk-logic': t.array(RiskLogicInput),
     /** Risk category titles for the question */
     'risk-categories': t.array(t.string),
     /** Risk framework titles for the question */
