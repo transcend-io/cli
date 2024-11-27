@@ -1,1 +1,119 @@
-// FIXME
+assessments:
+  - title: 12 Return by Ben - PIA
+    group: 12 Return by Ben - PIA
+    sections:
+      - title: Data Inventory Fields
+        status: IN_REVIEW
+        questions:
+          - title: Teams
+            type: MULTI_SELECT
+            sub-type: TEAM
+            placeholder: ''
+            description: 'Teams responsible for overseeing the data silo '
+            is-required: true
+            reference-id: 382d4b8c-fe8d-4fef-9275-e90254a45009
+            risk-logic: []
+            risk-categories: []
+            answer-options:
+              - value: c3c3a232-f503-4975-869d-c73b3a270a6a
+            allowed-mime-types: []
+            allow-select-other: false
+            sync-model: dataSilo
+            require-risk-evaluation: false
+            require-risk-matrix-evaluation: false
+          - title: Description
+            type: LONG_ANSWER_TEXT
+            sub-type: NONE
+            placeholder: ''
+            description: A description of the data silo
+            is-required: true
+            reference-id: 011f9abf-87ee-445f-b0f0-5dba84d007bc
+            risk-logic: []
+            risk-categories: []
+            answer-options:
+              - value: erte4
+            allowed-mime-types: []
+            allow-select-other: false
+            sync-model: dataSilo
+            sync-column: DESCRIPTION
+            require-risk-evaluation: false
+            require-risk-matrix-evaluation: false
+        assignees: []
+        external-assignees: []
+        is-reviewed: false
+    description: ''
+    status: IN_REVIEW
+    assignees: []
+    external-assignees:
+      - sdelhaji@gmail.com
+    reviewers:
+      - safaa@transcend.io
+    locked: false
+    archived: false
+    external: true
+    title-is-internal: true
+    created-at: '2024-11-25T20:16:34.312Z'
+    assigned-at: '2024-11-25T20:16:34.364Z'
+    submitted-at: '2024-11-25T20:17:03.301Z'
+    resources: []
+    rows: []
+
+assessment-templates:
+  - title: 12 Return by Ben - PIA
+    description: ''
+    sections:
+      - title: Data Inventory Fields
+        questions:
+          - title: Teams
+            type: MULTI_SELECT
+            sub-type: TEAM
+            placeholder: ''
+            description: 'Teams responsible for overseeing the data silo '
+            is-required: true
+            reference-id: 382d4b8c-fe8d-4fef-9275-e90254a45009
+            risk-logic: []
+            risk-categories: []
+            answer-options: []
+            allowed-mime-types: []
+            allow-select-other: false
+            sync-model: dataSilo
+            require-risk-evaluation: false
+            require-risk-matrix-evaluation: false
+          - title: Description
+            type: LONG_ANSWER_TEXT
+            sub-type: NONE
+            placeholder: ''
+            description: A description of the data silo
+            is-required: true
+            reference-id: 011f9abf-87ee-445f-b0f0-5dba84d007bc
+            risk-logic: []
+            risk-categories: []
+            answer-options: []
+            allowed-mime-types: []
+            allow-select-other: false
+            sync-model: dataSilo
+            sync-column: DESCRIPTION
+            require-risk-evaluation: false
+            require-risk-matrix-evaluation: false
+          - title: DSR Status
+            type: SINGLE_SELECT
+            sub-type: RECOMMENDED_FOR_PRIVACY
+            placeholder: ''
+            description: Whether the data silo is recommended for DSR Automation purposes
+            is-required: true
+            reference-id: adcd7a94-dd19-4c6b-b93c-13ab9304798e
+            risk-logic: []
+            risk-categories: []
+            answer-options: []
+            allowed-mime-types: []
+            allow-select-other: false
+            sync-model: dataSilo
+            sync-column: RECOMMENDED_FOR_PRIVACY
+            require-risk-evaluation: false
+            require-risk-matrix-evaluation: false
+    status: PUBLISHED
+    source: DATA_INVENTORY
+    creator: safaa@transcend.io
+    locked: false
+    archived: false
+    created-at: '2024-11-25T20:14:34.490Z'
