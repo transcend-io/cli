@@ -19,20 +19,25 @@ import * as packageJson from '../package.json';
 import { TranscendInput } from '../src/codecs';
 
 const majorVersion = packageJson.version.split('.')[0];
-const schemaDefaults = {
-  $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: `https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v${majorVersion}.json`,
-  title: 'transcend.yml',
-  description:
-    'Define personal data schema and Transcend config as code with the Transcend CLI.',
-};
 
-// Build the JSON schema from io-ts codec
-const jsonSchema = { ...schemaDefaults, ...toJsonSchema(TranscendInput) };
+for (const key of [`v${majorVersion}`, 'latest']) {
+  const fileName = `transcend-yml-schema-${key}.json`;
 
-const schemaFilePath = join(
-  process.cwd(),
-  `transcend-yml-schema-v${majorVersion}.json`,
-);
+  const schemaDefaults = {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    $id: `https://raw.githubusercontent.com/transcend-io/cli/main/${fileName}`,
+    title: 'transcend.yml',
+    description:
+      'Define personal data schema and Transcend config as code with the Transcend CLI.',
+  };
 
-writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, null, 2)}\n`);
+  // Build the JSON schema from io-ts codec
+  const jsonSchema = { ...schemaDefaults, ...toJsonSchema(TranscendInput) };
+
+  const schemaFilePath = join(
+    process.cwd(),
+    fileName,
+  );
+
+  writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, null, 2)}\n`);
+}
