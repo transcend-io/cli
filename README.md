@@ -394,6 +394,8 @@ The API key permissions for this command vary based on the value to the `resourc
 | privacyCenters        | The privacy center configurations.                                                                                                   | View Privacy Center                              | false      | [Privacy Center](https://app.transcend.io/privacy-center/general-settings)                                                                                                                                                    |
 | policies              | The privacy center policies.                                                                                                         | View Policies                                    | false      | [Privacy Center -> Policies](https://app.transcend.io/privacy-center/policies)                                                                                                                                                |
 | messages              | Message definitions used across consent, privacy center, email templates and more.                                                   | View Internationalization Messages               | false      | [Privacy Center -> Messages](https://app.transcend.io/privacy-center/messages-internationalization), [Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages) |
+| assessments           | Assessment responses.                                                                                                                | View Assessments                                 | false      | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                     |
+| assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                 | false      | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
 
 _Note: The scopes for tr-push are comprehensive of the scopes for tr-pull_
 
@@ -522,6 +524,12 @@ Pull in prompts, prompt templates, prompt partials and prompt groups (see [this 
 
 ```sh
 tr-pull --auth=$TRANSCEND_API_KEY --resources=prompts,promptPartials,promptGroups
+```
+
+Pull in assessments and assessment templates.
+
+```sh
+tr-pull --auth=$TRANSCEND_API_KEY --resources=assessments,assessmentTemplates
 ```
 
 Pull everything:

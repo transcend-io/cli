@@ -8,11 +8,20 @@ import {
   EnricherType,
   ProcessingPurpose,
   RequestAction,
+  ComparisonOperator,
   RequestActionObjectResolver,
+  AssessmentSyncColumn,
+  RetentionScheduleType,
+  AssessmentQuestionType,
   UspapiOption,
   DataFlowScope,
   PromptAVendorEmailSendType,
+  RetentionScheduleOperation,
+  AssessmentsDisplayLogicAction,
+  LogicOperator,
   ConsentPrecedenceOption,
+  AssessmentSyncModel,
+  AssessmentQuestionSubType,
   IsoCountryCode,
   BrowserTimeZone,
   IsoCountrySubdivisionCode,
@@ -38,6 +47,9 @@ import {
   PrivacyCenterComponentStyles,
   PrivacyCenterTextStyles,
   ConfigurableColorPaletteColor,
+  AssessmentFormTemplateStatus,
+  AssessmentFormStatus,
+  AssessmentFormTemplateSource,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -1442,6 +1454,294 @@ export const ActionItemInput = t.intersection([
 /** Type override */
 export type ActionItemInput = t.TypeOf<typeof ActionItemInput>;
 
+export const AssessmentRuleInput = t.intersection([
+  t.type({
+    /** The reference id of the question whose answer is compared by this rule */
+    'depends-on-question-reference-id': t.string,
+    /** The operator to use when comparing the question answer to the operands */
+    'comparison-operator': valuesOf(ComparisonOperator),
+  }),
+  t.partial({
+    /** The values to compare the question answer to */
+    'comparison-operands': t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type AssessmentRuleInput = t.TypeOf<typeof AssessmentRuleInput>;
+
+export interface AssessmentNestedRuleInput {
+  /** The operator to use when comparing the nested rules */
+  'logic-operator': LogicOperator;
+  /** The rules to evaluate and be compared with to other using the LogicOperator */
+  rules?: AssessmentRuleInput[];
+  /** The nested rules to add one more level of nesting to the rules. They are also compared to each other. */
+  'nested-rules'?: AssessmentNestedRuleInput[];
+}
+
+export const AssessmentNestedRuleInput: t.RecursiveType<
+  t.Type<AssessmentNestedRuleInput>
+> = t.recursion('AssessmentNestedRuleInput', (self) =>
+  t.intersection([
+    t.type({
+      /** The operator to use when comparing the nested rules */
+      'logic-operator': valuesOf(LogicOperator),
+    }),
+    t.partial({
+      /** The rules to evaluate and be compared with to other using the LogicOperator */
+      rules: t.array(AssessmentRuleInput),
+      /** The nested rules to add one more level of nesting to the rules. They are also compared to each other. */
+      'nested-rules': t.array(self),
+    }),
+  ]),
+);
+
+export const AssessmentDisplayLogicInput = t.intersection([
+  t.type({
+    /** The display logic type */
+    action: valuesOf(AssessmentsDisplayLogicAction),
+  }),
+  t.partial({
+    /** The rule to evaluate */
+    rule: AssessmentRuleInput,
+    /** The nested rule to evaluate */
+    'nested-rule': AssessmentNestedRuleInput,
+  }),
+]);
+
+/** Type override */
+export type AssessmentDisplayLogicInput = t.TypeOf<
+  typeof AssessmentDisplayLogicInput
+>;
+
+export const RiskAssignmentInput = t.partial({
+  /** The risk level to assign to the question */
+  'risk-level': t.string,
+  /** The risk matrix column to assign to a question. */
+  'risk-matrix-column': t.string,
+  /** The risk matrix row to assign to a question. */
+  'risk-matrix-row': t.string,
+});
+
+/** Type override */
+export type RiskAssignmentInput = t.TypeOf<typeof RiskAssignmentInput>;
+
+export const RiskLogicInput = t.intersection([
+  t.type({
+    /** The values to compare */
+    'comparison-operands': t.array(t.string),
+    /** The operator */
+    'comparison-operator': valuesOf(ComparisonOperator),
+  }),
+  t.partial({
+    /** The risk level to assign to the question */
+    'risk-level': t.string,
+  }),
+]);
+
+/** Type override */
+export type RiskLogicInput = t.TypeOf<typeof RiskLogicInput>;
+
+export const AssessmentAnswerOptionInput = t.type({
+  /** Value of answer */
+  value: t.string,
+});
+
+/** Type override */
+export type AssessmentAnswerOptionInput = t.TypeOf<
+  typeof AssessmentAnswerOptionInput
+>;
+
+export const AssessmentSectionQuestionInput = t.intersection([
+  t.type({
+    /** The title of the assessment section question */
+    title: t.string,
+    /** The question type */
+    type: valuesOf(AssessmentQuestionType),
+  }),
+  t.partial({
+    /** The sub-type of the assessment question */
+    'sub-type': valuesOf(AssessmentQuestionSubType),
+    /** The question placeholder */
+    placeholder: t.string,
+    /** The question description */
+    description: t.string,
+    /** Whether an answer is required */
+    'is-required': t.boolean,
+    /** Used to identify the question within a form or template so it can be referenced in conditional logic. */
+    'reference-id': t.string,
+    /** Display logic for the question */
+    'display-logic': AssessmentDisplayLogicInput,
+    /** Risk logic for the question */
+    'risk-logic': t.array(RiskLogicInput),
+    /** Risk category titles for the question */
+    'risk-categories': t.array(t.string),
+    /** Risk framework titles for the question */
+    'risk-framework': t.string,
+    /** Answer options for the question */
+    'answer-options': t.array(AssessmentAnswerOptionInput),
+    /** Allowed MIME types for the question */
+    'allowed-mime-types': t.array(t.string),
+    /** Allow selecting other options */
+    'allow-select-other': t.boolean,
+    /** Sync model for the question */
+    'sync-model': valuesOf(AssessmentSyncModel),
+    /** Sync column for the question */
+    'sync-column': valuesOf(AssessmentSyncColumn),
+    /** Attribute key / custom field name for the question */
+    'attribute-key': t.string,
+    /** Require risk evaluation for the question */
+    'require-risk-evaluation': t.boolean,
+    /** Require risk matrix evaluation for the question */
+    'require-risk-matrix-evaluation': t.boolean,
+  }),
+]);
+
+/** Type override */
+export type AssessmentSectionQuestionInput = t.TypeOf<
+  typeof AssessmentSectionQuestionInput
+>;
+
+export const AssessmentSectionInput = t.intersection([
+  t.type({
+    /** The title of the assessment section */
+    title: t.string,
+    /** The questions in the assessment section */
+    questions: t.array(AssessmentSectionQuestionInput),
+  }),
+  t.partial({
+    /** Email address of those assigned */
+    assignees: t.array(t.string),
+    /** Email address of those externally assigned */
+    'external-assignees': t.array(t.string),
+    /** Status of section */
+    status: t.string,
+    /** Whether assessment is reviewed */
+    'is-reviewed': t.boolean,
+  }),
+]);
+
+/** Type override */
+export type AssessmentSectionInput = t.TypeOf<typeof AssessmentSectionInput>;
+
+export const AssessmentRetentionScheduleInput = t.type({
+  /** The retention schedule type */
+  type: valuesOf(RetentionScheduleType),
+  /** The duration of the retention schedule in days */
+  'duration-days': t.number,
+  /** The operation to perform on the retention schedule */
+  operand: valuesOf(RetentionScheduleOperation),
+});
+
+/** Type override */
+export type AssessmentRetentionScheduleInput = t.TypeOf<
+  typeof AssessmentRetentionScheduleInput
+>;
+
+export const AssessmentTemplateInput = t.intersection([
+  t.type({
+    /** The title of the assessment template */
+    title: t.string,
+  }),
+  t.partial({
+    /** The Assessment sections under this assessment template */
+    sections: t.array(AssessmentSectionInput),
+    /** Description of assessment template */
+    description: t.string,
+    /** The status of the assessment */
+    status: valuesOf(AssessmentFormTemplateStatus),
+    /** The source of the assessment */
+    source: valuesOf(AssessmentFormTemplateSource),
+    /** The email of the user that created the assessment */
+    creator: t.string,
+    /** Whether the template is in a locked status */
+    locked: t.boolean,
+    /** ID of parent template this was cloned from */
+    'parent-id': t.string,
+    /** Whether the template is archived */
+    archived: t.boolean,
+    /** The date that the assessment was created */
+    'created-at': t.string,
+    /** The names of the custom fields associated to this assessment template */
+    'attribute-keys': t.array(t.string),
+    /** The retention schedule configuration */
+    'retention-schedule': AssessmentRetentionScheduleInput,
+    /** The titles of the email templates used in the assessment template */
+    templates: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type AssessmentTemplateInput = t.TypeOf<typeof AssessmentTemplateInput>;
+
+export const AssessmentResourceInput = t.type({
+  /** The title of the resource */
+  title: t.string,
+  /** The type of the resource */
+  type: valuesOf(AttributeSupportedResourceType),
+});
+
+/** Type override */
+export type AssessmentResourceInput = t.TypeOf<typeof AssessmentResourceInput>;
+
+export const AssessmentInput = t.intersection([
+  t.type({
+    /** The title of the assessment */
+    title: t.string,
+    /** The title of the assessment group */
+    group: t.string,
+  }),
+  t.partial({
+    /** The assessment sections */
+    sections: t.array(AssessmentSectionInput),
+    /** The email of the user that created the assessment */
+    creator: t.string,
+    /** The description of the assessment */
+    description: t.string,
+    /** The status of the assessment */
+    status: valuesOf(AssessmentFormStatus),
+    /** The emails of the transcend users assigned to the assessment */
+    assignees: t.array(t.string),
+    /** The emails of the external emails assigned to the assessment */
+    'external-assignees': t.array(t.string),
+    /** The emails of the assessment reviewers */
+    reviewers: t.array(t.string),
+    /** Whether the assessment is in a locked status */
+    locked: t.boolean,
+    /** Whether the assessment is archived */
+    archived: t.boolean,
+    /** Whether the form is created by an external user */
+    external: t.boolean,
+    /**
+     * Whether the form title is an internal label only, and the group title should be used in communications with assignees
+     */
+    'title-is-internal': t.boolean,
+    /** The date that the assessment is due */
+    'due-date': t.string,
+    /** The date that the assessment was created */
+    'created-at': t.string,
+    /** The date that the assessment was assigned at */
+    'assigned-at': t.string,
+    /** The date that the assessment was submitted at */
+    'submitted-at': t.string,
+    /** The date that the assessment was approved at */
+    'approved-at': t.string,
+    /** The date that the assessment was rejected at */
+    'rejected-at': t.string,
+    /** The linked data inventory resources */
+    resources: t.array(AssessmentResourceInput),
+    /** The linked data inventory synced rows */
+    rows: t.array(AssessmentResourceInput),
+    /** The assessment retention schedule */
+    'retention-schedule': AssessmentRetentionScheduleInput,
+    /** The assessment custom fields */
+    attributes: t.array(AttributePreview),
+  }),
+]);
+
+/** Type override */
+export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
+
 export const TranscendInput = t.partial({
   /**
    * Action items
@@ -1551,6 +1851,14 @@ export const TranscendInput = t.partial({
   messages: t.array(IntlMessageInput),
   /** The full list of consent manager partitions (e.g. dev vs staging vs prod) */
   partitions: t.array(PartitionInput),
+  /**
+   * The full list of assessment templates
+   */
+  'assessment-templates': t.array(AssessmentTemplateInput),
+  /**
+   * The full list of assessment results
+   */
+  assessments: t.array(AssessmentInput),
 });
 
 /** Type override */

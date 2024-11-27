@@ -32,6 +32,8 @@ export enum TranscendPullResource {
   PrivacyCenters = 'privacyCenters',
   Policies = 'policies',
   Messages = 'messages',
+  Assessments = 'assessments',
+  AssessmentTemplates = 'assessmentTemplates',
 }
 
 /**
