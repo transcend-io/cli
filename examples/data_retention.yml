@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-latest.json
 
 # This file outlines an example of how one may define a workflow for deleting data with Transcend.
 # In this example, we want to define a pipeline for deleting a set of video files associated with an account.
