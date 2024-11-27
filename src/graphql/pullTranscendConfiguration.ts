@@ -27,6 +27,10 @@ import {
   ActionItemInput,
   TeamInput,
   ActionItemCollectionInput,
+  AssessmentInput,
+  AssessmentTemplateInput,
+  AssessmentSectionInput,
+  AssessmentSectionQuestionInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -77,6 +81,8 @@ import { fetchAllTeams } from './fetchAllTeams';
 import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
 import { LanguageKey } from '@transcend-io/internationalization';
 import { fetchPartitions } from './syncPartitions';
+import { fetchAllAssessments } from './fetchAllAssessments';
+import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -166,6 +172,8 @@ export async function pullTranscendConfiguration(
     privacyCenters,
     messages,
     partitions,
+    assessments,
+    assessmentTemplates,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -306,6 +314,14 @@ export async function pullTranscendConfiguration(
     resources.includes(TranscendPullResource.Partitions)
       ? fetchPartitions(client)
       : [],
+    // Fetch assessments
+    resources.includes(TranscendPullResource.Assessments)
+      ? fetchAllAssessments(client)
+      : [],
+    // Fetch assessmentTemplates
+    resources.includes(TranscendPullResource.AssessmentTemplates)
+      ? fetchAllAssessmentTemplates(client)
+      : [],
   ]);
 
   const consentManagerTheme =
@@ -402,6 +418,286 @@ export async function pullTranscendConfiguration(
         browserTimeZones: experience.browserTimeZones,
       })),
     };
+  }
+
+  // Save assessments
+  if (
+    assessments.length > 0 &&
+    resources.includes(TranscendPullResource.Assessments)
+  ) {
+    result.assessments = assessments.map(
+      ({
+        title,
+        assessmentGroup,
+        sections,
+        creator,
+        description,
+        status,
+        assignees,
+        externalAssignees,
+        reviewers,
+        isLocked,
+        isArchived,
+        isExternallyCreated,
+        dueDate,
+        createdAt,
+        assignedAt,
+        submittedAt,
+        approvedAt,
+        rejectedAt,
+        titleIsInternal,
+        retentionSchedule,
+        attributeValues,
+        resources,
+        syncedRows,
+      }): AssessmentInput => ({
+        title,
+        group: assessmentGroup.title,
+        sections: sections.map(
+          ({
+            title,
+            status,
+            questions,
+            assignees,
+            isReviewed,
+            externalAssignees,
+          }): AssessmentSectionInput => ({
+            title,
+            status,
+            questions: questions.map(
+              ({
+                title,
+                type,
+                subType,
+                placeholder,
+                description,
+                isRequired,
+                referenceId,
+                displayLogic,
+                riskLogic,
+                riskCategories,
+                riskFramework,
+                answerOptions,
+                allowedMimeTypes,
+                allowSelectOther,
+                syncModel,
+                syncColumn,
+                attributeKey,
+                requireRiskEvaluation,
+                requireRiskMatrixEvaluation,
+              }): AssessmentSectionQuestionInput => ({
+                title,
+                type,
+                'sub-type': subType,
+                placeholder,
+                description,
+                'is-required': isRequired,
+                'reference-id': referenceId,
+                'display-logic': displayLogic
+                  ? {
+                      action: displayLogic.action,
+                      rule: displayLogic.rule
+                        ? {
+                            'depends-on-question-reference-id':
+                              displayLogic.rule.dependsOnQuestionReferenceId,
+                            'comparison-operator':
+                              displayLogic.rule.comparisonOperator,
+                            'comparison-operands':
+                              displayLogic.rule.comparisonOperands,
+                          }
+                        : undefined,
+                      'nested-rule': displayLogic.nestedRule
+                        ? {
+                            'logic-operator':
+                              displayLogic.nestedRule.logicOperator,
+                            rules: displayLogic.nestedRule.rules.map(
+                              (rule) => ({
+                                'depends-on-question-reference-id':
+                                  rule.dependsOnQuestionReferenceId,
+                                'comparison-operator': rule.comparisonOperator,
+                                'comparison-operands': rule.comparisonOperands,
+                              }),
+                            ),
+                          }
+                        : undefined,
+                    }
+                  : undefined,
+                'risk-logic': riskLogic,
+                'risk-categories': riskCategories.map(({ title }) => title),
+                'risk-framework': riskFramework?.title,
+                'answer-options': answerOptions.map(({ value }) => ({ value })),
+                'allowed-mime-types': allowedMimeTypes,
+                'allow-select-other': allowSelectOther,
+                'sync-model': syncModel,
+                'sync-column': syncColumn,
+                'attribute-key': attributeKey?.name,
+                'require-risk-evaluation': requireRiskEvaluation,
+                'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+              }),
+            ),
+            assignees: assignees.map(({ email }) => email),
+            'external-assignees': externalAssignees.map(({ email }) => email),
+            'is-reviewed': isReviewed,
+          }),
+        ),
+        creator: creator.email,
+        description,
+        status,
+        assignees: assignees.map(({ email }) => email),
+        'external-assignees': externalAssignees.map(({ email }) => email),
+        reviewers: reviewers.map(({ email }) => email),
+        locked: isLocked,
+        archived: isArchived,
+        external: isExternallyCreated,
+        'title-is-internal': titleIsInternal,
+        'due-date': dueDate,
+        'created-at': createdAt,
+        'assigned-at': assignedAt,
+        'submitted-at': submittedAt,
+        'approved-at': approvedAt,
+        'rejected-at': rejectedAt,
+        'retention-schedule': {
+          type: retentionSchedule.type,
+          'duration-days': retentionSchedule.durationDays,
+          operand: retentionSchedule.operation,
+        },
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+        resources: resources.map(
+          ({ resourceType, title, name, category, type, purpose }) => ({
+            type: resourceType,
+            title: category
+              ? `${category} - ${name}`
+              : purpose
+              ? `${purpose} - ${name}`
+              : title || name || type || '',
+          }),
+        ),
+        rows: syncedRows.map(
+          ({ resourceType, title, name, category, type, purpose }) => ({
+            type: resourceType,
+            title: category
+              ? `${category} - ${name}`
+              : purpose
+              ? `${purpose} - ${name}`
+              : title || name || type || '',
+          }),
+        ),
+      }),
+    );
+  }
+
+  // Save assessmentTemplates
+  if (
+    assessmentTemplates.length > 0 &&
+    resources.includes(TranscendPullResource.AssessmentTemplates)
+  ) {
+    result['assessment-templates'] = assessmentTemplates.map(
+      ({
+        title,
+        description,
+        sections,
+        status,
+        source,
+        creator,
+        isLocked,
+        isArchived,
+        createdAt,
+        retentionSchedule,
+      }): AssessmentTemplateInput => ({
+        title,
+        description,
+        sections: sections.map(
+          ({ title, questions }): AssessmentSectionInput => ({
+            title,
+            questions: questions.map(
+              ({
+                title,
+                type,
+                subType,
+                placeholder,
+                description,
+                isRequired,
+                referenceId,
+                displayLogic,
+                riskLogic,
+                riskCategories,
+                riskFramework,
+                answerOptions,
+                allowedMimeTypes,
+                allowSelectOther,
+                syncModel,
+                syncColumn,
+                attributeKey,
+                requireRiskEvaluation,
+                requireRiskMatrixEvaluation,
+              }): AssessmentSectionQuestionInput => ({
+                title,
+                type,
+                'sub-type': subType,
+                placeholder,
+                description,
+                'is-required': isRequired,
+                'reference-id': referenceId,
+                'display-logic': displayLogic
+                  ? {
+                      action: displayLogic.action,
+                      rule: displayLogic.rule
+                        ? {
+                            'depends-on-question-reference-id':
+                              displayLogic.rule.dependsOnQuestionReferenceId,
+                            'comparison-operator':
+                              displayLogic.rule.comparisonOperator,
+                            'comparison-operands':
+                              displayLogic.rule.comparisonOperands,
+                          }
+                        : undefined,
+                      'nested-rule': displayLogic.nestedRule
+                        ? {
+                            'logic-operator':
+                              displayLogic.nestedRule.logicOperator,
+                            rules: displayLogic.nestedRule.rules.map(
+                              (rule) => ({
+                                'depends-on-question-reference-id':
+                                  rule.dependsOnQuestionReferenceId,
+                                'comparison-operator': rule.comparisonOperator,
+                                'comparison-operands': rule.comparisonOperands,
+                              }),
+                            ),
+                          }
+                        : undefined,
+                    }
+                  : undefined,
+                'risk-logic': riskLogic,
+                'risk-categories': riskCategories.map(({ title }) => title),
+                'risk-framework': riskFramework?.title,
+                'answer-options': answerOptions.map(({ value }) => ({ value })),
+                'allowed-mime-types': allowedMimeTypes,
+                'allow-select-other': allowSelectOther,
+                'sync-model': syncModel,
+                'sync-column': syncColumn,
+                'attribute-key': attributeKey?.name,
+                'require-risk-evaluation': requireRiskEvaluation,
+                'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+              }),
+            ),
+          }),
+        ),
+        status,
+        source,
+        creator: creator.email,
+        locked: isLocked,
+        archived: isArchived,
+        'created-at': createdAt,
+        'retention-schedule': {
+          type: retentionSchedule.type,
+          'duration-days': retentionSchedule.durationDays,
+          operand: retentionSchedule.operation,
+        },
+      }),
+    );
   }
 
   // Save prompts

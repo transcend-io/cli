@@ -1526,18 +1526,6 @@ export const RiskAssignmentInput = t.partial({
 /** Type override */
 export type RiskAssignmentInput = t.TypeOf<typeof RiskAssignmentInput>;
 
-export const RiskLogicInput = t.type({
-  /** The risk to assign to this question if the response matches the provided logic */
-  'risk-assignment': RiskAssignmentInput,
-  /** The operator to use when comparing the response to the operands */
-  'comparison-operator': valuesOf(ComparisonOperator),
-  /** The values to compare the response to */
-  'comparison-operands': t.array(t.string),
-});
-
-/** Type override */
-export type RiskLogicInput = t.TypeOf<typeof RiskLogicInput>;
-
 export const AssessmentAnswerOptionInput = t.type({
   /** Value of answer */
   value: t.string,
@@ -1569,7 +1557,7 @@ export const AssessmentSectionQuestionInput = t.intersection([
     /** Display logic for the question */
     'display-logic': AssessmentDisplayLogicInput,
     /** Risk logic for the question */
-    'risk-logic': t.array(RiskLogicInput),
+    'risk-logic': t.array(t.string),
     /** Risk category titles for the question */
     'risk-categories': t.array(t.string),
     /** Risk framework titles for the question */
@@ -1598,12 +1586,24 @@ export type AssessmentSectionQuestionInput = t.TypeOf<
   typeof AssessmentSectionQuestionInput
 >;
 
-export const AssessmentSectionInput = t.type({
-  /** The title of the assessment section */
-  title: t.string,
-  /** The questions in the assessment section */
-  questions: t.array(AssessmentSectionQuestionInput),
-});
+export const AssessmentSectionInput = t.intersection([
+  t.type({
+    /** The title of the assessment section */
+    title: t.string,
+    /** The questions in the assessment section */
+    questions: t.array(AssessmentSectionQuestionInput),
+  }),
+  t.partial({
+    /** Email address of those assigned */
+    assignees: t.array(t.string),
+    /** Email address of those externally assigned */
+    'external-assignees': t.array(t.string),
+    /** Status of section */
+    status: t.string,
+    /** Whether assessment is reviewed */
+    'is-reviewed': t.boolean,
+  }),
+]);
 
 /** Type override */
 export type AssessmentSectionInput = t.TypeOf<typeof AssessmentSectionInput>;
@@ -1640,6 +1640,8 @@ export const AssessmentTemplateInput = t.intersection([
     creator: t.string,
     /** Whether the template is in a locked status */
     locked: t.boolean,
+    /** ID of parent template this was cloned from */
+    'parent-id': t.string,
     /** Whether the template is archived */
     archived: t.boolean,
     /** The date that the assessment was created */

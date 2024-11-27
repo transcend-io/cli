@@ -19,6 +19,8 @@ export * from './setResourceAttributes';
 export * from './buildTranscendGraphQLClient';
 export * from './retryRequestEnricher';
 export * from './gqls';
+export * from './fetchAllAssessmentTemplates';
+export * from './fetchAllAssessments';
 export * from './fetchPromptThreads';
 export * from './fetchAllPolicies';
 export * from './fetchAllRequestIdentifierMetadata';
