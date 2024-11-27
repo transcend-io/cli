@@ -264,9 +264,6 @@ $RECYCLE.BIN/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-# NVM config file
-.nvmrc
-
 # Do not commit schema dumps since it is always changing/only needed by test
 *.hidden.dump
 
