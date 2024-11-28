@@ -44,7 +44,8 @@
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
     "tr-upload-consent-preferences": "./build/cli-upload-consent-preferences.js",
     "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js",
-    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
+    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js",
+    "tr-upload-preferences": "./build/cli-upload-preferences.js"
   },
   "files": [
     "build/**/*",
@@ -66,7 +67,7 @@
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.94.0",
+    "@transcend-io/privacy-types": "^4.96.0",
     "@transcend-io/secret-value": "^1.2.0",
     "@transcend-io/type-utils": "^1.5.0",
     "bluebird": "^3.7.2",

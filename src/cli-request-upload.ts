@@ -73,7 +73,7 @@ async function main(): Promise<void> {
     skipSendingReceipt: skipSendingReceipt === 'true',
     emailIsVerified: emailIsVerified === 'true',
     isTest: isTest === 'true',
-    dryRun: dryRun === 'true',
+    dryRun: dryRun !== 'false',
   });
 }
 

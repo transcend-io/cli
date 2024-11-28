@@ -5,9 +5,8 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { DEFAULT_TRANSCEND_CONSENT_API } from './constants';
-import { uploadConsents } from './consent-manager/uploadConsents';
-import { ConsentPreferenceUpload } from './consent-manager/types';
-import { readCsv } from './requests';
+import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
+import { splitCsvToList } from './requests';
 
 /**
  * Upload consent preferences to the managed consent database
@@ -16,45 +15,43 @@ import { readCsv } from './requests';
  * https://docs.transcend.io/docs/consent/reference/managed-consent-database
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-upload-consent-preferences.ts --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
+ * yarn ts-node ./src/cli-upload-consent-preferences-interactive --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
  *  --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
  *
  * Standard usage:
- * yarn tr-upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
+ * yarn tr-upload-consent-preferences-interactive --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
  *  --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
  */
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
     /** File to load preferences from */
-    file = 'preferences.csv',
+    files = './preferences.csv',
     /** Transcend URL */
     transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
-    /** base64 encryption key */
-    base64EncryptionKey,
-    /** base64 signing key */
-    base64SigningKey,
+    /** API key */
+    auth,
+    /** Sombra API key */
+    sombraAuth,
     /** Partition key to load into */
     partition,
     /** Concurrency */
     concurrency = '100',
+    /** Whether to do a dry run */
+    dryRun = 'false',
+    /** Attributes to add to any DSR request if created */
+    attributes = 'Tags:transcend-cli',
+    /** Store cache of CSV format */
+    cacheFilepath = './transcend-preference-management-cache.json',
+    /** Store resulting, continuing where left off  */
+    receiptFilepath = './preference-management-upload-receipts.json',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
-  if (!base64EncryptionKey) {
+  if (!auth) {
     logger.error(
       colors.red(
-        'A base64EncryptionKey must be provided. ' +
-          'You can specify using --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY',
-      ),
-    );
-    process.exit(1);
-  }
-  if (!base64SigningKey) {
-    logger.error(
-      colors.red(
-        'A base64SigningKey must be provided. ' +
-          'You can specify using --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY',
+        'A Transcend API key must be provided. You can specify using --auth=$TRANSCEND_API_KEY',
       ),
     );
     process.exit(1);
@@ -71,17 +68,18 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Load in preferences from csv
-  const preferences = readCsv(file, ConsentPreferenceUpload);
-
   // Upload cookies
-  await uploadConsents({
-    base64EncryptionKey,
-    base64SigningKey,
-    preferences,
+  await uploadPreferenceManagementPreferencesInteractive({
+    cacheFilepath,
+    receiptFilepath,
+    auth,
+    sombraAuth,
+    files: splitCsvToList(files),
     partition,
     concurrency: parseInt(concurrency, 10),
     transcendUrl,
+    dryRun: dryRun !== 'false',
+    attributes: splitCsvToList(attributes),
   });
 }
 

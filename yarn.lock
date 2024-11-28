@@ -515,7 +515,7 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.94.0
+    "@transcend-io/privacy-types": ^4.96.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.5.0
     "@types/bluebird": ^3.5.38
@@ -608,6 +608,7 @@ __metadata:
     tr-upload-consent-preferences: ./build/cli-upload-consent-preferences.js
     tr-upload-cookies-from-csv: ./build/cli-upload-cookies-from-csv.js
     tr-upload-data-flows-from-csv: ./build/cli-upload-data-flows-from-csv.js
+    tr-upload-preferences: ./build/cli-upload-preferences.js
   languageName: unknown
   linkType: soft
 
@@ -643,14 +644,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.94.0":
-  version: 4.94.0
-  resolution: "@transcend-io/privacy-types@npm:4.94.0"
+"@transcend-io/privacy-types@npm:^4.96.0":
+  version: 4.96.0
+  resolution: "@transcend-io/privacy-types@npm:4.96.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 8cc1a8dd546f7660a7363937c50bf217026c7e492e5a3ef9c7a482c70bd71f4b51db85dcc264128e5100698dac99d99508f9403e6709e47ee1d4f0c3ae743a86
+  checksum: 0ed38f70c7e45c0cf3f084c03284e76f82366add723c74ac76d17e06e39e0ab402a5cc3df5c71e4f6b3e7d2ce49a8b9b4034f9b61f86f21d43f965537b2d8067
   languageName: node
   linkType: hard
 
