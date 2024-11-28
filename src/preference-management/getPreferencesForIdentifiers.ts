@@ -1,4 +1,5 @@
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
+import type { Got } from 'got';
 import colors from 'colors';
 import cliProgress from 'cli-progress';
 import chunk from 'lodash/chunk';
@@ -25,7 +26,7 @@ const PreferenceRecordsQueryResponse = t.intersection([
  * @returns Plaintext context information
  */
 export async function getPreferencesForIdentifiers(
-  sombra: Backend,
+  sombra: Got,
   {
     identifiers,
     partitionKey,
@@ -54,21 +55,15 @@ export async function getPreferencesForIdentifiers(
   await map(
     groupedIdentifiers,
     async (group) => {
-      const rawResult = await sombra.rp({
-        uri: `/v1/preferences/${partitionKey}/query`,
-        json: true,
-        method: 'POST',
-        body: {
-          filter: {
-            identifiers: group,
-          },
-        },
-      });
       // Make the request
       try {
-        await sombra
-          .post('sync', {
-            json: input,
+        const rawResult = await sombra
+          .post(`v1/preferences/${partitionKey}/query`, {
+            json: {
+              filter: {
+                identifiers: group,
+              },
+            },
           })
           .json();
 
@@ -85,11 +80,28 @@ export async function getPreferencesForIdentifiers(
         } catch (e) {
           // continue
         }
-        throw new Error(
-          `Received an error from server: ${
-            err?.response?.body || err?.message
-          }`,
-        );
+        const msg = err?.response?.body || err?.message || '';
+        if (!msg.includes('ETIMEDOUT')) {
+          throw new Error(
+            `Received an error from server: ${
+              err?.response?.body || err?.message
+            }`,
+          );
+        }
+        const rawResult = await sombra
+          .post(`v1/preferences/${partitionKey}/query`, {
+            json: {
+              filter: {
+                identifiers: group,
+              },
+            },
+          })
+          .json();
+
+        const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
+        results.push(...result.nodes);
+        total += group.length;
+        progressBar.update(total);
       }
     },
     {

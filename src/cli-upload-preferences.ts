@@ -4,7 +4,7 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { DEFAULT_TRANSCEND_CONSENT_API } from './constants';
+import { DEFAULT_TRANSCEND_API } from './constants';
 import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
 import { splitCsvToList } from './requests';
 
@@ -28,21 +28,19 @@ async function main(): Promise<void> {
     /** File to load preferences from */
     files = './preferences.csv',
     /** Transcend URL */
-    transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
+    transcendUrl = DEFAULT_TRANSCEND_API,
     /** API key */
     auth,
     /** Sombra API key */
     sombraAuth,
     /** Partition key to load into */
     partition,
-    /** Concurrency */
-    concurrency = '100',
     /** Whether to do a dry run */
     dryRun = 'false',
+    /** Whether to refresh cache */
+    refreshCache = 'false',
     /** Attributes to add to any DSR request if created */
     attributes = 'Tags:transcend-cli',
-    /** Store cache of CSV format */
-    cacheFilepath = './transcend-preference-management-cache.json',
     /** Store resulting, continuing where left off  */
     receiptFilepath = './preference-management-upload-receipts.json',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -70,13 +68,12 @@ async function main(): Promise<void> {
 
   // Upload cookies
   await uploadPreferenceManagementPreferencesInteractive({
-    cacheFilepath,
     receiptFilepath,
     auth,
     sombraAuth,
     files: splitCsvToList(files),
     partition,
-    concurrency: parseInt(concurrency, 10),
+    refreshPreferenceStoreCache: refreshCache === 'true',
     transcendUrl,
     dryRun: dryRun !== 'false',
     attributes: splitCsvToList(attributes),

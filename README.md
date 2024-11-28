@@ -2296,7 +2296,62 @@ Specify the backend URL, needed for US hosted backend infrastructure:
 yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --transcendUrl=https://api.us.transcend.io
 ```
 
+### tr-upload-preferences
+
+This command allows for updating of preference management data to your Transcend Preference Store.
+
+This command uses [inquirer](https://github.com/SBoudrias/Inquirer.js/) to prompt the user to
+map the shape of the CSV to the shape of the Transcend API. There is no requirement for the
+shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file, that allows for the mappings to be preserved between runs.
+This can be useful if you have the same CSV shape that needs to be imported multiple times.
+Once the mapping process is done once, it does not need to be done again.
+
+Additionally, the JSON cache file will store the result of any preferences that fail to be uploaded so that the
+script can be run multiple times if an issue happens.
+
+FIXME video
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Modify User Stored Preferences
+- View Managed Consent Database Admin API
+- View Global Attributes
+
+#### Authentication
+
+In order to use this cli, you will first need to follow [this guide](https://docs.transcend.io/docs/consent/reference/managed-consent-database#authenticate-a-user's-consent) in order
+to grab your encryption and signing keys.
+
+#### Arguments
+
+| Argument     | Description                                                                          | Type         | Default                      | Required |
+| ------------ | ------------------------------------------------------------------------------------ | ------------ | ---------------------------- | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.                     | string       | N/A                          | true     |
+| partition    | The partition key to download consent preferences to                                 | string       | N/A                          | true     |
+| sombraAuth   | The sombra internal key, use for additional authentication when self-hosting sombra. | string       | N/A                          | false    |
+| transcendUrl | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting.    | string - URL | https://consent.transcend.io | false    |
+
+FIXME other args
+
+#### Usage
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+```
+
+FIXME other usage
+
 ### tr-upload-consent-preferences
+
+**Deprecated** Use `tr-upload-preferences`
 
 This command allows for updating of consent preferences to the [Managed Consent Database](https://docs.transcend.io/docs/consent/reference/managed-consent-database).
 
