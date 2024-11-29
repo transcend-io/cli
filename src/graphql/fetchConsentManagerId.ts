@@ -19,7 +19,6 @@ import {
   FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER,
   EXPERIENCES,
-  PURPOSES,
   CONSENT_MANAGER_ANALYTICS_DATA,
   FETCH_CONSENT_MANAGER_THEME,
 } from './gqls';
@@ -116,27 +115,6 @@ export interface ConsentPurpose {
   name: string;
   /** Tracking type of purpose */
   trackingType: string;
-}
-
-/**
- * Fetch consent manager purposes
- *
- * @param client - GraphQL client
- * @returns Consent manager purposes in the organization
- */
-export async function fetchPurposes(
-  client: GraphQLClient,
-): Promise<ConsentPurpose[]> {
-  const {
-    purposes: { purposes },
-  } = await makeGraphQLRequest<{
-    /** Consent manager query */
-    purposes: {
-      /** Consent manager object */
-      purposes: ConsentPurpose[];
-    };
-  }>(client, PURPOSES);
-  return purposes;
 }
 
 const PAGE_SIZE = 50;

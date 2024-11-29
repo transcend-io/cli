@@ -1,21 +1,28 @@
-import { createSombraGotInstance } from '../graphql';
+import {
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchAllPurposes,
+} from '../graphql';
 import colors from 'colors';
+import chunk from 'lodash/chunk';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../constants';
 import { mapSeries } from 'bluebird';
 import { logger } from '../logger';
-// import cliProgress from 'cli-progress';
-// import { decodeCodec } from '@transcend-io/type-utils';
-// import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
-// import { USP_STRING_REGEX } from '../consent-manager';
+import cliProgress from 'cli-progress';
 import { parseAttributesFromString } from '../requests';
 import { PersistedState } from '@transcend-io/persisted-state';
-import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsvWithCache';
+import {
+  NONE_PREFERENCE_MAP,
+  getUpdatesFromPreferenceRow,
+  parsePreferenceManagementCsvWithCache,
+} from './parsePreferenceManagementCsvWithCache';
 import { PreferenceState } from './codecs';
+import { fetchAllPreferenceTopics } from '../graphql/fetchAllPreferenceTopics';
+import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
+import { getPreferencesFromIdentifiersWithCache } from './getPreferencesFromIdentifiersWithCache';
 
 /**
  * Upload a set of consent preferences
- *
- * FIXME pick up from left off with dryRun?
  *
  * @param options - Options
  */
@@ -93,14 +100,24 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     ),
   );
 
-  // Create sombra instance to communicate with
-  const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
+  // Create GraphQL client to connect to Transcend backend
+  const client = buildTranscendGraphQLClient(transcendUrl, auth);
+
+  const [sombra, purposes, preferenceTopics] = await Promise.all([
+    // Create sombra instance to communicate with
+    createSombraGotInstance(transcendUrl, auth, sombraAuth),
+    // get all purposes and topics
+    fetchAllPurposes(client),
+    fetchAllPreferenceTopics(client),
+  ]);
 
   // Process each file
   await mapSeries(files, async (file) => {
     await parsePreferenceManagementCsvWithCache(
       {
         file,
+        purposes,
+        preferenceTopics,
         ignoreCache: refreshPreferenceStoreCache,
         sombra,
         partitionKey: partition,
@@ -109,138 +126,193 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     );
   });
 
-  // // Ensure usp strings are valid
-  // const invalidUspStrings = preferences.filter(
-  //   (pref) => pref.usp && !USP_STRING_REGEX.test(pref.usp),
-  // );
-  // if (invalidUspStrings.length > 0) {
-  //   throw new Error(
-  //     `Received invalid usp strings: ${JSON.stringify(
-  //       invalidUspStrings,
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
-  // }
+  // Construct the pending updates
+  const pendingUpdates: Record<string, PreferenceUpdateItem> = {};
+  files.forEach((file) => {
+    const fileMetadata = preferenceState.getValue('fileMetadata');
+    const metadata = fileMetadata[file];
 
-  // if (invalidPurposeMaps.length > 0) {
-  //   throw new Error(
-  //     `Received invalid purpose maps: ${JSON.stringify(
-  //       invalidPurposeMaps,
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
-  // }
+    logger.info(
+      colors.magenta(
+        `Found ${
+          Object.entries(metadata.pendingSafeUpdates).length
+        } safe updates in ${file}`,
+      ),
+    );
+    logger.info(
+      colors.magenta(
+        `Found ${
+          Object.entries(metadata.pendingConflictUpdates).length
+        } conflict updates in ${file}`,
+      ),
+    );
+    logger.info(
+      colors.magenta(
+        `Found ${
+          Object.entries(metadata.skippedUpdates).length
+        } skipped updates in ${file}`,
+      ),
+    );
+    Object.entries({
+      ...metadata.pendingSafeUpdates,
+      ...metadata.pendingConflictUpdates,
+    }).forEach(([userId, update]) => {
+      const currentUpdate = pendingUpdates[userId];
+      const timestamp =
+        metadata.timestampColum === NONE_PREFERENCE_MAP
+          ? new Date()
+          : new Date(update[metadata.timestampColum!]);
+      const updates = getUpdatesFromPreferenceRow({
+        row: update,
+        columnToPurposeName: metadata.columnToPurposeName,
+      });
 
-  // // Ensure usp or preferences are provided
-  // const invalidInputs = preferences.filter(
-  //   (pref) => !pref.usp && !pref.purposes,
-  // );
-  // if (invalidInputs.length > 0) {
-  //   throw new Error(
-  //     `Received invalid inputs, expected either purposes or usp to be defined: ${JSON.stringify(
-  //       invalidInputs,
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
-  // }
+      if (currentUpdate) {
+        const newPurposes = Object.entries(updates).map(([purpose, value]) => ({
+          ...value,
+          purpose,
+        }));
+        (currentUpdate.purposes || []).forEach((purpose) => {
+          if (updates[purpose.purpose].enabled !== purpose.enabled) {
+            logger.warn(
+              colors.yellow(
+                `Conflict detected for user: ${userId} and purpose: ${purpose.purpose}`,
+              ),
+            );
+          }
+        });
+        pendingUpdates[userId] = {
+          userId,
+          partition,
+          // take the most recent timestamp
+          timestamp:
+            timestamp > new Date(currentUpdate.timestamp)
+              ? timestamp.toISOString()
+              : currentUpdate.timestamp,
+          purposes: [
+            ...(currentUpdate.purposes || []),
+            ...newPurposes.filter(
+              (newPurpose) =>
+                !(currentUpdate.purposes || []).find(
+                  (currentPurpose) =>
+                    currentPurpose.purpose === newPurpose.purpose,
+                ),
+            ),
+          ],
+        };
+      } else {
+        pendingUpdates[userId] = {
+          userId,
+          partition,
+          timestamp: timestamp.toISOString(),
+          purposes: Object.entries(updates).map(([purpose, value]) => ({
+            ...value,
+            purpose,
+          })),
+        };
+      }
+    });
+  });
+  preferenceState.setValue(pendingUpdates, 'pendingUpdates');
+  preferenceState.setValue({}, 'failingUpdates');
 
-  // logger.info(
-  //   colors.magenta(
-  //     `Uploading ${preferences.length} user preferences to partition ${partition}`,
-  //   ),
-  // );
+  if (dryRun) {
+    logger.info(
+      colors.green(`Dry run complete, exiting. Check file: ${receiptFilepath}`),
+    );
+    return;
+  }
 
-  // // Time duration
-  // const t0 = new Date().getTime();
-  // // create a new progress bar instance and use shades_classic theme
-  // const progressBar = new cliProgress.SingleBar(
-  //   {},
-  //   cliProgress.Presets.shades_classic,
-  // );
+  logger.info(
+    colors.magenta(`Uploading preferences to partition: ${partition}`),
+  );
 
-  // // Build a GraphQL client
-  // let total = 0;
-  // progressBar.start(preferences.length, 0);
-  // await map(
-  //   preferences,
-  //   async ({
-  //     userId,
-  //     confirmed = 'true',
-  //     updated,
-  //     prompted,
-  //     purposes,
-  //     ...consent
-  //   }) => {
-  //     const token = createConsentToken(
-  //       userId,
-  //       base64EncryptionKey,
-  //       base64SigningKey,
-  //     );
+  // Time duration
+  const t0 = new Date().getTime();
 
-  //     // parse usp string
-  //     const [, saleStatus] = consent.usp
-  //       ? USP_STRING_REGEX.exec(consent.usp) || []
-  //       : [];
+  // create a new progress bar instance and use shades_classic theme
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
 
-  //     const input = {
-  //       token,
-  //       partition,
-  //       consent: {
-  //         confirmed: confirmed === 'true',
-  //         purposes: purposes
-  //           ? decodeCodec(PurposeMap, purposes)
-  //           : consent.usp
-  //           ? { SaleOfInfo: saleStatus === 'Y' }
-  //           : {},
-  //         ...(updated ? { updated: updated === 'true' } : {}),
-  //         ...(prompted ? { prompted: prompted === 'true' } : {}),
-  //         ...consent,
-  //       },
-  //     } as ConsentPreferencesBody;
+  // Build a GraphQL client
+  let total = 0;
+  const updatesToRun = Object.entries(pendingUpdates);
+  const chunkedUpdates = chunk(updatesToRun, 100);
+  progressBar.start(updatesToRun.length, 0);
+  await mapSeries(chunkedUpdates, async (chunkedUpdates) => {
+    const failingUpdates = preferenceState.getValue('failingUpdates');
+    const successfulUpdates = preferenceState.getValue('successfulUpdates');
+    const pendingUpdates = preferenceState.getValue('pendingUpdates');
 
-  //     // Make the request
-  //     try {
-  //       await transcendConsentApi
-  //         .post('sync', {
-  //           json: input,
-  //         })
-  //         .json();
-  //     } catch (err) {
-  //       try {
-  //         const parsed = JSON.parse(err?.response?.body || '{}');
-  //         if (parsed.error) {
-  //           logger.error(colors.red(`Error: ${parsed.error}`));
-  //         }
-  //       } catch (e) {
-  //         // continue
-  //       }
-  //       throw new Error(
-  //         `Received an error from server: ${
-  //           err?.response?.body || err?.message
-  //         }`,
-  //       );
-  //     }
+    // Make the request
+    try {
+      await sombra
+        .put('/v1/preferences', {
+          json: {
+            records: chunkedUpdates,
+          },
+        })
+        .json();
+      chunkedUpdates.forEach(([userId, update]) => {
+        successfulUpdates[userId].push({
+          uploadedAt: new Date().toISOString(),
+          update,
+        });
+        delete pendingUpdates[userId];
+      });
+      preferenceState.setValue(pendingUpdates, 'pendingUpdates');
+      preferenceState.setValue(successfulUpdates, 'successfulUpdates');
+    } catch (err) {
+      try {
+        const parsed = JSON.parse(err?.response?.body || '{}');
+        if (parsed.error) {
+          logger.error(colors.red(`Error: ${parsed.error}`));
+        }
+      } catch (e) {
+        // continue
+      }
 
-  //     total += 1;
-  //     progressBar.update(total);
-  //   },
-  //   { concurrency },
-  // );
+      chunkedUpdates.forEach(([userId, update]) => {
+        failingUpdates[userId] = {
+          uploadedAt: new Date().toISOString(),
+          update,
+          error: err?.response?.body || err?.message || 'Unknown error',
+        };
+        delete pendingUpdates[userId];
+      });
+      preferenceState.setValue(failingUpdates, 'failingUpdates');
+      preferenceState.setValue(pendingUpdates, 'pendingUpdates');
+    }
 
-  // progressBar.stop();
-  // const t1 = new Date().getTime();
-  // const totalTime = t1 - t0;
+    total += chunkedUpdates.length;
+    progressBar.update(total);
+  });
 
-  // logger.info(
-  //   colors.green(
-  //     `Successfully uploaded ${
-  //       preferences.length
-  //     } user preferences to partition ${partition} in "${
-  //       totalTime / 1000
-  //     }" seconds!`,
-  //   ),
-  // );
+  progressBar.stop();
+  const t1 = new Date().getTime();
+  const totalTime = t1 - t0;
+  logger.info(
+    colors.green(
+      `Successfully uploaded ${
+        updatesToRun.length
+      } user preferences to partition ${partition} in "${
+        totalTime / 1000
+      }" seconds!`,
+    ),
+  );
+
+  logger.info(colors.magenta('Refreshing cache...'));
+
+  const updateIdentifiers = Object.keys(pendingUpdates);
+  await getPreferencesFromIdentifiersWithCache(
+    {
+      identifiers: updateIdentifiers,
+      ignoreCache: true,
+      sombra,
+      partitionKey: partition,
+    },
+    preferenceState,
+  );
 }

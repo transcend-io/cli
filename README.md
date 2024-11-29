@@ -2326,7 +2326,7 @@ The API key needs the following scopes:
 
 - Modify User Stored Preferences
 - View Managed Consent Database Admin API
-- View Global Attributes
+- View Preference Store Settings
 
 #### Authentication
 

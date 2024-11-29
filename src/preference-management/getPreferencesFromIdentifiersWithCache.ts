@@ -14,15 +14,15 @@ import { logger } from '../logger';
  * @param cache - The cache to store the preferences in
  * @returns The preferences for the emails
  */
-export async function getPreferencesFromEmailsWithCache(
+export async function getPreferencesFromIdentifiersWithCache(
   {
-    emails,
+    identifiers,
     ignoreCache = false,
     sombra,
     partitionKey,
   }: {
-    /** Emails to fetch */
-    emails: string[];
+    /** Identifiers to fetch */
+    identifiers: string[];
     /** Whether to use or ignore cache */
     ignoreCache?: boolean;
     /** Sombra got instance */
@@ -31,56 +31,70 @@ export async function getPreferencesFromEmailsWithCache(
     partitionKey: string;
   },
   cache: PersistedState<typeof PreferenceState>,
-): Promise<PreferenceQueryResponseItem[]> {
+): Promise<(PreferenceQueryResponseItem | null)[]> {
   // current cache value
   let preferenceStoreRecords = cache.getValue('preferenceStoreRecords');
 
   // ignore cache
   if (ignoreCache) {
     logger.info(
-      colors.magenta(`Ignoring cache, pulling ${emails.length} emails`),
+      colors.magenta(
+        `Ignoring cache, pulling ${identifiers.length} identifiers`,
+      ),
     );
     const response = await getPreferencesForIdentifiers(sombra, {
-      identifiers: emails.map((email) => ({ value: email })),
+      identifiers: identifiers.map((identifier) => ({ value: identifier })),
       partitionKey,
     });
     preferenceStoreRecords = {
       ...preferenceStoreRecords,
+      ...Object.fromEntries(
+        identifiers.map((identifier) => [identifier, null]),
+      ),
       ...Object.fromEntries(response.map((record) => [record.userId, record])),
     };
     cache.setValue(preferenceStoreRecords, 'preferenceStoreRecords');
-    logger.info(colors.green(`Successfully pulled ${emails.length} emails`));
+    logger.info(
+      colors.green(`Successfully pulled ${identifiers.length} identifiers`),
+    );
     return response;
   }
 
   // group emails by whether they are in the cache
-  const { missing = [], existing = [] } = groupBy(emails, (email) =>
-    preferenceStoreRecords[email] ? 'existing' : 'missing',
+  const { missing = [], existing = [] } = groupBy(identifiers, (email) =>
+    preferenceStoreRecords[email] || preferenceStoreRecords[email] === null
+      ? 'existing'
+      : 'missing',
   );
 
   logger.info(
     colors.magenta(
-      `Found ${existing.length} emails in cache, pulling ${missing.length} emails`,
+      `Found ${existing.length} identifiers in cache, pulling ${missing.length} identifiers`,
     ),
   );
 
-  // fetch missing emails
+  // fetch missing identifiers
   if (missing.length > 0) {
     const response = await getPreferencesForIdentifiers(sombra, {
-      identifiers: missing.map((email) => ({ value: email })),
+      identifiers: missing.map((identifier) => ({ value: identifier })),
       partitionKey,
     });
     const newPreferenceStoreRecords = {
       ...preferenceStoreRecords,
+      ...Object.fromEntries(missing.map((identifier) => [identifier, null])),
       ...Object.fromEntries(response.map((record) => [record.userId, record])),
     };
     cache.setValue(newPreferenceStoreRecords, 'preferenceStoreRecords');
-    logger.info(colors.green(`Successfully pulled ${missing.length} emails`));
-    return existing.map((email) => newPreferenceStoreRecords[email]);
+    logger.info(
+      colors.green(`Successfully pulled ${missing.length} identifiers`),
+    );
+    return identifiers.map(
+      (identifier) => newPreferenceStoreRecords[identifier],
+    );
   }
 
-  logger.info(colors.green('No emails pulled, full cache hit'));
+  logger.info(colors.green('No identifiers pulled, full cache hit'));
 
-  // return existing emails
-  return existing.map((email) => preferenceStoreRecords[email]);
+  // return existing identifiers
+  return identifiers.map((identifier) => preferenceStoreRecords[identifier]);
 }

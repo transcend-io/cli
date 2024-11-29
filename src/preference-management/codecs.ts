@@ -1,13 +1,23 @@
 import {
   PreferenceQueryResponseItem,
-  PreferenceStorePurposeUpdate,
+  PreferenceUpdateItem,
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
+
+export const PurposeRowMapping = t.type({
+  /** Name of the purpose to map to */
+  purpose: t.string,
+  /** Mapping from value in row to value in transcend API */
+  valueMapping: t.record(t.string, t.union([t.string, t.boolean])),
+});
+
+/** Override type */
+export type PurposeRowMapping = t.TypeOf<typeof PurposeRowMapping>;
 
 export const FileMetadataState = t.intersection([
   t.type({
     /** Mapping of column name to it's relevant purpose in Transcend */
-    columnToPurposeName: t.record(t.string, t.string),
+    columnToPurposeName: t.record(t.string, PurposeRowMapping),
     /** Last time the file was fetched */
     lastFetchedAt: t.string,
     /**
@@ -25,13 +35,6 @@ export const FileMetadataState = t.intersection([
      * their preferences are already in the store
      */
     skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
-    /**
-     * Mapping of userId to the rows in the file that have been successfully uploaded
-     */
-    successfulUpdates: t.record(
-      t.string,
-      t.array(t.record(t.string, t.string)),
-    ),
   }),
   t.partial({
     /** Determine which column name in file maps to consent record identifier to upload on  */
@@ -49,7 +52,10 @@ export const PreferenceState = t.type({
   /**
    * Mapping from core userId to preference store record
    */
-  preferenceStoreRecords: t.record(t.string, PreferenceQueryResponseItem),
+  preferenceStoreRecords: t.record(
+    t.string,
+    t.union([PreferenceQueryResponseItem, t.null]),
+  ),
   /**
    * Store a cache of previous files read in
    */
@@ -65,7 +71,7 @@ export const PreferenceState = t.type({
         /** Time upload ran at */
         uploadedAt: t.string,
         /** The update body */
-        update: PreferenceStorePurposeUpdate,
+        update: PreferenceUpdateItem,
       }),
     ),
   ),
@@ -75,22 +81,20 @@ export const PreferenceState = t.type({
    */
   failingUpdates: t.record(
     t.string,
-    t.array(
-      t.type({
-        /** Time upload ran at */
-        uploadedAt: t.string,
-        /** Attempts to upload that resulted in an error */
-        error: t.string,
-        /** The update body */
-        update: PreferenceStorePurposeUpdate,
-      }),
-    ),
+    t.type({
+      /** Time upload ran at */
+      uploadedAt: t.string,
+      /** Attempts to upload that resulted in an error */
+      error: t.string,
+      /** The update body */
+      update: PreferenceUpdateItem,
+    }),
   ),
   /**
    * The set of pending uploads to Transcend
    * Mapping from userId to the upload metadata
    */
-  pendingUpdates: t.record(t.string, PreferenceStorePurposeUpdate),
+  pendingUpdates: t.record(t.string, PreferenceUpdateItem),
 });
 
 /** Override type */

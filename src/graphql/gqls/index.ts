@@ -18,6 +18,8 @@ export * from './request';
 export * from './message';
 export * from './RequestEnricher';
 export * from './assessment';
+export * from './purpose';
+export * from './preferenceTopic';
 export * from './assessmentTemplate';
 export * from './prompt';
 export * from './RequestEnricher';
