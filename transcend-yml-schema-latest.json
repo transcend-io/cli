@@ -11,11 +11,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "type",
-              "collections"
-            ],
+            "required": ["title", "type", "collections"],
             "properties": {
               "title": {
                 "type": "string"
@@ -78,13 +74,7 @@
             "properties": {
               "priority": {
                 "type": "string",
-                "enum": [
-                  "WONT_DO",
-                  "LOW",
-                  "MEDIUM",
-                  "HIGH",
-                  "CRITICAL"
-                ]
+                "enum": ["WONT_DO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
               },
               "customerExperienceActionItemId": {
                 "type": "string"
@@ -117,10 +107,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -145,10 +132,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "productLine"
-            ],
+            "required": ["title", "productLine"],
             "properties": {
               "title": {
                 "type": "string"
@@ -194,9 +178,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string"
@@ -210,10 +192,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "description"
-            ],
+            "required": ["name", "description"],
             "properties": {
               "name": {
                 "type": "string"
@@ -348,9 +327,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string"
@@ -364,10 +341,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "output-identifiers"
-            ],
+            "required": ["title", "output-identifiers"],
             "properties": {
               "title": {
                 "type": "string"
@@ -421,10 +395,7 @@
               },
               "transitionRequestStatus": {
                 "type": "string",
-                "enum": [
-                  "CANCELED",
-                  "ON_HOLD"
-                ]
+                "enum": ["CANCELED", "ON_HOLD"]
               },
               "phoneNumbers": {
                 "type": "array",
@@ -5835,10 +5806,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "value"
-                      ],
+                      "required": ["name", "value"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -5897,10 +5865,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "type"
-            ],
+            "required": ["name", "type"],
             "properties": {
               "name": {
                 "type": "string"
@@ -5963,9 +5928,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name"
-                      ],
+                      "required": ["name"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -5997,9 +5960,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title"
-            ],
+            "required": ["title"],
             "properties": {
               "title": {
                 "type": "string"
@@ -11418,10 +11379,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -11458,9 +11416,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title"
-            ],
+            "required": ["title"],
             "properties": {
               "title": {
                 "type": "string"
@@ -16900,10 +16856,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -16928,10 +16881,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "category"
-            ],
+            "required": ["name", "category"],
             "properties": {
               "name": {
                 "type": "string"
@@ -16985,10 +16935,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -17013,10 +16960,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "purpose"
-            ],
+            "required": ["name", "purpose"],
             "properties": {
               "name": {
                 "type": "string"
@@ -17063,10 +17007,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -17091,9 +17032,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string"
@@ -17150,9 +17089,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string",
@@ -17197,11 +17134,7 @@
               },
               "regionDetectionMethod": {
                 "type": "string",
-                "enum": [
-                  "DISABLED",
-                  "AUTO",
-                  "FORM"
-                ]
+                "enum": ["DISABLED", "AUTO", "FORM"]
               },
               "regionList": {
                 "type": "array",
@@ -27996,10 +27929,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "type"
-            ],
+            "required": ["name", "type"],
             "properties": {
               "name": {
                 "type": "string"
@@ -28080,10 +28010,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "integrationName"
-            ],
+            "required": ["title", "integrationName"],
             "properties": {
               "title": {
                 "type": "string"
@@ -28114,10 +28041,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "value"
-                      ],
+                      "required": ["name", "value"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -28177,9 +28101,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "key"
-                      ],
+                      "required": ["key"],
                       "properties": {
                         "key": {
                           "type": "string"
@@ -28299,9 +28221,7 @@
                             "allOf": [
                               {
                                 "type": "object",
-                                "required": [
-                                  "key"
-                                ],
+                                "required": ["key"],
                                 "properties": {
                                   "key": {
                                     "type": "string"
@@ -28328,10 +28248,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "purpose",
-                                        "name"
-                                      ],
+                                      "required": ["purpose", "name"],
                                       "properties": {
                                         "purpose": {
                                           "type": "string",
@@ -28363,9 +28280,7 @@
                                       "allOf": [
                                         {
                                           "type": "object",
-                                          "required": [
-                                            "category"
-                                          ],
+                                          "required": ["category"],
                                           "properties": {
                                             "category": {
                                               "type": "string",
@@ -28419,9 +28334,7 @@
                                               "allOf": [
                                                 {
                                                   "type": "object",
-                                                  "required": [
-                                                    "category"
-                                                  ],
+                                                  "required": ["category"],
                                                   "properties": {
                                                     "category": {
                                                       "type": "string",
@@ -28467,11 +28380,7 @@
                                             },
                                             "confidenceLabel": {
                                               "type": "string",
-                                              "enum": [
-                                                "HIGH",
-                                                "MEDIUM",
-                                                "LOW"
-                                              ]
+                                              "enum": ["HIGH", "MEDIUM", "LOW"]
                                             },
                                             "confidence": {
                                               "type": "number"
@@ -28499,10 +28408,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "key",
-                                        "values"
-                                      ],
+                                      "required": ["key", "values"],
                                       "properties": {
                                         "key": {
                                           "type": "string"
@@ -28549,10 +28455,7 @@
                   },
                   "send-type": {
                     "type": "string",
-                    "enum": [
-                      "PER_DSR",
-                      "CROSS_DSR"
-                    ]
+                    "enum": ["PER_DSR", "CROSS_DSR"]
                   },
                   "include-identifiers-attachment": {
                     "type": "boolean"
@@ -33967,10 +33870,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -33995,23 +33895,14 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "value",
-              "type"
-            ],
+            "required": ["value", "type"],
             "properties": {
               "value": {
                 "type": "string"
               },
               "type": {
                 "type": "string",
-                "enum": [
-                  "HOST",
-                  "PATH",
-                  "QUERY_PARAM",
-                  "REGEX",
-                  "CSP"
-                ]
+                "enum": ["HOST", "PATH", "QUERY_PARAM", "REGEX", "CSP"]
               }
             }
           },
@@ -34032,10 +33923,7 @@
               },
               "status": {
                 "type": "string",
-                "enum": [
-                  "LIVE",
-                  "NEEDS_REVIEW"
-                ]
+                "enum": ["LIVE", "NEEDS_REVIEW"]
               },
               "owners": {
                 "type": "array",
@@ -34053,10 +33941,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -34081,9 +33966,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name"
-            ],
+            "required": ["name"],
             "properties": {
               "name": {
                 "type": "string"
@@ -34110,10 +33993,7 @@
               },
               "status": {
                 "type": "string",
-                "enum": [
-                  "LIVE",
-                  "NEEDS_REVIEW"
-                ]
+                "enum": ["LIVE", "NEEDS_REVIEW"]
               },
               "owners": {
                 "type": "array",
@@ -34131,10 +34011,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"
@@ -34176,52 +34053,30 @@
         },
         "consentPrecedence": {
           "type": "string",
-          "enum": [
-            "user",
-            "signal"
-          ]
+          "enum": ["user", "signal"]
         },
         "unknownRequestPolicy": {
           "type": "string",
-          "enum": [
-            "ALLOW",
-            "REQUIRE_FULL_CONSENT",
-            "BLOCK"
-          ]
+          "enum": ["ALLOW", "REQUIRE_FULL_CONSENT", "BLOCK"]
         },
         "unknownCookiePolicy": {
           "type": "string",
-          "enum": [
-            "ALLOW",
-            "REQUIRE_FULL_CONSENT",
-            "BLOCK"
-          ]
+          "enum": ["ALLOW", "REQUIRE_FULL_CONSENT", "BLOCK"]
         },
         "syncEndpoint": {
           "type": "string"
         },
         "telemetryPartitioning": {
           "type": "string",
-          "enum": [
-            "origin",
-            "path",
-            "url"
-          ]
+          "enum": ["origin", "path", "url"]
         },
         "signedIabAgreement": {
           "type": "string",
-          "enum": [
-            "yes",
-            "no",
-            "unknown"
-          ]
+          "enum": ["yes", "no", "unknown"]
         },
         "uspapi": {
           "type": "string",
-          "enum": [
-            "on",
-            "off"
-          ]
+          "enum": ["on", "off"]
         },
         "experiences": {
           "type": "array",
@@ -34229,9 +34084,7 @@
             "allOf": [
               {
                 "type": "object",
-                "required": [
-                  "name"
-                ],
+                "required": ["name"],
                 "properties": {
                   "name": {
                     "type": "string"
@@ -39647,21 +39500,14 @@
                   },
                   "onConsentExpiry": {
                     "type": "string",
-                    "enum": [
-                      "Prompt",
-                      "ResetAll",
-                      "ResetOptIns"
-                    ]
+                    "enum": ["Prompt", "ResetAll", "ResetOptIns"]
                   },
                   "consentExpiry": {
                     "type": "number"
                   },
                   "operator": {
                     "type": "string",
-                    "enum": [
-                      "IN",
-                      "NOT_IN"
-                    ]
+                    "enum": ["IN", "NOT_IN"]
                   },
                   "displayPriority": {
                     "type": "number"
@@ -39693,9 +39539,7 @@
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "trackingType"
-                      ],
+                      "required": ["trackingType"],
                       "properties": {
                         "trackingType": {
                           "type": "string"
@@ -39707,9 +39551,7 @@
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "trackingType"
-                      ],
+                      "required": ["trackingType"],
                       "properties": {
                         "trackingType": {
                           "type": "string"
@@ -40435,10 +40277,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title",
-          "content"
-        ],
+        "required": ["title", "content"],
         "properties": {
           "title": {
             "type": "string"
@@ -40453,10 +40292,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title",
-          "content"
-        ],
+        "required": ["title", "content"],
         "properties": {
           "title": {
             "type": "string"
@@ -40471,11 +40307,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "title",
-          "description",
-          "prompts"
-        ],
+        "required": ["title", "description", "prompts"],
         "properties": {
           "title": {
             "type": "string"
@@ -40524,21 +40356,14 @@
               },
               "large-language-model": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "client"
-                ],
+                "required": ["name", "client"],
                 "properties": {
                   "name": {
                     "type": "string"
                   },
                   "client": {
                     "type": "string",
-                    "enum": [
-                      "openai",
-                      "claude",
-                      "llama"
-                    ]
+                    "enum": ["openai", "claude", "llama"]
                   }
                 }
               }
@@ -40586,11 +40411,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "name",
-          "description",
-          "parameters"
-        ],
+        "required": ["name", "description", "parameters"],
         "properties": {
           "name": {
             "type": "string"
@@ -40610,12 +40431,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name",
-              "fileId",
-              "size",
-              "purpose"
-            ],
+            "required": ["name", "fileId", "size", "purpose"],
             "properties": {
               "name": {
                 "type": "string"
@@ -40953,10 +40769,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "url"
-                      ],
+                      "required": ["name", "url"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -40973,10 +40786,7 @@
                           "type": "array",
                           "items": {
                             "type": "object",
-                            "required": [
-                              "name",
-                              "url"
-                            ],
+                            "required": ["name", "url"],
                             "properties": {
                               "name": {
                                 "type": "string"
@@ -40995,10 +40805,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "url"
-                      ],
+                      "required": ["name", "url"],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -41015,10 +40822,7 @@
                           "type": "array",
                           "items": {
                             "type": "object",
-                            "required": [
-                              "name",
-                              "url"
-                            ],
+                            "required": ["name", "url"],
                             "properties": {
                               "name": {
                                 "type": "string"
@@ -41045,9 +40849,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title"
-            ],
+            "required": ["title"],
             "properties": {
               "title": {
                 "type": "string"
@@ -41152,9 +40954,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "properties": {
               "id": {
                 "type": "string"
@@ -41387,9 +41187,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "name"
-            ],
+            "required": ["name"],
             "properties": {
               "name": {
                 "type": "string"
@@ -41413,9 +41211,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title"
-            ],
+            "required": ["title"],
             "properties": {
               "title": {
                 "type": "string"
@@ -41431,10 +41227,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "title",
-                        "questions"
-                      ],
+                      "required": ["title", "questions"],
                       "properties": {
                         "title": {
                           "type": "string"
@@ -41445,10 +41238,7 @@
                             "allOf": [
                               {
                                 "type": "object",
-                                "required": [
-                                  "title",
-                                  "type"
-                                ],
+                                "required": ["title", "type"],
                                 "properties": {
                                   "title": {
                                     "type": "string"
@@ -41511,16 +41301,11 @@
                                     "allOf": [
                                       {
                                         "type": "object",
-                                        "required": [
-                                          "action"
-                                        ],
+                                        "required": ["action"],
                                         "properties": {
                                           "action": {
                                             "type": "string",
-                                            "enum": [
-                                              "SHOW",
-                                              "SKIP"
-                                            ]
+                                            "enum": ["SHOW", "SKIP"]
                                           }
                                         }
                                       },
@@ -41626,9 +41411,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "value"
-                                      ],
+                                      "required": ["value"],
                                       "properties": {
                                         "value": {
                                           "type": "string"
@@ -41787,18 +41570,11 @@
               },
               "status": {
                 "type": "string",
-                "enum": [
-                  "DRAFT",
-                  "PUBLISHED"
-                ]
+                "enum": ["DRAFT", "PUBLISHED"]
               },
               "source": {
                 "type": "string",
-                "enum": [
-                  "MANUAL",
-                  "DATA_INVENTORY",
-                  "IMPORT"
-                ]
+                "enum": ["MANUAL", "DATA_INVENTORY", "IMPORT"]
               },
               "creator": {
                 "type": "string"
@@ -41823,11 +41599,7 @@
               },
               "retention-schedule": {
                 "type": "object",
-                "required": [
-                  "type",
-                  "duration-days",
-                  "operand"
-                ],
+                "required": ["type", "duration-days", "operand"],
                 "properties": {
                   "type": {
                     "type": "string",
@@ -41841,11 +41613,7 @@
                   },
                   "operand": {
                     "type": "string",
-                    "enum": [
-                      "FULL_DELETE",
-                      "PARTIAL_DELETE",
-                      "NONE"
-                    ]
+                    "enum": ["FULL_DELETE", "PARTIAL_DELETE", "NONE"]
                   }
                 }
               },
@@ -41866,10 +41634,7 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "group"
-            ],
+            "required": ["title", "group"],
             "properties": {
               "title": {
                 "type": "string"
@@ -41888,10 +41653,7 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "title",
-                        "questions"
-                      ],
+                      "required": ["title", "questions"],
                       "properties": {
                         "title": {
                           "type": "string"
@@ -41902,10 +41664,7 @@
                             "allOf": [
                               {
                                 "type": "object",
-                                "required": [
-                                  "title",
-                                  "type"
-                                ],
+                                "required": ["title", "type"],
                                 "properties": {
                                   "title": {
                                     "type": "string"
@@ -41968,16 +41727,11 @@
                                     "allOf": [
                                       {
                                         "type": "object",
-                                        "required": [
-                                          "action"
-                                        ],
+                                        "required": ["action"],
                                         "properties": {
                                           "action": {
                                             "type": "string",
-                                            "enum": [
-                                              "SHOW",
-                                              "SKIP"
-                                            ]
+                                            "enum": ["SHOW", "SKIP"]
                                           }
                                         }
                                       },
@@ -42083,9 +41837,7 @@
                                     "type": "array",
                                     "items": {
                                       "type": "object",
-                                      "required": [
-                                        "value"
-                                      ],
+                                      "required": ["value"],
                                       "properties": {
                                         "value": {
                                           "type": "string"
@@ -42309,10 +42061,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "title",
-                    "type"
-                  ],
+                  "required": ["title", "type"],
                   "properties": {
                     "title": {
                       "type": "string"
@@ -42353,10 +42102,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "title",
-                    "type"
-                  ],
+                  "required": ["title", "type"],
                   "properties": {
                     "title": {
                       "type": "string"
@@ -42395,11 +42141,7 @@
               },
               "retention-schedule": {
                 "type": "object",
-                "required": [
-                  "type",
-                  "duration-days",
-                  "operand"
-                ],
+                "required": ["type", "duration-days", "operand"],
                 "properties": {
                   "type": {
                     "type": "string",
@@ -42413,11 +42155,7 @@
                   },
                   "operand": {
                     "type": "string",
-                    "enum": [
-                      "FULL_DELETE",
-                      "PARTIAL_DELETE",
-                      "NONE"
-                    ]
+                    "enum": ["FULL_DELETE", "PARTIAL_DELETE", "NONE"]
                   }
                 }
               },
@@ -42425,10 +42163,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "key",
-                    "values"
-                  ],
+                  "required": ["key", "values"],
                   "properties": {
                     "key": {
                       "type": "string"

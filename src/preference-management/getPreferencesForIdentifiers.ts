@@ -30,6 +30,7 @@ export async function getPreferencesForIdentifiers(
   {
     identifiers,
     partitionKey,
+    skipLogging = false,
   }: {
     /** The list of identifiers to look up */
     identifiers: {
@@ -38,6 +39,8 @@ export async function getPreferencesForIdentifiers(
     }[];
     /** The partition key to look up */
     partitionKey: string;
+    /** Whether to skip logging */
+    skipLogging?: boolean;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const results: PreferenceQueryResponseItem[] = [];
@@ -49,7 +52,9 @@ export async function getPreferencesForIdentifiers(
     {},
     cliProgress.Presets.shades_classic,
   );
-  progressBar.start(identifiers.length, 0);
+  if (!skipLogging) {
+    progressBar.start(identifiers.length, 0);
+  }
 
   let total = 0;
   await map(
@@ -63,6 +68,7 @@ export async function getPreferencesForIdentifiers(
               filter: {
                 identifiers: group,
               },
+              limit: group.length,
             },
           })
           .json();
@@ -101,7 +107,9 @@ export async function getPreferencesForIdentifiers(
         const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
         results.push(...result.nodes);
         total += group.length;
-        progressBar.update(total);
+        if (!skipLogging) {
+          progressBar.update(total);
+        }
       }
     },
     {
@@ -113,10 +121,12 @@ export async function getPreferencesForIdentifiers(
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
 
-  // Log completion time
-  logger.info(
-    colors.green(`Completed upload in "${totalTime / 1000}" seconds.`),
-  );
+  if (!skipLogging) {
+    // Log completion time
+    logger.info(
+      colors.green(`Completed download in "${totalTime / 1000}" seconds.`),
+    );
+  }
 
   return results;
 }

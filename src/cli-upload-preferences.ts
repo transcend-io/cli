@@ -37,10 +37,12 @@ async function main(): Promise<void> {
     partition,
     /** Whether to do a dry run */
     dryRun = 'false',
-    /** Whether to refresh cache */
-    refreshCache = 'false',
+    /** Whether to skip workflow triggers */
+    skipWorkflowTriggers = 'false',
+    /** Whether to skip sending emails */
+    isSilent = 'true',
     /** Attributes to add to any DSR request if created */
-    attributes = 'Tags:transcend-cli',
+    attributes = 'Tags:transcend-cli,Source:transcend-cli',
     /** Store resulting, continuing where left off  */
     receiptFilepath = './preference-management-upload-receipts.json',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
@@ -73,8 +75,9 @@ async function main(): Promise<void> {
     sombraAuth,
     files: splitCsvToList(files),
     partition,
-    refreshPreferenceStoreCache: refreshCache === 'true',
     transcendUrl,
+    skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
+    isSilent: isSilent !== 'false',
     dryRun: dryRun !== 'false',
     attributes: splitCsvToList(attributes),
   });

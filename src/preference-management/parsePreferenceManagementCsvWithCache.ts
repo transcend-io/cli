@@ -15,9 +15,12 @@ import {
 } from './codecs';
 import { logger } from '../logger';
 import { readCsv } from '../requests';
-import { getPreferencesFromIdentifiersWithCache } from './getPreferencesFromIdentifiersWithCache';
+import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { Purpose, PreferenceTopic } from '../graphql';
 import { mapSeries } from 'bluebird';
+import { inquirerConfirmBoolean } from '../helpers';
+import { PreferenceStorePurposeResponse } from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
 
 export const NONE_PREFERENCE_MAP = '[NONE]';
 
@@ -36,26 +39,42 @@ export function getUpdatesFromPreferenceRow({
   /** Column names to parse */
   columnToPurposeName: Record<string, PurposeRowMapping>;
 }): {
-  [k in string]: {
-    /** Purpose enabled */
-    enabled: boolean;
-  };
+  [k in string]: Omit<PreferenceStorePurposeResponse, 'purpose'>;
 } {
-  return Object.keys(columnToPurposeName).reduce(
-    (acc, col) =>
-      Object.assign(acc, {
-        [columnToPurposeName[col].purpose]: {
-          enabled: columnToPurposeName[col].valueMapping[row[col]] === true,
-        },
-      }),
-    {} as Record<
-      string,
-      {
-        /** Enabled */
-        enabled: boolean;
+  const result: {
+    [k in string]: Partial<PreferenceStorePurposeResponse>;
+  } = {};
+
+  Object.keys(columnToPurposeName).forEach((col) => {
+    const mappings = columnToPurposeName[col];
+    const [purpose, preference] = mappings.purpose.split('->');
+
+    if (preference) {
+      if (!result[purpose]) {
+        result[purpose] = {
+          preferences: [],
+        };
       }
-    >,
-  );
+      result[purpose].preferences!.push({
+        topic: preference,
+        choice: {
+          // FIXME select and multi select
+          booleanValue: mappings.valueMapping[row[col]] === true,
+        },
+      });
+    } else if (!result[purpose]) {
+      result[purpose] = {
+        enabled: mappings.valueMapping[row[col]] === true,
+      };
+    } else {
+      result[purpose].enabled = mappings.valueMapping[row[col]] === true;
+    }
+  });
+
+  return apply(result, (x) => ({
+    ...x,
+    enabled: x.enabled!,
+  }));
 }
 
 /**
@@ -69,11 +88,9 @@ export function getUpdatesFromPreferenceRow({
 export async function parsePreferenceManagementCsvWithCache(
   {
     file,
-    ignoreCache,
     sombra,
     purposes,
-    // FIXME
-    // preferenceTopics,
+    preferenceTopics,
     partitionKey,
   }: {
     /** File to parse */
@@ -82,8 +99,6 @@ export async function parsePreferenceManagementCsvWithCache(
     purposes: Purpose[];
     /** The preference topics */
     preferenceTopics: PreferenceTopic[];
-    /** Whether to use or ignore cache */
-    ignoreCache?: boolean;
     /** Sombra got instance */
     sombra: Got;
     /** Partition key */
@@ -98,7 +113,7 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
-  const preferences = readCsv(file, t.record(t.string, t.string));
+  let preferences = readCsv(file, t.record(t.string, t.string));
 
   // start building the cache, can use previous cache as well
   const currentState: FileMetadataState = {
@@ -115,71 +130,10 @@ export async function parsePreferenceManagementCsvWithCache(
   const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
 
   // Determine the identifier column to work off of
-  if (!currentState.identifierColumn) {
-    const { identifierName } = await inquirer.prompt<{
-      /** Identifier name */
-      identifierName: string;
-    }>([
-      {
-        name: 'identifierName',
-        message:
-          'Choose the column that will be used as the identifier to upload consent preferences by',
-        type: 'list',
-        default:
-          columnNames.find((col) => col.toLowerCase().includes('email')) ||
-          columnNames[0],
-        choices: columnNames,
-      },
-    ]);
-    currentState.identifierColumn = identifierName;
-    fileMetadata[file] = currentState;
-    cache.setValue(fileMetadata, 'fileMetadata');
-  }
-  logger.info(
-    colors.magenta(
-      `Using identifier column "${currentState.identifierColumn}" in file: "${file}"`,
-    ),
+  const remainingColumnsForTimestamp = difference(
+    columnNames,
+    currentState.identifierColumn ? [currentState.identifierColumn] : [],
   );
-
-  // Validate that the identifier column is present for all rows and unique
-  const identifierColumnsMissing = preferences
-    .map((pref, ind) => (pref[currentState.identifierColumn!] ? null : [ind]))
-    .filter((x): x is number[] => !!x)
-    .flat();
-  if (identifierColumnsMissing.length > 0) {
-    throw new Error(
-      `The identifier column "${
-        currentState.identifierColumn
-      }" is missing a value for the following rows: ${identifierColumnsMissing.join(
-        ', ',
-      )} in file "${file}"`,
-    );
-  }
-  logger.info(
-    colors.magenta(
-      `The identifier column "${currentState.identifierColumn}" is present for all rows in file: "${file}"`,
-    ),
-  );
-
-  // Validate that all identifiers are unique
-  const rowsByUserId = groupBy(preferences, currentState.identifierColumn);
-  const duplicateIdentifiers = Object.entries(rowsByUserId).filter(
-    ([, rows]) => rows.length > 1,
-  );
-  if (duplicateIdentifiers.length > 0) {
-    throw new Error(
-      `The identifier column "${
-        currentState.identifierColumn
-      }" has duplicate values for the following rows: ${duplicateIdentifiers
-        .map(([userId, rows]) => `${userId} (${rows.length})`)
-        .join(', ')} in file "${file}"`,
-    );
-  }
-
-  // Determine the identifier column to work off of
-  const remainingColumns = difference(columnNames, [
-    currentState.identifierColumn,
-  ]);
   if (!currentState.timestampColum) {
     const { timestampName } = await inquirer.prompt<{
       /** timestamp name */
@@ -191,10 +145,14 @@ export async function parsePreferenceManagementCsvWithCache(
           'Choose the column that will be used as the timestamp of last preference update',
         type: 'list',
         default:
-          remainingColumns.find((col) => col.toLowerCase().includes('date')) ||
-          remainingColumns.find((col) => col.toLowerCase().includes('time')) ||
-          remainingColumns[0],
-        choices: [...remainingColumns, NONE_PREFERENCE_MAP],
+          remainingColumnsForTimestamp.find((col) =>
+            col.toLowerCase().includes('date'),
+          ) ||
+          remainingColumnsForTimestamp.find((col) =>
+            col.toLowerCase().includes('time'),
+          ) ||
+          remainingColumnsForTimestamp[0],
+        choices: [...remainingColumnsForTimestamp, NONE_PREFERENCE_MAP],
       },
     ]);
     currentState.timestampColum = timestampName;
@@ -218,7 +176,7 @@ export async function parsePreferenceManagementCsvWithCache(
         `The timestamp column "${
           currentState.timestampColum
         }" is missing a value for the following rows: ${timestampColumnsMissing.join(
-          ', ',
+          '\n',
         )} in file "${file}"`,
       );
     }
@@ -229,12 +187,123 @@ export async function parsePreferenceManagementCsvWithCache(
     );
   }
 
+  // Determine the identifier column to work off of
+  const remainingColumnsForIdentifier = difference(
+    columnNames,
+    currentState.identifierColumn ? [currentState.identifierColumn] : [],
+  );
+  if (!currentState.identifierColumn) {
+    const { identifierName } = await inquirer.prompt<{
+      /** Identifier name */
+      identifierName: string;
+    }>([
+      {
+        name: 'identifierName',
+        message:
+          'Choose the column that will be used as the identifier to upload consent preferences by',
+        type: 'list',
+        default:
+          remainingColumnsForIdentifier.find((col) =>
+            col.toLowerCase().includes('email'),
+          ) || remainingColumnsForIdentifier[0],
+        choices: remainingColumnsForIdentifier,
+      },
+    ]);
+    currentState.identifierColumn = identifierName;
+    fileMetadata[file] = currentState;
+    cache.setValue(fileMetadata, 'fileMetadata');
+  }
+  logger.info(
+    colors.magenta(
+      `Using identifier column "${currentState.identifierColumn}" in file: "${file}"`,
+    ),
+  );
+
+  // Validate that the identifier column is present for all rows and unique
+  const identifierColumnsMissing = preferences
+    .map((pref, ind) => (pref[currentState.identifierColumn!] ? null : [ind]))
+    .filter((x): x is number[] => !!x)
+    .flat();
+  if (identifierColumnsMissing.length > 0) {
+    logger.warn(
+      colors.yellow(
+        `The identifier column "${
+          currentState.identifierColumn
+        }" is missing a value for the following rows: ${identifierColumnsMissing.join(
+          ', ',
+        )} in file "${file}"`,
+      ),
+    );
+    const skip = await inquirerConfirmBoolean({
+      message: 'Would you like to skip rows missing an identifier?',
+    });
+    if (!skip) {
+      throw new Error(
+        `The identifier column "${
+          currentState.identifierColumn
+        }" is missing a value for the following rows: ${identifierColumnsMissing.join(
+          ', ',
+        )} in file "${file}"`,
+      );
+    }
+    const previous = preferences.length;
+    preferences = preferences.filter(
+      (pref) => pref[currentState.identifierColumn!],
+    );
+    logger.info(
+      colors.yellow(
+        `Skipped ${
+          previous - preferences.length
+        } rows missing an identifier in file "${file}"`,
+      ),
+    );
+  }
+  logger.info(
+    colors.magenta(
+      `The identifier column "${currentState.identifierColumn}" is present for all rows in file: "${file}"`,
+    ),
+  );
+
+  // Validate that all identifiers are unique
+  const rowsByUserId = groupBy(preferences, currentState.identifierColumn);
+  const duplicateIdentifiers = Object.entries(rowsByUserId).filter(
+    ([, rows]) => rows.length > 1,
+  );
+  if (duplicateIdentifiers.length > 0) {
+    const msg = `The identifier column "${
+      currentState.identifierColumn
+    }" has duplicate values for the following rows: ${duplicateIdentifiers
+      .slice(0, 10)
+      .map(([userId, rows]) => `${userId} (${rows.length})`)
+      .join('\n')} in file "${file}"`;
+    logger.warn(colors.yellow(msg));
+    const skip = await inquirerConfirmBoolean({
+      message: 'Would you like to automatically take the latest update?',
+    });
+    if (!skip) {
+      throw new Error(msg);
+    }
+    preferences = Object.entries(rowsByUserId)
+      .map(([, rows]) => {
+        const sorted = rows.sort(
+          (a, b) =>
+            new Date(b[currentState.timestampColum!]).getTime() -
+            new Date(a[currentState.timestampColum!]).getTime(),
+        );
+        return sorted[0];
+      })
+      .filter((x) => x);
+  }
+
   // Ensure all rows are accounted for
   const otherColumns = difference(columnNames, [
     currentState.identifierColumn,
     currentState.timestampColum,
   ]);
-  const purposeNames = purposes.map((x) => x.trackingType);
+  const purposeNames = [
+    ...purposes.map((x) => x.trackingType),
+    ...preferenceTopics.map((x) => `${x.purpose.trackingType}->${x.slug}`),
+  ];
   if (otherColumns.length === 0) {
     throw new Error(`No other columns to process in file "${file}"`);
   }
@@ -301,16 +370,11 @@ export async function parsePreferenceManagementCsvWithCache(
   const identifiers = preferences.map(
     (pref) => pref[currentState.identifierColumn!],
   );
-  const existingConsentRecords = await getPreferencesFromIdentifiersWithCache(
-    {
-      identifiers,
-      ignoreCache,
-      sombra,
-      partitionKey,
-    },
-    cache,
-  );
-  const consentRecordByEmail = keyBy(existingConsentRecords, 'userId');
+  const existingConsentRecords = await getPreferencesForIdentifiers(sombra, {
+    identifiers: identifiers.map((x) => ({ value: x })),
+    partitionKey,
+  });
+  const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
 
   // Clear out previous updates
   currentState.pendingConflictUpdates = {};
@@ -331,7 +395,7 @@ export async function parsePreferenceManagementCsvWithCache(
     );
 
     // Grab current state of the update
-    const currentConsentRecord = consentRecordByEmail[userId];
+    const currentConsentRecord = consentRecordByIdentifier[userId];
 
     // Check if the update can be skipped
     if (
@@ -346,6 +410,12 @@ export async function parsePreferenceManagementCsvWithCache(
       currentState.skippedUpdates[userId] = pref;
       return;
     }
+    // console.log({
+    //   purposeMapping,
+    //   purposes: currentConsentRecord?.purposes,
+    //   currentConsentRecord,
+    //   userId,
+    // });
 
     // Determine if there are any conflicts
     const hasConflicts =
@@ -357,7 +427,10 @@ export async function parsePreferenceManagementCsvWithCache(
         return currentPurpose && currentPurpose.enabled !== value;
       });
     if (hasConflicts) {
-      currentState.pendingConflictUpdates[userId] = pref;
+      currentState.pendingConflictUpdates[userId] = {
+        row: pref,
+        record: currentConsentRecord,
+      };
       return;
     }
 
@@ -375,23 +448,5 @@ export async function parsePreferenceManagementCsvWithCache(
     ),
   );
 }
-
-// // Ensure usp strings are valid
-// const invalidUspStrings = preferences.filter(
-//   (pref) => pref.usp && !USP_STRING_REGEX.test(pref.usp),
-// );
-// if (invalidUspStrings.length > 0) {
-//   throw new Error(
-//     `Received invalid usp strings: ${JSON.stringify(
-//       invalidUspStrings,
-//       null,
-//       2,
-//     )}`,
-//   );
-// }
-// // parse usp string
-// const [, saleStatus] = consent.usp
-//   ? USP_STRING_REGEX.exec(consent.usp) || []
-//   : [];
 
 /* eslint-enable max-lines */

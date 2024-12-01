@@ -4,9 +4,9 @@ import {
   fetchAllPurposes,
 } from '../graphql';
 import colors from 'colors';
+import { map, mapSeries } from 'bluebird';
 import chunk from 'lodash/chunk';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../constants';
-import { mapSeries } from 'bluebird';
 import { logger } from '../logger';
 import cliProgress from 'cli-progress';
 import { parseAttributesFromString } from '../requests';
@@ -19,7 +19,7 @@ import {
 import { PreferenceState } from './codecs';
 import { fetchAllPreferenceTopics } from '../graphql/fetchAllPreferenceTopics';
 import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
-import { getPreferencesFromIdentifiersWithCache } from './getPreferencesFromIdentifiersWithCache';
+import { apply } from '@transcend-io/type-utils';
 
 /**
  * Upload a set of consent preferences
@@ -32,8 +32,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   receiptFilepath,
   files,
   partition,
+  isSilent = true,
   dryRun = false,
-  refreshPreferenceStoreCache = false,
+  skipWorkflowTriggers = false,
   attributes = [],
   transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
 }: {
@@ -45,29 +46,28 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   partition: string;
   /** File where to store receipt and continue from where left off */
   receiptFilepath: string;
-  /** When true, re-pull preference store cache when comparing consent values. Defaults to looking in cache for current preference store value. */
-  refreshPreferenceStoreCache?: boolean;
   /** The files to process */
   files: string[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Whether to do a dry run */
   dryRun?: boolean;
+  /** Whether to upload as isSilent */
+  isSilent?: boolean;
   /** Attributes string pre-parse. In format Key:Value */
   attributes?: string[];
+  /** Skip workflow triggers */
+  skipWorkflowTriggers?: boolean;
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
 
   // Create a new state file to store the requests from this run
   const preferenceState = new PersistedState(receiptFilepath, PreferenceState, {
-    successfulUpdates: {},
+    fileMetadata: {},
     failingUpdates: {},
     pendingUpdates: {},
-    preferenceStoreRecords: {},
-    fileMetadata: {},
   });
-  const successfulRequests = preferenceState.getValue('successfulUpdates');
   const failingRequests = preferenceState.getValue('failingUpdates');
   const pendingRequests = preferenceState.getValue('pendingUpdates');
   const fileMetadata = preferenceState.getValue('fileMetadata');
@@ -75,9 +75,6 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   logger.info(
     colors.magenta(
       'Restored cache, there are: \n' +
-        `${
-          Object.values(successfulRequests).length
-        } successful requests that were previously processed\n` +
         `${
           Object.values(failingRequests).length
         } failing requests to be retried\n` +
@@ -91,12 +88,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           .join('\n')}\n` +
         `The following files will be read in and refreshed in the cache:\n${files.join(
           '\n',
-        )}\n ` +
-        `The following attributes will be applied to all requests:\n${JSON.stringify(
-          parsedAttributes,
-          null,
-          2,
-        )}`,
+        )}\n`,
     ),
   );
 
@@ -118,7 +110,6 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         file,
         purposes,
         preferenceTopics,
-        ignoreCache: refreshPreferenceStoreCache,
         sombra,
         partitionKey: partition,
       },
@@ -155,7 +146,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     );
     Object.entries({
       ...metadata.pendingSafeUpdates,
-      ...metadata.pendingConflictUpdates,
+      ...apply(metadata.pendingConflictUpdates, ({ row }) => row),
     }).forEach(([userId, update]) => {
       const currentUpdate = pendingUpdates[userId];
       const timestamp =
@@ -171,6 +162,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         const newPurposes = Object.entries(updates).map(([purpose, value]) => ({
           ...value,
           purpose,
+          workflowSettings: {
+            attributes: parsedAttributes,
+            isSilent,
+            skipWorkflowTrigger: skipWorkflowTriggers,
+          },
         }));
         (currentUpdate.purposes || []).forEach((purpose) => {
           if (updates[purpose.purpose].enabled !== purpose.enabled) {
@@ -208,6 +204,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           purposes: Object.entries(updates).map(([purpose, value]) => ({
             ...value,
             purpose,
+            workflowSettings: {
+              attributes: parsedAttributes,
+              isSilent,
+              skipWorkflowTrigger: skipWorkflowTriggers,
+            },
           })),
         };
       }
@@ -224,7 +225,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   }
 
   logger.info(
-    colors.magenta(`Uploading preferences to partition: ${partition}`),
+    colors.magenta(
+      `Uploading ${
+        Object.values(pendingUpdates).length
+      } preferences to partition: ${partition}`,
+    ),
   );
 
   // Time duration
@@ -239,56 +244,57 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   // Build a GraphQL client
   let total = 0;
   const updatesToRun = Object.entries(pendingUpdates);
-  const chunkedUpdates = chunk(updatesToRun, 100);
+  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 100 : 10);
   progressBar.start(updatesToRun.length, 0);
-  await mapSeries(chunkedUpdates, async (chunkedUpdates) => {
-    const failingUpdates = preferenceState.getValue('failingUpdates');
-    const successfulUpdates = preferenceState.getValue('successfulUpdates');
-    const pendingUpdates = preferenceState.getValue('pendingUpdates');
-
-    // Make the request
-    try {
-      await sombra
-        .put('/v1/preferences', {
-          json: {
-            records: chunkedUpdates,
-          },
-        })
-        .json();
-      chunkedUpdates.forEach(([userId, update]) => {
-        successfulUpdates[userId].push({
-          uploadedAt: new Date().toISOString(),
-          update,
-        });
-        delete pendingUpdates[userId];
-      });
-      preferenceState.setValue(pendingUpdates, 'pendingUpdates');
-      preferenceState.setValue(successfulUpdates, 'successfulUpdates');
-    } catch (err) {
+  await map(
+    chunkedUpdates,
+    async (currentChunk) => {
+      // Make the request
       try {
-        const parsed = JSON.parse(err?.response?.body || '{}');
-        if (parsed.error) {
-          logger.error(colors.red(`Error: ${parsed.error}`));
+        await sombra
+          .put('v1/preferences', {
+            json: {
+              records: currentChunk.map(([, update]) => update),
+              skipWorkflowTriggers,
+            },
+          })
+          .json();
+      } catch (err) {
+        try {
+          const parsed = JSON.parse(err?.response?.body || '{}');
+          if (parsed.error) {
+            logger.error(colors.red(`Error: ${parsed.error}`));
+          }
+        } catch (e) {
+          // continue
         }
-      } catch (e) {
-        // continue
+        logger.error(
+          colors.red(
+            `Failed to upload ${
+              currentChunk.length
+            } user preferences to partition ${partition}: ${
+              err?.response?.body || err?.message
+            }`,
+          ),
+        );
+        const failingUpdates = preferenceState.getValue('failingUpdates');
+        currentChunk.forEach(([userId, update]) => {
+          failingUpdates[userId] = {
+            uploadedAt: new Date().toISOString(),
+            update,
+            error: err?.response?.body || err?.message || 'Unknown error',
+          };
+        });
+        preferenceState.setValue(failingUpdates, 'failingUpdates');
       }
 
-      chunkedUpdates.forEach(([userId, update]) => {
-        failingUpdates[userId] = {
-          uploadedAt: new Date().toISOString(),
-          update,
-          error: err?.response?.body || err?.message || 'Unknown error',
-        };
-        delete pendingUpdates[userId];
-      });
-      preferenceState.setValue(failingUpdates, 'failingUpdates');
-      preferenceState.setValue(pendingUpdates, 'pendingUpdates');
-    }
-
-    total += chunkedUpdates.length;
-    progressBar.update(total);
-  });
+      total += currentChunk.length;
+      progressBar.update(total);
+    },
+    {
+      concurrency: 10,
+    },
+  );
 
   progressBar.stop();
   const t1 = new Date().getTime();
@@ -301,18 +307,5 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         totalTime / 1000
       }" seconds!`,
     ),
-  );
-
-  logger.info(colors.magenta('Refreshing cache...'));
-
-  const updateIdentifiers = Object.keys(pendingUpdates);
-  await getPreferencesFromIdentifiersWithCache(
-    {
-      identifiers: updateIdentifiers,
-      ignoreCache: true,
-      sombra,
-      partitionKey: partition,
-    },
-    preferenceState,
   );
 }

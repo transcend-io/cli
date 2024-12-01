@@ -29,7 +29,13 @@ export const FileMetadataState = t.intersection([
      * Mapping of userId to the rows in the file that need to be uploaded
      * these records have conflicts with existing consent preferences
      */
-    pendingConflictUpdates: t.record(t.string, t.record(t.string, t.string)),
+    pendingConflictUpdates: t.record(
+      t.string,
+      t.type({
+        record: PreferenceQueryResponseItem,
+        row: t.record(t.string, t.string),
+      }),
+    ),
     /**
      * Mapping of userId to the rows in the file that can be skipped because
      * their preferences are already in the store
@@ -50,31 +56,9 @@ export type FileMetadataState = t.TypeOf<typeof FileMetadataState>;
 /** Persist this data between runs of the script */
 export const PreferenceState = t.type({
   /**
-   * Mapping from core userId to preference store record
-   */
-  preferenceStoreRecords: t.record(
-    t.string,
-    t.union([PreferenceQueryResponseItem, t.null]),
-  ),
-  /**
    * Store a cache of previous files read in
    */
   fileMetadata: t.record(t.string, FileMetadataState),
-  /**
-   * The set of successful uploads to Transcend
-   * Mapping from userId to the upload metadata
-   */
-  successfulUpdates: t.record(
-    t.string,
-    t.array(
-      t.type({
-        /** Time upload ran at */
-        uploadedAt: t.string,
-        /** The update body */
-        update: PreferenceUpdateItem,
-      }),
-    ),
-  ),
   /**
    * The set of successful uploads to Transcend
    * Mapping from userId to the upload metadata
