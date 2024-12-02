@@ -4,22 +4,20 @@ import {
   fetchAllPurposes,
 } from '../graphql';
 import colors from 'colors';
-import { map, mapSeries } from 'bluebird';
+import { map } from 'bluebird';
 import chunk from 'lodash/chunk';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../constants';
 import { logger } from '../logger';
 import cliProgress from 'cli-progress';
 import { parseAttributesFromString } from '../requests';
 import { PersistedState } from '@transcend-io/persisted-state';
-import {
-  NONE_PREFERENCE_MAP,
-  getUpdatesFromPreferenceRow,
-  parsePreferenceManagementCsvWithCache,
-} from './parsePreferenceManagementCsvWithCache';
+import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
 import { PreferenceState } from './codecs';
 import { fetchAllPreferenceTopics } from '../graphql/fetchAllPreferenceTopics';
 import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
 import { apply } from '@transcend-io/type-utils';
+import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
+import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 
 /**
  * Upload a set of consent preferences
@@ -30,11 +28,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   auth,
   sombraAuth,
   receiptFilepath,
-  files,
+  file,
   partition,
   isSilent = true,
   dryRun = false,
   skipWorkflowTriggers = false,
+  skipConflictUpdates = false,
   attributes = [],
   transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
 }: {
@@ -46,8 +45,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   partition: string;
   /** File where to store receipt and continue from where left off */
   receiptFilepath: string;
-  /** The files to process */
-  files: string[];
+  /** The file to process */
+  file: string;
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Whether to do a dry run */
@@ -58,6 +57,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   attributes?: string[];
   /** Skip workflow triggers */
   skipWorkflowTriggers?: boolean;
+  /**
+   * When true, only update preferences that do not conflict with existing
+   * preferences. When false, update all preferences in CSV based on timestamp.
+   */
+  skipConflictUpdates?: boolean;
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
@@ -70,7 +74,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   });
   const failingRequests = preferenceState.getValue('failingUpdates');
   const pendingRequests = preferenceState.getValue('pendingUpdates');
-  const fileMetadata = preferenceState.getValue('fileMetadata');
+  let fileMetadata = preferenceState.getValue('fileMetadata');
 
   logger.info(
     colors.magenta(
@@ -86,9 +90,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         )
           .map((x) => x)
           .join('\n')}\n` +
-        `The following files will be read in and refreshed in the cache:\n${files.join(
-          '\n',
-        )}\n`,
+        `The following file will be processed: ${file}\n`,
     ),
   );
 
@@ -103,123 +105,91 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     fetchAllPreferenceTopics(client),
   ]);
 
-  // Process each file
-  await mapSeries(files, async (file) => {
-    await parsePreferenceManagementCsvWithCache(
-      {
-        file,
-        purposes,
-        preferenceTopics,
-        sombra,
-        partitionKey: partition,
-      },
-      preferenceState,
-    );
-  });
+  // Process the file
+  await parsePreferenceManagementCsvWithCache(
+    {
+      file,
+      purposeSlugs: purposes.map((x) => x.trackingType),
+      preferenceTopics,
+      sombra,
+      partitionKey: partition,
+    },
+    preferenceState,
+  );
 
   // Construct the pending updates
   const pendingUpdates: Record<string, PreferenceUpdateItem> = {};
-  files.forEach((file) => {
-    const fileMetadata = preferenceState.getValue('fileMetadata');
-    const metadata = fileMetadata[file];
+  fileMetadata = preferenceState.getValue('fileMetadata');
+  const metadata = fileMetadata[file];
 
-    logger.info(
-      colors.magenta(
-        `Found ${
-          Object.entries(metadata.pendingSafeUpdates).length
-        } safe updates in ${file}`,
-      ),
-    );
-    logger.info(
-      colors.magenta(
-        `Found ${
-          Object.entries(metadata.pendingConflictUpdates).length
-        } conflict updates in ${file}`,
-      ),
-    );
-    logger.info(
-      colors.magenta(
-        `Found ${
-          Object.entries(metadata.skippedUpdates).length
-        } skipped updates in ${file}`,
-      ),
-    );
-    Object.entries({
-      ...metadata.pendingSafeUpdates,
-      ...apply(metadata.pendingConflictUpdates, ({ row }) => row),
-    }).forEach(([userId, update]) => {
-      const currentUpdate = pendingUpdates[userId];
-      const timestamp =
-        metadata.timestampColum === NONE_PREFERENCE_MAP
-          ? new Date()
-          : new Date(update[metadata.timestampColum!]);
-      const updates = getUpdatesFromPreferenceRow({
-        row: update,
-        columnToPurposeName: metadata.columnToPurposeName,
-      });
+  logger.info(
+    colors.magenta(
+      `Found ${
+        Object.entries(metadata.pendingSafeUpdates).length
+      } safe updates in ${file}`,
+    ),
+  );
+  logger.info(
+    colors.magenta(
+      `Found ${
+        Object.entries(metadata.pendingConflictUpdates).length
+      } conflict updates in ${file}`,
+    ),
+  );
+  logger.info(
+    colors.magenta(
+      `Found ${
+        Object.entries(metadata.skippedUpdates).length
+      } skipped updates in ${file}`,
+    ),
+  );
 
-      if (currentUpdate) {
-        const newPurposes = Object.entries(updates).map(([purpose, value]) => ({
-          ...value,
-          purpose,
-          workflowSettings: {
-            attributes: parsedAttributes,
-            isSilent,
-            skipWorkflowTrigger: skipWorkflowTriggers,
-          },
-        }));
-        (currentUpdate.purposes || []).forEach((purpose) => {
-          if (updates[purpose.purpose].enabled !== purpose.enabled) {
-            logger.warn(
-              colors.yellow(
-                `Conflict detected for user: ${userId} and purpose: ${purpose.purpose}`,
-              ),
-            );
-          }
-        });
-        pendingUpdates[userId] = {
-          userId,
-          partition,
-          // take the most recent timestamp
-          timestamp:
-            timestamp > new Date(currentUpdate.timestamp)
-              ? timestamp.toISOString()
-              : currentUpdate.timestamp,
-          purposes: [
-            ...(currentUpdate.purposes || []),
-            ...newPurposes.filter(
-              (newPurpose) =>
-                !(currentUpdate.purposes || []).find(
-                  (currentPurpose) =>
-                    currentPurpose.purpose === newPurpose.purpose,
-                ),
-            ),
-          ],
-        };
-      } else {
-        pendingUpdates[userId] = {
-          userId,
-          partition,
-          timestamp: timestamp.toISOString(),
-          purposes: Object.entries(updates).map(([purpose, value]) => ({
-            ...value,
-            purpose,
-            workflowSettings: {
-              attributes: parsedAttributes,
-              isSilent,
-              skipWorkflowTrigger: skipWorkflowTriggers,
-            },
-          })),
-        };
-      }
+  // Update either safe updates only or safe + conflict
+  Object.entries({
+    ...metadata.pendingSafeUpdates,
+    ...(skipConflictUpdates
+      ? {}
+      : apply(metadata.pendingConflictUpdates, ({ row }) => row)),
+  }).forEach(([userId, update]) => {
+    // Determine timestamp
+    const timestamp =
+      metadata.timestampColum === NONE_PREFERENCE_MAP
+        ? new Date()
+        : new Date(update[metadata.timestampColum!]);
+
+    // Determine updates
+    const updates = getPreferenceUpdatesFromRow({
+      row: update,
+      columnToPurposeName: metadata.columnToPurposeName,
+      preferenceTopics,
+      purposeSlugs: purposes.map((x) => x.trackingType),
     });
+    pendingUpdates[userId] = {
+      userId,
+      partition,
+      timestamp: timestamp.toISOString(),
+      purposes: Object.entries(updates).map(([purpose, value]) => ({
+        ...value,
+        purpose,
+        workflowSettings: {
+          attributes: parsedAttributes,
+          isSilent,
+          skipWorkflowTrigger: skipWorkflowTriggers,
+        },
+      })),
+    };
   });
   preferenceState.setValue(pendingUpdates, 'pendingUpdates');
   preferenceState.setValue({}, 'failingUpdates');
 
+  // Exist early if dry run
   if (dryRun) {
     logger.info(
-      colors.green(`Dry run complete, exiting. Check file: ${receiptFilepath}`),
+      colors.green(
+        `Dry run complete, exiting. ${
+          Object.values(pendingUpdates).length
+        } pending updates. Check file: ${receiptFilepath}`,
+      ),
     );
     return;
   }

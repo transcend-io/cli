@@ -26,7 +26,7 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     /** File to load preferences from */
-    files = './preferences.csv',
+    file = './preferences.csv',
     /** Transcend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
     /** API key */
@@ -39,6 +39,8 @@ async function main(): Promise<void> {
     dryRun = 'false',
     /** Whether to skip workflow triggers */
     skipWorkflowTriggers = 'false',
+    /** Whether to skip conflict updates */
+    skipConflictUpdates = 'false',
     /** Whether to skip sending emails */
     isSilent = 'true',
     /** Attributes to add to any DSR request if created */
@@ -73,9 +75,10 @@ async function main(): Promise<void> {
     receiptFilepath,
     auth,
     sombraAuth,
-    files: splitCsvToList(files),
+    file,
     partition,
     transcendUrl,
+    skipConflictUpdates: skipConflictUpdates !== 'false',
     skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
     isSilent: isSilent !== 'false',
     dryRun: dryRun !== 'false',
