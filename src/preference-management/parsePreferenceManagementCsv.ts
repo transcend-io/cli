@@ -52,8 +52,7 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
-  // FIXME
-  let preferences = readCsv(file, t.record(t.string, t.string)).slice(0, 20000);
+  let preferences = readCsv(file, t.record(t.string, t.string));
 
   // start building the cache, can use previous cache as well
   let currentState: FileMetadataState = {
