@@ -2368,8 +2368,6 @@ yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4
 
 ### tr-upload-consent-preferences
 
-**Deprecated** Use `tr-upload-preferences`
-
 This command allows for updating of consent preferences to the [Managed Consent Database](https://docs.transcend.io/docs/consent/reference/managed-consent-database).
 
 Each row in the CSV must include:
