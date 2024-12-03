@@ -118,30 +118,35 @@
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-upload-preferences](#tr-upload-preferences)
     - [Authentication](#authentication-27)
+    - [Authentication](#authentication-28)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
-    - [Authentication](#authentication-28)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+    - [Authentication](#authentication-29)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
-    - [Authentication](#authentication-29)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+    - [Authentication](#authentication-30)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
-    - [Authentication](#authentication-30)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+    - [Authentication](#authentication-31)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
-    - [Authentication](#authentication-31)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+    - [Authentication](#authentication-32)
     - [Arguments](#arguments-31)
     - [Usage](#usage-32)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
-    - [Authentication](#authentication-32)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
+    - [Authentication](#authentication-33)
     - [Arguments](#arguments-32)
     - [Usage](#usage-33)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-34)
+    - [Arguments](#arguments-33)
+    - [Usage](#usage-34)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -2294,6 +2299,71 @@ Specify the backend URL, needed for US hosted backend infrastructure:
 
 ```sh
 yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-upload-preferences
+
+This command allows for updating of preference management data to your Transcend Preference Store.
+
+This command uses [inquirer](https://github.com/SBoudrias/Inquirer.js/) to prompt the user to
+map the shape of the CSV to the shape of the Transcend API. There is no requirement for the
+shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file, that allows for the mappings to be preserved between runs.
+This can be useful if you have the same CSV shape that needs to be imported multiple times.
+Once the mapping process is done once, it does not need to be done again.
+
+Additionally, the JSON cache file will store the result of any preferences that fail to be uploaded so that the
+script can be run multiple times if an issue happens.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- Modify User Stored Preferences
+- View Managed Consent Database Admin API
+- View Preference Store Settings
+
+#### Authentication
+
+In order to use this cli, you will first need to follow [this guide](https://docs.transcend.io/docs/consent/reference/managed-consent-database#authenticate-a-user's-consent) in order
+
+#### Arguments
+
+| Argument             | Description                                                                                       | Type               | Default                                      | Required |
+| -------------------- | ------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------- | -------- |
+| auth                 | The Transcend API key with the scopes necessary for the command.                                  | string             | N/A                                          | true     |
+| partition            | The partition key to download consent preferences to                                              | string             | N/A                                          | true     |
+| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.              | string             | N/A                                          | false    |
+| transcendUrl         | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting.                 | string - URL       | https://consent.transcend.io                 | false    |
+| file                 | Path to the CSV file to load preferences from                                                     | string - file-path | ./preferences.csv                            | false    |
+| dryRun               | Whether to do a dry run only - will write results ti receiptFilepath without updating Transcend   | boolean            | false                                        | false    |
+| skipWorkflowTriggers | Whether to skip workflow triggers when uploading to preference store                              | boolean            | false                                        | false    |
+| skipConflictUpdates  | Whether to skip uploading of any records where the preference store and file have a hard conflict | boolean            | false                                        | false    |
+| isSilent             | Whether to skip sending emails in workflows                                                       | boolean            | true                                         | false    |
+| attributes           | Attributes to add to any DSR request if created                                                   | string             | Tags:transcend-cli,Source:transcend-cli      | false    |
+| receiptFilepath      | Store resulting, continuing where left off                                                        | string - file-path | ./preference-management-upload-receipts.json | false    |
+
+#### Usage
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+```
+
+Upload consent preferences with additional options
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://consent.us.transcend.io
 ```
 
 ### tr-upload-consent-preferences

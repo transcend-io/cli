@@ -59,8 +59,10 @@ export async function mapCsvColumnsToApi(
           }),
         );
 
-  getEntries(columnNameMap).forEach(([k, v]) => {
-    state.setValue(v, 'columnNames', k);
-  });
+  await Promise.all(
+    getEntries(columnNameMap).map(([k, v]) =>
+      state.setValue(v, 'columnNames', k),
+    ),
+  );
   return columnNameMap;
 }

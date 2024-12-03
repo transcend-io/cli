@@ -259,7 +259,7 @@ export async function uploadPrivacyRequestsFromCsv({
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
-        requestState.setValue(successfulRequests, 'successfulRequests');
+        await requestState.setValue(successfulRequests, 'successfulRequests');
       } catch (err) {
         const msg = `${err.message} - ${JSON.stringify(
           err.response?.body,
@@ -286,7 +286,7 @@ export async function uploadPrivacyRequestsFromCsv({
             rowIndex: ind,
             attemptedAt: new Date().toISOString(),
           });
-          requestState.setValue(duplicateRequests, 'duplicateRequests');
+          await requestState.setValue(duplicateRequests, 'duplicateRequests');
         } else {
           const failingRequests = requestState.getValue('failingRequests');
           failingRequests.push({
@@ -295,7 +295,7 @@ export async function uploadPrivacyRequestsFromCsv({
             error: clientError || msg,
             attemptedAt: new Date().toISOString(),
           });
-          requestState.setValue(failingRequests, 'failingRequests');
+          await requestState.setValue(failingRequests, 'failingRequests');
           if (debug) {
             logger.error(colors.red(clientError || msg));
             logger.error(

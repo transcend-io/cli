@@ -201,7 +201,7 @@ export async function bulkRestartRequests({
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
-        state.setValue(restartedRequests, 'restartedRequests');
+        await state.setValue(restartedRequests, 'restartedRequests');
       } catch (err) {
         const msg = `${err.message} - ${JSON.stringify(
           err.response?.body,
@@ -219,7 +219,7 @@ export async function bulkRestartRequests({
           attemptedAt: new Date().toISOString(),
           error: clientError || msg,
         });
-        state.setValue(failingRequests, 'failingRequests');
+        await state.setValue(failingRequests, 'failingRequests');
       }
       total += 1;
       progressBar.update(total);

@@ -5,7 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import { DEFAULT_TRANSCEND_CONSENT_API } from './constants';
-import { uploadConsentPreferences } from './consent-manager/uploadConsentPreferences';
+import { uploadConsents } from './consent-manager/uploadConsents';
 import { ConsentPreferenceUpload } from './consent-manager/types';
 import { readCsv } from './requests';
 
@@ -75,7 +75,7 @@ async function main(): Promise<void> {
   const preferences = readCsv(file, ConsentPreferenceUpload);
 
   // Upload cookies
-  await uploadConsentPreferences({
+  await uploadConsents({
     base64EncryptionKey,
     base64SigningKey,
     preferences,

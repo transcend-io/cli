@@ -1,18 +1,6 @@
 /* eslint-disable max-lines */
 import { gql } from 'graphql-request';
 
-export const PURPOSES = gql`
-  query TranscendCliPurposes {
-    purposes {
-      purposes {
-        id
-        name
-        trackingType
-      }
-    }
-  }
-`;
-
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true

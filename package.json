@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "6.9.0",
+  "version": "6.10.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -44,7 +44,8 @@
     "tr-update-consent-manager": "./build/cli-update-consent-manager-to-latest.js",
     "tr-upload-consent-preferences": "./build/cli-upload-consent-preferences.js",
     "tr-upload-cookies-from-csv": "./build/cli-upload-cookies-from-csv.js",
-    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js"
+    "tr-upload-data-flows-from-csv": "./build/cli-upload-data-flows-from-csv.js",
+    "tr-upload-preferences": "./build/cli-upload-preferences.js"
   },
   "files": [
     "build/**/*",
@@ -66,7 +67,7 @@
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^1.6.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.94.0",
+    "@transcend-io/privacy-types": "^4.98.0",
     "@transcend-io/secret-value": "^1.2.0",
     "@transcend-io/type-utils": "^1.5.0",
     "bluebird": "^3.7.2",
@@ -99,6 +100,7 @@
     "@types/chai": "^4.3.4",
     "@types/cli-progress": "^3.11.0",
     "@types/colors": "^1.2.1",
+    "@types/deep-equal-in-any-order": "1.0.1",
     "@types/fuzzysearch": "^1.0.0",
     "@types/global-agent": "^2.1.1",
     "@types/inquirer": "^7.3.1",
@@ -115,6 +117,7 @@
     "@typescript-eslint/parser": "^5.58.0",
     "@yarnpkg/sdks": "^3.0.0-rc.42",
     "chai": "^4.3.7",
+    "deep-equal-in-any-order": "^1.0.28",
     "depcheck": "^1.4.3",
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",

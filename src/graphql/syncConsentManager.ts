@@ -19,7 +19,6 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   fetchConsentManagerId,
   fetchConsentManagerExperiences,
-  fetchPurposes,
 } from './fetchConsentManagerId';
 import keyBy from 'lodash/keyBy';
 import { map } from 'bluebird';
@@ -30,6 +29,7 @@ import {
 import { logger } from '../logger';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchPartitions } from './syncPartitions';
+import { fetchAllPurposes } from './fetchAllPurposes';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -49,7 +49,7 @@ export async function syncConsentManagerExperiences(
   const experienceLookup = keyBy(existingExperiences, 'name');
 
   // Fetch existing purposes
-  const purposes = await fetchPurposes(client);
+  const purposes = await fetchAllPurposes(client);
   const purposeLookup = keyBy(purposes, 'trackingType');
 
   // Bulk update or create experiences
