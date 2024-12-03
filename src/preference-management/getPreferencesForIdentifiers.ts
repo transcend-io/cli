@@ -124,7 +124,7 @@ export async function getPreferencesForIdentifiers(
       }
     },
     {
-      concurrency: 100,
+      concurrency: 50,
     },
   );
 
