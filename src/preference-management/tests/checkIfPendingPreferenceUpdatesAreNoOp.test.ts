@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { expect } from 'chai';
 
-import { checkIfPendingPreferenceUpdatesCauseConflict } from '../index';
+import { checkIfPendingPreferenceUpdatesAreNoOp } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { PreferenceTopic } from '../../graphql';
 
@@ -75,10 +75,10 @@ const PREFERENCE_TOPICS: PreferenceTopic[] = [
   },
 ];
 
-describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
-  it('should return false for simple purpose comparison', () => {
+describe('checkIfPendingPreferenceUpdatesAreNoOp', () => {
+  it('should return true for simple purpose comparison', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -96,35 +96,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(false);
+    ).to.equal(true);
   });
 
-  it('should return false if purpose missing', () => {
+  it('should return false for simple purpose comparison', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
-        currentConsentRecord: {
-          ...DEFAULT_VALUES,
-          purposes: [
-            {
-              purpose: 'SalesOutreach',
-              enabled: false,
-              preferences: [],
-            },
-          ],
-        },
-        pendingUpdates: {
-          Marketing: {
-            enabled: false,
-          },
-        },
-        preferenceTopics: PREFERENCE_TOPICS,
-      }),
-    ).to.equal(false);
-  });
-
-  it('should return true for simple purpose comparison', () => {
-    expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -142,12 +119,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(true);
+    ).to.equal(false);
   });
 
   it('should return true for simple purpose comparison with extra preference', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -172,12 +149,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(false);
+    ).to.equal(true);
   });
 
   it('should return false for simple purpose comparison with extra preference in update', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -205,9 +182,9 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
     ).to.equal(false);
   });
 
-  it('should return false for preferences being same', () => {
+  it('should return true for preferences being same', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -264,12 +241,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(false);
+    ).to.equal(true);
   });
 
-  it('should return true for boolean preference changing', () => {
+  it('should return false for boolean preference changing', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -326,12 +303,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(true);
+    ).to.equal(false);
   });
 
-  it('should return true for single select preference changing', () => {
+  it('should return false for single select preference changing', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -388,12 +365,12 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(true);
+    ).to.equal(false);
   });
 
-  it('should return true for multi select preference changing', () => {
+  it('should return false for multi select preference changing', () => {
     expect(
-      checkIfPendingPreferenceUpdatesCauseConflict({
+      checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord: {
           ...DEFAULT_VALUES,
           purposes: [
@@ -450,7 +427,7 @@ describe.only('checkIfPendingPreferenceUpdatesCauseConflict', () => {
         },
         preferenceTopics: PREFERENCE_TOPICS,
       }),
-    ).to.equal(true);
+    ).to.equal(false);
   });
 });
 /* eslint-enable max-lines */
