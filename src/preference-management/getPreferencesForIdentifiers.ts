@@ -87,13 +87,19 @@ export async function getPreferencesForIdentifiers(
           // continue
         }
         const msg = err?.response?.body || err?.message || '';
-        if (!msg.includes('ETIMEDOUT')) {
+        if (!msg.includes('ETIMEDOUT' || '504 Gateway Time-out')) {
           throw new Error(
             `Received an error from server: ${
               err?.response?.body || err?.message
             }`,
           );
         }
+        logger.warn(
+          colors.yellow(
+            '[RETRYING FAILED REQUEST] ' +
+              `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
+          ),
+        );
         const rawResult = await sombra
           .post(`v1/preferences/${partitionKey}/query`, {
             json: {
@@ -113,7 +119,7 @@ export async function getPreferencesForIdentifiers(
       }
     },
     {
-      concurrency: 10,
+      concurrency: 100,
     },
   );
 

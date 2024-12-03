@@ -59,9 +59,11 @@ export async function mapColumnsToIdentifiers(
             };
           }),
         );
-  Object.entries(identifierNameMap).forEach(([k, v]) => {
-    state.setValue(v, 'identifierNames', k);
-  });
+  await Promise.all(
+    Object.entries(identifierNameMap).map(([k, v]) =>
+      state.setValue(v, 'identifierNames', k),
+    ),
+  );
 
   return {
     ...state.getValue('identifierNames'),

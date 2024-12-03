@@ -53,9 +53,11 @@ export async function mapColumnsToAttributes(
             };
           }),
         );
-  Object.entries(attributeNameMap).forEach(([k, v]) => {
-    state.setValue(v, 'attributeNames', k);
-  });
+  await Promise.all(
+    Object.entries(attributeNameMap).map(([k, v]) =>
+      state.setValue(v, 'attributeNames', k),
+    ),
+  );
 
   return {
     ...state.getValue('attributeNames'),

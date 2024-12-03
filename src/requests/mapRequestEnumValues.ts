@@ -56,7 +56,10 @@ export async function mapRequestEnumValues(
       Object.values(RequestAction),
       state.getValue('requestTypeToRequestAction'),
     );
-  state.setValue(requestTypeToRequestAction, 'requestTypeToRequestAction');
+  await state.setValue(
+    requestTypeToRequestAction,
+    'requestTypeToRequestAction',
+  );
 
   // Map data subject type
   logger.info(colors.magenta('Determining mapping of columns for subject'));
@@ -66,7 +69,7 @@ export async function mapRequestEnumValues(
       internalSubjects.map(({ type }) => type),
       state.getValue('subjectTypeToSubjectName'),
     );
-  state.setValue(subjectTypeToSubjectName, 'subjectTypeToSubjectName');
+  await state.setValue(subjectTypeToSubjectName, 'subjectTypeToSubjectName');
 
   // Map locale
   logger.info(colors.magenta('Determining mapping of columns for locale'));
@@ -75,7 +78,7 @@ export async function mapRequestEnumValues(
     Object.values(LanguageKey),
     state.getValue('languageToLocale'),
   );
-  state.setValue(languageToLocale, 'languageToLocale');
+  await state.setValue(languageToLocale, 'languageToLocale');
   logger.info(
     colors.magenta('Determining mapping of columns for request status'),
   );
@@ -95,7 +98,7 @@ export async function mapRequestEnumValues(
           [...Object.values(CompletedRequestStatus), NONE],
           state.getValue('statusToRequestStatus'),
         );
-  state.setValue(statusToRequestStatus, 'statusToRequestStatus');
+  await state.setValue(statusToRequestStatus, 'statusToRequestStatus');
 
   // Map country
   logger.info(colors.magenta('Determining mapping of columns for country'));
@@ -110,7 +113,7 @@ export async function mapRequestEnumValues(
           [...Object.values(IsoCountryCode), NONE],
           state.getValue('regionToCountry'),
         );
-  state.setValue(regionToCountry, 'regionToCountry');
+  await state.setValue(regionToCountry, 'regionToCountry');
 
   // Map country sub division
   logger.info(
@@ -127,5 +130,8 @@ export async function mapRequestEnumValues(
           [...Object.values(IsoCountrySubdivisionCode), NONE],
           state.getValue('regionToCountrySubDivision'),
         );
-  state.setValue(regionToCountrySubDivision, 'regionToCountrySubDivision');
+  await state.setValue(
+    regionToCountrySubDivision,
+    'regionToCountrySubDivision',
+  );
 }
