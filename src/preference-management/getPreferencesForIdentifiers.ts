@@ -18,6 +18,8 @@ const PreferenceRecordsQueryResponse = t.intersection([
   }),
 ]);
 
+const MSGS = ['ETIMEDOUT', '504 Gateway Time-out', 'Task timed out after'];
+
 /**
  * Grab the current consent preference values for a list of identifiers
  *
@@ -60,71 +62,51 @@ export async function getPreferencesForIdentifiers(
   await map(
     groupedIdentifiers,
     async (group) => {
-      // Make the request
-      try {
-        const rawResult = await sombra
-          .post(`v1/preferences/${partitionKey}/query`, {
-            json: {
-              filter: {
-                identifiers: group,
-              },
-              limit: group.length,
-            },
-          })
-          .json();
-
-        const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
-        results.push(...result.nodes);
-        total += group.length;
-        progressBar.update(total);
-      } catch (err) {
+      // Make the request with retry logic
+      let attempts = 0;
+      const maxAttempts = 3;
+      while (attempts < maxAttempts) {
         try {
-          const parsed = JSON.parse(err?.response?.body || '{}');
-          if (parsed.error) {
-            logger.error(colors.red(`Error: ${parsed.error}`));
-          }
-        } catch (e) {
-          // continue
-        }
-        const msg = err?.response?.body || err?.message || '';
-        const MSGS = [
-          'ETIMEDOUT',
-          '504 Gateway Time-out',
-          'Task timed out after',
-        ];
-        if (!MSGS.some((errorMessage) => msg.includes(errorMessage))) {
-          throw new Error(
-            `Received an error from server: ${
-              err?.response?.body || err?.message
-            }`,
-          );
-        }
-        logger.warn(
-          colors.yellow(
-            '[RETRYING FAILED REQUEST] ' +
-              `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
-          ),
-        );
-        const rawResult = await sombra
-          .post(`v1/preferences/${partitionKey}/query`, {
-            json: {
-              filter: {
-                identifiers: group,
+          // eslint-disable-next-line no-await-in-loop
+          const rawResult = await sombra
+            .post(`v1/preferences/${partitionKey}/query`, {
+              json: {
+                filter: {
+                  identifiers: group,
+                },
+                limit: group.length,
               },
-            },
-          })
-          .json();
+            })
+            .json();
 
-        const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
-        results.push(...result.nodes);
-        total += group.length;
-        if (!skipLogging) {
+          const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
+          results.push(...result.nodes);
+          total += group.length;
           progressBar.update(total);
+          break; // Exit loop if successful
+        } catch (err) {
+          attempts += 1;
+          const msg = err?.response?.body || err?.message || '';
+          if (
+            attempts >= maxAttempts ||
+            !MSGS.some((errorMessage) => msg.includes(errorMessage))
+          ) {
+            throw new Error(
+              `Received an error from server after ${attempts} attempts: ${msg}`,
+            );
+          }
+
+          logger.warn(
+            colors.yellow(
+              `[RETRYING FAILED REQUEST - Attempt ${attempts}] ` +
+                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
+            ),
+          );
         }
       }
     },
     {
-      concurrency: 50,
+      concurrency: 40,
     },
   );
 

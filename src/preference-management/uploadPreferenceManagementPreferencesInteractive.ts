@@ -179,8 +179,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       })),
     };
   });
-  preferenceState.setValue(pendingUpdates, 'pendingUpdates');
-  preferenceState.setValue({}, 'failingUpdates');
+  await preferenceState.setValue(pendingUpdates, 'pendingUpdates');
+  await preferenceState.setValue({}, 'failingUpdates');
 
   // Exist early if dry run
   if (dryRun) {
@@ -255,14 +255,14 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             error: err?.response?.body || err?.message || 'Unknown error',
           };
         });
-        preferenceState.setValue(failingUpdates, 'failingUpdates');
+        await preferenceState.setValue(failingUpdates, 'failingUpdates');
       }
 
       total += currentChunk.length;
       progressBar.update(total);
     },
     {
-      concurrency: 10,
+      concurrency: 40,
     },
   );
 

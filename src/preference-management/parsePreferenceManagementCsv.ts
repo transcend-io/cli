@@ -71,7 +71,7 @@ export async function parsePreferenceManagementCsvWithCache(
     currentState,
   );
   fileMetadata[file] = currentState;
-  cache.setValue(fileMetadata, 'fileMetadata');
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Validate that all identifiers are present and unique
   const result = await parsePreferenceIdentifiersFromCsv(
@@ -81,7 +81,7 @@ export async function parsePreferenceManagementCsvWithCache(
   currentState = result.currentState;
   preferences = result.preferences;
   fileMetadata[file] = currentState;
-  cache.setValue(fileMetadata, 'fileMetadata');
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Ensure all other columns are mapped to purpose and preference
   // slug values
@@ -94,7 +94,7 @@ export async function parsePreferenceManagementCsvWithCache(
     },
   );
   fileMetadata[file] = currentState;
-  cache.setValue(fileMetadata, 'fileMetadata');
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Grab existing preference store records
   const identifiers = preferences.map(
@@ -164,7 +164,7 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   fileMetadata[file] = currentState;
-  cache.setValue(fileMetadata, 'fileMetadata');
+  await cache.setValue(fileMetadata, 'fileMetadata');
   const t1 = new Date().getTime();
   logger.info(
     colors.green(
