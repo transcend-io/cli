@@ -27,7 +27,7 @@ export async function updateDataFlows(
   const airgapBundleId = await fetchConsentManagerId(client);
 
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
-  // const purposes = await fetchPurposes(client);
+  // const purposes = await fetchAllPurposes(client);
   // const purposeNameToId = keyBy(purposes, 'name');
 
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
@@ -74,7 +74,7 @@ export async function createDataFlows(
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
-  // const purposes = await fetchPurposes(client);
+  // const purposes = await fetchAllPurposes(client);
   // const purposeNameToId = keyBy(purposes, 'name');
   await mapSeries(chunk(dataFlowInputs, MAX_PAGE_SIZE), async (page) => {
     await makeGraphQLRequest(client, CREATE_DATA_FLOWS, {

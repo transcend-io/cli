@@ -515,13 +515,14 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.94.0
+    "@transcend-io/privacy-types": ^4.98.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.5.0
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
     "@types/cli-progress": ^3.11.0
     "@types/colors": ^1.2.1
+    "@types/deep-equal-in-any-order": 1.0.1
     "@types/fuzzysearch": ^1.0.0
     "@types/global-agent": ^2.1.1
     "@types/inquirer": ^7.3.1
@@ -542,6 +543,7 @@ __metadata:
     cli-progress: ^3.11.2
     colors: ^1.4.0
     csv-parse: =4.9.1
+    deep-equal-in-any-order: ^1.0.28
     depcheck: ^1.4.3
     eslint: ^8.38.0
     eslint-config-airbnb-base: ^15.0.0
@@ -608,6 +610,7 @@ __metadata:
     tr-upload-consent-preferences: ./build/cli-upload-consent-preferences.js
     tr-upload-cookies-from-csv: ./build/cli-upload-cookies-from-csv.js
     tr-upload-data-flows-from-csv: ./build/cli-upload-data-flows-from-csv.js
+    tr-upload-preferences: ./build/cli-upload-preferences.js
   languageName: unknown
   linkType: soft
 
@@ -643,14 +646,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.94.0":
-  version: 4.94.0
-  resolution: "@transcend-io/privacy-types@npm:4.94.0"
+"@transcend-io/privacy-types@npm:^4.98.0":
+  version: 4.98.0
+  resolution: "@transcend-io/privacy-types@npm:4.98.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 8cc1a8dd546f7660a7363937c50bf217026c7e492e5a3ef9c7a482c70bd71f4b51db85dcc264128e5100698dac99d99508f9403e6709e47ee1d4f0c3ae743a86
+  checksum: bee61228fa7ce58f2fbfe1dcb2e31812e480ef16012aa2f73deccf3812fc330225a332d57730303d46764de98079a8fc905969894419a3dc9a33744e8ec012d1
   languageName: node
   linkType: hard
 
@@ -774,6 +777,13 @@ __metadata:
   dependencies:
     colors: "*"
   checksum: 6602c4805242bd9197de50559883980ec7c58f440ceb6b74d5fc8e85a0992b5fc765e208ce94b3455789f00e33f75d8f8000ac8e597295e2f1bf86de2c161b94
+  languageName: node
+  linkType: hard
+
+"@types/deep-equal-in-any-order@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@types/deep-equal-in-any-order@npm:1.0.1"
+  checksum: 09a76203438bc2ed9e3ac3f22b6fd43f3561ac4ae5403cf62b4e69359f3016680fbd6ce31f80704e310c3616f4d134e3252ba70e963fc4ca4dd261719c6eb4fd
   languageName: node
   linkType: hard
 
@@ -2145,6 +2155,16 @@ __metadata:
   dependencies:
     type-detect: ^4.0.0
   checksum: 7f6d30cb41c713973dc07eaadded848b2ab0b835e518a88b91bea72f34e08c4c71d167a722a6f302d3a6108f05afd8e6d7650689a84d5d29ec7fe6220420397f
+  languageName: node
+  linkType: hard
+
+"deep-equal-in-any-order@npm:^1.0.28":
+  version: 1.1.20
+  resolution: "deep-equal-in-any-order@npm:1.1.20"
+  dependencies:
+    lodash.mapvalues: ^4.6.0
+    sort-any: ^2.0.0
+  checksum: 3fd4a571269e86f8958e797e4994df9f8aaa7c8cc438204a15b9c170e55b53f4b674e4609d8eaccb0b444a55c1932fd74026ef072f4a5412fd879599000e499f
   languageName: node
   linkType: hard
 
@@ -4255,6 +4275,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"lodash.mapvalues@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "lodash.mapvalues@npm:4.6.0"
+  checksum: 0ff1b252fda318fc36e47c296984925e98fbb0fc5a2ecc4ef458f3c739a9476d47e40c95ac653e8314d132aa59c746d4276527b99d6e271940555c6e12d2babd
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -5589,6 +5616,15 @@ resolve@^1.18.1:
     ip: ^1.1.5
     smart-buffer: ^4.1.0
   checksum: 2ca9d616e424f645838ebaabb04f85d94ea999e0f8393dc07f86c435af22ed88cb83958feeabd1bb7bc537c635ed47454255635502c6808a6df61af1f41af750
+  languageName: node
+  linkType: hard
+
+"sort-any@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "sort-any@npm:2.0.0"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: d2dc6cc4f56298ce50b13ce6aafd8bf16010a8f8d0ae75345e8424118ac2cc017a8ffea0eedd136dd67751c09e7b0edb09c959d052ed7ed02afcfbab63c68277
   languageName: node
   linkType: hard
 

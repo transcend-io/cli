@@ -22,7 +22,7 @@ export const PurposeMap = t.record(
  *
  * @param options - Options
  */
-export async function uploadConsentPreferences({
+export async function uploadConsents({
   base64EncryptionKey,
   base64SigningKey,
   preferences,

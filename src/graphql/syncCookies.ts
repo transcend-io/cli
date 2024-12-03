@@ -24,7 +24,7 @@ export async function updateOrCreateCookies(
   const airgapBundleId = await fetchConsentManagerId(client);
 
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
-  // const purposes = await fetchPurposes(client);
+  // const purposes = await fetchAllPurposes(client);
   // const purposeNameToId = keyBy(purposes, 'name');
 
   await mapSeries(chunk(cookieInputs, MAX_PAGE_SIZE), async (page) => {
