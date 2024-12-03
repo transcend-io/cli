@@ -87,11 +87,12 @@ export async function getPreferencesForIdentifiers(
           // continue
         }
         const msg = err?.response?.body || err?.message || '';
-        if (
-          !msg.includes(
-            'ETIMEDOUT' || '504 Gateway Time-out' || 'Task timed out after',
-          )
-        ) {
+        const MSGS = [
+          'ETIMEDOUT',
+          '504 Gateway Time-out',
+          'Task timed out after',
+        ];
+        if (!MSGS.some((errorMessage) => msg.includes(errorMessage))) {
           throw new Error(
             `Received an error from server: ${
               err?.response?.body || err?.message
