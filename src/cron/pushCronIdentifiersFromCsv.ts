@@ -7,7 +7,7 @@ import {
 } from './markCronIdentifierCompleted';
 import cliProgress from 'cli-progress';
 import { logger } from '../logger';
-import { readCsv } from '../requests';
+import { readCsv } from '../helpers';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
@@ -92,8 +92,7 @@ export async function pushCronIdentifiersFromCsv({
 
   logger.info(
     colors.green(
-      `Successfully notified Transcend for ${successCount} identifiers in "${
-        totalTime / 1000
+      `Successfully notified Transcend for ${successCount} identifiers in "${totalTime / 1000
       }" seconds!`,
     ),
   );
@@ -101,7 +100,7 @@ export async function pushCronIdentifiersFromCsv({
     logger.info(
       colors.magenta(
         `There were ${failureCount} identifiers that were not in a state to be updated.` +
-          'They likely have already been resolved.',
+        'They likely have already been resolved.',
       ),
     );
   }

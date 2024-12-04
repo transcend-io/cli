@@ -3,7 +3,6 @@ export * from './constants';
 export * from './mapEnumValues';
 export * from './splitCsvToList';
 export * from './parseAttributesFromString';
-export * from './readCsv';
 export * from './getUniqueValuesForColumn';
 export * from './filterRows';
 export * from './markSilentPrivacyRequests';

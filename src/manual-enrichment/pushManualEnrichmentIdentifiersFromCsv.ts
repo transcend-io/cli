@@ -11,7 +11,7 @@ import {
   enrichPrivacyRequest,
   EnrichPrivacyRequest,
 } from './enrichPrivacyRequest';
-import { readCsv } from '../requests';
+import { readCsv } from '../helpers';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**

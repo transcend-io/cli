@@ -7,7 +7,7 @@ import * as t from 'io-ts';
 import { logger } from './logger';
 import { markRequestDataSiloIdsCompleted } from './cron';
 import { DEFAULT_TRANSCEND_API } from './constants';
-import { readCsv } from './requests';
+import { readCsv } from './helpers';
 
 const RequestIdRow = t.type({
   'Request Id': t.string,

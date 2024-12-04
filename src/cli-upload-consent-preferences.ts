@@ -7,7 +7,7 @@ import { logger } from './logger';
 import { DEFAULT_TRANSCEND_CONSENT_API } from './constants';
 import { uploadConsents } from './consent-manager/uploadConsents';
 import { ConsentPreferenceUpload } from './consent-manager/types';
-import { readCsv } from './requests';
+import { readCsv } from './helpers';
 
 /**
  * Upload consent preferences to the managed consent database
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A base64EncryptionKey must be provided. ' +
-          'You can specify using --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY',
+        'You can specify using --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY',
       ),
     );
     process.exit(1);
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A base64SigningKey must be provided. ' +
-          'You can specify using --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY',
+        'You can specify using --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY',
       ),
     );
     process.exit(1);
@@ -65,7 +65,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);

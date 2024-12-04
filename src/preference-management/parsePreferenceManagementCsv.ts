@@ -5,7 +5,7 @@ import * as t from 'io-ts';
 import colors from 'colors';
 import { FileMetadataState, PreferenceState } from './codecs';
 import { logger } from '../logger';
-import { readCsv } from '../requests';
+import { readCsv } from '../helpers';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';

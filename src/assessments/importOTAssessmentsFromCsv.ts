@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import colors from 'colors';
 import { map } from 'bluebird';
 import * as t from 'io-ts';
@@ -12,17 +11,9 @@ import {
   buildTranscendGraphQLClient,
   fetchAllRequestAttributeKeys,
 } from '../graphql';
-import { mapRequestEnumValues } from './mapRequestEnumValues';
-import { CachedRequestState, CachedFileState } from './constants';
 import { mapCsvColumnsToApi } from './mapCsvColumnsToApi';
 import { parseAttributesFromString } from './parseAttributesFromString';
 import { readCsv } from '../helpers';
-import { submitPrivacyRequest } from './submitPrivacyRequest';
-import { mapColumnsToAttributes } from './mapColumnsToAttributes';
-import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
-import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
-import { filterRows } from './filterRows';
-import { extractClientError } from './extractClientError';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**

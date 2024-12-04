@@ -2,7 +2,7 @@ import colors from 'colors';
 import { logger } from '../logger';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
-import { readCsv } from '../requests/readCsv';
+import { readCsv } from '../helpers';
 import { DataFlowInput, DataFlowCsvInput } from '../codecs';
 import { splitCsvToList } from '../requests';
 import { DEFAULT_TRANSCEND_API } from '../constants';
