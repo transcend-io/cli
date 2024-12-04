@@ -179,8 +179,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       })),
     };
   });
-  await preferenceState.setValue(pendingUpdates, 'pendingUpdates');
-  await preferenceState.setValue({}, 'failingUpdates');
+  // FIXME out of memoru
+  // await preferenceState.setValue(pendingUpdates, 'pendingUpdates');
+  // await preferenceState.setValue({}, 'failingUpdates');
 
   // Exist early if dry run
   if (dryRun) {
@@ -255,7 +256,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             error: err?.response?.body || err?.message || 'Unknown error',
           };
         });
-        await preferenceState.setValue(failingUpdates, 'failingUpdates');
+        // await preferenceState.setValue(failingUpdates, 'failingUpdates'); FIXME
       }
 
       total += currentChunk.length;
