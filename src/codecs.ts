@@ -1580,6 +1580,8 @@ export const AssessmentSectionQuestionInput = t.intersection([
     'risk-framework': t.string,
     /** Answer options for the question */
     'answer-options': t.array(AssessmentAnswerOptionInput),
+    /** The selected answers to the assessments */
+    'selected-answers': t.array(t.string),
     /** Allowed MIME types for the question */
     'allowed-mime-types': t.array(t.string),
     /** Allow selecting other options */

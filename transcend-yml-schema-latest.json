@@ -41636,6 +41636,12 @@
                                       }
                                     }
                                   },
+                                  "selected-answers": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
                                   "allowed-mime-types": {
                                     "type": "array",
                                     "items": {
@@ -42091,6 +42097,12 @@
                                           "type": "string"
                                         }
                                       }
+                                    }
+                                  },
+                                  "selected-answers": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
                                     }
                                   },
                                   "allowed-mime-types": {
