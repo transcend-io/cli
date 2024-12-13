@@ -484,6 +484,7 @@ export async function pullTranscendConfiguration(
                 riskCategories,
                 riskFramework,
                 answerOptions,
+                selectedAnswers,
                 allowedMimeTypes,
                 allowSelectOther,
                 syncModel,
@@ -556,6 +557,7 @@ export async function pullTranscendConfiguration(
                   'answer-options': answerOptions.map(({ value }) => ({
                     value,
                   })),
+                  'selected-answers': selectedAnswers.map(({ value }) => value),
                   'allowed-mime-types': allowedMimeTypes,
                   'allow-select-other': allowSelectOther,
                   'sync-model': syncModel || undefined,
