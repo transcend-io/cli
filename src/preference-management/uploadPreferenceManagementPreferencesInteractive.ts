@@ -155,7 +155,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     const timestamp =
       metadata.timestampColum === NONE_PREFERENCE_MAP
         ? new Date()
-        : new Date(update[metadata.timestampColum!]);
+        : new Date(
+            new Date(update[metadata.timestampColum!]).getTime(),
+            // / -
+            //   11 * 60 * 60 * 1000, // FIXME
+          );
 
     // Determine updates
     const updates = getPreferenceUpdatesFromRow({

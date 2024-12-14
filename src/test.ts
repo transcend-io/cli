@@ -502,15 +502,17 @@ function runtest(): void {
   writeCsv(
     OUTPUT_FILE_WORKFLOWS,
     /* eslint-disable @typescript-eslint/no-unused-vars */
-    workflows.map(({ RequiresWorkflowTrigger, ...rest }) => ({
-      ...rest,
-      timestamp: rest.timestamp.toISOString(),
-      Marketing:
-        rest.MarketingEmails ||
-        rest.ProductGuidance ||
-        rest.ProductInsider ||
-        rest.ProductUpdates,
-    })),
+    workflows.map(
+      ({ RequiresWorkflowTrigger, IsInCustomerIo, isInMarketo, ...rest }) => ({
+        ...rest,
+        timestamp: rest.timestamp.toISOString(),
+        Marketing:
+          rest.MarketingEmails ||
+          rest.ProductGuidance ||
+          rest.ProductInsider ||
+          rest.ProductUpdates,
+      }),
+    ),
   );
   writeCsv(
     OUTPUT_FILE_NO_WORKFLOWS,
