@@ -29,6 +29,7 @@ export async function pullPrivacyRequests({
   sombraAuth,
   actions = [],
   statuses = [],
+  identifierSearch,
   pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
@@ -37,6 +38,8 @@ export async function pullPrivacyRequests({
 }: {
   /** Transcend API key authentication */
   auth: string;
+  /** Search for a specific identifier */
+  identifierSearch?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
   /** API URL for Transcend backend */
@@ -90,6 +93,7 @@ export async function pullPrivacyRequests({
   // fetch the requests
   const requests = await fetchAllRequests(client, {
     actions,
+    text: identifierSearch,
     statuses,
     createdAtBefore,
     createdAtAfter,
