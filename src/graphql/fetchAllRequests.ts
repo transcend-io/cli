@@ -80,6 +80,7 @@ export async function fetchAllRequests(
     actions = [],
     statuses = [],
     origins = [],
+    text,
     createdAtBefore,
     createdAtAfter,
     isTest,
@@ -96,6 +97,8 @@ export async function fetchAllRequests(
     createdAtBefore?: Date;
     /** Filter for requests created after this date */
     createdAtAfter?: Date;
+    /** Filter for requests with a specific identifier */
+    text?: string;
     /** Return test requests */
     isTest?: boolean;
     /** Return silent mode requests */
@@ -133,6 +136,7 @@ export async function fetchAllRequests(
       first: PAGE_SIZE,
       offset,
       filterBy: {
+        text,
         type: actions.length > 0 ? actions : undefined,
         status: statuses.length > 0 ? statuses : undefined,
         origin: origins.length > 0 ? origins : undefined,
