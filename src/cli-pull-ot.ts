@@ -23,11 +23,6 @@ async function main(): Promise<void> {
   // Parse command line arguments
   const {
     // file = './transcend.yml',
-    // dataSiloIds = '',
-    // integrationNames = '',
-    // skipDatapoints,
-    // skipSubDatapoints,
-    // includeGuessedCategories = 'false',
     // TODO: make this required!
     hostname = 'app-eu.onetrust.com',
     resource = OneTrustPullResource.Assessments,
@@ -35,7 +30,11 @@ async function main(): Promise<void> {
     debug = '',
     // TODO: remove hardcode
     auth = 'ODgyOWYxZWYyYjExNDAwYjkyNDlkZWMzMzgzYTY5MTM6YnRIRkNHTUc4V0N3NEFvaGFEa3dHdGtUN0JLY2hHMkY=',
-    // trackerStatuses = Object.values(ConsentTrackerStatus).join(','),
+    /**
+     * TODO: add
+     * enrich
+     * fileFormat
+     */
   } = yargs(process.argv.slice(2));
 
   // Parse request actions
