@@ -6,6 +6,7 @@ import { logger } from './logger';
 import colors from 'colors';
 import { DEFAULT_ONE_TRUST_PULL_RESOURCES } from './oneTrust';
 import { OneTrustPullResource } from './enums';
+// import { mapSeries } from 'bluebird';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 
@@ -29,7 +30,7 @@ async function main(): Promise<void> {
     // skipSubDatapoints,
     // includeGuessedCategories = 'false',
     // TODO: make this required!
-    hostname = 'informa.onetrust.com',
+    hostname = 'app-eu.onetrust.com',
     resources = DEFAULT_ONE_TRUST_PULL_RESOURCES.join(','),
     // pageSize = '',
     debug = '',
@@ -81,20 +82,63 @@ async function main(): Promise<void> {
         'content-type': 'application/json',
         // TODO: fetch from environment
         authorization:
-          'Bearer 9406677f66c38aa60c17ec4937630ce1bb0060fc4f9322224250f0de2cfa0772',
+          'Bearer ODgyOWYxZWYyYjExNDAwYjkyNDlkZWMzMzgzYTY5MTM6YnRIRkNHTUc4V0N3NEFvaGFEa3dHdGtUN0JLY2hHMkY=',
       },
     });
 
     // TODO: get based on the resources
-    await oneTrust.get('api/assessment/v2/assessments');
-    // console.log({ result });
+    // TODO: export into its own function
+    let currentPage = 0;
+    let totalPages = 1;
+    let totalElements = 0;
+
+    const allAssessments = [];
+
+    logger.info('Getting list of OneTrust assessments...');
+    while (currentPage < totalPages) {
+      // eslint-disable-next-line no-await-in-loop
+      const { body } = await oneTrust.get(
+        `api/assessment/v2/assessments?page=${currentPage}&size=2000`,
+      );
+      const parsedBody = JSON.parse(body);
+      const assessments = parsedBody.content ?? [];
+      console.log({ assessments });
+      allAssessments.push(...assessments);
+      const page = parsedBody.page ?? { totalPages: 0, totalElements: 0 };
+      if (currentPage === 0) {
+        totalPages = page.totalPages;
+        totalElements = page.totalElements;
+      }
+      currentPage += 1;
+
+      // log progress
+      logger.info(
+        `Fetched ${allAssessments.length} of ${totalElements} assessments.`,
+      );
+    }
+
+    // logger.info('Enriching the fetched OneTrust assessments with details');
+    // await mapSeries(allAssessments, async (assessment, index) => {
+    //   logger.info(
+    //     `Enriching assessment ${index + 1} of ${allAssessments.length}`,
+    //   );
+
+    //   const { body } = await oneTrust.get(
+    //     `api/assessment/v2/assessments/${assessment.assessmentId}/export?ExcludeSkippedQuestions=false`,
+    //   );
+    //   const parsedBody = JSON.parse(body);
+
+    //   console.log({ parsedBody });
+    // });
+
+    // const detailsBody = JSON.parse(details.body);
 
     // logger.info(colors.magenta('Writing configuration to file "file"...'));
     // writeTranscendYaml(file, configuration);
   } catch (err) {
     logger.error(
       colors.red(
-        `An error occurred syncing the schema: ${
+        `An error occurred pulling the resource: ${
           isDebug ? err.stack : err.message
         }`,
       ),
