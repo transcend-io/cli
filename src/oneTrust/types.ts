@@ -66,19 +66,6 @@ export interface OneTrustGetListOfAssessmentsResponse {
   };
 }
 
-interface OneTrustApprover {
-  /** Assessment approval status. */
-  approvalState: 'OPEN' | 'APPROVED' | 'REJECTED';
-  /** Date and time at which the assessment was approved. */
-  approvedOn: string;
-  /** Name of the user assigned as an approver. */
-  name: string;
-  /** ID of the assessment result. */
-  resultId: string;
-  /** Name of the assessment result. */
-  resultName: string;
-}
-
 interface OneTrustAssessmentQuestionOption {
   /** Attribute for which the option is available. */
   attributes: string;
@@ -158,13 +145,10 @@ interface OneTrustAssessmentQuestionResponses {
 interface OneTrustAssessmentQuestion {
   /** IDs of the attachment(s) added to the question. */
   attachmentIds: string[];
-
   /** Indicates whether navigation rules are enabled for the question. */
   hasNavigationRules: boolean;
-
   /** Indicates whether the question is hidden on the assessment. */
   hidden: boolean;
-
   /** Reason for locking the question in the assessment. */
   lockReason: 'LAUNCH_FROM_INVENTORY';
   /** The question */
@@ -219,9 +203,9 @@ interface OneTrustAssessmentQuestion {
       | 'PERSONAL_DATA';
     /** Indicates whether the question is valid. */
     valid: boolean;
-    /** The responses to this question */
-    questionResponses: OneTrustAssessmentQuestionResponses[];
   };
+  /** The responses to this question */
+  questionResponses: OneTrustAssessmentQuestionResponses[];
   /** The risks associated with this question */
   risks: OneTrustAssessmentQuestionRisks[];
   /** List of IDs associated with the question root requests. */
@@ -277,9 +261,23 @@ interface OneTrustAssessmentSection {
   valid: boolean;
 }
 
-export interface OneTrustGetAssessmentResponse {
+interface OneTrustApprover {
+  /** Assessment approval status. */
+  approvalState: 'OPEN' | 'APPROVED' | 'REJECTED';
+  /** Date and time at which the assessment was approved. */
+  approvedOn: string;
   /** ID of the user assigned as an approver. */
   id: string;
+  /** Name of the user assigned as an approver. */
+  name: string;
+  /** ID of the assessment result. */
+  resultId: string;
+  /** Name of the assessment result. */
+  resultName: string;
+}
+
+// ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
+export interface OneTrustGetAssessmentResponse {
   /** List of users assigned as approvers of the assessment. */
   approvers: OneTrustApprover[];
   /** ID of an assessment. */
@@ -365,7 +363,7 @@ export interface OneTrustGetAssessmentResponse {
   resultName: string;
   /** Risk level of the assessment. */
   riskLevel: string;
-  /** The Assessment sections */
+  /** List of sections in the assessment. */
   sections: OneTrustAssessmentSection[];
   /** Status of the assessment. */
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'UNDER_REVIEW' | 'COMPLETED';
