@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-import got from 'got';
-
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
-import { DEFAULT_ONE_TRUST_PULL_RESOURCES } from './oneTrust';
+import { getListOfAssessments } from './oneTrust';
 import { OneTrustPullResource } from './enums';
+import { createOneTrustGotInstance } from './oneTrust/createOneTrustGotInstance';
 // import { mapSeries } from 'bluebird';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
@@ -31,38 +30,30 @@ async function main(): Promise<void> {
     // includeGuessedCategories = 'false',
     // TODO: make this required!
     hostname = 'app-eu.onetrust.com',
-    resources = DEFAULT_ONE_TRUST_PULL_RESOURCES.join(','),
+    resource = OneTrustPullResource.Assessments,
     // pageSize = '',
     debug = '',
-    // auth,
+    // TODO: remove hardcode
+    auth = 'ODgyOWYxZWYyYjExNDAwYjkyNDlkZWMzMzgzYTY5MTM6YnRIRkNHTUc4V0N3NEFvaGFEa3dHdGtUN0JLY2hHMkY=',
     // trackerStatuses = Object.values(ConsentTrackerStatus).join(','),
   } = yargs(process.argv.slice(2));
 
   // Parse request actions
-  let splitResources: OneTrustPullResource[] = [];
-  if (!resources) {
+  if (!resource) {
     logger.error(
       colors.red(
-        `Missing required parameter "resources". e.g. --resources=${VALID_RESOURCES.join(
-          ',',
-        )}`,
+        `Missing required parameter "resource". e.g. --resource=${OneTrustPullResource.Assessments}`,
       ),
     );
     process.exit(1);
   }
-  splitResources =
-    resources === 'all'
-      ? VALID_RESOURCES
-      : (resources.split(',') as OneTrustPullResource[]);
-  const invalidResources = splitResources.filter(
-    (resource) => !VALID_RESOURCES.includes(resource),
-  );
-  if (invalidResources.length > 0) {
+
+  if (!VALID_RESOURCES.includes(resource)) {
     logger.error(
       colors.red(
-        `Received invalid resources values: "${invalidResources.join(
+        `Received invalid resource value: "${resource}". Allowed: ${VALID_RESOURCES.join(
           ',',
-        )}". Allowed: ${VALID_RESOURCES.join(',')}`,
+        )}`,
       ),
     );
     process.exit(1);
@@ -73,65 +64,26 @@ async function main(): Promise<void> {
 
   // Sync to Disk
   try {
-    // TODO invoke a createOneTrustGotInstance helper inspired by createSombraGotInstance
-    const oneTrust = got.extend({
-      // TODO: create constant or env var
-      prefixUrl: `https://${hostname}`,
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json',
-        // TODO: fetch from environment
-        authorization:
-          'Bearer ODgyOWYxZWYyYjExNDAwYjkyNDlkZWMzMzgzYTY5MTM6YnRIRkNHTUc4V0N3NEFvaGFEa3dHdGtUN0JLY2hHMkY=',
-      },
-    });
+    if (resource === OneTrustPullResource.Assessments) {
+      const oneTrust = createOneTrustGotInstance({ hostname, auth });
+      // const assessments =
+      await getListOfAssessments({ oneTrust });
+      // logger.info('Enriching the fetched OneTrust assessments with details');
+      // await mapSeries(allAssessments, async (assessment, index) => {
+      //   logger.info(
+      //     `Enriching assessment ${index + 1} of ${allAssessments.length}`,
+      //   );
 
-    // TODO: get based on the resources
-    // TODO: export into its own function
-    let currentPage = 0;
-    let totalPages = 1;
-    let totalElements = 0;
+      //   const { body } = await oneTrust.get(
+      //     `api/assessment/v2/assessments/${assessment.assessmentId}/export?ExcludeSkippedQuestions=false`,
+      //   );
+      //   const parsedBody = JSON.parse(body);
 
-    const allAssessments = [];
+      //   console.log({ parsedBody });
+      // });
 
-    logger.info('Getting list of OneTrust assessments...');
-    while (currentPage < totalPages) {
-      // eslint-disable-next-line no-await-in-loop
-      const { body } = await oneTrust.get(
-        `api/assessment/v2/assessments?page=${currentPage}&size=2000`,
-      );
-      const parsedBody = JSON.parse(body);
-      const assessments = parsedBody.content ?? [];
-      console.log({ assessments });
-      allAssessments.push(...assessments);
-      const page = parsedBody.page ?? { totalPages: 0, totalElements: 0 };
-      if (currentPage === 0) {
-        totalPages = page.totalPages;
-        totalElements = page.totalElements;
-      }
-      currentPage += 1;
-
-      // log progress
-      logger.info(
-        `Fetched ${allAssessments.length} of ${totalElements} assessments.`,
-      );
+      // const detailsBody = JSON.parse(details.body);
     }
-
-    // logger.info('Enriching the fetched OneTrust assessments with details');
-    // await mapSeries(allAssessments, async (assessment, index) => {
-    //   logger.info(
-    //     `Enriching assessment ${index + 1} of ${allAssessments.length}`,
-    //   );
-
-    //   const { body } = await oneTrust.get(
-    //     `api/assessment/v2/assessments/${assessment.assessmentId}/export?ExcludeSkippedQuestions=false`,
-    //   );
-    //   const parsedBody = JSON.parse(body);
-
-    //   console.log({ parsedBody });
-    // });
-
-    // const detailsBody = JSON.parse(details.body);
 
     // logger.info(colors.magenta('Writing configuration to file "file"...'));
     // writeTranscendYaml(file, configuration);

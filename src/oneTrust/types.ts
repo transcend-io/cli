@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-interface OneTrustAssessment {
+export interface OneTrustAssessment {
   /** ID of the assessment. */
   assessmentId: string;
   /** Date that the assessment was created. */

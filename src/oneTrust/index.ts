@@ -1,1 +1,2 @@
-export * from './pullOneTrustConfiguration';
+export * from './getListOfAssessments';
+export * from './createOneTrustGotInstance';
