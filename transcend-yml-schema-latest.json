@@ -300,7 +300,6 @@
                     "viewScopes",
                     "viewSSO",
                     "viewEmployees",
-                    "viewOptOutStatus",
                     "viewDataInventory",
                     "manageDataInventory",
                     "manageGlobalAttributes",
