@@ -7,7 +7,7 @@ const VALID_RESOURCES = Object.values(OneTrustPullResource);
 const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
 
 interface OneTrustCliArguments {
-  /** The name of the file to write the resources to without extensions */
+  /** The name of the file to write the resources to */
   file: string;
   /** The OneTrust hostname to send the requests to */
   hostname: string;
