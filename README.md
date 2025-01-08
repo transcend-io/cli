@@ -575,7 +575,7 @@ Note: This command will overwrite the existing transcend.yml file that you have 
 
 ### tr-pull-ot
 
-Pulls resources from a OneTrust instance. For now, it only supports retrieving OneTrust Assessments. It sends a request to the (Get List of Assessments)[https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget] endpoint to fetch a list of all Assessments in your account. Then, it queries the (Get Assessment)[https://developer.onetrust.com/onetrust/reference/exportassessmentusingget] and (Get Risk)[https://developer.onetrust.com/onetrust/reference/getriskusingget] endpoints to enrich these assessments with more details such as respondents, approvers, assessment questions and responses, and assessment risks. Finally, it syncs the enriched resources to disk in the specified file and format.
+Pulls resources from a OneTrust instance. For now, it only supports retrieving OneTrust Assessments. It sends a request to the [Get List of Assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget) endpoint to fetch a list of all Assessments in your account. Then, it queries the [Get Assessment](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget) and [Get Risk](https://developer.onetrust.com/onetrust/reference/getriskusingget) endpoints to enrich these assessments with more details such as respondents, approvers, assessment questions and responses, and assessment risks. Finally, it syncs the enriched resources to disk in the specified file and format.
 
 This command can be helpful if you are looking to:
 
@@ -586,11 +586,11 @@ This command can be helpful if you are looking to:
 
 In order to use this command, you will need to generate a OneTrust OAuth Token with scope for accessing the following endpoints:
 
-- (GET /v2/assessments)[https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget]
-- (GET /v2/assessments/{assessmentId}/export)[https://developer.onetrust.com/onetrust/reference/exportassessmentusingget]
-- (GET /risks/{riskId})[https://developer.onetrust.com/onetrust/reference/getriskusingget]
+- [GET /v2/assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget)
+- (GET /v2/assessments/{assessmentId}/export](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget)
+- [GET /risks/{riskId}](https://developer.onetrust.com/onetrust/reference/getriskusingget)
 
-To learn how to generate the token, see the (OAuth 2.0 Scopes)[https://developer.onetrust.com/onetrust/reference/oauth-20-scopes] and (Generate Access Token)[https://developer.onetrust.com/onetrust/reference/getoauthtoken] pages.
+To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer.onetrust.com/onetrust/reference/oauth-20-scopes) and [Generate Access Token](https://developer.onetrust.com/onetrust/reference/getoauthtoken) pages.
 
 #### Arguments
 
