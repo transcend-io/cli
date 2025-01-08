@@ -33,10 +33,10 @@ export interface OneTrustAssessment {
   resultId: string;
   /** Name of the result. */
   resultName: string;
-  /** State of the assessment. ARCHIVE ACTIVE */
+  /** State of the assessment. */
   state: 'ARCHIVE' | 'ACTIVE';
   /** Status of the assessment. */
-  status: 'NotStarted' | 'InProgress' | 'UnderReview' | 'Completed';
+  status: 'Not Started' | 'In Progress' | 'Under Review' | 'Completed';
   /** Name of the tag attached to the assessment. */
   tags: string[];
   /** The desired risk score. */
