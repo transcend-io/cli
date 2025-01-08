@@ -42,7 +42,7 @@ export const writeOneTrustAssessment = ({
 
   // Start with an opening bracket
   if (index === 0) {
-    fs.writeFileSync('./oneTrust.json', '[\n');
+    fs.writeFileSync(file, '[\n');
   }
 
   // combine the two assessments into a single stringified result
