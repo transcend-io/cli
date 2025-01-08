@@ -10,7 +10,7 @@ export enum OneTrustFileFormat {
  * Resources that can be pulled in from OneTrust
  */
 export enum OneTrustPullResource {
-  Assessments = 'Assessments',
+  Assessments = 'assessments',
 }
 
 /**
