@@ -2,16 +2,21 @@
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
-import { getListOfAssessments } from './oneTrust';
+import {
+  getListOfAssessments,
+  getAssessment,
+  writeOneTrustAssessment,
+} from './oneTrust';
 import { OneTrustFileFormat, OneTrustPullResource } from './enums';
 import { createOneTrustGotInstance } from './oneTrust/createOneTrustGotInstance';
 import { mapSeries } from 'bluebird';
-import { getAssessment } from './oneTrust/getAssesment';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
 
 interface OneTrustCliArguments {
+  /** The name of the file to write the resources to without extensions */
+  file: string;
   /** The OneTrust hostname to send the requests to */
   hostname: string;
   /** The OAuth Bearer token used to authenticate the requests */
@@ -30,21 +35,43 @@ interface OneTrustCliArguments {
  * @returns the parsed arguments
  */
 const parseCliArguments = (): OneTrustCliArguments => {
-  const {
-    // file = './transcend.yml',
-    hostname,
-    auth,
-    resource,
-    debug,
-    fileFormat,
-  } = yargs(process.argv.slice(2), {
-    string: ['hostname', 'auth', 'resource', 'fileFormat'],
-    boolean: ['debug'],
-    default: {
-      resource: OneTrustPullResource.Assessments,
-      fileFormat: OneTrustFileFormat.Json,
+  const { file, hostname, auth, resource, debug, fileFormat } = yargs(
+    process.argv.slice(2),
+    {
+      string: ['file', 'hostname', 'auth', 'resource', 'fileFormat'],
+      boolean: ['debug'],
+      default: {
+        resource: OneTrustPullResource.Assessments,
+        fileFormat: OneTrustFileFormat.Json,
+      },
     },
-  });
+  );
+
+  if (!file) {
+    logger.error(
+      colors.red(
+        'Missing required parameter "file". e.g. --file=./oneTrustAssessments.json',
+      ),
+    );
+    return process.exit(1);
+  }
+  const splitFile = file.split('.');
+  if (splitFile.length < 2) {
+    logger.error(
+      colors.red(
+        'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.',
+      ),
+    );
+    return process.exit(1);
+  }
+  if (splitFile.at(-1) !== fileFormat) {
+    logger.error(
+      colors.red(
+        `The "file" and "fileFormat" parameters must specify the same format! Got file=${file} and fileFormat=${fileFormat}`,
+      ),
+    );
+    return process.exit(1);
+  }
 
   if (!hostname) {
     logger.error(
@@ -54,6 +81,7 @@ const parseCliArguments = (): OneTrustCliArguments => {
     );
     return process.exit(1);
   }
+
   if (!auth) {
     logger.error(
       colors.red(
@@ -84,6 +112,7 @@ const parseCliArguments = (): OneTrustCliArguments => {
   }
 
   return {
+    file,
     hostname,
     auth,
     resource,
@@ -103,7 +132,8 @@ const parseCliArguments = (): OneTrustCliArguments => {
  * yarn tr-push --file=./examples/invalid.yml --auth=$ONE_TRUST_OAUTH_TOKEN
  */
 async function main(): Promise<void> {
-  const { hostname, auth, resource, debug } = parseCliArguments();
+  const { file, fileFormat, hostname, auth, resource, debug } =
+    parseCliArguments();
 
   // Sync to Disk
   try {
@@ -112,22 +142,28 @@ async function main(): Promise<void> {
       const assessments = await getListOfAssessments({ oneTrust });
 
       logger.info('Retrieving details about the fetched assessments...');
+
       await mapSeries(assessments, async (assessment, index) => {
         logger.info(
           `Enriching assessment ${index + 1} of ${assessments.length}`,
         );
 
+        // fetch details about the assessment
         const assessmentDetails = await getAssessment({
           oneTrust,
           assessmentId: assessment.assessmentId,
         });
 
-        console.log({
+        // write to disk
+        writeOneTrustAssessment({
+          assessment,
           assessmentDetails,
+          index,
+          total: assessments.length,
+          file,
+          fileFormat,
         });
       });
-
-      // const detailsBody = JSON.parse(details.body);
     }
 
     // logger.info(colors.magenta('Writing configuration to file "file"...'));
