@@ -587,7 +587,7 @@ This command can be helpful if you are looking to:
 In order to use this command, you will need to generate a OneTrust OAuth Token with scope for accessing the following endpoints:
 
 - [GET /v2/assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget)
-- (GET /v2/assessments/{assessmentId}/export](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget)
+- [GET /v2/assessments/{assessmentId}/export](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget)
 - [GET /risks/{riskId}](https://developer.onetrust.com/onetrust/reference/getriskusingget)
 
 To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer.onetrust.com/onetrust/reference/oauth-20-scopes) and [Generate Access Token](https://developer.onetrust.com/onetrust/reference/getoauthtoken) pages.
