@@ -28,8 +28,7 @@ async function main(): Promise<void> {
     resource = OneTrustPullResource.Assessments,
     // pageSize = '',
     debug = '',
-    // TODO: remove hardcode
-    auth = 'ODgyOWYxZWYyYjExNDAwYjkyNDlkZWMzMzgzYTY5MTM6YnRIRkNHTUc4V0N3NEFvaGFEa3dHdGtUN0JLY2hHMkY=',
+    auth = '',
     /**
      * TODO: add
      * enrich
