@@ -6,9 +6,9 @@ import {
   getAssessment,
   writeOneTrustAssessment,
   parseCliPullOtArguments,
+  createOneTrustGotInstance,
 } from './oneTrust';
 import { OneTrustPullResource } from './enums';
-import { createOneTrustGotInstance } from './oneTrust/createOneTrustGotInstance';
 import { mapSeries } from 'bluebird';
 
 /**
