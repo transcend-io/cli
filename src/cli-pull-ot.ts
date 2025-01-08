@@ -14,30 +14,28 @@ import { mapSeries } from 'bluebird';
 /**
  * Pull configuration from OneTrust down locally to disk
  *
- * TODO: update this comment
  * Dev Usage:
- * yarn ts-node ./src/cli-pull.ts --file=./examples/invalid.yml --auth=$ONE_TRUST_OAUTH_TOKEN
+ * yarn ts-node ./src/cli-pull-ot.ts --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  *
  * Standard usage
- * yarn tr-push --file=./examples/invalid.yml --auth=$ONE_TRUST_OAUTH_TOKEN
+ * yarn cli-pull-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  */
 async function main(): Promise<void> {
   const { file, fileFormat, hostname, auth, resource, debug } =
     parseCliPullOtArguments();
 
-  // Sync to Disk
   try {
     if (resource === OneTrustPullResource.Assessments) {
       const oneTrust = createOneTrustGotInstance({ hostname, auth });
       const assessments = await getListOfAssessments({ oneTrust });
 
-      logger.info('Retrieving details about the fetched assessments...');
-
+      // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
       await mapSeries(assessments, async (assessment, index) => {
         logger.info(
-          `Enriching assessment ${index + 1} of ${assessments.length}`,
+          `Fetching details about assessment ${index + 1} of ${
+            assessments.length
+          }...`,
         );
-
         // fetch details about the assessment
         const assessmentDetails = await getAssessment({
           oneTrust,
@@ -55,9 +53,6 @@ async function main(): Promise<void> {
         });
       });
     }
-
-    // logger.info(colors.magenta('Writing configuration to file "file"...'));
-    // writeTranscendYaml(file, configuration);
   } catch (err) {
     logger.error(
       colors.red(
@@ -70,7 +65,11 @@ async function main(): Promise<void> {
   }
 
   // Indicate success
-  logger.info(colors.green('Successfully synced yaml file to disk at "file"!'));
+  logger.info(
+    colors.green(
+      `Successfully synced OneTrust ${resource} to disk at "${file}"!`,
+    ),
+  );
 }
 
 main();

@@ -1,3 +1,5 @@
+import { logger } from '../logger';
+import colors from 'colors';
 import { OneTrustFileFormat } from '../enums';
 import { OneTrustAssessment, OneTrustGetAssessmentResponse } from './types';
 import fs from 'fs';
@@ -29,6 +31,14 @@ export const writeOneTrustAssessment = ({
   /** The total amount of assessments that we will write */
   total: number;
 }): void => {
+  logger.info(
+    colors.magenta(
+      `Syncing enriched assessment ${
+        index + 1
+      } of ${total} to file "${file}"...`,
+    ),
+  );
+
   // Start with an opening bracket
   if (index === 0) {
     fs.writeFileSync('./oneTrust.json', '[\n');
