@@ -35,6 +35,7 @@ export const parseCliPullOtArguments = (): OneTrustCliArguments => {
       default: {
         resource: OneTrustPullResource.Assessments,
         fileFormat: OneTrustFileFormat.Json,
+        debug: false,
       },
     },
   );
@@ -108,7 +109,7 @@ export const parseCliPullOtArguments = (): OneTrustCliArguments => {
     hostname,
     auth,
     resource,
-    debug: debug === undefined ? false : debug,
+    debug,
     fileFormat,
   };
 };
