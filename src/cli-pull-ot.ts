@@ -5,7 +5,8 @@ import colors from 'colors';
 import { getListOfAssessments } from './oneTrust';
 import { OneTrustFileFormat, OneTrustPullResource } from './enums';
 import { createOneTrustGotInstance } from './oneTrust/createOneTrustGotInstance';
-// import { mapSeries } from 'bluebird';
+import { mapSeries } from 'bluebird';
+import { getAssessment } from './oneTrust/getAssesment';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
@@ -108,21 +109,23 @@ async function main(): Promise<void> {
   try {
     if (resource === OneTrustPullResource.Assessments) {
       const oneTrust = createOneTrustGotInstance({ hostname, auth });
-      // const assessments =
-      await getListOfAssessments({ oneTrust });
-      // logger.info('Enriching the fetched OneTrust assessments with details');
-      // await mapSeries(allAssessments, async (assessment, index) => {
-      //   logger.info(
-      //     `Enriching assessment ${index + 1} of ${allAssessments.length}`,
-      //   );
+      const assessments = await getListOfAssessments({ oneTrust });
 
-      //   const { body } = await oneTrust.get(
-      //     `api/assessment/v2/assessments/${assessment.assessmentId}/export?ExcludeSkippedQuestions=false`,
-      //   );
-      //   const parsedBody = JSON.parse(body);
+      logger.info('Retrieving details about the fetched assessments...');
+      await mapSeries(assessments, async (assessment, index) => {
+        logger.info(
+          `Enriching assessment ${index + 1} of ${assessments.length}`,
+        );
 
-      //   console.log({ parsedBody });
-      // });
+        const assessmentDetails = await getAssessment({
+          oneTrust,
+          assessmentId: assessment.assessmentId,
+        });
+
+        console.log({
+          assessmentDetails,
+        });
+      });
 
       // const detailsBody = JSON.parse(details.body);
     }
