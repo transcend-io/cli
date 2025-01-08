@@ -26,7 +26,10 @@ async function main(): Promise<void> {
 
   try {
     if (resource === OneTrustPullResource.Assessments) {
+      // use the hostname and auth token to instantiate a client to talk to OneTrust
       const oneTrust = createOneTrustGotInstance({ hostname, auth });
+
+      // fetch the list of all assessments in the OneTrust organization
       const assessments = await getListOfAssessments({ oneTrust });
 
       // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
@@ -36,13 +39,11 @@ async function main(): Promise<void> {
             assessments.length
           }...`,
         );
-        // fetch details about the assessment
         const assessmentDetails = await getAssessment({
           oneTrust,
           assessmentId: assessment.assessmentId,
         });
 
-        // write to disk
         writeOneTrustAssessment({
           assessment,
           assessmentDetails,
@@ -56,7 +57,7 @@ async function main(): Promise<void> {
   } catch (err) {
     logger.error(
       colors.red(
-        `An error occurred pulling the resource: ${
+        `An error occurred pulling the resource ${resource} from OneTrust: ${
           debug ? err.stack : err.message
         }`,
       ),
