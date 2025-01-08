@@ -23,19 +23,19 @@ export const getListOfAssessments = async ({
 
   const allAssessments: OneTrustAssessment[] = [];
 
-  logger.info('Getting list of OneTrust assessments...');
+  logger.info('Getting list of all assessments from OneTrust...');
   while (currentPage < totalPages) {
     // eslint-disable-next-line no-await-in-loop
     const { body } = await oneTrust.get(
       `api/assessment/v2/assessments?page=${currentPage}&size=2000`,
     );
-    const parsedBody = JSON.parse(body) as OneTrustGetListOfAssessmentsResponse;
-    const assessments = parsedBody.content ?? [];
-    allAssessments.push(...assessments);
-    const page = parsedBody.page ?? { totalPages: 0, totalElements: 0 };
+    const { page, content } = JSON.parse(
+      body,
+    ) as OneTrustGetListOfAssessmentsResponse;
+    allAssessments.push(...(content ?? []));
     if (currentPage === 0) {
-      totalPages = page.totalPages;
-      totalElements = page.totalElements;
+      totalPages = page?.totalPages ?? 0;
+      totalElements = page?.totalElements ?? 0;
     }
     currentPage += 1;
 

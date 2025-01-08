@@ -52,9 +52,9 @@ export interface OneTrustAssessment {
 // ref: https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget
 export interface OneTrustGetListOfAssessmentsResponse {
   /** The list of assessments in the current page. */
-  content: OneTrustAssessment[];
+  content?: OneTrustAssessment[];
   /** Details about the pages being fetched */
-  page: {
+  page?: {
     /** Page number of the results list (0…N). */
     number: number;
     /** Number of records per page (0…N). */
