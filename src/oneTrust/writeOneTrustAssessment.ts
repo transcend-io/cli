@@ -12,6 +12,7 @@ import fs from 'fs';
  */
 export const writeOneTrustAssessment = ({
   file,
+  // TODO: https://transcend.height.app/T-41372 - support converting to CSV
   // fileFormat,
   assessment,
   assessmentDetails,
