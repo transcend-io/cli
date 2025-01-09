@@ -3,6 +3,7 @@ import colors from 'colors';
 import { OneTrustFileFormat } from '../enums';
 import { OneTrustAssessment, OneTrustGetAssessmentResponse } from './types';
 import fs from 'fs';
+import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -12,8 +13,7 @@ import fs from 'fs';
  */
 export const writeOneTrustAssessment = ({
   file,
-  // TODO: https://transcend.height.app/T-41372 - support converting to CSV
-  // fileFormat,
+  fileFormat,
   assessment,
   assessmentDetails,
   index,
@@ -40,26 +40,53 @@ export const writeOneTrustAssessment = ({
     ),
   );
 
-  // Start with an opening bracket
-  if (index === 0) {
-    fs.writeFileSync(file, '[\n');
-  }
-
-  // combine the two assessments into a single stringified result
+  // combine the two assessments into a single enriched result
   const enrichedAssessment = {
     ...assessmentDetails,
     ...assessment,
   };
-  const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
 
-  // Add comma for all items except the last one
-  const comma = index < total - 1 ? ',' : '';
+  // For json format
+  if (fileFormat === OneTrustFileFormat.Json) {
+    // start with an opening bracket
+    if (index === 0) {
+      fs.writeFileSync(file, '[\n');
+    }
 
-  // write to file
-  fs.appendFileSync(file, stringifiedAssessment + comma);
+    // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
 
-  // End with closing bracket
-  if (index === total - 1) {
-    fs.appendFileSync(file, ']');
+    // // Add comma for all items except the last one
+    // const comma = index < total - 1 ? ',' : '';
+
+    // // write to file
+    // fs.appendFileSync(file, stringifiedAssessment + comma);
+
+    // // end with closing bracket
+    // if (index === total - 1) {
+    //   fs.appendFileSync(file, ']');
+    // }
+  } else if (fileFormat === OneTrustFileFormat.Csv) {
+    // flatten the json object
+    // start with an opening bracket
+    if (index === 0) {
+      fs.writeFileSync('./oneTrust.json', '[\n');
+    }
+
+    const flattened = flattenOneTrustAssessment(enrichedAssessment);
+    const stringifiedFlattened = JSON.stringify(flattened, null, 2);
+
+    // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
+
+    // Add comma for all items except the last one
+    const comma = index < total - 1 ? ',' : '';
+
+    // write to file
+    // fs.appendFileSync(file, stringifiedAssessment + comma);
+    fs.appendFileSync('./oneTrust.json', stringifiedFlattened + comma);
+
+    // end with closing bracket
+    if (index === total - 1) {
+      fs.appendFileSync('./oneTrust.json', ']');
+    }
   }
 };

@@ -32,7 +32,12 @@ export interface OneTrustAssessment {
   /** ID of the result. */
   resultId: string;
   /** Name of the result. */
-  resultName: string;
+  resultName:
+    | 'Approved - Remediation required'
+    | 'Approved'
+    | 'Rejected'
+    | 'Assessment suspended - On Hold'
+    | null;
   /** State of the assessment. */
   state: 'ARCHIVE' | 'ACTIVE';
   /** Status of the assessment. */
@@ -149,7 +154,7 @@ interface OneTrustAssessmentQuestionResponses {
   justification: string | null;
 }
 
-interface OneTrustAssessmentQuestion {
+export interface OneTrustAssessmentQuestion {
   /** The question */
   question: {
     /** ID of the question. */
@@ -225,7 +230,7 @@ interface OneTrustAssessmentQuestion {
   attachmentIds: string[];
 }
 
-interface OneTrustAssessmentSection {
+export interface OneTrustAssessmentSection {
   /** The Assessment section header */
   header: {
     /** ID of the section in the assessment. */
@@ -270,7 +275,7 @@ interface OneTrustAssessmentSection {
   submittedBy: null | {
     /** The ID of the user who submitted the section */
     id: string;
-    /** THe name of the user who submitted the section */
+    /** THe name or email of the user who submitted the section */
     name: string;
   };
   /** Date of the submission */
@@ -291,7 +296,7 @@ interface OneTrustAssessmentSection {
   description: string | null;
 }
 
-interface OneTrustApprover {
+export interface OneTrustApprover {
   /** ID of the user assigned as an approver. */
   id: string;
   /** ID of the workflow stage */
@@ -316,7 +321,12 @@ interface OneTrustApprover {
   /** ID of the assessment result. */
   resultId: string;
   /** Name of the assessment result. */
-  resultName: string;
+  resultName:
+    | 'Approved - Remediation required'
+    | 'Approved'
+    | 'Rejected'
+    | 'Assessment suspended - On Hold'
+    | null;
   /** Name key of the assessment result. */
   resultNameKey: string;
 }
@@ -343,7 +353,7 @@ export interface OneTrustGetAssessmentResponse {
   /** Date and time by which the assessment must be completed. */
   deadline: string | null;
   /** Description of the assessment. */
-  description: string;
+  description: string | null;
   /** Overall inherent risk score without considering the existing controls. */
   inherentRiskScore: number | null;
   /** Date and time at which the assessment was last updated. */
@@ -406,7 +416,12 @@ export interface OneTrustGetAssessmentResponse {
   /** ID of the result. */
   resultId: string | null;
   /** Name of the result. */
-  resultName: string | null;
+  resultName:
+    | 'Approved - Remediation required'
+    | 'Approved'
+    | 'Rejected'
+    | 'Assessment suspended - On Hold'
+    | null;
   /** Risk level of the assessment. */
   riskLevel: 'None' | 'Low' | 'Medium' | 'High' | 'Very High';
   /** List of sections in the assessment. */

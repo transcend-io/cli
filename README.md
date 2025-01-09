@@ -147,6 +147,10 @@
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
+  - [tr-pull-ot](#tr-pull-ot)
+    - [Authentication](#authentication-35)
+    - [Arguments](#arguments-34)
+    - [Usage](#usage-35)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -599,7 +603,7 @@ To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer
 | auth       | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string  | N/A         | true     |
 | hostname   | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string  | N/A         | true     |
 | file       | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string  | N/A         | true     |
-| fileFormat | The format of the output file. For now, only json is supported.                                   | string  | json        | false    |
+| fileFormat | The format of the output file.                                                                    | string  | csv        | false    |
 | resource   | The resource to pull from OneTrust. For now, only assessments is supported.                       | string  | assessments | false    |
 | debug      | Whether to print detailed logs in case of error.                                                  | boolean | false       | false    |
 

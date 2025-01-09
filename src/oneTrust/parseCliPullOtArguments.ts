@@ -34,7 +34,7 @@ export const parseCliPullOtArguments = (): OneTrustCliArguments => {
       boolean: ['debug'],
       default: {
         resource: OneTrustPullResource.Assessments,
-        fileFormat: OneTrustFileFormat.Json,
+        fileFormat: OneTrustFileFormat.Csv,
         debug: false,
       },
     },
