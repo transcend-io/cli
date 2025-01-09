@@ -1,5 +1,18 @@
 import { makeEnum } from '@transcend-io/type-utils';
 
+/** Accepted file formats for exporting resources from OneTrust */
+export enum OneTrustFileFormat {
+  Json = 'json',
+  Csv = 'csv',
+}
+
+/**
+ * Resources that can be pulled in from OneTrust
+ */
+export enum OneTrustPullResource {
+  Assessments = 'assessments',
+}
+
 /**
  * Resources that can be pulled in
  */
@@ -50,7 +63,7 @@ export const PathfinderPolicyName = makeEnum({
  * Type override
  */
 export type PathfinderPolicyName =
-  typeof PathfinderPolicyName[keyof typeof PathfinderPolicyName];
+  (typeof PathfinderPolicyName)[keyof typeof PathfinderPolicyName];
 
 /**
  * The names of the OpenAI routes that we support setting policies for
@@ -76,4 +89,4 @@ export const OpenAIRouteName = makeEnum({
  * Type override
  */
 export type OpenAIRouteName =
-  typeof OpenAIRouteName[keyof typeof OpenAIRouteName];
+  (typeof OpenAIRouteName)[keyof typeof OpenAIRouteName];
