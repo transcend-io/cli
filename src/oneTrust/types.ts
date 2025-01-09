@@ -95,10 +95,41 @@ interface OneTrustAssessmentQuestionRisks {
 }
 
 interface OneTrustAssessmentQuestionResponses {
-  /** Justification comments for the given response. */
-  justification: string;
   /** The responses */
   responses: {
+    /** ID of the response. */
+    responseId: string;
+    /** Content of the response. */
+    response: string;
+    /** Type of response. */
+    type:
+      | 'NOT_SURE'
+      | 'JUSTIFICATION'
+      | 'NOT_APPLICABLE'
+      | 'DEFAULT'
+      | 'OTHERS';
+    /** Source from which the assessment is launched. */
+    responseSourceType: 'LAUNCH_FROM_INVENTORY' | 'FORCE_CREATED_SOURCE' | null;
+    /** Error associated with the response. */
+    errorCode:
+      | 'ATTRIBUTE_DISABLED'
+      | 'ATTRIBUTE_OPTION_DISABLED'
+      | 'INVENTORY_NOT_EXISTS'
+      | 'RELATED_INVENTORY_ATTRIBUTE_DISABLED'
+      | 'DATA_ELEMENT_NOT_EXISTS'
+      | 'DUPLICATE_INVENTORY'
+      | null;
+    /** This parameter is only applicable for inventory type responses (Example- ASSETS). */
+    responseMap: object;
+    /** Indicates whether the response is valid. */
+    valid: boolean;
+    /** The data subject */
+    dataSubject: {
+      /** The ID of the data subject */
+      id: string;
+      /** The ID of the data subject */
+      name: string;
+    };
     /** The data category */
     dataCategory: {
       /** The ID of the data category */
@@ -113,39 +144,9 @@ interface OneTrustAssessmentQuestionResponses {
       /** The ID of the data element */
       name: string;
     };
-    /** The data subject */
-    dataSubject: {
-      /** The ID of the data subject */
-      id: string;
-      /** The ID of the data subject */
-      name: string;
-    };
-    /** Error associated with the response. */
-    errorCode:
-      | 'ATTRIBUTE_DISABLED'
-      | 'ATTRIBUTE_OPTION_DISABLED'
-      | 'INVENTORY_NOT_EXISTS'
-      | 'RELATED_INVENTORY_ATTRIBUTE_DISABLED'
-      | 'DATA_ELEMENT_NOT_EXISTS'
-      | 'DUPLICATE_INVENTORY';
-    /** Content of the response. */
-    response: string;
-    /** ID of the response. */
-    responseId: string;
-    /** This parameter is only applicable for inventory type responses (Example- ASSETS). */
-    responseMap: object;
-    /** Source from which the assessment is launched. */
-    responseSourceType: 'LAUNCH_FROM_INVENTORY';
-    /** Type of response. */
-    type:
-      | 'NOT_SURE'
-      | 'JUSTIFICATION'
-      | 'NOT_APPLICABLE'
-      | 'DEFAULT'
-      | 'OTHERS';
-    /** Indicates whether the response is valid. */
-    valid: boolean;
   }[];
+  /** Justification comments for the given response. */
+  justification: string | null;
 }
 
 interface OneTrustAssessmentQuestion {
