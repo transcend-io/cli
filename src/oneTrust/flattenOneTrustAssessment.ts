@@ -132,7 +132,7 @@ const flattenOneTrustSections = (
 ): any => {
   const {
     //  allQuestions,
-    //  headers,
+    headers,
     unnestedSections,
   } = sections.reduce<{
     /** The sections questions */
@@ -157,8 +157,10 @@ const flattenOneTrustSections = (
     },
   );
   const flattenedSections = flattenList(unnestedSections, prefix);
+  // TODO: test
+  const flattenedHeaders = flattenList(headers, prefix);
 
-  return { ...flattenedSections };
+  return { ...flattenedSections, ...flattenedHeaders };
 };
 
 export const flattenOneTrustAssessment = ({

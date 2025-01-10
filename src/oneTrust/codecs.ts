@@ -179,26 +179,39 @@ export const OneTrustAssessmentQuestionResponsesCodec = t.type({
       /** Indicates whether the response is valid. */
       valid: t.boolean,
       /** The data subject */
-      dataSubject: t.type({
-        /** The ID of the data subject */
-        id: t.union([t.string, t.null]),
-        /** The ID of the data subject */
-        name: t.union([t.string, t.null]),
-      }),
+      dataSubject: t.union([
+        t.type({
+          /** The ID of the data subject */
+          id: t.union([t.string, t.null]),
+          /** The ID of the data subject */
+          name: t.union([t.string, t.null]),
+          /** The nameKey of the data category */
+          nameKey: t.union([t.string, t.null]),
+        }),
+        t.null,
+      ]),
       /** The data category */
-      dataCategory: t.type({
-        /** The ID of the data category */
-        id: t.union([t.string, t.null]),
-        /** The name of the data category */
-        name: t.union([t.string, t.null]),
-      }),
+      dataCategory: t.union([
+        t.type({
+          /** The ID of the data category */
+          id: t.union([t.string, t.null]),
+          /** The name of the data category */
+          name: t.union([t.string, t.null]),
+          /** The nameKey of the data category */
+          nameKey: t.union([t.string, t.null]),
+        }),
+        t.null,
+      ]),
       /** The data element */
-      dataElement: t.type({
-        /** The ID of the data element */
-        id: t.union([t.string, t.null]),
-        /** The ID of the data element */
-        name: t.union([t.string, t.null]),
-      }),
+      dataElement: t.union([
+        t.type({
+          /** The ID of the data element */
+          id: t.union([t.string, t.null]),
+          /** The ID of the data element */
+          name: t.union([t.string, t.null]),
+        }),
+        t.null,
+      ]),
     }),
   ),
   /** Justification comments for the given response. */
