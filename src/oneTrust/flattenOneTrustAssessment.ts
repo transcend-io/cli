@@ -45,17 +45,15 @@ const flattenList = (list: any[], prefix: string): any => {
   if (list.length === 0) {
     return {};
   }
-  const flattenedList = list.map((obj) => flattenObject(obj, prefix));
+  const listFlat = list.map((obj) => flattenObject(obj, prefix));
 
-  // get all possible keys from the flattenedList
+  // get all possible keys from the listFlat
   // TODO: make helper
-  const allKeys = Array.from(
-    new Set(flattenedList.flatMap((a) => Object.keys(a))),
-  );
+  const allKeys = Array.from(new Set(listFlat.flatMap((a) => Object.keys(a))));
 
-  // build a single object where all the keys contain the respective values of flattenedList
+  // build a single object where all the keys contain the respective values of listFlat
   return allKeys.reduce((acc, key) => {
-    const values = flattenedList.map((a) => a[key] ?? '').join(',');
+    const values = listFlat.map((a) => a[key] ?? '').join(',');
     acc[key] = values;
     return acc;
   }, {} as Record<string, any>);
@@ -212,14 +210,14 @@ const flattenOneTrustSections = (
       unnestedSections: [],
     },
   );
-  const flattenedSections = flattenList(unnestedSections, prefix);
-  const flattenedHeaders = flattenOneTrustSectionHeaders(headers, prefix);
-  const flattenedQuestions = flattenOneTrustQuestions(
+  const sectionsFlat = flattenList(unnestedSections, prefix);
+  const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
+  const questionsFlat = flattenOneTrustQuestions(
     allQuestions,
     `${prefix}_questions`,
   );
 
-  return { ...flattenedSections, ...flattenedHeaders, ...flattenedQuestions };
+  return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
 };
 
 export const flattenOneTrustAssessment = ({
@@ -245,7 +243,7 @@ export const flattenOneTrustAssessment = ({
     // approvers,
     // primaryEntityDetails,
     // respondents,
-    // eslintdisablenextline @typescripteslint/nounusedvars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     respondent,
     sections,
     ...rest
