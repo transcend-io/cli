@@ -448,4 +448,322 @@ export interface OneTrustGetAssessmentResponse {
   /** Welcome text if any in the assessment. */
   welcomeText: string | null;
 }
+
+// ref: https://developer.onetrust.com/onetrust/reference/getriskusingget
+export interface OneTrustGetRiskResponse {
+  /** List of associated inventories to the risk. */
+  associatedInventories: {
+    /** ID of the Inventory. */
+    inventoryId: string;
+    /** Name of the Inventory. */
+    inventoryName: string;
+    /** Type of the Inventory. */
+    inventoryType: 'ASSETS PROCESSING_ACTIVITIES VENDORS ENTITIES';
+    /** ID of the Inventory's Organization. */
+    organizationId: string;
+    /** The source type */
+    sourceType: {
+      /** Indicates whether entity type is eligible for linking/relating with risk or not */
+      eligibleForEntityLink: boolean;
+      /** Indicates whether the entity type is enabled or not. */
+      enabled: boolean;
+      /** Entity Type ID. This can be Assets, Entities, PIA, Engagement, Custom Object GUID in form of String. */
+      id: string;
+      /** Entity Type Name. */
+      label: string;
+      /** Name of the module. */
+      moduleName: boolean;
+      /** Indicates whether this type can be risk type or not in Risk */
+      riskType: boolean;
+      /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
+      seeded: boolean;
+      /** Indicates whether this type can be source type or not in Risk */
+      sourceType: boolean;
+      /** Translation Key of Entity Type ID. */
+      translationKey: string;
+    };
+  }[];
+  /** The attribute values associated with the risk */
+  attributeValues: {
+    /** List of custom attributes. */
+    additionalProp: {
+      /** Additional information like Source Questions, Approver Ids, Inventory Type. This will be a Map of String Key and Object value. */
+      additionalAttributes: object;
+      /** Attribute option GUID. */
+      id: string;
+      /** Attribute selection value and it is mandatory if the numeric value is not distinct for Numerical Single Select attribute. */
+      optionSelectionValue: string;
+      /** Attribute option value. */
+      value: string;
+      /** Attribute option value key for translation. */
+      valueKey: string;
+    }[];
+  };
+  /** List of categories. */
+  categories: {
+    /** Identifier for Risk Category. */
+    id: string;
+    /** Risk Category Name. */
+    name: string;
+    /** Risk Category Name Key value for translation. */
+    nameKey: string;
+  }[];
+  /** List of Control Identifiers. */
+  controlsIdentifier: string[];
+  /** Risk created time. */
+  createdUTCDateTime: string;
+  /** Risk Creation Type. */
+  creationType: string;
+  /** Date when the risk is closed. */
+  dateClosed: string;
+  /** Deadline date for the risk. */
+  deadline: string;
+  /** Risk delete type. */
+  deleteType: 'SOFT';
+  /** Risk description. */
+  description: string;
+  /** ID of the risk. */
+  id: string;
+  /** Residual impact level name. */
+  impactLevel: string;
+  /** Residual impact level ID. */
+  impactLevelId: number;
+  /** The inherent risk level */
+  inherentRiskLevel: {
+    /** Risk Impact Level name. */
+    impactLevel: string;
+    /** Risk Impact level ID. */
+    impactLevelId: number;
+    /** Risk Level Name. */
+    level: string;
+    /** Risk Level ID. */
+    levelId: number;
+    /** Risk Probability Level Name. */
+    probabilityLevel: string;
+    /** Risk Probability Level ID. */
+    probabilityLevelId: number;
+    /** Risk Score. */
+    riskScore: number;
+  };
+  /** The risk justification */
+  justification: string;
+  /** Residual level name. */
+  level: string;
+  /** Residual level display name. */
+  levelDisplayName: string;
+  /** Residual level ID. */
+  levelId: number;
+  /** Risk mitigated date. */
+  mitigatedDate: string;
+  /** Risk Mitigation details. */
+  mitigation: string;
+  /** Short Name for a Risk. */
+  name: string;
+  /** Integer risk identifier. */
+  number: number;
+  /** The organization group */
+  orgGroup: {
+    /** ID of an entity. */
+    id: string;
+    /** Name of an entity. */
+    name: string;
+  };
+  /** The previous risk state */
+  previousState:
+    | 'IDENTIFIED'
+    | 'RECOMMENDATION_ADDED'
+    | 'RECOMMENDATION_SENT'
+    | 'REMEDIATION_PROPOSED'
+    | 'EXCEPTION_REQUESTED'
+    | 'REDUCED'
+    | 'RETAINED'
+    | 'ARCHIVED_IN_VERSION';
+  /** Residual probability level. */
+  probabilityLevel: string;
+  /** Residual probability level ID. */
+  probabilityLevelId: number;
+  /** Risk Recommendation. */
+  recommendation: string;
+  /** Proposed remediation. */
+  remediationProposal: string;
+  /** Deadline reminder days. */
+  reminderDays: number;
+  /** Risk exception request. */
+  requestedException: string;
+  /** Risk Result. */
+  result:
+    | 'Accepted'
+    | 'Avoided'
+    | 'Reduced'
+    | 'Rejected'
+    | 'Transferred'
+    | 'Ignored';
+  /** Risk approvers name csv. */
+  riskApprovers: string;
+  /** Risk approvers ID. */
+  riskApproversId: string[];
+  /** List of risk owners ID. */
+  riskOwnersId: string[];
+  /** Risk owners name csv. */
+  riskOwnersName: string;
+  /** Risk score. */
+  riskScore: number;
+  /** The risk source type */
+  riskSourceType: {
+    /** Indicates whether entity type is eligible for linking/relating with risk or not */
+    eligibleForEntityLink: boolean;
+    /** Indicates whether the entity type is enabled or not. */
+    enabled: boolean;
+    /** Entity Type ID. This can be Assets, Entities, PIA, Engagement, Custom Object GUID in form of String. */
+    id: string;
+    /** Entity Type Name. */
+    label: string;
+    /** Name of the module. */
+    moduleName: boolean;
+    /** Indicates whether this type can be risk type or not in Risk */
+    riskType: boolean;
+    /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
+    seeded: boolean;
+    /** Indicates whether this type can be source type or not in Risk */
+    sourceType: boolean;
+    /** Translation Key of Entity Type ID. */
+    translationKey: string;
+  };
+  /** The risk type */
+  riskType: {
+    /** Indicates whether entity type is eligible for linking/relating with risk or not */
+    eligibleForEntityLink: boolean;
+    /** Indicates whether the entity type is enabled or not. */
+    enabled: boolean;
+    /** Entity Type ID. This can be Assets, Entities, PIA, Engagement, Custom Object GUID in form of String. */
+    id: string;
+    /** Entity Type Name. */
+    label: string;
+    /** Name of the module. */
+    moduleName: boolean;
+    /** Indicates whether this type can be risk type or not in Risk */
+    riskType: boolean;
+    /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
+    seeded: boolean;
+    /** Indicates whether this type can be source type or not in Risk */
+    sourceType: boolean;
+    /** Translation Key of Entity Type ID. */
+    translationKey: string;
+  };
+  /** For Auto risk, rule Id reference. */
+  ruleRootVersionId: string;
+  /** The risk source */
+  source: {
+    // eslint-disable-next-line max-len
+    /** Additional information about the Source Entity. This will be a Map of String Key and Object value. 'inventoryType' key is mandatory to be passed when sourceType is 'Inventory', and it can have one of the following values, 20 - Assets, 30 - Processing Activities, 50 - Vendors, 60 - Entities */
+    additionalAttributes: object;
+    /** Source Entity ID. */
+    id: string;
+    /** Source Entity Name. */
+    name: string;
+    /** The risk source type */
+    sourceType: {
+      /** Indicates whether entity type is eligible for linking/relating with risk or not */
+      eligibleForEntityLink: boolean;
+      /** Indicates whether the entity type is enabled or not. */
+      enabled: boolean;
+      /** Entity Type ID. This can be Assets, Entities, PIA, Engagement, Custom Object GUID in form of String. */
+      id: string;
+      /** Entity Type Name. */
+      label: string;
+      /** Name of the module. */
+      moduleName: boolean;
+      /** Indicates whether this type can be risk type or not in Risk */
+      riskType: boolean;
+      /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
+      seeded: boolean;
+      /** Indicates whether this type can be source type or not in Risk */
+      sourceType: boolean;
+      /** Translation Key of Entity Type ID. */
+      translationKey: string;
+    };
+    /** Source Entity Type. */
+    type: 'PIA' | 'RA' | 'GRA' | 'INVENTORY' | 'INCIDENT' | 'GENERIC';
+  };
+  /** The risk stage */
+  stage: {
+    /** ID of an entity. */
+    id: string;
+    /** Name of an entity. */
+    name: string;
+    /** Name Key of the entity for translation. */
+    nameKey: string;
+  };
+  /** The risk state */
+  state:
+    | 'IDENTIFIED'
+    | 'RECOMMENDATION_ADDED'
+    | 'RECOMMENDATION_SENT'
+    | 'REMEDIATION_PROPOSED'
+    | 'EXCEPTION_REQUESTED'
+    | 'REDUCED'
+    | 'RETAINED'
+    | 'ARCHIVED_IN_VERSION';
+  /** The target risk level */
+  targetRiskLevel: {
+    /** Risk Impact Level name. */
+    impactLevel: string;
+    /** Risk Impact level ID. */
+    impactLevelId: number;
+    /** Risk Level Name. */
+    level: string;
+    /** Risk Level ID. */
+    levelId: number;
+    /** Risk Probability Level Name. */
+    probabilityLevel: string;
+    /** Risk Probability Level ID. */
+    probabilityLevelId: number;
+    /** Risk Score. */
+    riskScore: number;
+  };
+  /** The risk threat */
+  threat: {
+    /** Threat ID. */
+    id: string;
+    /** Threat Identifier. */
+    identifier: string;
+    /** Threat Name. */
+    name: string;
+  };
+  /** Risk Treatment. */
+  treatment: string;
+  /** Risk Treatment status. */
+  treatmentStatus:
+    | 'InProgress'
+    | 'UnderReview'
+    | 'ExceptionRequested'
+    | 'Approved'
+    | 'ExceptionGranted';
+  /** Risk Type. */
+  type:
+    | 'ASSESSMENTS'
+    | 'ASSETS'
+    | 'PROCESSING_ACTIVITIES'
+    | 'VENDORS'
+    | 'ENTITIES'
+    | 'INCIDENTS';
+  /** ID of an assessment. */
+  typeRefIds: string[];
+  /** List of vulnerabilities */
+  vulnerabilities: {
+    /** Vulnerability ID. */
+    id: string;
+    /** Vulnerability Identifier. */
+    identifier: string;
+    /** Vulnerability Name. */
+    name: string;
+  }[];
+  /** The risk workflow */
+  workflow: {
+    /** ID of an entity. */
+    id: string;
+    /** Name of an entity. */
+    name: string;
+  };
+}
 /* eslint-enable max-lines */

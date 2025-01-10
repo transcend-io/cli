@@ -2,8 +2,8 @@
 import { logger } from './logger';
 import colors from 'colors';
 import {
-  getListOfAssessments,
-  getAssessment,
+  getListOfOneTrustAssessments,
+  getOneTrustAssessment,
   writeOneTrustAssessment,
   parseCliPullOtArguments,
   createOneTrustGotInstance,
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
       const oneTrust = createOneTrustGotInstance({ hostname, auth });
 
       // fetch the list of all assessments in the OneTrust organization
-      const assessments = await getListOfAssessments({ oneTrust });
+      const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
       // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
       await mapSeries(assessments, async (assessment, index) => {
@@ -39,7 +39,7 @@ async function main(): Promise<void> {
             assessments.length
           }...`,
         );
-        const assessmentDetails = await getAssessment({
+        const assessmentDetails = await getOneTrustAssessment({
           oneTrust,
           assessmentId: assessment.assessmentId,
         });

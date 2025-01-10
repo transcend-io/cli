@@ -3,11 +3,12 @@ import { OneTrustGetAssessmentResponse } from './types';
 
 /**
  * Retrieve details about a particular assessment.
+ * ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
  *
  * @param param - the information about the OneTrust client and assessment to retrieve
  * @returns details about the assessment
  */
-export const getAssessment = async ({
+export const getOneTrustAssessment = async ({
   oneTrust,
   assessmentId,
 }: {

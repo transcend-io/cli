@@ -7,11 +7,12 @@ import {
 
 /**
  * Fetch a list of all assessments from the OneTrust client.
+ * ref: https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget
  *
  * @param param - the information about the OneTrust client
  * @returns a list of OneTrustAssessment
  */
-export const getListOfAssessments = async ({
+export const getListOfOneTrustAssessments = async ({
   oneTrust,
 }: {
   /** The OneTrust client instance */
