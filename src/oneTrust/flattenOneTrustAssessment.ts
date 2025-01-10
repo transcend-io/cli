@@ -5,7 +5,9 @@ import {
   OneTrustAssessmentQuestionCodec,
   // OneTrustAssessmentQuestionResponsesCodec,
   OneTrustAssessmentSectionCodec,
+  OneTrustAssessmentSectionFlatHeaderCodec,
   OneTrustAssessmentSectionHeaderCodec,
+  OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustFlatAssessmentSectionCodec,
   OneTrustGetAssessmentResponseCodec,
@@ -126,6 +128,46 @@ const flattenList = (list: any[], prefix: string): any => {
 //     {},
 //   );
 
+const flattenOneTrustSectionHeaders = (
+  headers: OneTrustAssessmentSectionHeaderCodec[],
+  prefix: string,
+): any => {
+  // TODO: do this for EVERY nested object that may be null
+  const defaultRiskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec =
+    {
+      maxRiskLevel: null,
+      riskCount: null,
+      sectionId: null,
+    };
+
+  const { riskStatistics, flatHeaders } = headers.reduce<{
+    /** The risk statistics of all headers */
+    riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec[];
+    /** The headers without risk statistics */
+    flatHeaders: OneTrustAssessmentSectionFlatHeaderCodec[];
+  }>(
+    (acc, header) => {
+      const { riskStatistics, ...rest } = header;
+      return {
+        riskStatistics: [
+          ...acc.riskStatistics,
+          riskStatistics ?? defaultRiskStatistics,
+        ],
+        flatHeaders: [...acc.flatHeaders, rest],
+      };
+    },
+    {
+      riskStatistics: [],
+      flatHeaders: [],
+    },
+  );
+
+  return {
+    ...flattenList(flatHeaders, prefix),
+    ...flattenList(riskStatistics, `${prefix}_riskStatistics`),
+  };
+};
+
 const flattenOneTrustSections = (
   sections: OneTrustAssessmentSectionCodec[],
   prefix: string,
@@ -157,8 +199,7 @@ const flattenOneTrustSections = (
     },
   );
   const flattenedSections = flattenList(unnestedSections, prefix);
-  // TODO: test
-  const flattenedHeaders = flattenList(headers, prefix);
+  const flattenedHeaders = flattenOneTrustSectionHeaders(headers, prefix);
 
   return { ...flattenedSections, ...flattenedHeaders };
 };

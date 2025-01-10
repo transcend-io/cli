@@ -315,6 +315,23 @@ export type OneTrustAssessmentQuestionCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionCodec
 >;
 
+export const OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.union([
+  t.type({
+    /** Maximum level of risk in the section. */
+    maxRiskLevel: t.union([t.number, t.null]),
+    /** Number of risks in the section. */
+    riskCount: t.union([t.number, t.null]),
+    /** ID of the section in the assessment. */
+    sectionId: t.union([t.string, t.null]),
+  }),
+  t.null,
+]);
+
+/** Type override */
+export type OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.TypeOf<
+  typeof OneTrustAssessmentSectionHeaderRiskStatisticsCodec
+>;
+
 export const OneTrustAssessmentSectionHeaderCodec = t.type({
   /** ID of the section in the assessment. */
   sectionId: t.string,
@@ -337,23 +354,38 @@ export const OneTrustAssessmentSectionHeaderCodec = t.type({
   /** IDs of effectiveness questions in the section. */
   effectivenessQuestionIds: t.array(t.string),
   /** The risk statistics */
-  riskStatistics: t.union([
-    t.type({
-      /** Maximum level of risk in the section. */
-      maxRiskLevel: t.number,
-      /** Number of risks in the section. */
-      riskCount: t.number,
-      /** ID of the section in the assessment. */
-      sectionId: t.string,
-    }),
-    t.null,
-  ]),
+  riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   /** Whether the section was submitted */
   submitted: t.boolean,
 });
 /** Type override */
 export type OneTrustAssessmentSectionHeaderCodec = t.TypeOf<
   typeof OneTrustAssessmentSectionHeaderCodec
+>;
+
+// TODO: do not add to privacy-types
+/** The OneTrustAssessmentSectionHeaderCodec without nested riskStatistics  */
+export const OneTrustAssessmentSectionFlatHeaderCodec = t.type({
+  sectionId: OneTrustAssessmentSectionHeaderCodec.props.sectionId,
+  name: OneTrustAssessmentSectionHeaderCodec.props.name,
+  description: OneTrustAssessmentSectionHeaderCodec.props.description,
+  sequence: OneTrustAssessmentSectionHeaderCodec.props.sequence,
+  hidden: OneTrustAssessmentSectionHeaderCodec.props.hidden,
+  invalidQuestionIds:
+    OneTrustAssessmentSectionHeaderCodec.props.invalidQuestionIds,
+  requiredUnansweredQuestionIds:
+    OneTrustAssessmentSectionHeaderCodec.props.requiredUnansweredQuestionIds,
+  requiredQuestionIds:
+    OneTrustAssessmentSectionHeaderCodec.props.requiredQuestionIds,
+  unansweredQuestionIds:
+    OneTrustAssessmentSectionHeaderCodec.props.unansweredQuestionIds,
+  effectivenessQuestionIds:
+    OneTrustAssessmentSectionHeaderCodec.props.effectivenessQuestionIds,
+  submitted: OneTrustAssessmentSectionHeaderCodec.props.submitted,
+});
+/** Type override */
+export type OneTrustAssessmentSectionFlatHeaderCodec = t.TypeOf<
+  typeof OneTrustAssessmentSectionFlatHeaderCodec
 >;
 
 export const OneTrustAssessmentSectionCodec = t.type({
