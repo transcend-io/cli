@@ -2,8 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   OneTrustAssessmentCodec,
+  OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionCodec,
-  // OneTrustAssessmentQuestionResponsesCodec,
+  OneTrustAssessmentQuestionFlatCodec,
+  OneTrustAssessmentQuestionResponseCodec,
+  OneTrustAssessmentQuestionRiskCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionFlatHeaderCodec,
   OneTrustAssessmentSectionHeaderCodec,
@@ -45,6 +48,7 @@ const flattenList = (list: any[], prefix: string): any => {
   const flattenedList = list.map((obj) => flattenObject(obj, prefix));
 
   // get all possible keys from the flattenedList
+  // TODO: make helper
   const allKeys = Array.from(
     new Set(flattenedList.flatMap((a) => Object.keys(a))),
   );
@@ -58,7 +62,7 @@ const flattenList = (list: any[], prefix: string): any => {
 };
 
 // const flattenOneTrustQuestionResponses = (
-//   questionResponses: OneTrustAssessmentQuestionResponsesCodec[],
+//   questionResponses: OneTrustAssessmentQuestionResponseCodec[],
 //   prefix: string,
 // ): any => {
 //   if (questionResponses.length === 0) {
@@ -73,60 +77,74 @@ const flattenList = (list: any[], prefix: string): any => {
 //   };
 // };
 
-// const flattenOneTrustQuestion = (
-//   oneTrustQuestion: OneTrustAssessmentQuestionCodec,
-//   prefix: string,
-// ): any => {
-//   const {
-//     question: { options: questionOptions, ...restQuestion },
-//     questionResponses,
-//     // risks,
-//     ...rest
-//   } = oneTrustQuestion;
-//   const newPrefix = `${prefix}_${restQuestion.sequence}`;
+const flattenOneTrustQuestions = (
+  allSectionQuestions: OneTrustAssessmentQuestionCodec[][],
+  prefix: string,
+): any => {
+  // each entry of sectionQuestions is the list of questions of one section
+  const allSectionQuestionsFlat = allSectionQuestions.map(
+    (sectionQuestions) => {
+      // extract nested properties (TODO: try to make a helper for this!!!)
+      const {
+        // TODO: flatten the questions, allQuestionResponses, and risks too!
+        // questions,
+        // allQuestionResponses,
+        // allRisks,
+        unnestedSectionQuestions,
+      } = sectionQuestions.reduce<{
+        /** The nested questions */
+        questions: OneTrustAssessmentNestedQuestionCodec[];
+        /** The responses of all questions in the section */
+        allQuestionResponses: OneTrustAssessmentQuestionResponseCodec[][];
+        /** The risks of all questions in the section */
+        allRisks: OneTrustAssessmentQuestionRiskCodec[][];
+        /** The parent questions without nested questions */
+        unnestedSectionQuestions: OneTrustAssessmentQuestionFlatCodec[];
+      }>(
+        (acc, sectionQuestion) => {
+          const { question, questionResponses, risks, ...rest } =
+            sectionQuestion;
+          return {
+            questions: [...acc.questions, question],
+            allQuestionResponses: [
+              ...acc.allQuestionResponses,
+              questionResponses,
+            ],
+            allRisks: [...acc.allRisks, risks ?? []],
+            unnestedSectionQuestions: [...acc.unnestedSectionQuestions, rest],
+          };
+        },
+        {
+          questions: [],
+          allQuestionResponses: [],
+          allRisks: [],
+          unnestedSectionQuestions: [],
+        },
+      );
 
-//   return {
-//     ...flattenObject({ ...restQuestion, ...rest }, newPrefix),
-//     ...flattenList(questionOptions ?? [], `${newPrefix}_options`),
-//     ...flattenOneTrustQuestionResponses(
-//       questionResponses ?? [],
-//       `${newPrefix}_responses`,
-//     ),
-//   };
-// };
+      return flattenList(unnestedSectionQuestions, prefix);
+    },
+  );
 
-// const flattenOneTrustQuestions = (
-//   questions: OneTrustAssessmentQuestionCodec[],
-//   prefix: string,
-// ): any =>
-//   questions.reduce(
-//     (acc, question) => ({
-//       ...acc,
-//       ...flattenOneTrustQuestion(question, prefix),
-//     }),
-//     {},
-//   );
+  // extract all keys across allSectionQuestionsFlat
+  const allKeys = Array.from(
+    new Set(allSectionQuestionsFlat.flatMap((a) => Object.keys(a))),
+  );
 
-// const flattenOneTrustSection = (
-//   section: OneTrustAssessmentSectionCodec,
-// ): any => {
-//   const { questions, header, ...rest } = section;
-
-//   // the flattened section key has format like sections_${sequence}_sectionId
-//   const prefix = `sections_${section.sequence}`;
-//   return {
-//     ...flattenObject({ ...header, ...rest }, prefix),
-//     ...flattenOneTrustQuestions(questions, `${prefix}_questions`),
-//   };
-// };
-
-// const flattenOneTrustSections = (
-//   sections: OneTrustAssessmentSectionCodec[],
-// ): any =>
-//   sections.reduce(
-//     (acc, section) => ({ ...acc, ...flattenOneTrustSection(section) }),
-//     {},
-//   );
+  // TODO: comment
+  return allSectionQuestionsFlat.reduce(
+    (acc, flatSectionQuestions) =>
+      Object.fromEntries(
+        allKeys.map((key) => [
+          key,
+          `${acc[key] === undefined ? '' : `${acc[key]},`}[${
+            flatSectionQuestions[key] ?? ''
+          }]`,
+        ]),
+      ),
+    {},
+  );
+};
 
 const flattenOneTrustSectionHeaders = (
   headers: OneTrustAssessmentSectionHeaderCodec[],
@@ -172,11 +190,7 @@ const flattenOneTrustSections = (
   sections: OneTrustAssessmentSectionCodec[],
   prefix: string,
 ): any => {
-  const {
-    //  allQuestions,
-    headers,
-    unnestedSections,
-  } = sections.reduce<{
+  const { allQuestions, headers, unnestedSections } = sections.reduce<{
     /** The sections questions */
     allQuestions: OneTrustAssessmentQuestionCodec[][];
     /** The sections headers */
@@ -200,8 +214,12 @@ const flattenOneTrustSections = (
   );
   const flattenedSections = flattenList(unnestedSections, prefix);
   const flattenedHeaders = flattenOneTrustSectionHeaders(headers, prefix);
+  const flattenedQuestions = flattenOneTrustQuestions(
+    allQuestions,
+    `${prefix}_questions`,
+  );
 
-  return { ...flattenedSections, ...flattenedHeaders };
+  return { ...flattenedSections, ...flattenedHeaders, ...flattenedQuestions };
 };
 
 export const flattenOneTrustAssessment = ({
@@ -227,7 +245,7 @@ export const flattenOneTrustAssessment = ({
     // approvers,
     // primaryEntityDetails,
     // respondents,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslintdisablenextline @typescripteslint/nounusedvars
     respondent,
     sections,
     ...rest
@@ -243,7 +261,6 @@ export const flattenOneTrustAssessment = ({
     ...flattenOneTrustSections(sections, 'sections'),
   };
 };
-
 /**
  *
  *

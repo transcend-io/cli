@@ -35,9 +35,6 @@ async function main(): Promise<void> {
       // fetch the list of all assessments in the OneTrust organization
       const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
-      // TODO: undo
-      // const theAssessments = assessments.slice(1902);
-
       // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
       await mapSeries(assessments, async (assessment, index) => {
         logger.info(

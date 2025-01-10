@@ -142,7 +142,7 @@ export type OneTrustAssessmentQuestionRiskCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionRiskCodec
 >;
 
-export const OneTrustAssessmentQuestionResponsesCodec = t.type({
+export const OneTrustAssessmentQuestionResponseCodec = t.type({
   /** The responses */
   responses: t.array(
     t.type({
@@ -219,73 +219,80 @@ export const OneTrustAssessmentQuestionResponsesCodec = t.type({
 });
 
 /** Type override */
-export type OneTrustAssessmentQuestionResponsesCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionResponsesCodec
+export type OneTrustAssessmentQuestionResponseCodec = t.TypeOf<
+  typeof OneTrustAssessmentQuestionResponseCodec
+>;
+
+export const OneTrustAssessmentNestedQuestionCodec = t.type({
+  /** ID of the question. */
+  id: t.string,
+  /** ID of the root version of the question. */
+  rootVersionId: t.string,
+  /** Order in which the question appears in the assessment. */
+  sequence: t.number,
+  /** Type of question in the assessment. */
+  questionType: t.union([
+    t.literal('TEXTBOX'),
+    t.literal('MULTICHOICE'),
+    t.literal('YESNO'),
+    t.literal('DATE'),
+    t.literal('STATEMENT'),
+    t.literal('INVENTORY'),
+    t.literal('ATTRIBUTE'),
+    t.literal('PERSONAL_DATA'),
+    t.literal('ENGAGEMENT'),
+    t.literal('ASSESS_CONTROL'),
+    t.null,
+  ]),
+  /** Indicates whether a response to the question is required. */
+  required: t.boolean,
+  /** Data element attributes that are directly updated by the question. */
+  attributes: t.string,
+  /** Short, descriptive name for the question. */
+  friendlyName: t.union([t.string, t.null]),
+  /** Description of the question. */
+  description: t.union([t.string, t.null]),
+  /** Tooltip text within a hint for the question. */
+  hint: t.union([t.string, t.null]),
+  /** ID of the parent question. */
+  parentQuestionId: t.union([t.string, t.null]),
+  /** Indicates whether the response to the question is prepopulated. */
+  prePopulateResponse: t.boolean,
+  /** Indicates whether the assessment is linked to inventory records. */
+  linkAssessmentToInventory: t.boolean,
+  /** The question options */
+  options: t.union([t.array(OneTrustAssessmentQuestionOptionCodec), t.null]),
+  /** Indicates whether the question is valid. */
+  valid: t.boolean,
+  /** Type of question in the assessment. */
+  type: t.union([
+    t.literal('TEXTBOX'),
+    t.literal('MULTICHOICE'),
+    t.literal('YESNO'),
+    t.literal('DATE'),
+    t.literal('STATEMENT'),
+    t.literal('INVENTORY'),
+    t.literal('ATTRIBUTE'),
+    t.literal('PERSONAL_DATA'),
+    t.literal('ENGAGEMENT'),
+    t.literal('ASSESS_CONTROL'),
+  ]),
+  /** Whether the response can be multi select */
+  allowMultiSelect: t.boolean,
+  /** The text of a question. */
+  content: t.string,
+  /** Indicates whether justification comments are required for the question. */
+  requireJustification: t.boolean,
+});
+
+/** Type override */
+export type OneTrustAssessmentNestedQuestionCodec = t.TypeOf<
+  typeof OneTrustAssessmentNestedQuestionCodec
 >;
 
 export const OneTrustAssessmentQuestionCodec = t.type({
   /** The question */
-  question: t.type({
-    /** ID of the question. */
-    id: t.string,
-    /** ID of the root version of the question. */
-    rootVersionId: t.string,
-    /** Order in which the question appears in the assessment. */
-    sequence: t.number,
-    /** Type of question in the assessment. */
-    questionType: t.union([
-      t.literal('TEXTBOX'),
-      t.literal('MULTICHOICE'),
-      t.literal('YESNO'),
-      t.literal('DATE'),
-      t.literal('STATEMENT'),
-      t.literal('INVENTORY'),
-      t.literal('ATTRIBUTE'),
-      t.literal('PERSONAL_DATA'),
-      t.literal('ENGAGEMENT'),
-      t.literal('ASSESS_CONTROL'),
-      t.null,
-    ]),
-    /** Indicates whether a response to the question is required. */
-    required: t.boolean,
-    /** Data element attributes that are directly updated by the question. */
-    attributes: t.string,
-    /** Short, descriptive name for the question. */
-    friendlyName: t.union([t.string, t.null]),
-    /** Description of the question. */
-    description: t.union([t.string, t.null]),
-    /** Tooltip text within a hint for the question. */
-    hint: t.union([t.string, t.null]),
-    /** ID of the parent question. */
-    parentQuestionId: t.union([t.string, t.null]),
-    /** Indicates whether the response to the question is prepopulated. */
-    prePopulateResponse: t.boolean,
-    /** Indicates whether the assessment is linked to inventory records. */
-    linkAssessmentToInventory: t.boolean,
-    /** The question options */
-    options: t.union([t.array(OneTrustAssessmentQuestionOptionCodec), t.null]),
-    /** Indicates whether the question is valid. */
-    valid: t.boolean,
-    /** Type of question in the assessment. */
-    type: t.union([
-      t.literal('TEXTBOX'),
-      t.literal('MULTICHOICE'),
-      t.literal('YESNO'),
-      t.literal('DATE'),
-      t.literal('STATEMENT'),
-      t.literal('INVENTORY'),
-      t.literal('ATTRIBUTE'),
-      t.literal('PERSONAL_DATA'),
-      t.literal('ENGAGEMENT'),
-      t.literal('ASSESS_CONTROL'),
-    ]),
-    /** Whether the response can be multi select */
-    allowMultiSelect: t.boolean,
-    /** The text of a question. */
-    content: t.string,
-    /** Indicates whether justification comments are required for the question. */
-    requireJustification: t.boolean,
-  }),
+  question: OneTrustAssessmentNestedQuestionCodec,
   /** Indicates whether the question is hidden on the assessment. */
   hidden: t.boolean,
   /** Reason for locking the question in the assessment. */
@@ -299,7 +306,7 @@ export const OneTrustAssessmentQuestionCodec = t.type({
   /** Indicates whether navigation rules are enabled for the question. */
   hasNavigationRules: t.boolean,
   /** The responses to this question */
-  questionResponses: t.array(OneTrustAssessmentQuestionResponsesCodec),
+  questionResponses: t.array(OneTrustAssessmentQuestionResponseCodec),
   /** The risks associated with this question */
   risks: t.union([t.array(OneTrustAssessmentQuestionRiskCodec), t.null]),
   /** List of IDs associated with the question root requests. */
@@ -313,6 +320,24 @@ export const OneTrustAssessmentQuestionCodec = t.type({
 /** Type override */
 export type OneTrustAssessmentQuestionCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionCodec
+>;
+
+// TODO: do not add to privacy types
+// The OneTrustAssessmentQuestionCodec without nested properties
+export const OneTrustAssessmentQuestionFlatCodec = t.type({
+  hidden: OneTrustAssessmentQuestionCodec.props.hidden,
+  lockReason: OneTrustAssessmentQuestionCodec.props.lockReason,
+  copyErrors: OneTrustAssessmentQuestionCodec.props.copyErrors,
+  hasNavigationRules: OneTrustAssessmentQuestionCodec.props.hasNavigationRules,
+  rootRequestInformationIds:
+    OneTrustAssessmentQuestionCodec.props.rootRequestInformationIds,
+  totalAttachments: OneTrustAssessmentQuestionCodec.props.totalAttachments,
+  attachmentIds: OneTrustAssessmentQuestionCodec.props.attachmentIds,
+});
+
+/** Type override */
+export type OneTrustAssessmentQuestionFlatCodec = t.TypeOf<
+  typeof OneTrustAssessmentQuestionFlatCodec
 >;
 
 export const OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.union([
