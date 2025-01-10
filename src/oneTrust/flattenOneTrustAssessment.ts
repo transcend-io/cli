@@ -1,14 +1,14 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   OneTrustAssessmentCodec,
   OneTrustAssessmentQuestionCodec,
-  OneTrustAssessmentQuestionResponsesCodec,
-  OneTrustAssessmentQuestionRiskCodec,
+  // OneTrustAssessmentQuestionResponsesCodec,
   OneTrustAssessmentSectionCodec,
+  OneTrustAssessmentSectionHeaderCodec,
+  OneTrustEnrichedRiskCodec,
+  OneTrustFlatAssessmentSectionCodec,
   OneTrustGetAssessmentResponseCodec,
-  OneTrustRiskDetailsCodec,
 } from './codecs';
 
 // TODO: test what happens when a value is null -> it should convert to ''
@@ -55,109 +55,149 @@ const flattenList = (list: any[], prefix: string): any => {
   }, {} as Record<string, any>);
 };
 
-const flattenOneTrustQuestionResponses = (
-  questionResponses: OneTrustAssessmentQuestionResponsesCodec[],
-  prefix: string,
-): any => {
-  if (questionResponses.length === 0) {
-    return {};
-  }
+// const flattenOneTrustQuestionResponses = (
+//   questionResponses: OneTrustAssessmentQuestionResponsesCodec[],
+//   prefix: string,
+// ): any => {
+//   if (questionResponses.length === 0) {
+//     return {};
+//   }
 
-  // despite being an array, questionResponses only returns one element
-  const { responses, ...rest } = questionResponses[0];
-  return {
-    ...flattenList(responses, prefix),
-    ...flattenObject(rest, prefix),
-  };
-};
+//   // despite being an array, questionResponses only returns one element
+//   const { responses, ...rest } = questionResponses[0];
+//   return {
+//     ...flattenList(responses, prefix),
+//     ...flattenObject(rest, prefix),
+//   };
+// };
 
-const flattenOneTrustQuestion = (
-  oneTrustQuestion: OneTrustAssessmentQuestionCodec,
-  prefix: string,
-): any => {
-  const {
-    question: { options: questionOptions, ...restQuestion },
-    questionResponses,
-    // risks,
-    ...rest
-  } = oneTrustQuestion;
-  const newPrefix = `${prefix}_${restQuestion.sequence}`;
+// const flattenOneTrustQuestion = (
+//   oneTrustQuestion: OneTrustAssessmentQuestionCodec,
+//   prefix: string,
+// ): any => {
+//   const {
+//     question: { options: questionOptions, ...restQuestion },
+//     questionResponses,
+//     // risks,
+//     ...rest
+//   } = oneTrustQuestion;
+//   const newPrefix = `${prefix}_${restQuestion.sequence}`;
 
-  return {
-    ...flattenObject({ ...restQuestion, ...rest }, newPrefix),
-    ...flattenList(questionOptions ?? [], `${newPrefix}_options`),
-    ...flattenOneTrustQuestionResponses(
-      questionResponses ?? [],
-      `${newPrefix}_responses`,
-    ),
-  };
-};
+//   return {
+//     ...flattenObject({ ...restQuestion, ...rest }, newPrefix),
+//     ...flattenList(questionOptions ?? [], `${newPrefix}_options`),
+//     ...flattenOneTrustQuestionResponses(
+//       questionResponses ?? [],
+//       `${newPrefix}_responses`,
+//     ),
+//   };
+// };
 
-const flattenOneTrustQuestions = (
-  questions: OneTrustAssessmentQuestionCodec[],
-  prefix: string,
-): any =>
-  questions.reduce(
-    (acc, question) => ({
-      ...acc,
-      ...flattenOneTrustQuestion(question, prefix),
-    }),
-    {},
-  );
+// const flattenOneTrustQuestions = (
+//   questions: OneTrustAssessmentQuestionCodec[],
+//   prefix: string,
+// ): any =>
+//   questions.reduce(
+//     (acc, question) => ({
+//       ...acc,
+//       ...flattenOneTrustQuestion(question, prefix),
+//     }),
+//     {},
+//   );
 
-const flattenOneTrustSection = (
-  section: OneTrustAssessmentSectionCodec,
-): any => {
-  const { questions, header, ...rest } = section;
+// const flattenOneTrustSection = (
+//   section: OneTrustAssessmentSectionCodec,
+// ): any => {
+//   const { questions, header, ...rest } = section;
 
-  // the flattened section key has format like sections_${sequence}_sectionId
-  const prefix = `sections_${section.sequence}`;
-  return {
-    ...flattenObject({ ...header, ...rest }, prefix),
-    ...flattenOneTrustQuestions(questions, `${prefix}_questions`),
-  };
-};
+//   // the flattened section key has format like sections_${sequence}_sectionId
+//   const prefix = `sections_${section.sequence}`;
+//   return {
+//     ...flattenObject({ ...header, ...rest }, prefix),
+//     ...flattenOneTrustQuestions(questions, `${prefix}_questions`),
+//   };
+// };
+
+// const flattenOneTrustSections = (
+//   sections: OneTrustAssessmentSectionCodec[],
+// ): any =>
+//   sections.reduce(
+//     (acc, section) => ({ ...acc, ...flattenOneTrustSection(section) }),
+//     {},
+//   );
 
 const flattenOneTrustSections = (
   sections: OneTrustAssessmentSectionCodec[],
-): any =>
-  sections.reduce(
-    (acc, section) => ({ ...acc, ...flattenOneTrustSection(section) }),
-    {},
-  );
-
-export const flattenOneTrustAssessment = (
-  assessment: OneTrustAssessmentCodec &
-    OneTrustGetAssessmentResponseCodec & {
-      /** the sections enriched with risk details */
-      sections: (OneTrustAssessmentSectionCodec & {
-        /** the questions enriched with risk details */
-        questions: (OneTrustAssessmentQuestionCodec & {
-          /** the enriched risk details */
-          risks:
-            | (OneTrustAssessmentQuestionRiskCodec & OneTrustRiskDetailsCodec)[]
-            | null;
-        })[];
-      })[];
-    },
+  prefix: string,
 ): any => {
   const {
-    approvers,
-    primaryEntityDetails,
-    respondents,
+    //  allQuestions,
+    //  headers,
+    unnestedSections,
+  } = sections.reduce<{
+    /** The sections questions */
+    allQuestions: OneTrustAssessmentQuestionCodec[][];
+    /** The sections headers */
+    headers: OneTrustAssessmentSectionHeaderCodec[];
+    /** The sections */
+    unnestedSections: OneTrustFlatAssessmentSectionCodec[];
+  }>(
+    (acc, section) => {
+      const { questions, header, ...rest } = section;
+      return {
+        allQuestions: [...acc.allQuestions, questions],
+        headers: [...acc.headers, header],
+        unnestedSections: [...acc.unnestedSections, rest],
+      };
+    },
+    {
+      allQuestions: [],
+      headers: [],
+      unnestedSections: [],
+    },
+  );
+  const flattenedSections = flattenList(unnestedSections, prefix);
+
+  return { ...flattenedSections };
+};
+
+export const flattenOneTrustAssessment = ({
+  assessment,
+  assessmentDetails,
+}: {
+  /** the assessment */
+  assessment: OneTrustAssessmentCodec;
+  /** the assessment with details */
+  assessmentDetails: OneTrustGetAssessmentResponseCodec & {
+    /** the sections enriched with risk details */
+    sections: (OneTrustAssessmentSectionCodec & {
+      /** the questions enriched with risk details */
+      questions: (OneTrustAssessmentQuestionCodec & {
+        /** the enriched risk details */
+        risks: OneTrustEnrichedRiskCodec[] | null;
+      })[];
+    })[];
+  };
+}): any => {
+  const {
+    // TODO: handle these
+    // approvers,
+    // primaryEntityDetails,
+    // respondents,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     respondent,
     sections,
     ...rest
-  } = assessment;
+  } = assessmentDetails;
 
   // console.log({ approvers: flattenApprovers(approvers) });
   return {
+    ...flattenObject(assessment),
     ...flattenObject(rest),
-    ...flattenList(approvers, 'approvers'),
-    ...flattenList(primaryEntityDetails, 'primaryEntityDetails'),
-    ...flattenList(respondents, 'respondents'),
-    ...flattenOneTrustSections(sections),
+    // ...flattenList(approvers, 'approvers'),
+    // ...flattenList(primaryEntityDetails, 'primaryEntityDetails'),
+    // ...flattenList(respondents, 'respondents'),
+    ...flattenOneTrustSections(sections, 'sections'),
   };
 };
 

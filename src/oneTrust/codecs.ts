@@ -9,7 +9,7 @@ export const OneTrustAssessmentCodec = t.type({
   /** Date that the assessment was created. */
   createDt: t.string,
   /** Overall risk score without considering existing controls. */
-  inherentRiskScore: t.number,
+  inherentRiskScore: t.union([t.number, t.null]),
   /** Date and time that the assessment was last updated. */
   lastUpdated: t.string,
   /** Name of the assessment. */
@@ -21,30 +21,36 @@ export const OneTrustAssessmentCodec = t.type({
   /** Name of the organization group assigned to the assessment. */
   orgGroupName: t.string,
   /** Details about the inventory record which is the primary record of the assessment. */
-  primaryInventoryDetails: t.type({
-    /** GUID of the inventory record. */
-    primaryInventoryId: t.string,
-    /** Name of the inventory record. */
-    primaryInventoryName: t.string,
-    /** Integer ID of the inventory record. */
-    primaryInventoryNumber: t.number,
-  }),
+  primaryInventoryDetails: t.union([
+    t.type({
+      /** GUID of the inventory record. */
+      primaryInventoryId: t.string,
+      /** Name of the inventory record. */
+      primaryInventoryName: t.string,
+      /** Integer ID of the inventory record. */
+      primaryInventoryNumber: t.number,
+    }),
+    t.null,
+  ]),
   /** Overall risk score after considering existing controls. */
-  residualRiskScore: t.number,
+  residualRiskScore: t.union([t.number, t.null]),
   /** Result of the assessment. NOTE: This field will be deprecated soon. Please reference the 'resultName' field instead. */
   result: t.union([
     t.literal('Approved'),
     t.literal('AutoClosed'),
     t.literal('Rejected'),
+    t.string,
+    t.null,
   ]),
   /** ID of the result. */
-  resultId: t.string,
+  resultId: t.union([t.string, t.null]),
   /** Name of the result. */
   resultName: t.union([
     t.literal('Approved - Remediation required'),
     t.literal('Approved'),
     t.literal('Rejected'),
     t.literal('Assessment suspended - On Hold'),
+    t.string,
     t.null,
   ]),
   /** State of the assessment. */
@@ -55,11 +61,12 @@ export const OneTrustAssessmentCodec = t.type({
     t.literal('In Progress'),
     t.literal('Under Review'),
     t.literal('Completed'),
+    t.null,
   ]),
   /** Name of the tag attached to the assessment. */
   tags: t.array(t.string),
   /** The desired risk score. */
-  targetRiskScore: t.number,
+  targetRiskScore: t.union([t.number, t.null]),
   /** ID used to launch an assessment using a specific version of a template. */
   templateId: t.string,
   /**  Name of the template that is being used on the assessment. */
@@ -99,7 +106,7 @@ const OneTrustAssessmentQuestionOptionCodec = t.type({
   /** Name of the option. */
   option: t.string,
   /** Order in which the option appears. */
-  sequence: t.number,
+  sequence: t.union([t.number, t.null]),
   /** Attribute for which the option is available. */
   attributes: t.union([t.string, t.null]),
   /** Type of option. */
@@ -111,20 +118,24 @@ const OneTrustAssessmentQuestionOptionCodec = t.type({
   ]),
 });
 
-export const OneTrustAssessmentQuestionRiskCodec = t.type({
-  /** ID of the question for which the risk was flagged. */
-  questionId: t.string,
-  /** ID of the flagged risk. */
-  riskId: t.string,
-  /** Level of risk flagged on the question. */
-  level: t.number,
-  /** Score of risk flagged on the question. */
-  score: t.number,
-  /** Probability of risk flagged on the question. */
-  probability: t.union([t.number, t.undefined]),
-  /** Impact Level of risk flagged on the question. */
-  impactLevel: t.union([t.number, t.undefined]),
-});
+export const OneTrustAssessmentQuestionRiskCodec = t.intersection([
+  t.type({
+    /** ID of the question for which the risk was flagged. */
+    questionId: t.string,
+    /** ID of the flagged risk. */
+    riskId: t.string,
+  }),
+  t.partial({
+    /** Level of risk flagged on the question. */
+    level: t.union([t.number, t.null]),
+    /** Score of risk flagged on the question. */
+    score: t.union([t.number, t.null]),
+    /** Probability of risk flagged on the question. */
+    probability: t.union([t.number, t.undefined]),
+    /** Impact Level of risk flagged on the question. */
+    impactLevel: t.union([t.number, t.undefined]),
+  }),
+]);
 
 /** Type override */
 export type OneTrustAssessmentQuestionRiskCodec = t.TypeOf<
@@ -138,7 +149,7 @@ export const OneTrustAssessmentQuestionResponsesCodec = t.type({
       /** ID of the response. */
       responseId: t.string,
       /** Content of the response. */
-      response: t.string,
+      response: t.union([t.string, t.null]),
       /** Type of response. */
       type: t.union([
         t.literal('NOT_SURE'),
@@ -170,23 +181,23 @@ export const OneTrustAssessmentQuestionResponsesCodec = t.type({
       /** The data subject */
       dataSubject: t.type({
         /** The ID of the data subject */
-        id: t.string,
+        id: t.union([t.string, t.null]),
         /** The ID of the data subject */
-        name: t.string,
+        name: t.union([t.string, t.null]),
       }),
       /** The data category */
       dataCategory: t.type({
         /** The ID of the data category */
-        id: t.string,
+        id: t.union([t.string, t.null]),
         /** The name of the data category */
-        name: t.string,
+        name: t.union([t.string, t.null]),
       }),
       /** The data element */
       dataElement: t.type({
         /** The ID of the data element */
-        id: t.string,
+        id: t.union([t.string, t.null]),
         /** The ID of the data element */
-        name: t.string,
+        name: t.union([t.string, t.null]),
       }),
     }),
   ),
@@ -218,6 +229,9 @@ export const OneTrustAssessmentQuestionCodec = t.type({
       t.literal('INVENTORY'),
       t.literal('ATTRIBUTE'),
       t.literal('PERSONAL_DATA'),
+      t.literal('ENGAGEMENT'),
+      t.literal('ASSESS_CONTROL'),
+      t.null,
     ]),
     /** Indicates whether a response to the question is required. */
     required: t.boolean,
@@ -228,9 +242,9 @@ export const OneTrustAssessmentQuestionCodec = t.type({
     /** Description of the question. */
     description: t.union([t.string, t.null]),
     /** Tooltip text within a hint for the question. */
-    hint: t.string,
+    hint: t.union([t.string, t.null]),
     /** ID of the parent question. */
-    parentQuestionId: t.string,
+    parentQuestionId: t.union([t.string, t.null]),
     /** Indicates whether the response to the question is prepopulated. */
     prePopulateResponse: t.boolean,
     /** Indicates whether the assessment is linked to inventory records. */
@@ -249,6 +263,8 @@ export const OneTrustAssessmentQuestionCodec = t.type({
       t.literal('INVENTORY'),
       t.literal('ATTRIBUTE'),
       t.literal('PERSONAL_DATA'),
+      t.literal('ENGAGEMENT'),
+      t.literal('ASSESS_CONTROL'),
     ]),
     /** Whether the response can be multi select */
     allowMultiSelect: t.boolean,
@@ -286,46 +302,50 @@ export type OneTrustAssessmentQuestionCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionCodec
 >;
 
+export const OneTrustAssessmentSectionHeaderCodec = t.type({
+  /** ID of the section in the assessment. */
+  sectionId: t.string,
+  /** Name of the section. */
+  name: t.string,
+  /** Description of the section header. */
+  description: t.union([t.string, t.null]),
+  /** Sequence of the section within the form */
+  sequence: t.number,
+  /** Indicates whether the section is hidden in the assessment. */
+  hidden: t.boolean,
+  /** IDs of invalid questions in the section. */
+  invalidQuestionIds: t.array(t.string),
+  /** IDs of required but unanswered questions in the section. */
+  requiredUnansweredQuestionIds: t.array(t.string),
+  /** IDs of required questions in the section. */
+  requiredQuestionIds: t.array(t.string),
+  /** IDs of unanswered questions in the section. */
+  unansweredQuestionIds: t.array(t.string),
+  /** IDs of effectiveness questions in the section. */
+  effectivenessQuestionIds: t.array(t.string),
+  /** The risk statistics */
+  riskStatistics: t.union([
+    t.type({
+      /** Maximum level of risk in the section. */
+      maxRiskLevel: t.number,
+      /** Number of risks in the section. */
+      riskCount: t.number,
+      /** ID of the section in the assessment. */
+      sectionId: t.string,
+    }),
+    t.null,
+  ]),
+  /** Whether the section was submitted */
+  submitted: t.boolean,
+});
+/** Type override */
+export type OneTrustAssessmentSectionHeaderCodec = t.TypeOf<
+  typeof OneTrustAssessmentSectionHeaderCodec
+>;
+
 export const OneTrustAssessmentSectionCodec = t.type({
   /** The Assessment section header */
-  header: t.type({
-    /** ID of the section in the assessment. */
-    sectionId: t.string,
-    /** Name of the section. */
-    name: t.string,
-    /** Description of the section header. */
-    description: t.union([t.string, t.null]),
-    /** Sequence of the section within the form */
-    sequence: t.number,
-    /** Indicates whether the section is hidden in the assessment. */
-    hidden: t.boolean,
-    /** IDs of invalid questions in the section. */
-    invalidQuestionIds: t.array(t.string),
-    /** IDs of required but unanswered questions in the section. */
-    requiredUnansweredQuestionIds: t.array(t.string),
-    /** IDs of required questions in the section. */
-    requiredQuestionIds: t.array(t.string),
-    /** IDs of unanswered questions in the section. */
-    unansweredQuestionIds: t.array(t.string),
-    /** IDs of effectiveness questions in the section. */
-    effectivenessQuestionIds: t.array(t.string),
-    /** Number of invalid questions in the section. */
-    invalidQuestionCount: t.number,
-    /** The risk statistics */
-    riskStatistics: t.union([
-      t.type({
-        /** Maximum level of risk in the section. */
-        maxRiskLevel: t.number,
-        /** Number of risks in the section. */
-        riskCount: t.number,
-        /** ID of the section in the assessment. */
-        sectionId: t.string,
-      }),
-      t.null,
-    ]),
-    /** Whether the section was submitted */
-    submitted: t.boolean,
-  }),
+  header: OneTrustAssessmentSectionHeaderCodec,
   /** The questions within the section */
   questions: t.array(OneTrustAssessmentQuestionCodec),
   /** Indicates whether navigation rules are enabled for the question. */
@@ -363,6 +383,26 @@ export type OneTrustAssessmentSectionCodec = t.TypeOf<
   typeof OneTrustAssessmentSectionCodec
 >;
 
+// TODO: do not move to privacy-types
+/** The OneTrustAssessmentSectionCodec type without header or questions */
+export const OneTrustFlatAssessmentSectionCodec = t.type({
+  hasNavigationRules: OneTrustAssessmentSectionCodec.props.hasNavigationRules,
+  submittedBy: OneTrustAssessmentSectionCodec.props.submittedBy,
+  submittedDt: OneTrustAssessmentSectionCodec.props.submittedDt,
+  name: OneTrustAssessmentSectionCodec.props.name,
+  hidden: OneTrustAssessmentSectionCodec.props.hidden,
+  valid: OneTrustAssessmentSectionCodec.props.valid,
+  sectionId: OneTrustAssessmentSectionCodec.props.sectionId,
+  sequence: OneTrustAssessmentSectionCodec.props.sequence,
+  submitted: OneTrustAssessmentSectionCodec.props.submitted,
+  description: OneTrustAssessmentSectionCodec.props.description,
+});
+
+/** Type override */
+export type OneTrustFlatAssessmentSectionCodec = t.TypeOf<
+  typeof OneTrustFlatAssessmentSectionCodec
+>;
+
 export const OneTrustApproverCodec = t.type({
   /** ID of the user assigned as an approver. */
   id: t.string,
@@ -388,26 +428,37 @@ export const OneTrustApproverCodec = t.type({
     t.literal('REJECTED'),
   ]),
   /** Date and time at which the assessment was approved. */
-  approvedOn: t.string,
+  approvedOn: t.union([t.string, t.null]),
   /** ID of the assessment result. */
-  resultId: t.string,
+  resultId: t.union([t.string, t.null]),
   /** Name of the assessment result. */
   resultName: t.union([
     t.literal('Approved - Remediation required'),
     t.literal('Approved'),
     t.literal('Rejected'),
     t.literal('Assessment suspended - On Hold'),
+    t.string,
     t.null,
   ]),
   /** Name key of the assessment result. */
-  resultNameKey: t.string,
+  resultNameKey: t.union([t.string, t.null]),
 });
 
 /** Type override */
 export type OneTrustApproverCodec = t.TypeOf<typeof OneTrustApproverCodec>;
 
-// ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
+export const OneTrustAssessmentStatusCodec = t.union([
+  t.literal('NOT_STARTED'),
+  t.literal('IN_PROGRESS'),
+  t.literal('UNDER_REVIEW'),
+  t.literal('COMPLETED'),
+]);
+/** Type override */
+export type OneTrustAssessmentStatusCodec = t.TypeOf<
+  typeof OneTrustAssessmentStatusCodec
+>;
 
+// ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
 export const OneTrustGetAssessmentResponseCodec = t.type({
   /** List of users assigned as approvers of the assessment. */
   approvers: t.array(OneTrustApproverCodec),
@@ -417,6 +468,8 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
   assessmentNumber: t.number,
   /** Date and time at which the assessment was completed. */
   completedOn: t.union([t.string, t.null]),
+  /** Status of the assessment. */
+  status: OneTrustAssessmentStatusCodec,
   /** Creator of the Assessment */
   createdBy: t.type({
     /** The ID of the creator */
@@ -472,6 +525,7 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     t.literal('ENTITIES'),
     t.literal('ASSESS_CONTROL'),
     t.literal('ENGAGEMENT'),
+    t.literal('projects'),
     t.null,
   ]),
   /** Overall risk score after considering existing controls. */
@@ -502,6 +556,7 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     t.literal('Approved'),
     t.literal('Rejected'),
     t.literal('Assessment suspended - On Hold'),
+    t.string,
     t.null,
   ]),
   /** Risk level of the assessment. */
@@ -514,13 +569,6 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
   ]),
   /** List of sections in the assessment. */
   sections: t.array(OneTrustAssessmentSectionCodec),
-  status: t.union([
-    t.literal('Not Started'),
-    t.literal('In Progress'),
-    t.literal('Under Review'),
-    t.literal('Completed'),
-    t.null,
-  ]),
   /** Date and time at which the assessment was submitted. */
   submittedOn: t.union([t.string, t.null]),
   /** List of tags associated with the assessment. */
@@ -557,7 +605,7 @@ const EntityTypeCodec = t.type({
   /** Entity Type Name. */
   label: t.string,
   /** Name of the module. */
-  moduleName: t.boolean,
+  moduleName: t.union([t.string, t.null]),
   /** Indicates whether this type can be risk type or not in Risk */
   riskType: t.boolean,
   /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
@@ -570,19 +618,19 @@ const EntityTypeCodec = t.type({
 
 const RiskLevelCodec = t.type({
   /** Risk Impact Level name. */
-  impactLevel: t.string,
+  impactLevel: t.union([t.string, t.null]),
   /** Risk Impact level ID. */
-  impactLevelId: t.number,
+  impactLevelId: t.union([t.number, t.null]),
   /** Risk Level Name. */
-  level: t.string,
+  level: t.union([t.string, t.null]),
   /** Risk Level ID. */
-  levelId: t.number,
+  levelId: t.union([t.number, t.null]),
   /** Risk Probability Level Name. */
-  probabilityLevel: t.string,
+  probabilityLevel: t.union([t.string, t.null]),
   /** Risk Probability Level ID. */
-  probabilityLevelId: t.number,
+  probabilityLevelId: t.union([t.number, t.null]),
   /** Risk Score. */
-  riskScore: t.number,
+  riskScore: t.union([t.number, t.null]),
 });
 
 // ref: https://developer.onetrust.com/onetrust/reference/getriskusingget
@@ -595,31 +643,21 @@ export const OneTrustGetRiskResponseCodec = t.type({
       /** Name of the Inventory. */
       inventoryName: t.string,
       /** Type of the Inventory. */
-      inventoryType: t.literal('ASSETS PROCESSING_ACTIVITIES VENDORS ENTITIES'),
+      inventoryType: t.union([
+        t.literal('ASSETS'),
+        t.literal('PROCESSING_ACTIVITIES'),
+        t.literal('VENDORS'),
+        t.literal('ENTITIES'),
+        t.null,
+      ]),
       /** ID of the Inventory's Organization. */
-      organizationId: t.string,
+      organizationId: t.union([t.string, t.null]),
       /** The source type */
       sourceType: EntityTypeCodec,
     }),
   ),
   /** The attribute values associated with the risk */
-  attributeValues: t.type({
-    /** List of custom attributes. */
-    additionalProp: t.array(
-      t.type({
-        /** Additional information like Source Questions, Approver Ids, Inventory Type. This will be a Map of String Key and Object value. */
-        additionalAttributes: t.object,
-        /** Attribute option GUID. */
-        id: t.string,
-        /** Attribute selection value and it is mandatory if the numeric value is not distinct for Numerical Single Select attribute. */
-        optionSelectionValue: t.string,
-        /** Attribute option value. */
-        value: t.string,
-        /** Attribute option value key for translation. */
-        valueKey: t.string,
-      }),
-    ),
-  }),
+  attributeValues: t.object,
   /** List of categories. */
   categories: t.array(
     t.type({
@@ -634,37 +672,37 @@ export const OneTrustGetRiskResponseCodec = t.type({
   /** List of Control Identifiers. */
   controlsIdentifier: t.array(t.string),
   /** Risk created time. */
-  createdUTCDateTime: t.string,
+  createdUTCDateTime: t.union([t.string, t.null]),
   /** Risk Creation Type. */
-  creationType: t.string,
+  creationType: t.union([t.string, t.null]),
   /** Date when the risk is closed. */
-  dateClosed: t.string,
+  dateClosed: t.union([t.string, t.null]),
   /** Deadline date for the risk. */
-  deadline: t.string,
+  deadline: t.union([t.string, t.null]),
   /** Risk delete type. */
-  deleteType: t.literal('SOFT'),
+  deleteType: t.union([t.literal('SOFT'), t.null]),
   /** Risk description. */
-  description: t.string,
+  description: t.union([t.string, t.null]),
   /** ID of the risk. */
   id: t.string,
   /** Residual impact level name. */
-  impactLevel: t.string,
+  impactLevel: t.union([t.string, t.null]),
   /** Residual impact level ID. */
-  impactLevelId: t.number,
+  impactLevelId: t.union([t.number, t.null]),
   /** The inherent risk level */
   inherentRiskLevel: RiskLevelCodec,
   /** The risk justification */
-  justification: t.string,
+  justification: t.union([t.string, t.null]),
   /** Residual level display name. */
-  levelDisplayName: t.string,
+  levelDisplayName: t.union([t.string, t.null]),
   /** Residual level ID. */
-  levelId: t.number,
+  levelId: t.union([t.number, t.null]),
   /** Risk mitigated date. */
-  mitigatedDate: t.string,
+  mitigatedDate: t.union([t.string, t.null]),
   /** Risk Mitigation details. */
-  mitigation: t.string,
+  mitigation: t.union([t.string, t.null]),
   /** Short Name for a Risk. */
-  name: t.string,
+  name: t.union([t.string, t.null]),
   /** Integer risk identifier. */
   number: t.number,
   /** The organization group */
@@ -684,19 +722,20 @@ export const OneTrustGetRiskResponseCodec = t.type({
     t.literal('REDUCED'),
     t.literal('RETAINED'),
     t.literal('ARCHIVED_IN_VERSION'),
+    t.null,
   ]),
   /** Residual probability level. */
-  probabilityLevel: t.string,
+  probabilityLevel: t.union([t.string, t.null]),
   /** Residual probability level ID. */
-  probabilityLevelId: t.number,
+  probabilityLevelId: t.union([t.number, t.null]),
   /** Risk Recommendation. */
-  recommendation: t.string,
+  recommendation: t.union([t.string, t.null]),
   /** Proposed remediation. */
-  remediationProposal: t.string,
+  remediationProposal: t.union([t.string, t.null]),
   /** Deadline reminder days. */
-  reminderDays: t.number,
+  reminderDays: t.union([t.number, t.null]),
   /** Risk exception request. */
-  requestedException: t.string,
+  requestedException: t.union([t.string, t.null]),
   /** Risk Result. */
   result: t.union([
     t.literal('Accepted'),
@@ -705,23 +744,24 @@ export const OneTrustGetRiskResponseCodec = t.type({
     t.literal('Rejected'),
     t.literal('Transferred'),
     t.literal('Ignored'),
+    t.null,
   ]),
   /** Risk approvers name csv. */
-  riskApprovers: t.string,
+  riskApprovers: t.union([t.string, t.null]),
   /** Risk approvers ID. */
   riskApproversId: t.array(t.string),
   /** List of risk owners ID. */
-  riskOwnersId: t.array(t.string),
+  riskOwnersId: t.union([t.array(t.string), t.null]),
   /** Risk owners name csv. */
-  riskOwnersName: t.string,
+  riskOwnersName: t.union([t.string, t.null]),
   /** Risk score. */
-  riskScore: t.number,
+  riskScore: t.union([t.number, t.null]),
   /** The risk source type */
   riskSourceType: EntityTypeCodec,
   /** The risk type */
   riskType: EntityTypeCodec,
   /** For Auto risk, rule Id reference. */
-  ruleRootVersionId: t.string,
+  ruleRootVersionId: t.union([t.string, t.null]),
   /** The risk source */
   source: t.type({
     /** Additional information about the Source Entity */
@@ -765,16 +805,19 @@ export const OneTrustGetRiskResponseCodec = t.type({
   /** The target risk level */
   targetRiskLevel: RiskLevelCodec,
   /** The risk threat */
-  threat: t.type({
-    /** Threat ID. */
-    id: t.string,
-    /** Threat Identifier. */
-    identifier: t.string,
-    /** Threat Name. */
-    name: t.string,
-  }),
+  threat: t.union([
+    t.type({
+      /** Threat ID. */
+      id: t.string,
+      /** Threat Identifier. */
+      identifier: t.string,
+      /** Threat Name. */
+      name: t.string,
+    }),
+    t.null,
+  ]),
   /** Risk Treatment. */
-  treatment: t.string,
+  treatment: t.union([t.string, t.null]),
   /** Risk Treatment status. */
   treatmentStatus: t.union([
     t.literal('InProgress'),
@@ -782,6 +825,7 @@ export const OneTrustGetRiskResponseCodec = t.type({
     t.literal('ExceptionRequested'),
     t.literal('Approved'),
     t.literal('ExceptionGranted'),
+    t.null,
   ]),
   /** Risk Type. */
   type: t.union([
@@ -791,20 +835,25 @@ export const OneTrustGetRiskResponseCodec = t.type({
     t.literal('VENDORS'),
     t.literal('ENTITIES'),
     t.literal('INCIDENTS'),
+    t.literal('ENGAGEMENTS'),
+    t.null,
   ]),
   /** ID of an assessment. */
   typeRefIds: t.array(t.string),
   /** List of vulnerabilities */
-  vulnerabilities: t.array(
-    t.type({
-      /** Vulnerability ID. */
-      id: t.string,
-      /** Vulnerability Identifier. */
-      identifier: t.string,
-      /** Vulnerability Name. */
-      name: t.string,
-    }),
-  ),
+  vulnerabilities: t.union([
+    t.array(
+      t.type({
+        /** Vulnerability ID. */
+        id: t.string,
+        /** Vulnerability Identifier. */
+        identifier: t.string,
+        /** Vulnerability Name. */
+        name: t.string,
+      }),
+    ),
+    t.null,
+  ]),
   /** The risk workflow */
   workflow: t.type({
     /** ID of an entity. */
@@ -819,30 +868,25 @@ export type OneTrustGetRiskResponseCodec = t.TypeOf<
   typeof OneTrustGetRiskResponseCodec
 >;
 
-export const OneTrustRiskDetailsCodec = t.type({
-  /** Risk description. */
-  description: OneTrustGetRiskResponseCodec.props.description,
-  /** Short Name for a Risk. */
-  name: OneTrustGetRiskResponseCodec.props.name,
-  /** Risk Treatment. */
-  treatment: OneTrustGetRiskResponseCodec.props.treatment,
-  /** Risk Treatment status. */
-  treatmentStatus: OneTrustGetRiskResponseCodec.props.treatmentStatus,
-  /** Risk Type. */
-  type: OneTrustGetRiskResponseCodec.props.type,
-  /** The risk stage */
-  stage: OneTrustGetRiskResponseCodec.props.stage,
-  /** The risk state */
-  state: OneTrustGetRiskResponseCodec.props.state,
-  /** Risk Result. */
-  result: OneTrustGetRiskResponseCodec.props.result,
-  /** List of categories. */
-  categories: OneTrustGetRiskResponseCodec.props.categories,
-});
+// TODO: do not move to privacy-types
+export const OneTrustEnrichedRiskCodec = t.intersection([
+  OneTrustAssessmentQuestionRiskCodec,
+  t.type({
+    description: OneTrustGetRiskResponseCodec.props.description,
+    name: OneTrustGetRiskResponseCodec.props.name,
+    treatment: OneTrustGetRiskResponseCodec.props.treatment,
+    treatmentStatus: OneTrustGetRiskResponseCodec.props.treatmentStatus,
+    type: OneTrustGetRiskResponseCodec.props.type,
+    stage: OneTrustGetRiskResponseCodec.props.stage,
+    state: OneTrustGetRiskResponseCodec.props.state,
+    result: OneTrustGetRiskResponseCodec.props.result,
+    categories: OneTrustGetRiskResponseCodec.props.categories,
+  }),
+]);
 
 /** Type override */
-export type OneTrustRiskDetailsCodec = t.TypeOf<
-  typeof OneTrustRiskDetailsCodec
+export type OneTrustEnrichedRiskCodec = t.TypeOf<
+  typeof OneTrustEnrichedRiskCodec
 >;
 
 /* eslint-enable max-lines */

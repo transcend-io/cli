@@ -85,7 +85,6 @@ export const writeOneTrustAssessment = ({
   // combine the two assessments into a single enriched result
   const enrichedAssessment = {
     ...restAssessmentDetails,
-    ...assessment,
     sections: enrichedSections,
   };
 
@@ -115,8 +114,12 @@ export const writeOneTrustAssessment = ({
       fs.writeFileSync('./oneTrust.json', '[\n');
     }
 
-    const flattened = flattenOneTrustAssessment(enrichedAssessment);
+    const flattened = flattenOneTrustAssessment({
+      assessment,
+      assessmentDetails: enrichedAssessment,
+    });
     const stringifiedFlattened = JSON.stringify(flattened, null, 2);
+    // TODO: do not forget to ensure we have the same set of keys!!!
 
     // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
 

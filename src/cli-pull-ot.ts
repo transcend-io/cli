@@ -12,6 +12,7 @@ import {
 import { OneTrustPullResource } from './enums';
 import { mapSeries, map } from 'bluebird';
 import uniq from 'lodash/uniq';
+import { OneTrustGetRiskResponseCodec } from './oneTrust/codecs';
 
 /**
  * Pull configuration from OneTrust down locally to disk
@@ -34,6 +35,9 @@ async function main(): Promise<void> {
       // fetch the list of all assessments in the OneTrust organization
       const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
+      // TODO: undo
+      // const theAssessments = assessments.slice(660);
+
       // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
       await mapSeries(assessments, async (assessment, index) => {
         logger.info(
@@ -47,6 +51,7 @@ async function main(): Promise<void> {
         });
 
         // enrich assessments with risk information
+        let riskDetails: OneTrustGetRiskResponseCodec[] = [];
         const riskIds = uniq(
           assessmentDetails.sections.flatMap((s) =>
             s.questions.flatMap((q) =>
@@ -54,18 +59,20 @@ async function main(): Promise<void> {
             ),
           ),
         );
-        logger.info(
-          `Fetching details about ${riskIds} risks for assessment ${
-            index + 1
-          } of ${assessments.length}...`,
-        );
-        const riskDetails = await map(
-          riskIds,
-          (riskId) => getOneTrustRisk({ oneTrust, riskId }),
-          {
-            concurrency: 5,
-          },
-        );
+        if (riskIds.length > 0) {
+          logger.info(
+            `Fetching details about ${riskIds.length} risks for assessment ${
+              index + 1
+            } of ${assessments.length}...`,
+          );
+          riskDetails = await map(
+            riskIds,
+            (riskId) => getOneTrustRisk({ oneTrust, riskId }),
+            {
+              concurrency: 5,
+            },
+          );
+        }
 
         writeOneTrustAssessment({
           assessment,
