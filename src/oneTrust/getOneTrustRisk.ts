@@ -1,5 +1,5 @@
 import { Got } from 'got';
-import { OneTrustGetAssessmentResponse } from './types';
+import { OneTrustGetRiskResponse } from './types';
 
 /**
  * Retrieve details about a particular assessment.
@@ -16,8 +16,8 @@ export const getOneTrustRisk = async ({
   oneTrust: Got;
   /** The ID of the OneTrust risk to retrieve */
   riskId: string;
-}): Promise<OneTrustGetAssessmentResponse> => {
+}): Promise<OneTrustGetRiskResponse> => {
   const { body } = await oneTrust.get(`api/risk/v2/risks/${riskId}`);
 
-  return JSON.parse(body) as OneTrustGetAssessmentResponse;
+  return JSON.parse(body) as OneTrustGetRiskResponse;
 };
