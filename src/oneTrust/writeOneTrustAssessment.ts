@@ -1,7 +1,12 @@
 import { logger } from '../logger';
+import keyBy from 'lodash/keyBy';
 import colors from 'colors';
 import { OneTrustFileFormat } from '../enums';
-import { OneTrustAssessment, OneTrustGetAssessmentResponse } from './types';
+import {
+  OneTrustAssessmentCodec,
+  OneTrustGetAssessmentResponseCodec,
+  OneTrustGetRiskResponseCodec,
+} from './codecs';
 import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 
@@ -16,6 +21,7 @@ export const writeOneTrustAssessment = ({
   fileFormat,
   assessment,
   assessmentDetails,
+  riskDetails,
   index,
   total,
 }: {
@@ -24,9 +30,11 @@ export const writeOneTrustAssessment = ({
   /** The format of the output file */
   fileFormat: OneTrustFileFormat;
   /** The basic assessment */
-  assessment: OneTrustAssessment;
+  assessment: OneTrustAssessmentCodec;
   /** The assessment with details  */
-  assessmentDetails: OneTrustGetAssessmentResponse;
+  assessmentDetails: OneTrustGetAssessmentResponseCodec;
+  /** The details of risks found within the assessment */
+  riskDetails: OneTrustGetRiskResponseCodec[];
   /** The index of the assessment being written to the file */
   index: number;
   /** The total amount of assessments that we will write */
@@ -40,10 +48,45 @@ export const writeOneTrustAssessment = ({
     ),
   );
 
+  // enrich the sections with risk details
+  const riskDetailsById = keyBy(riskDetails, 'id');
+  const { sections, ...restAssessmentDetails } = assessmentDetails;
+  const enrichedSections = sections.map((section) => {
+    const { questions, ...restSection } = section;
+    const enrichedQuestions = questions.map((question) => {
+      const { risks, ...restQuestion } = question;
+      const enrichedRisks = (risks ?? []).map((risk) => {
+        const details = riskDetailsById[risk.riskId];
+        // TODO: missing the risk meta data and links to the assessment
+        return {
+          ...risk,
+          description: details.description,
+          name: details.name,
+          treatment: details.treatment,
+          treatmentStatus: details.treatmentStatus,
+          type: details.type,
+          state: details.state,
+          stage: details.stage,
+          result: details.result,
+          categories: details.categories,
+        };
+      });
+      return {
+        ...restQuestion,
+        risks: enrichedRisks,
+      };
+    });
+    return {
+      ...restSection,
+      questions: enrichedQuestions,
+    };
+  });
+
   // combine the two assessments into a single enriched result
   const enrichedAssessment = {
-    ...assessmentDetails,
+    ...restAssessmentDetails,
     ...assessment,
+    sections: enrichedSections,
   };
 
   // For json format

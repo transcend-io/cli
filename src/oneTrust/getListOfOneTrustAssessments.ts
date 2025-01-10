@@ -1,9 +1,10 @@
 import { Got } from 'got';
 import { logger } from '../logger';
 import {
-  OneTrustAssessment,
-  OneTrustGetListOfAssessmentsResponse,
-} from './types';
+  OneTrustAssessmentCodec,
+  OneTrustGetListOfAssessmentsResponseCodec,
+} from './codecs';
+import { decodeCodec } from '@transcend-io/type-utils';
 
 /**
  * Fetch a list of all assessments from the OneTrust client.
@@ -17,12 +18,12 @@ export const getListOfOneTrustAssessments = async ({
 }: {
   /** The OneTrust client instance */
   oneTrust: Got;
-}): Promise<OneTrustAssessment[]> => {
+}): Promise<OneTrustAssessmentCodec[]> => {
   let currentPage = 0;
   let totalPages = 1;
   let totalElements = 0;
 
-  const allAssessments: OneTrustAssessment[] = [];
+  const allAssessments: OneTrustAssessmentCodec[] = [];
 
   logger.info('Getting list of all assessments from OneTrust...');
   while (currentPage < totalPages) {
@@ -30,9 +31,11 @@ export const getListOfOneTrustAssessments = async ({
     const { body } = await oneTrust.get(
       `api/assessment/v2/assessments?page=${currentPage}&size=2000`,
     );
-    const { page, content } = JSON.parse(
+
+    const { page, content } = decodeCodec(
+      OneTrustGetListOfAssessmentsResponseCodec,
       body,
-    ) as OneTrustGetListOfAssessmentsResponse;
+    );
     allAssessments.push(...(content ?? []));
     if (currentPage === 0) {
       totalPages = page?.totalPages ?? 0;

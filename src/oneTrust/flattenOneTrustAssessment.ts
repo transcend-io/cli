@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
-  // OneTrustApprover,
-  OneTrustAssessment,
-  OneTrustAssessmentQuestion,
-  OneTrustAssessmentQuestionResponses,
-  OneTrustAssessmentSection,
-  OneTrustGetAssessmentResponse,
-} from './types';
+  OneTrustAssessmentCodec,
+  OneTrustAssessmentQuestionCodec,
+  OneTrustAssessmentQuestionResponsesCodec,
+  OneTrustAssessmentQuestionRiskCodec,
+  OneTrustAssessmentSectionCodec,
+  OneTrustGetAssessmentResponseCodec,
+  OneTrustRiskDetailsCodec,
+} from './codecs';
 
 // TODO: test what happens when a value is null -> it should convert to ''
 const flattenObject = (obj: any, prefix = ''): any =>
@@ -55,7 +56,7 @@ const flattenList = (list: any[], prefix: string): any => {
 };
 
 const flattenOneTrustQuestionResponses = (
-  questionResponses: OneTrustAssessmentQuestionResponses[],
+  questionResponses: OneTrustAssessmentQuestionResponsesCodec[],
   prefix: string,
 ): any => {
   if (questionResponses.length === 0) {
@@ -71,7 +72,7 @@ const flattenOneTrustQuestionResponses = (
 };
 
 const flattenOneTrustQuestion = (
-  oneTrustQuestion: OneTrustAssessmentQuestion,
+  oneTrustQuestion: OneTrustAssessmentQuestionCodec,
   prefix: string,
 ): any => {
   const {
@@ -93,7 +94,7 @@ const flattenOneTrustQuestion = (
 };
 
 const flattenOneTrustQuestions = (
-  questions: OneTrustAssessmentQuestion[],
+  questions: OneTrustAssessmentQuestionCodec[],
   prefix: string,
 ): any =>
   questions.reduce(
@@ -104,7 +105,9 @@ const flattenOneTrustQuestions = (
     {},
   );
 
-const flattenOneTrustSection = (section: OneTrustAssessmentSection): any => {
+const flattenOneTrustSection = (
+  section: OneTrustAssessmentSectionCodec,
+): any => {
   const { questions, header, ...rest } = section;
 
   // the flattened section key has format like sections_${sequence}_sectionId
@@ -115,14 +118,28 @@ const flattenOneTrustSection = (section: OneTrustAssessmentSection): any => {
   };
 };
 
-const flattenOneTrustSections = (sections: OneTrustAssessmentSection[]): any =>
+const flattenOneTrustSections = (
+  sections: OneTrustAssessmentSectionCodec[],
+): any =>
   sections.reduce(
     (acc, section) => ({ ...acc, ...flattenOneTrustSection(section) }),
     {},
   );
 
 export const flattenOneTrustAssessment = (
-  assessment: OneTrustAssessment & OneTrustGetAssessmentResponse,
+  assessment: OneTrustAssessmentCodec &
+    OneTrustGetAssessmentResponseCodec & {
+      /** the sections enriched with risk details */
+      sections: (OneTrustAssessmentSectionCodec & {
+        /** the questions enriched with risk details */
+        questions: (OneTrustAssessmentQuestionCodec & {
+          /** the enriched risk details */
+          risks:
+            | (OneTrustAssessmentQuestionRiskCodec & OneTrustRiskDetailsCodec)[]
+            | null;
+        })[];
+      })[];
+    },
 ): any => {
   const {
     approvers,

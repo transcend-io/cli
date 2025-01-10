@@ -7,9 +7,11 @@ import {
   writeOneTrustAssessment,
   parseCliPullOtArguments,
   createOneTrustGotInstance,
+  getOneTrustRisk,
 } from './oneTrust';
 import { OneTrustPullResource } from './enums';
-import { mapSeries } from 'bluebird';
+import { mapSeries, map } from 'bluebird';
+import uniq from 'lodash/uniq';
 
 /**
  * Pull configuration from OneTrust down locally to disk
@@ -44,9 +46,31 @@ async function main(): Promise<void> {
           assessmentId: assessment.assessmentId,
         });
 
+        // enrich assessments with risk information
+        const riskIds = uniq(
+          assessmentDetails.sections.flatMap((s) =>
+            s.questions.flatMap((q) =>
+              (q.risks ?? []).flatMap((r) => r.riskId),
+            ),
+          ),
+        );
+        logger.info(
+          `Fetching details about ${riskIds} risks for assessment ${
+            index + 1
+          } of ${assessments.length}...`,
+        );
+        const riskDetails = await map(
+          riskIds,
+          (riskId) => getOneTrustRisk({ oneTrust, riskId }),
+          {
+            concurrency: 5,
+          },
+        );
+
         writeOneTrustAssessment({
           assessment,
           assessmentDetails,
+          riskDetails,
           index,
           total: assessments.length,
           file,

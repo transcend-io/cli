@@ -1,5 +1,6 @@
 import { Got } from 'got';
-import { OneTrustGetAssessmentResponse } from './types';
+import { OneTrustGetAssessmentResponseCodec } from './codecs';
+import { decodeCodec } from '@transcend-io/type-utils';
 
 /**
  * Retrieve details about a particular assessment.
@@ -16,10 +17,10 @@ export const getOneTrustAssessment = async ({
   oneTrust: Got;
   /** The ID of the assessment to retrieve */
   assessmentId: string;
-}): Promise<OneTrustGetAssessmentResponse> => {
+}): Promise<OneTrustGetAssessmentResponseCodec> => {
   const { body } = await oneTrust.get(
     `api/assessment/v2/assessments/${assessmentId}/export?ExcludeSkippedQuestions=false`,
   );
 
-  return JSON.parse(body) as OneTrustGetAssessmentResponse;
+  return decodeCodec(OneTrustGetAssessmentResponseCodec, body);
 };
