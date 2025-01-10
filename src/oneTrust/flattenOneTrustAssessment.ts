@@ -5,10 +5,12 @@ import {
   // OneTrustApprover,
   OneTrustAssessment,
   OneTrustAssessmentQuestion,
+  OneTrustAssessmentQuestionResponses,
   OneTrustAssessmentSection,
   OneTrustGetAssessmentResponse,
 } from './types';
 
+// TODO: test what happens when a value is null -> it should convert to ''
 const flattenObject = (obj: any, prefix = ''): any =>
   Object.keys(obj).reduce((acc, key) => {
     const newKey = prefix ? `${prefix}_${key}` : key;
@@ -23,12 +25,12 @@ const flattenObject = (obj: any, prefix = ''): any =>
               if (typeof e === 'string') {
                 return e.replaceAll(',', '');
               }
-              return e;
+              return e ?? '';
             })
-            .join(', ')
+            .join(',')
         : typeof entry === 'string'
         ? entry.replaceAll(',', '')
-        : entry;
+        : entry ?? '';
     }
     return acc;
   }, {} as Record<string, any>);
@@ -46,10 +48,26 @@ const flattenList = (list: any[], prefix: string): any => {
 
   // build a single object where all the keys contain the respective values of flattenedList
   return allKeys.reduce((acc, key) => {
-    const values = flattenedList.map((a) => a[key] ?? '').join(', ');
+    const values = flattenedList.map((a) => a[key] ?? '').join(',');
     acc[key] = values;
     return acc;
   }, {} as Record<string, any>);
+};
+
+const flattenOneTrustQuestionResponses = (
+  questionResponses: OneTrustAssessmentQuestionResponses[],
+  prefix: string,
+): any => {
+  if (questionResponses.length === 0) {
+    return {};
+  }
+
+  // despite being an array, questionResponses only returns one element
+  const { responses, ...rest } = questionResponses[0];
+  return {
+    ...flattenList(responses, prefix),
+    ...flattenObject(rest, prefix),
+  };
 };
 
 const flattenOneTrustQuestion = (
@@ -58,16 +76,19 @@ const flattenOneTrustQuestion = (
 ): any => {
   const {
     question: { options: questionOptions, ...restQuestion },
-    // TODO: continue from here
-    // questionResponses,
+    questionResponses,
     // risks,
     ...rest
   } = oneTrustQuestion;
-  const newPrefix = `${prefix}_questions_${restQuestion.sequence}`;
+  const newPrefix = `${prefix}_${restQuestion.sequence}`;
 
   return {
     ...flattenObject({ ...restQuestion, ...rest }, newPrefix),
     ...flattenList(questionOptions ?? [], `${newPrefix}_options`),
+    ...flattenOneTrustQuestionResponses(
+      questionResponses ?? [],
+      `${newPrefix}_responses`,
+    ),
   };
 };
 
@@ -75,26 +96,30 @@ const flattenOneTrustQuestions = (
   questions: OneTrustAssessmentQuestion[],
   prefix: string,
 ): any =>
-  questions
-    .map((question) => flattenOneTrustQuestion(question, prefix))
-    .reduce((acc, flattenedQuestion) => ({ ...acc, ...flattenedQuestion }), {});
+  questions.reduce(
+    (acc, question) => ({
+      ...acc,
+      ...flattenOneTrustQuestion(question, prefix),
+    }),
+    {},
+  );
 
 const flattenOneTrustSection = (section: OneTrustAssessmentSection): any => {
-  // TODO: flatten header
   const { questions, header, ...rest } = section;
-  // append the section sequence as a prefix (e.g. sections_${sequence}_header_sectionId)
-  const prefix = `sections_${section.sequence}`;
 
+  // the flattened section key has format like sections_${sequence}_sectionId
+  const prefix = `sections_${section.sequence}`;
   return {
     ...flattenObject({ ...header, ...rest }, prefix),
-    ...flattenOneTrustQuestions(questions, prefix),
+    ...flattenOneTrustQuestions(questions, `${prefix}_questions`),
   };
 };
 
 const flattenOneTrustSections = (sections: OneTrustAssessmentSection[]): any =>
-  sections
-    .map((s) => flattenOneTrustSection(s))
-    .reduce((acc, flattenedSection) => ({ ...acc, ...flattenedSection }), {});
+  sections.reduce(
+    (acc, section) => ({ ...acc, ...flattenOneTrustSection(section) }),
+    {},
+  );
 
 export const flattenOneTrustAssessment = (
   assessment: OneTrustAssessment & OneTrustGetAssessmentResponse,

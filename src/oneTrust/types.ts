@@ -99,7 +99,7 @@ interface OneTrustAssessmentQuestionRisks {
   impactLevel?: number;
 }
 
-interface OneTrustAssessmentQuestionResponses {
+export interface OneTrustAssessmentQuestionResponses {
   /** The responses */
   responses: {
     /** ID of the response. */
