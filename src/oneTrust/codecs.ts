@@ -146,6 +146,15 @@ export type OneTrustAssessmentQuestionRiskCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionRiskCodec
 >;
 
+export const OneTrustAssessmentQuestionRisksCodec = t.union([
+  t.array(OneTrustAssessmentQuestionRiskCodec),
+  t.null,
+]);
+/** Type override */
+export type OneTrustAssessmentQuestionRisksCodec = t.TypeOf<
+  typeof OneTrustAssessmentQuestionRisksCodec
+>;
+
 export const OneTrustAssessmentQuestionResponseCodec = t.type({
   /** The responses */
   responses: t.array(
@@ -225,6 +234,14 @@ export const OneTrustAssessmentQuestionResponseCodec = t.type({
 /** Type override */
 export type OneTrustAssessmentQuestionResponseCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionResponseCodec
+>;
+
+export const OneTrustAssessmentQuestionResponsesCodec = t.array(
+  OneTrustAssessmentQuestionResponseCodec,
+);
+/** Type override */
+export type OneTrustAssessmentQuestionResponsesCodec = t.TypeOf<
+  typeof OneTrustAssessmentQuestionResponsesCodec
 >;
 
 export const OneTrustAssessmentNestedQuestionCodec = t.type({
@@ -449,6 +466,21 @@ export type OneTrustAssessmentSectionFlatHeaderCodec = t.TypeOf<
   typeof OneTrustAssessmentSectionFlatHeaderCodec
 >;
 
+export const OneTrustAssessmentSectionSubmittedByCodec = t.union([
+  t.type({
+    /** The ID of the user who submitted the section */
+    id: t.string,
+    /** THe name or email of the user who submitted the section */
+    name: t.string,
+  }),
+  t.null,
+]);
+
+/** Type override */
+export type OneTrustAssessmentSectionSubmittedByCodec = t.TypeOf<
+  typeof OneTrustAssessmentSectionSubmittedByCodec
+>;
+
 export const OneTrustAssessmentSectionCodec = t.type({
   /** The Assessment section header */
   header: OneTrustAssessmentSectionHeaderCodec,
@@ -457,15 +489,7 @@ export const OneTrustAssessmentSectionCodec = t.type({
   /** Indicates whether navigation rules are enabled for the question. */
   hasNavigationRules: t.boolean,
   /** Who submitted the section */
-  submittedBy: t.union([
-    t.type({
-      /** The ID of the user who submitted the section */
-      id: t.string,
-      /** THe name or email of the user who submitted the section */
-      name: t.string,
-    }),
-    t.null,
-  ]),
+  submittedBy: OneTrustAssessmentSectionSubmittedByCodec,
   /** Date of the submission */
   submittedDt: t.union([t.string, t.null]),
   /** Name of the section. */
@@ -564,6 +588,23 @@ export type OneTrustAssessmentStatusCodec = t.TypeOf<
   typeof OneTrustAssessmentStatusCodec
 >;
 
+export const OneTrustPrimaryEntityDetailsCodec = t.array(
+  t.type({
+    /** Unique ID for the primary record. */
+    id: t.string,
+    /** Name of the primary record. */
+    name: t.string,
+    /** The number associated with the primary record. */
+    number: t.number,
+    /** Name and number of the primary record. */
+    displayName: t.string,
+  }),
+);
+/** Type override */
+export type OneTrustPrimaryEntityDetailsCodec = t.TypeOf<
+  typeof OneTrustPrimaryEntityDetailsCodec
+>;
+
 // ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
 export const OneTrustGetAssessmentResponseCodec = t.type({
   /** List of users assigned as approvers of the assessment. */
@@ -611,18 +652,7 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     name: t.string,
   }),
   /** The primary record */
-  primaryEntityDetails: t.array(
-    t.type({
-      /** Unique ID for the primary record. */
-      id: t.string,
-      /** Name of the primary record. */
-      name: t.string,
-      /** The number associated with the primary record. */
-      number: t.number,
-      /** Name and number of the primary record. */
-      displayName: t.string,
-    }),
-  ),
+  primaryEntityDetails: OneTrustPrimaryEntityDetailsCodec,
   /** Type of inventory record designated as the primary record. */
   primaryRecordType: t.union([
     t.literal('ASSETS'),

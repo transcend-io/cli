@@ -1,21 +1,19 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { extractProperties } from '../helpers';
+import {
+  enrichPrimaryEntityDetailsWithDefault,
+  enrichSectionsWithDefault,
+  extractProperties,
+} from '../helpers';
 import {
   OneTrustAssessmentCodec,
   OneTrustAssessmentNestedQuestionCodec,
-  // OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionCodec,
   OneTrustAssessmentQuestionOptionCodec,
   OneTrustAssessmentQuestionResponseCodec,
-  // OneTrustAssessmentQuestionFlatCodec,
-  // OneTrustAssessmentQuestionResponseCodec,
-  // OneTrustAssessmentQuestionRiskCodec,
   OneTrustAssessmentSectionCodec,
-  // OneTrustAssessmentSectionFlatHeaderCodec,
   OneTrustAssessmentSectionHeaderCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
-  // OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustGetAssessmentResponseCodec,
 } from './codecs';
@@ -138,7 +136,7 @@ const flattenOneTrustQuestions = (
   prefix: string,
 ): any => {
   const allSectionQuestionsFlat = allSectionQuestions.map(
-    (sectionQuestions, i) => {
+    (sectionQuestions) => {
       // extract nested properties (TODO: try to make a helper for this!!!)
       const {
         rest: restSectionQuestions,
@@ -150,12 +148,6 @@ const flattenOneTrustQuestions = (
         'questionResponses',
         'risks',
       ]);
-
-      console.log({
-        section: i,
-        questions: sectionQuestions.length,
-        allQuestionResponses: allQuestionResponses.map((r) => r.length),
-      });
 
       const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
         flattenObject(q, prefix),
@@ -245,6 +237,15 @@ export const flattenOneTrustAssessment = ({
     })[];
   };
 }): any => {
+  // add default values to assessments
+  const transformedAssessmentDetails = {
+    ...assessmentDetails,
+    primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
+      assessmentDetails.primaryEntityDetails,
+    ),
+    sections: enrichSectionsWithDefault(assessmentDetails.sections),
+  };
+
   const {
     // TODO: handle these
     // approvers,
@@ -254,7 +255,7 @@ export const flattenOneTrustAssessment = ({
     respondent,
     sections,
     ...rest
-  } = assessmentDetails;
+  } = transformedAssessmentDetails;
 
   // console.log({ approvers: flattenApprovers(approvers) });
   return {
