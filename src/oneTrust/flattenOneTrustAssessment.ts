@@ -103,7 +103,11 @@ const flattenOneTrustQuestionResponses = (
   const allQuestionResponsesFlat = allQuestionResponses.map(
     (questionResponses) => {
       const { responses, rest: restQuestionResponses } = extractProperties(
-        questionResponses,
+        questionResponses.map((q) => ({
+          ...q,
+          // there is always just one response within responses
+          responses: q.responses[0],
+        })),
         ['responses'],
       );
 
@@ -145,15 +149,13 @@ const flattenOneTrustQuestions = (
         flattenObject(q, prefix),
       );
 
-      const result = flattenOneTrustQuestionResponses(
-        allQuestionResponses,
-        `${prefix}_questionResponses`,
-      );
-
       return {
         ...aggregateObjects({ objs: restSectionQuestionsFlat }),
         ...flattenOneTrustNestedQuestions(questions, prefix),
-        ...result,
+        ...flattenOneTrustQuestionResponses(
+          allQuestionResponses,
+          `${prefix}_questionResponses`,
+        ),
       };
     },
   );

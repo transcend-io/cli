@@ -6,6 +6,7 @@ import {
   OneTrustAssessmentQuestionResponsesCodec,
   OneTrustAssessmentQuestionRiskCodec,
   OneTrustAssessmentQuestionRisksCodec,
+  OneTrustAssessmentResponsesCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustAssessmentSectionSubmittedByCodec,
@@ -31,7 +32,13 @@ const enrichQuestionResponsesWithDefault = (
 ): OneTrustAssessmentQuestionResponsesCodec =>
   questionResponses.length === 0
     ? createDefaultCodec(t.array(OneTrustAssessmentQuestionResponseCodec))
-    : questionResponses;
+    : questionResponses.map((questionResponse) => ({
+        ...questionResponse,
+        responses:
+          questionResponse.responses.length === 0
+            ? createDefaultCodec(OneTrustAssessmentResponsesCodec)
+            : questionResponse.responses,
+      }));
 
 // TODO: test the shit out of this
 const enrichRisksWithDefault = (

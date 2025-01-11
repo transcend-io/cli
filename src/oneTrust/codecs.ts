@@ -155,78 +155,84 @@ export type OneTrustAssessmentQuestionRisksCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionRisksCodec
 >;
 
+export const OneTrustAssessmentResponsesCodec = t.array(
+  t.type({
+    /** ID of the response. */
+    responseId: t.string,
+    /** Content of the response. */
+    response: t.union([t.string, t.null]),
+    /** Type of response. */
+    type: t.union([
+      t.literal('NOT_SURE'),
+      t.literal('JUSTIFICATION'),
+      t.literal('NOT_APPLICABLE'),
+      t.literal('DEFAULT'),
+      t.literal('OTHERS'),
+    ]),
+    /** Source from which the assessment is launched. */
+    responseSourceType: t.union([
+      t.literal('LAUNCH_FROM_INVENTORY'),
+      t.literal('FORCE_CREATED_SOURCE'),
+      t.null,
+    ]),
+    /** Error associated with the response. */
+    errorCode: t.union([
+      t.literal('ATTRIBUTE_DISABLED'),
+      t.literal('ATTRIBUTE_OPTION_DISABLED'),
+      t.literal('INVENTORY_NOT_EXISTS'),
+      t.literal('RELATED_INVENTORY_ATTRIBUTE_DISABLED'),
+      t.literal('DATA_ELEMENT_NOT_EXISTS'),
+      t.literal('DUPLICATE_INVENTORY'),
+      t.null,
+    ]),
+    /** This parameter is only applicable for inventory type responses (Example- ASSETS). */
+    responseMap: t.object,
+    /** Indicates whether the response is valid. */
+    valid: t.boolean,
+    /** The data subject */
+    dataSubject: t.union([
+      t.type({
+        /** The ID of the data subject */
+        id: t.union([t.string, t.null]),
+        /** The ID of the data subject */
+        name: t.union([t.string, t.null]),
+        /** The nameKey of the data category */
+        nameKey: t.union([t.string, t.null]),
+      }),
+      t.null,
+    ]),
+    /** The data category */
+    dataCategory: t.union([
+      t.type({
+        /** The ID of the data category */
+        id: t.union([t.string, t.null]),
+        /** The name of the data category */
+        name: t.union([t.string, t.null]),
+        /** The nameKey of the data category */
+        nameKey: t.union([t.string, t.null]),
+      }),
+      t.null,
+    ]),
+    /** The data element */
+    dataElement: t.union([
+      t.type({
+        /** The ID of the data element */
+        id: t.union([t.string, t.null]),
+        /** The ID of the data element */
+        name: t.union([t.string, t.null]),
+      }),
+      t.null,
+    ]),
+  }),
+);
+/** Type override */
+export type OneTrustAssessmentResponsesCodec = t.TypeOf<
+  typeof OneTrustAssessmentResponsesCodec
+>;
+
 export const OneTrustAssessmentQuestionResponseCodec = t.type({
   /** The responses */
-  responses: t.array(
-    t.type({
-      /** ID of the response. */
-      responseId: t.string,
-      /** Content of the response. */
-      response: t.union([t.string, t.null]),
-      /** Type of response. */
-      type: t.union([
-        t.literal('NOT_SURE'),
-        t.literal('JUSTIFICATION'),
-        t.literal('NOT_APPLICABLE'),
-        t.literal('DEFAULT'),
-        t.literal('OTHERS'),
-      ]),
-      /** Source from which the assessment is launched. */
-      responseSourceType: t.union([
-        t.literal('LAUNCH_FROM_INVENTORY'),
-        t.literal('FORCE_CREATED_SOURCE'),
-        t.null,
-      ]),
-      /** Error associated with the response. */
-      errorCode: t.union([
-        t.literal('ATTRIBUTE_DISABLED'),
-        t.literal('ATTRIBUTE_OPTION_DISABLED'),
-        t.literal('INVENTORY_NOT_EXISTS'),
-        t.literal('RELATED_INVENTORY_ATTRIBUTE_DISABLED'),
-        t.literal('DATA_ELEMENT_NOT_EXISTS'),
-        t.literal('DUPLICATE_INVENTORY'),
-        t.null,
-      ]),
-      /** This parameter is only applicable for inventory type responses (Example- ASSETS). */
-      responseMap: t.object,
-      /** Indicates whether the response is valid. */
-      valid: t.boolean,
-      /** The data subject */
-      dataSubject: t.union([
-        t.type({
-          /** The ID of the data subject */
-          id: t.union([t.string, t.null]),
-          /** The ID of the data subject */
-          name: t.union([t.string, t.null]),
-          /** The nameKey of the data category */
-          nameKey: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-      /** The data category */
-      dataCategory: t.union([
-        t.type({
-          /** The ID of the data category */
-          id: t.union([t.string, t.null]),
-          /** The name of the data category */
-          name: t.union([t.string, t.null]),
-          /** The nameKey of the data category */
-          nameKey: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-      /** The data element */
-      dataElement: t.union([
-        t.type({
-          /** The ID of the data element */
-          id: t.union([t.string, t.null]),
-          /** The ID of the data element */
-          name: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-    }),
-  ),
+  responses: OneTrustAssessmentResponsesCodec,
   /** Justification comments for the given response. */
   justification: t.union([t.string, t.null]),
 });
