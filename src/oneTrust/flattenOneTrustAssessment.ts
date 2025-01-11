@@ -115,12 +115,14 @@ const flattenOneTrustNestedQuestions = (
   prefix: string,
 ): any => {
   // TODO: how do extract properties handle null
-  const { options: allOptions, rest } = extractProperties(questions, [
-    'options',
-  ]);
+  const { options: allOptions, rest: restQuestions } = extractProperties(
+    questions,
+    ['options'],
+  );
 
+  const restQuestionsFlat = restQuestions.map((r) => flattenObject(r, prefix));
   return {
-    ...flattenList(rest, prefix),
+    ...aggregateObjects({ objs: restQuestionsFlat }),
     ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_options`),
   };
 };
@@ -136,15 +138,18 @@ const flattenOneTrustQuestions = (
         question: questions,
         // questionResponses: allQuestionResponses,
         // risks: allRisks,
-        rest: unnestedSectionQuestions,
+        rest: restSectionQuestions,
       } = extractProperties(sectionQuestions, [
         'question',
         'questionResponses',
         'risks',
       ]);
 
+      const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
+        flattenObject(q, prefix),
+      );
       return {
-        ...flattenList(unnestedSectionQuestions, prefix),
+        ...aggregateObjects({ objs: restSectionQuestionsFlat }),
         ...flattenOneTrustNestedQuestions(questions, prefix),
       };
     },
@@ -190,8 +195,9 @@ const flattenOneTrustSectionHeaders = (
     },
   );
 
+  const flatFlatHeaders = flatHeaders.map((h) => flattenObject(h, prefix));
   return {
-    ...flattenList(flatHeaders, prefix),
+    ...aggregateObjects({ objs: flatFlatHeaders }),
     ...flattenList(riskStatistics, `${prefix}_riskStatistics`),
   };
 };
