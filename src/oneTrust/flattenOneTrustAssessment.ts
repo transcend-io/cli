@@ -138,7 +138,7 @@ const flattenOneTrustQuestions = (
   prefix: string,
 ): any => {
   const allSectionQuestionsFlat = allSectionQuestions.map(
-    (sectionQuestions) => {
+    (sectionQuestions, i) => {
       // extract nested properties (TODO: try to make a helper for this!!!)
       const {
         rest: restSectionQuestions,
@@ -150,6 +150,12 @@ const flattenOneTrustQuestions = (
         'questionResponses',
         'risks',
       ]);
+
+      console.log({
+        section: i,
+        questions: sectionQuestions.length,
+        allQuestionResponses: allQuestionResponses.map((r) => r.length),
+      });
 
       const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
         flattenObject(q, prefix),
