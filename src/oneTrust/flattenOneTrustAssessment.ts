@@ -46,9 +46,6 @@ const flattenObject = (obj: any, prefix = ''): any =>
   }, {} as Record<string, any>);
 
 const flattenList = (list: any[], prefix: string): any => {
-  if (list.length === 0) {
-    return {};
-  }
   const listFlat = list.map((obj) => flattenObject(obj, prefix));
 
   // get all possible keys from the listFlat
@@ -92,17 +89,11 @@ const flattenOneTrustNestedQuestionsOptions = (
     new Set(allOptionsFlat.flatMap((a) => Object.keys(a))),
   );
 
-  // TODO: comment
-  return allOptionsFlat.reduce(
-    (acc, optionsFlat) =>
-      Object.fromEntries(
-        allKeys.map((key) => [
-          key,
-          `${acc[key] === undefined ? '' : `${acc[key]},`}[${
-            optionsFlat[key] ?? ''
-          }]`,
-        ]),
-      ),
+  return allKeys.reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: allOptionsFlat.map((o) => `[${o[key] ?? ''}]`).join(','),
+    }),
     {},
   );
 };
@@ -153,16 +144,11 @@ const flattenOneTrustQuestions = (
   );
 
   // TODO: comment
-  return allSectionQuestionsFlat.reduce(
-    (acc, flatSectionQuestions) =>
-      Object.fromEntries(
-        allKeys.map((key) => [
-          key,
-          `${acc[key] === undefined ? '' : `${acc[key]},`}[${
-            flatSectionQuestions[key] ?? ''
-          }]`,
-        ]),
-      ),
+  return allKeys.reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: allSectionQuestionsFlat.map((q) => `[${q[key] ?? ''}]`).join(','),
+    }),
     {},
   );
 };
