@@ -45,21 +45,6 @@ const flattenObject = (obj: any, prefix = ''): any =>
     return acc;
   }, {} as Record<string, any>);
 
-const flattenList = (list: any[], prefix: string): any => {
-  const listFlat = list.map((obj) => flattenObject(obj, prefix));
-
-  // get all possible keys from the listFlat
-  // TODO: make helper
-  const allKeys = Array.from(new Set(listFlat.flatMap((a) => Object.keys(a))));
-
-  // build a single object where all the keys contain the respective values of listFlat
-  return allKeys.reduce((acc, key) => {
-    const values = listFlat.map((a) => a[key] ?? '').join(',');
-    acc[key] = values;
-    return acc;
-  }, {} as Record<string, any>);
-};
-
 // TODO: comment
 const aggregateObjects = ({
   objs,
@@ -68,7 +53,7 @@ const aggregateObjects = ({
   /** the objects to aggregate in a single one */
   objs: any[];
   /** whether to wrap the values in a [] */
-  wrap: boolean;
+  wrap?: boolean;
 }): any => {
   const allKeys = Array.from(new Set(objs.flatMap((a) => Object.keys(a))));
 
@@ -98,28 +83,31 @@ const aggregateObjects = ({
 //   };
 // };
 
+const flattenList = (list: any[], prefix: string): any => {
+  const listFlat = list.map((obj) => flattenObject(obj, prefix));
+
+  // get all possible keys from the listFlat
+  // TODO: make helper
+  const allKeys = Array.from(new Set(listFlat.flatMap((a) => Object.keys(a))));
+
+  // build a single object where all the keys contain the respective values of listFlat
+  return allKeys.reduce((acc, key) => {
+    const values = listFlat.map((a) => a[key] ?? '').join(',');
+    acc[key] = values;
+    return acc;
+  }, {} as Record<string, any>);
+};
+
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOptionCodec[] | null)[],
   prefix: string,
 ): any => {
-  const allOptionsFlat = allOptions.map((options) =>
-    flattenList(options ?? [], prefix),
-  );
+  const allOptionsFlat = allOptions.map((options) => {
+    const flatOptions = (options ?? []).map((o) => flattenObject(o, prefix));
+    return aggregateObjects({ objs: flatOptions });
+  });
 
   return aggregateObjects({ objs: allOptionsFlat, wrap: true });
-
-  // // extract all keys across allSectionQuestionsFlat
-  // const allKeys = Array.from(
-  //   new Set(allOptionsFlat.flatMap((a) => Object.keys(a))),
-  // );
-
-  // return allKeys.reduce(
-  //   (acc, key) => ({
-  //     ...acc,
-  //     [key]: allOptionsFlat.map((o) => `[${o[key] ?? ''}]`).join(','),
-  //   }),
-  //   {},
-  // );
 };
 
 const flattenOneTrustNestedQuestions = (
@@ -162,19 +150,10 @@ const flattenOneTrustQuestions = (
     },
   );
 
-  // extract all keys across allSectionQuestionsFlat
-  const allKeys = Array.from(
-    new Set(allSectionQuestionsFlat.flatMap((a) => Object.keys(a))),
-  );
-
-  // TODO: comment
-  return allKeys.reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: allSectionQuestionsFlat.map((q) => `[${q[key] ?? ''}]`).join(','),
-    }),
-    {},
-  );
+  return aggregateObjects({
+    objs: allSectionQuestionsFlat,
+    wrap: true,
+  });
 };
 
 const flattenOneTrustSectionHeaders = (
