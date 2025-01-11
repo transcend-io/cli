@@ -13,7 +13,6 @@ import {
   OneTrustAssessmentQuestionResponseCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderCodec,
-  OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustGetAssessmentResponseCodec,
 } from './codecs';
@@ -108,13 +107,6 @@ const flattenOneTrustQuestionResponses = (
         ['responses'],
       );
 
-      // TODO: replace possible null values within responses
-      // const defaultObject = {
-      //   id: null,
-      //   name: null,
-      //   nameKey: null,
-      // };
-
       // TODO: do we handle it right when empty?
       const responsesFlat = (responses ?? []).map((r) =>
         flattenObject(r, prefix),
@@ -176,21 +168,13 @@ const flattenOneTrustSectionHeaders = (
   headers: OneTrustAssessmentSectionHeaderCodec[],
   prefix: string,
 ): any => {
-  // TODO: set a default  for EVERY nested object that may be null
-  const defaultRiskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec =
-    {
-      maxRiskLevel: null,
-      riskCount: null,
-      sectionId: null,
-    };
-
   const { riskStatistics, rest: restHeaders } = extractProperties(headers, [
     'riskStatistics',
   ]);
 
   const flatFlatHeaders = restHeaders.map((h) => flattenObject(h, prefix));
   const flatRiskStatistics = riskStatistics.map((r) =>
-    flattenObject(r ?? defaultRiskStatistics, `${prefix}_riskStatistics`),
+    flattenObject(r, `${prefix}_riskStatistics`),
   );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
