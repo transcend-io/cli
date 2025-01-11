@@ -100,7 +100,7 @@ export type OneTrustGetListOfAssessmentsResponseCodec = t.TypeOf<
   typeof OneTrustGetListOfAssessmentsResponseCodec
 >;
 
-const OneTrustAssessmentQuestionOptionCodec = t.type({
+export const OneTrustAssessmentQuestionOptionCodec = t.type({
   /** ID of the option. */
   id: t.string,
   /** Name of the option. */
@@ -117,6 +117,10 @@ const OneTrustAssessmentQuestionOptionCodec = t.type({
     t.literal('DEFAULT'),
   ]),
 });
+/** Type override */
+export type OneTrustAssessmentQuestionOptionCodec = t.TypeOf<
+  typeof OneTrustAssessmentQuestionOptionCodec
+>;
 
 export const OneTrustAssessmentQuestionRiskCodec = t.intersection([
   t.type({

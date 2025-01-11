@@ -3,8 +3,10 @@
 import { extractProperties } from '../helpers';
 import {
   OneTrustAssessmentCodec,
+  OneTrustAssessmentNestedQuestionCodec,
   // OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionCodec,
+  OneTrustAssessmentQuestionOptionCodec,
   // OneTrustAssessmentQuestionFlatCodec,
   // OneTrustAssessmentQuestionResponseCodec,
   // OneTrustAssessmentQuestionRiskCodec,
@@ -15,6 +17,8 @@ import {
   OneTrustEnrichedRiskCodec,
   OneTrustGetAssessmentResponseCodec,
 } from './codecs';
+
+// TODO: will have to use something like csv-stringify
 
 // TODO: test what happens when a value is null -> it should convert to ''
 const flattenObject = (obj: any, prefix = ''): any =>
@@ -75,23 +79,58 @@ const flattenList = (list: any[], prefix: string): any => {
 //   };
 // };
 
-// const flattenOneTrustNestedQuestions = (
-//   questions: OneTrustAssessmentNestedQuestionCodec[],
-//   prefix: string,
-// ): any => {
-//   // extract nested pro
-// };
+const flattenOneTrustNestedQuestionsOptions = (
+  allOptions: (OneTrustAssessmentQuestionOptionCodec[] | null)[],
+  prefix: string,
+): any => {
+  const allOptionsFlat = allOptions.map((options) =>
+    flattenList(options ?? [], prefix),
+  );
+
+  // extract all keys across allSectionQuestionsFlat
+  const allKeys = Array.from(
+    new Set(allOptionsFlat.flatMap((a) => Object.keys(a))),
+  );
+
+  // TODO: comment
+  return allOptionsFlat.reduce(
+    (acc, optionsFlat) =>
+      Object.fromEntries(
+        allKeys.map((key) => [
+          key,
+          `${acc[key] === undefined ? '' : `${acc[key]},`}[${
+            optionsFlat[key] ?? ''
+          }]`,
+        ]),
+      ),
+    {},
+  );
+};
+
+const flattenOneTrustNestedQuestions = (
+  questions: OneTrustAssessmentNestedQuestionCodec[],
+  prefix: string,
+): any => {
+  // TODO: how do extract properties handle null
+  const { options: allOptions, rest } = extractProperties(questions, [
+    'options',
+  ]);
+
+  return {
+    ...flattenList(rest, prefix),
+    ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_options`),
+  };
+};
 
 const flattenOneTrustQuestions = (
   allSectionQuestions: OneTrustAssessmentQuestionCodec[][],
   prefix: string,
 ): any => {
-  // each entry of sectionQuestions is the list of questions of one section
   const allSectionQuestionsFlat = allSectionQuestions.map(
     (sectionQuestions) => {
       // extract nested properties (TODO: try to make a helper for this!!!)
       const {
-        // question: questions,
+        question: questions,
         // questionResponses: allQuestionResponses,
         // risks: allRisks,
         rest: unnestedSectionQuestions,
@@ -101,7 +140,10 @@ const flattenOneTrustQuestions = (
         'risks',
       ]);
 
-      return flattenList(unnestedSectionQuestions, prefix);
+      return {
+        ...flattenList(unnestedSectionQuestions, prefix),
+        ...flattenOneTrustNestedQuestions(questions, prefix),
+      };
     },
   );
 
