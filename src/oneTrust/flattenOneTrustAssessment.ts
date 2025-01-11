@@ -84,21 +84,6 @@ const aggregateObjects = ({
 //   };
 // };
 
-const flattenList = (list: any[], prefix: string): any => {
-  const listFlat = list.map((obj) => flattenObject(obj, prefix));
-
-  // get all possible keys from the listFlat
-  // TODO: make helper
-  const allKeys = Array.from(new Set(listFlat.flatMap((a) => Object.keys(a))));
-
-  // build a single object where all the keys contain the respective values of listFlat
-  return allKeys.reduce((acc, key) => {
-    const values = listFlat.map((a) => a[key] ?? '').join(',');
-    acc[key] = values;
-    return acc;
-  }, {} as Record<string, any>);
-};
-
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOptionCodec[] | null)[],
   prefix: string,
@@ -166,7 +151,7 @@ const flattenOneTrustSectionHeaders = (
   headers: OneTrustAssessmentSectionHeaderCodec[],
   prefix: string,
 ): any => {
-  // // TODO: do this for EVERY nested object that may be null
+  // TODO: set a default  for EVERY nested object that may be null
   const defaultRiskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec =
     {
       maxRiskLevel: null,
@@ -195,10 +180,11 @@ const flattenOneTrustSections = (
   const {
     questions: allQuestions,
     header: headers,
-    rest: unnestedSections,
+    rest: restSections,
   } = extractProperties(sections, ['questions', 'header']);
 
-  const sectionsFlat = flattenList(unnestedSections, prefix);
+  const restSectionsFlat = restSections.map((s) => flattenObject(s, prefix));
+  const sectionsFlat = aggregateObjects({ objs: restSectionsFlat });
   const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
   const questionsFlat = flattenOneTrustQuestions(
     allQuestions,
