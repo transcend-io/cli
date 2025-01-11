@@ -290,6 +290,38 @@ export type OneTrustAssessmentNestedQuestionCodec = t.TypeOf<
   typeof OneTrustAssessmentNestedQuestionCodec
 >;
 
+// TODO: do not add to privacy-types
+/**  OneTrustAssessmentNestedQuestionCodec without nested options */
+export const OneTrustAssessmentNestedQuestionFlatCodec = t.type({
+  id: OneTrustAssessmentNestedQuestionCodec.props.id,
+  rootVersionId: OneTrustAssessmentNestedQuestionCodec.props.rootVersionId,
+  sequence: OneTrustAssessmentNestedQuestionCodec.props.sequence,
+  questionType: OneTrustAssessmentNestedQuestionCodec.props.questionType,
+  required: OneTrustAssessmentNestedQuestionCodec.props.required,
+  attributes: OneTrustAssessmentNestedQuestionCodec.props.attributes,
+  friendlyName: OneTrustAssessmentNestedQuestionCodec.props.friendlyName,
+  description: OneTrustAssessmentNestedQuestionCodec.props.description,
+  hint: OneTrustAssessmentNestedQuestionCodec.props.hint,
+  parentQuestionId:
+    OneTrustAssessmentNestedQuestionCodec.props.parentQuestionId,
+  prePopulateResponse:
+    OneTrustAssessmentNestedQuestionCodec.props.prePopulateResponse,
+  linkAssessmentToInventory:
+    OneTrustAssessmentNestedQuestionCodec.props.linkAssessmentToInventory,
+  valid: OneTrustAssessmentNestedQuestionCodec.props.valid,
+  type: OneTrustAssessmentNestedQuestionCodec.props.type,
+  allowMultiSelect:
+    OneTrustAssessmentNestedQuestionCodec.props.allowMultiSelect,
+  content: OneTrustAssessmentNestedQuestionCodec.props.content,
+  requireJustification:
+    OneTrustAssessmentNestedQuestionCodec.props.requireJustification,
+});
+
+/** Type override */
+export type OneTrustAssessmentNestedQuestionFlatCodec = t.TypeOf<
+  typeof OneTrustAssessmentNestedQuestionFlatCodec
+>;
+
 export const OneTrustAssessmentQuestionCodec = t.type({
   /** The question */
   question: OneTrustAssessmentNestedQuestionCodec,

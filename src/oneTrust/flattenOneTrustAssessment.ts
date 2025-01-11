@@ -1,18 +1,18 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { extractProperties } from '../helpers';
 import {
   OneTrustAssessmentCodec,
-  OneTrustAssessmentNestedQuestionCodec,
+  // OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionCodec,
-  OneTrustAssessmentQuestionFlatCodec,
-  OneTrustAssessmentQuestionResponseCodec,
-  OneTrustAssessmentQuestionRiskCodec,
+  // OneTrustAssessmentQuestionFlatCodec,
+  // OneTrustAssessmentQuestionResponseCodec,
+  // OneTrustAssessmentQuestionRiskCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionFlatHeaderCodec,
   OneTrustAssessmentSectionHeaderCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustEnrichedRiskCodec,
-  OneTrustFlatAssessmentSectionCodec,
   OneTrustGetAssessmentResponseCodec,
 } from './codecs';
 
@@ -75,6 +75,13 @@ const flattenList = (list: any[], prefix: string): any => {
 //   };
 // };
 
+// const flattenOneTrustNestedQuestions = (
+//   questions: OneTrustAssessmentNestedQuestionCodec[],
+//   prefix: string,
+// ): any => {
+//   // extract nested pro
+// };
+
 const flattenOneTrustQuestions = (
   allSectionQuestions: OneTrustAssessmentQuestionCodec[][],
   prefix: string,
@@ -84,41 +91,15 @@ const flattenOneTrustQuestions = (
     (sectionQuestions) => {
       // extract nested properties (TODO: try to make a helper for this!!!)
       const {
-        // TODO: flatten the questions, allQuestionResponses, and risks too!
-        // questions,
-        // allQuestionResponses,
-        // allRisks,
-        unnestedSectionQuestions,
-      } = sectionQuestions.reduce<{
-        /** The nested questions */
-        questions: OneTrustAssessmentNestedQuestionCodec[];
-        /** The responses of all questions in the section */
-        allQuestionResponses: OneTrustAssessmentQuestionResponseCodec[][];
-        /** The risks of all questions in the section */
-        allRisks: OneTrustAssessmentQuestionRiskCodec[][];
-        /** The parent questions without nested questions */
-        unnestedSectionQuestions: OneTrustAssessmentQuestionFlatCodec[];
-      }>(
-        (acc, sectionQuestion) => {
-          const { question, questionResponses, risks, ...rest } =
-            sectionQuestion;
-          return {
-            questions: [...acc.questions, question],
-            allQuestionResponses: [
-              ...acc.allQuestionResponses,
-              questionResponses,
-            ],
-            allRisks: [...acc.allRisks, risks ?? []],
-            unnestedSectionQuestions: [...acc.unnestedSectionQuestions, rest],
-          };
-        },
-        {
-          questions: [],
-          allQuestionResponses: [],
-          allRisks: [],
-          unnestedSectionQuestions: [],
-        },
-      );
+        // question: questions,
+        // questionResponses: allQuestionResponses,
+        // risks: allRisks,
+        rest: unnestedSectionQuestions,
+      } = extractProperties(sectionQuestions, [
+        'question',
+        'questionResponses',
+        'risks',
+      ]);
 
       return flattenList(unnestedSectionQuestions, prefix);
     },
@@ -188,28 +169,12 @@ const flattenOneTrustSections = (
   sections: OneTrustAssessmentSectionCodec[],
   prefix: string,
 ): any => {
-  const { allQuestions, headers, unnestedSections } = sections.reduce<{
-    /** The sections questions */
-    allQuestions: OneTrustAssessmentQuestionCodec[][];
-    /** The sections headers */
-    headers: OneTrustAssessmentSectionHeaderCodec[];
-    /** The sections */
-    unnestedSections: OneTrustFlatAssessmentSectionCodec[];
-  }>(
-    (acc, section) => {
-      const { questions, header, ...rest } = section;
-      return {
-        allQuestions: [...acc.allQuestions, questions],
-        headers: [...acc.headers, header],
-        unnestedSections: [...acc.unnestedSections, rest],
-      };
-    },
-    {
-      allQuestions: [],
-      headers: [],
-      unnestedSections: [],
-    },
-  );
+  const {
+    questions: allQuestions,
+    header: headers,
+    rest: unnestedSections,
+  } = extractProperties(sections, ['questions', 'header']);
+
   const sectionsFlat = flattenList(unnestedSections, prefix);
   const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
   const questionsFlat = flattenOneTrustQuestions(
