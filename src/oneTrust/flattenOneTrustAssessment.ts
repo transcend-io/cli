@@ -11,9 +11,10 @@ import {
   // OneTrustAssessmentQuestionResponseCodec,
   // OneTrustAssessmentQuestionRiskCodec,
   OneTrustAssessmentSectionCodec,
-  OneTrustAssessmentSectionFlatHeaderCodec,
+  // OneTrustAssessmentSectionFlatHeaderCodec,
   OneTrustAssessmentSectionHeaderCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
+  // OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustGetAssessmentResponseCodec,
 } from './codecs';
@@ -165,7 +166,7 @@ const flattenOneTrustSectionHeaders = (
   headers: OneTrustAssessmentSectionHeaderCodec[],
   prefix: string,
 ): any => {
-  // TODO: do this for EVERY nested object that may be null
+  // // TODO: do this for EVERY nested object that may be null
   const defaultRiskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec =
     {
       maxRiskLevel: null,
@@ -173,32 +174,17 @@ const flattenOneTrustSectionHeaders = (
       sectionId: null,
     };
 
-  const { riskStatistics, flatHeaders } = headers.reduce<{
-    /** The risk statistics of all headers */
-    riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec[];
-    /** The headers without risk statistics */
-    flatHeaders: OneTrustAssessmentSectionFlatHeaderCodec[];
-  }>(
-    (acc, header) => {
-      const { riskStatistics, ...rest } = header;
-      return {
-        riskStatistics: [
-          ...acc.riskStatistics,
-          riskStatistics ?? defaultRiskStatistics,
-        ],
-        flatHeaders: [...acc.flatHeaders, rest],
-      };
-    },
-    {
-      riskStatistics: [],
-      flatHeaders: [],
-    },
-  );
+  const { riskStatistics, rest: restHeaders } = extractProperties(headers, [
+    'riskStatistics',
+  ]);
 
-  const flatFlatHeaders = flatHeaders.map((h) => flattenObject(h, prefix));
+  const flatFlatHeaders = restHeaders.map((h) => flattenObject(h, prefix));
+  const flatRiskStatistics = riskStatistics.map((r) =>
+    flattenObject(r ?? defaultRiskStatistics, `${prefix}_riskStatistics`),
+  );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
-    ...flattenList(riskStatistics, `${prefix}_riskStatistics`),
+    ...aggregateObjects({ objs: flatRiskStatistics }),
   };
 };
 
