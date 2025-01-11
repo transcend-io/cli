@@ -7,6 +7,7 @@ import {
   // OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionCodec,
   OneTrustAssessmentQuestionOptionCodec,
+  OneTrustAssessmentQuestionResponseCodec,
   // OneTrustAssessmentQuestionFlatCodec,
   // OneTrustAssessmentQuestionResponseCodec,
   // OneTrustAssessmentQuestionRiskCodec,
@@ -68,22 +69,6 @@ const aggregateObjects = ({
   }, {} as Record<string, any>);
 };
 
-// const flattenOneTrustQuestionResponses = (
-//   questionResponses: OneTrustAssessmentQuestionResponseCodec[],
-//   prefix: string,
-// ): any => {
-//   if (questionResponses.length === 0) {
-//     return {};
-//   }
-
-//   // despite being an array, questionResponses only returns one element
-//   const { responses, ...rest } = questionResponses[0];
-//   return {
-//     ...flattenList(responses, prefix),
-//     ...flattenObject(rest, prefix),
-//   };
-// };
-
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOptionCodec[] | null)[],
   prefix: string,
@@ -113,6 +98,41 @@ const flattenOneTrustNestedQuestions = (
   };
 };
 
+// flatten questionResponses of every question within a section
+const flattenOneTrustQuestionResponses = (
+  allQuestionResponses: OneTrustAssessmentQuestionResponseCodec[][],
+  prefix: string,
+): any => {
+  const allQuestionResponsesFlat = allQuestionResponses.map(
+    (questionResponses) => {
+      const { responses, rest: restQuestionResponses } = extractProperties(
+        questionResponses,
+        ['responses'],
+      );
+
+      // TODO: replace possible null values within responses
+      // const defaultObject = {
+      //   id: null,
+      //   name: null,
+      //   nameKey: null,
+      // };
+
+      // TODO: do we handle it right when empty?
+      const responsesFlat = (responses ?? []).map((r) =>
+        flattenObject(r, prefix),
+      );
+      const restQuestionResponsesFlat = (restQuestionResponses ?? []).map((q) =>
+        flattenObject(q, prefix),
+      );
+      return {
+        ...aggregateObjects({ objs: responsesFlat }),
+        ...aggregateObjects({ objs: restQuestionResponsesFlat }),
+      };
+    },
+  );
+  return aggregateObjects({ objs: allQuestionResponsesFlat, wrap: true });
+};
+
 const flattenOneTrustQuestions = (
   allSectionQuestions: OneTrustAssessmentQuestionCodec[][],
   prefix: string,
@@ -121,10 +141,10 @@ const flattenOneTrustQuestions = (
     (sectionQuestions) => {
       // extract nested properties (TODO: try to make a helper for this!!!)
       const {
-        question: questions,
-        // questionResponses: allQuestionResponses,
-        // risks: allRisks,
         rest: restSectionQuestions,
+        question: questions,
+        questionResponses: allQuestionResponses,
+        // risks: allRisks,
       } = extractProperties(sectionQuestions, [
         'question',
         'questionResponses',
@@ -134,9 +154,16 @@ const flattenOneTrustQuestions = (
       const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
         flattenObject(q, prefix),
       );
+
+      const result = flattenOneTrustQuestionResponses(
+        allQuestionResponses,
+        `${prefix}_questionResponses`,
+      );
+
       return {
         ...aggregateObjects({ objs: restSectionQuestionsFlat }),
         ...flattenOneTrustNestedQuestions(questions, prefix),
+        ...result,
       };
     },
   );
