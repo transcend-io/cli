@@ -247,7 +247,7 @@ export const flattenOneTrustAssessment = (
    */
 
   // add default values to assessments
-  const transformedAssessmentDetails = {
+  const assessmentWithDefaults = {
     ...combinedAssessment,
     primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
       combinedAssessment.primaryEntityDetails,
@@ -255,34 +255,38 @@ export const flattenOneTrustAssessment = (
     sections: enrichSectionsWithDefault(combinedAssessment.sections),
   };
 
-  const {
-    approvers,
-    primaryEntityDetails,
-    respondents,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    respondent,
-    sections,
-    ...rest
-  } = transformedAssessmentDetails;
+  const flatten = (assessment: OneTrustCombinedAssessmentCodec): any => {
+    const {
+      approvers,
+      primaryEntityDetails,
+      respondents,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      respondent,
+      sections,
+      ...rest
+    } = assessment;
 
-  const flatApprovers = approvers.map((approver) =>
-    flattenObject(approver, 'approvers'),
-  );
-  const flatRespondents = respondents.map((respondent) =>
-    flattenObject(respondent, 'respondents'),
-  );
-  const flatPrimaryEntityDetails = primaryEntityDetails.map(
-    (primaryEntityDetail) =>
-      flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
-  );
+    const flatApprovers = approvers.map((approver) =>
+      flattenObject(approver, 'approvers'),
+    );
+    const flatRespondents = respondents.map((respondent) =>
+      flattenObject(respondent, 'respondents'),
+    );
+    const flatPrimaryEntityDetails = primaryEntityDetails.map(
+      (primaryEntityDetail) =>
+        flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
+    );
 
-  return {
-    ...flattenObject(rest),
-    ...aggregateObjects({ objs: flatApprovers }),
-    ...aggregateObjects({ objs: flatRespondents }),
-    ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
-    ...flattenOneTrustSections(sections, 'sections'),
+    return {
+      ...flattenObject(rest),
+      ...aggregateObjects({ objs: flatApprovers }),
+      ...aggregateObjects({ objs: flatRespondents }),
+      ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
+      ...flattenOneTrustSections(sections, 'sections'),
+    };
   };
+
+  return flatten(assessmentWithDefaults);
 };
 /**
  *
