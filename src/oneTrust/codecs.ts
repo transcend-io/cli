@@ -1031,4 +1031,44 @@ export type OneTrustEnrichedRiskCodec = t.TypeOf<
   typeof OneTrustEnrichedRiskCodec
 >;
 
+// TODO: do not move to privacy-types
+export const OneTrustEnrichedRisksCodec = t.union([
+  t.array(OneTrustEnrichedRiskCodec),
+  t.null,
+]);
+/** Type override */
+export type OneTrustEnrichedRisksCodec = t.TypeOf<
+  typeof OneTrustEnrichedRisksCodec
+>;
+
+// TODO: do not add to privacy-types
+export const OneTrustEnrichedAssessmentQuestionCodec = t.type({
+  ...OneTrustAssessmentQuestionCodec.props,
+  risks: t.union([t.array(OneTrustEnrichedRiskCodec), t.null]),
+});
+/** Type override */
+export type OneTrustEnrichedAssessmentQuestionCodec = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentQuestionCodec
+>;
+
+// TODO: do not add to privacy-types
+export const OneTrustEnrichedAssessmentSectionCodec = t.type({
+  ...OneTrustAssessmentSectionCodec.props,
+  questions: t.array(OneTrustEnrichedAssessmentQuestionCodec),
+});
+/** Type override */
+export type OneTrustEnrichedAssessmentSectionCodec = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentSectionCodec
+>;
+
+// TODO: do not add to privacy-types
+export const OneTrustEnrichedAssessmentResponseCodec = t.type({
+  ...OneTrustGetAssessmentResponseCodec.props,
+  sections: t.array(OneTrustEnrichedAssessmentSectionCodec),
+});
+/** Type override */
+export type OneTrustEnrichedAssessmentResponseCodec = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentResponseCodec
+>;
+
 /* eslint-enable max-lines */

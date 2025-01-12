@@ -13,8 +13,7 @@ import {
   OneTrustAssessmentQuestionResponseCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderCodec,
-  OneTrustEnrichedRiskCodec,
-  OneTrustGetAssessmentResponseCodec,
+  OneTrustEnrichedAssessmentResponseCodec,
 } from './codecs';
 
 // TODO: will have to use something like csv-stringify
@@ -111,7 +110,6 @@ const flattenOneTrustQuestionResponses = (
         ['responses'],
       );
 
-      // TODO: do we handle it right when empty?
       const responsesFlat = (responses ?? []).map((r) =>
         flattenObject(r, prefix),
       );
@@ -138,6 +136,7 @@ const flattenOneTrustQuestions = (
         rest: restSectionQuestions,
         question: questions,
         questionResponses: allQuestionResponses,
+        // TODO; continue from here
         // risks: allRisks,
       } = extractProperties(sectionQuestions, [
         'question',
@@ -211,18 +210,16 @@ export const flattenOneTrustAssessment = ({
 }: {
   /** the assessment */
   assessment: OneTrustAssessmentCodec;
-  /** the assessment with details */
-  assessmentDetails: OneTrustGetAssessmentResponseCodec & {
-    /** the sections enriched with risk details */
-    sections: (OneTrustAssessmentSectionCodec & {
-      /** the questions enriched with risk details */
-      questions: (OneTrustAssessmentQuestionCodec & {
-        /** the enriched risk details */
-        risks: OneTrustEnrichedRiskCodec[] | null;
-      })[];
-    })[];
-  };
+  /** the assessment with details and enriched with risk */
+  assessmentDetails: OneTrustEnrichedAssessmentResponseCodec;
 }): any => {
+  /**
+   * TODO: experiment creating a default assessment with
+   *     const result = createDefaultCodec(OneTrustGetAssessmentResponseCodec);
+   * Then, flatten it and aggregate it with the actual assessment. This way, every
+   * assessment will always have the same fields!
+   */
+
   // add default values to assessments
   const transformedAssessmentDetails = {
     ...assessmentDetails,

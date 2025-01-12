@@ -4,12 +4,13 @@ import {
   OneTrustAssessmentQuestionOptionCodec,
   OneTrustAssessmentQuestionResponseCodec,
   OneTrustAssessmentQuestionResponsesCodec,
-  OneTrustAssessmentQuestionRiskCodec,
-  OneTrustAssessmentQuestionRisksCodec,
   OneTrustAssessmentResponsesCodec,
   OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustAssessmentSectionSubmittedByCodec,
+  OneTrustEnrichedAssessmentSectionCodec,
+  OneTrustEnrichedRiskCodec,
+  OneTrustEnrichedRisksCodec,
   OneTrustPrimaryEntityDetailsCodec,
 } from '../oneTrust/codecs';
 import { createDefaultCodec } from './createDefaultCodec';
@@ -42,10 +43,10 @@ const enrichQuestionResponsesWithDefault = (
 
 // TODO: test the shit out of this
 const enrichRisksWithDefault = (
-  risks: OneTrustAssessmentQuestionRisksCodec,
-): OneTrustAssessmentQuestionRisksCodec =>
+  risks: OneTrustEnrichedRisksCodec,
+): OneTrustEnrichedRisksCodec =>
   risks === null || risks.length === 0
-    ? createDefaultCodec(t.array(OneTrustAssessmentQuestionRiskCodec))
+    ? createDefaultCodec(t.array(OneTrustEnrichedRiskCodec))
     : risks;
 
 // TODO: test the shit out of this
@@ -58,7 +59,7 @@ const enrichRiskStatisticsWithDefault = (
 
 // TODO: test the shit out of this
 export const enrichSectionsWithDefault = (
-  sections: OneTrustAssessmentSectionCodec[],
+  sections: OneTrustEnrichedAssessmentSectionCodec[],
 ): OneTrustAssessmentSectionCodec[] =>
   sections.map((s) => ({
     ...s,
