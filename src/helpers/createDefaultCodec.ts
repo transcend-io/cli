@@ -13,11 +13,20 @@ export const createDefaultCodec = <C extends t.Mixed>(
 ): t.TypeOf<C> => {
   if (codec instanceof t.UnionType) {
     // First, look for object types in the union
+    const arrayType = codec.types.find(
+      (type: any) => type instanceof t.ArrayType,
+    );
+    if (arrayType) {
+      return createDefaultCodec(arrayType);
+    }
+
+    // First, look for object types in the union
     const objectType = codec.types.find(
       (type: any) =>
         type instanceof t.InterfaceType ||
         type instanceof t.PartialType ||
-        type instanceof t.IntersectionType,
+        type instanceof t.IntersectionType ||
+        type instanceof t.ArrayType,
     );
     if (objectType) {
       return createDefaultCodec(objectType);

@@ -1048,7 +1048,7 @@ export type OneTrustEnrichedRisksCodec = t.TypeOf<
 // TODO: do not add to privacy-types
 export const OneTrustEnrichedAssessmentQuestionCodec = t.type({
   ...OneTrustAssessmentQuestionCodec.props,
-  risks: t.union([t.array(OneTrustEnrichedRiskCodec), t.null]),
+  risks: OneTrustEnrichedRisksCodec,
 });
 /** Type override */
 export type OneTrustEnrichedAssessmentQuestionCodec = t.TypeOf<

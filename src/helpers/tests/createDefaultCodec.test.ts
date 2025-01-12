@@ -3,10 +3,6 @@ import chai, { expect } from 'chai';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 
 import { createDefaultCodec } from '../createDefaultCodec';
-import {
-  OneTrustEnrichedRiskCodec,
-  OneTrustGetRiskResponseCodec,
-} from '../../oneTrust/codecs';
 
 chai.use(deepEqualInAnyOrder);
 
@@ -42,12 +38,38 @@ describe('buildDefaultCodec', () => {
     expect(result).to.equal(null);
   });
 
-  it('should correctly build a default codec for a union with type', () => {
+  it('should correctly build a default codec for a union with object', () => {
     const result = createDefaultCodec(
       t.union([t.string, t.null, t.type({ name: t.string })]),
     );
-    // should default to the type if the union contains a type
+    // should default to the type if the union contains an object
     expect(result).to.deep.equal({ name: '' });
+  });
+
+  it('should correctly build a default codec for a union with array of type', () => {
+    const result = createDefaultCodec(
+      t.union([
+        t.string,
+        t.null,
+        t.type({ name: t.string }),
+        t.array(t.string),
+      ]),
+    );
+    // should default to the empty array if the union contains an array of type
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should correctly build a default codec for a union with array of object', () => {
+    const result = createDefaultCodec(
+      t.union([
+        t.string,
+        t.null,
+        t.type({ name: t.string }),
+        t.array(t.type({ age: t.number })),
+      ]),
+    );
+    // should default to the array with object if the union contains an array of objects
+    expect(result).to.deep.equal([{ age: null }]);
   });
 
   it('should correctly build a default codec for a union without null', () => {
@@ -101,9 +123,4 @@ describe('buildDefaultCodec', () => {
     // should default to the first value if the union does not contains null
     expect(result).to.deep.equalInAnyOrder({ id: '', name: '', age: null });
   });
-
-  // it.only('test', () => {
-  //   const result = createDefaultCodec(OneTrustEnrichedRiskCodec);
-  //   console.log({ result });
-  // });
 });
