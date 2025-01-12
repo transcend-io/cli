@@ -1079,12 +1079,14 @@ export type OneTrustEnrichedAssessmentResponseCodec = t.TypeOf<
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { status, ...OneTrustAssessmentCodecWithoutStatus } =
   OneTrustAssessmentCodec.props;
-export const CombinedAssessmentCodec = t.intersection([
+export const OneTrustCombinedAssessmentCodec = t.intersection([
   t.type(OneTrustAssessmentCodecWithoutStatus),
   OneTrustEnrichedAssessmentResponseCodec,
 ]);
 
 /** Type override */
-export type CombinedAssessmentCodec = t.TypeOf<typeof CombinedAssessmentCodec>;
+export type OneTrustCombinedAssessmentCodec = t.TypeOf<
+  typeof OneTrustCombinedAssessmentCodec
+>;
 
 /* eslint-enable max-lines */

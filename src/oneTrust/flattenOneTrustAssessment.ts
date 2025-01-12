@@ -6,7 +6,7 @@ import {
   extractProperties,
 } from '../helpers';
 import {
-  CombinedAssessmentCodec,
+  OneTrustCombinedAssessmentCodec,
   OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionOptionCodec,
   OneTrustAssessmentQuestionResponseCodec,
@@ -237,7 +237,7 @@ const flattenOneTrustSections = (
 };
 
 export const flattenOneTrustAssessment = (
-  combinedAssessment: CombinedAssessmentCodec,
+  combinedAssessment: OneTrustCombinedAssessmentCodec,
 ): any => {
   /**
    * TODO: experiment creating a default assessment with
