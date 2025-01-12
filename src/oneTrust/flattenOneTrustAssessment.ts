@@ -6,13 +6,12 @@ import {
   extractProperties,
 } from '../helpers';
 import {
-  OneTrustAssessmentCodec,
+  CombinedAssessmentCodec,
   OneTrustAssessmentNestedQuestionCodec,
   OneTrustAssessmentQuestionOptionCodec,
   OneTrustAssessmentQuestionResponseCodec,
   OneTrustAssessmentSectionHeaderCodec,
   OneTrustEnrichedAssessmentQuestionCodec,
-  OneTrustEnrichedAssessmentResponseCodec,
   OneTrustEnrichedAssessmentSectionCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustRiskCategories,
@@ -237,15 +236,9 @@ const flattenOneTrustSections = (
   return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
 };
 
-export const flattenOneTrustAssessment = ({
-  assessment,
-  assessmentDetails,
-}: {
-  /** the assessment */
-  assessment: OneTrustAssessmentCodec;
-  /** the assessment with details and enriched with risk */
-  assessmentDetails: OneTrustEnrichedAssessmentResponseCodec;
-}): any => {
+export const flattenOneTrustAssessment = (
+  combinedAssessment: CombinedAssessmentCodec,
+): any => {
   /**
    * TODO: experiment creating a default assessment with
    *     const result = createDefaultCodec(OneTrustGetAssessmentResponseCodec);
@@ -255,15 +248,14 @@ export const flattenOneTrustAssessment = ({
 
   // add default values to assessments
   const transformedAssessmentDetails = {
-    ...assessmentDetails,
+    ...combinedAssessment,
     primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
-      assessmentDetails.primaryEntityDetails,
+      combinedAssessment.primaryEntityDetails,
     ),
-    sections: enrichSectionsWithDefault(assessmentDetails.sections),
+    sections: enrichSectionsWithDefault(combinedAssessment.sections),
   };
 
   const {
-    // TODO: handle these
     approvers,
     primaryEntityDetails,
     respondents,
@@ -273,7 +265,6 @@ export const flattenOneTrustAssessment = ({
     ...rest
   } = transformedAssessmentDetails;
 
-  // console.log({ approvers: flattenApprovers(approvers) });
   const flatApprovers = approvers.map((approver) =>
     flattenObject(approver, 'approvers'),
   );
@@ -286,7 +277,6 @@ export const flattenOneTrustAssessment = ({
   );
 
   return {
-    ...flattenObject(assessment),
     ...flattenObject(rest),
     ...aggregateObjects({ objs: flatApprovers }),
     ...aggregateObjects({ objs: flatRespondents }),

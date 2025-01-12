@@ -1075,4 +1075,16 @@ export type OneTrustEnrichedAssessmentResponseCodec = t.TypeOf<
   typeof OneTrustEnrichedAssessmentResponseCodec
 >;
 
+// TODO: do not add to privacy-types
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { status, ...OneTrustAssessmentCodecWithoutStatus } =
+  OneTrustAssessmentCodec.props;
+export const CombinedAssessmentCodec = t.intersection([
+  t.type(OneTrustAssessmentCodecWithoutStatus),
+  OneTrustEnrichedAssessmentResponseCodec,
+]);
+
+/** Type override */
+export type CombinedAssessmentCodec = t.TypeOf<typeof CombinedAssessmentCodec>;
+
 /* eslint-enable max-lines */

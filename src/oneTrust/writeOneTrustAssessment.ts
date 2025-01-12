@@ -115,8 +115,8 @@ export const writeOneTrustAssessment = ({
     }
 
     const flattened = flattenOneTrustAssessment({
-      assessment,
-      assessmentDetails: enrichedAssessment,
+      ...assessment,
+      ...enrichedAssessment,
     });
     const stringifiedFlattened = JSON.stringify(flattened, null, 2);
     // TODO: do not forget to ensure we have the same set of keys!!!
