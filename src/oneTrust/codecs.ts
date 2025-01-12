@@ -775,6 +775,19 @@ const RiskLevelCodec = t.type({
   riskScore: t.union([t.number, t.null]),
 });
 
+export const OneTrustRiskCategories = t.array(
+  t.type({
+    /** Identifier for Risk Category. */
+    id: t.string,
+    /** Risk Category Name. */
+    name: t.string,
+    /** Risk Category Name Key value for translation. */
+    nameKey: t.string,
+  }),
+);
+/** Type override */
+export type OneTrustRiskCategories = t.TypeOf<typeof OneTrustRiskCategories>;
+
 // ref: https://developer.onetrust.com/onetrust/reference/getriskusingget
 export const OneTrustGetRiskResponseCodec = t.type({
   /** List of associated inventories to the risk. */
@@ -801,16 +814,7 @@ export const OneTrustGetRiskResponseCodec = t.type({
   /** The attribute values associated with the risk */
   attributeValues: t.object,
   /** List of categories. */
-  categories: t.array(
-    t.type({
-      /** Identifier for Risk Category. */
-      id: t.string,
-      /** Risk Category Name. */
-      name: t.string,
-      /** Risk Category Name Key value for translation. */
-      nameKey: t.string,
-    }),
-  ),
+  categories: OneTrustRiskCategories,
   /** List of Control Identifiers. */
   controlsIdentifier: t.array(t.string),
   /** Risk created time. */

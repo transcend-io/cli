@@ -8,12 +8,14 @@ import {
 import {
   OneTrustAssessmentCodec,
   OneTrustAssessmentNestedQuestionCodec,
-  OneTrustAssessmentQuestionCodec,
   OneTrustAssessmentQuestionOptionCodec,
   OneTrustAssessmentQuestionResponseCodec,
-  OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderCodec,
+  OneTrustEnrichedAssessmentQuestionCodec,
   OneTrustEnrichedAssessmentResponseCodec,
+  OneTrustEnrichedAssessmentSectionCodec,
+  OneTrustEnrichedRiskCodec,
+  OneTrustRiskCategories,
 } from './codecs';
 
 // TODO: will have to use something like csv-stringify
@@ -43,7 +45,7 @@ const flattenObject = (obj: any, prefix = ''): any =>
     return acc;
   }, {} as Record<string, any>);
 
-// TODO: comment
+// TODO: move to helpers
 const aggregateObjects = ({
   objs,
   wrap = false,
@@ -125,8 +127,39 @@ const flattenOneTrustQuestionResponses = (
   return aggregateObjects({ objs: allQuestionResponsesFlat, wrap: true });
 };
 
+const flattenOneTrustRiskCategories = (
+  allCategories: OneTrustRiskCategories[],
+  prefix: string,
+): any => {
+  const allCategoriesFlat = allCategories.map((categories) => {
+    const flatCategories = categories.map((c) => flattenObject(c, prefix));
+    return aggregateObjects({ objs: flatCategories });
+  });
+  return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
+};
+
+const flattenOneTrustRisks = (
+  allRisks: (OneTrustEnrichedRiskCodec[] | null)[],
+  prefix: string,
+): any => {
+  // TODO: extract categories and other nested properties
+  const allRisksFlat = allRisks.map((risks) => {
+    const { categories, rest: restRisks } = extractProperties(risks ?? [], [
+      'categories',
+    ]);
+
+    const flatRisks = restRisks.map((r) => flattenObject(r, prefix));
+    return {
+      ...aggregateObjects({ objs: flatRisks }),
+      ...flattenOneTrustRiskCategories(categories, `${prefix}_categories`),
+    };
+  });
+
+  return aggregateObjects({ objs: allRisksFlat, wrap: true });
+};
+
 const flattenOneTrustQuestions = (
-  allSectionQuestions: OneTrustAssessmentQuestionCodec[][],
+  allSectionQuestions: OneTrustEnrichedAssessmentQuestionCodec[][],
   prefix: string,
 ): any => {
   const allSectionQuestionsFlat = allSectionQuestions.map(
@@ -136,8 +169,7 @@ const flattenOneTrustQuestions = (
         rest: restSectionQuestions,
         question: questions,
         questionResponses: allQuestionResponses,
-        // TODO; continue from here
-        // risks: allRisks,
+        risks: allRisks,
       } = extractProperties(sectionQuestions, [
         'question',
         'questionResponses',
@@ -151,6 +183,7 @@ const flattenOneTrustQuestions = (
       return {
         ...aggregateObjects({ objs: restSectionQuestionsFlat }),
         ...flattenOneTrustNestedQuestions(questions, prefix),
+        ...flattenOneTrustRisks(allRisks, `${prefix}_risks`),
         ...flattenOneTrustQuestionResponses(
           allQuestionResponses,
           `${prefix}_questionResponses`,
@@ -184,7 +217,7 @@ const flattenOneTrustSectionHeaders = (
 };
 
 const flattenOneTrustSections = (
-  sections: OneTrustAssessmentSectionCodec[],
+  sections: OneTrustEnrichedAssessmentSectionCodec[],
   prefix: string,
 ): any => {
   const {

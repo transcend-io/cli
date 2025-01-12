@@ -5,7 +5,6 @@ import {
   OneTrustAssessmentQuestionResponseCodec,
   OneTrustAssessmentQuestionResponsesCodec,
   OneTrustAssessmentResponsesCodec,
-  OneTrustAssessmentSectionCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustAssessmentSectionSubmittedByCodec,
   OneTrustEnrichedAssessmentSectionCodec,
@@ -60,7 +59,7 @@ const enrichRiskStatisticsWithDefault = (
 // TODO: test the shit out of this
 export const enrichSectionsWithDefault = (
   sections: OneTrustEnrichedAssessmentSectionCodec[],
-): OneTrustAssessmentSectionCodec[] =>
+): OneTrustEnrichedAssessmentSectionCodec[] =>
   sections.map((s) => ({
     ...s,
     header: {

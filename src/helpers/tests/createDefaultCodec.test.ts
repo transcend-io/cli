@@ -3,6 +3,10 @@ import chai, { expect } from 'chai';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 
 import { createDefaultCodec } from '../createDefaultCodec';
+import {
+  OneTrustEnrichedRiskCodec,
+  OneTrustGetRiskResponseCodec,
+} from '../../oneTrust/codecs';
 
 chai.use(deepEqualInAnyOrder);
 
@@ -97,4 +101,9 @@ describe('buildDefaultCodec', () => {
     // should default to the first value if the union does not contains null
     expect(result).to.deep.equalInAnyOrder({ id: '', name: '', age: null });
   });
+
+  // it.only('test', () => {
+  //   const result = createDefaultCodec(OneTrustEnrichedRiskCodec);
+  //   console.log({ result });
+  // });
 });
