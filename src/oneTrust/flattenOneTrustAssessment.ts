@@ -264,9 +264,9 @@ export const flattenOneTrustAssessment = ({
 
   const {
     // TODO: handle these
-    // approvers,
-    // primaryEntityDetails,
-    // respondents,
+    approvers,
+    primaryEntityDetails,
+    respondents,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     respondent,
     sections,
@@ -274,12 +274,23 @@ export const flattenOneTrustAssessment = ({
   } = transformedAssessmentDetails;
 
   // console.log({ approvers: flattenApprovers(approvers) });
+  const flatApprovers = approvers.map((approver) =>
+    flattenObject(approver, 'approvers'),
+  );
+  const flatRespondents = respondents.map((respondent) =>
+    flattenObject(respondent, 'respondents'),
+  );
+  const flatPrimaryEntityDetails = primaryEntityDetails.map(
+    (primaryEntityDetail) =>
+      flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
+  );
+
   return {
     ...flattenObject(assessment),
     ...flattenObject(rest),
-    // ...flattenList(approvers, 'approvers'),
-    // ...flattenList(primaryEntityDetails, 'primaryEntityDetails'),
-    // ...flattenList(respondents, 'respondents'),
+    ...aggregateObjects({ objs: flatApprovers }),
+    ...aggregateObjects({ objs: flatRespondents }),
+    ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
     ...flattenOneTrustSections(sections, 'sections'),
   };
 };
