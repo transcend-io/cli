@@ -284,6 +284,9 @@ export const flattenOneTrustAssessment = (
   const combinedAssessmentFlat = flatten(combinedAssessmentWithDefaults);
   // const defaultAssessmentFlat = flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
 
+  // console.log({
+  //   defaultAssessmentFlat,
+  // });
   return combinedAssessmentFlat;
 };
 /**
