@@ -9,6 +9,7 @@ import {
 } from './codecs';
 import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
+import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_KEYS } from './constants';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -114,21 +115,32 @@ export const writeOneTrustAssessment = ({
       fs.writeFileSync('./oneTrust.json', '[\n');
     }
 
-    const flattened = flattenOneTrustAssessment({
+    // flatten the assessment object so it does not have nested properties
+    const flatAssessment = flattenOneTrustAssessment({
       ...assessment,
       ...enrichedAssessment,
     });
-    const stringifiedFlattened = JSON.stringify(flattened, null, 2);
-    // TODO: do not forget to ensure we have the same set of keys!!!
+
+    // transform the flat assessment to have all CSV keys in the expected order
+    const flatAssessmentWithCsvKeys =
+      DEFAULT_ONE_TRUST_ASSESSMENT_CSV_KEYS.reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: flatAssessment[key] ?? '',
+        }),
+        {},
+      );
+    const csvEntry = JSON.stringify(flatAssessmentWithCsvKeys, null, 2);
 
     // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
 
     // Add comma for all items except the last one
     const comma = index < total - 1 ? ',' : '';
 
+    // TODO: might be better not to convert it to CSV at all! The importOneTrustAssessments does not actually accept CSV.
     // write to file
     // fs.appendFileSync(file, stringifiedAssessment + comma);
-    fs.appendFileSync('./oneTrust.json', stringifiedFlattened + comma);
+    fs.appendFileSync('./oneTrust.json', csvEntry + comma);
 
     // end with closing bracket
     if (index === total - 1) {

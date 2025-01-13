@@ -15,7 +15,6 @@ import {
   OneTrustEnrichedRiskCodec,
   OneTrustRiskCategories,
 } from './codecs';
-import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 // import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
 // TODO: will have to use something like csv-stringify
@@ -240,68 +239,36 @@ const flattenOneTrustSections = (
 export const flattenOneTrustAssessment = (
   combinedAssessment: OneTrustCombinedAssessmentCodec,
 ): any => {
-  /**
-   * TODO: experiment creating a default assessment with
-   *     const result = createDefaultCodec(OneTrustGetAssessmentResponseCodec);
-   * Then, flatten it and aggregate it with the actual assessment. This way, every
-   * assessment will always have the same fields!
-   */
-
-  const flatten = (assessment: OneTrustCombinedAssessmentCodec): any => {
-    const {
-      approvers,
-      primaryEntityDetails,
-      respondents,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      respondent,
-      sections,
-      ...rest
-    } = assessment;
-
-    const flatApprovers = approvers.map((approver) =>
-      flattenObject(approver, 'approvers'),
-    );
-    const flatRespondents = respondents.map((respondent) =>
-      flattenObject(respondent, 'respondents'),
-    );
-    const flatPrimaryEntityDetails = primaryEntityDetails.map(
-      (primaryEntityDetail) =>
-        flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
-    );
-
-    return {
-      ...flattenObject(rest),
-      ...aggregateObjects({ objs: flatApprovers }),
-      ...aggregateObjects({ objs: flatRespondents }),
-      ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
-      ...flattenOneTrustSections(sections, 'sections'),
-    };
-  };
-
   // add default values to assessments
   const combinedAssessmentWithDefaults =
     enrichCombinedAssessmentWithDefaults(combinedAssessment);
 
-  const combinedAssessmentFlat = flatten(combinedAssessmentWithDefaults);
-  const defaultAssessmentFlat = flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
+  const {
+    approvers,
+    primaryEntityDetails,
+    respondents,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    respondent,
+    sections,
+    ...rest
+  } = combinedAssessmentWithDefaults;
 
-  // TODO: test that both have the same keys
-  const keysOne = Object.keys(combinedAssessmentFlat);
-  const keysTwo = Object.keys(defaultAssessmentFlat);
+  const flatApprovers = approvers.map((approver) =>
+    flattenObject(approver, 'approvers'),
+  );
+  const flatRespondents = respondents.map((respondent) =>
+    flattenObject(respondent, 'respondents'),
+  );
+  const flatPrimaryEntityDetails = primaryEntityDetails.map(
+    (primaryEntityDetail) =>
+      flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
+  );
 
-  const keysInCombinedOnly = keysOne.filter((k) => !keysTwo.includes(k));
-
-  console.log({
-    keysInCombinedOnly,
-  });
-  return combinedAssessmentFlat;
+  return {
+    ...flattenObject(rest),
+    ...aggregateObjects({ objs: flatApprovers }),
+    ...aggregateObjects({ objs: flatRespondents }),
+    ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
+    ...flattenOneTrustSections(sections, 'sections'),
+  };
 };
-/**
- *
- *
- * TODO: convert to camelCase -> Title Case
- * TODO: section -> header is spread
- * TODO: section -> questions -> question is spread
- * TODO: section -> questions -> question -> questionOptions are aggregated
- * TODO: section -> questions -> question -> questionResponses -> responses are spread
- */
