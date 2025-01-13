@@ -12,7 +12,11 @@ import {
 import { OneTrustPullResource } from './enums';
 import { mapSeries, map } from 'bluebird';
 import uniq from 'lodash/uniq';
-import { OneTrustGetRiskResponseCodec } from './oneTrust/codecs';
+import {
+  OneTrustAssessmentQuestion,
+  OneTrustAssessmentSection,
+  OneTrustGetRiskResponse,
+} from '@transcend-io/privacy-types';
 
 /**
  * Pull configuration from OneTrust down locally to disk
@@ -28,6 +32,7 @@ async function main(): Promise<void> {
     parseCliPullOtArguments();
 
   try {
+    // TODO: move to helper function
     if (resource === OneTrustPullResource.Assessments) {
       // use the hostname and auth token to instantiate a client to talk to OneTrust
       const oneTrust = createOneTrustGotInstance({ hostname, auth });
@@ -48,10 +53,10 @@ async function main(): Promise<void> {
         });
 
         // enrich assessments with risk information
-        let riskDetails: OneTrustGetRiskResponseCodec[] = [];
+        let riskDetails: OneTrustGetRiskResponse[] = [];
         const riskIds = uniq(
-          assessmentDetails.sections.flatMap((s) =>
-            s.questions.flatMap((q) =>
+          assessmentDetails.sections.flatMap((s: OneTrustAssessmentSection) =>
+            s.questions.flatMap((q: OneTrustAssessmentQuestion) =>
               (q.risks ?? []).flatMap((r) => r.riskId),
             ),
           ),
@@ -64,7 +69,7 @@ async function main(): Promise<void> {
           );
           riskDetails = await map(
             riskIds,
-            (riskId) => getOneTrustRisk({ oneTrust, riskId }),
+            (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId as string }),
             {
               concurrency: 5,
             },

@@ -2,14 +2,16 @@ import { logger } from '../logger';
 import keyBy from 'lodash/keyBy';
 import colors from 'colors';
 import { OneTrustFileFormat } from '../enums';
-import {
-  OneTrustAssessmentCodec,
-  OneTrustGetAssessmentResponseCodec,
-  OneTrustGetRiskResponseCodec,
-} from './codecs';
 import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
+import { decodeCodec } from '@transcend-io/type-utils';
+import {
+  OneTrustAssessment,
+  OneTrustAssessmentCsvRecord,
+  OneTrustGetAssessmentResponse,
+  OneTrustGetRiskResponse,
+} from '@transcend-io/privacy-types';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -31,11 +33,11 @@ export const writeOneTrustAssessment = ({
   /** The format of the output file */
   fileFormat: OneTrustFileFormat;
   /** The basic assessment */
-  assessment: OneTrustAssessmentCodec;
+  assessment: OneTrustAssessment;
   /** The assessment with details  */
-  assessmentDetails: OneTrustGetAssessmentResponseCodec;
+  assessmentDetails: OneTrustGetAssessmentResponse;
   /** The details of risks found within the assessment */
-  riskDetails: OneTrustGetRiskResponseCodec[];
+  riskDetails: OneTrustGetRiskResponse[];
   /** The index of the assessment being written to the file */
   index: number;
   /** The total amount of assessments that we will write */
@@ -122,17 +124,25 @@ export const writeOneTrustAssessment = ({
       ...enrichedAssessment,
     });
 
-    // transform the flat assessment to have all CSV keys in the expected order
-    const assessmentRow = DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER.map(
-      (header) => {
+    // comment
+    const flatAssessmentFull = Object.fromEntries(
+      DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER.map((header) => {
         const value = flatAssessment[header] ?? '';
-        // Escape values containing commas or quotes
-        return typeof value === 'string' &&
+        const escapedValue =
+          typeof value === 'string' &&
           (value.includes(',') || value.includes('"'))
-          ? `"${value.replace(/"/g, '""')}"`
-          : value;
-      },
+            ? `"${value.replace(/"/g, '""')}"`
+            : value;
+        return [header, escapedValue];
+      }),
     );
+
+    // TODO: import from privacy-types
+    // ensure the record has the expected type!
+    decodeCodec(OneTrustAssessmentCsvRecord, flatAssessmentFull);
+
+    // transform the flat assessment to have all CSV keys in the expected order
+    const assessmentRow = Object.values(flatAssessmentFull);
 
     // append the rows to the file
     csvRows.push(`${assessmentRow.join(',')}\n`);

@@ -1,19 +1,21 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  OneTrustAssessmentNestedQuestion,
+  OneTrustAssessmentQuestionOption,
+  OneTrustAssessmentQuestionResponses,
+  OneTrustAssessmentSectionHeader,
+  OneTrustRiskCategories,
+} from '@transcend-io/privacy-types';
+import {
   enrichCombinedAssessmentWithDefaults,
   extractProperties,
 } from '../helpers';
 import {
-  OneTrustCombinedAssessmentCodec,
-  OneTrustAssessmentNestedQuestionCodec,
-  OneTrustAssessmentQuestionOptionCodec,
-  OneTrustAssessmentQuestionResponseCodec,
-  OneTrustAssessmentSectionHeaderCodec,
-  OneTrustEnrichedAssessmentQuestionCodec,
-  OneTrustEnrichedAssessmentSectionCodec,
-  OneTrustEnrichedRiskCodec,
-  OneTrustRiskCategories,
+  OneTrustCombinedAssessment,
+  OneTrustEnrichedAssessmentQuestion,
+  OneTrustEnrichedAssessmentSection,
+  OneTrustEnrichedRisk,
 } from './codecs';
 // import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
@@ -67,7 +69,7 @@ const aggregateObjects = ({
 };
 
 const flattenOneTrustNestedQuestionsOptions = (
-  allOptions: (OneTrustAssessmentQuestionOptionCodec[] | null)[],
+  allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
   prefix: string,
 ): any => {
   const allOptionsFlat = allOptions.map((options) => {
@@ -79,7 +81,7 @@ const flattenOneTrustNestedQuestionsOptions = (
 };
 
 const flattenOneTrustNestedQuestions = (
-  questions: OneTrustAssessmentNestedQuestionCodec[],
+  questions: OneTrustAssessmentNestedQuestion[],
   prefix: string,
 ): any => {
   // TODO: how do extract properties handle null
@@ -97,7 +99,7 @@ const flattenOneTrustNestedQuestions = (
 
 // flatten questionResponses of every question within a section
 const flattenOneTrustQuestionResponses = (
-  allQuestionResponses: OneTrustAssessmentQuestionResponseCodec[][],
+  allQuestionResponses: OneTrustAssessmentQuestionResponses[],
   prefix: string,
 ): any => {
   const allQuestionResponsesFlat = allQuestionResponses.map(
@@ -138,7 +140,7 @@ const flattenOneTrustRiskCategories = (
 };
 
 const flattenOneTrustRisks = (
-  allRisks: (OneTrustEnrichedRiskCodec[] | null)[],
+  allRisks: (OneTrustEnrichedRisk[] | null)[],
   prefix: string,
 ): any => {
   // TODO: extract categories and other nested properties
@@ -158,7 +160,7 @@ const flattenOneTrustRisks = (
 };
 
 const flattenOneTrustQuestions = (
-  allSectionQuestions: OneTrustEnrichedAssessmentQuestionCodec[][],
+  allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][],
   prefix: string,
 ): any => {
   const allSectionQuestionsFlat = allSectionQuestions.map(
@@ -198,7 +200,7 @@ const flattenOneTrustQuestions = (
 };
 
 const flattenOneTrustSectionHeaders = (
-  headers: OneTrustAssessmentSectionHeaderCodec[],
+  headers: OneTrustAssessmentSectionHeader[],
   prefix: string,
 ): any => {
   const { riskStatistics, rest: restHeaders } = extractProperties(headers, [
@@ -215,8 +217,9 @@ const flattenOneTrustSectionHeaders = (
   };
 };
 
+// TODO: update type to be
 const flattenOneTrustSections = (
-  sections: OneTrustEnrichedAssessmentSectionCodec[],
+  sections: OneTrustEnrichedAssessmentSection[],
   prefix: string,
 ): any => {
   const {
@@ -236,9 +239,10 @@ const flattenOneTrustSections = (
   return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
 };
 
+// TODO: update type to be a Record<OneTrustAssessmentCsvHeader, string>
 export const flattenOneTrustAssessment = (
-  combinedAssessment: OneTrustCombinedAssessmentCodec,
-): any => {
+  combinedAssessment: OneTrustCombinedAssessment,
+): Record<string, string> => {
   // add default values to assessments
   const combinedAssessmentWithDefaults =
     enrichCombinedAssessmentWithDefaults(combinedAssessment);
@@ -253,6 +257,7 @@ export const flattenOneTrustAssessment = (
     ...rest
   } = combinedAssessmentWithDefaults;
 
+  // TODO: extract approver from approvers, otherwise it won't agree with the codec
   const flatApprovers = approvers.map((approver) =>
     flattenObject(approver, 'approvers'),
   );

@@ -1,6 +1,6 @@
 import { Got } from 'got';
-import { OneTrustGetRiskResponseCodec } from './codecs';
 import { decodeCodec } from '@transcend-io/type-utils';
+import { OneTrustGetRiskResponse } from '@transcend-io/privacy-types';
 
 /**
  * Retrieve details about a particular risk.
@@ -17,8 +17,8 @@ export const getOneTrustRisk = async ({
   oneTrust: Got;
   /** The ID of the OneTrust risk to retrieve */
   riskId: string;
-}): Promise<OneTrustGetRiskResponseCodec> => {
+}): Promise<OneTrustGetRiskResponse> => {
   const { body } = await oneTrust.get(`api/risk/v2/risks/${riskId}`);
 
-  return decodeCodec(OneTrustGetRiskResponseCodec, body);
+  return decodeCodec(OneTrustGetRiskResponse, body);
 };

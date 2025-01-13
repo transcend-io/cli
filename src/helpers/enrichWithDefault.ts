@@ -1,17 +1,19 @@
 import * as t from 'io-ts';
 import {
-  OneTrustAssessmentNestedQuestionCodec,
-  OneTrustAssessmentQuestionOptionCodec,
-  OneTrustAssessmentQuestionResponseCodec,
-  OneTrustAssessmentQuestionResponsesCodec,
-  OneTrustAssessmentResponsesCodec,
-  OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
-  OneTrustAssessmentSectionSubmittedByCodec,
-  OneTrustCombinedAssessmentCodec,
-  OneTrustEnrichedAssessmentSectionCodec,
-  OneTrustEnrichedRiskCodec,
-  OneTrustEnrichedRisksCodec,
-  OneTrustPrimaryEntityDetailsCodec,
+  OneTrustAssessmentNestedQuestion,
+  OneTrustAssessmentQuestionOption,
+  OneTrustAssessmentQuestionResponses,
+  OneTrustAssessmentResponses,
+  OneTrustAssessmentSectionHeaderRiskStatistics,
+  OneTrustAssessmentSectionSubmittedBy,
+  OneTrustPrimaryEntityDetails,
+} from '@transcend-io/privacy-types';
+
+import {
+  OneTrustCombinedAssessment,
+  OneTrustEnrichedAssessmentSection,
+  OneTrustEnrichedRisk,
+  OneTrustEnrichedRisks,
 } from '../oneTrust/codecs';
 import { createDefaultCodec } from './createDefaultCodec';
 
@@ -19,48 +21,48 @@ import { createDefaultCodec } from './createDefaultCodec';
 const enrichQuestionWithDefault = ({
   options,
   ...rest
-}: OneTrustAssessmentNestedQuestionCodec): OneTrustAssessmentNestedQuestionCodec => ({
+}: OneTrustAssessmentNestedQuestion): OneTrustAssessmentNestedQuestion => ({
   options:
     options === null || options.length === 0
-      ? createDefaultCodec(t.array(OneTrustAssessmentQuestionOptionCodec))
+      ? createDefaultCodec(t.array(OneTrustAssessmentQuestionOption))
       : options,
   ...rest,
 });
 
 // TODO: test the shit out of this
 const enrichQuestionResponsesWithDefault = (
-  questionResponses: OneTrustAssessmentQuestionResponsesCodec,
-): OneTrustAssessmentQuestionResponsesCodec =>
+  questionResponses: OneTrustAssessmentQuestionResponses,
+): OneTrustAssessmentQuestionResponses =>
   questionResponses.length === 0
-    ? createDefaultCodec(t.array(OneTrustAssessmentQuestionResponseCodec))
+    ? createDefaultCodec(OneTrustAssessmentQuestionResponses)
     : questionResponses.map((questionResponse) => ({
         ...questionResponse,
         responses:
           questionResponse.responses.length === 0
-            ? createDefaultCodec(OneTrustAssessmentResponsesCodec)
+            ? createDefaultCodec(OneTrustAssessmentResponses)
             : questionResponse.responses,
       }));
 
 // TODO: test the shit out of this
 const enrichRisksWithDefault = (
-  risks: OneTrustEnrichedRisksCodec,
-): OneTrustEnrichedRisksCodec =>
+  risks: OneTrustEnrichedRisks,
+): OneTrustEnrichedRisks =>
   risks === null || risks.length === 0
-    ? createDefaultCodec(t.array(OneTrustEnrichedRiskCodec))
+    ? createDefaultCodec(t.array(OneTrustEnrichedRisk))
     : risks;
 
 // TODO: test the shit out of this
 const enrichRiskStatisticsWithDefault = (
-  riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
-): OneTrustAssessmentSectionHeaderRiskStatisticsCodec =>
+  riskStatistics: OneTrustAssessmentSectionHeaderRiskStatistics,
+): OneTrustAssessmentSectionHeaderRiskStatistics =>
   riskStatistics === null
-    ? createDefaultCodec(OneTrustAssessmentSectionHeaderRiskStatisticsCodec)
+    ? createDefaultCodec(OneTrustAssessmentSectionHeaderRiskStatistics)
     : riskStatistics;
 
 // TODO: test the shit out of this
 const enrichSectionsWithDefault = (
-  sections: OneTrustEnrichedAssessmentSectionCodec[],
-): OneTrustEnrichedAssessmentSectionCodec[] =>
+  sections: OneTrustEnrichedAssessmentSection[],
+): OneTrustEnrichedAssessmentSection[] =>
   sections.map((s) => ({
     ...s,
     header: {
@@ -77,20 +79,20 @@ const enrichSectionsWithDefault = (
     })),
     submittedBy:
       s.submittedBy === null
-        ? createDefaultCodec(OneTrustAssessmentSectionSubmittedByCodec)
+        ? createDefaultCodec(OneTrustAssessmentSectionSubmittedBy)
         : s.submittedBy,
   }));
 
 const enrichPrimaryEntityDetailsWithDefault = (
-  primaryEntityDetails: OneTrustPrimaryEntityDetailsCodec,
-): OneTrustPrimaryEntityDetailsCodec =>
+  primaryEntityDetails: OneTrustPrimaryEntityDetails,
+): OneTrustPrimaryEntityDetails =>
   primaryEntityDetails.length === 0
-    ? createDefaultCodec(OneTrustPrimaryEntityDetailsCodec)
+    ? createDefaultCodec(OneTrustPrimaryEntityDetails)
     : primaryEntityDetails;
 
 export const enrichCombinedAssessmentWithDefaults = (
-  combinedAssessment: OneTrustCombinedAssessmentCodec,
-): OneTrustCombinedAssessmentCodec => ({
+  combinedAssessment: OneTrustCombinedAssessment,
+): OneTrustCombinedAssessment => ({
   ...combinedAssessment,
   primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
     combinedAssessment.primaryEntityDetails,

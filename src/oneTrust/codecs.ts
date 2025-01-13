@@ -1,1261 +1,170 @@
-/* eslint-disable max-lines */
+import {
+  OneTrustAssessment,
+  OneTrustAssessmentNestedQuestion,
+  OneTrustAssessmentQuestion,
+  OneTrustAssessmentQuestionRisk,
+  OneTrustAssessmentSection,
+  OneTrustAssessmentSectionHeader,
+  OneTrustGetAssessmentResponse,
+  OneTrustGetRiskResponse,
+} from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
 
-// TODO: move to privacy-types
-
-export const OneTrustAssessmentCodec = t.type({
-  /** ID of the assessment. */
-  assessmentId: t.string,
-  /** Date that the assessment was created. */
-  createDt: t.string,
-  /** Overall risk score without considering existing controls. */
-  inherentRiskScore: t.union([t.number, t.null]),
-  /** Date and time that the assessment was last updated. */
-  lastUpdated: t.string,
-  /** Name of the assessment. */
-  name: t.string,
-  /** Number assigned to the assessment. */
-  number: t.number,
-  /** Number of risks that are open on the assessment. */
-  openRiskCount: t.number,
-  /** Name of the organization group assigned to the assessment. */
-  orgGroupName: t.string,
-  /** Details about the inventory record which is the primary record of the assessment. */
-  primaryInventoryDetails: t.union([
-    t.type({
-      /** GUID of the inventory record. */
-      primaryInventoryId: t.string,
-      /** Name of the inventory record. */
-      primaryInventoryName: t.string,
-      /** Integer ID of the inventory record. */
-      primaryInventoryNumber: t.number,
-    }),
-    t.null,
-  ]),
-  /** Overall risk score after considering existing controls. */
-  residualRiskScore: t.union([t.number, t.null]),
-  /** Result of the assessment. NOTE: This field will be deprecated soon. Please reference the 'resultName' field instead. */
-  result: t.union([
-    t.literal('Approved'),
-    t.literal('AutoClosed'),
-    t.literal('Rejected'),
-    t.string,
-    t.null,
-  ]),
-  /** ID of the result. */
-  resultId: t.union([t.string, t.null]),
-  /** Name of the result. */
-  resultName: t.union([
-    t.literal('Approved - Remediation required'),
-    t.literal('Approved'),
-    t.literal('Rejected'),
-    t.literal('Assessment suspended - On Hold'),
-    t.string,
-    t.null,
-  ]),
-  /** State of the assessment. */
-  state: t.union([t.literal('ARCHIVE'), t.literal('ACTIVE')]),
-  /** Status of the assessment. */
-  status: t.union([
-    t.literal('Not Started'),
-    t.literal('In Progress'),
-    t.literal('Under Review'),
-    t.literal('Completed'),
-    t.null,
-  ]),
-  /** Name of the tag attached to the assessment. */
-  tags: t.array(t.string),
-  /** The desired risk score. */
-  targetRiskScore: t.union([t.number, t.null]),
-  /** ID used to launch an assessment using a specific version of a template. */
-  templateId: t.string,
-  /**  Name of the template that is being used on the assessment. */
-  templateName: t.string,
-  /** ID used to launch an assessment using the latest published version of a template. */
-  templateRootVersionId: t.string,
-});
-
-/** Type override */
-export type OneTrustAssessmentCodec = t.TypeOf<typeof OneTrustAssessmentCodec>;
-
-// ref: https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget
-export const OneTrustGetListOfAssessmentsResponseCodec = t.partial({
-  /** The list of assessments in the current page. */
-  content: t.array(OneTrustAssessmentCodec),
-  /** Details about the pages being fetched */
-  page: t.type({
-    /** Page number of the results list (0…N). */
-    number: t.number,
-    /** Number of records per page (0…N). */
-    size: t.number,
-    /** Total number of elements. */
-    totalElements: t.number,
-    /** Total number of pages. */
-    totalPages: t.number,
-  }),
-});
-
-/** Type override */
-export type OneTrustGetListOfAssessmentsResponseCodec = t.TypeOf<
-  typeof OneTrustGetListOfAssessmentsResponseCodec
->;
-
-export const OneTrustAssessmentQuestionOptionCodec = t.intersection([
-  t.partial({
-    /** The translationIdentifier */
-    translationIdentifier: t.string,
-  }),
-  t.type({
-    /** ID of the option. */
-    id: t.string,
-    /** Name of the option. */
-    option: t.string,
-    /** The key of the option */
-    optionKey: t.union([t.string, t.null]),
-    /** The hint */
-    hint: t.union([t.string, t.null]),
-    /** The hint key */
-    hintKey: t.union([t.string, t.null]),
-    /** The score */
-    score: t.union([t.number, t.null]),
-    /** If the option was pre-selected */
-    preSelectedOption: t.boolean,
-    /** Order in which the option appears. */
-    sequence: t.union([t.number, t.null]),
-    /** Attribute for which the option is available. */
-    attributes: t.union([t.string, t.null]),
-    /** Type of option. */
-    optionType: t.union([
-      t.literal('NOT_SURE'),
-      t.literal('NOT_APPLICABLE'),
-      t.literal('OTHERS'),
-      t.literal('DEFAULT'),
-    ]),
-  }),
-]);
-
-/** Type override */
-export type OneTrustAssessmentQuestionOptionCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionOptionCodec
->;
-
-export const OneTrustAssessmentQuestionRiskCodec = t.intersection([
-  t.type({
-    /** ID of the question for which the risk was flagged. */
-    questionId: t.string,
-    /** ID of the flagged risk. */
-    riskId: t.string,
-  }),
-  t.partial({
-    /** Level of risk flagged on the question. */
-    level: t.union([t.number, t.null]),
-    /** Score of risk flagged on the question. */
-    score: t.union([t.number, t.null]),
-    /** Probability of risk flagged on the question. */
-    probability: t.union([t.number, t.undefined]),
-    /** Impact Level of risk flagged on the question. */
-    impactLevel: t.union([t.number, t.undefined]),
-  }),
-]);
-
-/** Type override */
-export type OneTrustAssessmentQuestionRiskCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionRiskCodec
->;
-
-export const OneTrustAssessmentQuestionRisksCodec = t.union([
-  t.array(OneTrustAssessmentQuestionRiskCodec),
-  t.null,
-]);
-/** Type override */
-export type OneTrustAssessmentQuestionRisksCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionRisksCodec
->;
-
-export const OneTrustAssessmentResponsesCodec = t.array(
-  t.intersection([
-    t.partial({
-      /** The maturityScale */
-      maturityScale: t.union([t.string, t.null]),
-      /** The effectivenessScale */
-      effectivenessScale: t.union([t.string, t.null]),
-      /** The parentAssessmentDetailId */
-      parentAssessmentDetailId: t.union([t.string, t.null]),
-      /** The display label */
-      displayLabel: t.string,
-      /** The type of the parent question */
-      parentQuestionType: t.string,
-      /** The ID of the parent response */
-      parentResponseId: t.string,
-      /** Whether it's local version */
-      isLocalVersion: t.string,
-      /** Whether relationshipDisplayInformation */
-      relationshipDisplayInformation: t.union([t.string, t.null]),
-      /** The lock reason */
-      lockReason: t.union([t.string, t.null]),
-    }),
-    t.type({
-      /** The controlResponse */
-      controlResponse: t.union([t.string, t.null]),
-      /** The relationshipResponseDetails */
-      relationshipResponseDetails: t.array(t.string),
-      /** The textRedacted */
-      textRedacted: t.boolean,
-      /** The responseMap */
-      responseMap: t.object,
-      /** ID of the response. */
-      responseId: t.string,
-      /** Content of the response. */
-      response: t.union([t.string, t.null]),
-      /** The response key */
-      responseKey: t.union([t.string, t.null]),
-      /** The response key */
-      contractResponse: t.union([t.string, t.null]),
-      /** Type of response. */
-      type: t.union([
-        t.literal('NOT_SURE'),
-        t.literal('JUSTIFICATION'),
-        t.literal('NOT_APPLICABLE'),
-        t.literal('DEFAULT'),
-        t.literal('OTHERS'),
-      ]),
-      /** Source from which the assessment is launched. */
-      responseSourceType: t.union([
-        t.literal('LAUNCH_FROM_INVENTORY'),
-        t.literal('FORCE_CREATED_SOURCE'),
-        t.null,
-      ]),
-      /** Error associated with the response. */
-      errorCode: t.union([
-        t.literal('ATTRIBUTE_DISABLED'),
-        t.literal('ATTRIBUTE_OPTION_DISABLED'),
-        t.literal('INVENTORY_NOT_EXISTS'),
-        t.literal('RELATED_INVENTORY_ATTRIBUTE_DISABLED'),
-        t.literal('DATA_ELEMENT_NOT_EXISTS'),
-        t.literal('DUPLICATE_INVENTORY'),
-        t.null,
-      ]),
-      /** Indicates whether the response is valid. */
-      valid: t.boolean,
-      /** The data subject */
-      dataSubject: t.union([
-        t.type({
-          /** The ID of the data subject */
-          id: t.union([t.string, t.null]),
-          /** The ID of the data subject */
-          name: t.union([t.string, t.null]),
-          /** The nameKey of the data category */
-          nameKey: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-      /** The data category */
-      dataCategory: t.union([
-        t.type({
-          /** The ID of the data category */
-          id: t.union([t.string, t.null]),
-          /** The name of the data category */
-          name: t.union([t.string, t.null]),
-          /** The nameKey of the data category */
-          nameKey: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-      /** The data element */
-      dataElement: t.union([
-        t.type({
-          /** The ID of the data element */
-          id: t.union([t.string, t.null]),
-          /** The name of the data element */
-          name: t.union([t.string, t.null]),
-          /** The name key of the data element */
-          nameKey: t.union([t.string, t.null]),
-        }),
-        t.null,
-      ]),
-    }),
-  ]),
-);
-/** Type override */
-export type OneTrustAssessmentResponsesCodec = t.TypeOf<
-  typeof OneTrustAssessmentResponsesCodec
->;
-
-export const OneTrustAssessmentQuestionResponseCodec = t.type({
-  /** The responses */
-  responses: OneTrustAssessmentResponsesCodec,
-  /** Justification comments for the given response. */
-  justification: t.union([t.string, t.null]),
-});
-
-/** Type override */
-export type OneTrustAssessmentQuestionResponseCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionResponseCodec
->;
-
-export const OneTrustAssessmentQuestionResponsesCodec = t.array(
-  OneTrustAssessmentQuestionResponseCodec,
-);
-/** Type override */
-export type OneTrustAssessmentQuestionResponsesCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionResponsesCodec
->;
-
-export const OneTrustAssessmentNestedQuestionCodec = t.type({
-  /** ID of the question. */
-  id: t.string,
-  /** ID of the root version of the question. */
-  rootVersionId: t.string,
-  /** Order in which the question appears in the assessment. */
-  sequence: t.number,
-  /** Type of question in the assessment. */
-  questionType: t.union([
-    t.literal('TEXTBOX'),
-    t.literal('MULTICHOICE'),
-    t.literal('YESNO'),
-    t.literal('DATE'),
-    t.literal('STATEMENT'),
-    t.literal('INVENTORY'),
-    t.literal('ATTRIBUTE'),
-    t.literal('PERSONAL_DATA'),
-    t.literal('ENGAGEMENT'),
-    t.literal('ASSESS_CONTROL'),
-    t.null,
-  ]),
-  /** Indicates whether a response to the question is required. */
-  required: t.boolean,
-  /** Data element attributes that are directly updated by the question. */
-  attributes: t.string,
-  /** Short, descriptive name for the question. */
-  friendlyName: t.union([t.string, t.null]),
-  /** Description of the question. */
-  description: t.union([t.string, t.null]),
-  /** Tooltip text within a hint for the question. */
-  hint: t.union([t.string, t.null]),
-  /** ID of the parent question. */
-  parentQuestionId: t.union([t.string, t.null]),
-  /** Indicates whether the response to the question is prepopulated. */
-  prePopulateResponse: t.boolean,
-  /** Indicates whether the assessment is linked to inventory records. */
-  linkAssessmentToInventory: t.boolean,
-  /** The question options */
-  options: t.union([t.array(OneTrustAssessmentQuestionOptionCodec), t.null]),
-  /** Indicates whether the question is valid. */
-  valid: t.boolean,
-  /** Type of question in the assessment. */
-  type: t.union([
-    t.literal('TEXTBOX'),
-    t.literal('MULTICHOICE'),
-    t.literal('YESNO'),
-    t.literal('DATE'),
-    t.literal('STATEMENT'),
-    t.literal('INVENTORY'),
-    t.literal('ATTRIBUTE'),
-    t.literal('PERSONAL_DATA'),
-    t.literal('ENGAGEMENT'),
-    t.literal('ASSESS_CONTROL'),
-  ]),
-  /** Whether the response can be multi select */
-  allowMultiSelect: t.boolean,
-  /** The text of a question. */
-  content: t.string,
-  /** Indicates whether justification comments are required for the question. */
-  requireJustification: t.boolean,
-});
-
-/** Type override */
-export type OneTrustAssessmentNestedQuestionCodec = t.TypeOf<
-  typeof OneTrustAssessmentNestedQuestionCodec
->;
-
-// TODO: do not add to privacy-types
-/**  OneTrustAssessmentNestedQuestionCodec without nested options */
-export const OneTrustAssessmentNestedQuestionFlatCodec = t.type({
-  id: OneTrustAssessmentNestedQuestionCodec.props.id,
-  rootVersionId: OneTrustAssessmentNestedQuestionCodec.props.rootVersionId,
-  sequence: OneTrustAssessmentNestedQuestionCodec.props.sequence,
-  questionType: OneTrustAssessmentNestedQuestionCodec.props.questionType,
-  required: OneTrustAssessmentNestedQuestionCodec.props.required,
-  attributes: OneTrustAssessmentNestedQuestionCodec.props.attributes,
-  friendlyName: OneTrustAssessmentNestedQuestionCodec.props.friendlyName,
-  description: OneTrustAssessmentNestedQuestionCodec.props.description,
-  hint: OneTrustAssessmentNestedQuestionCodec.props.hint,
-  parentQuestionId:
-    OneTrustAssessmentNestedQuestionCodec.props.parentQuestionId,
+/**  OneTrustAssessmentNestedQuestion without nested options */
+export const OneTrustAssessmentNestedQuestionFlat = t.type({
+  id: OneTrustAssessmentNestedQuestion.props.id,
+  rootVersionId: OneTrustAssessmentNestedQuestion.props.rootVersionId,
+  sequence: OneTrustAssessmentNestedQuestion.props.sequence,
+  questionType: OneTrustAssessmentNestedQuestion.props.questionType,
+  required: OneTrustAssessmentNestedQuestion.props.required,
+  attributes: OneTrustAssessmentNestedQuestion.props.attributes,
+  friendlyName: OneTrustAssessmentNestedQuestion.props.friendlyName,
+  description: OneTrustAssessmentNestedQuestion.props.description,
+  hint: OneTrustAssessmentNestedQuestion.props.hint,
+  parentQuestionId: OneTrustAssessmentNestedQuestion.props.parentQuestionId,
   prePopulateResponse:
-    OneTrustAssessmentNestedQuestionCodec.props.prePopulateResponse,
+    OneTrustAssessmentNestedQuestion.props.prePopulateResponse,
   linkAssessmentToInventory:
-    OneTrustAssessmentNestedQuestionCodec.props.linkAssessmentToInventory,
-  valid: OneTrustAssessmentNestedQuestionCodec.props.valid,
-  type: OneTrustAssessmentNestedQuestionCodec.props.type,
-  allowMultiSelect:
-    OneTrustAssessmentNestedQuestionCodec.props.allowMultiSelect,
-  content: OneTrustAssessmentNestedQuestionCodec.props.content,
+    OneTrustAssessmentNestedQuestion.props.linkAssessmentToInventory,
+  valid: OneTrustAssessmentNestedQuestion.props.valid,
+  type: OneTrustAssessmentNestedQuestion.props.type,
+  allowMultiSelect: OneTrustAssessmentNestedQuestion.props.allowMultiSelect,
+  content: OneTrustAssessmentNestedQuestion.props.content,
   requireJustification:
-    OneTrustAssessmentNestedQuestionCodec.props.requireJustification,
+    OneTrustAssessmentNestedQuestion.props.requireJustification,
 });
 
 /** Type override */
-export type OneTrustAssessmentNestedQuestionFlatCodec = t.TypeOf<
-  typeof OneTrustAssessmentNestedQuestionFlatCodec
+export type OneTrustAssessmentNestedQuestionFlat = t.TypeOf<
+  typeof OneTrustAssessmentNestedQuestionFlat
 >;
 
-export const OneTrustAssessmentQuestionCodec = t.intersection([
-  t.type({
-    /** The question */
-    question: OneTrustAssessmentNestedQuestionCodec,
-    /** Indicates whether the question is hidden on the assessment. */
-    hidden: t.boolean,
-    /** Reason for locking the question in the assessment. */
-    lockReason: t.union([
-      t.literal('LAUNCH_FROM_INVENTORY'),
-      t.literal('FORCE_CREATION_LOCK'),
-      t.null,
-    ]),
-    /** The copy errors */
-    copyErrors: t.union([t.string, t.null]),
-    /** Indicates whether navigation rules are enabled for the question. */
-    hasNavigationRules: t.boolean,
-    /** The responses to this question */
-    questionResponses: t.array(OneTrustAssessmentQuestionResponseCodec),
-    /** The risks associated with this question */
-    risks: t.union([t.array(OneTrustAssessmentQuestionRiskCodec), t.null]),
-    /** List of IDs associated with the question root requests. */
-    rootRequestInformationIds: t.array(t.string),
-    /** Number of attachments added to the question. */
-    totalAttachments: t.number,
-    /** IDs of the attachment(s) added to the question. */
-    attachmentIds: t.array(t.string),
-    /** The canReopenWithAllowEditOption */
-    canReopenWithAllowEditOption: t.boolean,
-    /** The riskCreationAllowed */
-    riskCreationAllowed: t.boolean,
-    /** The riskDeletionPopupAllowed */
-    riskDeletionPopupAllowed: t.boolean,
-    /** The allowMaturityScaleOnQuestions */
-    allowMaturityScaleOnQuestions: t.boolean,
-    /** The questionAssociations */
-    questionAssociations: t.union([t.string, t.null]),
-    /** The issues */
-    issues: t.union([t.string, t.null]),
-    /** The responseEditableWhileUnderReview */
-    responseEditableWhileUnderReview: t.boolean,
-  }),
-  t.partial({
-    /** The businessKeyReference */
-    businessKeyReference: t.union([t.string, t.null]),
-    /** The topic */
-    topic: t.union([t.string, t.null]),
-    /** The questionLaws */
-    questionLaws: t.array(t.string),
-    /** The attachmentRequired */
-    attachmentRequired: t.boolean,
-    /** The responseFilter */
-    responseFilter: t.union([t.string, t.null]),
-    /** The linkAssessmentToResponseEntity */
-    linkAssessmentToResponseEntity: t.boolean,
-    /** The translationIdentifier */
-    translationIdentifier: t.string,
-    /** The readOnly */
-    readOnly: t.boolean,
-    /** The schema */
-    schema: t.union([t.string, t.null]),
-    /** The attributeId */
-    attributeId: t.string,
-    /** Whether it is a vendor question */
-    vendorQuestion: t.boolean,
-    /** Whether the question was seeded */
-    seeded: t.boolean,
-    /** Whether the question allows justification */
-    allowJustification: t.boolean,
-    /** Whether it refers to an asset question */
-    assetQuestion: t.boolean,
-    /** Whether it refers to an entity question */
-    entityQuestion: t.boolean,
-    /** Whether it is a paquestion */
-    paquestion: t.boolean,
-    /** The inventoryTypeEnum */
-    inventoryTypeEnum: t.union([t.string, t.null]),
-    /** Whether it is a forceOther */
-    forceOther: t.boolean,
-    /** Whether it is a isParentQuestionMultiSelect */
-    isParentQuestionMultiSelect: t.boolean,
-  }),
-]);
-
-/** Type override */
-export type OneTrustAssessmentQuestionCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionCodec
->;
-
-// TODO: do not add to privacy types
-// The OneTrustAssessmentQuestionCodec without nested properties
-export const OneTrustAssessmentQuestionFlatCodec = t.type({
-  hidden: OneTrustAssessmentQuestionCodec.types[0].props.hidden,
-  lockReason: OneTrustAssessmentQuestionCodec.types[0].props.lockReason,
-  copyErrors: OneTrustAssessmentQuestionCodec.types[0].props.copyErrors,
+// The OneTrustAssessmentQuestion without nested properties
+export const OneTrustAssessmentQuestionFlat = t.type({
+  hidden: OneTrustAssessmentQuestion.types[0].props.hidden,
+  lockReason: OneTrustAssessmentQuestion.types[0].props.lockReason,
+  copyErrors: OneTrustAssessmentQuestion.types[0].props.copyErrors,
   hasNavigationRules:
-    OneTrustAssessmentQuestionCodec.types[0].props.hasNavigationRules,
+    OneTrustAssessmentQuestion.types[0].props.hasNavigationRules,
   rootRequestInformationIds:
-    OneTrustAssessmentQuestionCodec.types[0].props.rootRequestInformationIds,
-  totalAttachments:
-    OneTrustAssessmentQuestionCodec.types[0].props.totalAttachments,
-  attachmentIds: OneTrustAssessmentQuestionCodec.types[0].props.attachmentIds,
+    OneTrustAssessmentQuestion.types[0].props.rootRequestInformationIds,
+  totalAttachments: OneTrustAssessmentQuestion.types[0].props.totalAttachments,
+  attachmentIds: OneTrustAssessmentQuestion.types[0].props.attachmentIds,
 });
 
 /** Type override */
-export type OneTrustAssessmentQuestionFlatCodec = t.TypeOf<
-  typeof OneTrustAssessmentQuestionFlatCodec
+export type OneTrustAssessmentQuestionFlat = t.TypeOf<
+  typeof OneTrustAssessmentQuestionFlat
 >;
 
-export const OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.union([
-  t.type({
-    /** Maximum level of risk in the section. */
-    maxRiskLevel: t.union([t.number, t.null]),
-    /** Number of risks in the section. */
-    riskCount: t.union([t.number, t.null]),
-    /** ID of the section in the assessment. */
-    sectionId: t.union([t.string, t.null]),
-  }),
-  t.null,
-]);
-
-/** Type override */
-export type OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.TypeOf<
-  typeof OneTrustAssessmentSectionHeaderRiskStatisticsCodec
->;
-
-export const OneTrustAssessmentSectionHeaderCodec = t.intersection([
-  t.type({
-    /** ID of the section in the assessment. */
-    sectionId: t.string,
-    /** Name of the section. */
-    name: t.string,
-    /** The status of the section */
-    status: t.union([t.string, t.null]),
-    /** The openNMIQuestionIds */
-    openNMIQuestionIds: t.union([t.string, t.null]),
-    /** Description of the section header. */
-    description: t.union([t.string, t.null]),
-    /** Sequence of the section within the form */
-    sequence: t.number,
-    /** Indicates whether the section is hidden in the assessment. */
-    hidden: t.boolean,
-    /** IDs of invalid questions in the section. */
-    invalidQuestionIds: t.array(t.string),
-    /** IDs of required but unanswered questions in the section. */
-    requiredUnansweredQuestionIds: t.array(t.string),
-    /** IDs of required questions in the section. */
-    requiredQuestionIds: t.array(t.string),
-    /** IDs of unanswered questions in the section. */
-    unansweredQuestionIds: t.array(t.string),
-    /** IDs of effectiveness questions in the section. */
-    effectivenessQuestionIds: t.array(t.string),
-    /** The risk statistics */
-    riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
-    /** Whether the section was submitted */
-    submitted: t.boolean,
-  }),
-  t.partial({
-    /** The name key of the template */
-    nameKey: t.union([t.string, t.null]),
-  }),
-]);
-
-/** Type override */
-export type OneTrustAssessmentSectionHeaderCodec = t.TypeOf<
-  typeof OneTrustAssessmentSectionHeaderCodec
->;
-
-// TODO: do not add to privacy-types
-/** The OneTrustAssessmentSectionHeaderCodec without nested riskStatistics  */
-export const OneTrustAssessmentSectionFlatHeaderCodec = t.type({
-  sectionId: OneTrustAssessmentSectionHeaderCodec.types[0].props.sectionId,
-  name: OneTrustAssessmentSectionHeaderCodec.types[0].props.name,
-  description: OneTrustAssessmentSectionHeaderCodec.types[0].props.description,
-  sequence: OneTrustAssessmentSectionHeaderCodec.types[0].props.sequence,
-  hidden: OneTrustAssessmentSectionHeaderCodec.types[0].props.hidden,
+/** The OneTrustAssessmentSectionHeader without nested riskStatistics  */
+export const OneTrustAssessmentSectionFlatHeader = t.type({
+  sectionId: OneTrustAssessmentSectionHeader.types[0].props.sectionId,
+  name: OneTrustAssessmentSectionHeader.types[0].props.name,
+  description: OneTrustAssessmentSectionHeader.types[0].props.description,
+  sequence: OneTrustAssessmentSectionHeader.types[0].props.sequence,
+  hidden: OneTrustAssessmentSectionHeader.types[0].props.hidden,
   invalidQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.types[0].props.invalidQuestionIds,
+    OneTrustAssessmentSectionHeader.types[0].props.invalidQuestionIds,
   requiredUnansweredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.types[0].props
+    OneTrustAssessmentSectionHeader.types[0].props
       .requiredUnansweredQuestionIds,
   requiredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.types[0].props.requiredQuestionIds,
+    OneTrustAssessmentSectionHeader.types[0].props.requiredQuestionIds,
   unansweredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.types[0].props.unansweredQuestionIds,
+    OneTrustAssessmentSectionHeader.types[0].props.unansweredQuestionIds,
   effectivenessQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.types[0].props
-      .effectivenessQuestionIds,
-  submitted: OneTrustAssessmentSectionHeaderCodec.types[0].props.submitted,
+    OneTrustAssessmentSectionHeader.types[0].props.effectivenessQuestionIds,
+  submitted: OneTrustAssessmentSectionHeader.types[0].props.submitted,
 });
 /** Type override */
-export type OneTrustAssessmentSectionFlatHeaderCodec = t.TypeOf<
-  typeof OneTrustAssessmentSectionFlatHeaderCodec
+export type OneTrustAssessmentSectionFlatHeader = t.TypeOf<
+  typeof OneTrustAssessmentSectionFlatHeader
 >;
 
-export const OneTrustAssessmentSectionSubmittedByCodec = t.union([
-  t.intersection([
-    t.type({
-      /** The ID of the user who submitted the section */
-      id: t.string,
-      /** THe name or email of the user who submitted the section */
-      name: t.string,
-    }),
-    t.partial({
-      /** The name key */
-      nameKey: t.union([t.string, t.null]),
-    }),
-  ]),
-  t.null,
-]);
-
-/** Type override */
-export type OneTrustAssessmentSectionSubmittedByCodec = t.TypeOf<
-  typeof OneTrustAssessmentSectionSubmittedByCodec
->;
-
-export const OneTrustAssessmentSectionCodec = t.type({
-  /** The Assessment section header */
-  header: OneTrustAssessmentSectionHeaderCodec,
-  /** The questions within the section */
-  questions: t.array(OneTrustAssessmentQuestionCodec),
-  /** Indicates whether navigation rules are enabled for the question. */
-  hasNavigationRules: t.boolean,
-  /** Who submitted the section */
-  submittedBy: OneTrustAssessmentSectionSubmittedByCodec,
-  /** Date of the submission */
-  submittedDt: t.union([t.string, t.null]),
-  /** Name of the section. */
-  name: t.string,
-  /** Indicates whether navigation rules are enabled for the question. */
-  hidden: t.boolean,
-  /** Indicates whether the section is valid. */
-  valid: t.boolean,
-  /** ID of the section in an assessment. */
-  sectionId: t.string,
-  /** Sequence of the section within the form */
-  sequence: t.number,
-  /** Whether the section was submitted */
-  submitted: t.boolean,
-  /** Descriptions of the section. */
-  description: t.union([t.string, t.null]),
+/** The OneTrustAssessmentSection type without header or questions */
+export const OneTrustFlatAssessmentSection = t.type({
+  hasNavigationRules: OneTrustAssessmentSection.props.hasNavigationRules,
+  submittedBy: OneTrustAssessmentSection.props.submittedBy,
+  submittedDt: OneTrustAssessmentSection.props.submittedDt,
+  name: OneTrustAssessmentSection.props.name,
+  hidden: OneTrustAssessmentSection.props.hidden,
+  valid: OneTrustAssessmentSection.props.valid,
+  sectionId: OneTrustAssessmentSection.props.sectionId,
+  sequence: OneTrustAssessmentSection.props.sequence,
+  submitted: OneTrustAssessmentSection.props.submitted,
+  description: OneTrustAssessmentSection.props.description,
 });
 
 /** Type override */
-export type OneTrustAssessmentSectionCodec = t.TypeOf<
-  typeof OneTrustAssessmentSectionCodec
+export type OneTrustFlatAssessmentSection = t.TypeOf<
+  typeof OneTrustFlatAssessmentSection
 >;
 
-// TODO: do not move to privacy-types
-/** The OneTrustAssessmentSectionCodec type without header or questions */
-export const OneTrustFlatAssessmentSectionCodec = t.type({
-  hasNavigationRules: OneTrustAssessmentSectionCodec.props.hasNavigationRules,
-  submittedBy: OneTrustAssessmentSectionCodec.props.submittedBy,
-  submittedDt: OneTrustAssessmentSectionCodec.props.submittedDt,
-  name: OneTrustAssessmentSectionCodec.props.name,
-  hidden: OneTrustAssessmentSectionCodec.props.hidden,
-  valid: OneTrustAssessmentSectionCodec.props.valid,
-  sectionId: OneTrustAssessmentSectionCodec.props.sectionId,
-  sequence: OneTrustAssessmentSectionCodec.props.sequence,
-  submitted: OneTrustAssessmentSectionCodec.props.submitted,
-  description: OneTrustAssessmentSectionCodec.props.description,
-});
-
-/** Type override */
-export type OneTrustFlatAssessmentSectionCodec = t.TypeOf<
-  typeof OneTrustFlatAssessmentSectionCodec
->;
-
-export const OneTrustApproverCodec = t.type({
-  /** ID of the user assigned as an approver. */
-  id: t.string,
-  /** ID of the workflow stage */
-  workflowStageId: t.string,
-  /** Name of the user assigned as an approver. */
-  name: t.string,
-  /** More details about the approver */
-  approver: t.type({
-    /** ID of the user assigned as an approver. */
-    id: t.string,
-    /** Full name of the user assigned as an approver. */
-    fullName: t.string,
-    /** Email of the user assigned as an approver. */
-    email: t.union([t.string, t.null]),
-    /** Whether the user assigned as an approver was deleted. */
-    deleted: t.boolean,
-    /** The assignee type */
-    assigneeType: t.union([t.string, t.null]),
-  }),
-  /** Assessment approval status. */
-  approvalState: t.union([
-    t.literal('OPEN'),
-    t.literal('APPROVED'),
-    t.literal('REJECTED'),
-  ]),
-  /** Date and time at which the assessment was approved. */
-  approvedOn: t.union([t.string, t.null]),
-  /** ID of the assessment result. */
-  resultId: t.union([t.string, t.null]),
-  /** Name of the assessment result. */
-  resultName: t.union([
-    t.literal('Approved - Remediation required'),
-    t.literal('Approved'),
-    t.literal('Rejected'),
-    t.literal('Assessment suspended - On Hold'),
-    t.string,
-    t.null,
-  ]),
-  /** Name key of the assessment result. */
-  resultNameKey: t.union([t.string, t.null]),
-});
-
-/** Type override */
-export type OneTrustApproverCodec = t.TypeOf<typeof OneTrustApproverCodec>;
-
-export const OneTrustAssessmentStatusCodec = t.union([
-  t.literal('NOT_STARTED'),
-  t.literal('IN_PROGRESS'),
-  t.literal('UNDER_REVIEW'),
-  t.literal('COMPLETED'),
-]);
-/** Type override */
-export type OneTrustAssessmentStatusCodec = t.TypeOf<
-  typeof OneTrustAssessmentStatusCodec
->;
-
-export const OneTrustPrimaryEntityDetailsCodec = t.array(
+export const OneTrustEnrichedRisk = t.intersection([
+  OneTrustAssessmentQuestionRisk,
   t.type({
-    /** Unique ID for the primary record. */
-    id: t.string,
-    /** Name of the primary record. */
-    name: t.string,
-    /** The number associated with the primary record. */
-    number: t.number,
-    /** Name and number of the primary record. */
-    displayName: t.string,
-    /** The relationshipResponseDetails */
-    relationshipResponseDetails: t.union([t.string, t.null]),
-    /** The entity business key */
-    entityBusinessKey: t.union([t.string, t.null]),
-  }),
-);
-/** Type override */
-export type OneTrustPrimaryEntityDetailsCodec = t.TypeOf<
-  typeof OneTrustPrimaryEntityDetailsCodec
->;
-
-// ref: https://developer.onetrust.com/onetrust/reference/exportassessmentusingget
-export const OneTrustGetAssessmentResponseCodec = t.type({
-  /** List of users assigned as approvers of the assessment. */
-  approvers: t.array(OneTrustApproverCodec),
-  /** ID of an assessment. */
-  assessmentId: t.string,
-  /** Number assigned to an assessment. */
-  assessmentNumber: t.number,
-  /** Date and time at which the assessment was completed. */
-  completedOn: t.union([t.string, t.null]),
-  /** Status of the assessment. */
-  status: OneTrustAssessmentStatusCodec,
-  /** Creator of the Assessment */
-  createdBy: t.type({
-    /** The ID of the creator */
-    id: t.string,
-    /** The name of the creator */
-    name: t.string,
-    /** The name key of the template */
-    nameKey: t.union([t.string, t.null]),
-  }),
-  /** Date and time at which the assessment was created. */
-  createdDT: t.string,
-  /** Date and time by which the assessment must be completed. */
-  deadline: t.union([t.string, t.null]),
-  /** Description of the assessment. */
-  description: t.union([t.string, t.null]),
-  /** Overall inherent risk score without considering the existing controls. */
-  inherentRiskScore: t.union([t.number, t.null]),
-  /** Date and time at which the assessment was last updated. */
-  lastUpdated: t.string,
-  /** Number of risks captured on the assessment with a low risk level. */
-  lowRisk: t.number,
-  /** Number of risks captured on the assessment with a medium risk level. */
-  mediumRisk: t.number,
-  /** Number of risks captured on the assessment with a high risk level. */
-  highRisk: t.number,
-  /** Name of the assessment. */
-  name: t.string,
-  /** Number of open risks that have not been addressed. */
-  openRiskCount: t.number,
-  /** The organization group */
-  orgGroup: t.intersection([
-    t.type({
-      /** The ID of the organization group */
-      id: t.string,
-      /** The name of the organization group */
-      name: t.string,
-    }),
-    t.partial({
-      /** The name key of the template */
-      nameKey: t.union([t.string, t.null]),
-    }),
-  ]),
-  /** The primary record */
-  primaryEntityDetails: OneTrustPrimaryEntityDetailsCodec,
-  /** Type of inventory record designated as the primary record. */
-  primaryRecordType: t.union([
-    t.literal('ASSETS'),
-    t.literal('PROCESSING_ACTIVITY'),
-    t.literal('VENDORS'),
-    t.literal('ENTITIES'),
-    t.literal('ASSESS_CONTROL'),
-    t.literal('ENGAGEMENT'),
-    t.literal('projects'),
-    t.null,
-  ]),
-  /** Overall risk score after considering existing controls. */
-  residualRiskScore: t.union([t.number, t.null]),
-  /** The respondent */
-  respondent: t.type({
-    /** The ID of the respondent */
-    id: t.string,
-    /** The name or email of the respondent */
-    name: t.string,
-  }),
-  /** The respondents */
-  respondents: t.array(
-    t.type({
-      /** The ID of the respondent */
-      id: t.string,
-      /** The name or email of the respondent */
-      name: t.string,
-      /** The name key of the template */
-      nameKey: t.union([t.string, t.null]),
-    }),
-  ),
-  /** Result of the assessment. */
-  result: t.union([t.string, t.null]),
-  /** ID of the result. */
-  resultId: t.union([t.string, t.null]),
-  /** Name of the result. */
-  resultName: t.union([
-    t.literal('Approved - Remediation required'),
-    t.literal('Approved'),
-    t.literal('Rejected'),
-    t.literal('Assessment suspended - On Hold'),
-    t.string,
-    t.null,
-  ]),
-  /** Risk level of the assessment. */
-  riskLevel: t.union([
-    t.literal('None'),
-    t.literal('Low'),
-    t.literal('Medium'),
-    t.literal('High'),
-    t.literal('Very High'),
-  ]),
-  /** List of sections in the assessment. */
-  sections: t.array(OneTrustAssessmentSectionCodec),
-  /** Date and time at which the assessment was submitted. */
-  submittedOn: t.union([t.string, t.null]),
-  /** List of tags associated with the assessment. */
-  tags: t.array(t.string),
-  /** The desired target risk score. */
-  targetRiskScore: t.union([t.number, t.null]),
-  /** The template */
-  template: t.type({
-    /** The ID of the template */
-    id: t.string,
-    /** The name of the template */
-    name: t.string,
-    /** The name key of the template */
-    nameKey: t.union([t.string, t.null]),
-  }),
-  /** Number of total risks on the assessment. */
-  totalRiskCount: t.number,
-  /** Number of very high risks on the assessment. */
-  veryHighRisk: t.number,
-  /** Welcome text if any in the assessment. */
-  welcomeText: t.union([t.string, t.null]),
-});
-
-/** Type override */
-export type OneTrustGetAssessmentResponseCodec = t.TypeOf<
-  typeof OneTrustGetAssessmentResponseCodec
->;
-
-const EntityTypeCodec = t.type({
-  /** Indicates whether entity type is eligible for linking/relating with risk or not */
-  eligibleForEntityLink: t.boolean,
-  /** Indicates whether the entity type is enabled or not. */
-  enabled: t.boolean,
-  /** Entity Type ID. This can be Assets, Entities, PIA, Engagement, Custom Object GUID in form of String. */
-  id: t.string,
-  /** Entity Type Name. */
-  label: t.string,
-  /** Name of the module. */
-  moduleName: t.union([t.string, t.null]),
-  /** Indicates whether this type can be risk type or not in Risk */
-  riskType: t.boolean,
-  /** For Base Entity Type Seeded is true and false for Custom Object/Entity Types by default. */
-  seeded: t.boolean,
-  /** Indicates whether this type can be source type or not in Risk */
-  sourceType: t.boolean,
-  /** Translation Key of Entity Type ID. */
-  translationKey: t.string,
-});
-
-const RiskLevelCodec = t.type({
-  /** Risk Impact Level name. */
-  impactLevel: t.union([t.string, t.null]),
-  /** Risk Impact level ID. */
-  impactLevelId: t.union([t.number, t.null]),
-  /** Risk Level Name. */
-  level: t.union([t.string, t.null]),
-  /** Risk Level ID. */
-  levelId: t.union([t.number, t.null]),
-  /** Risk Probability Level Name. */
-  probabilityLevel: t.union([t.string, t.null]),
-  /** Risk Probability Level ID. */
-  probabilityLevelId: t.union([t.number, t.null]),
-  /** Risk Score. */
-  riskScore: t.union([t.number, t.null]),
-});
-
-export const OneTrustRiskCategories = t.array(
-  t.intersection([
-    t.partial({
-      seeded: t.boolean,
-    }),
-    t.type({
-      /** Identifier for Risk Category. */
-      id: t.string,
-      /** Risk Category Name. */
-      name: t.string,
-      /** Risk Category Name Key value for translation. */
-      nameKey: t.string,
-    }),
-  ]),
-);
-/** Type override */
-export type OneTrustRiskCategories = t.TypeOf<typeof OneTrustRiskCategories>;
-
-// ref: https://developer.onetrust.com/onetrust/reference/getriskusingget
-export const OneTrustGetRiskResponseCodec = t.type({
-  /** List of associated inventories to the risk. */
-  associatedInventories: t.array(
-    t.type({
-      /** ID of the Inventory. */
-      inventoryId: t.string,
-      /** Name of the Inventory. */
-      inventoryName: t.string,
-      /** Type of the Inventory. */
-      inventoryType: t.union([
-        t.literal('ASSETS'),
-        t.literal('PROCESSING_ACTIVITIES'),
-        t.literal('VENDORS'),
-        t.literal('ENTITIES'),
-        t.null,
-      ]),
-      /** ID of the Inventory's Organization. */
-      organizationId: t.union([t.string, t.null]),
-      /** The source type */
-      sourceType: EntityTypeCodec,
-    }),
-  ),
-  /** The attribute values associated with the risk */
-  attributeValues: t.object,
-  /** List of categories. */
-  categories: OneTrustRiskCategories,
-  /** List of Control Identifiers. */
-  controlsIdentifier: t.array(t.string),
-  /** Risk created time. */
-  createdUTCDateTime: t.union([t.string, t.null]),
-  /** Risk Creation Type. */
-  creationType: t.union([t.string, t.null]),
-  /** Date when the risk is closed. */
-  dateClosed: t.union([t.string, t.null]),
-  /** Deadline date for the risk. */
-  deadline: t.union([t.string, t.null]),
-  /** Risk delete type. */
-  deleteType: t.union([t.literal('SOFT'), t.null]),
-  /** Risk description. */
-  description: t.union([t.string, t.null]),
-  /** ID of the risk. */
-  id: t.string,
-  /** Residual impact level name. */
-  impactLevel: t.union([t.string, t.null]),
-  /** Residual impact level ID. */
-  impactLevelId: t.union([t.number, t.null]),
-  /** The inherent risk level */
-  inherentRiskLevel: RiskLevelCodec,
-  /** The risk justification */
-  justification: t.union([t.string, t.null]),
-  /** Residual level display name. */
-  levelDisplayName: t.union([t.string, t.null]),
-  /** Residual level ID. */
-  levelId: t.union([t.number, t.null]),
-  /** Risk mitigated date. */
-  mitigatedDate: t.union([t.string, t.null]),
-  /** Risk Mitigation details. */
-  mitigation: t.union([t.string, t.null]),
-  /** Short Name for a Risk. */
-  name: t.union([t.string, t.null]),
-  /** Integer risk identifier. */
-  number: t.number,
-  /** The organization group */
-  orgGroup: t.intersection([
-    t.type({
-      /** The ID of the organization group */
-      id: t.string,
-      /** The name of the organization group */
-      name: t.string,
-    }),
-    t.partial({
-      /** The name key of the template */
-      nameKey: t.union([t.string, t.null]),
-    }),
-  ]),
-  /** The previous risk state */
-  previousState: t.union([
-    t.literal('IDENTIFIED'),
-    t.literal('RECOMMENDATION_ADDED'),
-    t.literal('RECOMMENDATION_SENT'),
-    t.literal('REMEDIATION_PROPOSED'),
-    t.literal('EXCEPTION_REQUESTED'),
-    t.literal('REDUCED'),
-    t.literal('RETAINED'),
-    t.literal('ARCHIVED_IN_VERSION'),
-    t.null,
-  ]),
-  /** Residual probability level. */
-  probabilityLevel: t.union([t.string, t.null]),
-  /** Residual probability level ID. */
-  probabilityLevelId: t.union([t.number, t.null]),
-  /** Risk Recommendation. */
-  recommendation: t.union([t.string, t.null]),
-  /** Proposed remediation. */
-  remediationProposal: t.union([t.string, t.null]),
-  /** Deadline reminder days. */
-  reminderDays: t.union([t.number, t.null]),
-  /** Risk exception request. */
-  requestedException: t.union([t.string, t.null]),
-  /** Risk Result. */
-  result: t.union([
-    t.literal('Accepted'),
-    t.literal('Avoided'),
-    t.literal('Reduced'),
-    t.literal('Rejected'),
-    t.literal('Transferred'),
-    t.literal('Ignored'),
-    t.null,
-  ]),
-  /** Risk approvers name csv. */
-  riskApprovers: t.union([t.string, t.null]),
-  /** Risk approvers ID. */
-  riskApproversId: t.array(t.string),
-  /** List of risk owners ID. */
-  riskOwnersId: t.union([t.array(t.string), t.null]),
-  /** Risk owners name csv. */
-  riskOwnersName: t.union([t.string, t.null]),
-  /** Risk score. */
-  riskScore: t.union([t.number, t.null]),
-  /** The risk source type */
-  riskSourceType: EntityTypeCodec,
-  /** The risk type */
-  riskType: EntityTypeCodec,
-  /** For Auto risk, rule Id reference. */
-  ruleRootVersionId: t.union([t.string, t.null]),
-  /** The risk source */
-  source: t.type({
-    /** Additional information about the Source Entity */
-    additionalAttributes: t.object,
-    /** Source Entity ID. */
-    id: t.string,
-    /** Source Entity Name. */
-    name: t.string,
-    /** The risk source type */
-    sourceType: EntityTypeCodec,
-    /** Source Entity Type. */
-    type: t.union([
-      t.literal('PIA'),
-      t.literal('RA'),
-      t.literal('GRA'),
-      t.literal('INVENTORY'),
-      t.literal('INCIDENT'),
-      t.literal('GENERIC'),
-    ]),
-  }),
-  /** The risk stage */
-  stage: t.intersection([
-    t.partial({
-      /** The currentStageApprovers */
-      currentStageApprovers: t.array(t.string),
-      /** The badgeColor */
-      badgeColor: t.union([t.string, t.null]),
-    }),
-    t.type({
-      /** ID of an entity. */
-      id: t.string,
-      /** Name of an entity. */
-      name: t.string,
-      /** Name Key of the entity for translation. */
-      nameKey: t.string,
-    }),
-  ]),
-  /** The risk state */
-  state: t.union([
-    t.literal('IDENTIFIED'),
-    t.literal('RECOMMENDATION_ADDED'),
-    t.literal('RECOMMENDATION_SENT'),
-    t.literal('REMEDIATION_PROPOSED'),
-    t.literal('EXCEPTION_REQUESTED'),
-    t.literal('REDUCED'),
-    t.literal('RETAINED'),
-    t.literal('ARCHIVED_IN_VERSION'),
-  ]),
-  /** The target risk level */
-  targetRiskLevel: RiskLevelCodec,
-  /** The risk threat */
-  threat: t.union([
-    t.type({
-      /** Threat ID. */
-      id: t.string,
-      /** Threat Identifier. */
-      identifier: t.string,
-      /** Threat Name. */
-      name: t.string,
-    }),
-    t.null,
-  ]),
-  /** Risk Treatment. */
-  treatment: t.union([t.string, t.null]),
-  /** Risk Treatment status. */
-  treatmentStatus: t.union([
-    t.literal('InProgress'),
-    t.literal('UnderReview'),
-    t.literal('ExceptionRequested'),
-    t.literal('Approved'),
-    t.literal('ExceptionGranted'),
-    t.null,
-  ]),
-  /** Risk Type. */
-  type: t.union([
-    t.literal('ASSESSMENTS'),
-    t.literal('ASSETS'),
-    t.literal('PROCESSING_ACTIVITIES'),
-    t.literal('VENDORS'),
-    t.literal('ENTITIES'),
-    t.literal('INCIDENTS'),
-    t.literal('ENGAGEMENTS'),
-    t.null,
-  ]),
-  /** ID of an assessment. */
-  typeRefIds: t.array(t.string),
-  /** List of vulnerabilities */
-  vulnerabilities: t.union([
-    t.array(
-      t.type({
-        /** Vulnerability ID. */
-        id: t.string,
-        /** Vulnerability Identifier. */
-        identifier: t.string,
-        /** Vulnerability Name. */
-        name: t.string,
-      }),
-    ),
-    t.null,
-  ]),
-  /** The risk workflow */
-  workflow: t.type({
-    /** ID of an entity. */
-    id: t.string,
-    /** Name of an entity. */
-    name: t.string,
-  }),
-});
-
-/** Type override */
-export type OneTrustGetRiskResponseCodec = t.TypeOf<
-  typeof OneTrustGetRiskResponseCodec
->;
-
-// TODO: do not move to privacy-types
-export const OneTrustEnrichedRiskCodec = t.intersection([
-  OneTrustAssessmentQuestionRiskCodec,
-  t.type({
-    description: OneTrustGetRiskResponseCodec.props.description,
-    name: OneTrustGetRiskResponseCodec.props.name,
-    treatment: OneTrustGetRiskResponseCodec.props.treatment,
-    treatmentStatus: OneTrustGetRiskResponseCodec.props.treatmentStatus,
-    type: OneTrustGetRiskResponseCodec.props.type,
-    stage: OneTrustGetRiskResponseCodec.props.stage,
-    state: OneTrustGetRiskResponseCodec.props.state,
-    result: OneTrustGetRiskResponseCodec.props.result,
-    categories: OneTrustGetRiskResponseCodec.props.categories,
+    description: OneTrustGetRiskResponse.props.description,
+    name: OneTrustGetRiskResponse.props.name,
+    treatment: OneTrustGetRiskResponse.props.treatment,
+    treatmentStatus: OneTrustGetRiskResponse.props.treatmentStatus,
+    type: OneTrustGetRiskResponse.props.type,
+    stage: OneTrustGetRiskResponse.props.stage,
+    state: OneTrustGetRiskResponse.props.state,
+    result: OneTrustGetRiskResponse.props.result,
+    categories: OneTrustGetRiskResponse.props.categories,
   }),
 ]);
 
 /** Type override */
-export type OneTrustEnrichedRiskCodec = t.TypeOf<
-  typeof OneTrustEnrichedRiskCodec
->;
+export type OneTrustEnrichedRisk = t.TypeOf<typeof OneTrustEnrichedRisk>;
 
-// TODO: do not move to privacy-types
-export const OneTrustEnrichedRisksCodec = t.union([
-  t.array(OneTrustEnrichedRiskCodec),
+export const OneTrustEnrichedRisks = t.union([
+  t.array(OneTrustEnrichedRisk),
   t.null,
 ]);
 /** Type override */
-export type OneTrustEnrichedRisksCodec = t.TypeOf<
-  typeof OneTrustEnrichedRisksCodec
->;
+export type OneTrustEnrichedRisks = t.TypeOf<typeof OneTrustEnrichedRisks>;
 
-// TODO: do not add to privacy-types
-export const OneTrustEnrichedAssessmentQuestionCodec = t.intersection([
+export const OneTrustEnrichedAssessmentQuestion = t.intersection([
   t.type({
-    ...OneTrustAssessmentQuestionCodec.types[0].props,
-    risks: OneTrustEnrichedRisksCodec,
+    ...OneTrustAssessmentQuestion.types[0].props,
+    risks: OneTrustEnrichedRisks,
   }),
-  t.partial({ ...OneTrustAssessmentQuestionCodec.types[1].props }),
+  t.partial({ ...OneTrustAssessmentQuestion.types[1].props }),
 ]);
 
 /** Type override */
-export type OneTrustEnrichedAssessmentQuestionCodec = t.TypeOf<
-  typeof OneTrustEnrichedAssessmentQuestionCodec
+export type OneTrustEnrichedAssessmentQuestion = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentQuestion
 >;
 
-// TODO: do not add to privacy-types
-export const OneTrustEnrichedAssessmentSectionCodec = t.type({
-  ...OneTrustAssessmentSectionCodec.props,
-  questions: t.array(OneTrustEnrichedAssessmentQuestionCodec),
+export const OneTrustEnrichedAssessmentSection = t.type({
+  ...OneTrustAssessmentSection.props,
+  questions: t.array(OneTrustEnrichedAssessmentQuestion),
 });
 /** Type override */
-export type OneTrustEnrichedAssessmentSectionCodec = t.TypeOf<
-  typeof OneTrustEnrichedAssessmentSectionCodec
+export type OneTrustEnrichedAssessmentSection = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentSection
 >;
 
-// TODO: do not add to privacy-types
-export const OneTrustEnrichedAssessmentResponseCodec = t.type({
-  ...OneTrustGetAssessmentResponseCodec.props,
-  sections: t.array(OneTrustEnrichedAssessmentSectionCodec),
+export const OneTrustEnrichedAssessmentResponse = t.type({
+  ...OneTrustGetAssessmentResponse.props,
+  sections: t.array(OneTrustEnrichedAssessmentSection),
 });
 /** Type override */
-export type OneTrustEnrichedAssessmentResponseCodec = t.TypeOf<
-  typeof OneTrustEnrichedAssessmentResponseCodec
+export type OneTrustEnrichedAssessmentResponse = t.TypeOf<
+  typeof OneTrustEnrichedAssessmentResponse
 >;
 
-// TODO: do not add to privacy-types
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { status, ...OneTrustAssessmentCodecWithoutStatus } =
-  OneTrustAssessmentCodec.props;
-export const OneTrustCombinedAssessmentCodec = t.intersection([
-  t.type(OneTrustAssessmentCodecWithoutStatus),
-  OneTrustEnrichedAssessmentResponseCodec,
+const { status, ...OneTrustAssessmentWithoutStatus } = OneTrustAssessment.props;
+export const OneTrustCombinedAssessment = t.intersection([
+  t.type(OneTrustAssessmentWithoutStatus),
+  OneTrustEnrichedAssessmentResponse,
 ]);
 
 /** Type override */
-export type OneTrustCombinedAssessmentCodec = t.TypeOf<
-  typeof OneTrustCombinedAssessmentCodec
+export type OneTrustCombinedAssessment = t.TypeOf<
+  typeof OneTrustCombinedAssessment
 >;
-
-/* eslint-enable max-lines */

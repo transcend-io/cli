@@ -1,10 +1,10 @@
 import { Got } from 'got';
 import { logger } from '../logger';
-import {
-  OneTrustAssessmentCodec,
-  OneTrustGetListOfAssessmentsResponseCodec,
-} from './codecs';
 import { decodeCodec } from '@transcend-io/type-utils';
+import {
+  OneTrustAssessment,
+  OneTrustGetListOfAssessmentsResponse,
+} from '@transcend-io/privacy-types';
 
 /**
  * Fetch a list of all assessments from the OneTrust client.
@@ -18,12 +18,12 @@ export const getListOfOneTrustAssessments = async ({
 }: {
   /** The OneTrust client instance */
   oneTrust: Got;
-}): Promise<OneTrustAssessmentCodec[]> => {
+}): Promise<OneTrustAssessment[]> => {
   let currentPage = 0;
   let totalPages = 1;
   let totalElements = 0;
 
-  const allAssessments: OneTrustAssessmentCodec[] = [];
+  const allAssessments: OneTrustAssessment[] = [];
 
   logger.info('Getting list of all assessments from OneTrust...');
   while (currentPage < totalPages) {
@@ -33,7 +33,7 @@ export const getListOfOneTrustAssessments = async ({
     );
 
     const { page, content } = decodeCodec(
-      OneTrustGetListOfAssessmentsResponseCodec,
+      OneTrustGetListOfAssessmentsResponse,
       body,
     );
     allAssessments.push(...(content ?? []));
