@@ -15,6 +15,7 @@ import {
   OneTrustEnrichedRiskCodec,
   OneTrustRiskCategories,
 } from './codecs';
+import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 // import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
 // TODO: will have to use something like csv-stringify
@@ -282,11 +283,17 @@ export const flattenOneTrustAssessment = (
     enrichCombinedAssessmentWithDefaults(combinedAssessment);
 
   const combinedAssessmentFlat = flatten(combinedAssessmentWithDefaults);
-  // const defaultAssessmentFlat = flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
+  const defaultAssessmentFlat = flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
 
-  // console.log({
-  //   defaultAssessmentFlat,
-  // });
+  // TODO: test that both have the same keys
+  const keysOne = Object.keys(combinedAssessmentFlat);
+  const keysTwo = Object.keys(defaultAssessmentFlat);
+
+  const keysInCombinedOnly = keysOne.filter((k) => !keysTwo.includes(k));
+
+  console.log({
+    keysInCombinedOnly,
+  });
   return combinedAssessmentFlat;
 };
 /**

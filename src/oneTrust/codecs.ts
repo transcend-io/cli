@@ -100,33 +100,40 @@ export type OneTrustGetListOfAssessmentsResponseCodec = t.TypeOf<
   typeof OneTrustGetListOfAssessmentsResponseCodec
 >;
 
-export const OneTrustAssessmentQuestionOptionCodec = t.type({
-  /** ID of the option. */
-  id: t.string,
-  /** Name of the option. */
-  option: t.string,
-  /** The key of the option */
-  optionKey: t.union([t.string, t.null]),
-  /** The hint */
-  hint: t.union([t.string, t.null]),
-  /** The hint key */
-  hintKey: t.union([t.string, t.null]),
-  /** The score */
-  score: t.union([t.number, t.null]),
-  /** If the option was pre-selected */
-  preSelectedOption: t.boolean,
-  /** Order in which the option appears. */
-  sequence: t.union([t.number, t.null]),
-  /** Attribute for which the option is available. */
-  attributes: t.union([t.string, t.null]),
-  /** Type of option. */
-  optionType: t.union([
-    t.literal('NOT_SURE'),
-    t.literal('NOT_APPLICABLE'),
-    t.literal('OTHERS'),
-    t.literal('DEFAULT'),
-  ]),
-});
+export const OneTrustAssessmentQuestionOptionCodec = t.intersection([
+  t.partial({
+    /** The translationIdentifier */
+    translationIdentifier: t.string,
+  }),
+  t.type({
+    /** ID of the option. */
+    id: t.string,
+    /** Name of the option. */
+    option: t.string,
+    /** The key of the option */
+    optionKey: t.union([t.string, t.null]),
+    /** The hint */
+    hint: t.union([t.string, t.null]),
+    /** The hint key */
+    hintKey: t.union([t.string, t.null]),
+    /** The score */
+    score: t.union([t.number, t.null]),
+    /** If the option was pre-selected */
+    preSelectedOption: t.boolean,
+    /** Order in which the option appears. */
+    sequence: t.union([t.number, t.null]),
+    /** Attribute for which the option is available. */
+    attributes: t.union([t.string, t.null]),
+    /** Type of option. */
+    optionType: t.union([
+      t.literal('NOT_SURE'),
+      t.literal('NOT_APPLICABLE'),
+      t.literal('OTHERS'),
+      t.literal('DEFAULT'),
+    ]),
+  }),
+]);
+
 /** Type override */
 export type OneTrustAssessmentQuestionOptionCodec = t.TypeOf<
   typeof OneTrustAssessmentQuestionOptionCodec
@@ -174,6 +181,18 @@ export const OneTrustAssessmentResponsesCodec = t.array(
       effectivenessScale: t.union([t.string, t.null]),
       /** The parentAssessmentDetailId */
       parentAssessmentDetailId: t.union([t.string, t.null]),
+      /** The display label */
+      displayLabel: t.string,
+      /** The type of the parent question */
+      parentQuestionType: t.string,
+      /** The ID of the parent response */
+      parentResponseId: t.string,
+      /** Whether it's local version */
+      isLocalVersion: t.string,
+      /** Whether relationshipDisplayInformation */
+      relationshipDisplayInformation: t.union([t.string, t.null]),
+      /** The lock reason */
+      lockReason: t.union([t.string, t.null]),
     }),
     t.type({
       /** The controlResponse */
@@ -188,6 +207,10 @@ export const OneTrustAssessmentResponsesCodec = t.array(
       responseId: t.string,
       /** Content of the response. */
       response: t.union([t.string, t.null]),
+      /** The response key */
+      responseKey: t.union([t.string, t.null]),
+      /** The response key */
+      contractResponse: t.union([t.string, t.null]),
       /** Type of response. */
       type: t.union([
         t.literal('NOT_SURE'),
@@ -431,6 +454,8 @@ export const OneTrustAssessmentQuestionCodec = t.intersection([
     responseFilter: t.union([t.string, t.null]),
     /** The linkAssessmentToResponseEntity */
     linkAssessmentToResponseEntity: t.boolean,
+    /** The translationIdentifier */
+    translationIdentifier: t.string,
     /** The readOnly */
     readOnly: t.boolean,
     /** The schema */
@@ -500,36 +525,43 @@ export type OneTrustAssessmentSectionHeaderRiskStatisticsCodec = t.TypeOf<
   typeof OneTrustAssessmentSectionHeaderRiskStatisticsCodec
 >;
 
-export const OneTrustAssessmentSectionHeaderCodec = t.type({
-  /** ID of the section in the assessment. */
-  sectionId: t.string,
-  /** Name of the section. */
-  name: t.string,
-  /** The status of the section */
-  status: t.union([t.string, t.null]),
-  /** The openNMIQuestionIds */
-  openNMIQuestionIds: t.union([t.string, t.null]),
-  /** Description of the section header. */
-  description: t.union([t.string, t.null]),
-  /** Sequence of the section within the form */
-  sequence: t.number,
-  /** Indicates whether the section is hidden in the assessment. */
-  hidden: t.boolean,
-  /** IDs of invalid questions in the section. */
-  invalidQuestionIds: t.array(t.string),
-  /** IDs of required but unanswered questions in the section. */
-  requiredUnansweredQuestionIds: t.array(t.string),
-  /** IDs of required questions in the section. */
-  requiredQuestionIds: t.array(t.string),
-  /** IDs of unanswered questions in the section. */
-  unansweredQuestionIds: t.array(t.string),
-  /** IDs of effectiveness questions in the section. */
-  effectivenessQuestionIds: t.array(t.string),
-  /** The risk statistics */
-  riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
-  /** Whether the section was submitted */
-  submitted: t.boolean,
-});
+export const OneTrustAssessmentSectionHeaderCodec = t.intersection([
+  t.type({
+    /** ID of the section in the assessment. */
+    sectionId: t.string,
+    /** Name of the section. */
+    name: t.string,
+    /** The status of the section */
+    status: t.union([t.string, t.null]),
+    /** The openNMIQuestionIds */
+    openNMIQuestionIds: t.union([t.string, t.null]),
+    /** Description of the section header. */
+    description: t.union([t.string, t.null]),
+    /** Sequence of the section within the form */
+    sequence: t.number,
+    /** Indicates whether the section is hidden in the assessment. */
+    hidden: t.boolean,
+    /** IDs of invalid questions in the section. */
+    invalidQuestionIds: t.array(t.string),
+    /** IDs of required but unanswered questions in the section. */
+    requiredUnansweredQuestionIds: t.array(t.string),
+    /** IDs of required questions in the section. */
+    requiredQuestionIds: t.array(t.string),
+    /** IDs of unanswered questions in the section. */
+    unansweredQuestionIds: t.array(t.string),
+    /** IDs of effectiveness questions in the section. */
+    effectivenessQuestionIds: t.array(t.string),
+    /** The risk statistics */
+    riskStatistics: OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
+    /** Whether the section was submitted */
+    submitted: t.boolean,
+  }),
+  t.partial({
+    /** The name key of the template */
+    nameKey: t.union([t.string, t.null]),
+  }),
+]);
+
 /** Type override */
 export type OneTrustAssessmentSectionHeaderCodec = t.TypeOf<
   typeof OneTrustAssessmentSectionHeaderCodec
@@ -538,22 +570,24 @@ export type OneTrustAssessmentSectionHeaderCodec = t.TypeOf<
 // TODO: do not add to privacy-types
 /** The OneTrustAssessmentSectionHeaderCodec without nested riskStatistics  */
 export const OneTrustAssessmentSectionFlatHeaderCodec = t.type({
-  sectionId: OneTrustAssessmentSectionHeaderCodec.props.sectionId,
-  name: OneTrustAssessmentSectionHeaderCodec.props.name,
-  description: OneTrustAssessmentSectionHeaderCodec.props.description,
-  sequence: OneTrustAssessmentSectionHeaderCodec.props.sequence,
-  hidden: OneTrustAssessmentSectionHeaderCodec.props.hidden,
+  sectionId: OneTrustAssessmentSectionHeaderCodec.types[0].props.sectionId,
+  name: OneTrustAssessmentSectionHeaderCodec.types[0].props.name,
+  description: OneTrustAssessmentSectionHeaderCodec.types[0].props.description,
+  sequence: OneTrustAssessmentSectionHeaderCodec.types[0].props.sequence,
+  hidden: OneTrustAssessmentSectionHeaderCodec.types[0].props.hidden,
   invalidQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.props.invalidQuestionIds,
+    OneTrustAssessmentSectionHeaderCodec.types[0].props.invalidQuestionIds,
   requiredUnansweredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.props.requiredUnansweredQuestionIds,
+    OneTrustAssessmentSectionHeaderCodec.types[0].props
+      .requiredUnansweredQuestionIds,
   requiredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.props.requiredQuestionIds,
+    OneTrustAssessmentSectionHeaderCodec.types[0].props.requiredQuestionIds,
   unansweredQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.props.unansweredQuestionIds,
+    OneTrustAssessmentSectionHeaderCodec.types[0].props.unansweredQuestionIds,
   effectivenessQuestionIds:
-    OneTrustAssessmentSectionHeaderCodec.props.effectivenessQuestionIds,
-  submitted: OneTrustAssessmentSectionHeaderCodec.props.submitted,
+    OneTrustAssessmentSectionHeaderCodec.types[0].props
+      .effectivenessQuestionIds,
+  submitted: OneTrustAssessmentSectionHeaderCodec.types[0].props.submitted,
 });
 /** Type override */
 export type OneTrustAssessmentSectionFlatHeaderCodec = t.TypeOf<
@@ -561,12 +595,18 @@ export type OneTrustAssessmentSectionFlatHeaderCodec = t.TypeOf<
 >;
 
 export const OneTrustAssessmentSectionSubmittedByCodec = t.union([
-  t.type({
-    /** The ID of the user who submitted the section */
-    id: t.string,
-    /** THe name or email of the user who submitted the section */
-    name: t.string,
-  }),
+  t.intersection([
+    t.type({
+      /** The ID of the user who submitted the section */
+      id: t.string,
+      /** THe name or email of the user who submitted the section */
+      name: t.string,
+    }),
+    t.partial({
+      /** The name key */
+      nameKey: t.union([t.string, t.null]),
+    }),
+  ]),
   t.null,
 ]);
 
@@ -882,14 +922,19 @@ const RiskLevelCodec = t.type({
 });
 
 export const OneTrustRiskCategories = t.array(
-  t.type({
-    /** Identifier for Risk Category. */
-    id: t.string,
-    /** Risk Category Name. */
-    name: t.string,
-    /** Risk Category Name Key value for translation. */
-    nameKey: t.string,
-  }),
+  t.intersection([
+    t.partial({
+      seeded: t.boolean,
+    }),
+    t.type({
+      /** Identifier for Risk Category. */
+      id: t.string,
+      /** Risk Category Name. */
+      name: t.string,
+      /** Risk Category Name Key value for translation. */
+      nameKey: t.string,
+    }),
+  ]),
 );
 /** Type override */
 export type OneTrustRiskCategories = t.TypeOf<typeof OneTrustRiskCategories>;
@@ -1041,14 +1086,22 @@ export const OneTrustGetRiskResponseCodec = t.type({
     ]),
   }),
   /** The risk stage */
-  stage: t.type({
-    /** ID of an entity. */
-    id: t.string,
-    /** Name of an entity. */
-    name: t.string,
-    /** Name Key of the entity for translation. */
-    nameKey: t.string,
-  }),
+  stage: t.intersection([
+    t.partial({
+      /** The currentStageApprovers */
+      currentStageApprovers: t.array(t.string),
+      /** The badgeColor */
+      badgeColor: t.union([t.string, t.null]),
+    }),
+    t.type({
+      /** ID of an entity. */
+      id: t.string,
+      /** Name of an entity. */
+      name: t.string,
+      /** Name Key of the entity for translation. */
+      nameKey: t.string,
+    }),
+  ]),
   /** The risk state */
   state: t.union([
     t.literal('IDENTIFIED'),
@@ -1158,10 +1211,14 @@ export type OneTrustEnrichedRisksCodec = t.TypeOf<
 >;
 
 // TODO: do not add to privacy-types
-export const OneTrustEnrichedAssessmentQuestionCodec = t.type({
-  ...OneTrustAssessmentQuestionCodec.types[0].props,
-  risks: OneTrustEnrichedRisksCodec,
-});
+export const OneTrustEnrichedAssessmentQuestionCodec = t.intersection([
+  t.type({
+    ...OneTrustAssessmentQuestionCodec.types[0].props,
+    risks: OneTrustEnrichedRisksCodec,
+  }),
+  t.partial({ ...OneTrustAssessmentQuestionCodec.types[1].props }),
+]);
+
 /** Type override */
 export type OneTrustEnrichedAssessmentQuestionCodec = t.TypeOf<
   typeof OneTrustEnrichedAssessmentQuestionCodec
