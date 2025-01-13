@@ -3,6 +3,7 @@
 import * as t from 'io-ts';
 
 /**
+ * // TODO: import from type-utils
  *  Creates a default value for an io-ts codec.
  *
  * @param codec - the codec whose default we want to create
