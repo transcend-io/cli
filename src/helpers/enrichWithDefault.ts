@@ -7,6 +7,7 @@ import {
   OneTrustAssessmentResponsesCodec,
   OneTrustAssessmentSectionHeaderRiskStatisticsCodec,
   OneTrustAssessmentSectionSubmittedByCodec,
+  OneTrustCombinedAssessmentCodec,
   OneTrustEnrichedAssessmentSectionCodec,
   OneTrustEnrichedRiskCodec,
   OneTrustEnrichedRisksCodec,
@@ -57,7 +58,7 @@ const enrichRiskStatisticsWithDefault = (
     : riskStatistics;
 
 // TODO: test the shit out of this
-export const enrichSectionsWithDefault = (
+const enrichSectionsWithDefault = (
   sections: OneTrustEnrichedAssessmentSectionCodec[],
 ): OneTrustEnrichedAssessmentSectionCodec[] =>
   sections.map((s) => ({
@@ -80,9 +81,19 @@ export const enrichSectionsWithDefault = (
         : s.submittedBy,
   }));
 
-export const enrichPrimaryEntityDetailsWithDefault = (
+const enrichPrimaryEntityDetailsWithDefault = (
   primaryEntityDetails: OneTrustPrimaryEntityDetailsCodec,
 ): OneTrustPrimaryEntityDetailsCodec =>
   primaryEntityDetails.length === 0
     ? createDefaultCodec(OneTrustPrimaryEntityDetailsCodec)
     : primaryEntityDetails;
+
+export const enrichCombinedAssessmentWithDefaults = (
+  combinedAssessment: OneTrustCombinedAssessmentCodec,
+): OneTrustCombinedAssessmentCodec => ({
+  ...combinedAssessment,
+  primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
+    combinedAssessment.primaryEntityDetails,
+  ),
+  sections: enrichSectionsWithDefault(combinedAssessment.sections),
+});

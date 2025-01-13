@@ -105,6 +105,16 @@ export const OneTrustAssessmentQuestionOptionCodec = t.type({
   id: t.string,
   /** Name of the option. */
   option: t.string,
+  /** The key of the option */
+  optionKey: t.union([t.string, t.null]),
+  /** The hint */
+  hint: t.union([t.string, t.null]),
+  /** The hint key */
+  hintKey: t.union([t.string, t.null]),
+  /** The score */
+  score: t.union([t.number, t.null]),
+  /** If the option was pre-selected */
+  preSelectedOption: t.boolean,
   /** Order in which the option appears. */
   sequence: t.union([t.number, t.null]),
   /** Attribute for which the option is available. */
@@ -157,6 +167,20 @@ export type OneTrustAssessmentQuestionRisksCodec = t.TypeOf<
 
 export const OneTrustAssessmentResponsesCodec = t.array(
   t.type({
+    /** The controlResponse */
+    controlResponse: t.union([t.string, t.null]),
+    /** The relationshipResponseDetails */
+    relationshipResponseDetails: t.array(t.string),
+    /** The textRedacted */
+    textRedacted: t.boolean,
+    /** The maturityScale */
+    maturityScale: t.union([t.string, t.null]),
+    /** The effectivenessScale */
+    effectivenessScale: t.union([t.string, t.null]),
+    /** The parentAssessmentDetailId */
+    parentAssessmentDetailId: t.union([t.string, t.null]),
+    /** The responseMap */
+    responseMap: t.object,
     /** ID of the response. */
     responseId: t.string,
     /** Content of the response. */
@@ -185,8 +209,6 @@ export const OneTrustAssessmentResponsesCodec = t.array(
       t.literal('DUPLICATE_INVENTORY'),
       t.null,
     ]),
-    /** This parameter is only applicable for inventory type responses (Example- ASSETS). */
-    responseMap: t.object,
     /** Indicates whether the response is valid. */
     valid: t.boolean,
     /** The data subject */
@@ -218,8 +240,10 @@ export const OneTrustAssessmentResponsesCodec = t.array(
       t.type({
         /** The ID of the data element */
         id: t.union([t.string, t.null]),
-        /** The ID of the data element */
+        /** The name of the data element */
         name: t.union([t.string, t.null]),
+        /** The name key of the data element */
+        nameKey: t.union([t.string, t.null]),
       }),
       t.null,
     ]),
@@ -374,6 +398,56 @@ export const OneTrustAssessmentQuestionCodec = t.type({
   totalAttachments: t.number,
   /** IDs of the attachment(s) added to the question. */
   attachmentIds: t.array(t.string),
+  /** The canReopenWithAllowEditOption */
+  canReopenWithAllowEditOption: t.boolean,
+  /** The riskCreationAllowed */
+  riskCreationAllowed: t.boolean,
+  /** The riskDeletionPopupAllowed */
+  riskDeletionPopupAllowed: t.boolean,
+  /** The allowMaturityScaleOnQuestions */
+  allowMaturityScaleOnQuestions: t.boolean,
+  /** The questionAssociations */
+  questionAssociations: t.union([t.string, t.null]),
+  /** The issues */
+  issues: t.union([t.string, t.null]),
+  /** The responseEditableWhileUnderReview */
+  responseEditableWhileUnderReview: t.boolean,
+  /** The businessKeyReference */
+  businessKeyReference: t.union([t.string, t.null]),
+  /** The topic */
+  topic: t.union([t.string, t.null]),
+  /** The questionLaws */
+  questionLaws: t.array(t.string),
+  /** The attachmentRequired */
+  attachmentRequired: t.boolean,
+  /** The responseFilter */
+  responseFilter: t.union([t.string, t.null]),
+  /** The linkAssessmentToResponseEntity */
+  linkAssessmentToResponseEntity: t.boolean,
+  /** The readOnly */
+  readOnly: t.boolean,
+  /** The schema */
+  schema: t.union([t.string, t.null]),
+  /** The attributeId */
+  attributeId: t.string,
+  /** Whether it is a vendor question */
+  vendorQuestion: t.boolean,
+  /** Whether the question was seeded */
+  seeded: t.boolean,
+  /** Whether the question allows justification */
+  allowJustification: t.boolean,
+  /** Whether it refers to an asset question */
+  assetQuestion: t.boolean,
+  /** Whether it refers to an entity question */
+  entityQuestion: t.boolean,
+  /** Whether it is a paquestion */
+  paquestion: t.boolean,
+  /** The inventoryTypeEnum */
+  inventoryTypeEnum: t.union([t.string, t.null]),
+  /** Whether it is a forceOther */
+  forceOther: t.boolean,
+  /** Whether it is a isParentQuestionMultiSelect */
+  isParentQuestionMultiSelect: t.boolean,
 });
 
 /** Type override */
@@ -421,6 +495,10 @@ export const OneTrustAssessmentSectionHeaderCodec = t.type({
   sectionId: t.string,
   /** Name of the section. */
   name: t.string,
+  /** The status of the section */
+  status: t.union([t.string, t.null]),
+  /** The openNMIQuestionIds */
+  openNMIQuestionIds: t.union([t.string, t.null]),
   /** Description of the section header. */
   description: t.union([t.string, t.null]),
   /** Sequence of the section within the form */
@@ -556,6 +634,8 @@ export const OneTrustApproverCodec = t.type({
     email: t.union([t.string, t.null]),
     /** Whether the user assigned as an approver was deleted. */
     deleted: t.boolean,
+    /** The assignee type */
+    assigneeType: t.union([t.string, t.null]),
   }),
   /** Assessment approval status. */
   approvalState: t.union([
@@ -604,6 +684,10 @@ export const OneTrustPrimaryEntityDetailsCodec = t.array(
     number: t.number,
     /** Name and number of the primary record. */
     displayName: t.string,
+    /** The relationshipResponseDetails */
+    relationshipResponseDetails: t.union([t.string, t.null]),
+    /** The entity business key */
+    entityBusinessKey: t.union([t.string, t.null]),
   }),
 );
 /** Type override */
@@ -629,6 +713,8 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     id: t.string,
     /** The name of the creator */
     name: t.string,
+    /** The name key of the template */
+    nameKey: t.union([t.string, t.null]),
   }),
   /** Date and time at which the assessment was created. */
   createdDT: t.string,
@@ -656,6 +742,8 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     id: t.string,
     /** The name of the organization group */
     name: t.string,
+    /** The name key of the template */
+    nameKey: t.union([t.string, t.null]),
   }),
   /** The primary record */
   primaryEntityDetails: OneTrustPrimaryEntityDetailsCodec,
@@ -686,6 +774,8 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
       id: t.string,
       /** The name or email of the respondent */
       name: t.string,
+      /** The name key of the template */
+      nameKey: t.union([t.string, t.null]),
     }),
   ),
   /** Result of the assessment. */
@@ -723,6 +813,8 @@ export const OneTrustGetAssessmentResponseCodec = t.type({
     id: t.string,
     /** The name of the template */
     name: t.string,
+    /** The name key of the template */
+    nameKey: t.union([t.string, t.null]),
   }),
   /** Number of total risks on the assessment. */
   totalRiskCount: t.number,
@@ -857,6 +949,8 @@ export const OneTrustGetRiskResponseCodec = t.type({
     id: t.string,
     /** Name of an entity. */
     name: t.string,
+    /** The name key of the template */
+    nameKey: t.union([t.string, t.null]),
   }),
   /** The previous risk state */
   previousState: t.union([

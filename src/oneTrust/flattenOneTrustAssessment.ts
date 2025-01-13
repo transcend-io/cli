@@ -1,8 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  enrichPrimaryEntityDetailsWithDefault,
-  enrichSectionsWithDefault,
+  enrichCombinedAssessmentWithDefaults,
   extractProperties,
 } from '../helpers';
 import {
@@ -16,7 +15,7 @@ import {
   OneTrustEnrichedRiskCodec,
   OneTrustRiskCategories,
 } from './codecs';
-import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
+// import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
 // TODO: will have to use something like csv-stringify
 
@@ -247,15 +246,6 @@ export const flattenOneTrustAssessment = (
    * assessment will always have the same fields!
    */
 
-  // add default values to assessments
-  const assessmentWithDefaults = {
-    ...combinedAssessment,
-    primaryEntityDetails: enrichPrimaryEntityDetailsWithDefault(
-      combinedAssessment.primaryEntityDetails,
-    ),
-    sections: enrichSectionsWithDefault(combinedAssessment.sections),
-  };
-
   const flatten = (assessment: OneTrustCombinedAssessmentCodec): any => {
     const {
       approvers,
@@ -287,9 +277,14 @@ export const flattenOneTrustAssessment = (
     };
   };
 
-  flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
+  // add default values to assessments
+  const combinedAssessmentWithDefaults =
+    enrichCombinedAssessmentWithDefaults(combinedAssessment);
 
-  return flatten(assessmentWithDefaults);
+  const combinedAssessmentFlat = flatten(combinedAssessmentWithDefaults);
+  // const defaultAssessmentFlat = flatten(DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT);
+
+  return combinedAssessmentFlat;
 };
 /**
  *
