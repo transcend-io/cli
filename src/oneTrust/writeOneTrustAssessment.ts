@@ -9,7 +9,7 @@ import {
 } from './codecs';
 import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
-import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_KEYS } from './constants';
+import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -96,23 +96,24 @@ export const writeOneTrustAssessment = ({
       fs.writeFileSync(file, '[\n');
     }
 
-    // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
+    const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
 
-    // // Add comma for all items except the last one
-    // const comma = index < total - 1 ? ',' : '';
+    // Add comma for all items except the last one
+    const comma = index < total - 1 ? ',' : '';
 
-    // // write to file
-    // fs.appendFileSync(file, stringifiedAssessment + comma);
+    // write to file
+    fs.appendFileSync(file, stringifiedAssessment + comma);
 
-    // // end with closing bracket
-    // if (index === total - 1) {
-    //   fs.appendFileSync(file, ']');
-    // }
+    // end with closing bracket
+    if (index === total - 1) {
+      fs.appendFileSync(file, ']');
+    }
   } else if (fileFormat === OneTrustFileFormat.Csv) {
-    // flatten the json object
-    // start with an opening bracket
+    const csvRows = [];
+
+    // write csv header at the beginning of the file
     if (index === 0) {
-      fs.writeFileSync('./oneTrust.json', '[\n');
+      csvRows.push(DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER.join(','));
     }
 
     // flatten the assessment object so it does not have nested properties
@@ -122,29 +123,21 @@ export const writeOneTrustAssessment = ({
     });
 
     // transform the flat assessment to have all CSV keys in the expected order
-    const flatAssessmentWithCsvKeys =
-      DEFAULT_ONE_TRUST_ASSESSMENT_CSV_KEYS.reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: flatAssessment[key] ?? '',
-        }),
-        {},
-      );
-    const csvEntry = JSON.stringify(flatAssessmentWithCsvKeys, null, 2);
+    const assessmentRow = DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER.map(
+      (header) => {
+        const value = flatAssessment[header] ?? '';
+        // Escape values containing commas or quotes
+        return typeof value === 'string' &&
+          (value.includes(',') || value.includes('"'))
+          ? `"${value.replace(/"/g, '""')}"`
+          : value;
+      },
+    );
 
-    // const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
+    // append the rows to the file
+    csvRows.push(`${assessmentRow.join(',')}\n`);
+    fs.appendFileSync('./oneTrust.csv', csvRows.join('\n'));
 
-    // Add comma for all items except the last one
-    const comma = index < total - 1 ? ',' : '';
-
-    // TODO: might be better not to convert it to CSV at all! The importOneTrustAssessments does not actually accept CSV.
-    // write to file
-    // fs.appendFileSync(file, stringifiedAssessment + comma);
-    fs.appendFileSync('./oneTrust.json', csvEntry + comma);
-
-    // end with closing bracket
-    if (index === total - 1) {
-      fs.appendFileSync('./oneTrust.json', ']');
-    }
+    // TODO: consider not to convert it to CSV at all! The importOneTrustAssessments does not actually accept CSV.
   }
 };

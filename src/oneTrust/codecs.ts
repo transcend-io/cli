@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import * as t from 'io-ts';
 
-// TODO: move all to privacy-types
+// TODO: move to privacy-types
 
 export const OneTrustAssessmentCodec = t.type({
   /** ID of the assessment. */
