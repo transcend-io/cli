@@ -11,10 +11,10 @@ import { buildTranscendGraphQLClient } from './graphql';
  * Pull configuration from OneTrust down locally to disk
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
+ * yarn ts-node ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
  *
  * Standard usage
- * yarn cli-sync-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
+ * yarn cli-sync-ot --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
  */
 async function main(): Promise<void> {
   const {
