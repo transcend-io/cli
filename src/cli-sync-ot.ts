@@ -22,10 +22,10 @@ import {
  * Pull configuration from OneTrust down locally to disk
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-ot.ts --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
+ * yarn ts-node ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  *
  * Standard usage
- * yarn cli-pull-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
+ * yarn cli-sync-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  */
 async function main(): Promise<void> {
   const { file, fileFormat, hostname, auth, resource } =

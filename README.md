@@ -147,7 +147,7 @@
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
-  - [tr-pull-ot](#tr-pull-ot)
+  - [tr-sync-ot](#tr-sync-ot)
     - [Authentication](#authentication-35)
     - [Arguments](#arguments-34)
     - [Usage](#usage-35)
@@ -176,7 +176,7 @@ yarn add -D @transcend-io/cli
 
 # cli commands available within package
 yarn tr-pull --auth=$TRANSCEND_API_KEY
-yarn tr-pull-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=$ONE_TRUST_HOSTNAME --file=$ONE_TRUST_OUTPUT_FILE
+yarn tr-sync-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=$ONE_TRUST_HOSTNAME --file=$ONE_TRUST_OUTPUT_FILE
 yarn tr-push --auth=$TRANSCEND_API_KEY
 yarn tr-scan-packages --auth=$TRANSCEND_API_KEY
 yarn tr-discover-silos --auth=$TRANSCEND_API_KEY
@@ -217,7 +217,7 @@ npm i -D @transcend-io/cli
 
 # cli commands available within package
 tr-pull --auth=$TRANSCEND_API_KEY
-tr-pull-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=$ONE_TRUST_HOSTNAME --file=$ONE_TRUST_OUTPUT_FILE
+tr-sync-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=$ONE_TRUST_HOSTNAME --file=$ONE_TRUST_OUTPUT_FILE
 tr-push --auth=$TRANSCEND_API_KEY
 tr-scan-packages --auth=$TRANSCEND_API_KEY
 tr-discover-silos --auth=$TRANSCEND_API_KEY
@@ -577,9 +577,9 @@ tr-pull --auth=./transcend-api-keys.json --resources=consentManager --file=./tra
 
 Note: This command will overwrite the existing transcend.yml file that you have locally.
 
-### tr-pull-ot
+### tr-sync-ot
 
-Pulls resources from a OneTrust instance. For now, it only supports retrieving OneTrust Assessments. It sends a request to the [Get List of Assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget) endpoint to fetch a list of all Assessments in your account. Then, it queries the [Get Assessment](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget) and [Get Risk](https://developer.onetrust.com/onetrust/reference/getriskusingget) endpoints to enrich these assessments with more details such as respondents, approvers, assessment questions and responses, and assessment risks. Finally, it syncs the enriched resources to disk in the specified file and format.
+Pulls resources from a OneTrust and syncs them to a Transcend instance. For now, it only supports retrieving OneTrust Assessments. It sends a request to the [Get List of Assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget) endpoint to fetch a list of all Assessments in your account. Then, it queries the [Get Assessment](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget) and [Get Risk](https://developer.onetrust.com/onetrust/reference/getriskusingget) endpoints to enrich these assessments with more details such as respondents, approvers, assessment questions and responses, and assessment risks. Finally, it syncs the enriched resources to disk in the specified file and format.
 
 This command can be helpful if you are looking to:
 
@@ -603,7 +603,7 @@ To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer
 | auth       | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string  | N/A         | true     |
 | hostname   | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string  | N/A         | true     |
 | file       | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string  | N/A         | true     |
-| fileFormat | The format of the output file.                                                                    | string  | csv        | false    |
+| fileFormat | The format of the output file.                                                                    | string  | csv         | false    |
 | resource   | The resource to pull from OneTrust. For now, only assessments is supported.                       | string  | assessments | false    |
 | debug      | Whether to print detailed logs in case of error.                                                  | boolean | false       | false    |
 
@@ -611,7 +611,7 @@ To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer
 
 ```sh
 # Writes out file to ./oneTrustAssessments.json
-tr-pull-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=trial.onetrust.com --file=./oneTrustAssessments.json
+tr-sync-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=trial.onetrust.com --file=./oneTrustAssessments.json
 ```
 
 ### tr-push
