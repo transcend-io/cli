@@ -28,75 +28,75 @@ import {
  * yarn cli-pull-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  */
 async function main(): Promise<void> {
-  const { file, fileFormat, hostname, auth, resource, debug } =
+  const { file, fileFormat, hostname, auth, resource } =
     parseCliPullOtArguments();
 
-  try {
-    // TODO: move to helper function
-    if (resource === OneTrustPullResource.Assessments) {
-      // use the hostname and auth token to instantiate a client to talk to OneTrust
-      const oneTrust = createOneTrustGotInstance({ hostname, auth });
+  // try {
+  // TODO: move to helper function
+  if (resource === OneTrustPullResource.Assessments) {
+    // use the hostname and auth token to instantiate a client to talk to OneTrust
+    const oneTrust = createOneTrustGotInstance({ hostname, auth });
 
-      // fetch the list of all assessments in the OneTrust organization
-      const assessments = await getListOfOneTrustAssessments({ oneTrust });
+    // fetch the list of all assessments in the OneTrust organization
+    const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
-      // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
-      await mapSeries(assessments, async (assessment, index) => {
-        logger.info(
-          `Fetching details about assessment ${index + 1} of ${
-            assessments.length
-          }...`,
-        );
-        const assessmentDetails = await getOneTrustAssessment({
-          oneTrust,
-          assessmentId: assessment.assessmentId,
-        });
-
-        // enrich assessments with risk information
-        let riskDetails: OneTrustGetRiskResponse[] = [];
-        const riskIds = uniq(
-          assessmentDetails.sections.flatMap((s: OneTrustAssessmentSection) =>
-            s.questions.flatMap((q: OneTrustAssessmentQuestion) =>
-              (q.risks ?? []).flatMap((r) => r.riskId),
-            ),
-          ),
-        );
-        if (riskIds.length > 0) {
-          logger.info(
-            `Fetching details about ${riskIds.length} risks for assessment ${
-              index + 1
-            } of ${assessments.length}...`,
-          );
-          riskDetails = await map(
-            riskIds,
-            (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId as string }),
-            {
-              concurrency: 5,
-            },
-          );
-        }
-
-        writeOneTrustAssessment({
-          assessment,
-          assessmentDetails,
-          riskDetails,
-          index,
-          total: assessments.length,
-          file,
-          fileFormat,
-        });
+    // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
+    await mapSeries(assessments, async (assessment, index) => {
+      logger.info(
+        `Fetching details about assessment ${index + 1} of ${
+          assessments.length
+        }...`,
+      );
+      const assessmentDetails = await getOneTrustAssessment({
+        oneTrust,
+        assessmentId: assessment.assessmentId,
       });
-    }
-  } catch (err) {
-    logger.error(
-      colors.red(
-        `An error occurred pulling the resource ${resource} from OneTrust: ${
-          debug ? err.stack : err.message
-        }`,
-      ),
-    );
-    process.exit(1);
+
+      // enrich assessments with risk information
+      let riskDetails: OneTrustGetRiskResponse[] = [];
+      const riskIds = uniq(
+        assessmentDetails.sections.flatMap((s: OneTrustAssessmentSection) =>
+          s.questions.flatMap((q: OneTrustAssessmentQuestion) =>
+            (q.risks ?? []).flatMap((r) => r.riskId),
+          ),
+        ),
+      );
+      if (riskIds.length > 0) {
+        logger.info(
+          `Fetching details about ${riskIds.length} risks for assessment ${
+            index + 1
+          } of ${assessments.length}...`,
+        );
+        riskDetails = await map(
+          riskIds,
+          (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId as string }),
+          {
+            concurrency: 5,
+          },
+        );
+      }
+
+      writeOneTrustAssessment({
+        assessment,
+        assessmentDetails,
+        riskDetails,
+        index,
+        total: assessments.length,
+        file,
+        fileFormat,
+      });
+    });
   }
+  // } catch (err) {
+  //   logger.error(
+  //     colors.red(
+  //       `An error occurred pulling the resource ${resource} from OneTrust: ${
+  //         debug ? err.stack : err.message
+  //       }`,
+  //     ),
+  //   );
+  //   process.exit(1);
+  // }
 
   // Indicate success
   logger.info(

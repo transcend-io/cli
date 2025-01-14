@@ -7,10 +7,7 @@ import {
   OneTrustAssessmentSectionHeader,
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
-import {
-  enrichCombinedAssessmentWithDefaults,
-  extractProperties,
-} from '../helpers';
+import { extractProperties } from '../helpers';
 import {
   OneTrustCombinedAssessment,
   OneTrustEnrichedAssessmentQuestion,
@@ -23,7 +20,7 @@ import {
 
 // TODO: test what happens when a value is null -> it should convert to ''
 const flattenObject = (obj: any, prefix = ''): any =>
-  Object.keys(obj).reduce((acc, key) => {
+  Object.keys(obj ?? []).reduce((acc, key) => {
     const newKey = prefix ? `${prefix}_${key}` : key;
 
     const entry = obj[key];
@@ -132,7 +129,7 @@ const flattenOneTrustRiskCategories = (
   allCategories: OneTrustRiskCategories[],
   prefix: string,
 ): any => {
-  const allCategoriesFlat = allCategories.map((categories) => {
+  const allCategoriesFlat = (allCategories ?? []).map((categories) => {
     const flatCategories = categories.map((c) => flattenObject(c, prefix));
     return aggregateObjects({ objs: flatCategories });
   });
@@ -144,12 +141,12 @@ const flattenOneTrustRisks = (
   prefix: string,
 ): any => {
   // TODO: extract categories and other nested properties
-  const allRisksFlat = allRisks.map((risks) => {
+  const allRisksFlat = (allRisks ?? []).map((risks) => {
     const { categories, rest: restRisks } = extractProperties(risks ?? [], [
       'categories',
     ]);
 
-    const flatRisks = restRisks.map((r) => flattenObject(r, prefix));
+    const flatRisks = (restRisks ?? []).map((r) => flattenObject(r, prefix));
     return {
       ...aggregateObjects({ objs: flatRisks }),
       ...flattenOneTrustRiskCategories(categories, `${prefix}_categories`),
@@ -243,10 +240,6 @@ const flattenOneTrustSections = (
 export const flattenOneTrustAssessment = (
   combinedAssessment: OneTrustCombinedAssessment,
 ): Record<string, string> => {
-  // add default values to assessments
-  const combinedAssessmentWithDefaults =
-    enrichCombinedAssessmentWithDefaults(combinedAssessment);
-
   const {
     approvers,
     primaryEntityDetails,
@@ -255,7 +248,7 @@ export const flattenOneTrustAssessment = (
     respondent,
     sections,
     ...rest
-  } = combinedAssessmentWithDefaults;
+  } = combinedAssessment;
 
   // TODO: extract approver from approvers, otherwise it won't agree with the codec
   const flatApprovers = approvers.map((approver) =>

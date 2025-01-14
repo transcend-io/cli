@@ -137,7 +137,6 @@ export const writeOneTrustAssessment = ({
       }),
     );
 
-    // TODO: import from privacy-types
     // ensure the record has the expected type!
     decodeCodec(OneTrustAssessmentCsvRecord, flatAssessmentFull);
 
@@ -147,7 +146,5 @@ export const writeOneTrustAssessment = ({
     // append the rows to the file
     csvRows.push(`${assessmentRow.join(',')}\n`);
     fs.appendFileSync('./oneTrust.csv', csvRows.join('\n'));
-
-    // TODO: consider not to convert it to CSV at all! The importOneTrustAssessments does not actually accept CSV.
   }
 };
