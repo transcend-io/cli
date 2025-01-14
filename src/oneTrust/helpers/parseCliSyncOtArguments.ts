@@ -40,6 +40,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     fileFormat,
     dryRun,
     transcendAuth,
+    transcendUrl,
   } = yargs(process.argv.slice(2), {
     string: [
       'file',
@@ -49,6 +50,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       'fileFormat',
       'dryRun',
       'transcendAuth',
+      'transcendUrl',
     ],
     boolean: ['debug', 'dryRun'],
     default: {
@@ -56,15 +58,25 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       fileFormat: OneTrustFileFormat.Csv,
       debug: false,
       dryRun: false,
+      transcendUrl: 'https://api.transcend.io',
     },
   });
 
-  // Can only sync to Transcend via a CSV file format!
+  // Must be able to authenticate to transcend to sync resources to it
   if (!dryRun && !transcendAuth) {
     logger.error(
       colors.red(
         // eslint-disable-next-line no-template-curly-in-string
         'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
+      ),
+    );
+    return process.exit(1);
+  }
+  if (!dryRun && !transcendUrl) {
+    logger.error(
+      colors.red(
+        // eslint-disable-next-line max-len
+        'Must specify a "transcendUrl" parameter to sync resources to Transcend. e.g. --transcendUrl=https://api.transcend.io',
       ),
     );
     return process.exit(1);
