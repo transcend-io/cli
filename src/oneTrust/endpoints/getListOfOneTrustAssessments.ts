@@ -1,5 +1,5 @@
 import { Got } from 'got';
-import { logger } from '../logger';
+import { logger } from '../../logger';
 import { decodeCodec } from '@transcend-io/type-utils';
 import {
   OneTrustAssessment,

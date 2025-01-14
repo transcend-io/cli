@@ -1,12 +1,12 @@
-import { logger } from '../logger';
+import { logger } from '../../logger';
 import colors from 'colors';
-import { OneTrustFileFormat } from '../enums';
+import { OneTrustFileFormat } from '../../enums';
 import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
-import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
+import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from '../constants';
 import { decodeCodec } from '@transcend-io/type-utils';
 import { OneTrustAssessmentCsvRecord } from '@transcend-io/privacy-types';
-import { OneTrustEnrichedAssessment } from './codecs';
+import { OneTrustEnrichedAssessment } from '../codecs';
 
 /**
  * Write the assessment to disk at the specified file path.

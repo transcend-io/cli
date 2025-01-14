@@ -7,13 +7,13 @@ import {
   OneTrustAssessmentSectionHeader,
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
-import { extractProperties } from '../helpers';
+import { extractProperties } from '../../helpers';
 import {
   OneTrustEnrichedAssessment,
   OneTrustEnrichedAssessmentQuestion,
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
-} from './codecs';
+} from '../codecs';
 // import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
 // TODO: will have to use something like csv-stringify

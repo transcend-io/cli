@@ -1,7 +1,7 @@
-import { logger } from '../logger';
+import { logger } from '../../logger';
 import colors from 'colors';
 import yargs from 'yargs-parser';
-import { OneTrustFileFormat, OneTrustPullResource } from '../enums';
+import { OneTrustFileFormat, OneTrustPullResource } from '../../enums';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
