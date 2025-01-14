@@ -5,11 +5,8 @@ import fs from 'fs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
 import { decodeCodec } from '@transcend-io/type-utils';
-import {
-  OneTrustAssessmentCsvRecord,
-  OneTrustGetRiskResponse,
-} from '@transcend-io/privacy-types';
-import { OneTrustCombinedAssessment } from './codecs';
+import { OneTrustAssessmentCsvRecord } from '@transcend-io/privacy-types';
+import { OneTrustEnrichedAssessment } from './codecs';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -29,9 +26,7 @@ export const writeOneTrustAssessment = ({
   /** The format of the output file */
   fileFormat: OneTrustFileFormat;
   /** The basic assessment */
-  assessment: OneTrustCombinedAssessment;
-  /** The details of risks found within the assessment */
-  riskDetails: OneTrustGetRiskResponse[];
+  assessment: OneTrustEnrichedAssessment;
   /** The index of the assessment being written to the file */
   index: number;
   /** The total amount of assessments that we will write */

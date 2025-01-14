@@ -42,7 +42,10 @@ async function main(): Promise<void> {
       // fetch the list of all assessments in the OneTrust organization
       const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
-      // fetch details about one assessment at a time and sync to disk right away to avoid running out of memory
+      /**
+       * fetch details about one assessment in series and push to transcend or write to disk
+       * (depending on the dryRun argument) right away to avoid running out of memory
+       */
       await mapSeries(assessments, async (assessment, index) => {
         logger.info(
           `Fetching details about assessment ${index + 1} of ${
@@ -78,10 +81,11 @@ async function main(): Promise<void> {
           );
         }
 
+        // TODO: create a helper for this
         // enrich the sections with risk details
         const riskDetailsById = keyBy(riskDetails, 'id');
         const { sections, ...restAssessmentDetails } = assessmentDetails;
-        const enrichedSections = sections.map((section) => {
+        const sectionsWithEnrichedRisk = sections.map((section) => {
           const { questions, ...restSection } = section;
           const enrichedQuestions = questions.map((question) => {
             const { risks, ...restQuestion } = question;
@@ -113,17 +117,16 @@ async function main(): Promise<void> {
         });
 
         // combine the two assessments into a single enriched result
-        const enrichedAssessment = {
+        const assessmentWithEnrichedRisk = {
           ...restAssessmentDetails,
-          sections: enrichedSections,
+          sections: sectionsWithEnrichedRisk,
         };
 
         writeOneTrustAssessment({
           assessment: {
             ...assessment,
-            ...enrichedAssessment,
+            ...assessmentWithEnrichedRisk,
           },
-          riskDetails,
           index,
           total: assessments.length,
           file,

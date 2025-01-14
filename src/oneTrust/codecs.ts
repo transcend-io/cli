@@ -159,12 +159,12 @@ export type OneTrustEnrichedAssessmentResponse = t.TypeOf<
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { status, ...OneTrustAssessmentWithoutStatus } = OneTrustAssessment.props;
-export const OneTrustCombinedAssessment = t.intersection([
+export const OneTrustEnrichedAssessment = t.intersection([
   t.type(OneTrustAssessmentWithoutStatus),
   OneTrustEnrichedAssessmentResponse,
 ]);
 
 /** Type override */
-export type OneTrustCombinedAssessment = t.TypeOf<
-  typeof OneTrustCombinedAssessment
+export type OneTrustEnrichedAssessment = t.TypeOf<
+  typeof OneTrustEnrichedAssessment
 >;

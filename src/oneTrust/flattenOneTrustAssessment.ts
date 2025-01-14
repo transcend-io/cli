@@ -9,7 +9,7 @@ import {
 } from '@transcend-io/privacy-types';
 import { extractProperties } from '../helpers';
 import {
-  OneTrustCombinedAssessment,
+  OneTrustEnrichedAssessment,
   OneTrustEnrichedAssessmentQuestion,
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
@@ -238,7 +238,7 @@ const flattenOneTrustSections = (
 
 // TODO: update type to be a Record<OneTrustAssessmentCsvHeader, string>
 export const flattenOneTrustAssessment = (
-  combinedAssessment: OneTrustCombinedAssessment,
+  combinedAssessment: OneTrustEnrichedAssessment,
 ): Record<string, string> => {
   const {
     approvers,
