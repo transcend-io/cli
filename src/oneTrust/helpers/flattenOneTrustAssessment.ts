@@ -15,7 +15,34 @@ import {
   OneTrustEnrichedRisk,
 } from '../codecs';
 
-// FIXME: move to @transcend/type-utils, document and write tests
+/**
+ * FIXME: move to @transcend/type-utils
+ *
+ * Flattens a nested object into a single-level object with concatenated key names.
+ *
+ * @param obj - The object to flatten
+ * @param prefix - The prefix to prepend to keys (used in recursion)
+ * @returns A flattened object where nested keys are joined with underscores
+ * @example
+ * const nested = {
+ *   user: {
+ *     name: 'John',
+ *     address: {
+ *       city: 'NY',
+ *       zip: 10001
+ *     },
+ *     hobbies: ['reading', 'gaming']
+ *   }
+ * };
+ *
+ * flattenObject(nested)
+ * // Returns: {
+ * //   user_name: 'John',
+ * //   user_address_city: 'NY',
+ * //   user_address_zip: 10001,
+ * //   user_hobbies: 'reading,gaming'
+ * // }
+ */
 const flattenObject = (obj: any, prefix = ''): any =>
   Object.keys(obj ?? []).reduce((acc, key) => {
     const newKey = prefix ? `${prefix}_${key}` : key;
@@ -40,8 +67,9 @@ const flattenObject = (obj: any, prefix = ''): any =>
     return acc;
   }, {} as Record<string, any>);
 
-// FIXME: move to @transcend/type-utils
 /**
+ * FIXME: move to @transcend/type-utils
+ *
  * Aggregates multiple objects into a single object by combining values of matching keys.
  * For each key present in any of the input objects, creates a comma-separated string
  * of values from all objects.
