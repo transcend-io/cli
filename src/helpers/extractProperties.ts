@@ -1,5 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// FIXME: move to @transcend/type-utils
 /**
  * Type that represents the extracted properties from an object type T.
  * For each property K from T, creates an array of that property's type.
