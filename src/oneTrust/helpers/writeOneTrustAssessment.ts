@@ -32,7 +32,7 @@ export const writeOneTrustAssessment = ({
 }): void => {
   logger.info(
     colors.magenta(
-      `Syncing enriched assessment ${
+      `Writing enriched assessment ${
         index + 1
       } of ${total} to file "${file}"...`,
     ),

@@ -81,8 +81,8 @@ export const syncOneTrustAssessments = async ({
       riskDetails,
     });
 
-    // sync to file
     if (dryRun && file && fileFormat) {
+      // sync to file
       writeOneTrustAssessment({
         assessment: enrichedAssessment,
         index,
@@ -90,6 +90,9 @@ export const syncOneTrustAssessments = async ({
         file,
         fileFormat,
       });
+    } else if (fileFormat === OneTrustFileFormat.Csv) {
+      // sync to transcend
+      // const csvEntry = oneTrustAssessmentToCsv({ assessment, index });
     }
   });
 };
