@@ -14,7 +14,6 @@ import {
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
 } from '../codecs';
-// import { DEFAULT_ONE_TRUST_COMBINED_ASSESSMENT } from './constants';
 
 // TODO: will have to use something like csv-stringify
 
