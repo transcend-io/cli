@@ -1,5 +1,4 @@
 import { logger } from '../logger';
-import keyBy from 'lodash/keyBy';
 import colors from 'colors';
 import { OneTrustFileFormat } from '../enums';
 import fs from 'fs';
@@ -7,11 +6,10 @@ import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
 import { decodeCodec } from '@transcend-io/type-utils';
 import {
-  OneTrustAssessment,
   OneTrustAssessmentCsvRecord,
-  OneTrustGetAssessmentResponse,
   OneTrustGetRiskResponse,
 } from '@transcend-io/privacy-types';
+import { OneTrustCombinedAssessment } from './codecs';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -23,8 +21,6 @@ export const writeOneTrustAssessment = ({
   file,
   fileFormat,
   assessment,
-  assessmentDetails,
-  riskDetails,
   index,
   total,
 }: {
@@ -33,9 +29,7 @@ export const writeOneTrustAssessment = ({
   /** The format of the output file */
   fileFormat: OneTrustFileFormat;
   /** The basic assessment */
-  assessment: OneTrustAssessment;
-  /** The assessment with details  */
-  assessmentDetails: OneTrustGetAssessmentResponse;
+  assessment: OneTrustCombinedAssessment;
   /** The details of risks found within the assessment */
   riskDetails: OneTrustGetRiskResponse[];
   /** The index of the assessment being written to the file */
@@ -51,46 +45,6 @@ export const writeOneTrustAssessment = ({
     ),
   );
 
-  // enrich the sections with risk details
-  const riskDetailsById = keyBy(riskDetails, 'id');
-  const { sections, ...restAssessmentDetails } = assessmentDetails;
-  const enrichedSections = sections.map((section) => {
-    const { questions, ...restSection } = section;
-    const enrichedQuestions = questions.map((question) => {
-      const { risks, ...restQuestion } = question;
-      const enrichedRisks = (risks ?? []).map((risk) => {
-        const details = riskDetailsById[risk.riskId];
-        // TODO: missing the risk meta data and links to the assessment
-        return {
-          ...risk,
-          description: details.description,
-          name: details.name,
-          treatment: details.treatment,
-          treatmentStatus: details.treatmentStatus,
-          type: details.type,
-          state: details.state,
-          stage: details.stage,
-          result: details.result,
-          categories: details.categories,
-        };
-      });
-      return {
-        ...restQuestion,
-        risks: enrichedRisks,
-      };
-    });
-    return {
-      ...restSection,
-      questions: enrichedQuestions,
-    };
-  });
-
-  // combine the two assessments into a single enriched result
-  const enrichedAssessment = {
-    ...restAssessmentDetails,
-    sections: enrichedSections,
-  };
-
   // For json format
   if (fileFormat === OneTrustFileFormat.Json) {
     // start with an opening bracket
@@ -98,7 +52,7 @@ export const writeOneTrustAssessment = ({
       fs.writeFileSync(file, '[\n');
     }
 
-    const stringifiedAssessment = JSON.stringify(enrichedAssessment, null, 2);
+    const stringifiedAssessment = JSON.stringify(assessment, null, 2);
 
     // Add comma for all items except the last one
     const comma = index < total - 1 ? ',' : '';
@@ -119,10 +73,7 @@ export const writeOneTrustAssessment = ({
     }
 
     // flatten the assessment object so it does not have nested properties
-    const flatAssessment = flattenOneTrustAssessment({
-      ...assessment,
-      ...enrichedAssessment,
-    });
+    const flatAssessment = flattenOneTrustAssessment(assessment);
 
     // comment
     const flatAssessmentFull = Object.fromEntries(
