@@ -5,6 +5,7 @@ import colors from 'colors';
 import { parseCliSyncOtArguments, createOneTrustGotInstance } from './oneTrust';
 import { OneTrustPullResource } from './enums';
 import { syncOneTrustAssessments } from './oneTrust/helpers/syncOneTrustAssessments';
+import { buildTranscendGraphQLClient } from './graphql';
 
 /**
  * Pull configuration from OneTrust down locally to disk
@@ -16,15 +17,37 @@ import { syncOneTrustAssessments } from './oneTrust/helpers/syncOneTrustAssessme
  * yarn cli-sync-ot --hostname=customer.my.onetrust.com --auth=$ONE_TRUST_OAUTH_TOKEN --file=./oneTrustAssessment.json
  */
 async function main(): Promise<void> {
-  const { file, fileFormat, hostname, auth, resource, debug, dryRun } =
-    parseCliSyncOtArguments();
+  const {
+    file,
+    fileFormat,
+    hostname,
+    oneTrustAuth,
+    transcendAuth,
+    transcendUrl,
+    resource,
+    debug,
+    dryRun,
+  } = parseCliSyncOtArguments();
 
   // use the hostname and auth token to instantiate a client to talk to OneTrust
-  const oneTrust = createOneTrustGotInstance({ hostname, auth });
+  const oneTrust = createOneTrustGotInstance({ hostname, auth: oneTrustAuth });
 
   try {
     if (resource === OneTrustPullResource.Assessments) {
-      await syncOneTrustAssessments({ oneTrust, file, fileFormat, dryRun });
+      await syncOneTrustAssessments({
+        oneTrust,
+        file,
+        fileFormat,
+        dryRun,
+        ...(transcendAuth && transcendUrl
+          ? {
+              transcend: buildTranscendGraphQLClient(
+                transcendUrl,
+                transcendAuth,
+              ),
+            }
+          : {}),
+      });
     }
   } catch (err) {
     logger.error(

@@ -15,6 +15,8 @@ interface OneTrustCliArguments {
   oneTrustAuth: string;
   /** The Transcend API key to authenticate the requests to Transcend */
   transcendAuth: string;
+  /** The Transcend URL where to forward requests */
+  transcendUrl: string;
   /** The resource to pull from OneTrust */
   resource: OneTrustPullResource;
   /** Whether to enable debugging while reporting errors */
@@ -114,22 +116,25 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
-  const splitFile = file.split('.');
-  if (splitFile.length < 2) {
-    logger.error(
-      colors.red(
-        'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.',
-      ),
-    );
-    return process.exit(1);
-  }
-  if (splitFile.at(-1) !== fileFormat) {
-    logger.error(
-      colors.red(
-        `The "file" and "fileFormat" parameters must specify the same format! Got file=${file} and fileFormat=${fileFormat}`,
-      ),
-    );
-    return process.exit(1);
+  if (file) {
+    const splitFile = file.split('.');
+    if (splitFile.length < 2) {
+      logger.error(
+        colors.red(
+          'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.',
+        ),
+      );
+      return process.exit(1);
+    }
+    if (splitFile.at(-1) !== fileFormat) {
+      logger.error(
+        colors.red(
+          // eslint-disable-next-line max-len
+          `The "file" and "fileFormat" parameters must specify the same format! Got file=${file} and fileFormat=${fileFormat}`,
+        ),
+      );
+      return process.exit(1);
+    }
   }
 
   if (!hostname) {
@@ -179,5 +184,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     fileFormat,
     dryRun,
     transcendAuth,
+    transcendUrl,
   };
 };

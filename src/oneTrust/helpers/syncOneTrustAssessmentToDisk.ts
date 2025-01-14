@@ -12,7 +12,7 @@ import { oneTrustAssessmentToCsv } from './oneTrustAssessmentToCsv';
  *
  * @param param - information about the assessment to write
  */
-export const writeOneTrustAssessment = ({
+export const syncOneTrustAssessmentToDisk = ({
   file,
   fileFormat,
   assessment,

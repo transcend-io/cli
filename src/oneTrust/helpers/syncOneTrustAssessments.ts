@@ -13,18 +13,29 @@ import {
 } from '@transcend-io/privacy-types';
 import uniq from 'lodash/uniq';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
-import { writeOneTrustAssessment } from './writeOneTrustAssessment';
+import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
 import { OneTrustFileFormat } from '../../enums';
-import { oneTrustAssessmentToCsvRecord } from './oneTrustAssessmentToCsvRecord';
+import { GraphQLClient } from 'graphql-request';
+import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
+
+export interface AssessmentForm {
+  /** ID of Assessment Form */
+  id: string;
+  /** Title of Assessment Form */
+  name: string;
+}
 
 export const syncOneTrustAssessments = async ({
   oneTrust,
   file,
   fileFormat,
   dryRun,
+  transcend,
 }: {
   /** the OneTrust client instance */
   oneTrust: Got;
+  /** the Transcend client instance */
+  transcend?: GraphQLClient;
   /** Whether to write to file instead of syncing to Transcend */
   dryRun: boolean;
   /** the path to the file in case dryRun is true */
@@ -84,16 +95,19 @@ export const syncOneTrustAssessments = async ({
 
     if (dryRun && file && fileFormat) {
       // sync to file
-      writeOneTrustAssessment({
+      syncOneTrustAssessmentToDisk({
         assessment: enrichedAssessment,
         index,
         total: assessments.length,
         file,
         fileFormat,
       });
-    } else if (fileFormat === OneTrustFileFormat.Csv) {
+    } else if (fileFormat === OneTrustFileFormat.Csv && transcend) {
       // sync to transcend
-      // const csvEntry = oneTrustAssessmentToCsvRecord(enrichedAssessment);
+      await syncOneTrustAssessmentToTranscend({
+        assessment: enrichedAssessment,
+        transcend,
+      });
     }
   });
 };
