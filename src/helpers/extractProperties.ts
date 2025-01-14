@@ -50,7 +50,7 @@ type ExtractedArrayProperties<T, K extends keyof T> = {
  *   { id: 2, name: 'Jane', age: 30, city: 'LA' }
  * ]
  * const result = extractProperties(items, ['id', 'name']);
- * // Returns: { id: number[], name: string[], rest: {age: number, city: string}[] }
+ * // Returns: { id: [1, 2], name: ['John', 'Jane'], rest: [{age: 25, city: 'NY'}, {age: 30, city: 'LA'}] }
  */
 export const extractProperties = <T extends object, K extends keyof T>(
   items: T[],
