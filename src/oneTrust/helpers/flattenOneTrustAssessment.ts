@@ -290,7 +290,6 @@ export const flattenOneTrustAssessment = (
     ...rest
   } = combinedAssessment;
 
-  // TODO: extract approver from approvers, otherwise it won't agree with the codec
   const flatApprovers = approvers.map((approver) =>
     flattenObject(approver, 'approvers'),
   );
