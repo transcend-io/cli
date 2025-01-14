@@ -184,7 +184,6 @@ const flattenOneTrustRisks = (
   allRisks: (OneTrustEnrichedRisk[] | null)[],
   prefix: string,
 ): any => {
-  // TODO: extract categories and other nested properties
   const allRisksFlat = (allRisks ?? []).map((risks) => {
     const { categories, rest: restRisks } = extractProperties(risks ?? [], [
       'categories',
@@ -206,7 +205,6 @@ const flattenOneTrustQuestions = (
 ): any => {
   const allSectionQuestionsFlat = allSectionQuestions.map(
     (sectionQuestions) => {
-      // extract nested properties (TODO: try to make a helper for this!!!)
       const {
         rest: restSectionQuestions,
         question: questions,
@@ -258,7 +256,6 @@ const flattenOneTrustSectionHeaders = (
   };
 };
 
-// TODO: update type to be
 const flattenOneTrustSections = (
   sections: OneTrustEnrichedAssessmentSection[],
   prefix: string,
@@ -280,7 +277,6 @@ const flattenOneTrustSections = (
   return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
 };
 
-// TODO: update type to be a Record<OneTrustAssessmentCsvHeader, string>
 export const flattenOneTrustAssessment = (
   combinedAssessment: OneTrustEnrichedAssessment,
 ): Record<string, string> => {
