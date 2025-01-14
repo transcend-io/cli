@@ -15,6 +15,7 @@ import uniq from 'lodash/uniq';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { writeOneTrustAssessment } from './writeOneTrustAssessment';
 import { OneTrustFileFormat } from '../../enums';
+import { oneTrustAssessmentToCsvRecord } from './oneTrustAssessmentToCsvRecord';
 
 export const syncOneTrustAssessments = async ({
   oneTrust,
@@ -92,7 +93,7 @@ export const syncOneTrustAssessments = async ({
       });
     } else if (fileFormat === OneTrustFileFormat.Csv) {
       // sync to transcend
-      // const csvEntry = oneTrustAssessmentToCsv({ assessment, index });
+      // const csvEntry = oneTrustAssessmentToCsvRecord(enrichedAssessment);
     }
   });
 };

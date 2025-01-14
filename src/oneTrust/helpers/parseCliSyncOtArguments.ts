@@ -11,8 +11,10 @@ interface OneTrustCliArguments {
   file: string;
   /** The OneTrust hostname to send the requests to */
   hostname: string;
-  /** The OAuth Bearer token used to authenticate the requests */
-  auth: string;
+  /** The OAuth Bearer token used to authenticate the requests to OneTrust */
+  oneTrustAuth: string;
+  /** The Transcend API key to authenticate the requests to Transcend */
+  transcendAuth: string;
   /** The resource to pull from OneTrust */
   resource: OneTrustPullResource;
   /** Whether to enable debugging while reporting errors */
@@ -29,25 +31,50 @@ interface OneTrustCliArguments {
  * @returns the parsed arguments
  */
 export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
-  const { file, hostname, auth, resource, debug, fileFormat, dryRun } = yargs(
-    process.argv.slice(2),
-    {
-      string: ['file', 'hostname', 'auth', 'resource', 'fileFormat', 'dryRun'],
-      boolean: ['debug', 'dryRun'],
-      default: {
-        resource: OneTrustPullResource.Assessments,
-        fileFormat: OneTrustFileFormat.Csv,
-        debug: false,
-        dryRun: false,
-      },
+  const {
+    file,
+    hostname,
+    oneTrustAuth,
+    resource,
+    debug,
+    fileFormat,
+    dryRun,
+    transcendAuth,
+  } = yargs(process.argv.slice(2), {
+    string: [
+      'file',
+      'hostname',
+      'oneTrustAuth',
+      'resource',
+      'fileFormat',
+      'dryRun',
+      'transcendAuth',
+    ],
+    boolean: ['debug', 'dryRun'],
+    default: {
+      resource: OneTrustPullResource.Assessments,
+      fileFormat: OneTrustFileFormat.Csv,
+      debug: false,
+      dryRun: false,
     },
-  );
+  });
+
+  // Can only sync to Transcend via a CSV file format!
+  if (!dryRun && !transcendAuth) {
+    logger.error(
+      colors.red(
+        // eslint-disable-next-line no-template-curly-in-string
+        'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
+      ),
+    );
+    return process.exit(1);
+  }
 
   // Can only sync to Transcend via a CSV file format!
   if (!dryRun && fileFormat !== OneTrustFileFormat.Csv) {
     logger.error(
       colors.red(
-        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Csv} when "dryRun" is "false".`,
+        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Csv} to sync resources to Transcend.`,
       ),
     );
     return process.exit(1);
@@ -102,10 +129,10 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
-  if (!auth) {
+  if (!oneTrustAuth) {
     logger.error(
       colors.red(
-        'Missing required parameter "auth". e.g. --auth=$ONE_TRUST_AUTH_TOKEN',
+        'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
       ),
     );
     return process.exit(1);
@@ -134,10 +161,11 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   return {
     file,
     hostname,
-    auth,
+    oneTrustAuth,
     resource,
     debug,
     fileFormat,
     dryRun,
+    transcendAuth,
   };
 };

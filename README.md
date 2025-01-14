@@ -598,21 +598,36 @@ To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer
 
 #### Arguments
 
-| Argument   | Description                                                                                       | Type    | Default     | Required |
-| ---------- | ------------------------------------------------------------------------------------------------- | ------- | ----------- | -------- |
-| auth       | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string  | N/A         | true     |
-| hostname   | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string  | N/A         | true     |
-| file       | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string  | N/A         | true     |
-| fileFormat | The format of the output file.                                                                    | string  | csv         | false    |
-| resource   | The resource to pull from OneTrust. For now, only assessments is supported.                       | string  | assessments | false    |
-| debug      | Whether to print detailed logs in case of error.                                                  | boolean | false       | false    |
-| dryRun     | Whether to export the resource to a file rather than sync to Transcend.                           | boolean | false       | false    |
+| Argument      | Description                                                                                       | Type    | Default     | Required |
+| ------------- | ------------------------------------------------------------------------------------------------- | ------- | ----------- | -------- |
+| hostname      | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string  | N/A         | true     |
+| oneTrustAuth  | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string  | N/A         | true     |
+| transcendAuth | The Transcend API Key to with the scopes necessary to access Transcend's Public APIs.             | string  | N/A         | false    |
+| file          | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string  | N/A         | false    |
+| fileFormat    | The format of the output file.                                                                    | string  | csv         | false    |
+| resource      | The resource to pull from OneTrust. For now, only assessments is supported.                       | string  | assessments | false    |
+| dryRun        | Whether to export the resource to a file rather than sync to Transcend.                           | boolean | false       | false    |
+| debug         | Whether to print detailed logs in case of error.                                                  | boolean | false       | false    |
 
 #### Usage
 
 ```sh
+# Syncs all assessments from the OneTrust instance to Transcend
+tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
+```
+
+Alternatively, you can set dryRun to true and sync the resource to disk:
+
+```sh
+# Writes out file to ./oneTrustAssessments.csv
+tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --file=./oneTrustAssessments.csv
+```
+
+You can also sync to disk in json format:
+
+```sh
 # Writes out file to ./oneTrustAssessments.json
-tr-sync-ot --auth=$ONE_TRUST_OAUTH_TOKEN --hostname=trial.onetrust.com --file=./oneTrustAssessments.json
+tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --fileFormat=json --file=./oneTrustAssessments.json
 ```
 
 ### tr-push
