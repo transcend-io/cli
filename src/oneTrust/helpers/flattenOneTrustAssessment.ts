@@ -15,9 +15,7 @@ import {
   OneTrustEnrichedRisk,
 } from '../codecs';
 
-// TODO: will have to use something like csv-stringify
-
-// TODO: test what happens when a value is null -> it should convert to ''
+// FIXME: move to @transcend/type-utils, document and write tests
 const flattenObject = (obj: any, prefix = ''): any =>
   Object.keys(obj ?? []).reduce((acc, key) => {
     const newKey = prefix ? `${prefix}_${key}` : key;
@@ -42,22 +40,42 @@ const flattenObject = (obj: any, prefix = ''): any =>
     return acc;
   }, {} as Record<string, any>);
 
-// TODO: move to helpers
+// FIXME: move to @transcend/type-utils
+/**
+ * Aggregates multiple objects into a single object by combining values of matching keys.
+ * For each key present in any of the input objects, creates a comma-separated string
+ * of values from all objects.
+ *
+ * @param param - the objects to aggregate and the aggregation method
+ * @returns a single object containing all unique keys with aggregated values
+ * @example
+ * const obj1 = { name: 'John', age: 30 };
+ * const obj2 = { name: 'Jane', city: 'NY' };
+ * const obj3 = { name: 'Bob', age: 25 };
+ *
+ * // Without wrap
+ * aggregateObjects({ objs: [obj1, obj2, obj3] })
+ * // Returns: { name: 'John,Jane,Bob', age: '30,,25', city: ',NY,' }
+ *
+ * // With wrap
+ * aggregateObjects({ objs: [obj1, obj2, obj3], wrap: true })
+ * // Returns: { name: '[John],[Jane],[Bob]', age: '[30],[],[25]', city: '[],[NY],[]' }
+ */
 const aggregateObjects = ({
   objs,
   wrap = false,
 }: {
   /** the objects to aggregate in a single one */
   objs: any[];
-  /** whether to wrap the values in a [] */
+  /** whether to wrap the concatenated values in a [] */
   wrap?: boolean;
 }): any => {
   const allKeys = Array.from(new Set(objs.flatMap((a) => Object.keys(a))));
 
-  // build a single object where all the keys contain the respective values of objs
+  // Reduce into a single object, where each key contains concatenated values from all input objects
   return allKeys.reduce((acc, key) => {
     const values = objs
-      .map((a) => (wrap ? `[${a[key] ?? ''}]` : a[key] ?? ''))
+      .map((o) => (wrap ? `[${o[key] ?? ''}]` : o[key] ?? ''))
       .join(',');
     acc[key] = values;
     return acc;
@@ -80,7 +98,6 @@ const flattenOneTrustNestedQuestions = (
   questions: OneTrustAssessmentNestedQuestion[],
   prefix: string,
 ): any => {
-  // TODO: how do extract properties handle null
   const { options: allOptions, rest: restQuestions } = extractProperties(
     questions,
     ['options'],

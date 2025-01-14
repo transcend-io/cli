@@ -5,8 +5,8 @@ import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 import { OneTrustAssessmentCsvRecord } from '@transcend-io/privacy-types';
 
 /**
- * Converts the assessment into a csv record (header + values). It always
- * returns a record with every key in the same order.
+ * Converts the assessment into a csv record (i.e. a map from the csv header
+ * to values). It always returns a record with every key in the same order.
  *
  * @param assessment - the assessment to convert to a csv record
  * @returns a stringified csv entry ready to be appended to a file

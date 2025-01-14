@@ -48,7 +48,7 @@ export const syncOneTrustAssessments = async ({
   const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
   /**
-   * fetch details about one assessment in series and push to transcend or write to disk
+   * fetch details about each assessment in series and write to transcend or to disk
    * (depending on the dryRun argument) right away to avoid running out of memory
    */
   await mapSeries(assessments, async (assessment, index) => {
@@ -86,7 +86,7 @@ export const syncOneTrustAssessments = async ({
       );
     }
 
-    // enrich the sections with risk details
+    // enrich the assessments with risk and details
     const enrichedAssessment = enrichOneTrustAssessment({
       assessment,
       assessmentDetails,
