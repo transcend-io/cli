@@ -7,14 +7,17 @@ import {
   OneTrustAssessmentSectionHeader,
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
-import { extractProperties } from '../../helpers';
 import {
   OneTrustEnrichedAssessment,
   OneTrustEnrichedAssessmentQuestion,
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
 } from '../codecs';
-import { flattenObject, aggregateObjects } from '@transcend-io/type-utils';
+import {
+  flattenObject,
+  aggregateObjects,
+  transposeObjectArray,
+} from '@transcend-io/type-utils';
 
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
@@ -30,7 +33,7 @@ const flattenOneTrustNestedQuestions = (
   questions: OneTrustAssessmentNestedQuestion[],
   prefix: string,
 ): any => {
-  const { options: allOptions, rest: restQuestions } = extractProperties(
+  const { options: allOptions, rest: restQuestions } = transposeObjectArray(
     questions,
     ['options'],
   );
@@ -47,7 +50,7 @@ const flattenOneTrustQuestionResponses = (
   prefix: string,
 ): any => {
   const allQuestionResponsesFlat = allQuestionResponses.map((qrs) => {
-    const { responses, rest: questionResponses } = extractProperties(
+    const { responses, rest: questionResponses } = transposeObjectArray(
       qrs.map((q) => ({
         ...q,
         // there is always just one response within responses
@@ -82,7 +85,7 @@ const flattenOneTrustRisks = (
   prefix: string,
 ): any => {
   const allRisksFlat = (allRisks ?? []).map((risks) => {
-    const { categories, rest: restRisks } = extractProperties(risks ?? [], [
+    const { categories, rest: restRisks } = transposeObjectArray(risks ?? [], [
       'categories',
     ]);
 
@@ -109,7 +112,7 @@ const flattenOneTrustQuestions = (
         question: questions,
         questionResponses: allQuestionResponses,
         risks: allRisks,
-      } = extractProperties(sectionQuestions, [
+      } = transposeObjectArray(sectionQuestions, [
         'question',
         'questionResponses',
         'risks',
@@ -141,7 +144,7 @@ const flattenOneTrustSectionHeaders = (
   headers: OneTrustAssessmentSectionHeader[],
   prefix: string,
 ): any => {
-  const { riskStatistics, rest: restHeaders } = extractProperties(headers, [
+  const { riskStatistics, rest: restHeaders } = transposeObjectArray(headers, [
     'riskStatistics',
   ]);
 
@@ -161,13 +164,13 @@ const flattenOneTrustSections = (
     questions: allQuestions,
     header: headers,
     rest: restSections,
-  } = extractProperties(sections, ['questions', 'header']);
+  } = transposeObjectArray(sections, ['questions', 'header']);
 
-  const sectionsFlat = flattenObject({ obj: { sections: restSections } });
-  const headersFlat = flattenOneTrustSectionHeaders(headers, 'sections');
-  const questionsFlat = flattenOneTrustQuestions(allQuestions, 'sections');
-
-  return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
+  return {
+    ...flattenObject({ obj: { sections: restSections } }),
+    ...flattenOneTrustSectionHeaders(headers, 'sections'),
+    ...flattenOneTrustQuestions(allQuestions, 'sections'),
+  };
 };
 
 export const flattenOneTrustAssessment = (
