@@ -25,7 +25,6 @@ export const getListOfOneTrustAssessments = async ({
 
   const allAssessments: OneTrustAssessment[] = [];
 
-  logger.info('Getting list of all assessments from OneTrust...');
   while (currentPage < totalPages) {
     // eslint-disable-next-line no-await-in-loop
     const { body } = await oneTrust.get(

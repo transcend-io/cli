@@ -47,19 +47,33 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   if (!dryRun && fileFormat !== OneTrustFileFormat.Csv) {
     logger.error(
       colors.red(
-        'Must not set the "fileFormat" parameter when "dryRun" is "false".',
+        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Csv} when "dryRun" is "false".`,
       ),
     );
   }
 
-  if (!file) {
+  // If trying to sync to disk, must specify a file path
+  if (dryRun && !file) {
     logger.error(
       colors.red(
-        'Missing required parameter "file". e.g. --file=./oneTrustAssessments.json',
+        'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json',
       ),
     );
     return process.exit(1);
   }
+
+  // If trying to sync to disk, must specify a file format
+  if (dryRun && !fileFormat) {
+    logger.error(
+      colors.red(
+        `Must set a "fileFormat" parameter when "dryRun" is "true". e.g. --fileFormat=${
+          OneTrustFileFormat.Json
+        }. Supported formats: ${VALID_FILE_FORMATS.join(',')}`,
+      ),
+    );
+    return process.exit(1);
+  }
+
   const splitFile = file.split('.');
   if (splitFile.length < 2) {
     logger.error(

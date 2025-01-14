@@ -32,13 +32,12 @@ import {
 async function main(): Promise<void> {
   const { file, fileFormat, hostname, auth, resource, debug } =
     parseCliSyncOtArguments();
+  // use the hostname and auth token to instantiate a client to talk to OneTrust
+  const oneTrust = createOneTrustGotInstance({ hostname, auth });
 
   try {
     // TODO: move to helper function
     if (resource === OneTrustPullResource.Assessments) {
-      // use the hostname and auth token to instantiate a client to talk to OneTrust
-      const oneTrust = createOneTrustGotInstance({ hostname, auth });
-
       // fetch the list of all assessments in the OneTrust organization
       const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
