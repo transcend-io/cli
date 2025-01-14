@@ -183,10 +183,7 @@ const flattenOneTrustSections = (
     rest: restSections,
   } = extractProperties(sections, ['questions', 'header']);
 
-  const restSectionsFlat = restSections.map((s) =>
-    flattenObject({ obj: s, prefix }),
-  );
-  const sectionsFlat = aggregateObjects({ objs: restSectionsFlat });
+  const sectionsFlat = flattenObject({ obj: { sections: restSections } });
   const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
   const questionsFlat = flattenOneTrustQuestions(
     allQuestions,
