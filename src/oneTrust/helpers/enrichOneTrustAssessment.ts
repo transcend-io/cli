@@ -32,7 +32,7 @@ export const enrichOneTrustAssessment = ({
       const { risks, ...restQuestion } = question;
       const enrichedRisks = (risks ?? []).map((risk) => {
         const details = riskDetailsById[risk.riskId];
-        // TODO: missing the risk meta data and links to the assessment
+        // FIXME: missing the risk meta data and links to the assessment
         return {
           ...risk,
           description: details.description,
