@@ -31,6 +31,13 @@ export const oneTrustAssessmentToCsvRecord = (
     }),
   );
 
+  /**
+   * TODO: test that this is actually doing something.
+   * For example
+   *  - does it fail if flatAssessmentFull has extra properties
+   *  - does it fail if flatAssessmentFull is missing properties
+   *
+   */
   // ensure the record has the expected type!
   return decodeCodec(OneTrustAssessmentCsvRecord, flatAssessmentFull);
 };
