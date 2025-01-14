@@ -1,4 +1,4 @@
-import { createDefaultCodec } from '../helpers';
+import { createDefaultCodec } from '@transcend-io/type-utils';
 import { OneTrustCombinedAssessment } from './codecs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 
