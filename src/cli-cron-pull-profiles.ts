@@ -131,16 +131,26 @@ async function main(): Promise<void> {
   const results = await map(
     uniq(requestIds),
     async (requestId) => {
-      const results = await fetchRequestFilesForRequest(client, { requestId });
-      return results.map(({ fileName, remoteId }) => ({
-        RecordId: remoteId,
-        Object: fileName
-          .replace('.json', '')
-          .split('/')
-          .pop()
-          ?.replace(' Information', ''),
-        Comment: 'Customer data deletion request submitted via transcend.io',
-      }));
+      const results = await fetchRequestFilesForRequest(client, {
+        requestId,
+        dataSiloId: targetDataSiloId,
+      });
+      return results.map(({ fileName, remoteId }) => {
+        if (!remoteId) {
+          throw new Error(
+            `Failed to find remoteId for ${fileName} request: ${requestId}`,
+          );
+        }
+        return {
+          RecordId: remoteId,
+          Object: fileName
+            .replace('.json', '')
+            .split('/')
+            .pop()
+            ?.replace(' Information', ''),
+          Comment: 'Customer data deletion request submitted via transcend.io',
+        };
+      });
     },
     {
       concurrency: 10,
