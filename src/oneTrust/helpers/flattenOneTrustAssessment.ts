@@ -14,108 +14,17 @@ import {
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
 } from '../codecs';
-
-/**
- * FIXME: move to @transcend/type-utils
- *
- * Flattens a nested object into a single-level object with concatenated key names.
- *
- * @param obj - The object to flatten
- * @param prefix - The prefix to prepend to keys (used in recursion)
- * @returns A flattened object where nested keys are joined with underscores
- * @example
- * const nested = {
- *   user: {
- *     name: 'John',
- *     address: {
- *       city: 'NY',
- *       zip: 10001
- *     },
- *     hobbies: ['reading', 'gaming']
- *   }
- * };
- *
- * flattenObject(nested)
- * // Returns: {
- * //   user_name: 'John',
- * //   user_address_city: 'NY',
- * //   user_address_zip: 10001,
- * //   user_hobbies: 'reading,gaming'
- * // }
- */
-const flattenObject = (obj: any, prefix = ''): any =>
-  Object.keys(obj ?? []).reduce((acc, key) => {
-    const newKey = prefix ? `${prefix}_${key}` : key;
-
-    const entry = obj[key];
-    if (typeof entry === 'object' && entry !== null && !Array.isArray(entry)) {
-      Object.assign(acc, flattenObject(entry, newKey));
-    } else {
-      acc[newKey] = Array.isArray(entry)
-        ? entry
-            .map((e) => {
-              if (typeof e === 'string') {
-                return e.replaceAll(',', '');
-              }
-              return e ?? '';
-            })
-            .join(',')
-        : typeof entry === 'string'
-        ? entry.replaceAll(',', '')
-        : entry ?? '';
-    }
-    return acc;
-  }, {} as Record<string, any>);
-
-/**
- * FIXME: move to @transcend/type-utils
- *
- * Aggregates multiple objects into a single object by combining values of matching keys.
- * For each key present in any of the input objects, creates a comma-separated string
- * of values from all objects.
- *
- * @param param - the objects to aggregate and the aggregation method
- * @returns a single object containing all unique keys with aggregated values
- * @example
- * const obj1 = { name: 'John', age: 30 };
- * const obj2 = { name: 'Jane', city: 'NY' };
- * const obj3 = { name: 'Bob', age: 25 };
- *
- * // Without wrap
- * aggregateObjects({ objs: [obj1, obj2, obj3] })
- * // Returns: { name: 'John,Jane,Bob', age: '30,,25', city: ',NY,' }
- *
- * // With wrap
- * aggregateObjects({ objs: [obj1, obj2, obj3], wrap: true })
- * // Returns: { name: '[John],[Jane],[Bob]', age: '[30],[],[25]', city: '[],[NY],[]' }
- */
-const aggregateObjects = ({
-  objs,
-  wrap = false,
-}: {
-  /** the objects to aggregate in a single one */
-  objs: any[];
-  /** whether to wrap the concatenated values in a [] */
-  wrap?: boolean;
-}): any => {
-  const allKeys = Array.from(new Set(objs.flatMap((a) => Object.keys(a))));
-
-  // Reduce into a single object, where each key contains concatenated values from all input objects
-  return allKeys.reduce((acc, key) => {
-    const values = objs
-      .map((o) => (wrap ? `[${o[key] ?? ''}]` : o[key] ?? ''))
-      .join(',');
-    acc[key] = values;
-    return acc;
-  }, {} as Record<string, any>);
-};
+import { flattenObject } from './flattenObject';
+import { aggregateObjects } from './aggregateObjects';
 
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
   prefix: string,
 ): any => {
   const allOptionsFlat = allOptions.map((options) => {
-    const flatOptions = (options ?? []).map((o) => flattenObject(o, prefix));
+    const flatOptions = (options ?? []).map((o) =>
+      flattenObject({ obj: o, prefix }),
+    );
     return aggregateObjects({ objs: flatOptions });
   });
 
@@ -131,7 +40,9 @@ const flattenOneTrustNestedQuestions = (
     ['options'],
   );
 
-  const restQuestionsFlat = restQuestions.map((r) => flattenObject(r, prefix));
+  const restQuestionsFlat = restQuestions.map((r) =>
+    flattenObject({ obj: r, prefix }),
+  );
   return {
     ...aggregateObjects({ objs: restQuestionsFlat }),
     ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_options`),
@@ -155,10 +66,10 @@ const flattenOneTrustQuestionResponses = (
       );
 
       const responsesFlat = (responses ?? []).map((r) =>
-        flattenObject(r, prefix),
+        flattenObject({ obj: r, prefix }),
       );
       const restQuestionResponsesFlat = (restQuestionResponses ?? []).map((q) =>
-        flattenObject(q, prefix),
+        flattenObject({ obj: q, prefix }),
       );
       return {
         ...aggregateObjects({ objs: responsesFlat }),
@@ -174,7 +85,9 @@ const flattenOneTrustRiskCategories = (
   prefix: string,
 ): any => {
   const allCategoriesFlat = (allCategories ?? []).map((categories) => {
-    const flatCategories = categories.map((c) => flattenObject(c, prefix));
+    const flatCategories = categories.map((c) =>
+      flattenObject({ obj: c, prefix }),
+    );
     return aggregateObjects({ objs: flatCategories });
   });
   return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
@@ -189,7 +102,9 @@ const flattenOneTrustRisks = (
       'categories',
     ]);
 
-    const flatRisks = (restRisks ?? []).map((r) => flattenObject(r, prefix));
+    const flatRisks = (restRisks ?? []).map((r) =>
+      flattenObject({ obj: r, prefix }),
+    );
     return {
       ...aggregateObjects({ objs: flatRisks }),
       ...flattenOneTrustRiskCategories(categories, `${prefix}_categories`),
@@ -217,7 +132,7 @@ const flattenOneTrustQuestions = (
       ]);
 
       const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
-        flattenObject(q, prefix),
+        flattenObject({ obj: q, prefix }),
       );
 
       return {
@@ -246,9 +161,11 @@ const flattenOneTrustSectionHeaders = (
     'riskStatistics',
   ]);
 
-  const flatFlatHeaders = restHeaders.map((h) => flattenObject(h, prefix));
+  const flatFlatHeaders = restHeaders.map((h) =>
+    flattenObject({ obj: h, prefix }),
+  );
   const flatRiskStatistics = riskStatistics.map((r) =>
-    flattenObject(r, `${prefix}_riskStatistics`),
+    flattenObject({ obj: r, prefix: `${prefix}_riskStatistics` }),
   );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
@@ -266,7 +183,9 @@ const flattenOneTrustSections = (
     rest: restSections,
   } = extractProperties(sections, ['questions', 'header']);
 
-  const restSectionsFlat = restSections.map((s) => flattenObject(s, prefix));
+  const restSectionsFlat = restSections.map((s) =>
+    flattenObject({ obj: s, prefix }),
+  );
   const sectionsFlat = aggregateObjects({ objs: restSectionsFlat });
   const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
   const questionsFlat = flattenOneTrustQuestions(
@@ -290,22 +209,11 @@ export const flattenOneTrustAssessment = (
     ...rest
   } = combinedAssessment;
 
-  const flatApprovers = approvers.map((approver) =>
-    flattenObject(approver, 'approvers'),
-  );
-  const flatRespondents = respondents.map((respondent) =>
-    flattenObject(respondent, 'respondents'),
-  );
-  const flatPrimaryEntityDetails = primaryEntityDetails.map(
-    (primaryEntityDetail) =>
-      flattenObject(primaryEntityDetail, 'primaryEntityDetails'),
-  );
-
   return {
-    ...flattenObject(rest),
-    ...aggregateObjects({ objs: flatApprovers }),
-    ...aggregateObjects({ objs: flatRespondents }),
-    ...aggregateObjects({ objs: flatPrimaryEntityDetails }),
+    ...flattenObject({ obj: rest }),
+    ...flattenObject({ obj: { approvers } }),
+    ...flattenObject({ obj: { respondents } }),
+    ...flattenObject({ obj: { primaryEntityDetails } }),
     ...flattenOneTrustSections(sections, 'sections'),
   };
 };
