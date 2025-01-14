@@ -21,13 +21,9 @@ const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
   prefix: string,
 ): any => {
-  const allOptionsFlat = allOptions.map((options) => {
-    const flatOptions = (options ?? []).map((o) =>
-      flattenObject({ obj: o, prefix }),
-    );
-    return aggregateObjects({ objs: flatOptions });
-  });
-
+  const allOptionsFlat = allOptions.map((options) =>
+    flattenObject({ obj: { options }, prefix }),
+  );
   return aggregateObjects({ objs: allOptionsFlat, wrap: true });
 };
 
@@ -40,12 +36,9 @@ const flattenOneTrustNestedQuestions = (
     ['options'],
   );
 
-  const restQuestionsFlat = restQuestions.map((r) =>
-    flattenObject({ obj: r, prefix }),
-  );
   return {
-    ...aggregateObjects({ objs: restQuestionsFlat }),
-    ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_options`),
+    ...flattenObject({ obj: { questions: restQuestions }, prefix }),
+    ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_questions`),
   };
 };
 
@@ -54,29 +47,24 @@ const flattenOneTrustQuestionResponses = (
   allQuestionResponses: OneTrustAssessmentQuestionResponses[],
   prefix: string,
 ): any => {
-  const allQuestionResponsesFlat = allQuestionResponses.map(
-    (questionResponses) => {
-      const { responses, rest: restQuestionResponses } = extractProperties(
-        questionResponses.map((q) => ({
-          ...q,
-          // there is always just one response within responses
-          responses: q.responses[0],
-        })),
-        ['responses'],
-      );
+  const allQuestionResponsesFlat = allQuestionResponses.map((qrs) => {
+    const { responses, rest: questionResponses } = extractProperties(
+      qrs.map((q) => ({
+        ...q,
+        // there is always just one response within responses
+        responses: q.responses[0],
+      })),
+      ['responses'],
+    );
 
-      const responsesFlat = (responses ?? []).map((r) =>
-        flattenObject({ obj: r, prefix }),
-      );
-      const restQuestionResponsesFlat = (restQuestionResponses ?? []).map((q) =>
-        flattenObject({ obj: q, prefix }),
-      );
-      return {
-        ...aggregateObjects({ objs: responsesFlat }),
-        ...aggregateObjects({ objs: restQuestionResponsesFlat }),
-      };
-    },
-  );
+    const responsesFlat = (responses ?? []).map((r) =>
+      flattenObject({ obj: r, prefix: `${prefix}_questionResponses` }),
+    );
+    return {
+      ...aggregateObjects({ objs: responsesFlat }),
+      ...flattenObject({ obj: { questionResponses }, prefix }),
+    };
+  });
   return aggregateObjects({ objs: allQuestionResponsesFlat, wrap: true });
 };
 
@@ -84,12 +72,9 @@ const flattenOneTrustRiskCategories = (
   allCategories: OneTrustRiskCategories[],
   prefix: string,
 ): any => {
-  const allCategoriesFlat = (allCategories ?? []).map((categories) => {
-    const flatCategories = categories.map((c) =>
-      flattenObject({ obj: c, prefix }),
-    );
-    return aggregateObjects({ objs: flatCategories });
-  });
+  const allCategoriesFlat = (allCategories ?? []).map((categories) =>
+    flattenObject({ obj: { categories }, prefix }),
+  );
   return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
 };
 
@@ -103,11 +88,11 @@ const flattenOneTrustRisks = (
     ]);
 
     const flatRisks = (restRisks ?? []).map((r) =>
-      flattenObject({ obj: r, prefix }),
+      flattenObject({ obj: r, prefix: `${prefix}_risks` }),
     );
     return {
       ...aggregateObjects({ objs: flatRisks }),
-      ...flattenOneTrustRiskCategories(categories, `${prefix}_categories`),
+      ...flattenOneTrustRiskCategories(categories, `${prefix}_risks`),
     };
   });
 
@@ -132,16 +117,16 @@ const flattenOneTrustQuestions = (
       ]);
 
       const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
-        flattenObject({ obj: q, prefix }),
+        flattenObject({ obj: q, prefix: `${prefix}_questions` }),
       );
 
       return {
         ...aggregateObjects({ objs: restSectionQuestionsFlat }),
         ...flattenOneTrustNestedQuestions(questions, prefix),
-        ...flattenOneTrustRisks(allRisks, `${prefix}_risks`),
+        ...flattenOneTrustRisks(allRisks, `${prefix}_questions`),
         ...flattenOneTrustQuestionResponses(
           allQuestionResponses,
-          `${prefix}_questionResponses`,
+          `${prefix}_questions`,
         ),
       };
     },
@@ -172,7 +157,6 @@ const flattenOneTrustSectionHeaders = (
 
 const flattenOneTrustSections = (
   sections: OneTrustEnrichedAssessmentSection[],
-  prefix: string,
 ): any => {
   const {
     questions: allQuestions,
@@ -181,11 +165,8 @@ const flattenOneTrustSections = (
   } = extractProperties(sections, ['questions', 'header']);
 
   const sectionsFlat = flattenObject({ obj: { sections: restSections } });
-  const headersFlat = flattenOneTrustSectionHeaders(headers, prefix);
-  const questionsFlat = flattenOneTrustQuestions(
-    allQuestions,
-    `${prefix}_questions`,
-  );
+  const headersFlat = flattenOneTrustSectionHeaders(headers, 'sections');
+  const questionsFlat = flattenOneTrustQuestions(allQuestions, 'sections');
 
   return { ...sectionsFlat, ...headersFlat, ...questionsFlat };
 };
@@ -208,6 +189,6 @@ export const flattenOneTrustAssessment = (
     ...flattenObject({ obj: { approvers } }),
     ...flattenObject({ obj: { respondents } }),
     ...flattenObject({ obj: { primaryEntityDetails } }),
-    ...flattenOneTrustSections(sections, 'sections'),
+    ...flattenOneTrustSections(sections),
   };
 };
