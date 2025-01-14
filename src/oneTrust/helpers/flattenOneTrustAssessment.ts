@@ -14,8 +14,7 @@ import {
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
 } from '../codecs';
-import { flattenObject } from './flattenObject';
-import { aggregateObjects } from './aggregateObjects';
+import { flattenObject, aggregateObjects } from '@transcend-io/type-utils';
 
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],

@@ -70,7 +70,7 @@
     "@transcend-io/persisted-state": "^1.0.4",
     "@transcend-io/privacy-types": "^4.105.0",
     "@transcend-io/secret-value": "^1.2.0",
-    "@transcend-io/type-utils": "^1.6.0",
+    "@transcend-io/type-utils": "^1.7.1",
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
     "colors": "^1.4.0",
