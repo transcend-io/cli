@@ -7,6 +7,7 @@ import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from '../constants';
 import { decodeCodec } from '@transcend-io/type-utils';
 import { OneTrustAssessmentCsvRecord } from '@transcend-io/privacy-types';
 import { OneTrustEnrichedAssessment } from '../codecs';
+import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -42,23 +43,12 @@ export const writeOneTrustAssessment = ({
 
   // For json format
   if (fileFormat === OneTrustFileFormat.Json) {
-    // start with an opening bracket
-    if (index === 0) {
-      fs.writeFileSync(file, '[\n');
-    }
-
-    const stringifiedAssessment = JSON.stringify(assessment, null, 2);
-
-    // Add comma for all items except the last one
-    const comma = index < total - 1 ? ',' : '';
-
-    // write to file
-    fs.appendFileSync(file, stringifiedAssessment + comma);
-
-    // end with closing bracket
-    if (index === total - 1) {
-      fs.appendFileSync(file, ']');
-    }
+    const jsonEntry = oneTrustAssessmentToJson({
+      assessment,
+      index,
+      total,
+    });
+    fs.appendFileSync(file, jsonEntry);
   } else if (fileFormat === OneTrustFileFormat.Csv) {
     const csvRows = [];
 

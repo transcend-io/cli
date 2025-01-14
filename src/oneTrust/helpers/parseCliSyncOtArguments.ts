@@ -50,6 +50,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
         `The "fileFormat" parameter must equal ${OneTrustFileFormat.Csv} when "dryRun" is "false".`,
       ),
     );
+    return process.exit(1);
   }
 
   // If trying to sync to disk, must specify a file path

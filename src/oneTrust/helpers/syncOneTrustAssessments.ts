@@ -81,6 +81,7 @@ export const syncOneTrustAssessments = async ({
       riskDetails,
     });
 
+    // sync to file
     if (dryRun && file && fileFormat) {
       writeOneTrustAssessment({
         assessment: enrichedAssessment,
