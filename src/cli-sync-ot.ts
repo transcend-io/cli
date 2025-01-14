@@ -52,7 +52,7 @@ async function main(): Promise<void> {
   } catch (err) {
     logger.error(
       colors.red(
-        `An error occurred pulling the resource ${resource} from OneTrust: ${
+        `An error occurred syncing the resource ${resource} from OneTrust: ${
           debug ? err.stack : err.message
         }`,
       ),
@@ -63,7 +63,9 @@ async function main(): Promise<void> {
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced OneTrust ${resource} to disk at "${file}"!`,
+      `Successfully synced OneTrust ${resource} to ${
+        dryRun ? `disk at "${file}"` : 'Transcend'
+      }!`,
     ),
   );
 }
