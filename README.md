@@ -606,6 +606,7 @@ To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer
 | fileFormat | The format of the output file.                                                                    | string  | csv         | false    |
 | resource   | The resource to pull from OneTrust. For now, only assessments is supported.                       | string  | assessments | false    |
 | debug      | Whether to print detailed logs in case of error.                                                  | boolean | false       | false    |
+| dryRun     | Whether to export the resource to a file rather than sync to Transcend.                           | boolean | false       | false    |
 
 #### Usage
 

@@ -5,7 +5,7 @@ import {
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
   writeOneTrustAssessment,
-  parseCliPullOtArguments,
+  parseCliSyncOtArguments,
   createOneTrustGotInstance,
   getOneTrustRisk,
 } from './oneTrust';
@@ -29,7 +29,7 @@ import {
  */
 async function main(): Promise<void> {
   const { file, fileFormat, hostname, auth, resource } =
-    parseCliPullOtArguments();
+    parseCliSyncOtArguments();
 
   // try {
   // TODO: move to helper function
