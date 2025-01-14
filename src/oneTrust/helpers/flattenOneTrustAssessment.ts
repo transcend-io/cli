@@ -58,12 +58,8 @@ const flattenOneTrustQuestionResponses = (
       })),
       ['responses'],
     );
-
-    const responsesFlat = (responses ?? []).map((r) =>
-      flattenObject({ obj: r, prefix: `${prefix}_questionResponses` }),
-    );
     return {
-      ...aggregateObjects({ objs: responsesFlat }),
+      ...flattenObject({ obj: { questionResponses: responses }, prefix }),
       ...flattenObject({ obj: { questionResponses }, prefix }),
     };
   });
@@ -84,16 +80,12 @@ const flattenOneTrustRisks = (
   allRisks: (OneTrustEnrichedRisk[] | null)[],
   prefix: string,
 ): any => {
-  const allRisksFlat = (allRisks ?? []).map((risks) => {
-    const { categories, rest: restRisks } = transposeObjectArray(risks ?? [], [
+  const allRisksFlat = (allRisks ?? []).map((ars) => {
+    const { categories, rest: risks } = transposeObjectArray(ars ?? [], [
       'categories',
     ]);
-
-    const flatRisks = (restRisks ?? []).map((r) =>
-      flattenObject({ obj: r, prefix: `${prefix}_risks` }),
-    );
     return {
-      ...aggregateObjects({ objs: flatRisks }),
+      ...flattenObject({ obj: { risks }, prefix }),
       ...flattenOneTrustRiskCategories(categories, `${prefix}_risks`),
     };
   });
@@ -108,8 +100,8 @@ const flattenOneTrustQuestions = (
   const allSectionQuestionsFlat = allSectionQuestions.map(
     (sectionQuestions) => {
       const {
-        rest: restSectionQuestions,
-        question: questions,
+        rest: questions,
+        question: nestedQuestions,
         questionResponses: allQuestionResponses,
         risks: allRisks,
       } = transposeObjectArray(sectionQuestions, [
@@ -118,13 +110,9 @@ const flattenOneTrustQuestions = (
         'risks',
       ]);
 
-      const restSectionQuestionsFlat = restSectionQuestions.map((q) =>
-        flattenObject({ obj: q, prefix: `${prefix}_questions` }),
-      );
-
       return {
-        ...aggregateObjects({ objs: restSectionQuestionsFlat }),
-        ...flattenOneTrustNestedQuestions(questions, prefix),
+        ...flattenObject({ obj: { questions }, prefix }),
+        ...flattenOneTrustNestedQuestions(nestedQuestions, prefix),
         ...flattenOneTrustRisks(allRisks, `${prefix}_questions`),
         ...flattenOneTrustQuestionResponses(
           allQuestionResponses,
