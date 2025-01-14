@@ -597,6 +597,14 @@ In order to use this command, you will need to generate a OneTrust OAuth Token w
 
 To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer.onetrust.com/onetrust/reference/oauth-20-scopes) and [Generate Access Token](https://developer.onetrust.com/onetrust/reference/getoauthtoken) pages.
 
+If syncing the resources to Transcend, you will also need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes when pushing the various resource types:
+
+| Resource    | Scope              |
+| ----------- | ------------------ |
+| assessments | Manage Assessments |
+
 #### Arguments
 
 | Argument      | Description                                                                                       | Type         | Default                  | Required |
