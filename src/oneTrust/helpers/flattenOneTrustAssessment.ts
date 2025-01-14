@@ -164,12 +164,9 @@ const flattenOneTrustSectionHeaders = (
   const flatFlatHeaders = restHeaders.map((h) =>
     flattenObject({ obj: h, prefix }),
   );
-  const flatRiskStatistics = riskStatistics.map((r) =>
-    flattenObject({ obj: r, prefix: `${prefix}_riskStatistics` }),
-  );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
-    ...aggregateObjects({ objs: flatRiskStatistics }),
+    ...flattenObject({ obj: { riskStatistics }, prefix }),
   };
 };
 
