@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "Small package containing useful typescript utilities.",
-  "version": "6.13.1",
+  "version": "6.13.2",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -59,7 +59,7 @@
     "clean": "yarn tsc --build --clean",
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
-    "test": "yarn mocha './src/**/*.test.ts'",
+    "test": "yarn mocha './src/**/*.test.ts' --reporter-option maxDiffSize=0",
     "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v6.json --write",
     "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
   },

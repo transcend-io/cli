@@ -130,6 +130,57 @@ describe('findCodePackagesInFolder', () => {
         repositoryName: 'transcend-io/cli',
       },
       {
+        name: 'Acme',
+        relativePath: 'test-requirements-txt/nested-cocoapods-2/Podfile',
+        repositoryName: 'transcend-io/cli',
+        softwareDevelopmentKits: [
+          {
+            name: 'RZVinyl',
+            version: undefined,
+          },
+          {
+            name: 'RZTransitions',
+            version: undefined,
+          },
+          {
+            name: 'SDWebImage',
+            version: undefined,
+          },
+          {
+            name: 'SwiftLint',
+            version: undefined,
+          },
+        ],
+        type: 'COCOA_PODS',
+      },
+      {
+        name: 'AcmeTests',
+        type: 'COCOA_PODS',
+        softwareDevelopmentKits: [
+          {
+            name: 'RZVinyl',
+            version: undefined,
+          },
+          {
+            name: 'iOSSnapshotTestCase',
+            version: undefined,
+          },
+          {
+            name: 'SnapshotTesting',
+            version: '1.8.1',
+          },
+        ],
+        relativePath: 'test-requirements-txt/nested-cocoapods-2/Podfile',
+        repositoryName: 'transcend-io/cli',
+      },
+      {
+        name: 'NotificationServiceExtension',
+        relativePath: 'test-requirements-txt/nested-cocoapods-2/Podfile',
+        repositoryName: 'transcend-io/cli',
+        softwareDevelopmentKits: [],
+        type: 'COCOA_PODS',
+      },
+      {
         name: 'com.yourcompany.yourapp',
         softwareDevelopmentKits: [
           {
