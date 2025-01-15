@@ -4,7 +4,7 @@ import { CodePackageSdk } from '../../codecs';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { CodePackageType } from '@transcend-io/privacy-types';
 
-const POD_TARGET_REGEX = /target '(.*?)'/;
+const POD_TARGET_REGEX = /target ('|")(.*?)('|")/;
 const POD_PACKAGE_REGEX = /pod ('|")(.*?)('|")(, ('|")~> (.+?)('|")|)/;
 
 export const cocoaPods: CodeScanningConfig = {
@@ -16,7 +16,7 @@ export const cocoaPods: CodeScanningConfig = {
     const targets = findAllWithRegex(
       {
         value: new RegExp(POD_TARGET_REGEX, 'g'),
-        matches: ['name'],
+        matches: ['quote1', 'name', 'quote2'],
       },
       fileContents,
     );
