@@ -1749,7 +1749,7 @@ export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
  *
  * @see https://docs.transcend.io/docs/silo-discovery
  */
-export const SiloDiscoveryRecommendation = t.intersection([
+export const SiloDiscoveryRecommendationInput = t.intersection([
   t.type({
     /** The ID of the plugin that found this recommendation */
     pluginId: t.string,
@@ -1789,8 +1789,8 @@ export const SiloDiscoveryRecommendation = t.intersection([
 ]);
 
 /** Type override */
-export type SiloDiscoveryRecommendation = t.TypeOf<
-  typeof SiloDiscoveryRecommendation
+export type SiloDiscoveryRecommendationInput = t.TypeOf<
+  typeof SiloDiscoveryRecommendationInput
 >;
 
 export const TranscendInput = t.partial({
@@ -1913,7 +1913,7 @@ export const TranscendInput = t.partial({
   /**
    * The full list of silo discovery recommendations
    */
-  siloDiscoveryRecommendations: t.array(SiloDiscoveryRecommendation),
+  siloDiscoveryRecommendations: t.array(SiloDiscoveryRecommendationInput),
 });
 
 /** Type override */

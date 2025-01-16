@@ -16,7 +16,7 @@ export interface SiloDiscoveryRecommendation {
   };
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 30;
 
 /**
  * Fetch all silo discovery recommendations in the organization
@@ -28,28 +28,68 @@ export async function fetchAllSiloDiscoveryRecommendations(
   client: GraphQLClient,
 ): Promise<SiloDiscoveryRecommendation[]> {
   const siloDiscoveryRecommendations: SiloDiscoveryRecommendation[] = [];
-  let lastKey;
+  let lastKey = null;
 
   // Whether to continue looping
   let shouldContinue = false;
   do {
+    /**
+     * Input for the GraphQL request
+     */
+    const input: {
+      /** whether to list pending or ignored recommendations */
+      isPending: boolean;
+      /** key for previous page */
+      lastKey?: {
+        /** ID of plugin that found recommendation */
+        pluginId: string;
+        /** unique identifier for the resource */
+        resourceId: string;
+        /** ID of organization resource belongs to */
+        organizationId: string;
+        /** Status of recommendation, concatenated with latest run time */
+        statusLatestRunTime: string;
+      } | null;
+    } = lastKey
+      ? {
+          isPending: true,
+          lastKey,
+        }
+      : {
+          isPending: true,
+        };
+
     const {
-      siloDiscoveryRecommendations: { nodes },
+      siloDiscoveryRecommendations: { nodes, lastKey: newLastKey },
       // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Silo Discovery Recommendations */
       siloDiscoveryRecommendations: {
         /** List */
         nodes: SiloDiscoveryRecommendation[];
+        /**
+         * Last key for pagination
+         */
+        lastKey: {
+          /** ID of plugin that found recommendation */
+          pluginId: string;
+          /** unique identifier for the resource */
+          resourceId: string;
+          /** ID of organization resource belongs to */
+          organizationId: string;
+          /** Status of recommendation, concatenated with latest run time */
+          statusLatestRunTime: string;
+        } | null;
       };
     }>(client, SILO_DISCOVERY_RECOMMENDATIONS, {
       first: PAGE_SIZE,
-      input: ,
-      filterBy:
+      input,
+      filterBy: {},
     });
+
     siloDiscoveryRecommendations.push(...nodes);
-    lastKey = PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
+    lastKey = newLastKey;
+    shouldContinue = nodes.length === PAGE_SIZE && lastKey !== null;
   } while (shouldContinue);
 
   return siloDiscoveryRecommendations.sort((a, b) =>
