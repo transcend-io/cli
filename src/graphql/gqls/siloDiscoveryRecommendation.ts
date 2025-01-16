@@ -1,7 +1,11 @@
 import { gql } from 'graphql-request';
 
 export const SILO_DISCOVERY_RECOMMENDATIONS = gql`
-  query TranscendCliVendors($first: Int!, $offset: Int!) {
+  query TranscendCliSiloDiscoveryRecommendations(
+    $first: Int
+    $input: SiloDiscoveryRecommendationsInput!
+    $filterBy: SiloDiscoveryRecommendationFiltersInput
+  ) {
     vendors(
       first: $first
       offset: $offset
@@ -13,31 +17,11 @@ export const SILO_DISCOVERY_RECOMMENDATIONS = gql`
       ]
     ) {
       nodes {
-        id
         title
-        description
-        dataProcessingAgreementLink
-        contactName
-        contactEmail
-        contactPhone
-        address
-        headquarterCountry
-        headquarterSubDivision
-        websiteUrl
-        businessEntity {
+        resourceId
+        lastDiscoveredAt
+        suggestedCatalog {
           title
-        }
-        teams {
-          name
-        }
-        owners {
-          email
-        }
-        attributeValues {
-          attributeKey {
-            name
-          }
-          name
         }
       }
     }
