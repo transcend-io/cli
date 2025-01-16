@@ -2,7 +2,19 @@ import { GraphQLClient } from 'graphql-request';
 import { SILO_DISCOVERY_RECOMMENDATIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-export interface SiloDiscoveryRecommendation {}
+export interface SiloDiscoveryRecommendation {
+  /** Title of silo discovery recommendation */
+  title: string;
+  /** Resource ID of silo discovery recommendation */
+  resourceId: string;
+  /** Last discovered at */
+  lastDiscoveredAt: string;
+  /** Suggested catalog */
+  suggestedCatalog: {
+    /** Title */
+    title: string;
+  };
+}
 
 const PAGE_SIZE = 20;
 
@@ -16,7 +28,7 @@ export async function fetchAllSiloDiscoveryRecommendations(
   client: GraphQLClient,
 ): Promise<SiloDiscoveryRecommendation[]> {
   const siloDiscoveryRecommendations: SiloDiscoveryRecommendation[] = [];
-  let offset = 0;
+  let lastKey;
 
   // Whether to continue looping
   let shouldContinue = false;
@@ -32,10 +44,11 @@ export async function fetchAllSiloDiscoveryRecommendations(
       };
     }>(client, SILO_DISCOVERY_RECOMMENDATIONS, {
       first: PAGE_SIZE,
-      offset,
+      input: ,
+      filterBy:
     });
     siloDiscoveryRecommendations.push(...nodes);
-    offset += PAGE_SIZE;
+    lastKey = PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 

@@ -6,16 +6,7 @@ export const SILO_DISCOVERY_RECOMMENDATIONS = gql`
     $input: SiloDiscoveryRecommendationsInput!
     $filterBy: SiloDiscoveryRecommendationFiltersInput
   ) {
-    vendors(
-      first: $first
-      offset: $offset
-      useMaster: false
-      isExportCsv: true
-      orderBy: [
-        { field: createdAt, direction: ASC }
-        { field: title, direction: ASC }
-      ]
-    ) {
+    siloDiscoveryRecommendations(first: $first, input: $input) {
       nodes {
         title
         resourceId
@@ -23,6 +14,17 @@ export const SILO_DISCOVERY_RECOMMENDATIONS = gql`
         suggestedCatalog {
           title
         }
+        plugin {
+          dataSilo {
+            title
+          }
+        }
+      }
+      lastKey {
+        pluginId
+        resourceId
+        organizationId
+        statusLatestRunTime
       }
     }
   }
