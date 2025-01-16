@@ -85,8 +85,9 @@ const flattenOneTrustRisks = (
       'categories',
     ]);
     return {
-      ...flattenObject({ obj: { risks }, prefix }),
-      ...flattenOneTrustRiskCategories(categories, `${prefix}_risks`),
+      ...(risks && flattenObject({ obj: { risks }, prefix })),
+      ...(categories &&
+        flattenOneTrustRiskCategories(categories, `${prefix}_risks`)),
     };
   });
 
@@ -111,13 +112,15 @@ const flattenOneTrustQuestions = (
       ]);
 
       return {
-        ...flattenObject({ obj: { questions }, prefix }),
-        ...flattenOneTrustNestedQuestions(nestedQuestions, prefix),
-        ...flattenOneTrustRisks(allRisks, `${prefix}_questions`),
-        ...flattenOneTrustQuestionResponses(
-          allQuestionResponses,
-          `${prefix}_questions`,
-        ),
+        ...(questions && flattenObject({ obj: { questions }, prefix })),
+        ...(nestedQuestions &&
+          flattenOneTrustNestedQuestions(nestedQuestions, prefix)),
+        ...(allRisks && flattenOneTrustRisks(allRisks, `${prefix}_questions`)),
+        ...(allQuestionResponses &&
+          flattenOneTrustQuestionResponses(
+            allQuestionResponses,
+            `${prefix}_questions`,
+          )),
       };
     },
   );
@@ -136,28 +139,30 @@ const flattenOneTrustSectionHeaders = (
     'riskStatistics',
   ]);
 
-  const flatFlatHeaders = restHeaders.map((h) =>
+  const flatFlatHeaders = (restHeaders ?? []).map((h) =>
     flattenObject({ obj: h, prefix }),
   );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
-    ...flattenObject({ obj: { riskStatistics }, prefix }),
+    ...(riskStatistics && flattenObject({ obj: { riskStatistics }, prefix })),
   };
 };
 
 const flattenOneTrustSections = (
   sections: OneTrustEnrichedAssessmentSection[],
 ): any => {
+  // filter out sections without questions (shouldn't happen, but just to be safe)
+  const sectionsWithQuestions = sections.filter((s) => s.questions.length > 0);
   const {
     questions: allQuestions,
     header: headers,
     rest: restSections,
-  } = transposeObjectArray(sections, ['questions', 'header']);
+  } = transposeObjectArray(sectionsWithQuestions, ['questions', 'header']);
 
   return {
-    ...flattenObject({ obj: { sections: restSections } }),
-    ...flattenOneTrustSectionHeaders(headers, 'sections'),
-    ...flattenOneTrustQuestions(allQuestions, 'sections'),
+    ...(restSections && flattenObject({ obj: { sections: restSections } })),
+    ...(headers && flattenOneTrustSectionHeaders(headers, 'sections')),
+    ...(allQuestions && flattenOneTrustQuestions(allQuestions, 'sections')),
   };
 };
 
