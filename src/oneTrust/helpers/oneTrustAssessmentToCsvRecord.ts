@@ -18,7 +18,11 @@ export const oneTrustAssessmentToCsvRecord = (
   // flatten the assessment object so it does not have nested properties
   const flatAssessment = flattenOneTrustAssessment(assessment);
 
-  // transform the flat assessment to have all CSV keys in the expected order
+  /**
+   * transform the flat assessment to:
+   * 1. have every possible header. This is how the backend can tell it's a CLI, not Dashboard, import.
+   * 2. have the headers in the same order. This is fundamental for constructing a CSV file.
+   */
   const flatAssessmentFull = Object.fromEntries(
     DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER.map((header) => {
       const value = flatAssessment[header] ?? '';
