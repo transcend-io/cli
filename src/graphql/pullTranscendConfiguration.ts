@@ -777,20 +777,18 @@ export async function pullTranscendConfiguration(
     result.siloDiscoveryRecommendations = siloDiscoveryRecommendations.map(
       ({
         title,
-        description,
-        status,
-        pluginId,
         resourceId,
-        organizationId,
-        statusLatestRunTime,
+        lastDiscoveredAt,
+        suggestedCatalog: { title: suggestedCatalogTitle },
+        plugin: {
+          dataSilo: { title: dataSiloTitle },
+        },
       }): SiloDiscoveryRecommendationInput => ({
         title,
-        description,
-        status,
-        pluginId,
         resourceId,
-        organizationId,
-        statusLatestRunTime,
+        lastDiscoveredAt,
+        suggestedCatalog: suggestedCatalogTitle,
+        plugin: dataSiloTitle,
       }),
     );
   }

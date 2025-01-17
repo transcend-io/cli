@@ -14,6 +14,14 @@ export interface SiloDiscoveryRecommendation {
     /** Title */
     title: string;
   };
+  /** The plugin that found this recommendation */
+  plugin: {
+    /** The data silo the plugin belongs to */
+    dataSilo: {
+      /** The internal display title */
+      title: string;
+    };
+  };
 }
 
 const PAGE_SIZE = 30;
