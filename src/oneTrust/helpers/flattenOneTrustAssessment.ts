@@ -4,6 +4,7 @@ import {
   OneTrustAssessmentNestedQuestion,
   OneTrustAssessmentQuestionOption,
   OneTrustAssessmentQuestionResponses,
+  OneTrustAssessmentResponses,
   OneTrustAssessmentSectionHeader,
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
@@ -17,7 +18,9 @@ import {
   flattenObject,
   aggregateObjects,
   transposeObjectArray,
+  createDefaultCodec,
 } from '@transcend-io/type-utils';
+import { convertToEmptyStrings } from './convertToEmptyStrings';
 
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
@@ -42,31 +45,6 @@ const flattenOneTrustNestedQuestions = (
     ...flattenObject({ obj: { questions: restQuestions }, prefix }),
     ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_questions`),
   };
-};
-
-// FIXME: there is a bug here. My current guess is that if no question in a section has
-// responses, the output is string[], instead of string[][] (question responses per question in the section)
-// writing test cases may help catch this!
-// flatten questionResponses of every question within a section
-const flattenOneTrustQuestionResponses = (
-  allQuestionResponses: OneTrustAssessmentQuestionResponses[],
-  prefix: string,
-): any => {
-  const allQuestionResponsesFlat = allQuestionResponses.map((qrs) => {
-    const { responses, rest: questionResponses } = transposeObjectArray(
-      qrs.map((q) => ({
-        ...q,
-        // there is always just one response within responses
-        responses: q.responses[0],
-      })),
-      ['responses'],
-    );
-    return {
-      ...flattenObject({ obj: { questionResponses: responses }, prefix }),
-      ...flattenObject({ obj: { questionResponses }, prefix }),
-    };
-  });
-  return aggregateObjects({ objs: allQuestionResponsesFlat, wrap: true });
 };
 
 const flattenOneTrustRiskCategories = (
@@ -97,7 +75,39 @@ const flattenOneTrustRisks = (
   return aggregateObjects({ objs: allRisksFlat, wrap: true });
 };
 
-const flattenOneTrustQuestions = (
+// flatten questionResponses of every question within a section
+export const flattenOneTrustQuestionResponses = (
+  allQuestionResponses: OneTrustAssessmentQuestionResponses[],
+  prefix: string,
+): any => {
+  const allQuestionResponsesFlat = allQuestionResponses.map((qrs) => {
+    const defaultQuestionResponses = convertToEmptyStrings(
+      createDefaultCodec(OneTrustAssessmentQuestionResponses),
+    ) as OneTrustAssessmentQuestionResponses;
+
+    const defaultResponses = convertToEmptyStrings(
+      createDefaultCodec(OneTrustAssessmentResponses),
+    ) as OneTrustAssessmentResponses;
+
+    const { responses, rest: questionResponses } = transposeObjectArray(
+      (qrs.length === 0 ? defaultQuestionResponses : qrs).map((q) => ({
+        ...q,
+        // there is always at most one response within responses
+        responses: q.responses[0] ?? defaultResponses[0],
+      })),
+      ['responses'],
+    );
+
+    return {
+      ...flattenObject({ obj: { questionResponses: responses }, prefix }),
+      ...flattenObject({ obj: { questionResponses }, prefix }),
+    };
+  });
+
+  return aggregateObjects({ objs: allQuestionResponsesFlat, wrap: true });
+};
+
+export const flattenOneTrustQuestions = (
   allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][],
   prefix: string,
 ): any => {
