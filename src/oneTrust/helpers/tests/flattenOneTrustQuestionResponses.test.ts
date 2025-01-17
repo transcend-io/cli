@@ -9,6 +9,7 @@ import {
   OneTrustAssessmentQuestionOption,
   OneTrustAssessmentQuestionResponses,
   OneTrustAssessmentResponses,
+  OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
 import {
   OneTrustEnrichedAssessmentQuestion,
@@ -29,8 +30,11 @@ describe('flattenOneTrustQuestions', () => {
     createDefaultCodec(OneTrustAssessmentNestedQuestion);
   const defaultQuestionOption: OneTrustAssessmentQuestionOption =
     createDefaultCodec(OneTrustAssessmentQuestionOption);
-  const defaultQuestionRisk: OneTrustEnrichedRisk =
+  const defaultRisk: OneTrustEnrichedRisk =
     createDefaultCodec(OneTrustEnrichedRisk);
+  const defaultRiskCategory: OneTrustRiskCategories = createDefaultCodec(
+    OneTrustRiskCategories,
+  );
 
   it('should return an empty flat object on empty list input', () => {
     const questions = [[]];
@@ -135,7 +139,7 @@ describe('flattenOneTrustQuestions', () => {
     );
   });
 
-  it('should correctly flatten questions risks', () => {
+  it.only('should correctly flatten questions risks', () => {
     const allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][] = [
       // section 1
       [
@@ -144,11 +148,11 @@ describe('flattenOneTrustQuestions', () => {
           ...defaultQuestion,
           risks: [
             {
-              ...defaultQuestionRisk,
+              ...defaultRisk,
               name: 's1q1r1',
             },
             {
-              ...defaultQuestionRisk,
+              ...defaultRisk,
               name: 's1q1r2',
             },
           ],
@@ -158,7 +162,7 @@ describe('flattenOneTrustQuestions', () => {
           ...defaultQuestion,
           risks: [
             {
-              ...defaultQuestionRisk,
+              ...defaultRisk,
               name: 's1q2r1',
             },
           ],
@@ -186,7 +190,7 @@ describe('flattenOneTrustQuestions', () => {
           ...defaultQuestion,
           risks: [
             {
-              ...defaultQuestionRisk,
+              ...defaultRisk,
               name: 's2q2r1',
             },
           ],
@@ -235,6 +239,140 @@ describe('flattenOneTrustQuestions', () => {
     const section4 = '[[]]';
     expect(sections_questions_risks_name).to.equal(
       `${section1},${section2},${section3},${section4}`,
+    );
+  });
+
+  it.only('should correctly flatten questions risks categories', () => {
+    const allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][] = [
+      // section 0
+      [
+        // question 0
+        {
+          ...defaultQuestion,
+          risks: [
+            // risk 0
+            {
+              ...defaultRisk,
+              categories: [
+                // category 0
+                {
+                  ...defaultRiskCategory[0],
+                  name: 's010r0c0',
+                },
+                // category 1
+                {
+                  ...defaultRiskCategory[0],
+                  name: 's010r0c1',
+                },
+              ],
+            },
+            // risk 1
+            {
+              ...defaultRisk,
+              categories: [],
+            },
+          ],
+        },
+        // question 1
+        {
+          ...defaultQuestion,
+          risks: [
+            // risk 1
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+            // risk 2
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+          ],
+        },
+        // question 2
+        {
+          ...defaultQuestion,
+          risks: [
+            // risk 0
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+            // risk 1
+            {
+              ...defaultRisk,
+              categories: [
+                // category 0
+                {
+                  ...defaultRiskCategory[0],
+                  name: 's0q2r1c0',
+                },
+              ],
+            },
+            // risk 2
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+          ],
+        },
+        // question 3
+        {
+          ...defaultQuestion,
+          // empty risks
+          risks: [],
+        },
+        // TODO: test with null risks
+      ],
+      // section 1
+      [
+        // question 0
+        {
+          ...defaultQuestion,
+          risks: [
+            // risk 0
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+          ],
+        },
+      ],
+      // section 2
+      [
+        // question 1
+        {
+          ...defaultQuestion,
+          // empty risks
+          risks: [],
+        },
+      ],
+    ];
+
+    // section 0 question 0 has 2 risks, the first with 2 categories
+    const section0Question0 = '[[s010r0c0,s010r0c1],[]]';
+    // section 0 question 1 has 2 risks, none with categories
+    const section0Question1 = '[[],[]]';
+    // section 0 question 2 has 3 risks, the middle one with 1 category
+    const section0Question2 = '[[],[s0q2r1c0],[]]';
+    // section 0 question 3 has 0 risks
+    const section0Question3 = '[]';
+    const section0 = `[${section0Question0},${section0Question1},${section0Question2},${section0Question3}]`;
+    // section 1 question 0 has 1 risk with empty categories
+    const section1question0 = '[[]]';
+    const section1 = `[${section1question0}]`;
+    // section 2 question 0 has 0 risks
+    const section2question0 = '[]';
+    const section2 = `[${section2question0}]`;
+    const { sections_questions_risks_categories_name } =
+      flattenOneTrustQuestions(allSectionQuestions, 'sections');
+    expect(sections_questions_risks_categories_name).to.equal(
+      `${section0},${section1},${section2}`,
     );
   });
 

@@ -65,8 +65,20 @@ const flattenOneTrustRiskCategories = (
   allCategories: OneTrustRiskCategories[],
   prefix: string,
 ): any => {
-  const allCategoriesFlat = (allCategories ?? []).map((categories) =>
-    flattenObject({ obj: { categories }, prefix }),
+  const defaultRiskCategories = convertToEmptyStrings(
+    createDefaultCodec(OneTrustRiskCategories),
+  ) as OneTrustRiskCategories;
+
+  const allCategoriesFlat = allCategories.map((categories) =>
+    !categories
+      ? {}
+      : flattenObject({
+          obj: {
+            categories:
+              categories.length === 0 ? defaultRiskCategories : categories,
+          },
+          prefix,
+        }),
   );
   return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
 };
@@ -77,15 +89,24 @@ const flattenOneTrustRisks = (
   prefix: string,
 ): any => {
   const allRisksFlat = (allRisks ?? []).map((ars) => {
-    const { categories, rest: risks } = transposeObjectArray(ars ?? [], [
-      'categories',
-    ]);
+    const { categories: allCategories, rest: risks } = transposeObjectArray(
+      ars ?? [],
+      ['categories'],
+    );
+
+    // console.log({
+    //   question: i,
+    //   allCategories: JSON.stringify(allCategories, null, 2),
+    // });
+
     return {
       ...(risks && flattenObject({ obj: { risks }, prefix })),
-      ...(categories &&
-        flattenOneTrustRiskCategories(categories, `${prefix}_risks`)),
+      ...(allCategories &&
+        flattenOneTrustRiskCategories(allCategories, `${prefix}_risks`)),
     };
   });
+
+  // console.log({ allRisksFlat });
 
   return aggregateObjects({ objs: allRisksFlat, wrap: true });
 };
@@ -140,12 +161,21 @@ export const flattenOneTrustQuestions = (
         'risks',
       ]);
 
-      const defaultRisk = convertToEmptyStrings(
-        createDefaultCodec(OneTrustEnrichedRisk),
-      ) as OneTrustEnrichedRisk;
+      const defaultRisk = {
+        ...convertToEmptyStrings(createDefaultCodec(OneTrustEnrichedRisk)),
+        categories: null,
+      } as OneTrustEnrichedRisk;
+      // must differentiate zero risks and no risks when it com
+      /**
+       * FIXME: must differentiate empty risks and risk with empty categories
+       * right now we convert empty risks to risk with empty categories so both look the same
+       * ideally, when there is no risk we would behave like there is no category
+       */
       const allRisksDefault = allRisks.map((risks) =>
         !risks || risks.length === 0 ? [defaultRisk] : risks,
       );
+
+      // console.log({ allRisksDefault });
 
       return {
         ...(questions && flattenObject({ obj: { questions }, prefix })),
@@ -161,7 +191,7 @@ export const flattenOneTrustQuestions = (
       };
     },
   );
-
+  // console.log({ allSectionQuestionsFlat });
   return aggregateObjects({
     objs: allSectionQuestionsFlat,
     wrap: true,
