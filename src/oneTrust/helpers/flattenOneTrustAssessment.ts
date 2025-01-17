@@ -71,6 +71,7 @@ const flattenOneTrustRiskCategories = (
   return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
 };
 
+// FIXME: test categories
 const flattenOneTrustRisks = (
   allRisks: (OneTrustEnrichedRisk[] | null)[],
   prefix: string,
@@ -139,11 +140,19 @@ export const flattenOneTrustQuestions = (
         'risks',
       ]);
 
+      const defaultRisk = convertToEmptyStrings(
+        createDefaultCodec(OneTrustEnrichedRisk),
+      ) as OneTrustEnrichedRisk;
+      const allRisksDefault = allRisks.map((risks) =>
+        !risks || risks.length === 0 ? [defaultRisk] : risks,
+      );
+
       return {
         ...(questions && flattenObject({ obj: { questions }, prefix })),
         ...(nestedQuestions &&
           flattenOneTrustNestedQuestions(nestedQuestions, prefix)),
-        ...(allRisks && flattenOneTrustRisks(allRisks, `${prefix}_questions`)),
+        ...(allRisksDefault &&
+          flattenOneTrustRisks(allRisksDefault, `${prefix}_questions`)),
         ...(allQuestionResponses &&
           flattenOneTrustQuestionResponses(
             allQuestionResponses,
