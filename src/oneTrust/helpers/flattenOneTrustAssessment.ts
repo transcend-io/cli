@@ -22,6 +22,7 @@ import {
 } from '@transcend-io/type-utils';
 import { convertToEmptyStrings } from './convertToEmptyStrings';
 
+// DONE
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
   prefix: string,
@@ -41,9 +42,22 @@ const flattenOneTrustNestedQuestions = (
     ['options'],
   );
 
+  const defaultQuestionResponses = convertToEmptyStrings(
+    createDefaultCodec(OneTrustAssessmentQuestionOption),
+  ) as OneTrustAssessmentQuestionOption;
+
+  const allOptionsWithDefault = allOptions.map((questionOptions) =>
+    !questionOptions || questionOptions.length === 0
+      ? [defaultQuestionResponses]
+      : questionOptions,
+  );
+
   return {
     ...flattenObject({ obj: { questions: restQuestions }, prefix }),
-    ...flattenOneTrustNestedQuestionsOptions(allOptions, `${prefix}_questions`),
+    ...flattenOneTrustNestedQuestionsOptions(
+      allOptionsWithDefault,
+      `${prefix}_questions`,
+    ),
   };
 };
 
@@ -75,8 +89,9 @@ const flattenOneTrustRisks = (
   return aggregateObjects({ objs: allRisksFlat, wrap: true });
 };
 
+// DONE
 // flatten questionResponses of every question within a section
-export const flattenOneTrustQuestionResponses = (
+const flattenOneTrustQuestionResponses = (
   allQuestionResponses: OneTrustAssessmentQuestionResponses[],
   prefix: string,
 ): any => {
