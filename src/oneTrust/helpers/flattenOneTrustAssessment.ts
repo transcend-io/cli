@@ -44,6 +44,9 @@ const flattenOneTrustNestedQuestions = (
   };
 };
 
+// FIXME: there is a bug here. My current guess is that if no question in a section has
+// responses, the output is string[], instead of string[][] (question responses per question in the section)
+// writing test cases may help catch this!
 // flatten questionResponses of every question within a section
 const flattenOneTrustQuestionResponses = (
   allQuestionResponses: OneTrustAssessmentQuestionResponses[],
