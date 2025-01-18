@@ -6,6 +6,7 @@ import {
   OneTrustAssessmentQuestionResponses,
   OneTrustAssessmentResponses,
   OneTrustAssessmentSectionHeader,
+  OneTrustAssessmentSectionHeaderRiskStatistics,
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
 import {
@@ -22,7 +23,6 @@ import {
 } from '@transcend-io/type-utils';
 import { convertToEmptyStrings } from './convertToEmptyStrings';
 
-// DONE
 const flattenOneTrustNestedQuestionsOptions = (
   allOptions: (OneTrustAssessmentQuestionOption[] | null)[],
   prefix: string,
@@ -83,7 +83,6 @@ const flattenOneTrustRiskCategories = (
   return aggregateObjects({ objs: allCategoriesFlat, wrap: true });
 };
 
-// FIXME: test categories
 const flattenOneTrustRisks = (
   allRisks: (OneTrustEnrichedRisk[] | null)[],
   prefix: string,
@@ -104,8 +103,6 @@ const flattenOneTrustRisks = (
   return aggregateObjects({ objs: allRisksFlat, wrap: true });
 };
 
-// DONE
-// flatten questionResponses of every question within a section
 const flattenOneTrustQuestionResponses = (
   allQuestionResponses: OneTrustAssessmentQuestionResponses[],
   prefix: string,
@@ -158,12 +155,6 @@ export const flattenOneTrustQuestions = (
         ...convertToEmptyStrings(createDefaultCodec(OneTrustEnrichedRisk)),
         categories: null,
       } as OneTrustEnrichedRisk;
-      // must differentiate zero risks and no risks when it com
-      /**
-       * FIXME: must differentiate empty risks and risk with empty categories
-       * right now we convert empty risks to risk with empty categories so both look the same
-       * ideally, when there is no risk we would behave like there is no category
-       */
       const allRisksDefault = allRisks.map((risks) =>
         !risks || risks.length === 0 ? [defaultRisk] : risks,
       );
@@ -200,17 +191,27 @@ const flattenOneTrustSectionHeaders = (
   const { riskStatistics, rest: restHeaders } = transposeObjectArray(headers, [
     'riskStatistics',
   ]);
+  const defaultRiskStatistics = convertToEmptyStrings(
+    createDefaultCodec(OneTrustAssessmentSectionHeaderRiskStatistics),
+  ) as OneTrustAssessmentSectionHeaderRiskStatistics;
+  const riskStatisticsWithDefault = riskStatistics.map((rs) =>
+    !rs ? defaultRiskStatistics : rs,
+  );
 
   const flatFlatHeaders = (restHeaders ?? []).map((h) =>
     flattenObject({ obj: h, prefix }),
   );
   return {
     ...aggregateObjects({ objs: flatFlatHeaders }),
-    ...(riskStatistics && flattenObject({ obj: { riskStatistics }, prefix })),
+    ...(riskStatisticsWithDefault &&
+      flattenObject({
+        obj: { riskStatistics: riskStatisticsWithDefault },
+        prefix,
+      })),
   };
 };
 
-const flattenOneTrustSections = (
+export const flattenOneTrustSections = (
   sections: OneTrustEnrichedAssessmentSection[],
 ): any => {
   // filter out sections without questions (shouldn't happen, but just to be safe)
