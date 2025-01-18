@@ -1,9 +1,5 @@
 import { createDefaultCodec } from '@transcend-io/type-utils';
 import { OneTrustEnrichedAssessment } from '../codecs';
-import {
-  OneTrustAssessmentQuestionResponses,
-  OneTrustAssessmentResponses,
-} from '@transcend-io/privacy-types';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
 
 /**

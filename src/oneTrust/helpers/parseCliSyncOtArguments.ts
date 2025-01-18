@@ -57,7 +57,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     boolean: ['debug', 'dryRun'],
     default: {
       resource: OneTrustPullResource.Assessments,
-      fileFormat: OneTrustFileFormat.Csv,
+      fileFormat: OneTrustFileFormat.Json,
       debug: false,
       dryRun: false,
       transcendUrl: 'https://api.transcend.io',
@@ -85,10 +85,10 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   }
 
   // Can only sync to Transcend via a CSV file format!
-  if (!dryRun && fileFormat !== OneTrustFileFormat.Csv) {
+  if (!dryRun && fileFormat !== OneTrustFileFormat.Json) {
     logger.error(
       colors.red(
-        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Csv} to sync resources to Transcend.`,
+        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Json} to sync resources to Transcend.`,
       ),
     );
     return process.exit(1);

@@ -614,7 +614,7 @@ The API key needs the following scopes when pushing the various resource types:
 | transcendAuth | The Transcend API Key to with the scopes necessary to access Transcend's Public APIs.             | string       | N/A                      | false    |
 | transcendUrl  | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                     | string - URL | https://api.transcend.io | false    |
 | file          | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string       | N/A                      | false    |
-| fileFormat    | The format of the output file.                                                                    | string       | csv                      | false    |
+| fileFormat    | The format of the output file.                                                                    | string       | json                     | false    |
 | resource      | The resource to pull from OneTrust. For now, only assessments is supported.                       | string       | assessments              | false    |
 | dryRun        | Whether to export the resource to a file rather than sync to Transcend.                           | boolean      | false                    | false    |
 | debug         | Whether to print detailed logs in case of error.                                                  | boolean      | false                    | false    |
