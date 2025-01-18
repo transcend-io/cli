@@ -1751,8 +1751,6 @@ export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
  */
 export const SiloDiscoveryRecommendationInput = t.intersection([
   t.type({
-    /** The ID of the plugin that found this recommendation */
-    pluginId: t.string,
     /** The unique identifier for the resource */
     resourceId: t.string,
     /** Timestamp of the plugin run that found this silo recommendation */
@@ -1760,10 +1758,11 @@ export const SiloDiscoveryRecommendationInput = t.intersection([
     /** The plugin that found this recommendation */
     plugin: t.string, // Assuming Plugin is a string, replace with appropriate type if necessary
     /** The suggested catalog for this recommendation */
-    suggestedCatalog: t.string, // Assuming Catalog is a string, replace with appropriate type if necessary
-    /** The raw inputs that were provided by the plugin as additionalContext and fed into our classifier */
-    rawInputs: t.array(t.string), // Assuming PlaintextContext is a string, replace with appropriate type if necessary
+    suggestedCatalog: t.string,
   }),
+  /**
+   * TODO: Allow for these to be pulled
+   */
   t.partial({
     /** The ISO country code for the AWS Region if applicable */
     country: t.string,

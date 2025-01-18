@@ -4,7 +4,6 @@ export const SILO_DISCOVERY_RECOMMENDATIONS = gql`
   query TranscendCliSiloDiscoveryRecommendations(
     $first: Int
     $input: SiloDiscoveryRecommendationsInput!
-    $filterBy: SiloDiscoveryRecommendationFiltersInput
   ) {
     siloDiscoveryRecommendations(first: $first, input: $input) {
       nodes {

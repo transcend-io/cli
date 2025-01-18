@@ -95,12 +95,25 @@ export async function fetchAllSiloDiscoveryRecommendations(
       filterBy: {},
     });
 
-    siloDiscoveryRecommendations.push(...nodes);
+    /**
+     * TODO: https://transcend.height.app/T-41786
+     * This is a temporary fix to ensure that recommendations without titles are given the title of their suggested catalog.
+     */
+    const titledNodes = nodes.map((node) => {
+      if (
+        node.title === null &&
+        node.suggestedCatalog &&
+        node.suggestedCatalog.title
+      ) {
+        return { ...node, title: node.suggestedCatalog.title };
+      }
+      return node;
+    });
+
+    siloDiscoveryRecommendations.push(...titledNodes);
     lastKey = newLastKey;
     shouldContinue = nodes.length === PAGE_SIZE && lastKey !== null;
   } while (shouldContinue);
 
-  return siloDiscoveryRecommendations.sort((a, b) =>
-    a.title.localeCompare(b.title),
-  );
+  return siloDiscoveryRecommendations;
 }
