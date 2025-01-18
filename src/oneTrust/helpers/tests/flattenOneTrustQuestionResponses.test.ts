@@ -25,6 +25,11 @@ import {
 chai.use(deepEqualInAnyOrder);
 
 describe('flattenOneTrustAssessment', () => {
+  const defaultQuestion: OneTrustEnrichedAssessmentQuestion =
+    createDefaultCodec(OneTrustEnrichedAssessmentQuestion);
+  const defaultNestedQuestion: OneTrustAssessmentNestedQuestion =
+    createDefaultCodec(OneTrustAssessmentNestedQuestion);
+
   describe('flattenOneTrustSections', () => {
     const defaultSection: OneTrustEnrichedAssessmentSection =
       createDefaultCodec(OneTrustEnrichedAssessmentSection);
@@ -70,18 +75,54 @@ describe('flattenOneTrustAssessment', () => {
       expect(sections_riskStatistics_riskCount).to.equal('5,');
       expect(sections_riskStatistics_sectionId).to.equal('section-0-id,');
     });
+
+    it('should correctly flatten the section questions', () => {
+      const sections: OneTrustEnrichedAssessmentSection[] = [
+        {
+          ...defaultSection,
+          questions: [
+            {
+              ...defaultQuestion,
+              question: {
+                ...defaultNestedQuestion,
+                content: 'section0-question0',
+              },
+            },
+          ],
+        },
+        {
+          ...defaultSection,
+          questions: [],
+        },
+        {
+          ...defaultSection,
+          questions: [
+            {
+              ...defaultQuestion,
+              question: {
+                ...defaultNestedQuestion,
+                content: 'section1-question0',
+              },
+            },
+          ],
+        },
+      ];
+
+      const result = flattenOneTrustSections(sections);
+      // should ignore sections without questions
+      const { sections_questions_content } = result;
+      expect(sections_questions_content).to.equal(
+        '[section0-question0],[section1-question0]',
+      );
+    });
   });
 
   describe('flattenOneTrustQuestions', () => {
-    const defaultQuestion: OneTrustEnrichedAssessmentQuestion =
-      createDefaultCodec(OneTrustEnrichedAssessmentQuestion);
     const defaultQuestionResponses: OneTrustAssessmentQuestionResponses =
       createDefaultCodec(OneTrustAssessmentQuestionResponses);
     const defaultResponses: OneTrustAssessmentResponses = createDefaultCodec(
       OneTrustAssessmentResponses,
     );
-    const defaultNestedQuestion: OneTrustAssessmentNestedQuestion =
-      createDefaultCodec(OneTrustAssessmentNestedQuestion);
     const defaultQuestionOption: OneTrustAssessmentQuestionOption =
       createDefaultCodec(OneTrustAssessmentQuestionOption);
     const defaultRisk: OneTrustEnrichedRisk =
@@ -296,7 +337,7 @@ describe('flattenOneTrustAssessment', () => {
       );
     });
 
-    it.only('should correctly flatten questions risks categories', () => {
+    it('should correctly flatten questions risks categories', () => {
       const allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][] = [
         // section 0
         [
