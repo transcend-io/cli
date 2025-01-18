@@ -94,19 +94,12 @@ const flattenOneTrustRisks = (
       ['categories'],
     );
 
-    // console.log({
-    //   question: i,
-    //   allCategories: JSON.stringify(allCategories, null, 2),
-    // });
-
     return {
       ...(risks && flattenObject({ obj: { risks }, prefix })),
       ...(allCategories &&
         flattenOneTrustRiskCategories(allCategories, `${prefix}_risks`)),
     };
   });
-
-  // console.log({ allRisksFlat });
 
   return aggregateObjects({ objs: allRisksFlat, wrap: true });
 };
@@ -175,8 +168,6 @@ export const flattenOneTrustQuestions = (
         !risks || risks.length === 0 ? [defaultRisk] : risks,
       );
 
-      // console.log({ allRisksDefault });
-
       return {
         ...(questions && flattenObject({ obj: { questions }, prefix })),
         ...(nestedQuestions &&
@@ -191,7 +182,11 @@ export const flattenOneTrustQuestions = (
       };
     },
   );
-  // console.log({ allSectionQuestionsFlat });
+
+  // const defaultQuestionResponses = convertToEmptyStrings(
+  //   createDefaultCodec(OneTrustAssessmentQuestionResponses),
+  // ) as OneTrustAssessmentQuestionResponses;
+
   return aggregateObjects({
     objs: allSectionQuestionsFlat,
     wrap: true,

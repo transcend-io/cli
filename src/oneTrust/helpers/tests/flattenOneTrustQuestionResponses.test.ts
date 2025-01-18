@@ -12,6 +12,7 @@ import {
   OneTrustRiskCategories,
 } from '@transcend-io/privacy-types';
 import {
+  // OneTrustEnrichedAssessment,
   OneTrustEnrichedAssessmentQuestion,
   OneTrustEnrichedRisk,
 } from '../../codecs';
@@ -139,7 +140,7 @@ describe('flattenOneTrustQuestions', () => {
     );
   });
 
-  it.only('should correctly flatten questions risks', () => {
+  it('should correctly flatten questions risks', () => {
     const allSectionQuestions: OneTrustEnrichedAssessmentQuestion[][] = [
       // section 1
       [
@@ -345,6 +346,32 @@ describe('flattenOneTrustQuestions', () => {
       ],
       // section 2
       [
+        // question 0
+        {
+          ...defaultQuestion,
+          // empty risks
+          risks: [],
+        },
+        // question 1
+        {
+          ...defaultQuestion,
+          // empty risks
+          risks: [],
+        },
+      ],
+      // section 3
+      [
+        // question 0
+        {
+          ...defaultQuestion,
+          risks: [
+            {
+              ...defaultRisk,
+              // empty categories
+              categories: [],
+            },
+          ],
+        },
         // question 1
         {
           ...defaultQuestion,
@@ -366,13 +393,17 @@ describe('flattenOneTrustQuestions', () => {
     // section 1 question 0 has 1 risk with empty categories
     const section1question0 = '[[]]';
     const section1 = `[${section1question0}]`;
-    // section 2 question 0 has 0 risks
-    const section2question0 = '[]';
-    const section2 = `[${section2question0}]`;
+    // section 2 questions have 0 risk
+    const section2 = '[]';
+    // section 3 question 0 has 1 risk with empty categories
+    const section3question0 = '[[]]';
+    // section 3 question 1 has 0 risks
+    const section3question1 = '[]';
+    const section3 = `[${section3question0},${section3question1}]`;
     const { sections_questions_risks_categories_name } =
       flattenOneTrustQuestions(allSectionQuestions, 'sections');
     expect(sections_questions_risks_categories_name).to.equal(
-      `${section0},${section1},${section2}`,
+      `${section0},${section1},${section2},${section3}`,
     );
   });
 
@@ -501,9 +532,6 @@ describe('flattenOneTrustQuestions', () => {
       allSectionQuestions,
       'sections',
     );
-
-    // [[s1q1o1,s1q1o2],[s1q2o1],[],[]],[[],[]],[[]]
-    // [[s1q1o1,s1q1o2],[s1q2o1],[],[]],[[],[]][[]]
 
     // 1st section has 4 questions, the first with 2 options, the second with 1 option,
     const section1 = '[[s1q1o1,s1q1o2],[s1q2o1],[],[]]';
