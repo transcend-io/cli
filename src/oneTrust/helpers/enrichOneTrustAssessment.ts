@@ -18,6 +18,7 @@ export const enrichOneTrustAssessment = ({
   assessmentDetails,
   riskDetails,
   creatorDetails,
+  approversDetails,
 }: {
   /** The OneTrust risk details */
   riskDetails: OneTrustGetRiskResponse[];
@@ -27,6 +28,8 @@ export const enrichOneTrustAssessment = ({
   assessmentDetails: OneTrustGetAssessmentResponse;
   /** The OneTrust assessment creator details */
   creatorDetails: OneTrustGetUserResponse;
+  /** The OneTrust assessment approvers details */
+  approversDetails: OneTrustGetUserResponse[];
 }): OneTrustEnrichedAssessment => {
   const riskDetailsById = keyBy(riskDetails, 'id');
   const { sections, createdBy, ...restAssessmentDetails } = assessmentDetails;
@@ -63,14 +66,38 @@ export const enrichOneTrustAssessment = ({
 
   const enrichedCreatedBy = {
     ...createdBy,
-    ...creatorDetails,
+    active: creatorDetails.active,
+    userType: creatorDetails.userType,
+    emails: creatorDetails.emails,
+    title: creatorDetails.title,
+    givenName: creatorDetails.name.givenName ?? null,
+    familyName: creatorDetails.name.familyName ?? null,
   };
+
+  const approverDetailsById = keyBy(approversDetails, 'id');
+  const enrichedApprovers = assessmentDetails.approvers.map(
+    (originalApprover) => ({
+      ...originalApprover,
+      approver: {
+        ...originalApprover.approver,
+        active: approverDetailsById[originalApprover.id].active,
+        userType: approverDetailsById[originalApprover.id].userType,
+        emails: approverDetailsById[originalApprover.id].emails,
+        title: approverDetailsById[originalApprover.id].title,
+        givenName:
+          approverDetailsById[originalApprover.id].name.givenName ?? null,
+        familyName:
+          approverDetailsById[originalApprover.id].name.familyName ?? null,
+      },
+    }),
+  );
 
   // combine the two assessments into a single enriched result
 
   return {
     ...assessment,
     ...restAssessmentDetails,
+    approvers: enrichedApprovers,
     createdBy: enrichedCreatedBy,
     sections: sectionsWithEnrichedRisk,
   };

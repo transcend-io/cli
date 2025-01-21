@@ -50,7 +50,7 @@ export const syncOneTrustAssessments = async ({
   const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
   // a cache of OneTrust users so we avoid sending requests for users already fetched
-  const allOneTrustUsers: Record<string, OneTrustGetUserResponse> = {};
+  const oneTrustCachedUsers: Record<string, OneTrustGetUserResponse> = {};
 
   /**
    * fetch details about each assessment in series and write to transcend or to disk
@@ -75,12 +75,35 @@ export const syncOneTrustAssessments = async ({
     );
     const creatorId = assessmentDetails.createdBy.id;
     const creator =
-      allOneTrustUsers[creatorId] ??
+      oneTrustCachedUsers[creatorId] ??
       (await getOneTrustUser({
         oneTrust,
-        creatorId: assessmentDetails.createdBy.id,
+        userId: creatorId,
       }));
-    allOneTrustUsers[creatorId] = creator;
+    oneTrustCachedUsers[creatorId] = creator;
+
+    // fetch assessment approvers information
+    const { approvers } = assessmentDetails;
+    let approversDetails: OneTrustGetUserResponse[] = [];
+    if (approvers.length > 0) {
+      logger.info(
+        `Fetching details about ${approvers.length} approvers for assessment ${
+          index + 1
+        } of ${assessments.length}...`,
+      );
+      approversDetails = await map(
+        approvers.map(({ id }) => id),
+        async (userId) => {
+          let approver = oneTrustCachedUsers[userId];
+          if (!approver) {
+            approver = await getOneTrustUser({ oneTrust, userId });
+            oneTrustCachedUsers[userId] = approver;
+          }
+          return approver;
+        },
+        { concurrency: 5 },
+      );
+    }
 
     // fetch assessment risk information
     let riskDetails: OneTrustGetRiskResponse[] = [];
@@ -112,6 +135,7 @@ export const syncOneTrustAssessments = async ({
       assessmentDetails,
       riskDetails,
       creatorDetails: creator,
+      approversDetails,
     });
 
     if (dryRun && file && fileFormat) {

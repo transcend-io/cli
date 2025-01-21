@@ -5,7 +5,6 @@ import { decodeCodec } from '@transcend-io/type-utils';
 /**
  * FIXME: move to privacy-types
  */
-
 // Nested types first
 const OneTrustUserMetadata = t.type({
   /** When the user was created */
@@ -20,7 +19,7 @@ const OneTrustUserMetadata = t.type({
 /** Type override */
 export type OneTrustUserMetadata = t.TypeOf<typeof OneTrustUserMetadata>;
 
-const OneTrustUserName = t.type({
+const OneTrustUserName = t.partial({
   /** The user's family name */
   familyName: t.string,
   /** The user's given name */
@@ -104,14 +103,14 @@ export type OneTrustGetUserResponse = t.TypeOf<typeof OneTrustGetUserResponse>;
  */
 export const getOneTrustUser = async ({
   oneTrust,
-  creatorId,
+  userId,
 }: {
   /** The OneTrust client instance */
   oneTrust: Got;
   /** The ID of the OneTrust user to retrieve */
-  creatorId: string;
+  userId: string;
 }): Promise<OneTrustGetUserResponse> => {
-  const { body } = await oneTrust.get(`api/scim/v2/Users/${creatorId}`);
+  const { body } = await oneTrust.get(`api/scim/v2/Users/${userId}`);
 
   return decodeCodec(OneTrustGetUserResponse, body);
 };

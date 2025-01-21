@@ -1,4 +1,5 @@
 import {
+  OneTrustApprover,
   OneTrustAssessment,
   OneTrustAssessmentNestedQuestion,
   OneTrustAssessmentQuestion,
@@ -166,9 +167,20 @@ export type OneTrustAssessmentCreatedBy = t.TypeOf<
   typeof OneTrustAssessmentCreatedBy
 >;
 
+export const OneTrustUserDetails = t.type({
+  active: OneTrustGetUserResponse.props.active,
+  userType: OneTrustGetUserResponse.props.userType,
+  emails: OneTrustGetUserResponse.props.emails,
+  title: OneTrustGetUserResponse.props.title,
+  givenName: t.union([t.string, t.null]),
+  familyName: t.union([t.string, t.null]),
+});
+/** Type override */
+export type OneTrustUserDetails = t.TypeOf<typeof OneTrustUserDetails>;
+
 export const OneTrustEnrichedUser = t.type({
   ...OneTrustAssessmentCreatedBy.props,
-  ...OneTrustGetUserResponse.props,
+  ...OneTrustUserDetails.props,
 });
 
 /** Type override */
@@ -176,6 +188,15 @@ export type OneTrustEnrichedUser = t.TypeOf<typeof OneTrustEnrichedUser>;
 
 export const OneTrustEnrichedAssessmentResponse = t.type({
   ...OneTrustGetAssessmentResponse.props,
+  approvers: t.array(
+    t.type({
+      ...OneTrustApprover.props,
+      approver: t.type({
+        ...OneTrustApprover.props.approver.props,
+        ...OneTrustUserDetails.props,
+      }),
+    }),
+  ),
   createdBy: OneTrustEnrichedUser,
   sections: t.array(OneTrustEnrichedAssessmentSection),
 });
