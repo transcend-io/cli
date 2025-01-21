@@ -82,12 +82,6 @@ export const syncOneTrustAssessments = async ({
       }));
     allOneTrustUsers[creatorId] = creator;
 
-    /**
-     * FIXME: enrich rootRequestInformationIds
-     */
-
-    // console.log({ creator });
-
     // fetch assessment risk information
     let riskDetails: OneTrustGetRiskResponse[] = [];
     const riskIds = uniq(
