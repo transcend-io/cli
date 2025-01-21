@@ -1,6 +1,5 @@
 import { Got } from 'got/dist/source';
 import {
-  OneTrustGetUserResponse,
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
   getOneTrustRisk,
@@ -12,6 +11,7 @@ import {
   OneTrustAssessmentQuestion,
   OneTrustAssessmentSection,
   OneTrustGetRiskResponse,
+  OneTrustGetUserResponse,
 } from '@transcend-io/privacy-types';
 import uniq from 'lodash/uniq';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';

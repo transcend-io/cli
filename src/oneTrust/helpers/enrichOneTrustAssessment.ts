@@ -1,11 +1,11 @@
 import {
   OneTrustAssessment,
+  OneTrustEnrichedAssessment,
   OneTrustGetAssessmentResponse,
   OneTrustGetRiskResponse,
+  OneTrustGetUserResponse,
 } from '@transcend-io/privacy-types';
 import keyBy from 'lodash/keyBy';
-import { OneTrustEnrichedAssessment } from '../codecs';
-import { OneTrustGetUserResponse } from '../endpoints';
 
 /**
  * Merge the assessment, assessmentDetails, and riskDetails into one object.
