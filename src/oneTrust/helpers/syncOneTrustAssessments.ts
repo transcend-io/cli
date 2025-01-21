@@ -1,5 +1,6 @@
 import { Got } from 'got/dist/source';
 import {
+  OneTrustGetUserResponse,
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
   getOneTrustRisk,
@@ -48,6 +49,9 @@ export const syncOneTrustAssessments = async ({
   logger.info('Getting list of all assessments from OneTrust...');
   const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
+  // a cache of OneTrust users so we avoid sending requests for users already fetched
+  const allOneTrustUsers: Record<string, OneTrustGetUserResponse> = {};
+
   /**
    * fetch details about each assessment in series and write to transcend or to disk
    * (depending on the dryRun argument) right away to avoid running out of memory
@@ -63,11 +67,20 @@ export const syncOneTrustAssessments = async ({
       assessmentId: assessment.assessmentId,
     });
 
-    // enrich assessments with user information
-    const creator = await getOneTrustUser({
-      oneTrust,
-      creatorId: assessmentDetails.createdBy.id,
-    });
+    // fetch assessment's creator information
+    logger.info(
+      `Fetching details about assessment ${index + 1} of ${
+        assessments.length
+      } creator...`,
+    );
+    const creatorId = assessmentDetails.createdBy.id;
+    const creator =
+      allOneTrustUsers[creatorId] ??
+      (await getOneTrustUser({
+        oneTrust,
+        creatorId: assessmentDetails.createdBy.id,
+      }));
+    allOneTrustUsers[creatorId] = creator;
 
     /**
      * FIXME: enrich rootRequestInformationIds
@@ -75,7 +88,7 @@ export const syncOneTrustAssessments = async ({
 
     // console.log({ creator });
 
-    // enrich assessments with risk information
+    // fetch assessment risk information
     let riskDetails: OneTrustGetRiskResponse[] = [];
     const riskIds = uniq(
       assessmentDetails.sections.flatMap((s: OneTrustAssessmentSection) =>
