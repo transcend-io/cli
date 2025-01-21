@@ -197,6 +197,16 @@ export const OneTrustEnrichedAssessmentResponse = t.type({
       }),
     }),
   ),
+  respondents: t.array(
+    t.intersection([
+      t.type({
+        ...OneTrustGetAssessmentResponse.props.respondent.props,
+      }),
+      t.partial({
+        ...OneTrustUserDetails.props,
+      }),
+    ]),
+  ),
   createdBy: OneTrustEnrichedUser,
   sections: t.array(OneTrustEnrichedAssessmentSection),
 });

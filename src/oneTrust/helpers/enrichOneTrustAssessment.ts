@@ -19,6 +19,7 @@ export const enrichOneTrustAssessment = ({
   riskDetails,
   creatorDetails,
   approversDetails,
+  respondentsDetails,
 }: {
   /** The OneTrust risk details */
   riskDetails: OneTrustGetRiskResponse[];
@@ -30,6 +31,8 @@ export const enrichOneTrustAssessment = ({
   creatorDetails: OneTrustGetUserResponse;
   /** The OneTrust assessment approvers details */
   approversDetails: OneTrustGetUserResponse[];
+  /** The OneTrust assessment internal respondents details */
+  respondentsDetails: OneTrustGetUserResponse[];
 }): OneTrustEnrichedAssessment => {
   const riskDetailsById = keyBy(riskDetails, 'id');
   const { sections, createdBy, ...restAssessmentDetails } = assessmentDetails;
@@ -39,7 +42,6 @@ export const enrichOneTrustAssessment = ({
       const { risks, ...restQuestion } = question;
       const enrichedRisks = (risks ?? []).map((risk) => {
         const details = riskDetailsById[risk.riskId];
-        // FIXME: missing the risk meta data and links to the assessment
         return {
           ...risk,
           description: details.description,
@@ -64,6 +66,7 @@ export const enrichOneTrustAssessment = ({
     };
   });
 
+  // grab creator details
   const enrichedCreatedBy = {
     ...createdBy,
     active: creatorDetails.active,
@@ -74,6 +77,7 @@ export const enrichOneTrustAssessment = ({
     familyName: creatorDetails.name.familyName ?? null,
   };
 
+  // grab approvers details
   const approverDetailsById = keyBy(approversDetails, 'id');
   const enrichedApprovers = assessmentDetails.approvers.map(
     (originalApprover) => ({
@@ -92,12 +96,26 @@ export const enrichOneTrustAssessment = ({
     }),
   );
 
-  // combine the two assessments into a single enriched result
+  // grab respondents details
+  const respondentsDetailsById = keyBy(respondentsDetails, 'id');
+  const enrichedRespondents = assessmentDetails.respondents.map(
+    (respondent) => ({
+      ...respondent,
+      active: respondentsDetailsById[respondent.id].active,
+      userType: respondentsDetailsById[respondent.id].userType,
+      emails: respondentsDetailsById[respondent.id].emails,
+      title: respondentsDetailsById[respondent.id].title,
+      givenName: respondentsDetailsById[respondent.id].name.givenName ?? null,
+      familyName: respondentsDetailsById[respondent.id].name.familyName ?? null,
+    }),
+  );
 
+  // combine everything into a single enriched assessment
   return {
     ...assessment,
     ...restAssessmentDetails,
     approvers: enrichedApprovers,
+    respondents: enrichedRespondents,
     createdBy: enrichedCreatedBy,
     sections: sectionsWithEnrichedRisk,
   };

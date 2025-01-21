@@ -68,19 +68,20 @@ export const syncOneTrustAssessments = async ({
     });
 
     // fetch assessment's creator information
-    logger.info(
-      `Fetching details about assessment ${index + 1} of ${
-        assessments.length
-      } creator...`,
-    );
     const creatorId = assessmentDetails.createdBy.id;
-    const creator =
-      oneTrustCachedUsers[creatorId] ??
-      (await getOneTrustUser({
+    let creator = oneTrustCachedUsers[creatorId];
+    if (!creator) {
+      logger.info(
+        `Fetching details about assessment ${index + 1} of ${
+          assessments.length
+        } creator...`,
+      );
+      creator = await getOneTrustUser({
         oneTrust,
         userId: creatorId,
-      }));
-    oneTrustCachedUsers[creatorId] = creator;
+      });
+      oneTrustCachedUsers[creatorId] = creator;
+    }
 
     // fetch assessment approvers information
     const { approvers } = assessmentDetails;
@@ -100,6 +101,35 @@ export const syncOneTrustAssessments = async ({
             oneTrustCachedUsers[userId] = approver;
           }
           return approver;
+        },
+        { concurrency: 5 },
+      );
+    }
+
+    // fetch assessment internal respondents information
+    const { respondents } = assessmentDetails;
+    // internal respondents names are not emails.
+    const internalRespondents = respondents.filter(
+      (r) => !r.name.includes('@'),
+    );
+    let respondentsDetails: OneTrustGetUserResponse[] = [];
+    if (internalRespondents.length > 0) {
+      logger.info(
+        `Fetching details about ${
+          internalRespondents.length
+        } internal responds for assessment ${index + 1} of ${
+          assessments.length
+        }...`,
+      );
+      respondentsDetails = await map(
+        internalRespondents.map(({ id }) => id),
+        async (userId) => {
+          let respondent = oneTrustCachedUsers[userId];
+          if (!respondent) {
+            respondent = await getOneTrustUser({ oneTrust, userId });
+            oneTrustCachedUsers[userId] = respondent;
+          }
+          return respondent;
         },
         { concurrency: 5 },
       );
@@ -129,13 +159,14 @@ export const syncOneTrustAssessments = async ({
       );
     }
 
-    // enrich the assessments with risk and details
+    // enrich the assessments with user and risk details
     const enrichedAssessment = enrichOneTrustAssessment({
       assessment,
       assessmentDetails,
       riskDetails,
       creatorDetails: creator,
       approversDetails,
+      respondentsDetails,
     });
 
     if (dryRun && file && fileFormat) {
