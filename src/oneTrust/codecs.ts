@@ -9,6 +9,9 @@ import {
   OneTrustGetRiskResponse,
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
+import { OneTrustGetUserResponse } from './endpoints';
+
+// FIXME: some some of these to privacy-types (the ones shared with main)
 
 /**  OneTrustAssessmentNestedQuestion without nested options */
 export const OneTrustAssessmentNestedQuestionFlat = t.type({
@@ -148,8 +151,32 @@ export type OneTrustEnrichedAssessmentSection = t.TypeOf<
   typeof OneTrustEnrichedAssessmentSection
 >;
 
+// FIXME: add to OneTrustGetAssessmentResponse
+const OneTrustAssessmentCreatedBy = t.type({
+  /** The ID of the creator */
+  id: t.string,
+  /** The name of the creator */
+  name: t.string,
+  /** The name key of the template */
+  nameKey: t.union([t.string, t.null]),
+});
+
+/** Type override */
+export type OneTrustAssessmentCreatedBy = t.TypeOf<
+  typeof OneTrustAssessmentCreatedBy
+>;
+
+export const OneTrustEnrichedUser = t.type({
+  ...OneTrustAssessmentCreatedBy.props,
+  ...OneTrustGetUserResponse.props,
+});
+
+/** Type override */
+export type OneTrustEnrichedUser = t.TypeOf<typeof OneTrustEnrichedUser>;
+
 export const OneTrustEnrichedAssessmentResponse = t.type({
   ...OneTrustGetAssessmentResponse.props,
+  createdBy: OneTrustEnrichedUser,
   sections: t.array(OneTrustEnrichedAssessmentSection),
 });
 /** Type override */

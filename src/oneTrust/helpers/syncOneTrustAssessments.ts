@@ -3,6 +3,7 @@ import {
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
   getOneTrustRisk,
+  getOneTrustUser,
 } from '../endpoints';
 import { map, mapSeries } from 'bluebird';
 import { logger } from '../../logger';
@@ -62,6 +63,18 @@ export const syncOneTrustAssessments = async ({
       assessmentId: assessment.assessmentId,
     });
 
+    // enrich assessments with user information
+    const creator = await getOneTrustUser({
+      oneTrust,
+      creatorId: assessmentDetails.createdBy.id,
+    });
+
+    /**
+     * FIXME: enrich rootRequestInformationIds
+     */
+
+    // console.log({ creator });
+
     // enrich assessments with risk information
     let riskDetails: OneTrustGetRiskResponse[] = [];
     const riskIds = uniq(
@@ -91,6 +104,7 @@ export const syncOneTrustAssessments = async ({
       assessment,
       assessmentDetails,
       riskDetails,
+      creatorDetails: creator,
     });
 
     if (dryRun && file && fileFormat) {

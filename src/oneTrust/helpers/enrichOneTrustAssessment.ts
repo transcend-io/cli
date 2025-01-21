@@ -5,6 +5,7 @@ import {
 } from '@transcend-io/privacy-types';
 import keyBy from 'lodash/keyBy';
 import { OneTrustEnrichedAssessment } from '../codecs';
+import { OneTrustGetUserResponse } from '../endpoints';
 
 /**
  * Merge the assessment, assessmentDetails, and riskDetails into one object.
@@ -16,6 +17,7 @@ export const enrichOneTrustAssessment = ({
   assessment,
   assessmentDetails,
   riskDetails,
+  creatorDetails,
 }: {
   /** The OneTrust risk details */
   riskDetails: OneTrustGetRiskResponse[];
@@ -23,9 +25,11 @@ export const enrichOneTrustAssessment = ({
   assessment: OneTrustAssessment;
   /** The OneTrust assessment details */
   assessmentDetails: OneTrustGetAssessmentResponse;
+  /** The OneTrust assessment creator details */
+  creatorDetails: OneTrustGetUserResponse;
 }): OneTrustEnrichedAssessment => {
   const riskDetailsById = keyBy(riskDetails, 'id');
-  const { sections, ...restAssessmentDetails } = assessmentDetails;
+  const { sections, createdBy, ...restAssessmentDetails } = assessmentDetails;
   const sectionsWithEnrichedRisk = sections.map((section) => {
     const { questions, ...restSection } = section;
     const enrichedQuestions = questions.map((question) => {
@@ -57,11 +61,17 @@ export const enrichOneTrustAssessment = ({
     };
   });
 
+  const enrichedCreatedBy = {
+    ...createdBy,
+    ...creatorDetails,
+  };
+
   // combine the two assessments into a single enriched result
 
   return {
     ...assessment,
     ...restAssessmentDetails,
+    createdBy: enrichedCreatedBy,
     sections: sectionsWithEnrichedRisk,
   };
 };
