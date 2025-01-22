@@ -1,8 +1,10 @@
 import { decodeCodec } from '@transcend-io/type-utils';
-import { OneTrustEnrichedAssessment } from '../codecs';
 import { DEFAULT_ONE_TRUST_ASSESSMENT_CSV_HEADER } from './constants';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
-import { OneTrustAssessmentCsvRecord } from '@transcend-io/privacy-types';
+import {
+  OneTrustAssessmentCsvRecord,
+  OneTrustEnrichedAssessment,
+} from '@transcend-io/privacy-types';
 
 /**
  * Converts the assessment into a csv record (i.e. a map from the csv header

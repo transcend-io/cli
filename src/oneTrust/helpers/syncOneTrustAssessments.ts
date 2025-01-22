@@ -58,9 +58,7 @@ export const syncOneTrustAssessments = async ({
    */
   await mapSeries(assessments, async (assessment, index) => {
     logger.info(
-      `Fetching details about assessment ${index + 1} of ${
-        assessments.length
-      }...`,
+      `[assessment ${index + 1} of ${assessments.length}]: fetching details...`,
     );
     const assessmentDetails = await getOneTrustAssessment({
       oneTrust,
@@ -72,9 +70,9 @@ export const syncOneTrustAssessments = async ({
     let creator = oneTrustCachedUsers[creatorId];
     if (!creator) {
       logger.info(
-        `Fetching details about assessment ${index + 1} of ${
+        `[assessment ${index + 1} of ${
           assessments.length
-        } creator...`,
+        }]: fetching creator...`,
       );
       creator = await getOneTrustUser({
         oneTrust,
@@ -88,9 +86,9 @@ export const syncOneTrustAssessments = async ({
     let approversDetails: OneTrustGetUserResponse[] = [];
     if (approvers.length > 0) {
       logger.info(
-        `Fetching details about ${approvers.length} approvers for assessment ${
-          index + 1
-        } of ${assessments.length}...`,
+        `[assessment ${index + 1} of ${
+          assessments.length
+        }]: fetching approvers...`,
       );
       approversDetails = await map(
         approvers.map(({ id }) => id),
@@ -115,11 +113,9 @@ export const syncOneTrustAssessments = async ({
     let respondentsDetails: OneTrustGetUserResponse[] = [];
     if (internalRespondents.length > 0) {
       logger.info(
-        `Fetching details about ${
-          internalRespondents.length
-        } internal responds for assessment ${index + 1} of ${
+        `[assessment ${index + 1} of ${
           assessments.length
-        }...`,
+        }]: fetching respondents...`,
       );
       respondentsDetails = await map(
         internalRespondents.map(({ id }) => id),
@@ -146,9 +142,7 @@ export const syncOneTrustAssessments = async ({
     );
     if (riskIds.length > 0) {
       logger.info(
-        `Fetching details about ${riskIds.length} risks for assessment ${
-          index + 1
-        } of ${assessments.length}...`,
+        `[assessment ${index + 1} of ${assessments.length}]: fetching risks...`,
       );
       riskDetails = await map(
         riskIds,

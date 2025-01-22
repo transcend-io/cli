@@ -2,9 +2,9 @@ import { logger } from '../../logger';
 import colors from 'colors';
 import { OneTrustFileFormat } from '../../enums';
 import fs from 'fs';
-import { OneTrustEnrichedAssessment } from '../codecs';
 import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 import { oneTrustAssessmentToCsv } from './oneTrustAssessmentToCsv';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 
 /**
  * Write the assessment to disk at the specified file path.

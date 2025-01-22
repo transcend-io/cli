@@ -1,6 +1,6 @@
 import { createDefaultCodec } from '@transcend-io/type-utils';
-import { OneTrustEnrichedAssessment } from '../codecs';
 import { flattenOneTrustAssessment } from './flattenOneTrustAssessment';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 
 /**
  * An object with default values of type OneTrustEnrichedAssessment. It's very

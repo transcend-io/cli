@@ -44,15 +44,7 @@ export const enrichOneTrustAssessment = ({
         const details = riskDetailsById[risk.riskId];
         return {
           ...risk,
-          description: details.description,
-          name: details.name,
-          treatment: details.treatment,
-          treatmentStatus: details.treatmentStatus,
-          type: details.type,
-          state: details.state,
-          stage: details.stage,
-          result: details.result,
-          categories: details.categories,
+          ...details,
         };
       });
       return {
@@ -98,8 +90,9 @@ export const enrichOneTrustAssessment = ({
 
   // grab respondents details
   const respondentsDetailsById = keyBy(respondentsDetails, 'id');
-  const enrichedRespondents = assessmentDetails.respondents.map(
-    (respondent) => ({
+  const enrichedRespondents = assessmentDetails.respondents
+    .filter((r) => !r.name.includes('@')) // search only internal respondents
+    .map((respondent) => ({
       ...respondent,
       active: respondentsDetailsById[respondent.id].active,
       userType: respondentsDetailsById[respondent.id].userType,
@@ -107,8 +100,7 @@ export const enrichOneTrustAssessment = ({
       title: respondentsDetailsById[respondent.id].title,
       givenName: respondentsDetailsById[respondent.id].name.givenName ?? null,
       familyName: respondentsDetailsById[respondent.id].name.familyName ?? null,
-    }),
-  );
+    }));
 
   // combine everything into a single enriched assessment
   return {

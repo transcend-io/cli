@@ -1,4 +1,4 @@
-import { OneTrustEnrichedAssessment } from '../codecs';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import { oneTrustAssessmentToCsvRecord } from './oneTrustAssessmentToCsvRecord';
 
 /**

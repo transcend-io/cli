@@ -7,14 +7,13 @@ import {
   OneTrustAssessmentResponses,
   OneTrustAssessmentSectionHeader,
   OneTrustAssessmentSectionHeaderRiskStatistics,
-  OneTrustRiskCategories,
-} from '@transcend-io/privacy-types';
-import {
   OneTrustEnrichedAssessment,
   OneTrustEnrichedAssessmentQuestion,
   OneTrustEnrichedAssessmentSection,
   OneTrustEnrichedRisk,
-} from '../codecs';
+  OneTrustRiskCategories,
+} from '@transcend-io/privacy-types';
+
 import {
   flattenObject,
   aggregateObjects,

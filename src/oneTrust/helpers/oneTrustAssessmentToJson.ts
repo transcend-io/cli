@@ -1,4 +1,4 @@
-import { OneTrustEnrichedAssessment } from '../codecs';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 
 /**
  * Converts the assessment into a json entry.

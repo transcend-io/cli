@@ -6,7 +6,7 @@ import {
   makeGraphQLRequest,
 } from '../../graphql';
 import { ImportOnetrustAssessmentsInput } from '../../codecs';
-import { OneTrustEnrichedAssessment } from '../codecs';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 
 export interface AssessmentForm {
   /** ID of Assessment Form */
