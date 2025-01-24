@@ -21,7 +21,7 @@ import {
 
 chai.use(deepEqualInAnyOrder);
 
-describe('flattenOneTrustAssessment', () => {
+describe.only('flattenOneTrustAssessment', () => {
   const defaultQuestion: OneTrustEnrichedAssessmentQuestion =
     createDefaultCodec(OneTrustEnrichedAssessmentQuestion);
   const defaultNestedQuestion: OneTrustAssessmentNestedQuestion =
@@ -216,17 +216,15 @@ describe('flattenOneTrustAssessment', () => {
           },
         ],
       ];
-      const { questions_questionResponses_response } = flattenOneTrustQuestions(
-        allSectionQuestions,
-        '',
-      );
+      const { sections_questions_questionResponses_response } =
+        flattenOneTrustQuestions(allSectionQuestions, 'sections');
       // 1st section has 3 questions, the first with 2 answers
       const section1 = '[[s1q1r1,s1q1r2],[],[]]';
       // 2nd section has 2 questions, none with answers.
       const section2 = '[[],[]]';
       // 2nd section has 1 question without answers
       const section3 = '[[]]';
-      expect(questions_questionResponses_response).to.equal(
+      expect(sections_questions_questionResponses_response).to.equal(
         `${section1},${section2},${section3}`,
       );
     });

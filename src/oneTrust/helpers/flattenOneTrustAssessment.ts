@@ -154,9 +154,11 @@ export const flattenOneTrustQuestions = (
         ...convertToEmptyStrings(createDefaultCodec(OneTrustEnrichedRisk)),
         categories: null,
       } as OneTrustEnrichedRisk;
-      const allRisksDefault = allRisks.map((risks) =>
-        !risks || risks.length === 0 ? [defaultRisk] : risks,
-      );
+      const allRisksDefault = allRisks
+        ? allRisks.map((risks) =>
+            !risks || risks.length === 0 ? [defaultRisk] : risks,
+          )
+        : undefined;
 
       return {
         ...(questions && flattenObject({ obj: { questions }, prefix })),
@@ -172,10 +174,6 @@ export const flattenOneTrustQuestions = (
       };
     },
   );
-
-  // const defaultQuestionResponses = convertToEmptyStrings(
-  //   createDefaultCodec(OneTrustAssessmentQuestionResponses),
-  // ) as OneTrustAssessmentQuestionResponses;
 
   return aggregateObjects({
     objs: allSectionQuestionsFlat,
