@@ -724,6 +724,9 @@ export async function pullTranscendConfiguration(
                     const parsed = parseAssessmentRiskLogic(logic);
                     return {
                       'risk-level': parsed.riskAssignment?.riskLevelId,
+                      'risk-matrix-row': parsed.riskAssignment?.riskMatrixRowId,
+                      'risk-matrix-column':
+                        parsed.riskAssignment?.riskMatrixColumnId,
                       'comparison-operands': parsed.comparisonOperands,
                       'comparison-operator': parsed.comparisonOperator,
                     };

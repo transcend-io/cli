@@ -41606,6 +41606,12 @@
                                           "properties": {
                                             "risk-level": {
                                               "type": "string"
+                                            },
+                                            "risk-matrix-column": {
+                                              "type": "string"
+                                            },
+                                            "risk-matrix-row": {
+                                              "type": "string"
                                             }
                                           }
                                         }
@@ -42068,6 +42074,12 @@
                                           "type": "object",
                                           "properties": {
                                             "risk-level": {
+                                              "type": "string"
+                                            },
+                                            "risk-matrix-column": {
+                                              "type": "string"
+                                            },
+                                            "risk-matrix-row": {
                                               "type": "string"
                                             }
                                           }
