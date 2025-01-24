@@ -1,5 +1,5 @@
 import { logger } from '../../logger';
-import { oneTrustAssessmentToCsvRecord } from './oneTrustAssessmentToCsvRecord';
+import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import {
   IMPORT_ONE_TRUST_ASSESSMENT_FORMS,
@@ -7,6 +7,7 @@ import {
 } from '../../graphql';
 import { ImportOnetrustAssessmentsInput } from '../../codecs';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
+import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 export interface AssessmentForm {
   /** ID of Assessment Form */
@@ -24,27 +25,35 @@ export interface AssessmentForm {
 export const syncOneTrustAssessmentToTranscend = async ({
   transcend,
   assessment,
+  total,
+  index,
 }: {
   /** the Transcend client instance */
   transcend: GraphQLClient;
   /** the assessment to sync to Transcend */
   assessment: OneTrustEnrichedAssessment;
+  /** The index of the assessment being written to the file */
+  index: number;
+  /** The total amount of assessments that we will write */
+  total: number;
 }): Promise<AssessmentForm | undefined> => {
-  logger.info();
+  logger.info(
+    colors.magenta(
+      `Writing enriched assessment ${index + 1} of ${total} to Transcend...`,
+    ),
+  );
 
   // convert the OneTrust assessment object into a CSV Record (a map from the csv header to values)
-  const csvRecord = oneTrustAssessmentToCsvRecord(assessment);
+  const json = oneTrustAssessmentToJson({
+    assessment,
+    index,
+    total,
+    wrap: true,
+  });
 
   // transform the csv record into a valid input to the mutation
   const input: ImportOnetrustAssessmentsInput = {
-    rows: [
-      {
-        columns: Object.entries(csvRecord).map(([key, value]) => ({
-          title: key,
-          value: value.toString(),
-        })),
-      },
-    ],
+    json,
   };
 
   const {

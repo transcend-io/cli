@@ -189,11 +189,13 @@ export const syncOneTrustAssessments = async ({
             file,
             fileFormat,
           });
-        } else if (fileFormat === OneTrustFileFormat.Csv && transcend) {
+        } else if (fileFormat === OneTrustFileFormat.Json && transcend) {
           // sync to transcend
           await syncOneTrustAssessmentToTranscend({
             assessment: enrichedAssessment,
             transcend,
+            total: assessments.length,
+            index: trueIndex,
           });
         }
       },

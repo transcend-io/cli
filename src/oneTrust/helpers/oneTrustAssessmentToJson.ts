@@ -10,6 +10,7 @@ export const oneTrustAssessmentToJson = ({
   assessment,
   index,
   total,
+  wrap = true,
 }: {
   /** The assessment to convert */
   assessment: OneTrustEnrichedAssessment;
@@ -17,10 +18,12 @@ export const oneTrustAssessmentToJson = ({
   index: number;
   /** The total amount of the assessments in the final Json object */
   total: number;
+  /** Whether to wrap every entry in brackets */
+  wrap?: boolean;
 }): string => {
   let jsonEntry = '';
   // start with an opening bracket
-  if (index === 0) {
+  if (index === 0 || wrap) {
     jsonEntry = '[\n';
   }
 
@@ -33,7 +36,7 @@ export const oneTrustAssessmentToJson = ({
   jsonEntry = jsonEntry + stringifiedAssessment + comma;
 
   // end with closing bracket
-  if (index === total - 1) {
+  if (index === total - 1 || wrap) {
     jsonEntry += ']';
   }
 

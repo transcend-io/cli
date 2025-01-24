@@ -2093,9 +2093,11 @@ const OneTrustAssessmentRowInput = t.type({
 });
 
 /** Input for importing multiple OneTrust assessment forms into Transcend */
-export const ImportOnetrustAssessmentsInput = t.type({
+export const ImportOnetrustAssessmentsInput = t.partial({
   /** 'The rows of the CSV file.' */
   rows: t.array(OneTrustAssessmentRowInput),
+  /** 'The json record representing the assessment.' */
+  json: t.string,
 });
 /** Type override */
 export type ImportOnetrustAssessmentsInput = t.TypeOf<
