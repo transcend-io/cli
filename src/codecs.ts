@@ -1536,6 +1536,10 @@ export const RiskLogicInput = t.intersection([
   t.partial({
     /** The risk level to assign to the question */
     'risk-level': t.string,
+    /** The risk matrix column to assign to a question. */
+    'risk-matrix-column': t.string,
+    /** The risk matrix row to assign to a question. */
+    'risk-matrix-row': t.string,
   }),
 ]);
 

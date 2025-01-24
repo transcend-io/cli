@@ -4,8 +4,10 @@ import * as t from 'io-ts';
 
 export const AssessmentRiskLogic = t.intersection([
   t.partial({
-    riskAssignment: t.type({
+    riskAssignment: t.partial({
       riskLevelId: t.string,
+      riskMatrixRowId: t.string,
+      riskMatrixColumnId: t.string,
     }),
   }),
   t.type({
