@@ -23,6 +23,8 @@ export async function fetchRequestFilesForRequest(
   filterBy: {
     /** Filter by request ID */
     requestId: string;
+    /** Filter by data silo ID */
+    dataSiloId?: string;
   },
 ): Promise<RequestFile[]> {
   const requestFiles: RequestFile[] = [];

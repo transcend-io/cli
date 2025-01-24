@@ -59,7 +59,7 @@
     "clean": "yarn tsc --build --clean",
     "lint": "yarn eslint src --ext .ts",
     "prepublish": "yarn build",
-    "test": "yarn mocha './src/**/*.test.ts'",
+    "test": "yarn mocha './src/**/*.test.ts' --reporter-option maxDiffSize=0",
     "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v6.json --write",
     "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
   },

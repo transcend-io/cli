@@ -1,0 +1,35 @@
+platform :ios, "14.0"
+use_frameworks!
+inhibit_all_warnings!
+target "Acme" do
+
+    # Raizlabs
+    pod 'RZVinyl', :git =>'git@github.com:test/acme-RZVinyl.git'
+    pod 'RZTransitions', '1.2.1'
+    # Acme
+    pod 'SDWebImage', :git =>'git@github.com:test/acme-SDWebImage.git', :commit => 'c224e87'
+
+    # Code Analysis
+    pod 'SwiftLint'
+    target 'AcmeTests' do
+        inherit! :search_paths
+        pod 'RZVinyl', :git =>'git@github.com:test/acme-RZVinyl.git'
+        # For UI Snapshot Testing
+        use_frameworks!
+        pod 'iOSSnapshotTestCase', '6.2.0'
+        pod 'SnapshotTesting', '~> 1.8.1'
+    end
+
+    target 'NotificationServiceExtension' do
+      inherit! :search_paths
+    end
+
+    post_install do |installer|
+      installer.pods_project.targets.each do |target|
+
+      target.build_configurations.each do |config|
+          config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
+        end
+      end
+    end
+end
