@@ -46,6 +46,7 @@ export const syncOneTrustAssessmentToDisk = ({
           assessment,
           index,
           total,
+          wrap: false,
         }),
       );
     } else {
@@ -55,7 +56,7 @@ export const syncOneTrustAssessmentToDisk = ({
           assessment,
           index,
           total,
-        }),
+          wrap: false,        }),
       );
     }
   } else if (fileFormat === OneTrustFileFormat.Csv) {

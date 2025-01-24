@@ -50,7 +50,7 @@ export const syncOneTrustAssessments = async ({
   logger.info('Getting list of all assessments from OneTrust...');
   const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
-  // a cache of OneTrust users so we avoid sending requests for users already fetched
+  // a cache of OneTrust users so we avoid requesting already fetched users
   const oneTrustCachedUsers: Record<string, OneTrustGetUserResponse> = {};
 
   // split all assessments in batches, so we can process some of steps in parallel
@@ -115,7 +115,7 @@ export const syncOneTrustAssessments = async ({
 
         // fetch assessment internal respondents information
         const { respondents } = assessmentDetails;
-        // internal respondents names are not emails.
+        // if a user is an internal respondents, their 'name' field can't be an email.
         const internalRespondents = respondents.filter(
           (r) => !r.name.includes('@'),
         );
@@ -179,12 +179,14 @@ export const syncOneTrustAssessments = async ({
     await mapSeries(
       batchEnrichedAssessments,
       async (enrichedAssessment, index) => {
-        const trueIndex = batch * BATCH_SIZE + index;
+        // the assessment's global index takes its batch into consideration
+        const globalIndex = batch * BATCH_SIZE + index;
+
         if (dryRun && file && fileFormat) {
           // sync to file
           syncOneTrustAssessmentToDisk({
             assessment: enrichedAssessment,
-            index: trueIndex,
+            index: globalIndex,
             total: assessments.length,
             file,
             fileFormat,
@@ -195,7 +197,7 @@ export const syncOneTrustAssessments = async ({
             assessment: enrichedAssessment,
             transcend,
             total: assessments.length,
-            index: trueIndex,
+            index: globalIndex,
           });
         }
       },
