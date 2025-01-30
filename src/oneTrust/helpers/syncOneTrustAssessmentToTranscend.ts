@@ -49,7 +49,6 @@ export const syncOneTrustAssessmentToTranscend = async ({
     index,
     total,
   });
-
   // transform the csv record into a valid input to the mutation
   const input: ImportOnetrustAssessmentsInput = {
     json,

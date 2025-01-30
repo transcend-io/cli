@@ -45,6 +45,7 @@ export const enrichOneTrustAssessment = ({
         return {
           ...risk,
           ...details,
+          level: risk.level,
           impactLevel: risk.impactLevel ?? 0,
         };
       });
