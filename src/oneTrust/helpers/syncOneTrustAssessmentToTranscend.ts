@@ -36,7 +36,7 @@ export const syncOneTrustAssessmentToTranscend = async ({
   index: number;
   /** The total amount of assessments that we will write */
   total: number;
-}): Promise<AssessmentForm | undefined> => {
+}): Promise<AssessmentForm> => {
   logger.info(
     colors.magenta(
       `Writing enriched assessment ${index + 1} of ${total} to Transcend...`,

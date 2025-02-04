@@ -30,7 +30,7 @@ export const oneTrustAssessmentToJson = ({
   const stringifiedAssessment = JSON.stringify(assessment);
 
   // Add comma for all items except the last one
-  const comma = index < total - 1 && !wrap ? ',' : '';
+  const comma = index < total - 1 && !wrap ? ',\n' : '';
 
   // write to file
   jsonEntry = jsonEntry + stringifiedAssessment + comma;
