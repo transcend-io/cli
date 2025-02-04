@@ -52,12 +52,15 @@ export const syncOneTrustAssessments = async ({
   // a cache of OneTrust users so we avoid requesting already fetched users
   const oneTrustCachedUsers: Record<string, OneTrustGetUserResponse> = {};
 
+  const START = 576;
+  const actualAssessments = assessments.slice(START);
+
   /**
    * fetch details about each assessment in series and write to transcend or to disk
    * (depending on the dryRun argument) right away to avoid running out of memory
    */
-  await mapSeries(assessments, async (assessment, index) => {
-    const assessmentNumber = index + 1;
+  await mapSeries(actualAssessments, async (assessment, index) => {
+    const assessmentNumber = START + index + 1;
     logger.info(
       `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`,
     );
@@ -173,7 +176,7 @@ export const syncOneTrustAssessments = async ({
         assessment: enrichedAssessment,
         transcend,
         total: assessments.length,
-        index,
+        index: START + index,
       });
     }
   });

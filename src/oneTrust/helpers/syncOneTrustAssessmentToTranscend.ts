@@ -36,7 +36,7 @@ export const syncOneTrustAssessmentToTranscend = async ({
   index: number;
   /** The total amount of assessments that we will write */
   total: number;
-}): Promise<AssessmentForm> => {
+}): Promise<AssessmentForm | undefined> => {
   logger.info(
     colors.magenta(
       `Writing enriched assessment ${index + 1} of ${total} to Transcend...`,
@@ -55,17 +55,27 @@ export const syncOneTrustAssessmentToTranscend = async ({
     json,
   };
 
-  const {
-    importOneTrustAssessmentForms: { assessmentForms },
-  } = await makeGraphQLRequest<{
-    /** the importOneTrustAssessmentForms mutation */
-    importOneTrustAssessmentForms: {
-      /** Created Assessment Forms */
-      assessmentForms: AssessmentForm[];
-    };
-  }>(transcend, IMPORT_ONE_TRUST_ASSESSMENT_FORMS, {
-    input,
-  });
-
-  return assessmentForms[0];
+  try {
+    const {
+      importOneTrustAssessmentForms: { assessmentForms },
+    } = await makeGraphQLRequest<{
+      /** the importOneTrustAssessmentForms mutation */
+      importOneTrustAssessmentForms: {
+        /** Created Assessment Forms */
+        assessmentForms: AssessmentForm[];
+      };
+    }>(transcend, IMPORT_ONE_TRUST_ASSESSMENT_FORMS, {
+      input,
+    });
+    return assessmentForms[0];
+  } catch (e) {
+    logger.error(
+      colors.red(
+        `Failed to sync assessment ${index + 1} of ${total} with id '${
+          assessment.assessmentId
+        }' to Transcend...`,
+      ),
+    );
+    return undefined;
+  }
 };
