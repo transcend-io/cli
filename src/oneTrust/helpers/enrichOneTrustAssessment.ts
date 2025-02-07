@@ -63,46 +63,61 @@ export const enrichOneTrustAssessment = ({
   // grab creator details
   const enrichedCreatedBy = {
     ...createdBy,
-    active: creatorDetails.active,
-    userType: creatorDetails.userType,
-    emails: creatorDetails.emails,
-    title: creatorDetails.title,
-    givenName: creatorDetails.name.givenName ?? null,
-    familyName: creatorDetails.name.familyName ?? null,
+    active: creatorDetails?.active ?? false,
+    userType: creatorDetails?.userType ?? 'Internal',
+    emails: creatorDetails?.emails ?? [],
+    title: creatorDetails?.title ?? null,
+    givenName: creatorDetails?.name.givenName ?? null,
+    familyName: creatorDetails?.name.familyName ?? null,
   };
 
   // grab approvers details
   const approverDetailsById = keyBy(approversDetails, 'id');
-  const enrichedApprovers = assessmentDetails.approvers.map(
-    (originalApprover) => ({
-      ...originalApprover,
-      approver: {
-        ...originalApprover.approver,
-        active: approverDetailsById[originalApprover.id].active,
-        userType: approverDetailsById[originalApprover.id].userType,
-        emails: approverDetailsById[originalApprover.id].emails,
-        title: approverDetailsById[originalApprover.id].title,
-        givenName:
-          approverDetailsById[originalApprover.id].name.givenName ?? null,
-        familyName:
-          approverDetailsById[originalApprover.id].name.familyName ?? null,
-      },
-    }),
+  const enrichedApprovers = assessmentDetails.approvers.flatMap(
+    (originalApprover) =>
+      approverDetailsById[originalApprover.id]
+        ? [
+            {
+              ...originalApprover,
+              approver: {
+                ...originalApprover.approver,
+                active: approverDetailsById[originalApprover.id].active,
+                userType: approverDetailsById[originalApprover.id].userType,
+                emails: approverDetailsById[originalApprover.id].emails,
+                title: approverDetailsById[originalApprover.id].title,
+                givenName:
+                  approverDetailsById[originalApprover.id].name.givenName ??
+                  null,
+                familyName:
+                  approverDetailsById[originalApprover.id].name.familyName ??
+                  null,
+              },
+            },
+          ]
+        : [],
   );
 
   // grab respondents details
   const respondentsDetailsById = keyBy(respondentsDetails, 'id');
   const enrichedRespondents = assessmentDetails.respondents
     .filter((r) => !r.name.includes('@')) // search only internal respondents
-    .map((respondent) => ({
-      ...respondent,
-      active: respondentsDetailsById[respondent.id].active,
-      userType: respondentsDetailsById[respondent.id].userType,
-      emails: respondentsDetailsById[respondent.id].emails,
-      title: respondentsDetailsById[respondent.id].title,
-      givenName: respondentsDetailsById[respondent.id].name.givenName ?? null,
-      familyName: respondentsDetailsById[respondent.id].name.familyName ?? null,
-    }));
+    .flatMap((respondent) =>
+      respondentsDetailsById[respondent.id]
+        ? [
+            {
+              ...respondent,
+              active: respondentsDetailsById[respondent.id].active,
+              userType: respondentsDetailsById[respondent.id].userType,
+              emails: respondentsDetailsById[respondent.id].emails,
+              title: respondentsDetailsById[respondent.id].title,
+              givenName:
+                respondentsDetailsById[respondent.id].name.givenName ?? null,
+              familyName:
+                respondentsDetailsById[respondent.id].name.familyName ?? null,
+            },
+          ]
+        : [],
+    );
 
   // combine everything into a single enriched assessment
   return {

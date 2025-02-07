@@ -39,32 +39,16 @@ export const syncOneTrustAssessmentToDisk = ({
   );
 
   if (fileFormat === OneTrustFileFormat.Json) {
-    if (index === 0) {
-      fs.writeFileSync(
-        file,
-        oneTrustAssessmentToJson({
-          assessment,
-          index,
-          total,
-          wrap: false,
-        }),
-      );
-    } else {
-      fs.appendFileSync(
-        file,
-        oneTrustAssessmentToJson({
-          assessment,
-          index,
-          total,
-          wrap: false,
-        }),
-      );
-    }
+    fs.appendFileSync(
+      file,
+      oneTrustAssessmentToJson({
+        assessment,
+        index,
+        total,
+        wrap: false,
+      }),
+    );
   } else if (fileFormat === OneTrustFileFormat.Csv) {
-    if (index === 0) {
-      fs.writeFileSync(file, oneTrustAssessmentToCsv({ assessment, index }));
-    } else {
-      fs.appendFileSync(file, oneTrustAssessmentToCsv({ assessment, index }));
-    }
+    fs.appendFileSync(file, oneTrustAssessmentToCsv({ assessment, index }));
   }
 };

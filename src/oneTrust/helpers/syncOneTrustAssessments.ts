@@ -1,4 +1,5 @@
 import { Got } from 'got/dist/source';
+import colors from 'colors';
 import {
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
@@ -52,15 +53,12 @@ export const syncOneTrustAssessments = async ({
   // a cache of OneTrust users so we avoid requesting already fetched users
   const oneTrustCachedUsers: Record<string, OneTrustGetUserResponse> = {};
 
-  const START = 576;
-  const actualAssessments = assessments.slice(START);
-
   /**
    * fetch details about each assessment in series and write to transcend or to disk
    * (depending on the dryRun argument) right away to avoid running out of memory
    */
-  await mapSeries(actualAssessments, async (assessment, index) => {
-    const assessmentNumber = START + index + 1;
+  await mapSeries(assessments, async (assessment, index) => {
+    const assessmentNumber = index + 1;
     logger.info(
       `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`,
     );
@@ -75,16 +73,24 @@ export const syncOneTrustAssessments = async ({
       logger.info(
         `[assessment ${assessmentNumber} of ${assessments.length}]: fetching creator...`,
       );
-      creator = await getOneTrustUser({
-        oneTrust,
-        userId: creatorId,
-      });
-      oneTrustCachedUsers[creatorId] = creator;
+      try {
+        creator = await getOneTrustUser({
+          oneTrust,
+          userId: creatorId,
+        });
+        oneTrustCachedUsers[creatorId] = creator;
+      } catch (e) {
+        logger.error(
+          colors.red(
+            `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch creator ${creatorId}`,
+          ),
+        );
+      }
     }
 
     // fetch assessment approvers information
     const { approvers } = assessmentDetails;
-    let approversDetails: OneTrustGetUserResponse[] = [];
+    let approversDetails: OneTrustGetUserResponse[][] = [];
     if (approvers.length > 0) {
       logger.info(
         `[assessment ${assessmentNumber} of ${assessments.length}]: fetching approvers...`,
@@ -94,10 +100,19 @@ export const syncOneTrustAssessments = async ({
         async (userId) => {
           let approver = oneTrustCachedUsers[userId];
           if (!approver) {
-            approver = await getOneTrustUser({ oneTrust, userId });
-            oneTrustCachedUsers[userId] = approver;
+            try {
+              approver = await getOneTrustUser({ oneTrust, userId });
+              oneTrustCachedUsers[userId] = approver;
+            } catch (e) {
+              logger.error(
+                colors.red(
+                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch approver ${userId}`,
+                ),
+              );
+              return [];
+            }
           }
-          return approver;
+          return [approver];
         },
         { concurrency: 5 },
       );
@@ -109,20 +124,30 @@ export const syncOneTrustAssessments = async ({
     const internalRespondents = respondents.filter(
       (r) => !r.name.includes('@'),
     );
-    let respondentsDetails: OneTrustGetUserResponse[] = [];
+    let respondentsDetails: OneTrustGetUserResponse[][] = [];
     if (internalRespondents.length > 0) {
       logger.info(
         `[assessment ${assessmentNumber} of ${assessments.length}]: fetching respondents...`,
       );
       respondentsDetails = await map(
         internalRespondents.map(({ id }) => id),
+        // FIXME: turn this into a helper
         async (userId) => {
           let respondent = oneTrustCachedUsers[userId];
           if (!respondent) {
-            respondent = await getOneTrustUser({ oneTrust, userId });
-            oneTrustCachedUsers[userId] = respondent;
+            try {
+              respondent = await getOneTrustUser({ oneTrust, userId });
+              oneTrustCachedUsers[userId] = respondent;
+            } catch (e) {
+              logger.error(
+                colors.red(
+                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch respondent ${userId}`,
+                ),
+              );
+              return [];
+            }
           }
-          return respondent;
+          return [respondent];
         },
         { concurrency: 5 },
       );
@@ -156,8 +181,8 @@ export const syncOneTrustAssessments = async ({
       assessmentDetails,
       riskDetails,
       creatorDetails: creator,
-      approversDetails,
-      respondentsDetails,
+      approversDetails: approversDetails.flat(),
+      respondentsDetails: respondentsDetails.flat(),
     });
 
     // the assessment's global index takes its batch into consideration
@@ -176,7 +201,7 @@ export const syncOneTrustAssessments = async ({
         assessment: enrichedAssessment,
         transcend,
         total: assessments.length,
-        index: START + index,
+        index,
       });
     }
   });
