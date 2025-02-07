@@ -19,5 +19,6 @@ export const getOneTrustUser = async ({
   userId: string;
 }): Promise<OneTrustGetUserResponse> => {
   const { body } = await oneTrust.get(`api/scim/v2/Users/${userId}`);
+
   return decodeCodec(OneTrustGetUserResponse, body);
 };
