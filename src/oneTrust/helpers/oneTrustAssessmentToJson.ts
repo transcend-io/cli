@@ -24,16 +24,16 @@ export const oneTrustAssessmentToJson = ({
   let jsonEntry = '';
   // start with an opening bracket
   if (index === 0 || wrap) {
-    jsonEntry = '[';
+    jsonEntry = '[\n';
   }
 
   const stringifiedAssessment = JSON.stringify(assessment);
 
   // Add comma for all items except the last one
-  const comma = index < total - 1 && !wrap ? ',\n' : '';
+  const comma = index < total - 1 && !wrap ? ',' : '';
 
   // write to file
-  jsonEntry = jsonEntry + stringifiedAssessment + comma;
+  jsonEntry = `${jsonEntry + stringifiedAssessment + comma}\n`;
 
   // end with closing bracket
   if (index === total - 1 || wrap) {
