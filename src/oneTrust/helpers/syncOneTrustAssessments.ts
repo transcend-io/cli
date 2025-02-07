@@ -62,10 +62,12 @@ export const syncOneTrustAssessments = async ({
     logger.info(
       `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`,
     );
+    const { templateName, assessmentId } = assessment;
     const assessmentDetails = await getOneTrustAssessment({
       oneTrust,
-      assessmentId: assessment.assessmentId,
+      assessmentId,
     });
+
     // fetch assessment's creator information
     const creatorId = assessmentDetails.createdBy.id;
     let creator = oneTrustCachedUsers[creatorId];
@@ -82,7 +84,8 @@ export const syncOneTrustAssessments = async ({
       } catch (e) {
         logger.error(
           colors.red(
-            `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch creator ${creatorId}`,
+            `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch form creator.` +
+              `\tcreatorId: ${creatorId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
           ),
         );
       }
@@ -106,7 +109,8 @@ export const syncOneTrustAssessments = async ({
             } catch (e) {
               logger.error(
                 colors.red(
-                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch approver ${userId}`,
+                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a form approver.` +
+                    `\tapproverId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
                 ),
               );
               return [];
@@ -131,7 +135,6 @@ export const syncOneTrustAssessments = async ({
       );
       respondentsDetails = await map(
         internalRespondents.map(({ id }) => id),
-        // FIXME: turn this into a helper
         async (userId) => {
           let respondent = oneTrustCachedUsers[userId];
           if (!respondent) {
@@ -141,7 +144,8 @@ export const syncOneTrustAssessments = async ({
             } catch (e) {
               logger.error(
                 colors.red(
-                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch respondent ${userId}`,
+                  `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a respondent.` +
+                    `\trespondentId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
                 ),
               );
               return [];
