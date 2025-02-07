@@ -36,29 +36,27 @@ export const syncOneTrustAssessmentToTranscend = async ({
   index: number;
   /** The total amount of assessments that we will write */
   total: number;
-}): Promise<AssessmentForm | undefined> => {
+}): Promise<void> => {
   logger.info(
     colors.magenta(
       `Writing enriched assessment ${index + 1} of ${total} to Transcend...`,
     ),
   );
 
-  // convert the OneTrust assessment object into a CSV Record (a map from the csv header to values)
+  // convert the OneTrust assessment object into a json record
   const json = oneTrustAssessmentToJson({
     assessment,
     index,
     total,
   });
 
-  // transform the csv record into a valid input to the mutation
+  // transform the json record into a valid input to the mutation
   const input: ImportOnetrustAssessmentsInput = {
     json,
   };
 
   try {
-    const {
-      importOneTrustAssessmentForms: { assessmentForms },
-    } = await makeGraphQLRequest<{
+    await makeGraphQLRequest<{
       /** the importOneTrustAssessmentForms mutation */
       importOneTrustAssessmentForms: {
         /** Created Assessment Forms */
@@ -67,15 +65,12 @@ export const syncOneTrustAssessmentToTranscend = async ({
     }>(transcend, IMPORT_ONE_TRUST_ASSESSMENT_FORMS, {
       input,
     });
-    return assessmentForms[0];
   } catch (e) {
     logger.error(
       colors.red(
-        `Failed to sync assessment ${index + 1} of ${total} with id '${
-          assessment.assessmentId
-        }' to Transcend...`,
+        `Failed to sync assessment ${index + 1} of ${total} to Transcend.\n` +
+          `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}`,
       ),
     );
-    return undefined;
   }
 };
