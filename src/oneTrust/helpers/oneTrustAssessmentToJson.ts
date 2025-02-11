@@ -33,7 +33,7 @@ export const oneTrustAssessmentToJson = ({
   const comma = index < total - 1 && !wrap ? ',' : '';
 
   // write to file
-  jsonEntry = jsonEntry + stringifiedAssessment + comma;
+  jsonEntry = `${jsonEntry + stringifiedAssessment + comma}\n`;
 
   // end with closing bracket
   if (index === total - 1 || wrap) {
