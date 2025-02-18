@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import keyBy from 'lodash/keyBy';
 import {
-  DataCategoryType,
+  type DataCategoryType,
   SubDataPointDataSubCategoryGuessStatus,
 } from '@transcend-io/privacy-types';
 import uniq from 'lodash/uniq';
@@ -14,12 +14,12 @@ import type { GraphQLClient } from 'graphql-request';
 import {
   DATAPOINT_EXPORT,
   DATA_SILO_EXPORT,
-  DataSiloAttributeValue,
+  type DataSiloAttributeValue,
   SUB_DATA_POINTS_COUNT,
   makeGraphQLRequest,
 } from '../graphql';
 import { logger } from '../logger';
-import { DataCategoryInput, ProcessingPurposeInput } from '../codecs';
+import type { DataCategoryInput, ProcessingPurposeInput } from '../codecs';
 import { mapSeries } from 'bluebird';
 
 export interface DataSiloCsvPreview {
@@ -119,6 +119,12 @@ async function pullSubDatapoints(
   const filterBy = {
     ...(parentCategories.length > 0 ? { category: parentCategories } : {}),
     ...(subCategories.length > 0 ? { subCategoryIds: subCategories } : {}),
+    // if parentCategories or subCategories and not includeGuessedCategories
+    ...(parentCategories.length + subCategories.length > 0 &&
+    !includeGuessedCategories
+      ? // then only show data points with approved data categories
+        { status: SubDataPointDataSubCategoryGuessStatus.Approved }
+      : {}),
     ...(dataSiloIds.length > 0 ? { dataSilos: dataSiloIds } : {}),
   };
 
@@ -140,7 +146,7 @@ async function pullSubDatapoints(
   progressBar.start(totalCount, 0);
   let total = 0;
   let shouldContinue = false;
-  let cursor;
+  let cursor: string | undefined;
   let offset = 0;
   do {
     try {
