@@ -69,7 +69,7 @@ export const syncOneTrustAssessmentToTranscend = async ({
     logger.error(
       colors.red(
         `Failed to sync assessment ${index + 1} of ${total} to Transcend.\n` +
-          `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}`,
+          `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}\n`,
       ),
     );
   }
