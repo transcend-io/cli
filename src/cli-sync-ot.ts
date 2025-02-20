@@ -5,7 +5,7 @@ import colors from 'colors';
 import { parseCliSyncOtArguments, createOneTrustGotInstance } from './oneTrust';
 import { OneTrustPullResource } from './enums';
 import { buildTranscendGraphQLClient } from './graphql';
-import { syncOneTrustAssessments } from './oneTrust/helpers/syncOneTrustAssessments';
+import { syncOneTrustAssessments } from './oneTrust/helpers';
 
 /**
  * Pull configuration from OneTrust down locally to disk

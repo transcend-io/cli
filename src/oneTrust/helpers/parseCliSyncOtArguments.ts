@@ -1,7 +1,11 @@
 import { logger } from '../../logger';
 import colors from 'colors';
 import yargs from 'yargs-parser';
-import { OneTrustFileFormat, OneTrustPullResource } from '../../enums';
+import {
+  OneTrustFileFormat,
+  OneTrustPullResource,
+  OneTrustPullSource,
+} from '../../enums';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
@@ -25,6 +29,8 @@ interface OneTrustCliArguments {
   fileFormat: OneTrustFileFormat;
   /** Whether to export the resource into a file rather than push to transcend */
   dryRun: boolean;
+  /** Where to read the OneTrust resource from */
+  source: OneTrustPullSource;
 }
 
 /**
@@ -43,6 +49,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     dryRun,
     transcendAuth,
     transcendUrl,
+    source,
   } = yargs(process.argv.slice(2), {
     string: [
       'file',
@@ -53,6 +60,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       'dryRun',
       'transcendAuth',
       'transcendUrl',
+      'source',
     ],
     boolean: ['debug', 'dryRun'],
     default: {
@@ -61,6 +69,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       debug: false,
       dryRun: false,
       transcendUrl: 'https://api.transcend.io',
+      source: OneTrustPullSource.OneTrust,
     },
   });
 
@@ -84,7 +93,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
-  // Can only sync to Transcend via a CSV file format!
+  // Can only sync to Transcend via a Json file format!
   if (!dryRun && fileFormat !== OneTrustFileFormat.Json) {
     logger.error(
       colors.red(
@@ -92,6 +101,30 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       ),
     );
     return process.exit(1);
+  }
+
+  // if reading assessments from a file
+  if (source === OneTrustPullSource.File) {
+    // Must specify a file to read from
+    if (!file) {
+      logger.error(
+        colors.red(
+          `Must specify a "file" parameter if "source" is '${source}'.`,
+        ),
+      );
+      return process.exit(1);
+    }
+
+    // Cannot try reading from file and save assessments to a file simultaneously
+    if (dryRun) {
+      logger.error(
+        colors.red(
+          'Cannot read and write to a file simultaneously.' +
+            ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`,
+        ),
+      );
+      return process.exit(1);
+    }
   }
 
   // If trying to sync to disk, must specify a file path
@@ -185,5 +218,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     dryRun,
     transcendAuth,
     transcendUrl,
+    source,
   };
 };

@@ -24,7 +24,7 @@ export const oneTrustAssessmentToJson = ({
   let jsonEntry = '';
   // start with an opening bracket
   if (index === 0 || wrap) {
-    jsonEntry = '[';
+    jsonEntry = '[\n';
   }
 
   const stringifiedAssessment = JSON.stringify(assessment);
@@ -37,7 +37,7 @@ export const oneTrustAssessmentToJson = ({
 
   // end with closing bracket
   if (index === total - 1 || wrap) {
-    jsonEntry += ']';
+    jsonEntry += '\n]';
   }
 
   return jsonEntry;
