@@ -14,9 +14,9 @@ interface OneTrustCliArguments {
   /** The name of the file to write the resources to */
   file: string;
   /** The OneTrust hostname to send the requests to */
-  hostname: string;
+  hostname?: string;
   /** The OAuth Bearer token used to authenticate the requests to OneTrust */
-  oneTrustAuth: string;
+  oneTrustAuth?: string;
   /** The Transcend API key to authenticate the requests to Transcend */
   transcendAuth: string;
   /** The Transcend URL where to forward requests */
@@ -103,30 +103,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
-  // if reading assessments from a file
-  if (source === OneTrustPullSource.File) {
-    // Must specify a file to read from
-    if (!file) {
-      logger.error(
-        colors.red(
-          `Must specify a "file" parameter if "source" is '${source}'.`,
-        ),
-      );
-      return process.exit(1);
-    }
-
-    // Cannot try reading from file and save assessments to a file simultaneously
-    if (dryRun) {
-      logger.error(
-        colors.red(
-          'Cannot read and write to a file simultaneously.' +
-            ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`,
-        ),
-      );
-      return process.exit(1);
-    }
-  }
-
   // If trying to sync to disk, must specify a file path
   if (dryRun && !file) {
     logger.error(
@@ -170,23 +146,49 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     }
   }
 
-  if (!hostname) {
-    logger.error(
-      colors.red(
-        'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com',
-      ),
-    );
-    return process.exit(1);
+  // if reading assessments from a OneTrust
+  if (source === OneTrustPullSource.OneTrust) {
+    // must specify the OneTrust hostname
+    if (!hostname) {
+      logger.error(
+        colors.red(
+          'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com',
+        ),
+      );
+      return process.exit(1);
+    }
+    // must specify the OneTrust auth
+    if (!oneTrustAuth) {
+      logger.error(
+        colors.red(
+          'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
+        ),
+      );
+      return process.exit(1);
+    }
+  } else {
+    // if reading the assessments from a file, must specify a file to read from
+    if (!file) {
+      logger.error(
+        colors.red(
+          'Must specify a "file" parameter to read the OneTrust assessments from. e.g. --source=./oneTrustAssessments.json',
+        ),
+      );
+      return process.exit(1);
+    }
+
+    // Cannot try reading from file and save assessments to a file simultaneously
+    if (dryRun) {
+      logger.error(
+        colors.red(
+          'Cannot read and write to a file simultaneously.' +
+            ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`,
+        ),
+      );
+      return process.exit(1);
+    }
   }
 
-  if (!oneTrustAuth) {
-    logger.error(
-      colors.red(
-        'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
-      ),
-    );
-    return process.exit(1);
-  }
   if (!VALID_RESOURCES.includes(resource)) {
     logger.error(
       colors.red(
@@ -210,8 +212,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
 
   return {
     file,
-    hostname,
-    oneTrustAuth,
+    ...(hostname && { hostname }),
+    ...(oneTrustAuth && { oneTrustAuth }),
     resource,
     debug,
     fileFormat,
