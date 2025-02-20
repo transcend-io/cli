@@ -14,6 +14,14 @@ export enum OneTrustPullResource {
 }
 
 /**
+ * Where to read OneTrust resources from
+ */
+export enum OneTrustPullSource {
+  OneTrust = 'oneTrust',
+  File = 'file',
+}
+
+/**
  * Resources that can be pulled in
  */
 export enum TranscendPullResource {

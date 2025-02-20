@@ -12,7 +12,7 @@
     - [Authentication](#authentication)
     - [Arguments](#arguments)
     - [Usage](#usage-1)
-  - [tr-pull-ot](#tr-pull-ot)
+  - [tr-sync-ot](#tr-sync-ot)
     - [Authentication](#authentication-1)
     - [Arguments](#arguments-1)
     - [Usage](#usage-2)
@@ -147,7 +147,6 @@
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
-  - [tr-sync-ot](#tr-sync-ot)
   - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
     - [Authentication](#authentication-35)
     - [Arguments](#arguments-34)
@@ -610,8 +609,9 @@ The API key needs the following scopes when pushing the various resource types:
 
 | Argument      | Description                                                                                       | Type         | Default                  | Required |
 | ------------- | ------------------------------------------------------------------------------------------------- | ------------ | ------------------------ | -------- |
-| hostname      | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string       | N/A                      | true     |
-| oneTrustAuth  | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string       | N/A                      | true     |
+| hostname      | The domain of the OneTrust environment from which to pull the resource (e.g. trial.onetrust.com). | string       | N/A                      | false    |
+| oneTrustAuth  | The OAuth access token with the scopes necessary to access the OneTrust Public APIs.              | string       | N/A                      | false    |
+| source        | Whether to read the assessments from OneTrust or from a file                                      | string       | oneTrust                 | false    |
 | transcendAuth | The Transcend API Key to with the scopes necessary to access Transcend's Public APIs.             | string       | N/A                      | false    |
 | transcendUrl  | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                     | string - URL | https://api.transcend.io | false    |
 | file          | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string       | N/A                      | false    |

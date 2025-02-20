@@ -3,9 +3,12 @@ import { logger } from './logger';
 
 import colors from 'colors';
 import { parseCliSyncOtArguments, createOneTrustGotInstance } from './oneTrust';
-import { OneTrustPullResource } from './enums';
-import { syncOneTrustAssessments } from './oneTrust/helpers/syncOneTrustAssessments';
+import { OneTrustPullResource, OneTrustPullSource } from './enums';
 import { buildTranscendGraphQLClient } from './graphql';
+import {
+  syncOneTrustAssessmentsFromFile,
+  syncOneTrustAssessmentsFromOneTrust,
+} from './oneTrust/helpers';
 
 /**
  * Pull configuration from OneTrust down locally to disk
@@ -25,37 +28,50 @@ async function main(): Promise<void> {
     transcendAuth,
     transcendUrl,
     resource,
-    // debug,
+    debug,
     dryRun,
+    source,
   } = parseCliSyncOtArguments();
 
-  // use the hostname and auth token to instantiate a client to talk to OneTrust
-  const oneTrust = createOneTrustGotInstance({ hostname, auth: oneTrustAuth });
+  // instantiate a client to talk to OneTrust
+  const oneTrust =
+    hostname && oneTrustAuth
+      ? createOneTrustGotInstance({
+          hostname,
+          auth: oneTrustAuth,
+        })
+      : undefined;
 
-  // try {
-  if (resource === OneTrustPullResource.Assessments) {
-    await syncOneTrustAssessments({
-      oneTrust,
-      file,
-      fileFormat,
-      dryRun,
-      ...(transcendAuth && transcendUrl
-        ? {
-            transcend: buildTranscendGraphQLClient(transcendUrl, transcendAuth),
-          }
-        : {}),
-    });
+  // instantiate a client to talk to Transcend
+  const transcend =
+    transcendUrl && transcendAuth
+      ? buildTranscendGraphQLClient(transcendUrl, transcendAuth)
+      : undefined;
+
+  try {
+    if (resource === OneTrustPullResource.Assessments) {
+      if (source === OneTrustPullSource.OneTrust && oneTrust) {
+        await syncOneTrustAssessmentsFromOneTrust({
+          oneTrust,
+          file,
+          fileFormat,
+          dryRun,
+          ...(transcend && { transcend }),
+        });
+      } else if (source === OneTrustPullSource.File && file && transcend) {
+        await syncOneTrustAssessmentsFromFile({ file, transcend });
+      }
+    }
+  } catch (err) {
+    logger.error(
+      colors.red(
+        `An error occurred syncing the resource ${resource} from OneTrust: ${
+          debug ? err.stack : err.message
+        }`,
+      ),
+    );
+    process.exit(1);
   }
-  // } catch (err) {
-  //   logger.error(
-  //     colors.red(
-  //       `An error occurred syncing the resource ${resource} from OneTrust: ${
-  //         debug ? err.stack : err.message
-  //       }`,
-  //     ),
-  //   );
-  //   process.exit(1);
-  // }
 
   // Indicate success
   logger.info(

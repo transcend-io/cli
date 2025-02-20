@@ -1,4 +1,5 @@
 import { Got } from 'got/dist/source';
+import colors from 'colors';
 import {
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
@@ -28,7 +29,12 @@ export interface AssessmentForm {
   name: string;
 }
 
-export const syncOneTrustAssessments = async ({
+/**
+ * Reads all the assessments from a OneTrust instance and syncs them to Transcend or to Disk.
+ *
+ * @param param - the information about the assessment, its OneTrust source, and destination (disk or Transcend)
+ */
+export const syncOneTrustAssessmentsFromOneTrust = async ({
   oneTrust,
   file,
   fileFormat,
@@ -70,13 +76,14 @@ export const syncOneTrustAssessments = async ({
     await map(
       assessmentBatch,
       async (assessment, index) => {
-        const assessmentNumber = BATCH_SIZE * batch + index;
+        const assessmentNumber = BATCH_SIZE * batch + index + 1;
         logger.info(
           `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`,
         );
+        const { templateName, assessmentId } = assessment;
         const assessmentDetails = await getOneTrustAssessment({
           oneTrust,
-          assessmentId: assessment.assessmentId,
+          assessmentId,
         });
         // fetch assessment's creator information
         const creatorId = assessmentDetails.createdBy.id;
@@ -85,16 +92,25 @@ export const syncOneTrustAssessments = async ({
           logger.info(
             `[assessment ${assessmentNumber} of ${assessments.length}]: fetching creator...`,
           );
-          creator = await getOneTrustUser({
-            oneTrust,
-            userId: creatorId,
-          });
-          oneTrustCachedUsers[creatorId] = creator;
+          try {
+            creator = await getOneTrustUser({
+              oneTrust,
+              userId: creatorId,
+            });
+            oneTrustCachedUsers[creatorId] = creator;
+          } catch (e) {
+            logger.error(
+              colors.red(
+                `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch form creator.` +
+                  `\tcreatorId: ${creatorId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+              ),
+            );
+          }
         }
 
         // fetch assessment approvers information
         const { approvers } = assessmentDetails;
-        let approversDetails: OneTrustGetUserResponse[] = [];
+        let approversDetails: OneTrustGetUserResponse[][] = [];
         if (approvers.length > 0) {
           logger.info(
             `[assessment ${assessmentNumber} of ${assessments.length}]: fetching approvers...`,
@@ -102,12 +118,22 @@ export const syncOneTrustAssessments = async ({
           approversDetails = await map(
             approvers.map(({ id }) => id),
             async (userId) => {
-              let approver = oneTrustCachedUsers[userId];
-              if (!approver) {
-                approver = await getOneTrustUser({ oneTrust, userId });
-                oneTrustCachedUsers[userId] = approver;
+              try {
+                let approver = oneTrustCachedUsers[userId];
+                if (!approver) {
+                  approver = await getOneTrustUser({ oneTrust, userId });
+                  oneTrustCachedUsers[userId] = approver;
+                }
+                return [approver];
+              } catch (e) {
+                logger.error(
+                  colors.red(
+                    `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a form approver.` +
+                      `\tapproverId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+                  ),
+                );
+                return [];
               }
-              return approver;
             },
             { concurrency: 5 },
           );
@@ -119,7 +145,7 @@ export const syncOneTrustAssessments = async ({
         const internalRespondents = respondents.filter(
           (r) => !r.name.includes('@'),
         );
-        let respondentsDetails: OneTrustGetUserResponse[] = [];
+        let respondentsDetails: OneTrustGetUserResponse[][] = [];
         if (internalRespondents.length > 0) {
           logger.info(
             `[assessment ${assessmentNumber} of ${assessments.length}]: fetching respondents...`,
@@ -127,12 +153,22 @@ export const syncOneTrustAssessments = async ({
           respondentsDetails = await map(
             internalRespondents.map(({ id }) => id),
             async (userId) => {
-              let respondent = oneTrustCachedUsers[userId];
-              if (!respondent) {
-                respondent = await getOneTrustUser({ oneTrust, userId });
-                oneTrustCachedUsers[userId] = respondent;
+              try {
+                let respondent = oneTrustCachedUsers[userId];
+                if (!respondent) {
+                  respondent = await getOneTrustUser({ oneTrust, userId });
+                  oneTrustCachedUsers[userId] = respondent;
+                }
+                return [respondent];
+              } catch (e) {
+                logger.error(
+                  colors.red(
+                    `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a respondent.` +
+                      `\trespondentId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+                  ),
+                );
+                return [];
               }
-              return respondent;
             },
             { concurrency: 5 },
           );
@@ -166,8 +202,8 @@ export const syncOneTrustAssessments = async ({
           assessmentDetails,
           riskDetails,
           creatorDetails: creator,
-          approversDetails,
-          respondentsDetails,
+          approversDetails: approversDetails.flat(),
+          respondentsDetails: respondentsDetails.flat(),
         });
 
         batchEnrichedAssessments.push(enrichedAssessment);
