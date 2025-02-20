@@ -38,18 +38,12 @@ export const syncOneTrustAssessmentsFromFile = async ({
 
   let index = 0;
 
-  const indices = [
-    39, 154, 564, 578, 587, 1080, 1242, 1379, 1390, 1439, 1693, 1797, 1816,
-    1947, 2020, 2066,
-  ];
-
   // Process the file line by line
   // eslint-disable-next-line no-restricted-syntax
   for await (const line of rl) {
     try {
-      // FIXME: remove indices
       // Parse each non-empty line and sync to transcend
-      if (indices.includes(index + 1) && line.trim()) {
+      if (line.trim()) {
         const parsedAssessment = decodeCodec(
           OneTrustEnrichedAssessment,
           line.endsWith(',') ? line.slice(0, -1) : line,
