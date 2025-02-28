@@ -1,4 +1,5 @@
 export * from './dataPoint';
+export * from './entry';
 export * from './dataSilo';
 export * from './enricher';
 export * from './catalog';

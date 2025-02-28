@@ -81,9 +81,7 @@ async function main(): Promise<void> {
         Object: entry.scannedObjectId, // FIXME
         'Object Path': entry.scannedObjectPathId, // FIXME
         Property: entry.name,
-        'Data Categories': entry.categories
-          .map((category) => `${category.category}:${category.name}`)
-          .join(', '),
+        'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
         // 'Guessed Category': entry.pendingCategoryGuesses?.[0]
         //   ? `${entry.pendingCategoryGuesses![0]!.category.category}:${
         //       entry.pendingCategoryGuesses![0]!.category.name

@@ -4,8 +4,8 @@ import colors from 'colors';
 import sortBy from 'lodash/sortBy';
 import type { GraphQLClient } from 'graphql-request';
 import type { DataCategoryInput } from '../codecs';
-import type { UnstructuredSubDataPointRecommendationStatus } from '../enums';
-import { SUB_DATA_POINTS_COUNT, makeGraphQLRequest } from '../graphql';
+// import type { UnstructuredSubDataPointRecommendationStatus } from '../enums';
+import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
 import type { DatapointFilterOptions } from './pullAllDatapoints';
 
@@ -15,22 +15,13 @@ interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** Name (or key) of the subdatapoint */
   name: string;
   /** Personal data category */
-  categories: DataCategoryInput[];
+  dataSubCategory: DataCategoryInput;
   /** Scanned object ID */
   scannedObjectId: string;
   /** Scanned object path ID */
   scannedObjectPathId: string;
   /** The data silo ID */
   dataSiloId: string;
-  /** Data category guesses that are output by the classifier */
-  pendingCategoryGuesses?: {
-    /** Data category being guessed */
-    category: DataCategoryInput;
-    /** Status of recommendation */
-    status: UnstructuredSubDataPointRecommendationStatus;
-    /** classifier version that produced the guess */
-    classifierVersion: number;
-  }[];
 }
 
 /**
@@ -44,9 +35,9 @@ export async function pullUnstructuredSubDataPointRecommendations(
   {
     dataSiloIds = [],
     // includeGuessedCategories,
-    parentCategories = [],
+    // parentCategories = [],
     subCategories = [],
-    pageSize = 1000,
+    pageSize = 100,
   }: DatapointFilterOptions & {
     /** Page size to pull in */
     pageSize?: number;
@@ -66,7 +57,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
 
   // Filters
   const filterBy = {
-    ...(parentCategories.length > 0 ? { category: parentCategories } : {}),
+    // ...(parentCategories.length > 0 ? { category: parentCategories } : {}),
     ...(subCategories.length > 0 ? { subCategoryIds: subCategories } : {}),
     // if parentCategories or subCategories and not includeGuessedCategories
     // ...(parentCategories.length + subCategories.length > 0 &&
@@ -87,7 +78,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
       /** Count */
       totalCount: number;
     };
-  }>(client, SUB_DATA_POINTS_COUNT, {
+  }>(client, ENTRY_COUNT, {
     filterBy,
   });
 
@@ -113,7 +104,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
         client, // FIXME below incomplete
         gql`
           query TranscendCliUnstructuredSubDataPointRecommendationCsvExport(
-            $filterBy: SubDataPointFiltersInput
+            $filterBy: UnstructuredSubDataPointRecommendationsFilterInput
             $first: Int!
             $offset: Int!
           ) {
@@ -121,15 +112,20 @@ export async function pullUnstructuredSubDataPointRecommendations(
               filterBy: $filterBy
               first: $first
               offset: $offset
-              useMaster: false
             ) {
               nodes {
                 id
                 name
-                categories {
+                dataSiloId
+                scannedObjectPathId
+                scannedObjectId
+                dataSubCategory {
                   name
                   category
                 }
+                confidence
+                classificationMethod
+                classifierVersion
               }
             }
           }
