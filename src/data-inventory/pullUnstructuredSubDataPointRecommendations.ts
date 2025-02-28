@@ -4,26 +4,41 @@ import colors from 'colors';
 import sortBy from 'lodash/sortBy';
 import type { GraphQLClient } from 'graphql-request';
 import type { DataCategoryInput } from '../codecs';
-// import type { UnstructuredSubDataPointRecommendationStatus } from '../enums';
+import { UnstructuredSubDataPointRecommendationStatus } from '../enums';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
-import type { DatapointFilterOptions } from './pullAllDatapoints';
 
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
   id: string;
   /** Name (or key) of the subdatapoint */
   name: string;
-  /** Personal data category */
-  dataSubCategory: DataCategoryInput;
   /** Scanned object ID */
   scannedObjectId: string;
   /** Scanned object path ID */
   scannedObjectPathId: string;
   /** The data silo ID */
   dataSiloId: string;
+  /** Personal data category */
+  dataSubCategory: DataCategoryInput;
+  /** Classification Status */
+  status: UnstructuredSubDataPointRecommendationStatus;
+  /** Confidence */
+  confidence: number;
+  /** Classification method */
+  classificationMethod: string;
+  /** Classifier version */
+  classifierVersion: string;
 }
 
+interface EntryFilterOptions {
+  /** IDs of data silos to filter down */
+  dataSiloIds?: string[];
+  /** Parent categories to filter down for */
+  status?: UnstructuredSubDataPointRecommendationStatus[];
+  /** Sub categories to filter down for */
+  subCategories?: string[]; // TODO: https://transcend.height.app/T-40482 - do by name not ID
+}
 /**
  * Pull unstructured subdatapoint information
  *
@@ -34,11 +49,10 @@ export async function pullUnstructuredSubDataPointRecommendations(
   client: GraphQLClient,
   {
     dataSiloIds = [],
-    // includeGuessedCategories,
-    // parentCategories = [],
+    status,
     subCategories = [],
     pageSize = 100,
-  }: DatapointFilterOptions & {
+  }: EntryFilterOptions & {
     /** Page size to pull in */
     pageSize?: number;
   } = {},
@@ -59,13 +73,15 @@ export async function pullUnstructuredSubDataPointRecommendations(
   const filterBy = {
     // ...(parentCategories.length > 0 ? { category: parentCategories } : {}),
     ...(subCategories.length > 0 ? { subCategoryIds: subCategories } : {}),
-    // if parentCategories or subCategories and not includeGuessedCategories
-    // ...(parentCategories.length + subCategories.length > 0 &&
-    // !includeGuessedCategories
-    //   ? // then only show data points with approved data categories
-    //     // FIXME should include validated, corrected, manually added; should exclude classified and rejected
-    //     { status: UnstructuredSubDataPointRecommendationStatus.Validated }
-    //   : {}),
+    ...(status
+      ? { status }
+      : {
+          status: [
+            UnstructuredSubDataPointRecommendationStatus.Corrected,
+            UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
+            UnstructuredSubDataPointRecommendationStatus.Validated,
+          ],
+        }),
     ...(dataSiloIds.length > 0 ? { dataSilos: dataSiloIds } : {}),
   };
 
@@ -115,14 +131,15 @@ export async function pullUnstructuredSubDataPointRecommendations(
             ) {
               nodes {
                 id
-                name
                 dataSiloId
                 scannedObjectPathId
                 scannedObjectId
+                name
                 dataSubCategory {
                   name
                   category
                 }
+                status
                 confidence
                 classificationMethod
                 classifierVersion

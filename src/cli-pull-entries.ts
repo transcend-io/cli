@@ -27,7 +27,6 @@ async function main(): Promise<void> {
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     dataSiloIds = '',
-    includeGuessedCategories = 'false',
     parentCategories = '',
     subCategories = '',
   } = yargs(process.argv.slice(2));
@@ -67,8 +66,6 @@ async function main(): Promise<void> {
 
     const entries = await pullUnstructuredSubDataPointRecommendations(client, {
       dataSiloIds: splitCsvToList(dataSiloIds),
-      includeGuessedCategories: includeGuessedCategories === 'true',
-      parentCategories: parsedParentCategories,
       subCategories: splitCsvToList(subCategories), // TODO: https://transcend.height.app/T-40482 - do by name not ID
     });
 
@@ -76,17 +73,16 @@ async function main(): Promise<void> {
     let headers: string[] = [];
     const inputs = entries.map((entry) => {
       const result = {
-        'Property ID': entry.id,
+        'Entry ID': entry.id,
         'Data Silo': entry.dataSiloId, // FIXME
-        Object: entry.scannedObjectId, // FIXME
         'Object Path': entry.scannedObjectPathId, // FIXME
-        Property: entry.name,
+        Object: entry.scannedObjectId, // FIXME
+        Entry: entry.name,
         'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
-        // 'Guessed Category': entry.pendingCategoryGuesses?.[0]
-        //   ? `${entry.pendingCategoryGuesses![0]!.category.category}:${
-        //       entry.pendingCategoryGuesses![0]!.category.name
-        //     }`
-        //   : '',
+        'Classification Status': entry.status,
+        'Confidence Score': entry.confidence,
+        'Classification Method': entry.classificationMethod,
+        'Classifier Version': entry.classifierVersion,
       };
       headers = uniq([...headers, ...Object.keys(result)]);
       return result;
