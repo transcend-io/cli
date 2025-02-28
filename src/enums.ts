@@ -98,3 +98,21 @@ export const OpenAIRouteName = makeEnum({
  */
 export type OpenAIRouteName =
   (typeof OpenAIRouteName)[keyof typeof OpenAIRouteName];
+
+// FIXME - move to privacy-types
+export const UnstructuredSubDataPointRecommendationStatus = makeEnum({
+  /** The category was manually applied */
+  ManuallyAdded: 'MANUALLY_ADDED',
+  /** The recommendation has been corrected */
+  Corrected: 'CORRECTED',
+  /** The recommendation has been approved as valid */
+  Validated: 'VALIDATED',
+  /** The recommendation is has been made but not validated */
+  Classified: 'CLASSIFIED',
+  /** The recommendation has been marked as wrong */
+  Rejected: 'REJECTED',
+});
+
+/** Type override */
+export type UnstructuredSubDataPointRecommendationStatus =
+  (typeof UnstructuredSubDataPointRecommendationStatus)[keyof typeof UnstructuredSubDataPointRecommendationStatus];

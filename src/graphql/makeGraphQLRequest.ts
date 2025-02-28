@@ -1,4 +1,8 @@
-import { GraphQLClient, RequestDocument, Variables } from 'graphql-request';
+import type {
+  GraphQLClient,
+  RequestDocument,
+  Variables,
+} from 'graphql-request';
 import { logger } from '../logger';
 import colors from 'colors';
 
