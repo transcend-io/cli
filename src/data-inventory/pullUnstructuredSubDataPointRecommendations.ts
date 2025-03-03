@@ -4,7 +4,7 @@ import colors from 'colors';
 import sortBy from 'lodash/sortBy';
 import type { GraphQLClient } from 'graphql-request';
 import type { DataCategoryInput } from '../codecs';
-import { UnstructuredSubDataPointRecommendationStatus } from '../enums';
+import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
 
@@ -71,16 +71,15 @@ export async function pullUnstructuredSubDataPointRecommendations(
 
   // Filters
   const filterBy = {
-    // ...(parentCategories.length > 0 ? { category: parentCategories } : {}),
     ...(subCategories.length > 0 ? { subCategoryIds: subCategories } : {}),
     ...(status
       ? { status }
       : {
-          status: [
-            UnstructuredSubDataPointRecommendationStatus.Corrected,
-            UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
-            UnstructuredSubDataPointRecommendationStatus.Validated,
-          ],
+          // status: [
+          //   // UnstructuredSubDataPointRecommendationStatus.Corrected,
+          //   // UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
+          //   UnstructuredSubDataPointRecommendationStatus.Validated,
+          // ],
         }),
     ...(dataSiloIds.length > 0 ? { dataSilos: dataSiloIds } : {}),
   };

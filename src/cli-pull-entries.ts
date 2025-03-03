@@ -1,6 +1,6 @@
 #!/usr/bin/env node
+import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import uniq from 'lodash/uniq';
-
 import yargs from 'yargs-parser';
 import { logger } from './logger';
 import colors from 'colors';
@@ -9,7 +9,7 @@ import { DEFAULT_TRANSCEND_API } from './constants';
 import { pullUnstructuredSubDataPointRecommendations } from './data-inventory';
 import { writeCsv } from './cron';
 import { splitCsvToList } from './requests';
-import { DataCategoryType } from '@transcend-io/privacy-types';
+// import { DataCategoryType } from '@transcend-io/privacy-types';
 
 /**
  * Sync entries from Transcend inventory to a CSV
@@ -27,8 +27,8 @@ async function main(): Promise<void> {
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     dataSiloIds = '',
-    parentCategories = '',
     subCategories = '',
+    status = '',
   } = yargs(process.argv.slice(2));
 
   // Ensure auth is passed
@@ -41,24 +41,24 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Validate trackerStatuses
-  const parsedParentCategories = splitCsvToList(
-    parentCategories,
-  ) as DataCategoryType[];
-  const invalidParentCategories = parsedParentCategories.filter(
-    (type) => !Object.values(DataCategoryType).includes(type),
-  );
-  if (invalidParentCategories.length > 0) {
-    logger.error(
-      colors.red(
-        `Failed to parse parentCategories:"${invalidParentCategories.join(
-          ',',
-        )}".\n` +
-          `Expected one of: \n${Object.values(DataCategoryType).join('\n')}`,
-      ),
-    );
-    process.exit(1);
-  }
+  // // Validate trackerStatuses
+  // const parsedParentCategories = splitCsvToList(
+  //   parentCategories,
+  // ) as DataCategoryType[];
+  // const invalidParentCategories = parsedParentCategories.filter(
+  //   (type) => !Object.values(DataCategoryType).includes(type),
+  // );
+  // if (invalidParentCategories.length > 0) {
+  //   logger.error(
+  //     colors.red(
+  //       `Failed to parse parentCategories:"${invalidParentCategories.join(
+  //         ',',
+  //       )}".\n` +
+  //         `Expected one of: \n${Object.values(DataCategoryType).join('\n')}`,
+  //     ),
+  //   );
+  //   process.exit(1);
+  // }
 
   try {
     // Create a GraphQL client
@@ -67,6 +67,9 @@ async function main(): Promise<void> {
     const entries = await pullUnstructuredSubDataPointRecommendations(client, {
       dataSiloIds: splitCsvToList(dataSiloIds),
       subCategories: splitCsvToList(subCategories), // TODO: https://transcend.height.app/T-40482 - do by name not ID
+      status: splitCsvToList(
+        status,
+      ) as UnstructuredSubDataPointRecommendationStatus[],
     });
 
     logger.info(colors.magenta(`Writing entries to file "${file}"...`));
