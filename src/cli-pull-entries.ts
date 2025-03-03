@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
 import uniq from 'lodash/uniq';
 import yargs from 'yargs-parser';
-import { logger } from './logger';
-import colors from 'colors';
-import { buildTranscendGraphQLClient } from './graphql';
 import { DEFAULT_TRANSCEND_API } from './constants';
-import { pullUnstructuredSubDataPointRecommendations } from './data-inventory';
 import { writeCsv } from './cron';
+import { pullUnstructuredSubDataPointRecommendations } from './data-inventory';
+import { buildTranscendGraphQLClient } from './graphql';
+import { logger } from './logger';
 import { splitCsvToList } from './requests';
-// import { DataCategoryType } from '@transcend-io/privacy-types';
 
 /**
  * Sync entries from Transcend inventory to a CSV
@@ -41,25 +40,6 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // // Validate trackerStatuses
-  // const parsedParentCategories = splitCsvToList(
-  //   parentCategories,
-  // ) as DataCategoryType[];
-  // const invalidParentCategories = parsedParentCategories.filter(
-  //   (type) => !Object.values(DataCategoryType).includes(type),
-  // );
-  // if (invalidParentCategories.length > 0) {
-  //   logger.error(
-  //     colors.red(
-  //       `Failed to parse parentCategories:"${invalidParentCategories.join(
-  //         ',',
-  //       )}".\n` +
-  //         `Expected one of: \n${Object.values(DataCategoryType).join('\n')}`,
-  //     ),
-  //   );
-  //   process.exit(1);
-  // }
-
   try {
     // Create a GraphQL client
     const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -77,9 +57,9 @@ async function main(): Promise<void> {
     const inputs = entries.map((entry) => {
       const result = {
         'Entry ID': entry.id,
-        'Data Silo': entry.dataSiloId, // FIXME
-        'Object Path': entry.scannedObjectPathId, // FIXME
-        Object: entry.scannedObjectId, // FIXME
+        'Data Silo ID': entry.dataSiloId, // FIXME
+        'Object Path ID': entry.scannedObjectPathId, // FIXME
+        'Object ID': entry.scannedObjectId, // FIXME
         Entry: entry.name,
         'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
         'Classification Status': entry.status,

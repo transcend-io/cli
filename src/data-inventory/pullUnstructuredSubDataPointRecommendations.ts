@@ -1,10 +1,9 @@
-import cliProgress from 'cli-progress';
-import { gql } from 'graphql-request';
-import colors from 'colors';
-import sortBy from 'lodash/sortBy';
-import type { GraphQLClient } from 'graphql-request';
-import type { DataCategoryInput } from '../codecs';
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { gql, type GraphQLClient } from 'graphql-request';
+import sortBy from 'lodash/sortBy';
+import type { DataCategoryInput } from '../codecs';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
 
@@ -72,15 +71,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
   // Filters
   const filterBy = {
     ...(subCategories.length > 0 ? { subCategoryIds: subCategories } : {}),
-    ...(status
-      ? { status }
-      : {
-          // status: [
-          //   // UnstructuredSubDataPointRecommendationStatus.Corrected,
-          //   // UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
-          //   UnstructuredSubDataPointRecommendationStatus.Validated,
-          // ],
-        }),
+    ...(status ? { status } : {}),
     ...(dataSiloIds.length > 0 ? { dataSilos: dataSiloIds } : {}),
   };
 
@@ -116,7 +107,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
           nodes: UnstructuredSubDataPointRecommendationCsvPreview[];
         };
       }>(
-        client, // FIXME below incomplete
+        client,
         gql`
           query TranscendCliUnstructuredSubDataPointRecommendationCsvExport(
             $filterBy: UnstructuredSubDataPointRecommendationsFilterInput
