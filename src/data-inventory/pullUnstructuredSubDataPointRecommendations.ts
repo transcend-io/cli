@@ -10,8 +10,10 @@ import { logger } from '../logger';
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
   id: string;
-  /** Name (or key) of the subdatapoint */
+  /** Entry or Named Entity recognized by the classifier */
   name: string;
+  /** Context snippet including entry */
+  contextSnippet: string;
   /** Scanned object ID */
   scannedObjectId: string;
   /** Scanned object path ID */
@@ -125,6 +127,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
                 scannedObjectPathId
                 scannedObjectId
                 name
+                contextSnippet
                 dataSubCategory {
                   name
                   category

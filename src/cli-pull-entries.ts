@@ -61,6 +61,7 @@ async function main(): Promise<void> {
         'Object Path ID': entry.scannedObjectPathId, // FIXME
         'Object ID': entry.scannedObjectId, // FIXME
         Entry: entry.name,
+        'Context Snippet': entry.contextSnippet,
         'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
         'Classification Status': entry.status,
         'Confidence Score': entry.confidence,
