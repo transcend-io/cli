@@ -7,6 +7,15 @@ import type { DataCategoryInput } from '../codecs';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
 
+interface ScannedObject {
+  /** ID */
+  id: string;
+  /** Name */
+  name: string;
+  /** Encrypted samples S3 key */
+  encryptedSamplesS3Key?: string;
+}
+
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
   id: string;
@@ -15,7 +24,7 @@ interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** Context snippet including entry */
   contextSnippet: string;
   /** Scanned object ID */
-  scannedObjectId: string;
+  scannedObject: ScannedObject;
   /** Scanned object path ID */
   scannedObjectPathId: string;
   /** The data silo ID */
@@ -39,12 +48,23 @@ interface EntryFilterOptions {
   status?: UnstructuredSubDataPointRecommendationStatus[];
   /** Sub categories to filter down for */
   subCategories?: string[]; // TODO: https://transcend.height.app/T-40482 - do by name not ID
+  /** Include entry and snippet */
+  includeEncryptedSnippets?: boolean;
+  /** Include encryptedSamplesS3Key */
+  includeEncryptedSamplesS3Key?: boolean;
 }
 /**
  * Pull unstructured subdatapoint information
  *
  * @param client - Client to use for the request
  * @param options - Options
+ * @param options.dataSiloIds - IDs of data silos to filter down
+ * @param options.status - Parent categories to filter down for
+ * @param options.subCategories - Sub categories to filter down for
+ * @param options.includeEncryptedSnippets - Include entry and snippet
+ * @param options.includeEncryptedSamplesS3Key - Include encryptedSamplesS3Key
+ * @param options.pageSize - Page size to pull in
+ * @returns A promise that resolves to an array of unstructured subdatapoint recommendations
  */
 export async function pullUnstructuredSubDataPointRecommendations(
   client: GraphQLClient,
@@ -52,6 +72,8 @@ export async function pullUnstructuredSubDataPointRecommendations(
     dataSiloIds = [],
     status,
     subCategories = [],
+    includeEncryptedSnippets,
+    includeEncryptedSamplesS3Key,
     pageSize = 100,
   }: EntryFilterOptions & {
     /** Page size to pull in */
@@ -125,9 +147,13 @@ export async function pullUnstructuredSubDataPointRecommendations(
                 id
                 dataSiloId
                 scannedObjectPathId
-                scannedObjectId
-                name
-                contextSnippet
+                scannedObject {
+                  id
+                  name
+                  ${includeEncryptedSamplesS3Key ? 'encryptedSamplesS3Key' : ''}
+                }
+                ${includeEncryptedSnippets ? 'name' : ''}
+                ${includeEncryptedSnippets ? 'contextSnippet' : ''}
                 dataSubCategory {
                   name
                   category

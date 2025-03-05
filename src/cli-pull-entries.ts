@@ -28,6 +28,8 @@ async function main(): Promise<void> {
     dataSiloIds = '',
     subCategories = '',
     status = '',
+    includeEncryptedSnippets = 'false',
+    includeEncryptedSamplesS3Key = 'false',
   } = yargs(process.argv.slice(2));
 
   // Ensure auth is passed
@@ -39,6 +41,9 @@ async function main(): Promise<void> {
     );
     process.exit(1);
   }
+  const includeEncryptedSnippetsBool = includeEncryptedSnippets === 'true';
+  const includeEncryptedSamplesS3KeyBool =
+    includeEncryptedSamplesS3Key === 'true';
 
   try {
     // Create a GraphQL client
@@ -50,6 +55,8 @@ async function main(): Promise<void> {
       status: splitCsvToList(
         status,
       ) as UnstructuredSubDataPointRecommendationStatus[],
+      includeEncryptedSnippets: includeEncryptedSnippetsBool,
+      includeEncryptedSamplesS3Key: includeEncryptedSamplesS3KeyBool,
     });
 
     logger.info(colors.magenta(`Writing entries to file "${file}"...`));
@@ -59,14 +66,21 @@ async function main(): Promise<void> {
         'Entry ID': entry.id,
         'Data Silo ID': entry.dataSiloId, // FIXME
         'Object Path ID': entry.scannedObjectPathId, // FIXME
-        'Object ID': entry.scannedObjectId, // FIXME
-        Entry: entry.name,
-        'Context Snippet': entry.contextSnippet,
+        Object: entry.scannedObject.name,
+        ...(includeEncryptedSnippetsBool
+          ? { Entry: entry.name, 'Context Snippet': entry.contextSnippet }
+          : {}),
         'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
         'Classification Status': entry.status,
         'Confidence Score': entry.confidence,
         'Classification Method': entry.classificationMethod,
         'Classifier Version': entry.classifierVersion,
+        ...(includeEncryptedSnippetsBool
+          ? {
+              'Encrypted Samples S3 Key':
+                entry.scannedObject.encryptedSamplesS3Key,
+            }
+          : {}),
       };
       headers = uniq([...headers, ...Object.keys(result)]);
       return result;
