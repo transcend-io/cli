@@ -28,7 +28,7 @@
     "tr-pull-consent-metrics": "./build/cli-pull-consent-metrics.js",
     "tr-pull-consent-preferences": "./build/cli-pull-consent-preferences.js",
     "tr-pull-datapoints": "./build/cli-pull-datapoints.js",
-    "tr-pull-entries": "./build/cli-pull-entries.js",
+    "tr-pull-unstructured-discovery-files": "./build/cli-pull-unstructured-discovery-files.js",
     "tr-push": "./build/cli-push.js",
     "tr-request-approve": "./build/cli-request-approve.js",
     "tr-request-cancel": "./build/cli-request-cancel.js",
