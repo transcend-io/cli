@@ -7,15 +7,6 @@ import type { DataCategoryInput } from '../codecs';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../logger';
 
-interface ScannedObject {
-  /** ID */
-  id: string;
-  /** Name */
-  name: string;
-  /** Encrypted samples S3 key */
-  encryptedSamplesS3Key?: string;
-}
-
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
   id: string;
@@ -24,7 +15,7 @@ interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** Context snippet including entry */
   contextSnippet: string;
   /** Scanned object ID */
-  scannedObject: ScannedObject;
+  scannedObjectId: string;
   /** Scanned object path ID */
   scannedObjectPathId: string;
   /** The data silo ID */
@@ -73,7 +64,6 @@ export async function pullUnstructuredSubDataPointRecommendations(
     status,
     subCategories = [],
     includeEncryptedSnippets,
-    includeEncryptedSamplesS3Key,
     pageSize = 100,
   }: EntryFilterOptions & {
     /** Page size to pull in */
@@ -147,11 +137,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
                 id
                 dataSiloId
                 scannedObjectPathId
-                scannedObject {
-                  id
-                  name
-                  ${includeEncryptedSamplesS3Key ? 'encryptedSamplesS3Key' : ''}
-                }
+                scannedObjectId
                 ${includeEncryptedSnippets ? 'name' : ''}
                 ${includeEncryptedSnippets ? 'contextSnippet' : ''}
                 dataSubCategory {

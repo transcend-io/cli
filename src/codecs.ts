@@ -50,6 +50,7 @@ import {
   AssessmentFormTemplateStatus,
   AssessmentFormStatus,
   AssessmentFormTemplateSource,
+  UnstructuredSubDataPointRecommendationStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -58,12 +59,7 @@ import {
 } from '@transcend-io/airgap.js-types';
 import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
-import {
-  OpenAIRouteName,
-  PathfinderPolicyName,
-  // FIXME - move to privacy-types
-  UnstructuredSubDataPointRecommendationStatus,
-} from './enums';
+import { OpenAIRouteName, PathfinderPolicyName } from './enums';
 import { LanguageKey } from '@transcend-io/internationalization';
 
 /**
