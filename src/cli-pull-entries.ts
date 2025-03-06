@@ -22,7 +22,7 @@ import { splitCsvToList } from './requests';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
-    file = './entries.csv',
+    file = './unstructured-discovery-files.csv',
     transcendUrl = DEFAULT_TRANSCEND_API,
     auth,
     dataSiloIds = '',
