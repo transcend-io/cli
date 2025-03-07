@@ -4,7 +4,10 @@ export const ENTRY_COUNT = gql`
   query TranscendCliEntryCount(
     $filterBy: UnstructuredSubDataPointRecommendationsFilterInput
   ) {
-    unstructuredSubDataPointRecommendations(filterBy: $filterBy) {
+    unstructuredSubDataPointRecommendations(
+      filterBy: $filterBy
+      useMaster: false
+    ) {
       totalCount
     }
   }

@@ -132,6 +132,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
               filterBy: $filterBy
               first: $first
               offset: $offset
+              useMaster: false
             ) {
               nodes {
                 id

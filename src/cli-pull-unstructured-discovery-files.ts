@@ -11,13 +11,13 @@ import { logger } from './logger';
 import { splitCsvToList } from './requests';
 
 /**
- * Sync entries from Transcend inventory to a CSV
+ * Sync unstructured discovery files from Transcend inventory to a CSV
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-entries.ts --auth=$TRANSCEND_API_KEY
+ * yarn ts-node ./src/cli-pull-unstructured-discovery-files.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage
- * yarn cli-pull-entries --auth=$TRANSCEND_API_KEY
+ * yarn cli-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -55,13 +55,17 @@ async function main(): Promise<void> {
       includeEncryptedSnippets: includeEncryptedSnippetsBool,
     });
 
-    logger.info(colors.magenta(`Writing entries to file "${file}"...`));
+    logger.info(
+      colors.magenta(
+        `Writing unstructured discovery files to file "${file}"...`,
+      ),
+    );
     let headers: string[] = [];
     const inputs = entries.map((entry) => {
       const result = {
         'Entry ID': entry.id,
-        'Data Silo ID': entry.dataSiloId, // FIXME
-        'Object Path ID': entry.scannedObjectPathId, // FIXME
+        'Data Silo ID': entry.dataSiloId,
+        'Object Path ID': entry.scannedObjectPathId,
         'Object ID': entry.scannedObjectId,
         ...(includeEncryptedSnippetsBool
           ? { Entry: entry.name, 'Context Snippet': entry.contextSnippet }
@@ -78,13 +82,19 @@ async function main(): Promise<void> {
     writeCsv(file, inputs, headers);
   } catch (err) {
     logger.error(
-      colors.red(`An error occurred syncing the entries: ${err.message}`),
+      colors.red(
+        `An error occurred syncing the unstructured discovery files: ${err.message}`,
+      ),
     );
     process.exit(1);
   }
 
   // Indicate success
-  logger.info(colors.green(`Successfully synced entries to disk at ${file}!`));
+  logger.info(
+    colors.green(
+      `Successfully synced unstructured discovery files to disk at ${file}!`,
+    ),
+  );
 }
 
 main();
