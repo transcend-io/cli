@@ -50,6 +50,7 @@ import {
   AssessmentFormTemplateStatus,
   AssessmentFormStatus,
   AssessmentFormTemplateSource,
+  UnstructuredSubDataPointRecommendationStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -267,6 +268,29 @@ export const DataCategoryGuessInput = t.intersection([
 
 /** Type override */
 export type DataCategoryGuessInput = t.TypeOf<typeof DataCategoryGuessInput>;
+
+/**
+ * A guessed data category from the content classifier
+ */
+export const DataCategoryRecommendationInput = t.intersection([
+  t.type({
+    /** The parent category */
+    category: DataCategoryPreviewInput,
+    /** Status of guess */
+    status: valuesOf(UnstructuredSubDataPointRecommendationStatus),
+    /** Confidence level of guess */
+    confidence: t.number,
+  }),
+  t.partial({
+    /** classifier version that produced the guess */
+    classifierVersion: t.number,
+  }),
+]);
+
+/** Type override */
+export type DataCategoryRecommendationInput = t.TypeOf<
+  typeof DataCategoryRecommendationInput
+>;
 
 export const AttributeValueInput = t.intersection([
   t.type({

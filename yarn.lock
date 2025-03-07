@@ -515,7 +515,7 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.105.4
+    "@transcend-io/privacy-types": ^4.106.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.8.0
     "@types/bluebird": ^3.5.38
@@ -593,6 +593,7 @@ __metadata:
     tr-pull-consent-metrics: ./build/cli-pull-consent-metrics.js
     tr-pull-consent-preferences: ./build/cli-pull-consent-preferences.js
     tr-pull-datapoints: ./build/cli-pull-datapoints.js
+    tr-pull-unstructured-discovery-files: ./build/cli-pull-unstructured-discovery-files.js
     tr-push: ./build/cli-push.js
     tr-request-approve: ./build/cli-request-approve.js
     tr-request-cancel: ./build/cli-request-cancel.js
@@ -647,14 +648,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.105.4":
-  version: 4.105.4
-  resolution: "@transcend-io/privacy-types@npm:4.105.4"
+"@transcend-io/privacy-types@npm:^4.106.0":
+  version: 4.106.0
+  resolution: "@transcend-io/privacy-types@npm:4.106.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 8e2ce5d232dc3862b8aee0e080247eb6aa03db1d966f63906edbae67848eb897b95bd82964111929e21dd1e0b3584bbff762eadce91054f93ac7d81d38a184af
+  checksum: 2d02700505e7cc44507515e3d35c2fbb97e586361c83ae5a057bc7904fcbc770f9dfc143d233b4850dab1b698a311d684134ae4d66265ce478e88344f1f90364
   languageName: node
   linkType: hard
 

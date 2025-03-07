@@ -122,35 +122,39 @@
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-upload-preferences](#tr-upload-preferences)
+  - [tr-pull-pull-unstructured-discovery-files](#tr-pull-pull-unstructured-discovery-files)
     - [Authentication](#authentication-28)
-    - [Authentication](#authentication-29)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-upload-preferences](#tr-upload-preferences)
+    - [Authentication](#authentication-29)
     - [Authentication](#authentication-30)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-31)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-32)
     - [Arguments](#arguments-31)
     - [Usage](#usage-32)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-33)
     - [Arguments](#arguments-32)
     - [Usage](#usage-33)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-35)
     - [Arguments](#arguments-34)
     - [Usage](#usage-35)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-36)
+    - [Arguments](#arguments-35)
+    - [Usage](#usage-36)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -2370,6 +2374,68 @@ Specify the backend URL, needed for US hosted backend infrastructure:
 
 ```sh
 yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --file=./datapoints.csv --transcendUrl=https://api.us.transcend.io
+```
+
+### tr-pull-pull-unstructured-discovery-files
+
+This command allows for pulling Unstructured Discovery into a CSV.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "View Data Inventory"
+
+#### Arguments
+
+| Argument                 | Description                                                                                          | Type          | Default                            | Required |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------- | -------- |
+| auth                     | The Transcend API key with the scopes necessary for the command.                                     | string        | N/A                                | true     |
+| file                     | The file to save datapoints to                                                                       | string - path | ./unstructured-discovery-files.csv | false    |
+| transcendUrl             | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                        | string - URL  | https://api.transcend.io           | false    |
+| dataSiloIds              | Comma-separated list of data silo IDs to filter by                                                   | string        | N/A                                | false    |
+| subCategories            | Comma-separated list of data categories to filter by                                                 | string        | N/A                                | false    |
+| status                   | Comma-separated list of classification statuses to filter by (CLASSIFIED, VALIDATED, REJECTED, etc.) | string        | (excludes REJECTED)                | false    |
+| includeEncryptedSnippets | Whether to include encrypted snippets of the entries classified                                      | boolean       | false                              | false    |
+
+#### Usage
+
+All arguments
+
+```sh
+yarn tr-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY --file=./unstructured-discovery-files.csv --transcendUrl=https://api.us.transcend.io --dataSiloIds=f956ccce-5534-4328-a78d-3a924b1fe429 --subCategories=79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1 --status=VALIDATED,MANUALLY_ADDED,CORRECTED --includeEncryptedSnippets=true
+```
+
+Specify the backend URL, needed for US hosted backend infrastructure:
+
+```sh
+yarn tr-pull-datapoints --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+Pull entries for specific data silos:
+
+```sh
+yarn tr-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY --dataSiloIds=f956ccce-5534-4328-a78d-3a924b1fe429
+```
+
+Filter by data categories:
+
+```sh
+yarn tr-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY --subCategories=79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1
+```
+
+Filter by classification status (exclude unconfirmed recommendations):
+
+```sh
+yarn tr-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY --status=VALIDATED,MANUALLY_ADDED,CORRECTED
+```
+
+Filter by classification status (include rejected recommendations):
+
+```sh
+yarn tr-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY --status=REJECTED
 ```
 
 ### tr-upload-preferences
