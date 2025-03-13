@@ -20,6 +20,7 @@ export * from './extractClientError';
 export * from './uploadPrivacyRequestsFromCsv';
 export * from './bulkRestartRequests';
 export * from './restartPrivacyRequest';
+export * from './skipPreflightJobs';
 export * from './bulkRetryEnrichers';
 export * from './retryRequestDataSilos';
 export * from './pullPrivacyRequests';
