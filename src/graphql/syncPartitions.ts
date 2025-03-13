@@ -6,6 +6,7 @@ import { mapSeries } from 'bluebird';
 import difference from 'lodash/difference';
 import { logger } from '../logger';
 import { PartitionInput } from '../codecs';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
 
 const PAGE_SIZE = 50;
 
@@ -65,6 +66,8 @@ export async function syncPartitions(
   client: GraphQLClient,
   partitionInputs: PartitionInput[],
 ): Promise<boolean> {
+  // Grab the bundleId associated with this API key
+  const airgapBundleId = await fetchConsentManagerId(client);
   let encounteredError = false;
   const partitions = await fetchPartitions(client);
   const newPartitionNames = difference(
@@ -75,6 +78,7 @@ export async function syncPartitions(
     try {
       await makeGraphQLRequest(client, CREATE_CONSENT_PARTITION, {
         input: {
+          id: airgapBundleId,
           name,
         },
       });
