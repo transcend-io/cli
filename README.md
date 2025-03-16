@@ -844,6 +844,7 @@ Transcend can scan your codebase to inventory your code packages and dependencie
 - package.json
 - requirements.txt & setup.py
 - Podfile
+- Package.resolved
 - build.gradle
 - pubspec.yaml
 - Gemfile & .gemspec
