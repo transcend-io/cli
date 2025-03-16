@@ -21,7 +21,7 @@ import {
 
 chai.use(deepEqualInAnyOrder);
 
-describe.only('flattenOneTrustAssessment', () => {
+describe('flattenOneTrustAssessment', () => {
   const defaultQuestion: OneTrustEnrichedAssessmentQuestion =
     createDefaultCodec(OneTrustEnrichedAssessmentQuestion);
   const defaultNestedQuestion: OneTrustAssessmentNestedQuestion =

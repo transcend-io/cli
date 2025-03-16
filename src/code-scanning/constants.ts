@@ -6,6 +6,7 @@ import {
   gemfile,
   composerJson,
   pubspec,
+  swift,
   pythonRequirementsTxt,
 } from './integrations';
 import { CodePackageType } from '@transcend-io/privacy-types';
@@ -22,6 +23,7 @@ export const SILO_DISCOVERY_CONFIGS: {
   pythonRequirementsTxt,
   gemfile,
   pubspec,
+  swift,
 };
 
 export const CODE_SCANNING_CONFIGS: {
@@ -34,4 +36,5 @@ export const CODE_SCANNING_CONFIGS: {
   [CodePackageType.Gemfile]: gemfile,
   [CodePackageType.Pubspec]: pubspec,
   [CodePackageType.ComposerJson]: composerJson,
+  [CodePackageType.Swift]: swift,
 };

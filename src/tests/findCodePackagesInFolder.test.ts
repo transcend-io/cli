@@ -690,6 +690,22 @@ describe('findCodePackagesInFolder', () => {
         type: 'COMPOSER_JSON',
         repositoryName: 'transcend-io/cli',
       },
+      {
+        name: 'test-swift',
+        type: 'SWIFT',
+        relativePath: 'test-swift/Package.resolved',
+        repositoryName: 'transcend-io/cli',
+        softwareDevelopmentKits: [
+          {
+            name: 'alamofire',
+            version: '5.8.1',
+          },
+          {
+            name: 'swift-numerics',
+            version: '1.0.2',
+          },
+        ],
+      },
     ]);
   });
 });
