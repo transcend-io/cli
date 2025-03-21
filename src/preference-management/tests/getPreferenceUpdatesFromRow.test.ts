@@ -7,7 +7,7 @@ import { PreferenceTopicType } from '@transcend-io/privacy-types';
 
 chai.use(deepEqualInAnyOrder);
 
-describe('getPreferenceUpdatesFromRow', () => {
+describe.only('getPreferenceUpdatesFromRow', () => {
   it('should parse boolean updates', () => {
     expect(
       getPreferenceUpdatesFromRow({

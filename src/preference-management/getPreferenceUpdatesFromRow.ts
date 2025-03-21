@@ -151,15 +151,13 @@ export function getPreferenceUpdatesFromRow({
               choice: {
                 selectValues: splitCsvToList(rawValue)
                   .map((val) => {
-                    // FIXME: Support mapping multi select values
-                    // The current prompt/parsing logic from `parsePreferenceAndPurposeValuesFromCsv` coerces everything to a boolean
                     const result = valueMapping[val];
                     if (typeof result !== 'string') {
                       throw new Error(
                         `Invalid value for multi select preference: ${preference}, ` +
                         `expected one of: ${preferenceTopic.preferenceOptionValues
                           .map(({ slug }) => slug)
-                          .join(', ')}, got: ${result}`,
+                          .join(', ')}, got: ${val}`,
                       );
                     }
                     return result;
