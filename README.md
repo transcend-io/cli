@@ -2486,6 +2486,8 @@ In order to use this cli, you will first need to follow [this guide](https://doc
 
 #### Usage
 
+A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv). In this example, `Sales` and `Marketing` are two custom Purposes, and `SalesCommunications` and `MarketingCommunications` are Preference Topics. During the interactive CLI prompt, you can map these columns to the slugs stored in Transcend!
+
 Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
 
 ```sh

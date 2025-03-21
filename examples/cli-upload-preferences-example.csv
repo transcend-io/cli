@@ -1,0 +1,5 @@
+identifier,timestamp,Sales,Marketing,SalesCommunications,MarketingCommunications
+test-acme1@gmail.com,2025-03-21 10:49:21.192000000 -07:00,true,true,"EmailOutreach","ProductNewsletter,EventsNewsletter"
+test-acme2@gmail.com,2025-03-21 10:49:21.192000000 -07:00,true,false,"EmailOutreach",
+test-acme3@gmail.com,2025-03-21 11:49:21.192000000 -07:00,false,true,,"ProductNewsletter,EventsNewsletter"
+test-acme4@gmail.com,2025-03-21 10:49:21.192000000 -07:00,false,false,,
