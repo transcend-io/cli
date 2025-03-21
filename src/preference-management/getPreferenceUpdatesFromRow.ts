@@ -43,8 +43,8 @@ export function getPreferenceUpdatesFromRow({
   /** The preference topics */
   preferenceTopics: PreferenceTopic[];
 }): {
-    [k in string]: Omit<PreferenceStorePurposeResponse, 'purpose'>;
-  } {
+  [k in string]: Omit<PreferenceStorePurposeResponse, 'purpose'>;
+} {
   // Create a result object to store the parsed preferences
   const result: {
     [k in string]: Partial<PreferenceStorePurposeResponse>;
@@ -73,9 +73,9 @@ export function getPreferenceUpdatesFromRow({
             .map((x) => x.slug);
           throw new Error(
             `Invalid preference slug: ${preference} for purpose: ${purpose}. ` +
-            `Allowed preference slugs for purpose are: ${allowedTopics.join(
-              ',',
-            )}`,
+              `Allowed preference slugs for purpose are: ${allowedTopics.join(
+                ',',
+              )}`,
           );
         }
 
@@ -125,9 +125,9 @@ export function getPreferenceUpdatesFromRow({
             ) {
               throw new Error(
                 `Invalid value for select preference: ${preference}, expected one of: ` +
-                `${preferenceTopic.preferenceOptionValues
-                  .map(({ slug }) => slug)
-                  .join(', ')}, got: ${rawValue}`,
+                  `${preferenceTopic.preferenceOptionValues
+                    .map(({ slug }) => slug)
+                    .join(', ')}, got: ${rawValue}`,
               );
             }
 
@@ -155,9 +155,9 @@ export function getPreferenceUpdatesFromRow({
                     if (typeof result !== 'string') {
                       throw new Error(
                         `Invalid value for multi select preference: ${preference}, ` +
-                        `expected one of: ${preferenceTopic.preferenceOptionValues
-                          .map(({ slug }) => slug)
-                          .join(', ')}, got: ${val}`,
+                          `expected one of: ${preferenceTopic.preferenceOptionValues
+                            .map(({ slug }) => slug)
+                            .join(', ')}, got: ${val}`,
                       );
                     }
                     return result;

@@ -118,13 +118,14 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         if (!preferenceTopic) {
           logger.error(
             colors.red(
-              `Preference topic "${purposeMapping.preference}" not found`)
+              `Preference topic "${purposeMapping.preference}" not found`,
+            ),
           );
           return;
         }
-        const preferenceOptions = preferenceTopic.preferenceOptionValues.map(({ slug }) => (
-          slug
-        ));
+        const preferenceOptions = preferenceTopic.preferenceOptionValues.map(
+          ({ slug }) => slug,
+        );
 
         if (preferenceTopic.type === PreferenceTopicType.Boolean) {
           const { preferenceValue } = await inquirer.prompt<{
@@ -154,7 +155,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
               // eslint-disable-next-line max-len
               message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
               type: 'list',
-              choices: preferenceOptions
+              choices: preferenceOptions,
             },
           ]);
           purposeMapping.valueMapping[value] = preferenceValue;
@@ -178,7 +179,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
                 // eslint-disable-next-line max-len
                 message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
                 type: 'list',
-                choices: preferenceOptions
+                choices: preferenceOptions,
               },
             ]);
             purposeMapping.valueMapping[parsedValue] = preferenceValue;
@@ -186,7 +187,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           return;
         }
 
-        throw new Error(`Unknown preference topic type: ${preferenceTopic.type}`);
+        throw new Error(
+          `Unknown preference topic type: ${preferenceTopic.type}`,
+        );
       }
     });
 
