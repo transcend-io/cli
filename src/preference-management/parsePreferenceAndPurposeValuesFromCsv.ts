@@ -6,6 +6,8 @@ import { FileMetadataState } from './codecs';
 import { logger } from '../logger';
 import { mapSeries } from 'bluebird';
 import { PreferenceTopic } from '../graphql';
+import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import { splitCsvToList } from '../requests';
 
 /* eslint-disable no-param-reassign */
 
@@ -92,18 +94,100 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         );
         return;
       }
-      const { purposeValue } = await inquirer.prompt<{
-        /** purpose value */
-        purposeValue: boolean;
-      }>([
-        {
-          name: 'purposeValue',
-          message: `Choose the purpose value for value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-          type: 'confirm',
-          default: value !== 'false',
-        },
-      ]);
-      purposeMapping.valueMapping[value] = purposeValue;
+      // if preference is null, this column is just for the purpose
+      if (purposeMapping.preference === null) {
+        const { purposeValue } = await inquirer.prompt<{
+          /** purpose value */
+          purposeValue: boolean;
+        }>([
+          {
+            name: 'purposeValue',
+            message: `Choose the purpose value for value "${value}" associated with purpose "${purposeMapping.purpose}"`,
+            type: 'confirm',
+            default: value !== 'false',
+          },
+        ]);
+        purposeMapping.valueMapping[value] = purposeValue;
+      }
+
+      // if preference is not null, this column is for a specific preference
+      if (purposeMapping.preference !== null) {
+        const preferenceTopic = preferenceTopics.find(
+          (x) => x.slug === purposeMapping.preference,
+        );
+        if (!preferenceTopic) {
+          logger.error(
+            colors.red(
+              `Preference topic "${purposeMapping.preference}" not found`)
+          );
+          return;
+        }
+        const preferenceOptions = preferenceTopic.preferenceOptionValues.map(({ slug }) => (
+          slug
+        ));
+
+        if (preferenceTopic.type === PreferenceTopicType.Boolean) {
+          const { preferenceValue } = await inquirer.prompt<{
+            /** purpose value */
+            preferenceValue: boolean;
+          }>([
+            {
+              name: 'preferenceValue',
+              message:
+                // eslint-disable-next-line max-len
+                `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
+              type: 'confirm',
+              default: value !== 'false',
+            },
+          ]);
+          purposeMapping.valueMapping[value] = preferenceValue;
+          return;
+        }
+
+        if (preferenceTopic.type === PreferenceTopicType.Select) {
+          const { preferenceValue } = await inquirer.prompt<{
+            /** purpose value */
+            preferenceValue: boolean;
+          }>([
+            {
+              name: 'preferenceValue',
+              // eslint-disable-next-line max-len
+              message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
+              type: 'list',
+              choices: preferenceOptions
+            },
+          ]);
+          purposeMapping.valueMapping[value] = preferenceValue;
+          return;
+        }
+
+        if (preferenceTopic.type === PreferenceTopicType.MultiSelect) {
+          const parsedValues = splitCsvToList(value);
+          // need to do this serially
+          await mapSeries(parsedValues, async (parsedValue) => {
+            // if we already have a value, skip re-processing it again
+            if (purposeMapping.valueMapping[parsedValue] !== undefined) {
+              return;
+            }
+            const { preferenceValue } = await inquirer.prompt<{
+              /** purpose value */
+              preferenceValue: boolean;
+            }>([
+              {
+                name: 'preferenceValue',
+                // eslint-disable-next-line max-len
+                message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
+                type: 'list',
+                choices: preferenceOptions
+              },
+            ]);
+            purposeMapping.valueMapping[parsedValue] = preferenceValue;
+          });
+          return;
+        }
+
+        throw new Error(`Unknown preference topic type: ${preferenceTopic.type}`);
+      }
     });
 
     currentState.columnToPurposeName[col] = purposeMapping;
