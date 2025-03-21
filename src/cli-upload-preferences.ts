@@ -64,7 +64,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);
