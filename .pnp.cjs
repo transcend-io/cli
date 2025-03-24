@@ -59,7 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chai", "npm:4.3.7"],\
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
-            ["csv-parse", "npm:5.6.0"],\
+            ["csv-parse", "npm:4.9.1"],\
             ["deep-equal-in-any-order", "npm:1.1.20"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.38.0"],\
@@ -711,7 +711,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chai", "npm:4.3.7"],\
             ["cli-progress", "npm:3.11.2"],\
             ["colors", "npm:1.4.0"],\
-            ["csv-parse", "npm:5.6.0"],\
+            ["csv-parse", "npm:4.9.1"],\
             ["deep-equal-in-any-order", "npm:1.1.20"],\
             ["depcheck", "npm:1.4.3"],\
             ["eslint", "npm:8.38.0"],\
@@ -2505,10 +2505,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["csv-parse", [\
-        ["npm:5.6.0", {\
-          "packageLocation": "./.yarn/cache/csv-parse-npm-5.6.0-ac425c1790-173e176bda.zip/node_modules/csv-parse/",\
+        ["npm:4.9.1", {\
+          "packageLocation": "./.yarn/cache/csv-parse-npm-4.9.1-89fbef128e-2bb839d259.zip/node_modules/csv-parse/",\
           "packageDependencies": [\
-            ["csv-parse", "npm:5.6.0"]\
+            ["csv-parse", "npm:4.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\

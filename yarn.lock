@@ -542,7 +542,7 @@ __metadata:
     chai: ^4.3.7
     cli-progress: ^3.11.2
     colors: ^1.4.0
-    csv-parse: ^5.6.0
+    csv-parse: =4.9.1
     deep-equal-in-any-order: ^1.0.28
     depcheck: ^1.4.3
     eslint: ^8.38.0
@@ -577,7 +577,6 @@ __metadata:
     yargs-parser: ^21.1.1
   bin:
     tr-build-xdi-sync-endpoint: ./build/cli-build-xdi-sync-endpoint.js
-    tr-chunk-csv: ./build/cli-chunk-csv.js
     tr-consent-manager-service-json-to-yml: ./build/cli-consent-manager-service-json-to-yml.js
     tr-consent-managers-to-business-entities: cli-consent-managers-to-business-entities.ts
     tr-cron-mark-identifiers-completed: ./build/cli-cron-mark-identifiers-completed.js
@@ -2089,10 +2088,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-parse@npm:^5.6.0":
-  version: 5.6.0
-  resolution: "csv-parse@npm:5.6.0"
-  checksum: 173e176bdaf212bab37d0f6d39a06d039d24a1c0ee40b9f1023ebf8b36095934807deeb493c0fb58592b39b0682ccd0be5c9e8d2b137c08807e7031595ea7a51
+"csv-parse@npm:=4.9.1":
+  version: 4.9.1
+  resolution: "csv-parse@npm:4.9.1"
+  checksum: 2bb839d259d812d7bb3dfb57aa6ff6ec832503916ea5666f5a90188bec899b6af87406c579e05c58004180a4481e6c2473479ef3c17430fd9ed5246bd876904a
   languageName: node
   linkType: hard
 
