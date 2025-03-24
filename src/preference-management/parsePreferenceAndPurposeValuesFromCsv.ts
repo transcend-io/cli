@@ -72,7 +72,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           name: 'purposeName',
           message: `Choose the purpose that column ${col} is associated with`,
           type: 'list',
-          default: purposeNames[0],
+          default: purposeNames.find((x) => x.startsWith(purposeSlugs[0])),
           choices: purposeNames,
         },
       ]);
@@ -156,6 +156,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
               message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
               type: 'list',
               choices: preferenceOptions,
+              default: preferenceOptions.find((x) => x === value),
             },
           ]);
           purposeMapping.valueMapping[value] = preferenceValue;
@@ -180,6 +181,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
                 message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
                 type: 'list',
                 choices: preferenceOptions,
+                default: preferenceOptions.find((x) => x === parsedValue),
               },
             ]);
             purposeMapping.valueMapping[parsedValue] = preferenceValue;
