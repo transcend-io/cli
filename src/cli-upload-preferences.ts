@@ -39,6 +39,8 @@ async function main(): Promise<void> {
     dryRun = 'false',
     /** Whether to skip workflow triggers */
     skipWorkflowTriggers = 'false',
+    /** Whether to force run workflow triggers */
+    forceTriggerWorkflows = 'false',
     /** Whether to skip conflict updates */
     skipConflictUpdates = 'false',
     /** Whether to skip sending emails */
@@ -80,6 +82,7 @@ async function main(): Promise<void> {
     transcendUrl,
     skipConflictUpdates: skipConflictUpdates !== 'false',
     skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
+    forceTriggerWorkflows: forceTriggerWorkflows === 'true',
     isSilent: isSilent !== 'false',
     dryRun: dryRun !== 'false',
     attributes: splitCsvToList(attributes),

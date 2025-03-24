@@ -33,6 +33,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   isSilent = true,
   dryRun = false,
   skipWorkflowTriggers = false,
+  forceTriggerWorkflows = false,
   skipConflictUpdates = false,
   attributes = [],
   transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
@@ -57,6 +58,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   attributes?: string[];
   /** Skip workflow triggers */
   skipWorkflowTriggers?: boolean;
+  /** Force run workflow triggers */
+  forceTriggerWorkflows?: boolean;
   /**
    * When true, only update preferences that do not conflict with existing
    * preferences. When false, update all preferences in CSV based on timestamp.
@@ -175,6 +178,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           attributes: parsedAttributes,
           isSilent,
           skipWorkflowTrigger: skipWorkflowTriggers,
+          forceTriggerWorkflows,
         },
       })),
     };
@@ -226,6 +230,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             json: {
               records: currentChunk.map(([, update]) => update),
               skipWorkflowTriggers,
+              forceTriggerWorkflows,
             },
           })
           .json();
