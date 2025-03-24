@@ -9,7 +9,7 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { writeCsv } from './cron/writeCsv';
+import { writeCsvSync } from './cron/writeCsv';
 
 /** Size of each chunk in bytes (1GB) */
 const CHUNK_SIZE = 1 * 1024 * 1024 * 1024;
@@ -124,7 +124,7 @@ async function main(): Promise<void> {
             });
             return obj;
           });
-          writeCsv(currentOutputFile, data, headerRow);
+          writeCsvSync(currentOutputFile, data, headerRow);
           data.length = 0;
         }
 
@@ -151,7 +151,7 @@ async function main(): Promise<void> {
             });
             return obj;
           });
-          writeCsv(currentOutputFile, data, headerRow);
+          writeCsvSync(currentOutputFile, data, headerRow);
           data.length = 0;
           currentChunkRows = [];
         }
@@ -181,7 +181,7 @@ async function main(): Promise<void> {
           return obj;
         });
 
-        writeCsv(currentOutputFile, data, headerRow);
+        writeCsvSync(currentOutputFile, data, headerRow);
         data.length = 0;
         currentChunkRows.length = 0;
       }

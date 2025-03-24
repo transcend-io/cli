@@ -12,7 +12,6 @@
   "main": "build/index",
   "bin": {
     "tr-build-xdi-sync-endpoint": "./build/cli-build-xdi-sync-endpoint.js",
-    "tr-chunk-csv": "./build/cli-chunk-csv.js",
     "tr-consent-manager-service-json-to-yml": "./build/cli-consent-manager-service-json-to-yml.js",
     "tr-consent-managers-to-business-entities": "cli-consent-managers-to-business-entities.ts",
     "tr-cron-mark-identifiers-completed": "./build/cli-cron-mark-identifiers-completed.js",
@@ -76,7 +75,7 @@
     "bluebird": "^3.7.2",
     "cli-progress": "^3.11.2",
     "colors": "^1.4.0",
-    "csv-parse": "^5.6.0",
+    "csv-parse": "=4.9.1",
     "fast-csv": "^4.3.6",
     "fast-glob": "^3.2.12",
     "fp-ts": "^2.16.1",
