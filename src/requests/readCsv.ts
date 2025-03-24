@@ -1,5 +1,5 @@
 import type { Options } from 'csv-parse';
-import parse from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 import { readFileSync } from 'fs';
 import * as t from 'io-ts';
 

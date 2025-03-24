@@ -52,7 +52,12 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
-  let preferences = readCsv(file, t.record(t.string, t.string));
+  let preferences = readCsv(file, t.record(t.string, t.string), {
+    columns: true,
+    skip_empty_lines: true,
+    relax_quotes: true,
+    relax_column_count: true,
+  });
 
   // start building the cache, can use previous cache as well
   let currentState: FileMetadataState = {

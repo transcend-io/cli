@@ -11,14 +11,29 @@ import colors from 'colors';
 import { logger } from './logger';
 import { writeCsv } from './cron/writeCsv';
 
-/** Size of each chunk in bytes (1.5GB) */
-const CHUNK_SIZE = 1.5 * 1024 * 1024 * 1024;
+/** Size of each chunk in bytes (1GB) */
+const CHUNK_SIZE = 1 * 1024 * 1024 * 1024;
+/** Number of rows to process in each batch */
+const BATCH_SIZE = 10000;
+
+/**
+ * Format memory usage for logging
+ *
+ * @param memoryData - The NodeJS memory usage data to format
+ * @returns A formatted string showing memory usage in MB
+ */
+function formatMemoryUsage(memoryData: NodeJS.MemoryUsage): string {
+  return Object.entries(memoryData)
+    .map(([key, value]) => `${key}: ${(value / 1024 / 1024).toFixed(2)} MB`)
+    .join(', ');
+}
 
 /**
  * Chunks a large CSV file into smaller files of approximately 1.5GB each
+ * Note that you may need to increase the node memory limit for this script to run!!
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-chunk-csv.ts --inputFile=/path/to/large.csv --outputDir=/path/to/output
+ * NODE_OPTIONS='--max-old-space-size=16384' yarn ts-node ./src/cli-chunk-csv.ts --inputFile=./working/full_export.csv
  *
  * Standard usage:
  * yarn tr-chunk-csv --inputFile=/path/to/large.csv --outputDir=/path/to/output
@@ -47,10 +62,14 @@ async function main(): Promise<void> {
   let headerRow: string[] | null = null;
   let currentChunkRows: string[][] = [];
   let totalLinesProcessed = 0;
+  let currentOutputFile: string | null = null;
+  let expectedColumnCount: number | null = null;
 
   const parser = new Parser({
     columns: false,
     skip_empty_lines: true,
+    relax_quotes: true,
+    relax_column_count: true
   });
 
   const chunker = new Transform({
@@ -65,16 +84,32 @@ async function main(): Promise<void> {
     transform(chunk: string[], encoding, callback) {
       if (!headerRow) {
         headerRow = chunk;
-        logger.info(colors.blue('Found header row with columns:'), headerRow.join(', '));
+        expectedColumnCount = headerRow.length;
+        logger.info(
+          colors.blue(
+            `Found header row with ${expectedColumnCount} columns: ${headerRow.join(', ')}`,
+          ),
+        );
         callback();
         return;
       }
 
+      // Validate row structure
+      if (expectedColumnCount !== null && chunk.length !== expectedColumnCount) {
+        logger.warn(
+          colors.yellow(
+            `Warning: Row ${totalLinesProcessed + 1} has ${chunk.length} columns, expected ${expectedColumnCount}`,
+          ),
+        );
+      }
+
       totalLinesProcessed += 1;
-      if (totalLinesProcessed % 100000 === 0) {
+      if (totalLinesProcessed % 1_000_000 === 0) {
+        const memoryUsage = formatMemoryUsage(process.memoryUsage());
         logger.info(
           colors.blue(
-            `Processed ${totalLinesProcessed.toLocaleString()} lines...`,
+            `Processed ${totalLinesProcessed.toLocaleString()} lines... ` +
+            `Memory usage: ${memoryUsage}`,
           ),
         );
       }
@@ -82,34 +117,46 @@ async function main(): Promise<void> {
       const rowSize = Buffer.byteLength(chunk.join(','), 'utf8');
 
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
-        // Write current chunk to file
-        const outputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
-        logger.info(
-          colors.yellow(
-            `Writing chunk ${currentChunkNumber} to ${outputFile} (${currentChunkRows.length.toLocaleString()} rows)`,
-          ),
-        );
-
-        const data = currentChunkRows.map((row) => {
-          const obj: Record<string, string> = {};
-          headerRow?.forEach((header, index) => {
-            obj[header] = row[index];
+        // If we have a current output file, write any remaining rows
+        if (currentOutputFile && currentChunkRows.length > 0) {
+          const data = currentChunkRows.map((row) => {
+            const obj: Record<string, string> = {};
+            headerRow?.forEach((header, index) => {
+              obj[header] = row[index];
+            });
+            return obj;
           });
-          return obj;
-        });
-
-        // Write header and rows
-        if (headerRow) {
-          writeCsv(outputFile, data, headerRow);
+          writeCsv(currentOutputFile, data, headerRow);
+          data.length = 0;
         }
 
-        // Reset for next chunk
+        // Start new chunk
+        currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
+        logger.info(
+          colors.yellow(
+            `Starting new chunk ${currentChunkNumber} at ${currentOutputFile}`,
+          ),
+        );
         currentChunkSize = rowSize;
         currentChunkNumber += 1;
         currentChunkRows = [chunk];
       } else {
         currentChunkSize += rowSize;
         currentChunkRows.push(chunk);
+
+        // Write batch if we've accumulated enough rows
+        if (currentChunkRows.length >= BATCH_SIZE && currentOutputFile) {
+          const data = currentChunkRows.map((row) => {
+            const obj: Record<string, string> = {};
+            headerRow?.forEach((header, index) => {
+              obj[header] = row[index];
+            });
+            return obj;
+          });
+          writeCsv(currentOutputFile, data, headerRow);
+          data.length = 0;
+          currentChunkRows = [];
+        }
       }
 
       callback();
@@ -120,26 +167,25 @@ async function main(): Promise<void> {
      * @param callback - Callback function to signal completion
      */
     flush(callback) {
-      // Write the last chunk if there are any rows and we have a header
-      if (currentChunkRows.length > 0 && headerRow) {
-        const outputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
+      // Write any remaining rows
+      if (currentOutputFile && currentChunkRows.length > 0 && headerRow) {
         logger.info(
           colors.yellow(
-            `Writing final chunk ${currentChunkNumber} to ${outputFile} (${currentChunkRows.length.toLocaleString()} rows)`,
+            `Writing final ${currentChunkRows.length.toLocaleString()} rows to ${currentOutputFile}`,
           ),
         );
 
         const data = currentChunkRows.map((row) => {
           const obj: Record<string, string> = {};
-          // We know headerRow is not null here because of the if condition above
           headerRow!.forEach((header, index) => {
             obj[header] = row[index];
           });
           return obj;
         });
 
-        // Write header and rows
-        writeCsv(outputFile, data, headerRow);
+        writeCsv(currentOutputFile, data, headerRow);
+        data.length = 0;
+        currentChunkRows.length = 0;
       }
       callback();
     }
