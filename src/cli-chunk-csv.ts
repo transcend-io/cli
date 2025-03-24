@@ -68,8 +68,6 @@ async function main(): Promise<void> {
   const parser = new Parser({
     columns: false,
     skip_empty_lines: true,
-    relax_quotes: true,
-    relax_column_count: true
   });
 
   const chunker = new Transform({
