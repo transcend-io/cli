@@ -30,6 +30,7 @@ export async function parsePreferenceManagementCsvWithCache(
     purposeSlugs,
     preferenceTopics,
     partitionKey,
+    forceTriggerWorkflows,
   }: {
     /** File to parse */
     file: string;
@@ -41,6 +42,8 @@ export async function parsePreferenceManagementCsvWithCache(
     sombra: Got;
     /** Partition key */
     partitionKey: string;
+    /** Force run workflow triggers */
+    forceTriggerWorkflows?: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
@@ -131,6 +134,7 @@ export async function parsePreferenceManagementCsvWithCache(
     // this is the case if a record exists, and the purpose
     // and preference values are all in sync
     if (
+      !forceTriggerWorkflows &&
       currentConsentRecord &&
       checkIfPendingPreferenceUpdatesAreNoOp({
         currentConsentRecord,

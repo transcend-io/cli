@@ -116,6 +116,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       preferenceTopics,
       sombra,
       partitionKey: partition,
+      forceTriggerWorkflows,
     },
     preferenceState,
   );
