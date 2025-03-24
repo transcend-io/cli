@@ -33,7 +33,7 @@ function formatMemoryUsage(memoryData: NodeJS.MemoryUsage): string {
  * Note that you may need to increase the node memory limit for this script to run!!
  *
  * Dev Usage:
- * NODE_OPTIONS='--max-old-space-size=16384' yarn ts-node ./src/cli-chunk-csv.ts --inputFile=./working/full_export.csv
+ * yarn ts-node ./src/cli-chunk-csv.ts --inputFile=./working/full_export.csv
  *
  * Standard usage:
  * yarn tr-chunk-csv --inputFile=/path/to/large.csv --outputDir=/path/to/output
