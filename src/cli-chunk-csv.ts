@@ -41,8 +41,7 @@ async function main(): Promise<void> {
   const {
     inputFile,
     outputDir,
-    chunkSizeRaw,
-  } = yargs(process.argv.slice(3)) as { [k in string]: string };
+  } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure inputFile is provided
   if (!inputFile) {
@@ -54,7 +53,6 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const chunkSize = chunkSizeRaw ? parseInt(chunkSizeRaw, 10) : CHUNK_SIZE;
   const baseFileName = basename(inputFile, '.csv');
   const outputDirectory = outputDir || dirname(inputFile);
   let currentChunkSize = 0;
@@ -133,7 +131,7 @@ async function main(): Promise<void> {
       }
 
       // Determine if we need to start a new chunk
-      if (currentChunkSize + rowSize > chunkSize) {
+      if (currentChunkSize + rowSize > CHUNK_SIZE) {
         currentChunkNumber += 1;
         currentChunkSize = 0;
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
