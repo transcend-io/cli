@@ -11,8 +11,8 @@ import colors from 'colors';
 import { logger } from './logger';
 import { writeCsvSync, appendCsvSync } from './cron/writeCsv';
 
-/** Size of each chunk in bytes (need to stay under JS string size limit of 512MB) */
-const CHUNK_SIZE = 400 * 1024 * 1024;
+/** Size of each chunk in bytes (need to stay WELL under JS string size limit of 512MB) */
+const CHUNK_SIZE = 200 * 1024 * 1024;
 
 /**
  * Format memory usage for logging
@@ -41,7 +41,8 @@ async function main(): Promise<void> {
   const {
     inputFile,
     outputDir,
-  } = yargs(process.argv.slice(2)) as { [k in string]: string };
+    chunkSizeRaw,
+  } = yargs(process.argv.slice(3)) as { [k in string]: string };
 
   // Ensure inputFile is provided
   if (!inputFile) {
@@ -53,6 +54,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const chunkSize = chunkSizeRaw ? parseInt(chunkSizeRaw, 10) : CHUNK_SIZE;
   const baseFileName = basename(inputFile, '.csv');
   const outputDirectory = outputDir || dirname(inputFile);
   let currentChunkSize = 0;
@@ -131,7 +133,7 @@ async function main(): Promise<void> {
       }
 
       // Determine if we need to start a new chunk
-      if (currentChunkSize + rowSize > CHUNK_SIZE) {
+      if (currentChunkSize + rowSize > chunkSize) {
         currentChunkNumber += 1;
         currentChunkSize = 0;
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
