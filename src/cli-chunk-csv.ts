@@ -111,6 +111,17 @@ async function main(): Promise<void> {
 
       const rowSize = Buffer.byteLength(chunk.join(','), 'utf8');
 
+      // Write the current row immediately
+      if (currentOutputFile) {
+        const data = [{
+          ...Object.fromEntries(
+            headerRow.map((header, index) => [header, chunk[index]]),
+          ),
+        }];
+        // Only write headers for the first row of each chunk
+        writeCsvSync(currentOutputFile, data, currentChunkSize === rowSize);
+      }
+
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
         // Start new chunk
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
@@ -123,17 +134,6 @@ async function main(): Promise<void> {
         currentChunkNumber += 1;
       } else {
         currentChunkSize += rowSize;
-      }
-
-      // Write the current row immediately
-      if (currentOutputFile) {
-        const data = [{
-          ...Object.fromEntries(
-            headerRow.map((header, index) => [header, chunk[index]]),
-          ),
-        }];
-        // Only write headers for the first row of each chunk
-        writeCsvSync(currentOutputFile, data, currentChunkSize === rowSize);
       }
 
       callback();
