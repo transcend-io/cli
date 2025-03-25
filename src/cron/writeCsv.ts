@@ -29,10 +29,7 @@ export function writeCsvSync(
 ): void {
   const rows: string[][] = [];
 
-  const headerRow = Array.isArray(headers) ? headers : Object.keys(data[0] || {});
-  rows.push(headerRow);
-
-  // Add data rows
+  rows.push(headers);
   rows.push(...data.map((row) => Object.values(row)));
 
   // Build CSV content with proper escaping

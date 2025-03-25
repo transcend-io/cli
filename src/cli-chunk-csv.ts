@@ -117,8 +117,14 @@ async function main(): Promise<void> {
           headerRow.map((header, index) => [header, chunk[index]]),
         ),
       }];
+      currentChunkSize += rowSize;
 
       if (currentChunkSize === rowSize) {
+        logger.info(
+          colors.yellow(
+            `Starting new chunk ${currentChunkNumber} at ${currentOutputFile}`,
+          ),
+        );
         writeCsvSync(currentOutputFile, data, headerRow);
       } else {
         appendCsvSync(currentOutputFile, data);
@@ -127,15 +133,8 @@ async function main(): Promise<void> {
       // Determine if we need to start a new chunk
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
         currentChunkNumber += 1;
-        currentChunkSize = rowSize;
+        currentChunkSize = 0;
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
-        logger.info(
-          colors.yellow(
-            `Starting new chunk ${currentChunkNumber} at ${currentOutputFile}`,
-          ),
-        );
-      } else {
-        currentChunkSize += rowSize;
       }
 
       callback();
