@@ -1,5 +1,5 @@
 import * as fastcsv from 'fast-csv';
-import { createWriteStream, writeFileSync } from 'fs';
+import { createWriteStream, writeFileSync, appendFileSync } from 'fs';
 
 import { ObjByString } from '@transcend-io/type-utils';
 
@@ -18,7 +18,7 @@ function escapeCsvValue(value: string): string {
  *
  * @param filePath - File to write out to
  * @param data - Data to write
- * @param headers - Headers
+ * @param headers - Headers. If true, write headers to file. If false, append to existing file.
  */
 export function writeCsvSync(
   filePath: string,
@@ -37,7 +37,13 @@ export function writeCsvSync(
     .map(row => row.map(escapeCsvValue).join(','))
     .join('\n');
 
-  writeFileSync(filePath, csvContent);
+  // If this is the first write (headers are true), write to file
+  // Otherwise append to the existing file
+  if (headers) {
+    writeFileSync(filePath, csvContent);
+  } else {
+    appendFileSync(filePath, '\n' + csvContent);
+  }
 }
 
 /**
