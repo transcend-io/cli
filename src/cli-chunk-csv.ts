@@ -9,7 +9,7 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from './logger';
-import { writeCsvSync } from './cron/writeCsv';
+import { writeCsvSync, appendCsvSync } from './cron/writeCsv';
 
 /** Size of each chunk in bytes (need to stay under JS string size limit of 512MB) */
 const CHUNK_SIZE = 400 * 1024 * 1024;
@@ -118,8 +118,12 @@ async function main(): Promise<void> {
             headerRow.map((header, index) => [header, chunk[index]]),
           ),
         }];
-        // Only write headers for the first row of each chunk
-        writeCsvSync(currentOutputFile, data, currentChunkSize === rowSize);
+
+        if (currentChunkSize === rowSize) {
+          writeCsvSync(currentOutputFile, data, true);
+        } else {
+          appendCsvSync(currentOutputFile, data);
+        }
       }
 
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
