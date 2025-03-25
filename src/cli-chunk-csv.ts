@@ -58,7 +58,7 @@ async function main(): Promise<void> {
   let currentChunkSize = 0;
   let currentChunkNumber = 1;
   let headerRow: string[] | null = null;
-  let currentOutputFile: string | null = null;
+  let currentOutputFile = join(outputDirectory, `${baseFileName}_chunk1.csv`);
   let expectedColumnCount: number | null = null;
   let totalLinesProcessed = 0;
 
@@ -112,30 +112,28 @@ async function main(): Promise<void> {
       const rowSize = Buffer.byteLength(chunk.join(','), 'utf8');
 
       // Write the current row immediately
-      if (currentOutputFile) {
-        const data = [{
-          ...Object.fromEntries(
-            headerRow.map((header, index) => [header, chunk[index]]),
-          ),
-        }];
+      const data = [{
+        ...Object.fromEntries(
+          headerRow.map((header, index) => [header, chunk[index]]),
+        ),
+      }];
 
-        if (currentChunkSize === rowSize) {
-          writeCsvSync(currentOutputFile, data, true);
-        } else {
-          appendCsvSync(currentOutputFile, data);
-        }
+      if (currentChunkSize === rowSize) {
+        writeCsvSync(currentOutputFile, data, headerRow);
+      } else {
+        appendCsvSync(currentOutputFile, data);
       }
 
+      // Determine if we need to start a new chunk
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
-        // Start new chunk
+        currentChunkNumber += 1;
+        currentChunkSize = rowSize;
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
         logger.info(
           colors.yellow(
             `Starting new chunk ${currentChunkNumber} at ${currentOutputFile}`,
           ),
         );
-        currentChunkSize = rowSize;
-        currentChunkNumber += 1;
       } else {
         currentChunkSize += rowSize;
       }
