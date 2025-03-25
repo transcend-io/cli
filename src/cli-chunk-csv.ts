@@ -128,7 +128,7 @@ async function main(): Promise<void> {
           data.length = 0;
         }
 
-        // Start new chunk
+        // Start new chunk with the current row
         currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
         logger.info(
           colors.yellow(

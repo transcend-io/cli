@@ -1,8 +1,17 @@
 import * as fastcsv from 'fast-csv';
-import { createWriteStream } from 'fs';
-import { writeFileSync } from 'fs';
+import { createWriteStream, writeFileSync } from 'fs';
 
 import { ObjByString } from '@transcend-io/type-utils';
+
+/**
+ * Escape a CSV value
+ */
+function escapeCsvValue(value: string): string {
+  if (value.includes('"') || value.includes(',') || value.includes('\n')) {
+    return `"${value.replace(/"/g, '""')}"`;
+  }
+  return value;
+}
 
 /**
  * Write a csv to file synchronously
@@ -23,7 +32,11 @@ export function writeCsvSync(
   }
   rows.push(...data.map(row => Object.values(row)));
 
-  const csvContent = rows.map(row => row.join(',')).join('\n');
+  // Build CSV content with proper escaping
+  const csvContent = rows
+    .map(row => row.map(escapeCsvValue).join(','))
+    .join('\n');
+
   writeFileSync(filePath, csvContent);
 }
 
