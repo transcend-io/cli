@@ -25,15 +25,12 @@ function escapeCsvValue(value: string): string {
 export function writeCsvSync(
   filePath: string,
   data: ObjByString[],
-  headers: boolean | string[] = true,
+  headers: string[],
 ): void {
   const rows: string[][] = [];
 
-  // Add headers if specified
-  if (headers) {
-    const headerRow = Array.isArray(headers) ? headers : Object.keys(data[0] || {});
-    rows.push(headerRow);
-  }
+  const headerRow = Array.isArray(headers) ? headers : Object.keys(data[0] || {});
+  rows.push(headerRow);
 
   // Add data rows
   rows.push(...data.map((row) => Object.values(row)));
