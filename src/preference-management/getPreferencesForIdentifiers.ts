@@ -18,7 +18,7 @@ const PreferenceRecordsQueryResponse = t.intersection([
   }),
 ]);
 
-const MSGS = ['ETIMEDOUT', '504 Gateway Time-out', 'Task timed out after'];
+const MSGS = ['ENOTFOUND', 'ETIMEDOUT', '504 Gateway Time-out', 'Task timed out after'];
 
 /**
  * Grab the current consent preference values for a list of identifiers
@@ -99,7 +99,7 @@ export async function getPreferencesForIdentifiers(
           logger.warn(
             colors.yellow(
               `[RETRYING FAILED REQUEST - Attempt ${attempts}] ` +
-                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
+              `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
             ),
           );
         }
