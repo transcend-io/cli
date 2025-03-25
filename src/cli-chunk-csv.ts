@@ -11,8 +11,8 @@ import colors from 'colors';
 import { logger } from './logger';
 import { writeCsvSync } from './cron/writeCsv';
 
-/** Size of each chunk in bytes (512MB to stay under JS string size limits) */
-const CHUNK_SIZE = 512 * 1024 * 1024;
+/** Size of each chunk in bytes (need to stay under JS string size limit of 512MB) */
+const CHUNK_SIZE = 500 * 1024 * 1024;
 
 /**
  * Format memory usage for logging
