@@ -12,7 +12,7 @@ import { logger } from './logger';
 import { writeCsvSync, appendCsvSync } from './cron/writeCsv';
 
 /** Size of each chunk in bytes (need to stay WELL under JS string size limit of 512MB) */
-const CHUNK_SIZE = 200 * 1024 * 1024;
+const CHUNK_SIZE = 10 * 1024 * 1024;
 
 /**
  * Format memory usage for logging
