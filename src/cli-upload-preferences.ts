@@ -141,6 +141,10 @@ async function main(): Promise<void> {
   );
   logger.debug(`Files to process: ${files.join(', ')}`);
 
+  if (skipExistingRecordCheck !== 'false') {
+    logger.info(colors.bgYellow(`Skipping existing record check: ${skipExistingRecordCheck}`));
+  }
+
   await map(files, async (filePath) => {
     const fileName = basename(filePath).replace('.csv', '');
     await uploadPreferenceManagementPreferencesInteractive({
