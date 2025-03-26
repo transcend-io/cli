@@ -137,7 +137,7 @@ export async function parsePreferenceManagementCsvWithCache(
     const currentConsentRecord = consentRecordByIdentifier[userId];
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
-        `No exisiting consent record found for user with id: ${userId}. 
+        `No existing consent record found for user with id: ${userId}. 
         When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
       );
     }
