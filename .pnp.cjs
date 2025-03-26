@@ -35,6 +35,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/privacy-types", "npm:4.108.0"],\
             ["@transcend-io/secret-value", "npm:1.2.0"],\
             ["@transcend-io/type-utils", "npm:1.8.0"],\
+            ["@types/JSONStream", [\
+              "@types/jsonstream",\
+              "npm:0.8.33"\
+            ]],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -46,6 +50,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonstream", "npm:0.8.33"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
@@ -55,6 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@yarnpkg/sdks", "npm:3.0.0-rc.42"],\
+            ["JSONStream", "npm:1.3.5"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.7"],\
             ["cli-progress", "npm:3.11.2"],\
@@ -687,6 +693,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@transcend-io/privacy-types", "npm:4.108.0"],\
             ["@transcend-io/secret-value", "npm:1.2.0"],\
             ["@transcend-io/type-utils", "npm:1.8.0"],\
+            ["@types/JSONStream", [\
+              "@types/jsonstream",\
+              "npm:0.8.33"\
+            ]],\
             ["@types/bluebird", "npm:3.5.38"],\
             ["@types/chai", "npm:4.3.4"],\
             ["@types/cli-progress", "npm:3.11.0"],\
@@ -698,6 +708,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonstream", "npm:0.8.33"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
@@ -707,6 +718,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@typescript-eslint/parser", "virtual:05f71a130d973c89ca25c909f694e525ea840a597fa145c0b76e367faaae056c000c13c8dc936d4a8d6e8c6aa1f1290e6e296ad4666bf503fd491f764698380a#npm:5.58.0"],\
             ["@yarnpkg/sdks", "npm:3.0.0-rc.42"],\
+            ["JSONStream", "npm:1.3.5"],\
             ["bluebird", "npm:3.7.2"],\
             ["chai", "npm:4.3.7"],\
             ["cli-progress", "npm:3.11.2"],\
@@ -1038,6 +1050,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json5-npm-0.0.29-f63a7916bd-e60b153664.zip/node_modules/@types/json5/",\
           "packageDependencies": [\
             ["@types/json5", "npm:0.0.29"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/jsonstream", [\
+        ["npm:0.8.33", {\
+          "packageLocation": "./.yarn/cache/@types-jsonstream-npm-0.8.33-7fb802be78-040d927d83.zip/node_modules/@types/jsonstream/",\
+          "packageDependencies": [\
+            ["@types/jsonstream", "npm:0.8.33"],\
+            ["@types/node", "npm:16.11.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1578,6 +1600,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-glob", "npm:3.2.7"],\
             ["micromatch", "npm:4.0.4"],\
             ["tslib", "npm:2.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["JSONStream", [\
+        ["npm:1.3.5", {\
+          "packageLocation": "./.yarn/cache/JSONStream-npm-1.3.5-1987f2e6dd-2605fa1242.zip/node_modules/JSONStream/",\
+          "packageDependencies": [\
+            ["JSONStream", "npm:1.3.5"],\
+            ["jsonparse", "npm:1.3.1"],\
+            ["through", "npm:2.3.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4949,6 +4982,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["json5", "npm:2.2.0"],\
             ["minimist", "npm:1.2.7"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["jsonparse", [\
+        ["npm:1.3.1", {\
+          "packageLocation": "./.yarn/cache/jsonparse-npm-1.3.1-b6fde74828-6514a7be46.zip/node_modules/jsonparse/",\
+          "packageDependencies": [\
+            ["jsonparse", "npm:1.3.1"]\
           ],\
           "linkType": "HARD"\
         }]\
