@@ -48,10 +48,7 @@ export function writeCsvSync(
  * @param filePath - File to append to
  * @param data - Data to append
  */
-export function appendCsvSync(
-  filePath: string,
-  data: ObjByString[],
-): void {
+export function appendCsvSync(filePath: string, data: ObjByString[]): void {
   // Convert data to CSV rows
   const rows = data.map((row) => Object.values(row));
 

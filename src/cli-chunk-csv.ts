@@ -38,10 +38,9 @@ function formatMemoryUsage(memoryData: NodeJS.MemoryUsage): string {
  */
 async function main(): Promise<void> {
   // Parse command line arguments
-  const {
-    inputFile,
-    outputDir,
-  } = yargs(process.argv.slice(2)) as { [k in string]: string };
+  const { inputFile, outputDir } = yargs(process.argv.slice(2)) as {
+    [k in string]: string;
+  };
 
   // Ensure inputFile is provided
   if (!inputFile) {
@@ -82,7 +81,9 @@ async function main(): Promise<void> {
         expectedColumnCount = headerRow.length;
         logger.info(
           colors.blue(
-            `Found header row with ${expectedColumnCount} columns: ${headerRow.join(', ')}`,
+            `Found header row with ${expectedColumnCount} columns: ${headerRow.join(
+              ', ',
+            )}`,
           ),
         );
         callback();
@@ -90,10 +91,15 @@ async function main(): Promise<void> {
       }
 
       // Validate row structure
-      if (expectedColumnCount !== null && chunk.length !== expectedColumnCount) {
+      if (
+        expectedColumnCount !== null &&
+        chunk.length !== expectedColumnCount
+      ) {
         logger.warn(
           colors.yellow(
-            `Warning: Row ${totalLinesProcessed + 1} has ${chunk.length} columns, expected ${expectedColumnCount}`,
+            `Warning: Row ${totalLinesProcessed + 1} has ${
+              chunk.length
+            } columns, expected ${expectedColumnCount}`,
           ),
         );
       }
@@ -104,7 +110,7 @@ async function main(): Promise<void> {
         logger.info(
           colors.blue(
             `Processed ${totalLinesProcessed.toLocaleString()} lines... ` +
-            `Memory usage: ${memoryUsage}`,
+              `Memory usage: ${memoryUsage}`,
           ),
         );
       }
@@ -112,11 +118,13 @@ async function main(): Promise<void> {
       const rowSize = Buffer.byteLength(chunk.join(','), 'utf8');
 
       // Write the current row immediately
-      const data = [{
-        ...Object.fromEntries(
-          headerRow.map((header, index) => [header, chunk[index]]),
-        ),
-      }];
+      const data = [
+        {
+          ...Object.fromEntries(
+            headerRow.map((header, index) => [header, chunk[index]]),
+          ),
+        },
+      ];
       currentChunkSize += rowSize;
 
       if (currentChunkSize === rowSize) {
@@ -134,7 +142,10 @@ async function main(): Promise<void> {
       if (currentChunkSize + rowSize > CHUNK_SIZE) {
         currentChunkNumber += 1;
         currentChunkSize = 0;
-        currentOutputFile = join(outputDirectory, `${baseFileName}_chunk${currentChunkNumber}.csv`);
+        currentOutputFile = join(
+          outputDirectory,
+          `${baseFileName}_chunk${currentChunkNumber}.csv`,
+        );
       }
 
       callback();
@@ -146,7 +157,7 @@ async function main(): Promise<void> {
      */
     flush(callback) {
       callback();
-    }
+    },
   });
 
   const readStream = createReadStream(inputFile);
@@ -157,7 +168,7 @@ async function main(): Promise<void> {
     logger.info(
       colors.green(
         `Successfully chunked ${inputFile} into ${currentChunkNumber} files ` +
-        `(${totalLinesProcessed.toLocaleString()} total lines processed)`,
+          `(${totalLinesProcessed.toLocaleString()} total lines processed)`,
       ),
     );
   } catch (error) {
