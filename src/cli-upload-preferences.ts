@@ -7,6 +7,9 @@ import { logger } from './logger';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
 import { splitCsvToList } from './requests';
+import { readdirSync } from 'fs';
+import { mapSeries } from 'bluebird';
+import { join } from 'path';
 
 /**
  * Upload consent preferences to the managed consent database
@@ -25,8 +28,10 @@ import { splitCsvToList } from './requests';
 async function main(): Promise<void> {
   // Parse command line arguments
   const {
+    /** Directory to load preferences from */
+    directory,
     /** File to load preferences from */
-    file = './preferences.csv',
+    file,
     /** Transcend URL */
     transcendUrl = DEFAULT_TRANSCEND_API,
     /** API key */
@@ -46,7 +51,7 @@ async function main(): Promise<void> {
     /** Attributes to add to any DSR request if created */
     attributes = 'Tags:transcend-cli,Source:transcend-cli',
     /** Store resulting, continuing where left off  */
-    receiptFilepath = './preference-management-upload-receipts.json',
+    receiptFileDir = './receipts',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -64,25 +69,86 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);
   }
 
-  // Upload cookies
-  await uploadPreferenceManagementPreferencesInteractive({
-    receiptFilepath,
-    auth,
-    sombraAuth,
-    file,
-    partition,
-    transcendUrl,
-    skipConflictUpdates: skipConflictUpdates !== 'false',
-    skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
-    isSilent: isSilent !== 'false',
-    dryRun: dryRun !== 'false',
-    attributes: splitCsvToList(attributes),
+  if (directory && file) {
+    logger.error(
+      colors.red(
+        'Cannot provide both a directory and a file. Please provide only one.',
+      ),
+    );
+    process.exit(1);
+  }
+
+  if (!file && !directory) {
+    logger.error(
+      colors.red(
+        // eslint-disable-next-line max-len
+        'A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences',
+      ),
+    );
+    process.exit(1);
+  }
+
+  const files: string[] = [];
+
+  if (directory) {
+    try {
+      const filesInDirectory = readdirSync(directory);
+      const csvFiles = filesInDirectory.filter((file) => file.endsWith('.csv'));
+
+      if (csvFiles.length === 0) {
+        logger.error(colors.red(`No CSV files found in directory: ${directory}`));
+        process.exit(1);
+      }
+
+      // Add full paths for each CSV file
+      files.push(...csvFiles.map((file) => join(directory, file)));
+    } catch (err) {
+      logger.error(colors.red(`Failed to read directory: ${directory}`));
+      logger.error(colors.red((err as Error).message));
+      process.exit(1);
+    }
+  } else {
+    try {
+      // Verify file exists and is a CSV
+      if (!file.endsWith('.csv')) {
+        logger.error(colors.red('File must be a CSV file'));
+        process.exit(1);
+      }
+      files.push(file);
+    } catch (err) {
+      logger.error(colors.red(`Failed to access file: ${file}`));
+      logger.error(colors.red((err as Error).message));
+      process.exit(1);
+    }
+  }
+
+  logger.info(
+    colors.green(
+      `Processing ${files.length} consent preferences files for partition: ${partition}`,
+    ),
+  );
+  logger.debug(`Files to process: ${files.join(', ')}`);
+
+  await mapSeries(files, async (filePath) => {
+    await uploadPreferenceManagementPreferencesInteractive({
+      receiptFilepath: join(receiptFileDir, `${filePath}-receipts.json`),
+      auth,
+      sombraAuth,
+      file: filePath,
+      partition,
+      transcendUrl,
+      skipConflictUpdates: skipConflictUpdates !== 'false',
+      skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
+      isSilent: isSilent !== 'false',
+      dryRun: dryRun !== 'false',
+      attributes: splitCsvToList(attributes),
+    });
   });
 }
 
