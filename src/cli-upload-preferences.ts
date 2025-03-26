@@ -8,8 +8,8 @@ import { DEFAULT_TRANSCEND_API } from './constants';
 import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
 import { splitCsvToList } from './requests';
 import { readdirSync } from 'fs';
-import { mapSeries } from 'bluebird';
-import { join } from 'path';
+import { map } from 'bluebird';
+import { basename, join } from 'path';
 
 /**
  * Upload consent preferences to the managed consent database
@@ -18,11 +18,11 @@ import { join } from 'path';
  * https://docs.transcend.io/docs/consent/reference/managed-consent-database
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-upload-consent-preferences-interactive --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
+ * yarn ts-node ./src/cli-upload-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
  *  --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
  *
  * Standard usage:
- * yarn tr-upload-consent-preferences-interactive --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
+ * yarn tr-upload-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY \
  *  --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
  */
 async function main(): Promise<void> {
@@ -46,12 +46,16 @@ async function main(): Promise<void> {
     skipWorkflowTriggers = 'false',
     /** Whether to skip conflict updates */
     skipConflictUpdates = 'false',
+    /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
+    skipExistingRecordCheck = 'false',
     /** Whether to skip sending emails */
     isSilent = 'true',
     /** Attributes to add to any DSR request if created */
     attributes = 'Tags:transcend-cli,Source:transcend-cli',
     /** Store resulting, continuing where left off  */
     receiptFileDir = './receipts',
+    /** Number of files to process concurrently (only relevant for directory processing) */
+    concurrency = '10',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -69,13 +73,13 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);
   }
 
-  if (directory && file) {
+  if (!!directory && !!file) {
     logger.error(
       colors.red(
         'Cannot provide both a directory and a file. Please provide only one.',
@@ -137,21 +141,35 @@ async function main(): Promise<void> {
   );
   logger.debug(`Files to process: ${files.join(', ')}`);
 
-  await mapSeries(files, async (filePath) => {
-    await uploadPreferenceManagementPreferencesInteractive({
-      receiptFilepath: join(receiptFileDir, `${filePath}-receipts.json`),
-      auth,
-      sombraAuth,
-      file: filePath,
-      partition,
-      transcendUrl,
-      skipConflictUpdates: skipConflictUpdates !== 'false',
-      skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
-      isSilent: isSilent !== 'false',
-      dryRun: dryRun !== 'false',
-      attributes: splitCsvToList(attributes),
-    });
-  });
+  if (skipExistingRecordCheck !== 'false') {
+    logger.info(
+      colors.bgYellow(
+        `Skipping existing record check: ${skipExistingRecordCheck}`,
+      ),
+    );
+  }
+
+  await map(
+    files,
+    async (filePath) => {
+      const fileName = basename(filePath).replace('.csv', '');
+      await uploadPreferenceManagementPreferencesInteractive({
+        receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
+        auth,
+        sombraAuth,
+        file: filePath,
+        partition,
+        transcendUrl,
+        skipConflictUpdates: skipConflictUpdates !== 'false',
+        skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
+        skipExistingRecordCheck: skipExistingRecordCheck !== 'false',
+        isSilent: isSilent !== 'false',
+        dryRun: dryRun !== 'false',
+        attributes: splitCsvToList(attributes),
+      });
+    },
+    { concurrency: parseInt(concurrency, 10) },
+  );
 }
 
 main();
