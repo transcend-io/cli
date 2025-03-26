@@ -34,6 +34,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   dryRun = false,
   skipWorkflowTriggers = false,
   skipConflictUpdates = false,
+  skipExistingRecordCheck = false,
   attributes = [],
   transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
 }: {
@@ -62,6 +63,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
    * preferences. When false, update all preferences in CSV based on timestamp.
    */
   skipConflictUpdates?: boolean;
+  /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
+  skipExistingRecordCheck?: boolean;
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
@@ -111,6 +114,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       preferenceTopics,
       sombra,
       partitionKey: partition,
+      skipExistingRecordCheck,
     },
     preferenceState,
   );

@@ -30,6 +30,7 @@ export async function parsePreferenceManagementCsvWithCache(
     purposeSlugs,
     preferenceTopics,
     partitionKey,
+    skipExistingRecordCheck = false,
   }: {
     /** File to parse */
     file: string;
@@ -41,6 +42,8 @@ export async function parsePreferenceManagementCsvWithCache(
     sombra: Got;
     /** Partition key */
     partitionKey: string;
+    /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
+    skipExistingRecordCheck: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
@@ -100,10 +103,12 @@ export async function parsePreferenceManagementCsvWithCache(
   const identifiers = preferences.map(
     (pref) => pref[currentState.identifierColumn!],
   );
-  const existingConsentRecords = await getPreferencesForIdentifiers(sombra, {
-    identifiers: identifiers.map((x) => ({ value: x })),
-    partitionKey,
-  });
+  const existingConsentRecords = skipExistingRecordCheck
+    ? []
+    : await getPreferencesForIdentifiers(sombra, {
+      identifiers: identifiers.map((x) => ({ value: x })),
+      partitionKey,
+    });
   const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
 
   // Clear out previous updates
