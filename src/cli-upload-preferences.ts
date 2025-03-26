@@ -81,7 +81,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  if (directory && file) {
+  if (!!directory && !!file) {
     logger.error(
       colors.red(
         'Cannot provide both a directory and a file. Please provide only one.',

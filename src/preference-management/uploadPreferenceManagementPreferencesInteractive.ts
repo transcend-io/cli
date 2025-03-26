@@ -61,8 +61,6 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   attributes?: string[];
   /** Skip workflow triggers */
   skipWorkflowTriggers?: boolean;
-  /** Whether to force trigger workflows */
-  forceTriggerWorkflows?: boolean;
   /**
    * When true, only update preferences that do not conflict with existing
    * preferences. When false, update all preferences in CSV based on timestamp.
@@ -70,6 +68,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   skipConflictUpdates?: boolean;
   /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
   skipExistingRecordCheck?: boolean;
+  /** Whether to force trigger workflows */
+  forceTriggerWorkflows?: boolean;
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
