@@ -9,11 +9,52 @@ import { readCsv } from '../requests';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
-import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
-import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
-import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
+// import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
+// import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
+// import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
+
+const FILE_METADATA_TO_USE = {
+  identifierColumn: 'IDENTIFIER',
+  timestampColumn: 'TIMESTAMP',
+  columnToPurposeName: {
+    SalesCommunication: {
+      purpose: 'SalesCommunication',
+      preference: null,
+      valueMapping: {
+        false: false,
+        true: true,
+      },
+    },
+    MarketingCommunications: {
+      purpose: 'MarketingCommunications',
+      preference: null,
+      valueMapping: {
+        true: true,
+        false: false,
+      },
+    },
+    'SalesCommunication.SalesCommunication': {
+      purpose: 'SalesCommunication',
+      preference: 'SalesCommunication',
+      valueMapping: {
+        SalesOutreachAndSpecialOffers: 'SalesOutreachAndSpecialOffers',
+      },
+    },
+    'MarketingCommunications.MarketingCommunications': {
+      purpose: 'MarketingCommunications',
+      preference: 'MarketingCommunications',
+      valueMapping: {
+        BBEventsAndResources: 'BBEventsAndResources',
+        NewslettersAndThoughtLeadership: 'NewslettersAndThoughtLeadership',
+        ProductUpdatesAndReleases: 'ProductUpdatesAndReleases',
+        UserResearchAndSurveys: 'UserResearchAndSurveys',
+        ProductEducationAndHowTos: 'ProductEducationAndHowToS',
+      },
+    },
+  },
+};
 
 /**
  * Parse a file into the cache
@@ -52,10 +93,10 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
-  let preferences = readCsv(file, t.record(t.string, t.string));
+  const preferences = readCsv(file, t.record(t.string, t.string));
 
   // start building the cache, can use previous cache as well
-  let currentState: FileMetadataState = {
+  const currentState: FileMetadataState = {
     columnToPurposeName: {},
     pendingSafeUpdates: {},
     pendingConflictUpdates: {},
@@ -65,34 +106,38 @@ export async function parsePreferenceManagementCsvWithCache(
     lastFetchedAt: new Date().toISOString(),
   };
 
-  // Validate that all timestamps are present in the file
-  currentState = await parsePreferenceTimestampsFromCsv(
-    preferences,
-    currentState,
-  );
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
+  // // Validate that all timestamps are present in the file
+  // currentState = await parsePreferenceTimestampsFromCsv(
+  //   preferences,
+  //   currentState,
+  // );
+  // fileMetadata[file] = currentState;
+  // await cache.setValue(fileMetadata, 'fileMetadata');
 
-  // Validate that all identifiers are present and unique
-  const result = await parsePreferenceIdentifiersFromCsv(
-    preferences,
-    currentState,
-  );
-  currentState = result.currentState;
-  preferences = result.preferences;
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
+  // // Validate that all identifiers are present and unique
+  // const result = await parsePreferenceIdentifiersFromCsv(
+  //   preferences,
+  //   currentState,
+  // );
+  // currentState = result.currentState;
+  // preferences = result.preferences;
+  // fileMetadata[file] = currentState;
+  // await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Ensure all other columns are mapped to purpose and preference
   // slug values
-  currentState = await parsePreferenceAndPurposeValuesFromCsv(
-    preferences,
-    currentState,
-    {
-      preferenceTopics,
-      purposeSlugs,
-    },
-  );
+  // currentState = await parsePreferenceAndPurposeValuesFromCsv(
+  //   preferences,
+  //   currentState,
+  //   {
+  //     preferenceTopics,
+  //     purposeSlugs,
+  //   },
+  // );
+  currentState.columnToPurposeName = FILE_METADATA_TO_USE.columnToPurposeName;
+  currentState.identifierColumn = FILE_METADATA_TO_USE.identifierColumn;
+  currentState.timestampColum = FILE_METADATA_TO_USE.timestampColumn;
+
   fileMetadata[file] = currentState;
   await cache.setValue(fileMetadata, 'fileMetadata');
 

@@ -84,6 +84,13 @@ export const FileMetadataState = t.intersection([
 /** Override type */
 export type FileMetadataState = t.TypeOf<typeof FileMetadataState>;
 
+export const MetadataFile = t.type({
+  fileMetadata: t.record(t.string, FileMetadataState),
+});
+
+/** Override type */
+export type MetadataFile = t.TypeOf<typeof MetadataFile>;
+
 /** Persist this data between runs of the script */
 export const PreferenceState = t.type({
   /**
