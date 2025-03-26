@@ -30,7 +30,8 @@ export async function parsePreferenceManagementCsvWithCache(
     purposeSlugs,
     preferenceTopics,
     partitionKey,
-    skipExistingRecordCheck = false,
+    skipExistingRecordCheck,
+    forceTriggerWorkflows,
   }: {
     /** File to parse */
     file: string;
@@ -44,6 +45,8 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey: string;
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
     skipExistingRecordCheck: boolean;
+    /** Wheather to force workflow triggers */
+    forceTriggerWorkflows: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
@@ -94,6 +97,7 @@ export async function parsePreferenceManagementCsvWithCache(
     {
       preferenceTopics,
       purposeSlugs,
+      forceTriggerWorkflows,
     },
   );
   fileMetadata[file] = currentState;
@@ -131,7 +135,12 @@ export async function parsePreferenceManagementCsvWithCache(
 
     // Grab current state of the update
     const currentConsentRecord = consentRecordByIdentifier[userId];
-
+    if (forceTriggerWorkflows && !currentConsentRecord) {
+      throw new Error(
+        `No exisiting consent record found for user with id: ${userId}. 
+        When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
+      );
+    }
     // Check if the update can be skipped
     // this is the case if a record exists, and the purpose
     // and preference values are all in sync
@@ -141,7 +150,8 @@ export async function parsePreferenceManagementCsvWithCache(
         currentConsentRecord,
         pendingUpdates,
         preferenceTopics,
-      })
+      }) &&
+      !forceTriggerWorkflows
     ) {
       currentState.skippedUpdates[userId] = pref;
       return;
