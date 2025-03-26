@@ -73,7 +73,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);
@@ -142,26 +142,34 @@ async function main(): Promise<void> {
   logger.debug(`Files to process: ${files.join(', ')}`);
 
   if (skipExistingRecordCheck !== 'false') {
-    logger.info(colors.bgYellow(`Skipping existing record check: ${skipExistingRecordCheck}`));
+    logger.info(
+      colors.bgYellow(
+        `Skipping existing record check: ${skipExistingRecordCheck}`,
+      ),
+    );
   }
 
-  await map(files, async (filePath) => {
-    const fileName = basename(filePath).replace('.csv', '');
-    await uploadPreferenceManagementPreferencesInteractive({
-      receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
-      auth,
-      sombraAuth,
-      file: filePath,
-      partition,
-      transcendUrl,
-      skipConflictUpdates: skipConflictUpdates !== 'false',
-      skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
-      skipExistingRecordCheck: skipExistingRecordCheck !== 'false',
-      isSilent: isSilent !== 'false',
-      dryRun: dryRun !== 'false',
-      attributes: splitCsvToList(attributes),
-    });
-  }, { concurrency: parseInt(concurrency, 10) });
+  await map(
+    files,
+    async (filePath) => {
+      const fileName = basename(filePath).replace('.csv', '');
+      await uploadPreferenceManagementPreferencesInteractive({
+        receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
+        auth,
+        sombraAuth,
+        file: filePath,
+        partition,
+        transcendUrl,
+        skipConflictUpdates: skipConflictUpdates !== 'false',
+        skipWorkflowTriggers: skipWorkflowTriggers !== 'false',
+        skipExistingRecordCheck: skipExistingRecordCheck !== 'false',
+        isSilent: isSilent !== 'false',
+        dryRun: dryRun !== 'false',
+        attributes: splitCsvToList(attributes),
+      });
+    },
+    { concurrency: parseInt(concurrency, 10) },
+  );
 }
 
 main();

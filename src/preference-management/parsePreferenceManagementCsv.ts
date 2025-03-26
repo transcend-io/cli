@@ -106,9 +106,9 @@ export async function parsePreferenceManagementCsvWithCache(
   const existingConsentRecords = skipExistingRecordCheck
     ? []
     : await getPreferencesForIdentifiers(sombra, {
-      identifiers: identifiers.map((x) => ({ value: x })),
-      partitionKey,
-    });
+        identifiers: identifiers.map((x) => ({ value: x })),
+        partitionKey,
+      });
   const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
 
   // Clear out previous updates

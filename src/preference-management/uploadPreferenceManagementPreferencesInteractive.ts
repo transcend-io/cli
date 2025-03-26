@@ -82,16 +82,18 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   logger.info(
     colors.magenta(
       'Restored cache, there are: \n' +
-      `${Object.values(failingRequests).length
-      } failing requests to be retried\n` +
-      `${Object.values(pendingRequests).length
-      } pending requests to be processed\n` +
-      `The following files are stored in cache and will be used:\n${Object.keys(
-        fileMetadata,
-      )
-        .map((x) => x)
-        .join('\n')}\n` +
-      `The following file will be processed: ${file}\n`,
+        `${
+          Object.values(failingRequests).length
+        } failing requests to be retried\n` +
+        `${
+          Object.values(pendingRequests).length
+        } pending requests to be processed\n` +
+        `The following files are stored in cache and will be used:\n${Object.keys(
+          fileMetadata,
+        )
+          .map((x) => x)
+          .join('\n')}\n` +
+        `The following file will be processed: ${file}\n`,
     ),
   );
 
@@ -126,19 +128,22 @@ export async function uploadPreferenceManagementPreferencesInteractive({
 
   logger.info(
     colors.magenta(
-      `Found ${Object.entries(metadata.pendingSafeUpdates).length
+      `Found ${
+        Object.entries(metadata.pendingSafeUpdates).length
       } safe updates in ${file}`,
     ),
   );
   logger.info(
     colors.magenta(
-      `Found ${Object.entries(metadata.pendingConflictUpdates).length
+      `Found ${
+        Object.entries(metadata.pendingConflictUpdates).length
       } conflict updates in ${file}`,
     ),
   );
   logger.info(
     colors.magenta(
-      `Found ${Object.entries(metadata.skippedUpdates).length
+      `Found ${
+        Object.entries(metadata.skippedUpdates).length
       } skipped updates in ${file}`,
     ),
   );
@@ -185,7 +190,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   if (dryRun) {
     logger.info(
       colors.green(
-        `Dry run complete, exiting. ${Object.values(pendingUpdates).length
+        `Dry run complete, exiting. ${
+          Object.values(pendingUpdates).length
         } pending updates. Check file: ${receiptFilepath}`,
       ),
     );
@@ -194,7 +200,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
 
   logger.info(
     colors.magenta(
-      `Uploading ${Object.values(pendingUpdates).length
+      `Uploading ${
+        Object.values(pendingUpdates).length
       } preferences to partition: ${partition}`,
     ),
   );
@@ -237,8 +244,10 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         }
         logger.error(
           colors.red(
-            `Failed to upload ${currentChunk.length
-            } user preferences to partition ${partition}: ${err?.response?.body || err?.message
+            `Failed to upload ${
+              currentChunk.length
+            } user preferences to partition ${partition}: ${
+              err?.response?.body || err?.message
             }`,
           ),
         );
@@ -266,8 +275,10 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   const totalTime = t1 - t0;
   logger.info(
     colors.green(
-      `Successfully uploaded ${updatesToRun.length
-      } user preferences to partition ${partition} in "${totalTime / 1000
+      `Successfully uploaded ${
+        updatesToRun.length
+      } user preferences to partition ${partition} in "${
+        totalTime / 1000
       }" seconds!`,
     ),
   );
