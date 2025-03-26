@@ -44,6 +44,8 @@ async function main(): Promise<void> {
     dryRun = 'false',
     /** Whether to skip workflow triggers */
     skipWorkflowTriggers = 'false',
+    /** Whether to force trigger workflows */
+    forceTriggerWorkflows = 'false',
     /** Whether to skip conflict updates */
     skipConflictUpdates = 'false',
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
@@ -166,6 +168,7 @@ async function main(): Promise<void> {
         isSilent: isSilent !== 'false',
         dryRun: dryRun !== 'false',
         attributes: splitCsvToList(attributes),
+        forceTriggerWorkflows: forceTriggerWorkflows !== 'false',
       });
     },
     { concurrency: parseInt(concurrency, 10) },
