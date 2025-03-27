@@ -55,8 +55,6 @@ export const syncOneTrustAssessmentsFromFile = ({
         await syncOneTrustAssessmentToTranscend({
           assessment: parsedAssessment,
           transcend,
-          // FIXME: remove this hardcoded value!
-          total: 2178,
           index,
         });
 
