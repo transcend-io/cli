@@ -35,11 +35,13 @@ export const syncOneTrustAssessmentToTranscend = async ({
   /** The index of the assessment being written to the file */
   index: number;
   /** The total amount of assessments that we will write */
-  total: number;
+  total?: number;
 }): Promise<void> => {
   logger.info(
     colors.magenta(
-      `Writing enriched assessment ${index + 1} of ${total} to Transcend...`,
+      `Writing enriched assessment ${index + 1} ${
+        total ? `of ${total} ` : ' '
+      }to Transcend...`,
     ),
   );
 
@@ -68,7 +70,9 @@ export const syncOneTrustAssessmentToTranscend = async ({
   } catch (e) {
     logger.error(
       colors.red(
-        `Failed to sync assessment ${index + 1} of ${total} to Transcend.\n` +
+        `Failed to sync assessment ${index + 1} ${
+          total ? `of ${total} ` : ' '
+        }to Transcend.\n` +
           `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}\n`,
       ),
     );

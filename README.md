@@ -645,6 +645,13 @@ You can also sync to disk in json format:
 tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --fileFormat=json --file=./oneTrustAssessments.json
 ```
 
+Once you save the assessments into disk, you can sync them to Transcend by reading from the file instead:
+
+```sh
+# Syncs to Transcend by reading from file ./oneTrustAssessments.json
+tr-sync-ot --source=file --file=./oneTrustAssessments.json --transcendAuth=$TRANSCEND_API_KEY
+```
+
 ### tr-push
 
 Given a transcend.yml file, sync the contents up to your connected services view (https://app.transcend.io/privacy-requests/connected-services).

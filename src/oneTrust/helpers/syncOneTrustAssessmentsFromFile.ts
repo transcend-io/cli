@@ -1,9 +1,9 @@
 import { decodeCodec } from '@transcend-io/type-utils';
 import colors from 'colors';
 import { logger } from '../../logger';
+import JSONStream from 'JSONStream';
 
 import { createReadStream } from 'fs';
-import * as readline from 'readline';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 import { GraphQLClient } from 'graphql-request';
@@ -13,7 +13,7 @@ import { GraphQLClient } from 'graphql-request';
  *
  * @param param - the information about the source file and Transcend instance to write them to.
  */
-export const syncOneTrustAssessmentsFromFile = async ({
+export const syncOneTrustAssessmentsFromFile = ({
   transcend,
   file,
 }: {
@@ -24,46 +24,73 @@ export const syncOneTrustAssessmentsFromFile = async ({
 }): Promise<void> => {
   logger.info(`Getting list of all assessments from file ${file}...`);
 
-  // Create a readable stream from the file
-  const fileStream = createReadStream(file, {
-    encoding: 'utf-8',
-    highWaterMark: 64 * 1024, // 64KB chunks
-  });
+  return new Promise((resolve, reject) => {
+    // Create a readable stream from the file
+    const fileStream = createReadStream(file, {
+      encoding: 'utf-8',
+      highWaterMark: 64 * 1024, // 64KB chunks
+    });
 
-  // Create readline interface
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  });
+    // Create a JSONStream parser to parse the array of OneTrust assessments from the file
+    const parser = JSONStream.parse('*'); // '*' matches each element in the root array
 
-  let index = 0;
+    let index = 0;
 
-  // Process the file line by line
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const line of rl) {
-    try {
-      // Parse each non-empty line and sync to transcend
-      if (line.trim()) {
+    // Pipe the file stream into the JSON parser
+    fileStream.pipe(parser);
+
+    // Handle each parsed assessment object
+    parser.on('data', async (assessment) => {
+      try {
+        // Pause the stream while processing to avoid overwhelming memory
+        parser.pause();
+
+        // Decode and validate the assessment
         const parsedAssessment = decodeCodec(
           OneTrustEnrichedAssessment,
-          line.endsWith(',') ? line.slice(0, -1) : line,
+          assessment,
         );
 
+        // Sync the assessment to transcend
         await syncOneTrustAssessmentToTranscend({
           assessment: parsedAssessment,
           transcend,
-          total: 2178,
           index,
         });
+
+        index += 1;
+
+        // Resume the stream after processing
+        parser.resume();
+      } catch (e) {
+        // if failed to parse a line, report error and continue
+        logger.error(
+          colors.red(
+            `Failed to parse the assessment ${index} from file '${file}': ${e.message}.`,
+          ),
+        );
       }
-      index += 1;
-    } catch (parseError) {
-      // if failed to parse a line, report error and continue
+    });
+
+    // Handle completion
+    parser.on('end', () => {
+      logger.info(`Finished processing ${index} assessments from file ${file}`);
+      resolve();
+    });
+
+    // Handle stream or parsing errors
+    parser.on('error', (error) => {
       logger.error(
-        colors.red(
-          `Failed to parse the line ${index} from file '${file}': ${parseError.message}.`,
-        ),
+        colors.red(`Error parsing file '${file}': ${error.message}`),
       );
-    }
-  }
+      reject(error);
+    });
+
+    fileStream.on('error', (error) => {
+      logger.error(
+        colors.red(`Error reading file '${file}': ${error.message}`),
+      );
+      reject(error);
+    });
+  });
 };

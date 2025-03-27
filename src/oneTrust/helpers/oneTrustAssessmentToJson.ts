@@ -17,7 +17,7 @@ export const oneTrustAssessmentToJson = ({
   /** The position of the assessment in the final Json object */
   index: number;
   /** The total amount of the assessments in the final Json object */
-  total: number;
+  total?: number;
   /** Whether to wrap every entry in brackets */
   wrap?: boolean;
 }): string => {
@@ -30,13 +30,13 @@ export const oneTrustAssessmentToJson = ({
   const stringifiedAssessment = JSON.stringify(assessment);
 
   // Add comma for all items except the last one
-  const comma = index < total - 1 && !wrap ? ',' : '';
+  const comma = total && index < total - 1 && !wrap ? ',' : '';
 
   // write to file
   jsonEntry = `${jsonEntry + stringifiedAssessment + comma}\n`;
 
   // end with closing bracket
-  if (index === total - 1 || wrap) {
+  if ((total && index === total - 1) || wrap) {
     jsonEntry += '\n]';
   }
 
