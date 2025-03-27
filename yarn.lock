@@ -530,7 +530,6 @@ __metadata:
     "@types/inquirer-autocomplete-prompt": ^3.0.0
     "@types/js-yaml": ^4.0.5
     "@types/json-schema": ^7.0.15
-    "@types/jsonstream": ^0.8.33
     "@types/jsonwebtoken": ^9
     "@types/lodash": ^4.14.186
     "@types/mocha": ^10.0.1
@@ -741,7 +740,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/JSONStream@npm:@types/jsonstream@^0.8.33, @types/jsonstream@npm:^0.8.33":
+"@types/JSONStream@npm:@types/jsonstream@^0.8.33":
   version: 0.8.33
   resolution: "@types/jsonstream@npm:0.8.33"
   dependencies:

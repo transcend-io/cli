@@ -50,7 +50,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/json-schema", "npm:7.0.15"],\
-            ["@types/jsonstream", "npm:0.8.33"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
@@ -708,7 +707,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/inquirer-autocomplete-prompt", "npm:3.0.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/json-schema", "npm:7.0.15"],\
-            ["@types/jsonstream", "npm:0.8.33"],\
             ["@types/jsonwebtoken", "npm:9.0.3"],\
             ["@types/lodash", "npm:4.14.186"],\
             ["@types/mocha", "npm:10.0.1"],\
