@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import cliProgress from 'cli-progress';
 import {
+  BusinessEntityInput,
   DataCategoryInput,
   DataSiloInput,
   ProcessingPurposeInput,
@@ -543,6 +544,8 @@ export interface DataSiloEnriched {
   manualWorkRetryFrequency: string;
   /** Attribute values tagged to data silo */
   attributeValues: DataSiloAttributeValue[];
+  /** Business Entities associated with data silo */
+  businessEntities: BusinessEntityInput[];
 }
 
 /**
@@ -767,6 +770,7 @@ export async function syncDataSilos(
               )
             : undefined,
           attributes: input.attributes,
+          businessEntityTitles: input.businessEntityTitles,
           // AVC settings
           notifyEmailAddress: input['email-settings']?.['notify-email-address'],
           promptAVendorEmailSendFrequency:
