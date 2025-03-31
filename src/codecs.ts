@@ -1410,10 +1410,6 @@ export const DataSiloInput = t.intersection([
      * The business entities associated with this data silo
      */
     businessEntities: t.array(BusinessEntityInput),
-    /**
-     * The business entity titles associated with this data silo
-     */
-    businessEntityTitles: t.array(t.string),
   }),
 ]);
 

@@ -770,7 +770,9 @@ export async function syncDataSilos(
               )
             : undefined,
           attributes: input.attributes,
-          businessEntityTitles: input.businessEntityTitles,
+          businessEntityTitles: input.businessEntities?.map(
+            (entity) => entity.title,
+          ),
           // AVC settings
           notifyEmailAddress: input['email-settings']?.['notify-email-address'],
           promptAVendorEmailSendFrequency:
