@@ -1417,7 +1417,6 @@ export async function pullTranscendConfiguration(
           manualWorkRetryFrequency,
           catalog,
           attributeValues,
-          businessEntities,
         },
         dataPoints,
       ]): DataSiloInput => ({
@@ -1468,7 +1467,6 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-        businessEntities,
 
         datapoints: dataPoints
           .map(

@@ -1409,7 +1409,7 @@ export const DataSiloInput = t.intersection([
     /**
      * The business entities associated with this data silo
      */
-    businessEntities: t.array(BusinessEntityInput),
+    businessEntityTitles: t.array(t.string),
   }),
 ]);
 
