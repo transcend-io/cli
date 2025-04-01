@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import cliProgress from 'cli-progress';
 import {
-  BusinessEntityInput,
   DataCategoryInput,
   DataSiloInput,
   ProcessingPurposeInput,
@@ -544,8 +543,6 @@ export interface DataSiloEnriched {
   manualWorkRetryFrequency: string;
   /** Attribute values tagged to data silo */
   attributeValues: DataSiloAttributeValue[];
-  /** Business Entities associated with data silo */
-  businessEntities: BusinessEntityInput[];
 }
 
 /**
