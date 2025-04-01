@@ -37,8 +37,8 @@ export async function createSombraGotInstance(
       Authorization: `Bearer ${transcendApiKey}`,
       ...(sombraApiKey
         ? {
-            'X-Sombra-Authorization': `Bearer ${sombraApiKey}`,
-          }
+          'X-Sombra-Authorization': `Bearer ${sombraApiKey}`,
+        }
         : {}),
     },
   });
