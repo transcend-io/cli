@@ -110,9 +110,9 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     if (splitFile.at(-1) !== OneTrustFileFormat.Json) {
       logger.error(
         colors.red(
-          `Expected but format of the "file" parameters to be ${
+          `Expected the format of the "file" parameters '${file}' to be '${
             OneTrustFileFormat.Json
-          }, but got ${splitFile.at(-1)}.`,
+          }', but got '${splitFile.at(-1)}'.`,
         ),
       );
       return process.exit(1);
