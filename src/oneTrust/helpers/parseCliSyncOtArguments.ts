@@ -8,7 +8,6 @@ import {
 } from '../../enums';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
-const VALID_FILE_FORMATS = Object.values(OneTrustFileFormat);
 
 interface OneTrustCliArguments {
   /** The name of the file to write the resources to */
@@ -25,8 +24,6 @@ interface OneTrustCliArguments {
   resource: OneTrustPullResource;
   /** Whether to enable debugging while reporting errors */
   debug: boolean;
-  /** The export format of the file where to save the resources */
-  fileFormat: OneTrustFileFormat;
   /** Whether to export the resource into a file rather than push to transcend */
   dryRun: boolean;
   /** Where to read the OneTrust resource from */
@@ -45,7 +42,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     oneTrustAuth,
     resource,
     debug,
-    fileFormat,
     dryRun,
     transcendAuth,
     transcendUrl,
@@ -56,7 +52,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       'hostname',
       'oneTrustAuth',
       'resource',
-      'fileFormat',
       'dryRun',
       'transcendAuth',
       'transcendUrl',
@@ -65,7 +60,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     boolean: ['debug', 'dryRun'],
     default: {
       resource: OneTrustPullResource.Assessments,
-      fileFormat: OneTrustFileFormat.Json,
       debug: false,
       dryRun: false,
       transcendUrl: 'https://api.transcend.io',
@@ -93,33 +87,11 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
-  // Can only sync to Transcend via a Json file format!
-  if (!dryRun && fileFormat !== OneTrustFileFormat.Json) {
-    logger.error(
-      colors.red(
-        `The "fileFormat" parameter must equal ${OneTrustFileFormat.Json} to sync resources to Transcend.`,
-      ),
-    );
-    return process.exit(1);
-  }
-
   // If trying to sync to disk, must specify a file path
   if (dryRun && !file) {
     logger.error(
       colors.red(
         'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json',
-      ),
-    );
-    return process.exit(1);
-  }
-
-  // If trying to sync to disk, must specify a file format
-  if (dryRun && !fileFormat) {
-    logger.error(
-      colors.red(
-        `Must set a "fileFormat" parameter when "dryRun" is "true". e.g. --fileFormat=${
-          OneTrustFileFormat.Json
-        }. Supported formats: ${VALID_FILE_FORMATS.join(',')}`,
       ),
     );
     return process.exit(1);
@@ -135,11 +107,12 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       );
       return process.exit(1);
     }
-    if (splitFile.at(-1) !== fileFormat) {
+    if (splitFile.at(-1) !== OneTrustFileFormat.Json) {
       logger.error(
         colors.red(
-          // eslint-disable-next-line max-len
-          `The "file" and "fileFormat" parameters must specify the same format! Got file=${file} and fileFormat=${fileFormat}`,
+          `Expected but format of the "file" parameters to be ${
+            OneTrustFileFormat.Json
+          }, but got ${splitFile.at(-1)}.`,
         ),
       );
       return process.exit(1);
@@ -199,16 +172,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     );
     return process.exit(1);
   }
-  if (!VALID_FILE_FORMATS.includes(fileFormat)) {
-    logger.error(
-      colors.red(
-        `Received invalid fileFormat value: "${fileFormat}". Allowed: ${VALID_FILE_FORMATS.join(
-          ',',
-        )}`,
-      ),
-    );
-    return process.exit(1);
-  }
 
   return {
     file,
@@ -216,7 +179,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     ...(oneTrustAuth && { oneTrustAuth }),
     resource,
     debug,
-    fileFormat,
     dryRun,
     transcendAuth,
     transcendUrl,
