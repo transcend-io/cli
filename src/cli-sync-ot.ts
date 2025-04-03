@@ -22,7 +22,6 @@ import {
 async function main(): Promise<void> {
   const {
     file,
-    fileFormat,
     hostname,
     oneTrustAuth,
     transcendAuth,
@@ -54,7 +53,6 @@ async function main(): Promise<void> {
         await syncOneTrustAssessmentsFromOneTrust({
           oneTrust,
           file,
-          fileFormat,
           dryRun,
           ...(transcend && { transcend }),
         });
