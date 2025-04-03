@@ -3,7 +3,6 @@ import colors from 'colors';
 import { OneTrustFileFormat } from '../../enums';
 import fs from 'fs';
 import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
-import { oneTrustAssessmentToCsv } from './oneTrustAssessmentToCsv';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 
 /**
@@ -59,12 +58,6 @@ export const syncOneTrustAssessmentToDisk = ({
           wrap: false,
         }),
       );
-    }
-  } else if (fileFormat === OneTrustFileFormat.Csv) {
-    if (index === 0) {
-      fs.writeFileSync(file, oneTrustAssessmentToCsv({ assessment, index }));
-    } else {
-      fs.appendFileSync(file, oneTrustAssessmentToCsv({ assessment, index }));
     }
   }
 };

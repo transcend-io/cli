@@ -634,13 +634,6 @@ tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN -
 Alternatively, you can set dryRun to true and sync the resource to disk:
 
 ```sh
-# Writes out file to ./oneTrustAssessments.csv
-tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --file=./oneTrustAssessments.csv
-```
-
-You can also sync to disk in json format:
-
-```sh
 # Writes out file to ./oneTrustAssessments.json
 tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --fileFormat=json --file=./oneTrustAssessments.json
 ```
