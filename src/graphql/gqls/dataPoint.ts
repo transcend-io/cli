@@ -141,7 +141,6 @@ export const SUB_DATA_POINTS_WITH_GUESSES = gql`
           }
           status
           confidence
-          confidenceLabel
           classifierVersion
         }
         accessRequestVisibilityEnabled
