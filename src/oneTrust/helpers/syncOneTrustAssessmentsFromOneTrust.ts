@@ -18,7 +18,6 @@ import {
 import uniq from 'lodash/uniq';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
-import { OneTrustFileFormat } from '../../enums';
 import { GraphQLClient } from 'graphql-request';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
@@ -37,7 +36,6 @@ export interface AssessmentForm {
 export const syncOneTrustAssessmentsFromOneTrust = async ({
   oneTrust,
   file,
-  fileFormat,
   dryRun,
   transcend,
 }: {
@@ -49,8 +47,6 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
   dryRun: boolean;
   /** the path to the file in case dryRun is true */
   file?: string;
-  /** the format of the file in case dryRun is true */
-  fileFormat?: OneTrustFileFormat;
 }): Promise<void> => {
   // fetch the list of all assessments in the OneTrust organization
   logger.info('Getting list of all assessments from OneTrust...');
@@ -218,16 +214,15 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
         // the assessment's global index takes its batch into consideration
         const globalIndex = batch * BATCH_SIZE + index;
 
-        if (dryRun && file && fileFormat) {
+        if (dryRun && file) {
           // sync to file
           syncOneTrustAssessmentToDisk({
             assessment: enrichedAssessment,
             index: globalIndex,
             total: assessments.length,
             file,
-            fileFormat,
           });
-        } else if (fileFormat === OneTrustFileFormat.Json && transcend) {
+        } else if (transcend) {
           // sync to transcend
           await syncOneTrustAssessmentToTranscend({
             assessment: enrichedAssessment,

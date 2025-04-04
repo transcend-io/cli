@@ -618,8 +618,7 @@ The API key needs the following scopes when pushing the various resource types:
 | source        | Whether to read the assessments from OneTrust or from a file                                      | string       | oneTrust                 | false    |
 | transcendAuth | The Transcend API Key to with the scopes necessary to access Transcend's Public APIs.             | string       | N/A                      | false    |
 | transcendUrl  | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                     | string - URL | https://api.transcend.io | false    |
-| file          | Path to the file to pull the resource into. Its format must match the fileFormat argument.        | string       | N/A                      | false    |
-| fileFormat    | The format of the output file.                                                                    | string       | json                     | false    |
+| file          | Path to the file to pull the resource into. Must be a json file!                                  | string       | N/A                      | false    |
 | resource      | The resource to pull from OneTrust. For now, only assessments is supported.                       | string       | assessments              | false    |
 | dryRun        | Whether to export the resource to a file rather than sync to Transcend.                           | boolean      | false                    | false    |
 | debug         | Whether to print detailed logs in case of error.                                                  | boolean      | false                    | false    |
@@ -634,15 +633,15 @@ tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN -
 Alternatively, you can set dryRun to true and sync the resource to disk:
 
 ```sh
-# Writes out file to ./oneTrustAssessments.csv
-tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --file=./oneTrustAssessments.csv
+# Writes out file to ./oneTrustAssessments.json
+tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --file=./oneTrustAssessments.json
 ```
 
-You can also sync to disk in json format:
+Once you save the assessments into disk, you can sync them to Transcend by reading from the file instead:
 
 ```sh
-# Writes out file to ./oneTrustAssessments.json
-tr-sync-ot --hostname=trial.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --dryRun=true --fileFormat=json --file=./oneTrustAssessments.json
+# Syncs to Transcend by reading from file ./oneTrustAssessments.json
+tr-sync-ot --source=file --file=./oneTrustAssessments.json --transcendAuth=$TRANSCEND_API_KEY
 ```
 
 ### tr-push

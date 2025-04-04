@@ -35,7 +35,6 @@ import {
   RegionDetectionMethod,
   PreflightRequestStatus,
   AttributeSupportedResourceType,
-  ConfidenceLabel,
   SubDataPointDataSubCategoryGuessStatus,
   LargeLanguageModelClient,
   PromptFilePurpose,
@@ -255,8 +254,6 @@ export const DataCategoryGuessInput = t.intersection([
     category: DataCategoryPreviewInput,
     /** Status of guess */
     status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
-    /** Confidence label */
-    confidenceLabel: valuesOf(ConfidenceLabel),
     /** Confidence level of guess */
     confidence: t.number,
   }),
