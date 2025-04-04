@@ -1517,7 +1517,6 @@ export async function pullTranscendConfiguration(
                                         category: guess.category.category,
                                       },
                                       status: guess.status,
-                                      confidenceLabel: guess.confidenceLabel,
                                       confidence: guess.confidence,
                                       classifierVersion:
                                         guess.classifierVersion || undefined,
