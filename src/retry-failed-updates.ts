@@ -30,6 +30,9 @@ export async function retryFailedUpdates({
   path,
   transcendUrl = DEFAULT_TRANSCEND_API,
   skipWorkflowTriggers = false,
+  /** Whether to force workflow triggers */
+  forceTriggerWorkflows = false,
+
 }: {
   /** The Transcend API key */
   auth: string;
@@ -41,7 +44,14 @@ export async function retryFailedUpdates({
   transcendUrl?: string;
   /** Skip workflow triggers */
   skipWorkflowTriggers?: boolean;
+  /** Whether to force workflow triggers */
+  forceTriggerWorkflows?: boolean;
 }): Promise<void> {
+  logger.info(colors.magenta(`Retry failed updates from path: ${path}`));
+  logger.info(colors.magenta(`Transcend URL: ${transcendUrl}`));
+  logger.info(colors.magenta(`Skip workflow triggers: ${skipWorkflowTriggers}`));
+  logger.info(colors.magenta(`Force trigger workflows: ${forceTriggerWorkflows}`));
+
   if (!existsSync(path)) {
     logger.error(colors.red(`Path does not exist: ${path}`));
     return;
@@ -123,6 +133,7 @@ export async function retryFailedUpdates({
                   json: {
                     records: validUpdates.map(([, { update }]) => update),
                     skipWorkflowTriggers,
+                    forceTriggerWorkflows,
                   },
                 })
                 .json();
@@ -215,6 +226,8 @@ async function main(): Promise<void> {
   const {
     auth,
     sombraAuth,
+    transcendUrl,
+    forceTriggerWorkflows,
     path,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
@@ -227,7 +240,8 @@ async function main(): Promise<void> {
     auth,
     sombraAuth,
     path,
-    skipWorkflowTriggers: true,
+    transcendUrl,
+    forceTriggerWorkflows: forceTriggerWorkflows === 'true',
   });
 }
 

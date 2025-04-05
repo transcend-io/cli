@@ -15,47 +15,6 @@ import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurp
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
 
-// const FILE_METADATA_TO_USE = {
-//   identifierColumn: 'IDENTIFIER',
-//   timestampColumn: 'TIMESTAMP',
-//   columnToPurposeName: {
-//     SalesCommunication: {
-//       purpose: 'SalesCommunication',
-//       preference: null,
-//       valueMapping: {
-//         false: false,
-//         true: true,
-//       },
-//     },
-//     MarketingCommunications: {
-//       purpose: 'MarketingCommunications',
-//       preference: null,
-//       valueMapping: {
-//         true: true,
-//         false: false,
-//       },
-//     },
-//     'SalesCommunication.SalesCommunication': {
-//       purpose: 'SalesCommunication',
-//       preference: 'SalesCommunication',
-//       valueMapping: {
-//         SalesOutreachAndSpecialOffers: 'SalesOutreachAndSpecialOffers',
-//       },
-//     },
-//     'MarketingCommunications.MarketingCommunications': {
-//       purpose: 'MarketingCommunications',
-//       preference: 'MarketingCommunications',
-//       valueMapping: {
-//         BBEventsAndResources: 'BBEventsAndResources',
-//         NewslettersAndThoughtLeadership: 'NewslettersAndThoughtLeadership',
-//         ProductUpdatesAndReleases: 'ProductUpdatesAndReleases',
-//         UserResearchAndSurveys: 'UserResearchAndSurveys',
-//         ProductEducationAndHowTos: 'ProductEducationAndHowToS',
-//       },
-//     },
-//   },
-// };
-
 /**
  * Parse a file into the cache
  *
@@ -86,7 +45,7 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey: string;
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
     skipExistingRecordCheck: boolean;
-    /** Wheather to force workflow triggers */
+    /** Whether to force workflow triggers */
     forceTriggerWorkflows: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,
