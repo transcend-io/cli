@@ -2469,19 +2469,24 @@ In order to use this cli, you will first need to follow [this guide](https://doc
 
 #### Arguments
 
-| Argument             | Description                                                                                       | Type               | Default                                      | Required |
-| -------------------- | ------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------- | -------- |
-| auth                 | The Transcend API key with the scopes necessary for the command.                                  | string             | N/A                                          | true     |
-| partition            | The partition key to download consent preferences to                                              | string             | N/A                                          | true     |
-| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.              | string             | N/A                                          | false    |
-| transcendUrl         | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting.                 | string - URL       | https://consent.transcend.io                 | false    |
-| file                 | Path to the CSV file to load preferences from                                                     | string - file-path | ./preferences.csv                            | false    |
-| dryRun               | Whether to do a dry run only - will write results ti receiptFilepath without updating Transcend   | boolean            | false                                        | false    |
-| skipWorkflowTriggers | Whether to skip workflow triggers when uploading to preference store                              | boolean            | false                                        | false    |
-| skipConflictUpdates  | Whether to skip uploading of any records where the preference store and file have a hard conflict | boolean            | false                                        | false    |
-| isSilent             | Whether to skip sending emails in workflows                                                       | boolean            | true                                         | false    |
-| attributes           | Attributes to add to any DSR request if created                                                   | string             | Tags:transcend-cli,Source:transcend-cli      | false    |
-| receiptFilepath      | Store resulting, continuing where left off                                                        | string - file-path | ./preference-management-upload-receipts.json | false    |
+| Argument                | Description                                                                                       | Type                    | Default                                      | Required |
+| ----------------------- | ------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------- | -------- |
+| auth                    | The Transcend API key with the scopes necessary for the command.                                  | string                  | N/A                                          | true     |
+| partition               | The partition key to download consent preferences to                                              | string                  | N/A                                          | true     |
+| sombraAuth              | The sombra internal key, use for additional authentication when self-hosting sombra.              | string                  | N/A                                          | false    |
+| transcendUrl            | URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting.                 | string - URL            | https://consent.transcend.io                 | false    |
+| file                    | Path to the CSV file to load preferences from                                                     | string - file-path      | N/A                                          | true     |
+| directory               | Path to the directory of CSV files to load preferences from                                       | string - directory-path | N/A                                          | true     |
+| csv                     | false                                                                                             |
+| dryRun                  | Whether to do a dry run only - will write results ti receiptFilepath without updating Transcend   | boolean                 | false                                        | false    |
+| skipExistingRecordCheck | Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD            | boolean                 | false                                        | false    |
+| receiptFileDir          | Directory path where the response receipts should be saved                                        | string - directory-path | ./receipts'                                  | false    |
+| skipWorkflowTriggers    | Whether to skip workflow triggers when uploading to preference store                              | boolean                 | false                                        | false    |
+| forceTriggerWorkflows   | Whether to force trigger workflows for existing consent records                                   | boolean                 | false                                        | false    |
+| skipConflictUpdates     | Whether to skip uploading of any records where the preference store and file have a hard conflict | boolean                 | false                                        | false    |
+| isSilent                | Whether to skip sending emails in workflows                                                       | boolean                 | true                                         | false    |
+| attributes              | Attributes to add to any DSR request if created                                                   | string                  | Tags:transcend-cli,Source:transcend-cli      | false    |
+| receiptFilepath         | Store resulting, continuing where left off                                                        | string - file-path      | ./preference-management-upload-receipts.json | false    |
 
 #### Usage
 

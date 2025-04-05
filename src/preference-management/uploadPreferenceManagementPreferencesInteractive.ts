@@ -2,6 +2,9 @@ import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllPurposes,
+  fetchAllPreferenceTopics,
+  PreferenceTopic,
+  Purpose,
 } from '../graphql';
 import colors from 'colors';
 import { map } from 'bluebird';
@@ -13,7 +16,6 @@ import { parseAttributesFromString } from '../requests';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
 import { PreferenceState } from './codecs';
-import { fetchAllPreferenceTopics } from '../graphql/fetchAllPreferenceTopics';
 import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
 import { apply } from '@transcend-io/type-utils';
 import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
@@ -37,6 +39,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   skipExistingRecordCheck = false,
   attributes = [],
   transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
+  forceTriggerWorkflows = false,
 }: {
   /** The Transcend API key */
   auth: string;
@@ -65,6 +68,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   skipConflictUpdates?: boolean;
   /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
   skipExistingRecordCheck?: boolean;
+  /** Whether to force trigger workflows */
+  forceTriggerWorkflows?: boolean;
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
@@ -104,8 +109,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     // Create sombra instance to communicate with
     createSombraGotInstance(transcendUrl, auth, sombraAuth),
     // get all purposes and topics
-    fetchAllPurposes(client),
-    fetchAllPreferenceTopics(client),
+    forceTriggerWorkflows
+      ? Promise.resolve([] as Purpose[])
+      : fetchAllPurposes(client),
+    forceTriggerWorkflows
+      ? Promise.resolve([] as PreferenceTopic[])
+      : fetchAllPreferenceTopics(client),
   ]);
 
   // Process the file
@@ -117,6 +126,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       sombra,
       partitionKey: partition,
       skipExistingRecordCheck,
+      forceTriggerWorkflows,
     },
     preferenceState,
   );
@@ -230,6 +240,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             json: {
               records: currentChunk.map(([, update]) => update),
               skipWorkflowTriggers,
+              forceTriggerWorkflows,
             },
           })
           .json();
