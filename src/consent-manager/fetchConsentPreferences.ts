@@ -1,4 +1,5 @@
 import * as t from 'io-ts';
+import { logger } from '../logger';
 import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import { ConsentPreferenceFetch } from './types';
@@ -33,7 +34,8 @@ export async function fetchConsentPreferences(
   {
     partition,
     filterBy = {},
-    limit = 50,
+    pageSize = 50,
+    onPage,
   }: {
     /** Partition key to fetch */
     partition: string;
@@ -47,12 +49,14 @@ export async function fetchConsentPreferences(
       timestampAfter?: string;
     };
     /** Number of items to pull back at once */
-    limit?: number;
+    pageSize?: number;
+    /** Callback to be called with each page of results */
+    onPage?: (userIds: string[]) => void;
   },
-): Promise<ConsentPreferenceFetch[]> {
+): Promise<void> {
   let currentLastKey: ConsentPreferenceResponse['lastKey'];
-  const data: ConsentPreferenceFetch[] = [];
   let shouldContinue = true;
+  let totalFetched = 0;
 
   while (shouldContinue) {
     // eslint-disable-next-line no-await-in-loop
@@ -63,7 +67,7 @@ export async function fetchConsentPreferences(
           ...filterBy,
           // using lastKey to paginate if it exists (will not for first iteration)
           startKey: currentLastKey || undefined,
-          limit,
+          limit: pageSize,
         },
       })
       .json();
@@ -74,13 +78,14 @@ export async function fetchConsentPreferences(
     }
 
     // Process the data received from the API call
-    // For example, push the new data into an array
-    data.push(...nodes);
-
+    const userIds = nodes.map(({ userId }) => userId);
+    if (onPage) {
+      onPage(userIds);
+    }
+    logger.info(`Fetched ${totalFetched} consent preferences so far...`);
+    totalFetched += nodes.length;
     // Extract the lastKey from the API response
     currentLastKey = lastKey;
     shouldContinue = !!lastKey && Object.keys(lastKey).length > 0;
   }
-
-  return data;
 }

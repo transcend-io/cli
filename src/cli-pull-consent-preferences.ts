@@ -6,7 +6,7 @@ import colors from 'colors';
 import { logger } from './logger';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { fetchConsentPreferences } from './consent-manager';
-import { writeCsv } from './cron';
+import { writeCsvSync, appendCsvSync } from './cron';
 import { createSombraGotInstance } from './graphql';
 import { splitCsvToList } from './requests';
 
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         'A partition must be provided. ' +
-          'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
+        'You can specify using --partition=ee1a0845-694e-4820-9d51-50c7d0a23467',
       ),
     );
     process.exit(1);
@@ -70,9 +70,12 @@ async function main(): Promise<void> {
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
+  // Write CSV header
+  writeCsvSync(file, [], ['userId']);
+
   // Fetch preferences
   const identifiersAsList = splitCsvToList(identifiers);
-  const preferences = await fetchConsentPreferences(sombra, {
+  await fetchConsentPreferences(sombra, {
     partition,
     filterBy: {
       ...(timestampBefore ? { timestampBefore } : {}),
@@ -81,17 +84,20 @@ async function main(): Promise<void> {
         ? { identifiers: identifiersAsList }
         : {}),
     },
-    limit: parseInt(concurrency, 10),
+    pageSize: parseInt(concurrency, 10),
+    onPage: (userIds: string[]) => {
+      // Append each page of results to the CSV file
+      appendCsvSync(
+        file,
+        userIds.map((userId: string) => ({ userId })),
+      );
+    },
   });
 
-  // Write to disk
-  writeCsv(
-    file,
-    preferences.map((pref) => ({
-      ...pref,
-      purposes: JSON.stringify(pref.purposes),
-      ...pref.purposes,
-    })),
+  logger.info(
+    colors.green(
+      `Successfully wrote preferences to file "${file}"`,
+    ),
   );
 }
 
