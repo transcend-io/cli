@@ -28413,7 +28413,6 @@
                                           "required": [
                                             "category",
                                             "status",
-                                            "confidenceLabel",
                                             "confidence"
                                           ],
                                           "properties": {
@@ -28465,14 +28464,6 @@
                                                 "APPROVED",
                                                 "PENDING",
                                                 "REJECTED"
-                                              ]
-                                            },
-                                            "confidenceLabel": {
-                                              "type": "string",
-                                              "enum": [
-                                                "HIGH",
-                                                "MEDIUM",
-                                                "LOW"
                                               ]
                                             },
                                             "confidence": {

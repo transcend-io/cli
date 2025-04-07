@@ -25,11 +25,14 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
   {
     purposeSlugs,
     preferenceTopics,
+    forceTriggerWorkflows,
   }: {
     /** The purpose slugs that are allowed to be updated */
     purposeSlugs: string[];
     /** The preference topics */
     preferenceTopics: PreferenceTopic[];
+    /** Force workflow triggers */
+    forceTriggerWorkflows: boolean;
   },
 ): Promise<FileMetadataState> {
   // Determine columns to map
@@ -41,6 +44,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     ...(currentState.timestampColum ? [currentState.timestampColum] : []),
   ]);
   if (otherColumns.length === 0) {
+    if (forceTriggerWorkflows) {
+      return currentState;
+    }
     throw new Error('No other columns to process');
   }
 
