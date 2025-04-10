@@ -543,6 +543,20 @@ export interface DataSiloEnriched {
   manualWorkRetryFrequency: string;
   /** Attribute values tagged to data silo */
   attributeValues: DataSiloAttributeValue[];
+  /**
+   * The data silos that discovered this particular data silo
+   */
+  discoveredBy: {
+    /** Title of data silo */
+    title: string;
+  }[];
+  /**
+   * The business entities assigned directly to this data silo
+   */
+  businessEntities: {
+    /** Title of business entity */
+    title: string;
+  }[];
 }
 
 /**
@@ -767,6 +781,7 @@ export async function syncDataSilos(
               )
             : undefined,
           attributes: input.attributes,
+          businessEntityTitles: input.businessEntityTitles,
           // AVC settings
           notifyEmailAddress: input['email-settings']?.['notify-email-address'],
           promptAVendorEmailSendFrequency:

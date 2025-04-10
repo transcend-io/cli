@@ -1403,6 +1403,10 @@ export const DataSiloInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
+    /**
+     * The business entities associated with this data silo
+     */
+    businessEntityTitles: t.array(t.string),
   }),
 ]);
 

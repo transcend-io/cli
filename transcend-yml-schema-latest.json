@@ -33976,6 +33976,12 @@
                     }
                   }
                 }
+              },
+              "businessEntityTitles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
