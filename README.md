@@ -90,71 +90,75 @@
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-preflight-jobs](#tr-skip-preflight-jobs)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-pull-datapoints](#tr-pull-datapoints)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-pull-pull-unstructured-discovery-files](#tr-pull-pull-unstructured-discovery-files)
+  - [tr-pull-datapoints](#tr-pull-datapoints)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-upload-preferences](#tr-upload-preferences)
+  - [tr-pull-pull-unstructured-discovery-files](#tr-pull-pull-unstructured-discovery-files)
     - [Authentication](#authentication-29)
-    - [Authentication](#authentication-30)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-upload-preferences](#tr-upload-preferences)
+    - [Authentication](#authentication-30)
     - [Authentication](#authentication-31)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-32)
     - [Arguments](#arguments-31)
     - [Usage](#usage-32)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-33)
     - [Arguments](#arguments-32)
     - [Usage](#usage-33)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-35)
     - [Arguments](#arguments-34)
     - [Usage](#usage-35)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-36)
     - [Arguments](#arguments-35)
     - [Usage](#usage-36)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-37)
+    - [Arguments](#arguments-36)
+    - [Usage](#usage-37)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -1993,6 +1997,39 @@ Set to status "RESOLVED" instead of status "SKIPPED"
 
 ```sh
 yarn tr-skip-request-data-silos --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --status=RESOLVED
+```
+
+### tr-skip-preflight-jobs
+
+This command allows for bulk skipping preflight checks.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key must have the following scopes:
+
+- "Manage Request Compilation"
+
+#### Arguments
+
+| Argument     | Description                                                                   | Type            | Default                  | Required |
+| ------------ | ----------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth         | The Transcend API key with the scopes necessary for the command.              | string          | N/A                      | true     |
+| enricherIds  | The ID of the enrichers to skip privacy request jobs for.                     | string[] - UUID | N/A                      | true     |
+| transcendUrl | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting. | string - URL    | https://api.transcend.io | false    |
+
+#### Usage
+
+```sh
+yarn tr-skip-preflight-jobs --auth=$TRANSCEND_API_KEY --enricherIds=70810f2e-cf90-43f6-9776-901a5950599f
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-skip-preflight-jobs --auth=$TRANSCEND_API_KEY --enricherIds=70810f2e-cf90-43f6-9776-901a5950599f,db1e64ba-cea6-43ff-ad27-5dc8122e5224 \
+ --transcendUrl=https://api.us.transcend.io
 ```
 
 ### tr-retry-request-data-silos

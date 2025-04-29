@@ -41,3 +41,13 @@ export const RETRY_REQUEST_ENRICHER = gql`
     }
   }
 `;
+
+export const SKIP_REQUEST_ENRICHER = gql`
+  mutation TranscendCliSkipRequestEnricher($requestEnricherId: ID!) {
+    skipRequestEnricher(id: $requestEnricherId) {
+      requestEnricher {
+        id
+      }
+    }
+  }
+`;
