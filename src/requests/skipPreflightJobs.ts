@@ -83,10 +83,6 @@ export async function skipPreflightJobs({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ].includes(enricher.status as any),
       );
-      logger.info(
-        `Found "${requestEnrichersFiltered.length}" enrichers out of ${requestEnrichers.length}` +
-          `total request enrichers for request "${request.id}"`,
-      );
 
       // FIXME
       if (requestEnrichersFiltered.length > 0) {

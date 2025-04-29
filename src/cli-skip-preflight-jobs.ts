@@ -46,7 +46,7 @@ async function main(): Promise<void> {
   if (!enricherIds) {
     logger.error(
       colors.red(
-        'A Data Silo ID must be provided. You can specify using --enricherIds=2560bb81-b837-4c6f-a57e-dcef87069d43',
+        'An enricher ID must be provided. You can specify using --enricherIds=2560bb81-b837-4c6f-a57e-dcef87069d43',
       ),
     );
     process.exit(1);
