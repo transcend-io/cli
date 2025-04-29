@@ -35,7 +35,6 @@ import {
   RegionDetectionMethod,
   PreflightRequestStatus,
   AttributeSupportedResourceType,
-  ConfidenceLabel,
   SubDataPointDataSubCategoryGuessStatus,
   LargeLanguageModelClient,
   PromptFilePurpose,
@@ -255,8 +254,6 @@ export const DataCategoryGuessInput = t.intersection([
     category: DataCategoryPreviewInput,
     /** Status of guess */
     status: valuesOf(SubDataPointDataSubCategoryGuessStatus),
-    /** Confidence label */
-    confidenceLabel: valuesOf(ConfidenceLabel),
     /** Confidence level of guess */
     confidence: t.number,
   }),
@@ -1406,6 +1403,10 @@ export const DataSiloInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
+    /**
+     * The business entities associated with this data silo
+     */
+    businessEntityTitles: t.array(t.string),
   }),
 ]);
 

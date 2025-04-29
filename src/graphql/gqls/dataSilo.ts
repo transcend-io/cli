@@ -111,6 +111,12 @@ export const DATA_SILOS_ENRICHED = gql`
         promptAVendorEmailIncludeIdentifiersAttachment
         promptAVendorEmailCompletionLinkType
         manualWorkRetryFrequency
+        discoveredBy {
+          title
+        }
+        businessEntities {
+          title
+        }
       }
     }
   }

@@ -515,9 +515,10 @@ __metadata:
     "@transcend-io/handlebars-utils": ^1.1.0
     "@transcend-io/internationalization": ^1.6.0
     "@transcend-io/persisted-state": ^1.0.4
-    "@transcend-io/privacy-types": ^4.106.0
+    "@transcend-io/privacy-types": ^4.108.0
     "@transcend-io/secret-value": ^1.2.0
     "@transcend-io/type-utils": ^1.8.0
+    "@types/JSONStream": "npm:@types/jsonstream@^0.8.33"
     "@types/bluebird": ^3.5.38
     "@types/chai": ^4.3.4
     "@types/cli-progress": ^3.11.0
@@ -538,6 +539,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.58.0
     "@typescript-eslint/parser": ^5.58.0
     "@yarnpkg/sdks": ^3.0.0-rc.42
+    JSONStream: ^1.3.5
     bluebird: ^3.7.2
     chai: ^4.3.7
     cli-progress: ^3.11.2
@@ -648,14 +650,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@transcend-io/privacy-types@npm:^4.106.0":
-  version: 4.106.0
-  resolution: "@transcend-io/privacy-types@npm:4.106.0"
+"@transcend-io/privacy-types@npm:^4.108.0":
+  version: 4.108.0
+  resolution: "@transcend-io/privacy-types@npm:4.108.0"
   dependencies:
     "@transcend-io/type-utils": ^1.0.5
     fp-ts: ^2.16.1
     io-ts: ^2.2.21
-  checksum: 2d02700505e7cc44507515e3d35c2fbb97e586361c83ae5a057bc7904fcbc770f9dfc143d233b4850dab1b698a311d684134ae4d66265ce478e88344f1f90364
+  checksum: 4d40db180cc9e1840f8843df6ce136f0dc9421f19b0a41bca2a99986afade8fd184d7cd00b7681bbaf853047dde1a5c93750bff58acfecc7fb7bda4ae70bbbec
   languageName: node
   linkType: hard
 
@@ -735,6 +737,15 @@ __metadata:
   version: 1.0.2
   resolution: "@tsconfig/node16@npm:1.0.2"
   checksum: ca94d3639714672bbfd55f03521d3f56bb6a25479bd425da81faf21f13e1e9d15f40f97377dedbbf477a5841c5b0c8f4cd1b391f33553d750b9202c54c2c07aa
+  languageName: node
+  linkType: hard
+
+"@types/JSONStream@npm:@types/jsonstream@^0.8.33":
+  version: 0.8.33
+  resolution: "@types/jsonstream@npm:0.8.33"
+  dependencies:
+    "@types/node": "*"
+  checksum: 040d927d83ec13afebcbfa6c5de95fb2003a3ebc826ecb3b189db6aebb4c3a90a25a510bae5f24561ca3b1dedb976ac5b6940230c990451989ba2cd615e99d0c
   languageName: node
   linkType: hard
 
@@ -1283,6 +1294,18 @@ __metadata:
   bin:
     shell: ./lib/cli.js
   checksum: f66db59b4e3f663477c44710447b70a49fd8c9483460f4c1e2971ecd9adc4b2adf075ce05b4cad483e06e35192ddf3cac4fff6765fed172772b8f9facbd4982d
+  languageName: node
+  linkType: hard
+
+"JSONStream@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "JSONStream@npm:1.3.5"
+  dependencies:
+    jsonparse: ^1.2.0
+    through: ">=2.2.7 <3"
+  bin:
+    JSONStream: ./bin.js
+  checksum: 2605fa124260c61bad38bb65eba30d2f72216a78e94d0ab19b11b4e0327d572b8d530c0c9cc3b0764f727ad26d39e00bf7ebad57781ca6368394d73169c59e46
   languageName: node
   linkType: hard
 
@@ -4112,6 +4135,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"jsonparse@npm:^1.2.0":
+  version: 1.3.1
+  resolution: "jsonparse@npm:1.3.1"
+  checksum: 6514a7be4674ebf407afca0eda3ba284b69b07f9958a8d3113ef1005f7ec610860c312be067e450c569aab8b89635e332cee3696789c750692bb60daba627f4d
+  languageName: node
+  linkType: hard
+
 "jsonwebtoken@npm:^9.0.2":
   version: 9.0.2
   resolution: "jsonwebtoken@npm:9.0.2"
@@ -5900,7 +5930,7 @@ resolve@^1.18.1:
   languageName: node
   linkType: hard
 
-"through@npm:^2.3.6":
+"through@npm:>=2.2.7 <3, through@npm:^2.3.6":
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd

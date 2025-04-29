@@ -18,7 +18,12 @@ const PreferenceRecordsQueryResponse = t.intersection([
   }),
 ]);
 
-const MSGS = ['ETIMEDOUT', '504 Gateway Time-out', 'Task timed out after'];
+const MSGS = [
+  'ENOTFOUND',
+  'ETIMEDOUT',
+  '504 Gateway Time-out',
+  'Task timed out after',
+];
 
 /**
  * Grab the current consent preference values for a list of identifiers

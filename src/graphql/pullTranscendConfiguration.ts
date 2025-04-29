@@ -1417,6 +1417,8 @@ export async function pullTranscendConfiguration(
           manualWorkRetryFrequency,
           catalog,
           attributeValues,
+          discoveredBy,
+          businessEntities,
         },
         dataPoints,
       ]): DataSiloInput => ({
@@ -1440,6 +1442,14 @@ export async function pullTranscendConfiguration(
           ? { owners: owners.map(({ email }) => email) }
           : {}),
         ...(teams.length > 0 ? { teams: teams.map(({ name }) => name) } : {}),
+        ...(discoveredBy.length > 0
+          ? { discoveredBy: discoveredBy.map(({ title }) => title) }
+          : {}),
+        ...(businessEntities.length > 0
+          ? {
+              businessEntities: businessEntities.map(({ title }) => title),
+            }
+          : {}),
         country: country || undefined,
         countrySubDivision: countrySubDivision || undefined,
         disabled: !isLive,
@@ -1517,7 +1527,6 @@ export async function pullTranscendConfiguration(
                                         category: guess.category.category,
                                       },
                                       status: guess.status,
-                                      confidenceLabel: guess.confidenceLabel,
                                       confidence: guess.confidence,
                                       classifierVersion:
                                         guess.classifierVersion || undefined,
