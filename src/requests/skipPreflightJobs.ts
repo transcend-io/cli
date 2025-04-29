@@ -1,12 +1,11 @@
 import { map, mapSeries } from 'bluebird';
-import fs from 'fs';
 import colors from 'colors';
 import { logger } from '../logger';
 import {
   makeGraphQLRequest,
   buildTranscendGraphQLClient,
   fetchAllRequestEnrichers,
-  // fetchAllRequests,
+  fetchAllRequests,
   SKIP_REQUEST_ENRICHER,
 } from '../graphql';
 import cliProgress from 'cli-progress';
@@ -15,7 +14,6 @@ import {
   RequestStatus,
 } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../constants';
-import { join } from 'path';
 
 /**
  * Given an enricher ID, mark all open request enrichers as skipped
@@ -47,15 +45,9 @@ export async function skipPreflightJobs({
   const t0 = new Date().getTime();
 
   // fetch all RequestDataSilos that are open
-  // FIXME rewrite this to be bulk
-  // const requests = await fetchAllRequests(client, {
-  //   statuses: [RequestStatus.Enriching],
-  // });
-
-  const requests: {
-    /** ID */
-    id: string;
-  }[] = JSON.parse(fs.readFileSync(join(__dirname, './requests.json'), 'utf8'));
+  const requests = await fetchAllRequests(client, {
+    statuses: [RequestStatus.Enriching],
+  });
 
   // Notify Transcend
   logger.info(
