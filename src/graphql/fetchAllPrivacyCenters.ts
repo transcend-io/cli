@@ -14,8 +14,6 @@ export interface PrivacyCenter {
   isDisabled: boolean;
   /** Whether or not to show the privacy requests button */
   showPrivacyRequestButton: boolean;
-  /** Whether or not to show the data practices page */
-  hideDataPractices: boolean;
   /** Whether or not to show the policies page */
   showPolicies: boolean;
   /** Whether or not to show the tracking technologies page */

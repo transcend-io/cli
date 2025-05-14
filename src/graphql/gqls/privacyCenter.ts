@@ -23,7 +23,6 @@ export const PRIVACY_CENTER = gql`
       url
       isDisabled
       showPrivacyRequestButton
-      hideDataPractices
       showPolicies
       showTrackingTechnologies
       showCookies

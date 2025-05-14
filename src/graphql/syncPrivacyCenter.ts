@@ -38,9 +38,6 @@ export async function syncPrivacyCenter(
         showMarketingPreferences: privacyCenter.showMarketingPreferences,
         showPrivacyPreferences: privacyCenter.showPrivacyPreferences,
         showManageYourPrivacy: privacyCenter.showManageYourPrivacy,
-        ...(typeof privacyCenter.showDataPractices === 'boolean'
-          ? { hideDataPractices: !privacyCenter.showDataPractices }
-          : {}),
         showPolicies: privacyCenter.showPolicies,
         showConsentManager: privacyCenter.showConsentManager,
         showDataFlows: privacyCenter.showDataFlows,

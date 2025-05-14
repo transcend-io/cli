@@ -884,7 +884,6 @@ export async function pullTranscendConfiguration(
     result['privacy-center'] = {
       isDisabled: privacyCenter.isDisabled,
       showPrivacyRequestButton: privacyCenter.showPrivacyRequestButton,
-      showDataPractices: !privacyCenter.hideDataPractices,
       showPolicies: privacyCenter.showPolicies,
       showTrackingTechnologies: privacyCenter.showTrackingTechnologies,
       showCookies: privacyCenter.showCookies,
