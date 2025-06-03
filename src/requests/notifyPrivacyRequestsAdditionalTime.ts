@@ -82,14 +82,8 @@ export async function notifyPrivacyRequestsAdditionalTime({
     createdAtAfter,
     isSilent: false,
     isClosed: false,
+    requestIds,
   });
-
-  // Filter down requests by request ID
-  if (requestIds && requestIds.length > 0) {
-    allRequests = allRequests.filter((request) =>
-      requestIds.includes(request.id),
-    );
-  }
 
   // Filter requests by daysLeft
   allRequests = allRequests.filter(

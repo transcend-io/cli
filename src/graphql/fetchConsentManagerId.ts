@@ -108,15 +108,6 @@ export async function fetchConsentManagerId(
   return consentManager.id;
 }
 
-export interface ConsentPurpose {
-  /** ID of purpose */
-  id: string;
-  /** Name of purpose */
-  name: string;
-  /** Tracking type of purpose */
-  trackingType: string;
-}
-
 const PAGE_SIZE = 50;
 
 export interface ConsentExperience {

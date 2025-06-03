@@ -5,6 +5,7 @@ manual-enrichment-identifiers.csv
 preference-management-upload-receipts.json
 build/
 privacy-request-upload-receipts/
+dsr-files/
 
 # Secrets
 *.env.secret

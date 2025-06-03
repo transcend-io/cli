@@ -34,131 +34,135 @@
     - [Authentication](#authentication-5)
     - [Arguments](#arguments-5)
     - [Usage](#usage-6)
-  - [tr-request-cancel](#tr-request-cancel)
+  - [tr-request-download-files](#tr-request-download-files)
     - [Authentication](#authentication-6)
     - [Arguments](#arguments-6)
     - [Usage](#usage-7)
-  - [tr-request-notify-additional-time](#tr-request-notify-additional-time)
+  - [tr-request-cancel](#tr-request-cancel)
     - [Authentication](#authentication-7)
     - [Arguments](#arguments-7)
     - [Usage](#usage-8)
-  - [tr-request-mark-silent](#tr-request-mark-silent)
+  - [tr-request-notify-additional-time](#tr-request-notify-additional-time)
     - [Authentication](#authentication-8)
     - [Arguments](#arguments-8)
     - [Usage](#usage-9)
-  - [tr-request-upload](#tr-request-upload)
+  - [tr-request-mark-silent](#tr-request-mark-silent)
     - [Authentication](#authentication-9)
     - [Arguments](#arguments-9)
     - [Usage](#usage-10)
-  - [tr-request-restart](#tr-request-restart)
+  - [tr-request-upload](#tr-request-upload)
     - [Authentication](#authentication-10)
     - [Arguments](#arguments-10)
     - [Usage](#usage-11)
-  - [tr-request-enricher-restart](#tr-request-enricher-restart)
+  - [tr-request-restart](#tr-request-restart)
     - [Authentication](#authentication-11)
     - [Arguments](#arguments-11)
     - [Usage](#usage-12)
-  - [tr-request-reject-unverified-identifiers](#tr-request-reject-unverified-identifiers)
+  - [tr-request-enricher-restart](#tr-request-enricher-restart)
     - [Authentication](#authentication-12)
     - [Arguments](#arguments-12)
     - [Usage](#usage-13)
-  - [tr-request-export](#tr-request-export)
+  - [tr-request-reject-unverified-identifiers](#tr-request-reject-unverified-identifiers)
     - [Authentication](#authentication-13)
     - [Arguments](#arguments-13)
     - [Usage](#usage-14)
-  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
+  - [tr-request-export](#tr-request-export)
     - [Authentication](#authentication-14)
     - [Arguments](#arguments-14)
     - [Usage](#usage-15)
-  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
+  - [tr-cron-pull-identifiers](#tr-cron-pull-identifiers)
     - [Authentication](#authentication-15)
     - [Arguments](#arguments-15)
     - [Usage](#usage-16)
-  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
+  - [tr-cron-mark-identifiers-completed](#tr-cron-mark-identifiers-completed)
     - [Authentication](#authentication-16)
     - [Arguments](#arguments-16)
     - [Usage](#usage-17)
-  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
+  - [tr-manual-enrichment-pull-identifiers](#tr-manual-enrichment-pull-identifiers)
     - [Authentication](#authentication-17)
     - [Arguments](#arguments-17)
     - [Usage](#usage-18)
-  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
+  - [tr-manual-enrichment-push-identifiers](#tr-manual-enrichment-push-identifiers)
     - [Authentication](#authentication-18)
     - [Arguments](#arguments-18)
     - [Usage](#usage-19)
-  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
+  - [tr-mark-request-data-silos-completed](#tr-mark-request-data-silos-completed)
     - [Authentication](#authentication-19)
     - [Arguments](#arguments-19)
     - [Usage](#usage-20)
-  - [tr-skip-preflight-jobs](#tr-skip-preflight-jobs)
+  - [tr-skip-request-data-silos](#tr-skip-request-data-silos)
     - [Authentication](#authentication-20)
     - [Arguments](#arguments-20)
     - [Usage](#usage-21)
-  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
+  - [tr-skip-preflight-jobs](#tr-skip-preflight-jobs)
     - [Authentication](#authentication-21)
     - [Arguments](#arguments-21)
     - [Usage](#usage-22)
-  - [tr-update-consent-manager](#tr-update-consent-manager)
+  - [tr-retry-request-data-silos](#tr-retry-request-data-silos)
     - [Authentication](#authentication-22)
     - [Arguments](#arguments-22)
     - [Usage](#usage-23)
-  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
+  - [tr-update-consent-manager](#tr-update-consent-manager)
     - [Authentication](#authentication-23)
     - [Arguments](#arguments-23)
     - [Usage](#usage-24)
-  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
+  - [tr-consent-managers-to-business-entities](#tr-consent-managers-to-business-entities)
     - [Authentication](#authentication-24)
     - [Arguments](#arguments-24)
     - [Usage](#usage-25)
-  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
+  - [tr-consent-manager-service-json-to-yml](#tr-consent-manager-service-json-to-yml)
     - [Authentication](#authentication-25)
     - [Arguments](#arguments-25)
     - [Usage](#usage-26)
-  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
+  - [tr-derive-data-silos-from-data-flows](#tr-derive-data-silos-from-data-flows)
     - [Authentication](#authentication-26)
     - [Arguments](#arguments-26)
     - [Usage](#usage-27)
-  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
+  - [tr-derive-data-silos-from-data-flows-cross-instance](#tr-derive-data-silos-from-data-flows-cross-instance)
     - [Authentication](#authentication-27)
     - [Arguments](#arguments-27)
     - [Usage](#usage-28)
-  - [tr-pull-datapoints](#tr-pull-datapoints)
+  - [tr-pull-consent-metrics](#tr-pull-consent-metrics)
     - [Authentication](#authentication-28)
     - [Arguments](#arguments-28)
     - [Usage](#usage-29)
-  - [tr-pull-pull-unstructured-discovery-files](#tr-pull-pull-unstructured-discovery-files)
+  - [tr-pull-datapoints](#tr-pull-datapoints)
     - [Authentication](#authentication-29)
     - [Arguments](#arguments-29)
     - [Usage](#usage-30)
-  - [tr-upload-preferences](#tr-upload-preferences)
+  - [tr-pull-pull-unstructured-discovery-files](#tr-pull-pull-unstructured-discovery-files)
     - [Authentication](#authentication-30)
-    - [Authentication](#authentication-31)
     - [Arguments](#arguments-30)
     - [Usage](#usage-31)
-  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
+  - [tr-upload-preferences](#tr-upload-preferences)
+    - [Authentication](#authentication-31)
     - [Authentication](#authentication-32)
     - [Arguments](#arguments-31)
     - [Usage](#usage-32)
-  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
+  - [tr-upload-consent-preferences](#tr-upload-consent-preferences)
     - [Authentication](#authentication-33)
     - [Arguments](#arguments-32)
     - [Usage](#usage-33)
-  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
+  - [tr-pull-consent-preferences](#tr-pull-consent-preferences)
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
-  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
+  - [tr-upload-data-flows-from-csv](#tr-upload-data-flows-from-csv)
     - [Authentication](#authentication-35)
     - [Arguments](#arguments-34)
     - [Usage](#usage-35)
-  - [tr-generate-api-keys](#tr-generate-api-keys)
+  - [tr-upload-cookies-from-csv](#tr-upload-cookies-from-csv)
     - [Authentication](#authentication-36)
     - [Arguments](#arguments-35)
     - [Usage](#usage-36)
-  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+  - [tr-generate-api-keys](#tr-generate-api-keys)
     - [Authentication](#authentication-37)
     - [Arguments](#arguments-36)
     - [Usage](#usage-37)
+  - [tr-build-xdi-sync-endpoint](#tr-build-xdi-sync-endpoint)
+    - [Authentication](#authentication-38)
+    - [Arguments](#arguments-37)
+    - [Usage](#usage-38)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -1010,6 +1014,85 @@ Approve ERASURE requests created within a specific time frame
 
 ```sh
 yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
+```
+
+### tr-request-download-files
+
+Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
+
+#### Authentication
+
+In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
+
+The API key needs the following scopes:
+
+- View the Request Compilation
+- View Incoming Requests
+- Request Approval and Communication
+
+#### Arguments
+
+| Argument             | Description                                                                                                    | Type            | Default                  | Required |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------ | -------- |
+| auth                 | The Transcend API key with the scopes necessary for the command.                                               | string          | N/A                      | true     |
+| sombraAuth           | The sombra internal key, use for additional authentication when self-hosting sombra.                           | string          | N/A                      | false    |
+| concurrency          | The concurrency to use when downloading requests in parallel.                                                  | number          | 10                       | false    |
+| requestIds           | Specify the specific request IDs to download                                                                   | string[]        | []                       | false    |
+| statuses             | The [request statuses](https://docs.transcend.io/docs/privacy-requests/overview#request-statuses) to download. | RequestStatus[] | APPROVING,DOWNLOADABLE   | false    |
+| folderPath           | The folder to download files to                                                                                | string          | ./dsr-files              | false    |
+| createdAtBefore      | Download requests that were submitted before this time                                                         | Date            | N/A                      | false    |
+| createdAtAfter       | Download requests that were submitted after this time                                                          | Date            | N/A                      | false    |
+| approveAfterDownload | If the request is in status=APPROVING, approve the request after its downloaded                                | boolean         | false                    | false    |
+| transcendUrl         | URL of the Transcend backend. Use https://api.us.transcend.io for US hosting.                                  | string - URL    | https://api.transcend.io | false    |
+
+#### Usage
+
+Download all requests in status=APPROVING or status=DOWNLOADABLE
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --transcendUrl=https://api.us.transcend.io
+```
+
+Write files to a specific folder on disk
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --folderPath=./my-folder
+```
+
+Auto approve after download
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --approveAfterDownload=true
+```
+
+Download requests in APPROVING state only
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --statues=APPROVING
+```
+
+Increase the concurrency (defaults to 50)
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --concurrency=100
+```
+
+Approve requests in a timeframe
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
+```
+
+Approve specific requests
+
+```sh
+yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --requestIds=b8c2ce13-9e40-4104-af79-23c68f2a87ba,d5eedc52-0f85-4034-bc01-14951acad5aa
 ```
 
 ### tr-request-cancel

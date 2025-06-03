@@ -64,16 +64,14 @@ export async function bulkRetryEnrichers({
 
   logger.info(colors.magenta('Fetching requests to restart...'));
 
-  const allRequests = await fetchAllRequests(client, {
+  const requests = await fetchAllRequests(client, {
     actions: requestActions,
     statuses: [RequestStatus.Enriching],
     createdAtBefore,
     createdAtAfter,
+    requestIds,
   });
-  const requests = allRequests.filter(
-    (request) => requestIds.length === 0 || requestIds.includes(request.id),
-  );
-  logger.info(`Found ${requests.length} requests to process`);
+
   let totalRestarted = 0;
 
   // Validate request IDs
