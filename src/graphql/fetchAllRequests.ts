@@ -86,6 +86,7 @@ export async function fetchAllRequests(
     isTest,
     isSilent,
     isClosed,
+    requestIds = [],
   }: {
     /** Actions to filter on */
     actions?: RequestAction[];
@@ -105,8 +106,15 @@ export async function fetchAllRequests(
     isSilent?: boolean;
     /** Filter by whether request is active */
     isClosed?: boolean;
+    /**
+     * Filter the list of requests for a set of IDs - these are applied
+     * at runtime while other filters are applied at the GraphQL level.
+     */
+    requestIds?: string[];
   } = {},
 ): Promise<PrivacyRequest[]> {
+  logger.info(colors.magenta('Fetching requests...'));
+
   // create a new progress bar instance and use shades_classic theme
   const t0 = new Date().getTime();
   const progressBar = new cliProgress.SingleBar(
@@ -175,5 +183,18 @@ export async function fetchAllRequests(
     ),
   );
 
-  return requests;
+  // Filter down requests by request ID
+  let allRequests = requests;
+  if (requestIds && requestIds.length > 0) {
+    allRequests = allRequests.filter((request) =>
+      requestIds.includes(request.id),
+    );
+    logger.info(
+      colors.green(
+        `Filtered down to ${allRequests.length} requests based on ${requestIds.length} provided IDs.`,
+      ),
+    );
+  }
+
+  return allRequests;
 }

@@ -334,7 +334,8 @@
                     "viewPolicies",
                     "manageIntlMessages",
                     "viewIntlMessages",
-                    "llmLogTransfer"
+                    "llmLogTransfer",
+                    "manageWorkflows"
                   ]
                 }
               }
@@ -41748,7 +41749,8 @@
                                       "DATA_PROTECTION_OFFICER_NAME",
                                       "DATA_TYPE",
                                       "ENCRYPTION",
-                                      "IS_PRIMARY_KEY"
+                                      "IS_PRIMARY_KEY",
+                                      "CUSTOM_SILO_CONNECTION_STRATEGY"
                                     ]
                                   },
                                   "attribute-key": {
@@ -42217,7 +42219,8 @@
                                       "DATA_PROTECTION_OFFICER_NAME",
                                       "DATA_TYPE",
                                       "ENCRYPTION",
-                                      "IS_PRIMARY_KEY"
+                                      "IS_PRIMARY_KEY",
+                                      "CUSTOM_SILO_CONNECTION_STRATEGY"
                                     ]
                                   },
                                   "attribute-key": {

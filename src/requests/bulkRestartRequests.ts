@@ -115,8 +115,6 @@ export async function bulkRestartRequests({
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  logger.info(colors.magenta('Fetching requests to restart...'));
-
   const allRequests = await fetchAllRequests(client, {
     actions: requestActions,
     statuses: requestStatuses,
@@ -124,9 +122,7 @@ export async function bulkRestartRequests({
     createdAtAfter,
   });
   const requests = allRequests.filter(
-    (request) =>
-      new Date(request.createdAt) < createdAt &&
-      (requestIds.length === 0 || requestIds.includes(request.id)),
+    (request) => new Date(request.createdAt) < createdAt,
   );
   logger.info(`Found ${requests.length} requests to process`);
 

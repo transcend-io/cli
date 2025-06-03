@@ -92,19 +92,13 @@ export async function cancelPrivacyRequests({
   }
 
   // Pull in the requests
-  let allRequests = await fetchAllRequests(client, {
+  const allRequests = await fetchAllRequests(client, {
     actions: requestActions,
     createdAtBefore,
     createdAtAfter,
     statuses,
+    requestIds,
   });
-
-  // Filter down requests by request ID
-  if (requestIds && requestIds.length > 0) {
-    allRequests = allRequests.filter((request) =>
-      requestIds.includes(request.id),
-    );
-  }
 
   // Notify Transcend
   logger.info(
