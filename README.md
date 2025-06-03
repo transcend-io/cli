@@ -1020,6 +1020,8 @@ yarn tr-request-approve --auth=$TRANSCEND_API_KEY --actions=SALE_OPT_OUT --creat
 
 Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
 
+<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
+
 #### Authentication
 
 In order to use this cli, you will first need to generate an API key on the Transcend Admin Dashboard (https://app.transcend.io/infrastructure/api-keys).
