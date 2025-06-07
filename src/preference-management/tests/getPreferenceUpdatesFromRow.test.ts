@@ -23,6 +23,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             slug: 'BooleanPreference1',
             type: PreferenceTopicType.Boolean,
             preferenceOptionValues: [],
+            title: {
+              defaultMessage: 'Marketing Preferences',
+              id: '12345678-1234-1234-1234-123456789012',
+            },
+            displayDescription: {
+              defaultMessage: 'Enable marketing tracking',
+              id: '12345678-1234-1234-1234-123456789013',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
             purpose: {
               trackingType: 'Marketing',
             },
@@ -34,6 +44,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             preferenceOptionValues: [],
             purpose: {
               trackingType: 'Marketing',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
+            title: {
+              defaultMessage: 'Advertising Preferences',
+              id: '12345678-1234-1234-1234-123456789014',
+            },
+            displayDescription: {
+              defaultMessage: 'Enable advertising tracking',
+              id: '12345678-1234-1234-1234-123456789015',
             },
           },
         ],
@@ -97,13 +117,31 @@ describe('getPreferenceUpdatesFromRow', () => {
           {
             id: '14b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
             slug: 'SingleSelectPreference',
+            defaultConfiguration: '',
+            title: {
+              defaultMessage: 'Single Select Preference',
+              id: '12345678-1234-1234-1234-123456789010',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose one option',
+              id: '12345678-1234-1234-1234-123456789011',
+            },
+            showInPrivacyCenter: true,
             type: PreferenceTopicType.Select,
             preferenceOptionValues: [
               {
                 slug: 'Value1',
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789016',
+                },
               },
               {
                 slug: 'Value2',
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789017',
+                },
               },
             ],
             purpose: {
@@ -159,12 +197,30 @@ describe('getPreferenceUpdatesFromRow', () => {
             id: '14b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
             slug: 'MultiSelectPreference',
             type: PreferenceTopicType.MultiSelect,
+            defaultConfiguration: '',
+            title: {
+              defaultMessage: 'Multi Select Preference',
+              id: '12345678-1234-1234-1234-123456789020',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose multiple options',
+              id: '12345678-1234-1234-1234-123456789021',
+            },
+            showInPrivacyCenter: true,
             preferenceOptionValues: [
               {
                 slug: 'Value1',
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789018',
+                },
               },
               {
                 slug: 'Value2',
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789019',
+                },
               },
             ],
             purpose: {
@@ -237,6 +293,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             slug: 'BooleanPreference1',
             type: PreferenceTopicType.Boolean,
             preferenceOptionValues: [],
+            title: {
+              defaultMessage: 'Boolean Preference 1',
+              id: '12345678-1234-1234-1234-123456789022',
+            },
+            displayDescription: {
+              defaultMessage: 'Enable this preference',
+              id: '12345678-1234-1234-1234-123456789023',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
             purpose: {
               trackingType: 'Marketing',
             },
@@ -246,6 +312,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             slug: 'BooleanPreference2',
             type: PreferenceTopicType.Boolean,
             preferenceOptionValues: [],
+            title: {
+              defaultMessage: 'Boolean Preference 2',
+              id: '12345678-1234-1234-1234-123456789024',
+            },
+            displayDescription: {
+              defaultMessage: 'Disable this preference',
+              id: '12345678-1234-1234-1234-123456789025',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
             purpose: {
               trackingType: 'Marketing',
             },
@@ -254,12 +330,30 @@ describe('getPreferenceUpdatesFromRow', () => {
             id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
             slug: 'MultiSelectPreference',
             type: PreferenceTopicType.MultiSelect,
+            defaultConfiguration: '',
+            title: {
+              defaultMessage: 'Multi Select Preference',
+              id: '12345678-1234-1234-1234-123456789028',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose multiple options',
+              id: '12345678-1234-1234-1234-123456789029',
+            },
+            showInPrivacyCenter: true,
             preferenceOptionValues: [
               {
                 slug: 'Value1',
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789026',
+                },
               },
               {
                 slug: 'Value2',
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789027',
+                },
               },
             ],
             purpose: {
@@ -270,12 +364,30 @@ describe('getPreferenceUpdatesFromRow', () => {
             id: '44b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
             slug: 'SingleSelectPreference',
             type: PreferenceTopicType.Select,
+            defaultConfiguration: '',
+            title: {
+              defaultMessage: 'Single Select Preference',
+              id: '12345678-1234-1234-1234-123456789030',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose one option',
+              id: '12345678-1234-1234-1234-123456789031',
+            },
+            showInPrivacyCenter: true,
             preferenceOptionValues: [
               {
                 slug: 'Value1',
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789030',
+                },
               },
               {
                 slug: 'Value2',
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789031',
+                },
               },
             ],
             purpose: {
@@ -375,6 +487,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             purpose: {
               trackingType: 'Marketing',
             },
+            displayDescription: {
+              defaultMessage: 'Enable this preference',
+              id: '12345678-1234-1234-1234-123456789032',
+            },
+            title: {
+              defaultMessage: 'Boolean Preference 1',
+              id: '12345678-1234-1234-1234-123456789033',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
           },
           {
             id: '24b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
@@ -384,6 +506,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             purpose: {
               trackingType: 'Marketing',
             },
+            displayDescription: {
+              defaultMessage: 'Disable this preference',
+              id: '12345678-1234-1234-1234-123456789034',
+            },
+            title: {
+              defaultMessage: 'Boolean Preference 2',
+              id: '12345678-1234-1234-1234-123456789035',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
           },
         ],
         columnToPurposeName: {
@@ -419,6 +551,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             purpose: {
               trackingType: 'Marketing',
             },
+            displayDescription: {
+              defaultMessage: 'Enable this preference',
+              id: '12345678-1234-1234-1234-123456789036',
+            },
+            title: {
+              defaultMessage: 'Boolean Preference 1',
+              id: '12345678-1234-1234-1234-123456789037',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
           },
           {
             id: '24b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
@@ -428,6 +570,16 @@ describe('getPreferenceUpdatesFromRow', () => {
             purpose: {
               trackingType: 'Marketing',
             },
+            displayDescription: {
+              defaultMessage: 'Disable this preference',
+              id: '12345678-1234-1234-1234-123456789038',
+            },
+            title: {
+              defaultMessage: 'Boolean Preference 2',
+              id: '12345678-1234-1234-1234-123456789039',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
           },
         ],
         columnToPurposeName: {
@@ -464,11 +616,29 @@ describe('getPreferenceUpdatesFromRow', () => {
             preferenceOptionValues: [
               {
                 slug: 'Value1',
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789040',
+                },
               },
               {
                 slug: 'Value2',
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789041',
+                },
               },
             ],
+            title: {
+              defaultMessage: 'Single Select Preference',
+              id: '12345678-1234-1234-1234-123456789042',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose one option',
+              id: '12345678-1234-1234-1234-123456789043',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
             purpose: {
               trackingType: 'Marketing',
             },
@@ -507,12 +677,30 @@ describe('getPreferenceUpdatesFromRow', () => {
             type: PreferenceTopicType.MultiSelect,
             preferenceOptionValues: [
               {
+                title: {
+                  defaultMessage: 'Option 1',
+                  id: '12345678-1234-1234-1234-123456789044',
+                },
                 slug: 'Value1',
               },
               {
+                title: {
+                  defaultMessage: 'Option 2',
+                  id: '12345678-1234-1234-1234-123456789045',
+                },
                 slug: 'Value2',
               },
             ],
+            title: {
+              defaultMessage: 'Multi Select Preference',
+              id: '12345678-1234-1234-1234-123456789046',
+            },
+            displayDescription: {
+              defaultMessage: 'Choose multiple options',
+              id: '12345678-1234-1234-1234-123456789047',
+            },
+            showInPrivacyCenter: true,
+            defaultConfiguration: '',
             purpose: {
               trackingType: 'Marketing',
             },

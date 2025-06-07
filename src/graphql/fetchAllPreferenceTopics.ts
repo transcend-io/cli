@@ -8,12 +8,37 @@ export interface PreferenceTopic {
   id: string;
   /** Slug of preference topic */
   slug: string;
+  /** Title of topic */
+  title: {
+    /** ID */
+    id: string;
+    /** Default message */
+    defaultMessage: string;
+  };
+  /** Whether to show in privacy center */
+  showInPrivacyCenter: boolean;
+  /** Description to display in privacy center */
+  displayDescription: {
+    /** ID */
+    id: string;
+    /** Default message */
+    defaultMessage: string;
+  };
   /** Type of preference topic */
   type: PreferenceTopicType;
+  /** Default configuration */
+  defaultConfiguration: string;
   /** Option values */
   preferenceOptionValues: {
     /** Slug of value */
     slug: string;
+    /** Title of value */
+    title: {
+      /** ID */
+      id: string;
+      /** Default message */
+      defaultMessage: string;
+    };
   }[];
   /** Related purpose */
   purpose: {

@@ -31,6 +31,16 @@ const PREFERENCE_TOPICS: PreferenceTopic[] = [
     purpose: {
       trackingType: 'Marketing',
     },
+    title: {
+      defaultMessage: 'Boolean Preference 1',
+      id: '14b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3',
+    },
+    displayDescription: {
+      defaultMessage: 'This is a boolean preference for testing.',
+      id: '14b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b4',
+    },
+    defaultConfiguration: '',
+    showInPrivacyCenter: true,
   },
   {
     id: '24b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
@@ -40,17 +50,45 @@ const PREFERENCE_TOPICS: PreferenceTopic[] = [
     purpose: {
       trackingType: 'Marketing',
     },
+    title: {
+      defaultMessage: 'Boolean Preference 2',
+      id: '24b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b4',
+    },
+    displayDescription: {
+      defaultMessage: 'This is another boolean preference for testing.',
+      id: '24b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b5',
+    },
+    defaultConfiguration: '',
+    showInPrivacyCenter: true,
   },
   {
     id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b3b',
     slug: 'MultiSelectPreference',
     type: PreferenceTopicType.MultiSelect,
+    title: {
+      defaultMessage: 'Multi Select Preference',
+      id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b0',
+    },
+    displayDescription: {
+      defaultMessage: 'This is a multi-select preference for testing.',
+      id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b1',
+    },
+    defaultConfiguration: '',
+    showInPrivacyCenter: true,
     preferenceOptionValues: [
       {
         slug: 'Value1',
+        title: {
+          defaultMessage: 'Value 1',
+          id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b1',
+        },
       },
       {
         slug: 'Value2',
+        title: {
+          defaultMessage: 'Value 2',
+          id: '34b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b2',
+        },
       },
     ],
     purpose: {
@@ -64,11 +102,29 @@ const PREFERENCE_TOPICS: PreferenceTopic[] = [
     preferenceOptionValues: [
       {
         slug: 'Value1',
+        title: {
+          defaultMessage: 'Value 1',
+          id: '44b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b1',
+        },
       },
       {
         slug: 'Value2',
+        title: {
+          defaultMessage: 'Value 2',
+          id: '44b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b2',
+        },
       },
     ],
+    title: {
+      defaultMessage: 'Single Select Preference',
+      id: '44b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b0',
+    },
+    displayDescription: {
+      defaultMessage: 'This is a single-select preference for testing.',
+      id: '44b3b3b3-4b3b-4b3b-4b3b-4b3b3b3b3b1',
+    },
+    defaultConfiguration: '',
+    showInPrivacyCenter: true,
     purpose: {
       trackingType: 'Marketing',
     },

@@ -32,6 +32,7 @@ import {
   AssessmentSectionInput,
   AssessmentSectionQuestionInput,
   RiskLogicInput,
+  ConsentPurpose,
 } from '../codecs';
 import {
   RequestAction,
@@ -89,6 +90,7 @@ import {
   parseAssessmentDisplayLogic,
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
+import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -180,6 +182,7 @@ export async function pullTranscendConfiguration(
     partitions,
     assessments,
     assessmentTemplates,
+    purposes,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -327,6 +330,10 @@ export async function pullTranscendConfiguration(
     // Fetch assessmentTemplates
     resources.includes(TranscendPullResource.AssessmentTemplates)
       ? fetchAllAssessmentTemplates(client)
+      : [],
+    // Fetch purpose and preferences
+    resources.includes(TranscendPullResource.Purposes)
+      ? fetchAllPurposesAndPreferences(client)
       : [],
   ]);
 
@@ -1329,6 +1336,64 @@ export async function pullTranscendConfiguration(
           color: color || undefined,
           description,
         })),
+      }),
+    );
+  }
+
+  // save purposes
+  if (purposes.length > 0) {
+    result.purposes = purposes.map(
+      ({
+        name,
+        description,
+        trackingType,
+        defaultConsent,
+        configurable,
+        showInConsentManager,
+        isActive,
+        displayOrder,
+        optOutSignals,
+        authLevel,
+        topics,
+        showInPrivacyCenter,
+        title,
+      }): ConsentPurpose => ({
+        name,
+        title,
+        description: description || undefined,
+        trackingType,
+        'default-consent': defaultConsent,
+        configurable,
+        'show-in-consent-manager': showInConsentManager,
+        'show-in-privacy-center': showInPrivacyCenter,
+        'is-active': isActive,
+        'display-order': displayOrder,
+        'opt-out-signals': optOutSignals.length > 0 ? optOutSignals : undefined,
+        'auth-level': authLevel || undefined,
+        'preference-topics': topics.map(
+          ({
+            title,
+            type,
+            displayDescription,
+            defaultConfiguration,
+            showInPrivacyCenter,
+            preferenceOptionValues,
+          }) => ({
+            title: title.defaultMessage,
+            type,
+            description: displayDescription.defaultMessage,
+            'default-configuration': defaultConfiguration,
+            'show-in-privacy-center': showInPrivacyCenter,
+            ...(preferenceOptionValues.length > 0
+              ? {
+                  options: preferenceOptionValues.map(({ title, slug }) => ({
+                    title: title.defaultMessage,
+                    slug,
+                  })),
+                }
+              : {}),
+          }),
+        ),
       }),
     );
   }

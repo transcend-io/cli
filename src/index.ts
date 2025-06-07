@@ -12,3 +12,4 @@ export * from './cron';
 export * from './api-keys';
 export * from './ai';
 export * from './data-inventory';
+export * from './manual-enrichment';

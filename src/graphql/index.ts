@@ -15,6 +15,7 @@ export * from './makeGraphQLRequest';
 export * from './createSombraGotInstance';
 export * from './syncRepositories';
 export * from './syncPartitions';
+export * from './fetchAllPurposesAndPreferences';
 export * from './setResourceAttributes';
 export * from './buildTranscendGraphQLClient';
 export * from './retryRequestEnricher';

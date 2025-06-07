@@ -1,0 +1,223 @@
+purposes:
+  - name: Advertising
+    title: Advertising
+    description: Helps us and others serve ads relevant to you.
+    trackingType: Advertising
+    default-consent: Auto
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    opt-out-signals:
+      - GPC
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: AlwaysBlock
+    title: AlwaysBlock
+    description: Always Block everything tagged with this Purpose
+    trackingType: AlwaysBlock
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: false
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: Analytics
+    title: Analytics
+    description: Help us learn how our site is used and how it performs.
+    trackingType: Analytics
+    default-consent: Auto
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: Essential purposes
+    title: Essential purposes
+    description: No Consent Needed
+    trackingType: Essential
+    default-consent: Auto
+    configurable: false
+    show-in-consent-manager: false
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: Functionality
+    title: Functionality
+    description: Personalization, autofilled forms, etc.
+    trackingType: Functional
+    default-consent: Auto
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    opt-out-signals:
+      - DNT
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: HealthData
+    title: HealthData
+    description: Trackers related to selling/sharing health data
+    trackingType: HealthData
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: true
+    is-active: true
+    display-order: 10
+    opt-out-signals:
+      - GPC
+    auth-level: ALLOW_OPT_OUT
+    preference-topics: []
+  - name: Healthengine
+    title: Healthengine
+    description: Healthengine consented to
+    trackingType: Healthengine
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: Intercom
+    title: Intercom
+    description: Consent for intercom chats
+    trackingType: Intercom
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: OPTIONAL
+    preference-topics: []
+  - name: Marketing
+    title: Marketing
+    description: Receive promotional emails and updates on our latest products and services
+    trackingType: Marketing
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: false
+    show-in-privacy-center: true
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics:
+      - title: Frequency
+        type: SELECT
+        description: How often would you like to hear from us?
+        default-configuration: '{}'
+        show-in-privacy-center: true
+        options:
+          - title: Daily
+            slug: Daily
+          - title: Monthly
+            slug: Monthly
+          - title: Quarterly
+            slug: Quarterly
+      - title: Go 100% Digital
+        type: BOOLEAN
+        description: I would like to go paperless
+        default-configuration: '{}'
+        show-in-privacy-center: true
+        options: []
+      - title: Method
+        type: MULTI_SELECT
+        description: How would you like to be contacted?
+        default-configuration: '{}'
+        show-in-privacy-center: true
+        options:
+          - title: Email
+            slug: Email
+          - title: Push Notifications
+            slug: PushNotifications
+          - title: SMS
+            slug: Sms
+  - name: Newsletters
+    title: Newsletters
+    description: Newsletter communications
+    trackingType: Newsletters
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: false
+    show-in-privacy-center: true
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics:
+      - title: Topics
+        type: MULTI_SELECT
+        description: Newsletter topics to subscribe to
+        default-configuration: '{}'
+        show-in-privacy-center: true
+        options:
+          - title: Marketing Emails
+            slug: MarketingEmails
+          - title: Product Insider
+            slug: ProductInsider
+          - title: Product Usage
+            slug: ProductUsage
+  - name: Sale of personal information
+    title: Sale of personal information
+    description: Sale of personal information.
+    trackingType: SaleOfInfo
+    default-consent: Auto
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    opt-out-signals:
+      - DNT
+      - GPC
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: Sales Outreach
+    title: Sales Outreach
+    description: Sales outreach and communication
+    trackingType: SalesOutreach
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: SessionReplay
+    title: SessionReplay
+    description: Session replay data flows and cookies (like FullStory)
+    trackingType: SessionReplay
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: true
+    display-order: 10
+    opt-out-signals:
+      - DNT
+      - GPC
+    auth-level: REQUIRED
+    preference-topics: []
+  - name: SMS Communications
+    title: SMS Communications
+    description: Opting out of SMS communications
+    trackingType: SmsOptOut
+    default-consent: 'off'
+    configurable: true
+    show-in-consent-manager: true
+    show-in-privacy-center: false
+    is-active: false
+    display-order: 10
+    auth-level: REQUIRED
+    preference-topics: []

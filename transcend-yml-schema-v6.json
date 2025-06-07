@@ -41478,6 +41478,7 @@
                                       "TEAM",
                                       "DATA_SUB_CATEGORY",
                                       "PROCESSING_PURPOSE_SUB_CATEGORY",
+                                      "PROCESSING_ACTIVITY",
                                       "VENDOR",
                                       "REGION",
                                       "BUSINESS_ENTITY",
@@ -41665,7 +41666,8 @@
                                       "vendor",
                                       "dataSubCategory",
                                       "processingPurposeSubCategory",
-                                      "businessEntity"
+                                      "businessEntity",
+                                      "processingActivity"
                                     ]
                                   },
                                   "sync-column": {
@@ -41750,7 +41752,11 @@
                                       "DATA_TYPE",
                                       "ENCRYPTION",
                                       "IS_PRIMARY_KEY",
-                                      "CUSTOM_SILO_CONNECTION_STRATEGY"
+                                      "CUSTOM_SILO_CONNECTION_STRATEGY",
+                                      "SECURITY_MEASURE_DETAILS",
+                                      "STORAGE_REGIONS",
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_LINK",
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS"
                                     ]
                                   },
                                   "attribute-key": {
@@ -41948,6 +41954,7 @@
                                       "TEAM",
                                       "DATA_SUB_CATEGORY",
                                       "PROCESSING_PURPOSE_SUB_CATEGORY",
+                                      "PROCESSING_ACTIVITY",
                                       "VENDOR",
                                       "REGION",
                                       "BUSINESS_ENTITY",
@@ -42135,7 +42142,8 @@
                                       "vendor",
                                       "dataSubCategory",
                                       "processingPurposeSubCategory",
-                                      "businessEntity"
+                                      "businessEntity",
+                                      "processingActivity"
                                     ]
                                   },
                                   "sync-column": {
@@ -42220,7 +42228,11 @@
                                       "DATA_TYPE",
                                       "ENCRYPTION",
                                       "IS_PRIMARY_KEY",
-                                      "CUSTOM_SILO_CONNECTION_STRATEGY"
+                                      "CUSTOM_SILO_CONNECTION_STRATEGY",
+                                      "SECURITY_MEASURE_DETAILS",
+                                      "STORAGE_REGIONS",
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_LINK",
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS"
                                     ]
                                   },
                                   "attribute-key": {
@@ -42473,6 +42485,140 @@
                     }
                   }
                 }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "purposes": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "trackingType",
+              "title",
+              "name"
+            ],
+            "properties": {
+              "trackingType": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "is-active": {
+                "type": "boolean"
+              },
+              "configurable": {
+                "type": "boolean"
+              },
+              "display-order": {
+                "type": "number"
+              },
+              "show-in-privacy-center": {
+                "type": "boolean"
+              },
+              "show-in-consent-manager": {
+                "type": "boolean"
+              },
+              "preference-topics": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "title",
+                        "description"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "SELECT",
+                            "MULTI_SELECT",
+                            "BOOLEAN"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "default-configuration": {
+                          "type": "string"
+                        },
+                        "show-in-privacy-center": {
+                          "type": "boolean"
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "title",
+                              "slug"
+                            ],
+                            "properties": {
+                              "title": {
+                                "type": "string"
+                              },
+                              "slug": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "auth-level": {
+                "type": "string",
+                "enum": [
+                  "REQUIRED",
+                  "OPTIONAL",
+                  "ALLOW_OPT_OUT"
+                ]
+              },
+              "opt-out-signals": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "GPC",
+                    "DNT"
+                  ]
+                }
+              },
+              "default-consent": {
+                "type": "string",
+                "enum": [
+                  "off",
+                  "Auto"
+                ]
               }
             }
           }
