@@ -1384,10 +1384,14 @@ export async function pullTranscendConfiguration(
             description: displayDescription.defaultMessage,
             'default-configuration': defaultConfiguration,
             'show-in-privacy-center': showInPrivacyCenter,
-            options: preferenceOptionValues.map(({ title, slug }) => ({
-              title: title.defaultMessage,
-              slug,
-            })),
+            ...(preferenceOptionValues.length > 0
+              ? {
+                  options: preferenceOptionValues.map(({ title, slug }) => ({
+                    title: title.defaultMessage,
+                    slug,
+                  })),
+                }
+              : {}),
           }),
         ),
       }),
