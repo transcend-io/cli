@@ -71,6 +71,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Policies]: [ScopeName.ManagePolicies],
   [TranscendPullResource.Assessments]: [ScopeName.ManageAssessments],
   [TranscendPullResource.AssessmentTemplates]: [ScopeName.ManageAssessments],
+  [TranscendPullResource.Purposes]: [
+    ScopeName.ManageConsentManager,
+    ScopeName.ManagePreferenceStoreSettings,
+  ],
 };
 
 /**
@@ -114,6 +118,10 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.Policies]: [ScopeName.ViewPolicies],
   [TranscendPullResource.Assessments]: [ScopeName.ViewAssessments],
   [TranscendPullResource.AssessmentTemplates]: [ScopeName.ViewAssessments],
+  [TranscendPullResource.Purposes]: [
+    ScopeName.ViewConsentManager,
+    ScopeName.ViewPreferenceStoreSettings,
+  ],
 };
 
 export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
@@ -150,4 +158,5 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Policies]: 'policies',
   [TranscendPullResource.Assessments]: 'assessments',
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
+  [TranscendPullResource.Purposes]: 'purposes',
 };

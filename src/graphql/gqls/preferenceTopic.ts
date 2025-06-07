@@ -18,8 +18,22 @@ export const PREFERENCE_TOPICS = gql`
         id
         slug
         type
+        title {
+          id
+          defaultMessage
+        }
+        showInPrivacyCenter
+        displayDescription {
+          id
+          defaultMessage
+        }
+        defaultConfiguration
         preferenceOptionValues {
           slug
+          title {
+            id
+            defaultMessage
+          }
         }
         purpose {
           trackingType
