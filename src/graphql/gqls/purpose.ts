@@ -23,9 +23,19 @@ export const PURPOSES = gql`
       nodes {
         id
         name
+        description
+        defaultConsent
         trackingType
+        configurable
+        essential
+        showInConsentManager
         isActive
+        displayOrder
+        optOutSignals
         deletedAt
+        authLevel
+        showInPrivacyCenter
+        title
       }
     }
   }
