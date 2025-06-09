@@ -75,6 +75,9 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
     ScopeName.ManageConsentManager,
     ScopeName.ManagePreferenceStoreSettings,
   ],
+  [TranscendPullResource.PreferenceOptions]: [
+    ScopeName.ManagePreferenceStoreSettings,
+  ],
 };
 
 /**
@@ -122,6 +125,9 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
     ScopeName.ViewConsentManager,
     ScopeName.ViewPreferenceStoreSettings,
   ],
+  [TranscendPullResource.PreferenceOptions]: [
+    ScopeName.ViewPreferenceStoreSettings,
+  ],
 };
 
 export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
@@ -159,4 +165,5 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Assessments]: 'assessments',
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
   [TranscendPullResource.Purposes]: 'purposes',
+  [TranscendPullResource.PreferenceOptions]: 'preference-options',
 };

@@ -1777,7 +1777,7 @@ export const AssessmentInput = t.intersection([
 /** Type override */
 export type AssessmentInput = t.TypeOf<typeof AssessmentInput>;
 
-export const ConsentPreferenceTopicOptionValue = t.type({
+export const PreferenceTopicOptionValueInput = t.type({
   /** Title of option value */
   title: t.string,
   /** API slug */
@@ -1785,11 +1785,11 @@ export const ConsentPreferenceTopicOptionValue = t.type({
 });
 
 /** Type override */
-export type ConsentPreferenceTopicOptionValue = t.TypeOf<
-  typeof ConsentPreferenceTopicOptionValue
+export type PreferenceTopicOptionValueInput = t.TypeOf<
+  typeof PreferenceTopicOptionValueInput
 >;
 
-export const ConsentPreferenceTopic = t.intersection([
+export const PreferenceTopicInput = t.intersection([
   t.type({
     /** The type of the preference topic */
     type: valuesOf(PreferenceTopicType),
@@ -1797,6 +1797,8 @@ export const ConsentPreferenceTopic = t.intersection([
     title: t.string,
     /** The description of the preference topic */
     description: t.string,
+    /** The slug of the preference topic */
+    slug: t.string,
   }),
   t.partial({
     /** Default value */
@@ -1804,17 +1806,17 @@ export const ConsentPreferenceTopic = t.intersection([
     /** Whether the preference topic is shown in privacy center */
     'show-in-privacy-center': t.boolean,
     /** The options when type is single or multi select */
-    options: t.array(ConsentPreferenceTopicOptionValue),
+    options: t.array(t.string),
   }),
 ]);
 
 /** Type override */
-export type ConsentPreferenceTopic = t.TypeOf<typeof ConsentPreferenceTopic>;
+export type PreferenceTopicInput = t.TypeOf<typeof PreferenceTopicInput>;
 
-export const ConsentPurpose = t.intersection([
+export const PurposeInput = t.intersection([
   t.type({
     /** Consent purpose slug */
-    trackingType: t.string,
+    'tracking-type': t.string,
     /** The title of the tracking purpose that appears in Consent Management and Privacy Center UIs  */
     title: t.string,
     /** The display name of this tracking purpose */
@@ -1834,7 +1836,7 @@ export const ConsentPurpose = t.intersection([
     /** Whether purpose is show in consent manger */
     'show-in-consent-manager': t.boolean,
     /** The preference topics configured for the purpose */
-    'preference-topics': t.array(ConsentPreferenceTopic),
+    'preference-topics': t.array(PreferenceTopicInput),
     /** Authentication level for purpose on privacy center */
     'auth-level': valuesOf(PreferenceStoreAuthLevel),
     /** Opt out signals that should instantly opt out of this purpose */
@@ -1845,7 +1847,7 @@ export const ConsentPurpose = t.intersection([
 ]);
 
 /** Type override */
-export type ConsentPurpose = t.TypeOf<typeof ConsentPurpose>;
+export type PurposeInput = t.TypeOf<typeof PurposeInput>;
 
 export const TranscendInput = t.partial({
   /**
@@ -1967,7 +1969,11 @@ export const TranscendInput = t.partial({
   /**
    * Consent and preference management purposes
    */
-  purposes: t.array(ConsentPurpose),
+  purposes: t.array(PurposeInput),
+  /**
+   * Preference management options
+   */
+  'preference-options': t.array(PreferenceTopicOptionValueInput),
 });
 
 /** Type override */

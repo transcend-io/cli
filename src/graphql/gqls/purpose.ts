@@ -40,3 +40,25 @@ export const PURPOSES = gql`
     }
   }
 `;
+
+export const UPDATE_PURPOSE = gql`
+  mutation TranscendCliUpdatePurpose($input: UpdatePurposeInput!) {
+    updatePurpose(input: $input) {
+      clientMutationId
+      purpose {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_PURPOSE = gql`
+  mutation TranscendCliCreatePurpose($input: CreatePurposeInput!) {
+    createPurpose(input: $input) {
+      clientMutationId
+      purpose {
+        id
+      }
+    }
+  }
+`;

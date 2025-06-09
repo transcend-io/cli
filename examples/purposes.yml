@@ -63,8 +63,8 @@ purposes:
       - DNT
     auth-level: REQUIRED
     preference-topics: []
-  - name: HealthData
-    title: HealthData
+  - name: Health Data
+    title: Health Data
     description: Trackers related to selling/sharing health data
     trackingType: HealthData
     default-consent: 'off'
@@ -194,8 +194,8 @@ purposes:
     display-order: 10
     auth-level: REQUIRED
     preference-topics: []
-  - name: SessionReplay
-    title: SessionReplay
+  - name: Session Replay
+    title: Session Replay
     description: Session replay data flows and cookies (like FullStory)
     trackingType: SessionReplay
     default-consent: 'off'
