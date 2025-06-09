@@ -32,7 +32,8 @@ import {
   AssessmentSectionInput,
   AssessmentSectionQuestionInput,
   RiskLogicInput,
-  ConsentPurpose,
+  PurposeInput,
+  PreferenceTopicOptionValueInput,
 } from '../codecs';
 import {
   RequestAction,
@@ -84,6 +85,7 @@ import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
 import { LanguageKey } from '@transcend-io/internationalization';
 import { fetchPartitions } from './syncPartitions';
 import { fetchAllAssessments } from './fetchAllAssessments';
+import { fetchAllPreferenceOptionValues } from './fetchAllPreferenceOptionValues';
 import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
 import {
   AssessmentNestedRule,
@@ -183,6 +185,7 @@ export async function pullTranscendConfiguration(
     assessments,
     assessmentTemplates,
     purposes,
+    preferenceOptionValues,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -334,6 +337,10 @@ export async function pullTranscendConfiguration(
     // Fetch purpose and preferences
     resources.includes(TranscendPullResource.Purposes)
       ? fetchAllPurposesAndPreferences(client)
+      : [],
+    // Fetch preferenceOptionValues
+    resources.includes(TranscendPullResource.PreferenceOptions)
+      ? fetchAllPreferenceOptionValues(client)
       : [],
   ]);
 
@@ -1357,11 +1364,11 @@ export async function pullTranscendConfiguration(
         topics,
         showInPrivacyCenter,
         title,
-      }): ConsentPurpose => ({
+      }): PurposeInput => ({
         name,
         title,
         description: description || undefined,
-        trackingType,
+        'tracking-type': trackingType,
         'default-consent': defaultConsent,
         configurable,
         'show-in-consent-manager': showInConsentManager,
@@ -1374,6 +1381,7 @@ export async function pullTranscendConfiguration(
           ({
             title,
             type,
+            slug,
             displayDescription,
             defaultConfiguration,
             showInPrivacyCenter,
@@ -1381,19 +1389,30 @@ export async function pullTranscendConfiguration(
           }) => ({
             title: title.defaultMessage,
             type,
+            slug,
             description: displayDescription.defaultMessage,
             'default-configuration': defaultConfiguration,
             'show-in-privacy-center': showInPrivacyCenter,
             ...(preferenceOptionValues.length > 0
               ? {
-                  options: preferenceOptionValues.map(({ title, slug }) => ({
-                    title: title.defaultMessage,
-                    slug,
-                  })),
+                  options: preferenceOptionValues.map(({ slug }) => slug),
                 }
               : {}),
           }),
         ),
+      }),
+    );
+  }
+
+  // save preference options
+  if (
+    preferenceOptionValues.length > 0 &&
+    resources.includes(TranscendPullResource.PreferenceOptions)
+  ) {
+    result['preference-options'] = preferenceOptionValues.map(
+      ({ slug, title }): PreferenceTopicOptionValueInput => ({
+        slug,
+        title: title.defaultMessage,
       }),
     );
   }

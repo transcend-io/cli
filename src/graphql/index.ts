@@ -20,6 +20,7 @@ export * from './setResourceAttributes';
 export * from './buildTranscendGraphQLClient';
 export * from './retryRequestEnricher';
 export * from './gqls';
+export * from './syncPreferenceOptionValues';
 export * from './fetchAllAssessmentTemplates';
 export * from './fetchAllAssessments';
 export * from './fetchPromptThreads';

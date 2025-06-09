@@ -42,3 +42,44 @@ export const PREFERENCE_TOPICS = gql`
     }
   }
 `;
+
+export const CREATE_OR_UPDATE_PREFERENCE_TOPIC = gql`
+  mutation CreateOrUpdatePreferenceTopic(
+    $input: CreateOrUpdatePreferenceTopicInput!
+  ) {
+    createOrUpdatePreferenceTopic(input: $input) {
+      preferenceTopic {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_OR_UPDATE_PREFERENCE_OPTION_VALUES = gql`
+  mutation CreateOrUpdatePreferenceOptionValues(
+    $input: CreateOrUpdatePreferenceOptionValuesInput!
+  ) {
+    createOrUpdatePreferenceOptionValues(input: $input) {
+      preferenceOptionValues {
+        id
+        slug
+      }
+    }
+  }
+`;
+
+export const PREFERENCE_OPTION_VALUES = gql`
+  query PreferenceOptionValues {
+    preferenceOptionValues {
+      clientMutationId
+      nodes {
+        id
+        title {
+          id
+          defaultMessage
+        }
+        slug
+      }
+    }
+  }
+`;

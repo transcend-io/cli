@@ -33,11 +33,13 @@ import { syncTemplate } from './syncTemplates';
 import { fetchAllActions } from './fetchAllActions';
 import { syncPromptPartials } from './syncPromptPartials';
 import { syncPromptGroups } from './syncPromptGroups';
+import { syncPurposes } from './syncPurposes';
 import { syncAgents } from './syncAgents';
 import { syncActionItemCollections } from './syncActionItemCollections';
 import { syncActionItems } from './syncActionItems';
 import { syncAgentFunctions } from './syncAgentFunctions';
 import { syncAgentFiles } from './syncAgentFiles';
+import { syncPreferenceOptionValues } from './syncPreferenceOptionValues';
 import { syncVendors } from './syncVendors';
 import { syncDataCategories } from './syncDataCategories';
 import { syncProcessingPurposes } from './syncProcessingPurposes';
@@ -105,6 +107,7 @@ export async function syncConfigurationToTranscend(
     messages,
     policies,
     partitions,
+    purposes,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -257,6 +260,21 @@ export async function syncConfigurationToTranscend(
   if (cookies) {
     const cookiesSuccess = await syncCookies(client, cookies);
     encounteredError = encounteredError || !cookiesSuccess;
+  }
+
+  // Sync preference topic values
+  if (input['preference-options']) {
+    const preferenceTopicValuesSuccess = await syncPreferenceOptionValues(
+      client,
+      input['preference-options'],
+    );
+    encounteredError = encounteredError || !preferenceTopicValuesSuccess;
+  }
+
+  // Sync purposes
+  if (purposes) {
+    const purposesSuccess = await syncPurposes(client, purposes);
+    encounteredError = encounteredError || !purposesSuccess;
   }
 
   // Sync action item collections
