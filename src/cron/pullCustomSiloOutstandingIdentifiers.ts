@@ -61,7 +61,6 @@ export async function pullCustomSiloOutstandingIdentifiers({
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-
   let totalRequestCount = 0;
   if (!skipRequestCount) {
     totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
@@ -71,10 +70,12 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.magenta(
-      `Pulling ${skipRequestCount ? 'all' : totalRequestCount} outstanding request identifiers ` +
-      `for data silo: "${dataSiloId}" for requests of types "${actions.join(
-        '", "',
-      )}"`,
+      `Pulling ${
+        skipRequestCount ? 'all' : totalRequestCount
+      } outstanding request identifiers ` +
+        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+          '", "',
+        )}"`,
     ),
   );
 
@@ -138,7 +139,8 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.green(
-      `Successfully pulled ${identifiers.length} outstanding identifiers from ${foundRequestIds.size
+      `Successfully pulled ${identifiers.length} outstanding identifiers from ${
+        foundRequestIds.size
       } requests in "${totalTime / 1000}" seconds!`,
     ),
   );

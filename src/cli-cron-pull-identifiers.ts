@@ -86,7 +86,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
