@@ -31,6 +31,7 @@ export async function pullCustomSiloOutstandingIdentifiers({
   actions,
   pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
+  skipRequestCount = false,
 }: {
   /** Transcend API key authentication */
   auth: string;
@@ -44,6 +45,8 @@ export async function pullCustomSiloOutstandingIdentifiers({
   transcendUrl?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
+  /** Skip request count */
+  skipRequestCount?: boolean;
 }): Promise<{
   /** Raw Identifiers */
   identifiers: CronIdentifierWithAction[];
@@ -58,13 +61,18 @@ export async function pullCustomSiloOutstandingIdentifiers({
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  const totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
-    dataSiloId,
-  });
+  let totalRequestCount = 0;
+  if (!skipRequestCount) {
+    totalRequestCount = await fetchRequestDataSiloActiveCount(client, {
+      dataSiloId,
+    });
+  }
 
   logger.info(
     colors.magenta(
-      `Pulling ${totalRequestCount} outstanding request identifiers ` +
+      `Pulling ${
+        skipRequestCount ? 'all' : totalRequestCount
+      } outstanding request identifiers ` +
         `for data silo: "${dataSiloId}" for requests of types "${actions.join(
           '", "',
         )}"`,
@@ -84,7 +92,9 @@ export async function pullCustomSiloOutstandingIdentifiers({
   const identifiers: CronIdentifierWithAction[] = [];
 
   // map over each action
-  progressBar.start(totalRequestCount, 0);
+  if (!skipRequestCount) {
+    progressBar.start(totalRequestCount, 0);
+  }
   await mapSeries(actions, async (action) => {
     let offset = 0;
     let shouldContinue = true;
@@ -109,11 +119,21 @@ export async function pullCustomSiloOutstandingIdentifiers({
       );
       shouldContinue = pageIdentifiers.length === pageLimit;
       offset += pageLimit;
-      progressBar.update(foundRequestIds.size);
+      if (!skipRequestCount) {
+        progressBar.update(foundRequestIds.size);
+      } else {
+        logger.info(
+          colors.magenta(
+            `Pulled ${pageIdentifiers.length} outstanding identifiers for ${foundRequestIds.size} requests`,
+          ),
+        );
+      }
     }
   });
 
-  progressBar.stop();
+  if (!skipRequestCount) {
+    progressBar.stop();
+  }
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
 
