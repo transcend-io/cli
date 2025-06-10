@@ -37,6 +37,7 @@ async function main(): Promise<void> {
     dataSiloId,
     actions,
     pageLimit = '100',
+    skipRequestCount = false,
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -67,6 +68,14 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  if (skipRequestCount === 'true') {
+    logger.info(
+      colors.yellow(
+        'Skipping request count as requested. This may help speed up the call.',
+      ),
+    );
+  }
+
   // Validate actions
   const parsedActions = splitCsvToList(actions) as RequestAction[];
   const invalidActions = parsedActions.filter(
@@ -77,7 +86,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -92,6 +101,7 @@ async function main(): Promise<void> {
       auth,
       sombraAuth,
       dataSiloId,
+      skipRequestCount: skipRequestCount === 'true',
     });
 
   // Write CSV
