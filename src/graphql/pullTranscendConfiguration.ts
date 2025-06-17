@@ -897,7 +897,6 @@ export async function pullTranscendConfiguration(
       showDataFlows: privacyCenter.showDataFlows,
       showConsentManager: privacyCenter.showConsentManager,
       showManageYourPrivacy: privacyCenter.showManageYourPrivacy,
-      showPrivacyPreferences: privacyCenter.showPrivacyPreferences,
       showMarketingPreferences: privacyCenter.showMarketingPreferences,
       locales: privacyCenter.locales,
       defaultLocale: privacyCenter.defaultLocale,

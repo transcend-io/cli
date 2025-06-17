@@ -36,7 +36,6 @@ export async function syncPrivacyCenter(
         defaultLocale: privacyCenter.defaultLocale,
         locales: privacyCenter.locales,
         showMarketingPreferences: privacyCenter.showMarketingPreferences,
-        showPrivacyPreferences: privacyCenter.showPrivacyPreferences,
         showManageYourPrivacy: privacyCenter.showManageYourPrivacy,
         showPolicies: privacyCenter.showPolicies,
         showConsentManager: privacyCenter.showConsentManager,
