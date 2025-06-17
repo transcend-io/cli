@@ -29,7 +29,6 @@ export const PRIVACY_CENTER = gql`
       showDataFlows
       showConsentManager
       showManageYourPrivacy
-      showPrivacyPreferences
       showMarketingPreferences
       locales
       defaultLocale

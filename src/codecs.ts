@@ -1248,8 +1248,6 @@ export const PrivacyCenterInput = t.partial({
   showConsentManager: t.boolean,
   /** Whether or not to show the manage your privacy page */
   showManageYourPrivacy: t.boolean,
-  /** Whether or not to show the privacy preferences page */
-  showPrivacyPreferences: t.boolean,
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: t.boolean,
   /** What languages are supported for the privacy center */

@@ -275,7 +275,6 @@ privacy-center:
   showDataFlows: true
   showConsentManager: true
   showManageYourPrivacy: true
-  showPrivacyPreferences: true
   showMarketingPreferences: true
   locales:
     - en

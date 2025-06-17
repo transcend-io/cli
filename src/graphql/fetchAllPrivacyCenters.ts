@@ -26,8 +26,6 @@ export interface PrivacyCenter {
   showConsentManager: boolean;
   /** Whether or not to show the manage your privacy page */
   showManageYourPrivacy: boolean;
-  /** Whether or not to show the privacy preferences page */
-  showPrivacyPreferences: boolean;
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: boolean;
   /** What languages are supported for the privacy center */

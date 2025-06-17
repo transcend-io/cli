@@ -40678,9 +40678,6 @@
         "showManageYourPrivacy": {
           "type": "boolean"
         },
-        "showPrivacyPreferences": {
-          "type": "boolean"
-        },
         "showMarketingPreferences": {
           "type": "boolean"
         },
