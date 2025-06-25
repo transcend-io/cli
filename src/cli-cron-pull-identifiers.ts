@@ -5,7 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import uniq from 'lodash/uniq';
-import { pullCustomSiloOutstandingIdentifiers, writeCsv, writeLargeCsv } from './cron';
+import { pullCustomSiloOutstandingIdentifiers, writeLargeCsv } from './cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { splitCsvToList } from './requests';
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -126,7 +126,7 @@ async function main(): Promise<void> {
     identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
   );
   const writtenFiles = await writeLargeCsv(file, identifiersFormattedForCsv, headers, parsedChunkSize);
-  
+
   if (writtenFiles.length === 1) {
     logger.info(
       colors.green(

@@ -99,7 +99,7 @@ export async function writeLargeCsv(
   filePath: string,
   data: ObjByString[],
   headers: boolean | string[] = true,
-  chunkSize: number = 100000,
+  chunkSize = 100000,
 ): Promise<string[]> {
   if (data.length <= chunkSize) {
     // If data is small enough, write to single file
@@ -110,21 +110,22 @@ export async function writeLargeCsv(
   // Split data into chunks and write to multiple files
   const writtenFiles: string[] = [];
   const totalChunks = Math.ceil(data.length / chunkSize);
-  
+
   // Extract the base name and extension from the file path
   const lastDotIndex = filePath.lastIndexOf('.');
   const baseName = lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath;
   const extension = lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv';
 
-  for (let i = 0; i < totalChunks; i++) {
+  for (let i = 0; i < totalChunks; i += 1) {
     const start = i * chunkSize;
     const end = Math.min(start + chunkSize, data.length);
     const chunk = data.slice(start, end);
-    
+
     // Create filename with chunk number and zero-padding
     const chunkNumber = String(i + 1).padStart(String(totalChunks).length, '0');
     const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
-    
+
+    // eslint-disable-next-line no-await-in-loop
     await writeCsv(chunkFilePath, chunk, headers);
     writtenFiles.push(chunkFilePath);
   }
