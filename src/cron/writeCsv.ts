@@ -113,8 +113,10 @@ export async function writeLargeCsv(
 
   // Extract the base name and extension from the file path
   const lastDotIndex = filePath.lastIndexOf('.');
-  const baseName = lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath;
-  const extension = lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv';
+  const baseName =
+    lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath;
+  const extension =
+    lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv';
 
   for (let i = 0; i < totalChunks; i += 1) {
     const start = i * chunkSize;

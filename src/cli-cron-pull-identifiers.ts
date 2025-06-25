@@ -92,7 +92,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -125,7 +125,12 @@ async function main(): Promise<void> {
   const headers = uniq(
     identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
   );
-  const writtenFiles = await writeLargeCsv(file, identifiersFormattedForCsv, headers, parsedChunkSize);
+  const writtenFiles = await writeLargeCsv(
+    file,
+    identifiersFormattedForCsv,
+    headers,
+    parsedChunkSize,
+  );
 
   if (writtenFiles.length === 1) {
     logger.info(
