@@ -100,7 +100,7 @@ async function main(): Promise<void> {
 
   // Validate chunk size
   const parsedChunkSize = parseInt(chunkSize, 10);
-  if (isNaN(parsedChunkSize) || parsedChunkSize <= 0) {
+  if (Number.isNaN(parsedChunkSize) || parsedChunkSize <= 0) {
     logger.error(
       colors.red(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer.`,
