@@ -1777,7 +1777,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 | sombraAuth       | The sombra internal key, use for additional authentication when self-hosting sombra.                                                                                                                                                                                                                                     | string             | N/A                      | false    |
 | pageLimit        | The page limit to use when pulling in pages of identifiers.                                                                                                                                                                                                                                                              | number             | 100                      | false    |
 | skipRequestCount | Whether to skip the count of all outstanding requests. This is required to render the progress bar, but can take a long time to run if you have a large number of outstanding requests to process. In that case, we recommend setting skipRequestCount=true so that you can still proceed with fetching the identifiers. | boolean            | false                    | false    |
-| chunkSize        | Maximum number of rows per CSV file. For large datasets, the output will be automatically split into multiple files to avoid file system size limits. Each file will contain at most this many rows.                                                                                                                   | number             | 100000                   | false    |
+| chunkSize        | Maximum number of rows per CSV file. For large datasets, the output will be automatically split into multiple files to avoid file system size limits. Each file will contain at most this many rows.                                                                                                                     | number             | 100000                   | false    |
 
 #### Usage
 
@@ -1821,6 +1821,7 @@ yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf
 ```
 
 **Note:** For large datasets exceeding the chunk size, multiple CSV files will be created automatically:
+
 - `filename_part01_of_05.csv` (50,000 rows)
 - `filename_part02_of_05.csv` (50,000 rows)
 - ... and so on
