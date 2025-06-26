@@ -5,7 +5,7 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import uniq from 'lodash/uniq';
-import { pullCustomSiloOutstandingIdentifiers, writeCsv } from './cron';
+import { pullCustomSiloOutstandingIdentifiers, writeLargeCsv } from './cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { splitCsvToList } from './requests';
@@ -13,19 +13,24 @@ import { splitCsvToList } from './requests';
 /**
  * Pull the set of active identifiers for a cron job silo.
  *
+ * For large datasets, the output will be automatically split into multiple CSV files
+ * to avoid file system size limits. Use --chunkSize to control the number of rows per file.
+ *
  * Requires an API key with scope for the cron integration being checked on.
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-cron-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --chunkSize=100000
  *
  * Standard usage:
  * yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY  \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --actions=ERASURE \
- *   --file=/Users/michaelfarrell/Desktop/test.csv
+ *   --file=/Users/michaelfarrell/Desktop/test.csv \
+ *   --chunkSize=100000
  */
 async function main(): Promise<void> {
   // Parse command line arguments
@@ -38,6 +43,7 @@ async function main(): Promise<void> {
     actions,
     pageLimit = '100',
     skipRequestCount = false,
+    chunkSize = '100000',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -92,6 +98,17 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  // Validate chunk size
+  const parsedChunkSize = parseInt(chunkSize, 10);
+  if (Number.isNaN(parsedChunkSize) || parsedChunkSize <= 0) {
+    logger.error(
+      colors.red(
+        `Invalid chunk size: "${chunkSize}". Must be a positive integer.`,
+      ),
+    );
+    process.exit(1);
+  }
+
   // Pull down outstanding identifiers
   const { identifiersFormattedForCsv } =
     await pullCustomSiloOutstandingIdentifiers({
@@ -104,16 +121,33 @@ async function main(): Promise<void> {
       skipRequestCount: skipRequestCount === 'true',
     });
 
-  // Write CSV
+  // Write CSV (split into multiple files if too large)
   const headers = uniq(
     identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
   );
-  writeCsv(file, identifiersFormattedForCsv, headers);
-  logger.info(
-    colors.green(
-      `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
-    ),
+  const writtenFiles = await writeLargeCsv(
+    file,
+    identifiersFormattedForCsv,
+    headers,
+    parsedChunkSize,
   );
+
+  if (writtenFiles.length === 1) {
+    logger.info(
+      colors.green(
+        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
+      ),
+    );
+  } else {
+    logger.info(
+      colors.green(
+        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to ${writtenFiles.length} files:`,
+      ),
+    );
+    writtenFiles.forEach((fileName) => {
+      logger.info(colors.green(`  - ${fileName}`));
+    });
+  }
 }
 
 main();

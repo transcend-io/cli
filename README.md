@@ -1752,6 +1752,9 @@ yarn tr-request-export --auth=$TRANSCEND_API_KEY --file=./path/to/file.csv
 If you are using the cron job integration, you can run this command to pull the outstanding identifiers
 for the data silo to a CSV.
 
+For large datasets, the output will be automatically split into multiple CSV files to avoid file system size limits.
+Use the `--chunkSize` parameter to control the maximum number of rows per file.
+
 Read more at https://docs.transcend.io/docs/integrations/cron-job-integration.
 
 https://user-images.githubusercontent.com/10264973/205483055-f4050645-bdf5-4ea2-8464-3183abd63074.mov
@@ -1774,6 +1777,7 @@ The API key must be associated to the ID of the integration/data silo that is be
 | sombraAuth       | The sombra internal key, use for additional authentication when self-hosting sombra.                                                                                                                                                                                                                                     | string             | N/A                      | false    |
 | pageLimit        | The page limit to use when pulling in pages of identifiers.                                                                                                                                                                                                                                                              | number             | 100                      | false    |
 | skipRequestCount | Whether to skip the count of all outstanding requests. This is required to render the progress bar, but can take a long time to run if you have a large number of outstanding requests to process. In that case, we recommend setting skipRequestCount=true so that you can still proceed with fetching the identifiers. | boolean            | false                    | false    |
+| chunkSize        | Maximum number of rows per CSV file. For large datasets, the output will be automatically split into multiple files to avoid file system size limits. Each file will contain at most this many rows.                                                                                                                     | number             | 100000                   | false    |
 
 #### Usage
 
@@ -1808,6 +1812,19 @@ Specifying the page limit, defaults to 100.
 yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE \
  --pageLimit=300
 ```
+
+Specifying the chunk size for large datasets to avoid file size limits (defaults to 100,000 rows per file).
+
+```sh
+yarn tr-cron-pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE \
+ --chunkSize=50000
+```
+
+**Note:** For large datasets exceeding the chunk size, multiple CSV files will be created automatically:
+
+- `filename_part01_of_05.csv` (50,000 rows)
+- `filename_part02_of_05.csv` (50,000 rows)
+- ... and so on
 
 ### tr-cron-mark-identifiers-completed
 
