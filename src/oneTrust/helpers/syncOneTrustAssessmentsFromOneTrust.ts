@@ -95,8 +95,8 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
             });
             oneTrustCachedUsers[creatorId] = creator;
           } catch (e) {
-            logger.error(
-              colors.red(
+            logger.warn(
+              colors.yellow(
                 `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch form creator.` +
                   `\tcreatorId: ${creatorId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
               ),
@@ -122,8 +122,8 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                 }
                 return [approver];
               } catch (e) {
-                logger.error(
-                  colors.red(
+                logger.warn(
+                  colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a form approver.` +
                       `\tapproverId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
                   ),
@@ -157,8 +157,8 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                 }
                 return [respondent];
               } catch (e) {
-                logger.error(
-                  colors.red(
+                logger.warn(
+                  colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a respondent.` +
                       `\trespondentId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
                   ),
