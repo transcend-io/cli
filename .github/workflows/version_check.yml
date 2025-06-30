@@ -39,7 +39,7 @@ jobs:
           echo "$CHANGED_FILES"
 
           # Filter out test files and package.json
-          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' || grep -v '^\.pre-commit-config\.yaml$' || true)
+          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' | grep -v '^\.pre-commit-config\.yaml$' || true)
 
           echo "Non-test files (excluding package.json, yarn.lock, CHANGELOG.md, .github yml files):"
           echo "$NON_TEST_FILES"
