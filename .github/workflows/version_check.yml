@@ -39,7 +39,7 @@ jobs:
           echo "$CHANGED_FILES"
 
           # Filter out test files and package.json
-          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' || true)
+          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' || grep -v '^\.pre-commit-config\.yaml$' || true)
 
           echo "Non-test files (excluding package.json, yarn.lock, CHANGELOG.md, .github yml files):"
           echo "$NON_TEST_FILES"
@@ -47,19 +47,19 @@ jobs:
           # If there are non-test files changed, check if version was bumped
           if [ -n "$NON_TEST_FILES" ]; then
             echo "Non-test files have been modified. Checking for version bump..."
-            
+
             # Get the current version from package.json
             CURRENT_VERSION=$(node -p "require('./package.json').version")
             echo "Current version: $CURRENT_VERSION"
-            
+
             # Get the version from the base branch
             git checkout $BASE_SHA -- package.json
             BASE_VERSION=$(node -p "require('./package.json').version")
             echo "Base version: $BASE_VERSION"
-            
+
             # Restore the current package.json
             git checkout $HEAD_SHA -- package.json
-            
+
             # Compare versions using semver
             if [ "$CURRENT_VERSION" = "$BASE_VERSION" ]; then
               echo "❌ Error: Non-test files have been modified but package.json version has not been bumped."
