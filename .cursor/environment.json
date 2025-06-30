@@ -1,0 +1,39 @@
+{
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  },
+  "install": "yarn install",
+  "terminals": [
+    {
+      "name": "yarn build",
+      "description": "Build the project",
+      "command": "yarn build"
+    },
+    {
+      "name": "yarn clean",
+      "description": "Clean the project",
+      "command": "yarn clean"
+    },
+    {
+      "name": "yarn lint",
+      "description": "Lint the project",
+      "command": "yarn lint"
+    },
+    {
+      "name": "yarn prepublish",
+      "description": "Pre-publish the project",
+      "command": "yarn prepublish"
+    },
+    {
+      "name": "yarn test",
+      "description": "Test the project",
+      "command": "yarn test"
+    },
+    {
+      "name": "yarn pre-commit",
+      "description": "Run pre-commit hooks",
+      "command": "yarn pre-commit"
+    }
+  ]
+}
