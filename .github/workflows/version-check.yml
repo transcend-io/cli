@@ -1,0 +1,78 @@
+name: Version Bump Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          # Get the list of changed files between base and head
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}..HEAD)
+          echo "All changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Filter out files that don't require version bumps
+          NON_VERSION_FILES=$(echo "$CHANGED_FILES" | grep -v -E '(\.test\.|/tests/|\.md$|\.yml$|\.yaml$|\.json$|\.gitignore|\.prettierrc|\.eslintrc|\.editorconfig|\.nvmrc|LICENSE|CHANGELOG)' | grep -E '\.(ts|js|tsx|jsx)$' || true)
+          
+          echo "Non-test source files changed:"
+          echo "$NON_VERSION_FILES"
+          
+          # Set output for next step
+          if [ -n "$NON_VERSION_FILES" ]; then
+            echo "has_source_changes=true" >> $GITHUB_OUTPUT
+            echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$NON_VERSION_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "has_source_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check version bump
+        if: steps.changed-files.outputs.has_source_changes == 'true'
+        run: |
+          # Get the current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Get the version from the base branch
+          git checkout origin/${{ github.base_ref }} -- package.json
+          BASE_VERSION=$(node -p "require('./package.json').version")
+          echo "Base version: $BASE_VERSION"
+          
+          # Reset to current branch's package.json
+          git checkout HEAD -- package.json
+          
+          # Check if version was bumped
+          if [ "$CURRENT_VERSION" = "$BASE_VERSION" ]; then
+            echo "❌ Version bump required!"
+            echo ""
+            echo "The following non-test source files were changed:"
+            echo "${{ steps.changed-files.outputs.changed_files }}"
+            echo ""
+            echo "Please bump the version in package.json using one of:"
+            echo "  - npm version patch (for bug fixes)"
+            echo "  - npm version minor (for new features)" 
+            echo "  - npm version major (for breaking changes)"
+            echo ""
+            echo "Current version: $BASE_VERSION"
+            echo "No version change detected in package.json"
+            exit 1
+          else
+            echo "✅ Version bumped from $BASE_VERSION to $CURRENT_VERSION"
+          fi
+
+      - name: Version check skipped
+        if: steps.changed-files.outputs.has_source_changes == 'false'
+        run: |
+          echo "✅ No non-test source files changed. Version bump not required."
