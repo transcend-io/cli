@@ -2,7 +2,7 @@ name: Version Bump Check
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   check-version-bump:
@@ -26,21 +26,21 @@ jobs:
           # Get the base branch commit
           BASE_SHA=${{ github.event.pull_request.base.sha }}
           HEAD_SHA=${{ github.event.pull_request.head.sha }}
-          
+
           echo "Base SHA: $BASE_SHA"
           echo "Head SHA: $HEAD_SHA"
-          
+
           # Get all changed files
           CHANGED_FILES=$(git diff --name-only $BASE_SHA...$HEAD_SHA)
           echo "Changed files:"
           echo "$CHANGED_FILES"
-          
+
           # Filter out test files and package.json
-          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' || true)
-          
-          echo "Non-test files (excluding package.json, yarn.lock, CHANGELOG.md):"
+          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' || true)
+
+          echo "Non-test files (excluding package.json, yarn.lock, CHANGELOG.md, .github yml files):"
           echo "$NON_TEST_FILES"
-          
+
           # If there are non-test files changed, check if version was bumped
           if [ -n "$NON_TEST_FILES" ]; then
             echo "Non-test files have been modified. Checking for version bump..."
@@ -75,5 +75,5 @@ jobs:
               echo "✅ Version has been bumped from $BASE_VERSION to $CURRENT_VERSION"
             fi
           else
-            echo "✅ Only test files, package.json, yarn.lock, or CHANGELOG.md were modified. No version bump required."
+            echo "✅ Only test files, package.json, yarn.lock, CHANGELOG.md, or .github yml files were modified. No version bump required."
           fi
