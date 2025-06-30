@@ -404,7 +404,8 @@
                   "DATABASE",
                   "LOOKER",
                   "WAIT_PERIOD",
-                  "GOVERNMENT_ID"
+                  "GOVERNMENT_ID",
+                  "CUSTOM_FUNCTION"
                 ]
               },
               "input-identifier": {
