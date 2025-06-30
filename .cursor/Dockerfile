@@ -15,9 +15,14 @@ RUN chsh -s /usr/bin/zsh ubuntu
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.zsh_history" \
     && echo $SNIPPET >> "/home/ubuntu/.zshrc"
 
-# install additional OS packages.
+# Install additional OS packages including Python, Git, and build tools
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
+      build-essential \
+      git \
+      python3 \
+      python3-pip \
+      python3-venv \
       shellcheck \
       software-properties-common \
       tldr \
@@ -27,9 +32,21 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && mkdir -p /root/.local/share \
     && tldr -u
 
+# Install specific yarn version globally
+RUN npm install -g "yarn@2.4.3"
+
+# Install pre-commit globally (this doesn't need the repo to be present)
+RUN pip3 install pre-commit
+
 # Ensure the ubuntu user has proper permissions
 RUN chown -R ubuntu:ubuntu /home/ubuntu
 
 # Switch to the ubuntu user and set working directory
 USER ubuntu
 WORKDIR /home/ubuntu
+
+# The agent will handle:
+# 1. Cloning the repository
+# 2. Running `yarn install`
+# 3. Running `yarn tsc --build`
+# 4. Setting up pre-commit hooks
