@@ -4,10 +4,12 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
     # Use the sha / tag you want to point at, this needs
     # to stay in sync with the package.json version
-    rev: 'v2.8.7'
+    rev: 'v2.7.1'
     hooks:
       - id: prettier
         args: [--write, --list-different]
+        additional_dependencies:
+          - prettier@2.8.7
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
