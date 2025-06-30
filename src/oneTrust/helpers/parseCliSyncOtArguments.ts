@@ -16,6 +16,10 @@ interface OneTrustCliArguments {
   hostname?: string;
   /** The OAuth Bearer token used to authenticate the requests to OneTrust */
   oneTrustAuth?: string;
+  /** The client ID used to authenticate the requests to OneTrust. Must be used with "oneTrustClientSecret" as well. */
+  oneTrustClientId?: string;
+  /** The client secret used to authenticate the requests to OneTrust. Must be used with "oneTrustClientId" as well. */
+  oneTrustClientSecret?: string;
   /** The Transcend API key to authenticate the requests to Transcend */
   transcendAuth: string;
   /** The Transcend URL where to forward requests */
@@ -46,6 +50,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     transcendAuth,
     transcendUrl,
     source,
+    oneTrustClientId,
+    oneTrustClientSecret,
   } = yargs(process.argv.slice(2), {
     string: [
       'file',
@@ -56,6 +62,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       'transcendAuth',
       'transcendUrl',
       'source',
+      'oneTrustClientId',
+      'oneTrustClientSecret',
     ],
     boolean: ['debug', 'dryRun'],
     default: {
@@ -97,6 +105,36 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     return process.exit(1);
   }
 
+  // If oneTrustClientId or oneTrustClientSecret is provided, both must be provided
+  if ((oneTrustClientId && !oneTrustClientSecret) || (!oneTrustClientId && oneTrustClientSecret)) {
+    logger.error(
+      colors.red(
+        'Must specify both a "oneTrustClientId" and "oneTrustClientSecret" parameter when authenticating to OneTrust. e.g. --oneTrustClientId=$ONE_TRUST_CLIENT_ID --oneTrustClientSecret=$ONE_TRUST_CLIENT_SECRET',
+      ),
+    );
+    return process.exit(1);
+  }
+
+  // If oneTrustClientId and oneTrustClientSecret are provided, oneTrustAuth should not be provided
+  if (oneTrustClientId && oneTrustClientSecret && oneTrustAuth) {
+    logger.error(
+      colors.red(
+        'Cannot specify "oneTrustAuth" when "oneTrustClientId" and "oneTrustClientSecret" have been provided. Choose either token or oneTrustClientId/oneTrustClientSecret authentication, not both.',
+      ),
+    );
+    return process.exit(1);
+  }
+
+   // must specify the OneTrust auth or oneTrustClientId/oneTrustClientSecret
+   if (!oneTrustAuth && !oneTrustClientId && !oneTrustClientSecret) {
+    logger.error(
+      colors.red(
+        'Missing required parameter "oneTrustAuth" or "oneTrustClientId" and "oneTrustClientSecret". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN or --oneTrustClientId=$ONE_TRUST_CLIENT_ID --oneTrustClientSecret=$ONE_TRUST_CLIENT_SECRET',
+      ),
+    );
+    return process.exit(1);
+  }
+
   if (file) {
     const splitFile = file.split('.');
     if (splitFile.length < 2) {
@@ -130,15 +168,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
       );
       return process.exit(1);
     }
-    // must specify the OneTrust auth
-    if (!oneTrustAuth) {
-      logger.error(
-        colors.red(
-          'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
-        ),
-      );
-      return process.exit(1);
-    }
+   
   } else {
     // if reading the assessments from a file, must specify a file to read from
     if (!file) {
@@ -177,6 +207,7 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     file,
     ...(hostname && { hostname }),
     ...(oneTrustAuth && { oneTrustAuth }),
+    ...(oneTrustClientId && oneTrustClientSecret ? { oneTrustClientId, oneTrustClientSecret } : {}),
     resource,
     debug,
     dryRun,

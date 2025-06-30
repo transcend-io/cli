@@ -11,7 +11,7 @@ import {
 } from './oneTrust/helpers';
 
 /**
- * Pull configuration from OneTrust down locally to disk
+ * Pull resources from OneTrust to Transcend or locally to disk
  *
  * Dev Usage:
  * yarn ts-node ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
@@ -30,16 +30,24 @@ async function main(): Promise<void> {
     debug,
     dryRun,
     source,
+    oneTrustClientId,
+    oneTrustClientSecret,
   } = parseCliSyncOtArguments();
 
   // instantiate a client to talk to OneTrust
   const oneTrust =
-    hostname && oneTrustAuth
-      ? createOneTrustGotInstance({
+    hostname && (oneTrustAuth || (oneTrustClientId && oneTrustClientSecret))
+      ? await createOneTrustGotInstance({
           hostname,
           auth: oneTrustAuth,
+          clientId: oneTrustClientId,
+          clientSecret: oneTrustClientSecret,
         })
       : undefined;
+
+  if (!oneTrust) {
+    logger.error(colors.red('Failed to instantiate a OneTrust client.'));
+  }
 
   // instantiate a client to talk to Transcend
   const transcend =
