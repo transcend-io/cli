@@ -31,9 +31,14 @@
       "command": "yarn test"
     },
     {
-      "name": "yarn pre-commit",
-      "description": "Run pre-commit hooks",
-      "command": "yarn pre-commit"
+      "name": "pre-commit",
+      "description": "Run pre-commit hooks on changed files",
+      "command": "pre-commit"
+    },
+    {
+      "name": "pre-commit all files",
+      "description": "Run pre-commit hooks on all files",
+      "command": "pre-commit run --all-files"
     }
   ]
 }
