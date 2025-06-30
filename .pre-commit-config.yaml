@@ -8,6 +8,8 @@ repos:
     hooks:
       - id: prettier
         args: [--write, --list-different]
+        additional_dependencies:
+          - prettier@2.8.7
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
