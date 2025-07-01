@@ -6,74 +6,45 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
-  check-version-bump:
+  changed-files:
     runs-on: ubuntu-latest
+    name: Test for changed files
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
         with:
-          node-version: 18.x
+          files: |
+            src/
+            examples/
+            scripts/
+            package.json
+            tsconfig.json
+            README.md
+            yarn.lock
 
-      - name: Check for non-test file changes and version bump
+      - name: Check if package.json version has been modified
+        shell: bash
+        if: ${{ github.base_ref == 'main' && steps.changed-files.outputs.any_changed == 'true' }}
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          # Get the base branch commit
-          BASE_SHA=${{ github.event.pull_request.base.sha }}
-          HEAD_SHA=${{ github.event.pull_request.head.sha }}
-
-          echo "Base SHA: $BASE_SHA"
-          echo "Head SHA: $HEAD_SHA"
-
-          # Get all changed files
-          CHANGED_FILES=$(git diff --name-only $BASE_SHA...$HEAD_SHA)
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
-
-          # Filter out test files and package.json
-          NON_TEST_FILES=$(echo "$CHANGED_FILES" | grep -v '\.test\.' | grep -v '^package\.json$' | grep -v '^yarn\.lock$' | grep -v '^CHANGELOG\.md$' | grep -v '^\.github/.*\.yml$' | grep -v '^\.github/.*\.yaml$' | grep -v '^\.pre-commit-config\.yaml$' || true)
-
-          echo "Non-test files (excluding package.json, yarn.lock, CHANGELOG.md, .github yml files):"
-          echo "$NON_TEST_FILES"
-
-          # If there are non-test files changed, check if version was bumped
-          if [ -n "$NON_TEST_FILES" ]; then
-            echo "Non-test files have been modified. Checking for version bump..."
-
-            # Get the current version from package.json
-            CURRENT_VERSION=$(node -p "require('./package.json').version")
-            echo "Current version: $CURRENT_VERSION"
-
-            # Get the version from the base branch
-            git checkout $BASE_SHA -- package.json
-            BASE_VERSION=$(node -p "require('./package.json').version")
-            echo "Base version: $BASE_VERSION"
-
-            # Restore the current package.json
-            git checkout $HEAD_SHA -- package.json
-
-            # Compare versions using semver
-            if [ "$CURRENT_VERSION" = "$BASE_VERSION" ]; then
-              echo "❌ Error: Non-test files have been modified but package.json version has not been bumped."
-              echo "Current version: $CURRENT_VERSION"
-              echo "Base version: $BASE_VERSION"
-              echo ""
-              echo "Modified non-test files:"
-              echo "$NON_TEST_FILES"
-              echo ""
-              echo "Please bump the version in package.json using one of:"
-              echo "  - yarn version patch (for bug fixes)"
-              echo "  - yarn version minor (for new features)"
-              echo "  - yarn version major (for breaking changes)"
-              exit 1
-            else
-              echo "✅ Version has been bumped from $BASE_VERSION to $CURRENT_VERSION"
-            fi
+          if PAGER= git diff --unified=0 origin/main package.json | grep '\+  "version":' > /dev/null; then
+            echo "✅ Version has been bumped successfully";
           else
-            echo "✅ Only test files, package.json, yarn.lock, CHANGELOG.md, or .github yml files were modified. No version bump required."
+            echo "❌ Error: Files have been modified but package.json version has not been bumped.";
+            echo ""
+            echo "Modified files:";
+            echo "$ALL_CHANGED_FILES";
+            echo ""
+            echo "Please bump the version in package.json using one of:";
+            echo "  - yarn version patch (for bug fixes)";
+            echo "  - yarn version minor (for new features)";
+            echo "  - yarn version major (for breaking changes)";
+            exit 1;
           fi
