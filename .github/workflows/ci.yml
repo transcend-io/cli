@@ -5,15 +5,15 @@ jobs:
   build-and-upload-artifacts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: yarn
       - name: Build the typescript code
         run: yarn build
-      - uses: actions/upload-artifact@main
+      - uses: actions/upload-artifact@v4
         with:
           name: build artifacts
           path: build/
@@ -25,9 +25,9 @@ jobs:
         os: [ubuntu-latest]
         node-version: [18.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
@@ -36,9 +36,9 @@ jobs:
   run-depcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: yarn
@@ -47,9 +47,9 @@ jobs:
   generate-json-schema:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: yarn
@@ -61,12 +61,12 @@ jobs:
   run-pre-commits:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 100 # need the history to do a changed files check below (source, origin)
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: yarn
@@ -84,8 +84,8 @@ jobs:
       - run-pre-commits
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18.x'
       - run: yarn
@@ -106,8 +106,8 @@ jobs:
       - run-pre-commits
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18.x'
       - run: yarn
