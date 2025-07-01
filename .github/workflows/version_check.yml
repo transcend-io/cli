@@ -24,7 +24,6 @@ jobs:
             examples/
             scripts/
             package.json
-            tsconfig.json
             README.md
             yarn.lock
 
