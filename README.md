@@ -273,7 +273,7 @@ tr-pull --auth=$TRANSCEND_API_KEY
 ...
 ```
 
-Note:
+Note
 
 _The cli-commands default to using the EU Transcend backend. To use these commands with the US backend, you will need to use the flag --transcendUrl=https://api.us.transcend.io. You can also set the environment variable `TRANSCEND_API_URL=https://api.us.transcend.io`_
 
