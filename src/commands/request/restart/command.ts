@@ -1,5 +1,9 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createSombraAuthParameter,
@@ -21,14 +25,14 @@ export const restartCommand = buildCommand({
         ],
       }),
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
-        brief: 'The request action to restart',
+        brief: 'The request actions to restart',
       },
       statuses: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestStatus),
         variadic: ',',
         brief: 'The request statuses to restart',
       },
