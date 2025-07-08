@@ -1,10 +1,10 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestStatus, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { arrayParser, uuidParser } from '@/cli/parsers';
+import { uuidParser } from '@/cli/parsers';
 
 export const skipRequestDataSilosCommand = buildCommand({
   loader: async () => {
@@ -23,15 +23,14 @@ export const skipRequestDataSilosCommand = buildCommand({
       },
       transcendUrl: createTranscendUrlParameter(),
       statuses: {
-        kind: 'parsed',
-        parse: arrayParser,
-        brief:
-          'The request statuses to mark as completed for. Comma-separated list.',
-        default: 'COMPILING,SECONDARY',
+        kind: 'enum',
+        values: Object.values(RequestStatus),
+        variadic: ',',
+        brief: 'The request statuses to skip',
       },
       status: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: ['SKIPPED', 'RESOLVED'],
         brief: 'The status to set the request data silo job to',
         default: 'SKIPPED',
       },

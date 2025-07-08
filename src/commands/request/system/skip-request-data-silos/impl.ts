@@ -1,22 +1,30 @@
 import type { LocalContext } from '@/context';
+import type { RequestStatus } from '@transcend-io/privacy-types';
+import { skipRequestDataSilos as skipRequestDataSilosHelper } from '@/lib/requests';
 
 interface SkipRequestDataSilosCommandFlags {
   auth: string;
   dataSiloId: string;
   transcendUrl: string;
-  statuses: string[];
-  status: string;
+  statuses: RequestStatus[];
+  status: 'SKIPPED' | 'RESOLVED';
 }
 
-export function skipRequestDataSilos(
+export async function skipRequestDataSilos(
   this: LocalContext,
-  flags: SkipRequestDataSilosCommandFlags,
-): void {
-  console.log('Skip request data silos command started...');
-  console.log('Flags:', flags);
-
-  // TODO: Implement the actual functionality
-  // This would involve skipping all open privacy request jobs for a data silo
-
-  throw new Error('Command not yet implemented');
+  {
+    auth,
+    dataSiloId,
+    status,
+    statuses,
+    transcendUrl,
+  }: SkipRequestDataSilosCommandFlags,
+): Promise<void> {
+  await skipRequestDataSilosHelper({
+    transcendUrl,
+    auth,
+    status,
+    dataSiloId,
+    requestStatuses: statuses,
+  });
 }
