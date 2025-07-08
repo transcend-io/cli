@@ -1,5 +1,5 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestAction, ScopeName } from '@transcend-io/privacy-types';
 import { name } from '../../../../constants';
 import {
   createAuthParameter,
@@ -26,10 +26,10 @@ export const pullIdentifiersCommand = buildCommand({
         default: './manual-enrichment-identifiers.csv',
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
-        brief: 'The request action to pull for',
+        brief: 'The request actions to pull for',
         optional: true,
       },
       concurrency: {

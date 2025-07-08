@@ -1,24 +1,33 @@
 import type { LocalContext } from '@/context';
+import { pullManualEnrichmentIdentifiersToCsv } from '@/lib/manual-enrichment';
+import type { RequestAction } from '@transcend-io/privacy-types';
 
 interface PullIdentifiersCommandFlags {
   auth: string;
   sombraAuth?: string;
   transcendUrl: string;
   file: string;
-  actions?: string[];
+  actions?: RequestAction[];
   concurrency: number;
 }
 
-export function pullIdentifiers(
+export async function pullIdentifiers(
   this: LocalContext,
-  flags: PullIdentifiersCommandFlags,
-): void {
-  console.log('Manual enrichment pull identifiers command started...');
-  console.log('Flags:', flags);
-
-  // TODO: Implement the actual functionality
-  // This would involve calling the Transcend API to pull identifiers
-  // that are pending manual enrichment and writing them to a CSV file
-
-  throw new Error('Command not yet implemented');
+  {
+    auth,
+    transcendUrl,
+    file,
+    concurrency,
+    actions,
+    sombraAuth,
+  }: PullIdentifiersCommandFlags,
+): Promise<void> {
+  await pullManualEnrichmentIdentifiersToCsv({
+    file,
+    transcendUrl,
+    concurrency,
+    requestActions: actions,
+    auth,
+    sombraAuth,
+  });
 }

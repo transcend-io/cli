@@ -27,12 +27,13 @@ export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
  * Pull the set of manual enrichment jobs to CSV
  *
  * @param options - Options
+ * @returns List of requests with identifiers
  */
 export async function pullManualEnrichmentIdentifiersToCsv({
   file,
   auth,
   sombraAuth,
-  requestActions,
+  requestActions = [],
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -45,7 +46,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   /** Concurrency */
   concurrency?: number;
   /** The request actions to fetch */
-  requestActions: RequestAction[];
+  requestActions?: RequestAction[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<PrivacyRequestWithIdentifiers[]> {
