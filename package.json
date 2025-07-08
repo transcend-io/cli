@@ -59,7 +59,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "./dist/cli.mjs",
+    "start": "./dist/bin/cli.mjs",
     "prebuild": "tsc -p tsconfig.json",
     "build": "tsup",
     "build:watch": "tsup --watch",
