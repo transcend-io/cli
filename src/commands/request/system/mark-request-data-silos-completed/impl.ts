@@ -1,4 +1,14 @@
 import type { LocalContext } from '@/context';
+import colors from 'colors';
+import * as t from 'io-ts';
+
+import { logger } from '@/logger';
+import { markRequestDataSiloIdsCompleted } from '@/lib/cron';
+import { readCsv } from '@/lib/requests';
+
+const RequestIdRow = t.type({
+  'Request Id': t.string,
+});
 
 interface MarkRequestDataSilosCompletedCommandFlags {
   auth: string;
@@ -7,16 +17,22 @@ interface MarkRequestDataSilosCompletedCommandFlags {
   transcendUrl: string;
 }
 
-export function markRequestDataSilosCompleted(
+export async function markRequestDataSilosCompleted(
   this: LocalContext,
-  flags: MarkRequestDataSilosCompletedCommandFlags,
-): void {
-  console.log('Mark request data silos completed command started...');
-  console.log('Flags:', flags);
+  {
+    auth,
+    dataSiloId,
+    file,
+    transcendUrl,
+  }: MarkRequestDataSilosCompletedCommandFlags,
+): Promise<void> {
+  logger.info(colors.magenta(`Reading "${file}" from disk`));
+  const activeResults = readCsv(file, RequestIdRow);
 
-  // TODO: Implement the actual functionality
-  // This would involve reading a CSV of request IDs and marking
-  // all associated privacy request jobs as completed
-
-  throw new Error('Command not yet implemented');
+  await markRequestDataSiloIdsCompleted({
+    requestIds: activeResults.map((request) => request['Request Id']),
+    transcendUrl,
+    auth,
+    dataSiloId,
+  });
 }
