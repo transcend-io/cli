@@ -28,7 +28,7 @@ export const scanPackagesCommand = buildCommand({
         brief: 'List of directories to ignore in scan',
         optional: true,
       },
-      packageName: {
+      repositoryName: {
         kind: 'parsed',
         parse: String,
         brief: 'Name of the git repository that the package should be tied to',
