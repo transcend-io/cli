@@ -1,49 +1,63 @@
 import type { LocalContext } from '@/context';
+import colors from 'colors';
+
+import { logger } from '@/logger';
+import { uniq } from 'lodash-es';
+import { pullPrivacyRequests } from '@/lib/requests';
+import { writeCsv } from '@/lib/cron';
+import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
 interface ExportCommandFlags {
   auth: string;
   sombraAuth?: string;
-  actions?: string[];
-  statuses?: string[];
+  actions?: RequestAction[];
+  statuses?: RequestStatus[];
   transcendUrl: string;
   file: string;
   concurrency: number;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
   showTests?: boolean;
+  pageLimit: number;
 }
 
 // `export` is a reserved keyword, so we need to prefix it with an underscore
+// eslint-disable-next-line no-underscore-dangle
 export async function _export(
   this: LocalContext,
-  flags: ExportCommandFlags,
+  {
+    auth,
+    transcendUrl,
+    file,
+    pageLimit,
+    actions,
+    sombraAuth,
+    statuses,
+    createdAtBefore,
+    createdAtAfter,
+    showTests,
+  }: ExportCommandFlags,
 ): Promise<void> {
-  console.log('Exporting requests to file:', flags.file);
-  console.log('Concurrency:', flags.concurrency);
+  const { requestsFormattedForCsv } = await pullPrivacyRequests({
+    transcendUrl,
+    pageLimit,
+    actions,
+    statuses,
+    auth,
+    sombraAuth,
+    createdAtBefore,
+    createdAtAfter,
+    isTest: showTests,
+  });
 
-  if (flags.actions) {
-    console.log('Actions:', flags.actions);
-  }
-  if (flags.statuses) {
-    console.log('Statuses:', flags.statuses);
-  }
-  if (flags.createdAtBefore) {
-    console.log('Created before:', flags.createdAtBefore);
-  }
-  if (flags.createdAtAfter) {
-    console.log('Created after:', flags.createdAtAfter);
-  }
-  if (flags.showTests !== undefined) {
-    console.log('Show tests:', flags.showTests);
-  }
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Fetching requests based on filters
-  // 2. Exporting them to CSV format
-  // 3. Processing in parallel with specified concurrency
-  // 4. Handling test vs production request filtering
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log('Export command completed');
+  // Write to CSV
+  const headers = uniq(
+    requestsFormattedForCsv.map((d) => Object.keys(d)).flat(),
+  );
+  writeCsv(file, requestsFormattedForCsv, headers);
+  logger.info(
+    colors.green(
+      `Successfully wrote ${requestsFormattedForCsv.length} requests to file "${file}"`,
+    ),
+  );
 }

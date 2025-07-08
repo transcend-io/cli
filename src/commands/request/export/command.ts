@@ -1,5 +1,9 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createSombraAuthParameter,
@@ -19,17 +23,17 @@ export const exportCommand = buildCommand({
       }),
       sombraAuth: createSombraAuthParameter(),
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
-        brief: 'The request action to restart',
+        brief: 'The request actions to export',
         optional: true,
       },
       statuses: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestStatus),
         variadic: ',',
-        brief: 'The request statuses to restart',
+        brief: 'The request statuses to export',
         optional: true,
       },
       transcendUrl: createTranscendUrlParameter(),
@@ -62,6 +66,12 @@ export const exportCommand = buildCommand({
         brief:
           'Filter for test requests or production requests - when not provided, pulls both',
         optional: true,
+      },
+      pageLimit: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief: 'The page limit to use when pulling in pages of requests',
+        default: '100',
       },
     },
   },
