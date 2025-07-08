@@ -1,9 +1,11 @@
 import type { LocalContext } from '@/context';
+import { markSilentPrivacyRequests } from '@/lib/requests';
+import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
 interface MarkSilentCommandFlags {
   auth: string;
-  actions: string[];
-  statuses: string[];
+  actions: RequestAction[];
+  statuses?: RequestStatus[];
   requestIds?: string[];
   createdAtBefore?: Date;
   createdAtAfter?: Date;
@@ -13,28 +15,25 @@ interface MarkSilentCommandFlags {
 
 export async function markSilent(
   this: LocalContext,
-  flags: MarkSilentCommandFlags,
+  {
+    auth,
+    transcendUrl,
+    actions,
+    statuses,
+    requestIds,
+    createdAtBefore,
+    createdAtAfter,
+    concurrency,
+  }: MarkSilentCommandFlags,
 ): Promise<void> {
-  console.log('Marking requests as silent with actions:', flags.actions);
-  console.log('Statuses:', flags.statuses);
-  console.log('Concurrency:', flags.concurrency);
-
-  if (flags.requestIds) {
-    console.log('Request IDs:', flags.requestIds);
-  }
-  if (flags.createdAtBefore) {
-    console.log('Created before:', flags.createdAtBefore);
-  }
-  if (flags.createdAtAfter) {
-    console.log('Created after:', flags.createdAtAfter);
-  }
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Fetching requests based on filters
-  // 2. Marking them as silent in parallel with specified concurrency
-  // 3. Processing date filters
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log('Mark silent command completed');
+  await markSilentPrivacyRequests({
+    transcendUrl,
+    requestActions: actions,
+    auth,
+    requestIds,
+    statuses,
+    concurrency,
+    createdAtBefore,
+    createdAtAfter,
+  });
 }

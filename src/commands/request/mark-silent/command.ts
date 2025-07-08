@@ -1,10 +1,14 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { arrayParser, dateParser } from '@/cli/parsers';
+import { dateParser } from '@/cli/parsers';
 
 export const markSilentCommand = buildCommand({
   loader: async () => {
@@ -17,17 +21,18 @@ export const markSilentCommand = buildCommand({
         scopes: [ScopeName.ManageRequestCompilation],
       }),
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request actions to mark silent',
       },
       statuses: {
-        kind: 'parsed',
-        parse: arrayParser,
-        brief: 'The request statuses to mark silent. Comma-separated list.',
-        default:
-          'REQUEST_MADE,WAITING,ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING',
+        kind: 'enum',
+        values: Object.values(RequestStatus),
+        variadic: ',',
+        brief:
+          'The request statuses to mark silent. Comma-separated list. Defaults to REQUEST_MADE,WAITING,ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING.',
+        optional: true,
       },
       requestIds: {
         kind: 'parsed',
