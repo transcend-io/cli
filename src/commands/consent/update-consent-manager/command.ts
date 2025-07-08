@@ -1,10 +1,9 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { ConsentBundleType, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { arrayParser } from '@/cli/parsers';
 
 export const updateConsentManagerCommand = buildCommand({
   loader: async () => {
@@ -17,10 +16,10 @@ export const updateConsentManagerCommand = buildCommand({
         scopes: [ScopeName.ManageConsentManagerDeveloperSettings],
       }),
       bundleTypes: {
-        kind: 'parsed',
-        parse: arrayParser,
-        brief: 'The bundle types to deploy. Comma-separated list.',
-        default: 'PRODUCTION,TEST',
+        kind: 'enum',
+        values: Object.values(ConsentBundleType),
+        brief: 'The bundle types to deploy. Defaults to PRODUCTION,TEST.',
+        variadic: ',',
       },
       deploy: {
         kind: 'boolean',
