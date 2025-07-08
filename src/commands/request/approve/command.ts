@@ -1,5 +1,9 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestOrigin,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -21,14 +25,14 @@ export const approveCommand = buildCommand({
         ],
       }),
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request actions to approve',
       },
       origins: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestOrigin),
         variadic: ',',
         brief: 'The request origins to approve',
         optional: true,
