@@ -1,5 +1,5 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestAction, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -22,8 +22,8 @@ export const rejectUnverifiedIdentifiersCommand = buildCommand({
         brief: 'The names of identifiers to clear out',
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request action to restart',
         optional: true,
