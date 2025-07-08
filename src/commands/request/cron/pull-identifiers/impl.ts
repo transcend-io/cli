@@ -1,4 +1,13 @@
 import type { LocalContext } from '@/context';
+import colors from 'colors';
+
+import { logger } from '@/logger';
+import { uniq } from 'lodash-es';
+import {
+  pullCustomSiloOutstandingIdentifiers,
+  writeLargeCsv,
+} from '@/lib/cron';
+import { RequestAction } from '@transcend-io/privacy-types';
 
 interface PullIdentifiersCommandFlags {
   file: string;
@@ -6,7 +15,7 @@ interface PullIdentifiersCommandFlags {
   auth: string;
   sombraAuth?: string;
   dataSiloId: string;
-  actions: string;
+  actions: RequestAction[];
   pageLimit: number;
   skipRequestCount: boolean;
   chunkSize: number;
@@ -14,24 +23,63 @@ interface PullIdentifiersCommandFlags {
 
 export async function pullIdentifiers(
   this: LocalContext,
-  flags: PullIdentifiersCommandFlags,
+  {
+    file,
+    transcendUrl,
+    auth,
+    sombraAuth,
+    dataSiloId,
+    actions,
+    pageLimit,
+    skipRequestCount,
+    chunkSize,
+  }: PullIdentifiersCommandFlags,
 ): Promise<void> {
-  console.log('Pulling identifiers for data silo:', flags.dataSiloId);
-  console.log('Actions:', flags.actions);
-  console.log('Output file:', flags.file);
-  console.log('Page limit:', flags.pageLimit);
-  console.log('Chunk size:', flags.chunkSize);
-  console.log('Skip request count:', flags.skipRequestCount);
+  if (skipRequestCount) {
+    logger.info(
+      colors.yellow(
+        'Skipping request count as requested. This may help speed up the call.',
+      ),
+    );
+  }
 
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Making API calls to get outstanding identifiers
-  // 2. Handling pagination with pageLimit
-  // 3. Splitting output into chunks based on chunkSize
-  // 4. Writing to CSV files with proper naming for chunks
+  // Pull down outstanding identifiers
+  const { identifiersFormattedForCsv } =
+    await pullCustomSiloOutstandingIdentifiers({
+      transcendUrl,
+      pageLimit,
+      actions,
+      auth,
+      sombraAuth,
+      dataSiloId,
+      skipRequestCount,
+    });
 
-  // Simulate async work
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  // Write CSV (split into multiple files if too large)
+  const headers = uniq(
+    identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
+  );
+  const writtenFiles = await writeLargeCsv(
+    file,
+    identifiersFormattedForCsv,
+    headers,
+    chunkSize,
+  );
 
-  console.log('Pull identifiers command completed');
+  if (writtenFiles.length === 1) {
+    logger.info(
+      colors.green(
+        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
+      ),
+    );
+  } else {
+    logger.info(
+      colors.green(
+        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to ${writtenFiles.length} files:`,
+      ),
+    );
+    writtenFiles.forEach((fileName) => {
+      logger.info(colors.green(`  - ${fileName}`));
+    });
+  }
 }

@@ -5,6 +5,7 @@ import {
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
 import { uuidParser } from '@/cli/parsers';
+import { RequestAction } from '@transcend-io/privacy-types';
 
 export const pullIdentifiersCommand = buildCommand({
   loader: async () => {
@@ -23,9 +24,10 @@ export const pullIdentifiersCommand = buildCommand({
         brief: 'The ID of the data silo to pull in',
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
-        brief: 'The request action to restart',
+        kind: 'enum',
+        values: Object.values(RequestAction),
+        variadic: ',',
+        brief: 'The request actions to restart',
       },
       file: {
         kind: 'parsed',
