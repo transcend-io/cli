@@ -249,6 +249,15 @@ module.exports = {
     '@typescript-eslint/ban-types': ['error'],
     '@typescript-eslint/no-explicit-any': ['error'],
   },
+  overrides: [
+    {
+      files: ['src/commands/**/*'],
+      rules: {
+        'max-len': 'off',
+        'jsdoc/require-jsdoc': 'off',
+      },
+    },
+  ],
   settings: {
     /** Allow for typescript alias resolution */
     'import/resolver': {

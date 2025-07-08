@@ -1,8 +1,5 @@
 node_modules
-.pnp.cjs
-.pnp.loader.mjs
-.yarnrc.yml
-.yarn/
+pnpm-lock.yaml
 *.tsx.snap
 *.hbs
 *.hcl
@@ -41,14 +38,11 @@ node_modules
 *.tf
 *.block
 .prettierignore
-.yarnrc
 *.woff
 .dockerignore
 *.testts
 .gitignore
 *.sh
-yarn.lock
 .idea
 .gitkeep
-.yarn/
 transcend-yml-schema-*.json

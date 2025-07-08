@@ -1,10 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.nodePath": ".yarn/sdks",
   "eslint.trace.server": "messages",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "editor.formatOnSave": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.preferences.quoteStyle": "single",
@@ -29,7 +26,6 @@
     "**/tsconfig.tsbuildinfo": true,
     "**/build": true,
     "**/builds": true,
-    "**/.yarn": true,
     "**/.caches": true,
     "**/.pnp.*": true
   },

@@ -1,1 +1,1 @@
-ignores: ["@yarnpkg/sdks", "depcheck", "prettier"]
+ignores: ["depcheck", "prettier"]

@@ -183,7 +183,7 @@ export interface AssessmentQuestion {
   /** Email of the external respondent */
   externalRespondentEmail?: string;
   /** Comments related to the question */
-  comments: Comment[];
+  comments: unknown[];
   /** Allowed MIME types for file uploads in the question */
   allowedMimeTypes: string[];
   /** Timestamp of the last update to the question */

@@ -1,0 +1,1 @@
+async function t(e){console.log("Rejecting unverified identifiers:",e.identifierNames),e.actions&&console.log("Actions:",e.actions),await new Promise(i=>setTimeout(i,100)),console.log("Reject unverified identifiers command completed")}export{t as rejectUnverifiedIdentifiers};

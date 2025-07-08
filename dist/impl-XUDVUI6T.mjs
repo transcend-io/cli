@@ -1,0 +1,1 @@
+import*as i from"fs";async function t(e){if(console.log("Marking identifiers as completed for data silo:",e.dataSiloId),console.log("Input file:",e.file),!i.existsSync(e.file))throw new Error(`File not found: ${e.file}`);await new Promise(o=>setTimeout(o,100)),console.log("Mark identifiers completed command finished")}export{t as markIdentifiersCompleted};

@@ -17,13 +17,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - run: yarn
+      - run: pnpm install
 
       # Install
-      - run: yarn up @transcend-io/internationalization
-      - run: yarn up @transcend-io/privacy-types
-      - run: yarn up @transcend-io/persisted-state
-      - run: yarn up @transcend-io/type-utils
+      - run: pnpm up "@transcend-io/*" --latest
 
       - name: Create Pull Request
         id: cpr

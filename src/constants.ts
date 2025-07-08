@@ -2,6 +2,9 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
+export { description, version } from '../package.json';
+export const name = 'transcend';
+
 export const ADMIN_DASH = 'https://app.transcend.io';
 
 export const ADMIN_DASH_INTEGRATIONS = `${ADMIN_DASH}/infrastructure/integrations`;

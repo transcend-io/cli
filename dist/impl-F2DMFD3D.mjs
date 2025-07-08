@@ -1,0 +1,1 @@
+function t(n){throw console.log("Consent managers to business entities command started..."),console.log("Flags:",n),new Error("Command not yet implemented")}export{t as consentManagersToBusinessEntities};
