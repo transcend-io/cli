@@ -12,9 +12,7 @@ const helpTextForAllCommands = generateHelpTextForAllCommands(
 );
 
 const formattedMarkdown: string = helpTextForAllCommands
-  .map(
-    ([command, helpText]) => `## ${command}\n\n\`\`\`bash\n${helpText}\`\`\``,
-  )
+  .map(([command, helpText]) => `## ${command}\n\n\`\`\`txt\n${helpText}\`\`\``)
   .join('\n');
 
 const readme = fs.readFileSync('README.md', 'utf8');
