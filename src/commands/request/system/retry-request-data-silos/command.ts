@@ -1,5 +1,5 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestAction, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -22,10 +22,10 @@ export const retryRequestDataSilosCommand = buildCommand({
         brief: 'The ID of the data silo to pull in',
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
-        brief: 'The request action to restart',
+        brief: 'The request actions to restart',
       },
       transcendUrl: createTranscendUrlParameter(),
     },

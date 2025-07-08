@@ -1,21 +1,27 @@
 import type { LocalContext } from '@/context';
+import type { RequestAction } from '@transcend-io/privacy-types';
+import { retryRequestDataSilos as retryRequestDataSilosHelper } from '@/lib/requests';
 
 interface RetryRequestDataSilosCommandFlags {
   auth: string;
   dataSiloId: string;
-  actions: string[];
+  actions: RequestAction[];
   transcendUrl: string;
 }
 
-export function retryRequestDataSilos(
+export async function retryRequestDataSilos(
   this: LocalContext,
-  flags: RetryRequestDataSilosCommandFlags,
-): void {
-  console.log('Retry request data silos command started...');
-  console.log('Flags:', flags);
-
-  // TODO: Implement the actual functionality
-  // This would involve retrying data silo jobs for open privacy requests
-
-  throw new Error('Command not yet implemented');
+  {
+    auth,
+    dataSiloId,
+    actions,
+    transcendUrl,
+  }: RetryRequestDataSilosCommandFlags,
+): Promise<void> {
+  await retryRequestDataSilosHelper({
+    requestActions: actions,
+    transcendUrl,
+    auth,
+    dataSiloId,
+  });
 }
