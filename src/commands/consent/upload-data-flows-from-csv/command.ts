@@ -1,5 +1,5 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { ConsentTrackerStatus, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -16,10 +16,9 @@ export const uploadDataFlowsFromCsvCommand = buildCommand({
         scopes: [ScopeName.ManageDataFlow],
       }),
       trackerStatus: {
-        kind: 'parsed',
-        parse: String,
-        brief:
-          'Whether or not to upload the data flows into the "Approved" tab (LIVE) or the "Triage" tab (NEEDS_REVIEW)',
+        kind: 'enum',
+        values: Object.values(ConsentTrackerStatus),
+        brief: 'The status of the data flows you will upload.',
       },
       file: {
         kind: 'parsed',

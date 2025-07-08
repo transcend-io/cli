@@ -1,18 +1,30 @@
 import type { LocalContext } from '@/context';
+import { uploadDataFlowsFromCsv as uploadDataFlowsFromCsvHelper } from '@/lib/consent-manager';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 
 interface UploadDataFlowsFromCsvCommandFlags {
   auth: string;
-  trackerStatus: string;
+  trackerStatus: ConsentTrackerStatus;
   file: string;
   classifyService: boolean;
   transcendUrl: string;
 }
 
-export function uploadDataFlowsFromCsv(
+export async function uploadDataFlowsFromCsv(
   this: LocalContext,
-  flags: UploadDataFlowsFromCsvCommandFlags,
-): void {
-  console.log('Upload data flows from CSV command started...');
-  console.log('Flags:', flags);
-  throw new Error('Command not yet implemented');
+  {
+    auth,
+    trackerStatus,
+    file,
+    classifyService,
+    transcendUrl,
+  }: UploadDataFlowsFromCsvCommandFlags,
+): Promise<void> {
+  await uploadDataFlowsFromCsvHelper({
+    auth,
+    trackerStatus,
+    file,
+    classifyService,
+    transcendUrl,
+  });
 }
