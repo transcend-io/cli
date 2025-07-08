@@ -31,8 +31,13 @@ export const pushCommand = buildCommand({
         kind: 'parsed',
         parse: String,
         brief:
-          'The variables to template into the YAML file when pushing configuration',
-        optional: true,
+          'The variables to template into the YAML file when pushing configuration. Comma-separated list of key:value pairs.',
+        default: '',
+      },
+      publishToPrivacyCenter: {
+        kind: 'boolean',
+        brief: 'When true, publish the configuration to the Privacy Center',
+        default: false,
       },
       classifyService: {
         kind: 'boolean',
