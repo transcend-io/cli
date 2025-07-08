@@ -1,10 +1,12 @@
 import type { LocalContext } from '@/context';
+import { notifyPrivacyRequestsAdditionalTime } from '@/lib/requests';
+import type { RequestAction } from '@transcend-io/privacy-types';
 
 interface NotifyAdditionalTimeCommandFlags {
   auth: string;
   createdAtBefore: Date;
   createdAtAfter?: Date;
-  actions?: string[];
+  actions?: RequestAction[];
   daysLeft: number;
   days: number;
   requestIds?: string[];
@@ -15,34 +17,29 @@ interface NotifyAdditionalTimeCommandFlags {
 
 export async function notifyAdditionalTime(
   this: LocalContext,
-  flags: NotifyAdditionalTimeCommandFlags,
+  {
+    auth,
+    transcendUrl,
+    createdAtBefore,
+    createdAtAfter,
+    actions,
+    daysLeft,
+    days,
+    requestIds,
+    emailTemplate,
+    concurrency,
+  }: NotifyAdditionalTimeCommandFlags,
 ): Promise<void> {
-  console.log(
-    'Notifying additional time for requests created before:',
-    flags.createdAtBefore,
-  );
-  console.log('Days left threshold:', flags.daysLeft);
-  console.log('Days to extend:', flags.days);
-  console.log('Email template:', flags.emailTemplate);
-  console.log('Concurrency:', flags.concurrency);
-
-  if (flags.createdAtAfter) {
-    console.log('Created after:', flags.createdAtAfter);
-  }
-  if (flags.actions) {
-    console.log('Actions:', flags.actions);
-  }
-  if (flags.requestIds) {
-    console.log('Request IDs:', flags.requestIds);
-  }
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Fetching requests based on filters
-  // 2. Checking expiration dates
-  // 3. Extending requests and sending notifications
-  // 4. Processing in parallel with specified concurrency
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log('Notify additional time command completed');
+  await notifyPrivacyRequestsAdditionalTime({
+    transcendUrl,
+    requestActions: actions,
+    auth,
+    emailTemplate,
+    days,
+    daysLeft,
+    requestIds,
+    concurrency,
+    createdAtBefore,
+    createdAtAfter,
+  });
 }

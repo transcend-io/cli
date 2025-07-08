@@ -1,5 +1,5 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestAction, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -28,8 +28,8 @@ export const notifyAdditionalTimeCommand = buildCommand({
         optional: true,
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request actions to notify',
         optional: true,
