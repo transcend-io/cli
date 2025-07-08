@@ -23,7 +23,11 @@
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
 
-    "typeRoots": ["src/lib/@types", "node_modules/@types"]
+    "typeRoots": ["src/lib/@types", "node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["**/*"],
   "exclude": ["node_modules", "dist"],

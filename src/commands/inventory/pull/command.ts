@@ -61,7 +61,8 @@ export const pullCommand = buildCommand({
         kind: 'enum',
         values: Object.values(ConsentTrackerStatus),
         variadic: ',',
-        brief: `The statuses of consent manager trackers to pull down. Defaults to all statuses.`,
+        brief:
+          'The statuses of consent manager trackers to pull down. Defaults to all statuses.',
         optional: true,
       },
       pageSize: {
