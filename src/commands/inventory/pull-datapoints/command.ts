@@ -1,5 +1,5 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { DataCategoryType, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -25,7 +25,8 @@ export const pullDatapointsCommand = buildCommand({
       dataSiloIds: {
         kind: 'parsed',
         parse: String,
-        brief: 'Comma-separated list of data silo IDs to filter by',
+        variadic: ',',
+        brief: 'List of data silo IDs to filter by',
         optional: true,
       },
       includeAttributes: {
@@ -39,15 +40,17 @@ export const pullDatapointsCommand = buildCommand({
         default: false,
       },
       parentCategories: {
-        kind: 'parsed',
-        parse: String,
-        brief: 'Comma-separated list of parent categories to filter by',
+        kind: 'enum',
+        values: Object.values(DataCategoryType),
+        brief: 'List of parent categories to filter by',
+        variadic: ',',
         optional: true,
       },
       subCategories: {
         kind: 'parsed',
         parse: String,
-        brief: 'Comma-separated list of subcategories to filter by',
+        brief: 'List of subcategories to filter by',
+        variadic: ',',
         optional: true,
       },
     },
