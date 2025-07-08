@@ -4,7 +4,7 @@ import cliProgress from 'cli-progress';
 
 import { PrivacyRequest } from '../graphql';
 import * as t from 'io-ts';
-import { Got } from 'got/dist/source';
+import type { Got } from 'got';
 import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import { logger } from '../../logger';
 import { TableEncryptionType } from '@transcend-io/privacy-types';

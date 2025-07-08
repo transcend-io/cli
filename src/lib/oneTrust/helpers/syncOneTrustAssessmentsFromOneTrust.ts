@@ -1,4 +1,4 @@
-import { Got } from 'got/dist/source';
+import type { Got } from 'got';
 import colors from 'colors';
 import {
   getListOfOneTrustAssessments,
