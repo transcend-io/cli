@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+// TODO DELETE
 import { fetchAndIndexCatalogs, buildTranscendGraphQLClient } from './graphql';
 import { join } from 'path';
 import yargs from 'yargs-parser';

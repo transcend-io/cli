@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+// TODO DELETE
 import { stringify } from 'query-string';
 import yargs from 'yargs-parser';
 import { logger } from '../logger';

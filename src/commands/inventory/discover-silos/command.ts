@@ -1,6 +1,9 @@
 import { buildCommand } from '@stricli/core';
 import { ScopeName } from '@transcend-io/privacy-types';
-import { createAuthParameter } from '@/cli/common-parameters';
+import {
+  createAuthParameter,
+  createTranscendUrlParameter,
+} from '@/cli/common-parameters';
 import { uuidParser } from '@/cli/parsers';
 
 export const discoverSilosCommand = buildCommand({
@@ -28,9 +31,16 @@ export const discoverSilosCommand = buildCommand({
         kind: 'parsed',
         parse: String,
         brief:
-          'You can pass a glob syntax pattern(s) to specify additional file paths to scan',
-        optional: true,
+          'You can pass a glob syntax pattern(s) to specify additional file paths to scan. Comma-separated list of globs.',
+        default: '',
       },
+      ignoreDirs: {
+        kind: 'parsed',
+        parse: String,
+        brief: 'Comma-separated list of directories to ignore.',
+        default: '',
+      },
+      transcendUrl: createTranscendUrlParameter(),
     },
   },
   docs: {
