@@ -42,7 +42,7 @@ export async function mapCsvColumnsToApi(
           [k in ColumnName]?: string;
         }>(
           columnQuestions.map((name) => {
-            const field = titleCase(name.replace('ColumnName', ''));
+            const field = startCase(name.replace('ColumnName', ''));
             const matches = fuzzyMatchColumns(
               columnNames,
               field,

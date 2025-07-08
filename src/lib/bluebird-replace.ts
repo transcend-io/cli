@@ -21,14 +21,18 @@ export async function mapSeries<R, U>(
  *
  * @param array - The array to iterate over
  * @param iterator - The iterator function that receives (item, index, arrayLength)
- * @param concurrency - The concurrency level for the Promise.all call
+ * @param options - Options
  * @returns The results of the iterator function
  */
 export async function map<R, U>(
   array: R[],
   iterator: (item: R, index: number, arrayLength: number) => Promise<U>,
-  { concurrency = Infinity },
+  options: {
+    /** Concurrency level for the Promise.all call */
+    concurrency?: number;
+  } = {},
 ): Promise<U[]> {
+  const { concurrency = Infinity } = options;
   const results: U[] = new Array(array.length);
   const executing: Promise<void>[] = [];
   let nextIndex = 0;
