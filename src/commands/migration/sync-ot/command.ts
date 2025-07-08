@@ -4,6 +4,7 @@ import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
+import { OneTrustPullResource, OneTrustPullSource } from '@/enums';
 
 export const syncOtCommand = buildCommand({
   loader: async () => {
@@ -27,10 +28,10 @@ export const syncOtCommand = buildCommand({
         optional: true,
       },
       source: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(OneTrustPullSource) as OneTrustPullSource[],
         brief: 'Whether to read the assessments from OneTrust or from a file',
-        default: 'oneTrust',
+        default: OneTrustPullSource.OneTrust,
       },
       transcendAuth: {
         ...createAuthParameter({
@@ -47,11 +48,11 @@ export const syncOtCommand = buildCommand({
         optional: true,
       },
       resource: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(OneTrustPullResource) as OneTrustPullResource[],
         brief:
           'The resource to pull from OneTrust. For now, only assessments is supported',
-        default: 'assessments',
+        default: OneTrustPullResource.Assessments,
       },
       dryRun: {
         kind: 'boolean',

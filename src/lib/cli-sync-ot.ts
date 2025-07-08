@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+// TODO DELETE
 import { logger } from '../logger';
 
 import colors from 'colors';
