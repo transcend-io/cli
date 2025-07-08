@@ -1,9 +1,11 @@
 import type { LocalContext } from '@/context';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { cancelPrivacyRequests } from '@/lib/requests';
 
 interface CancelCommandFlags {
   auth: string;
-  actions: string[];
-  statuses: string[];
+  actions: RequestAction[];
+  statuses?: RequestStatus[];
   requestIds?: string[];
   silentModeBefore?: Date;
   createdAtBefore?: Date;
@@ -15,33 +17,29 @@ interface CancelCommandFlags {
 
 export async function cancel(
   this: LocalContext,
-  flags: CancelCommandFlags,
+  {
+    auth,
+    actions,
+    statuses = [],
+    requestIds,
+    silentModeBefore,
+    createdAtBefore,
+    createdAtAfter,
+    cancellationTitle,
+    transcendUrl,
+    concurrency,
+  }: CancelCommandFlags,
 ): Promise<void> {
-  console.log('Canceling requests with actions:', flags.actions);
-  console.log('Statuses:', flags.statuses);
-  console.log('Cancellation title:', flags.cancellationTitle);
-  console.log('Concurrency:', flags.concurrency);
-
-  if (flags.requestIds) {
-    console.log('Request IDs:', flags.requestIds);
-  }
-  if (flags.silentModeBefore) {
-    console.log('Silent mode before:', flags.silentModeBefore);
-  }
-  if (flags.createdAtBefore) {
-    console.log('Created before:', flags.createdAtBefore);
-  }
-  if (flags.createdAtAfter) {
-    console.log('Created after:', flags.createdAtAfter);
-  }
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Fetching requests based on filters
-  // 2. Canceling them in parallel with specified concurrency
-  // 3. Sending cancellation emails with specified template
-  // 4. Handling silent mode logic
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log('Cancel command completed');
+  await cancelPrivacyRequests({
+    transcendUrl,
+    requestActions: actions,
+    auth,
+    cancellationTitle,
+    requestIds,
+    statuses,
+    concurrency,
+    silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
+    createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
+    createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
+  });
 }

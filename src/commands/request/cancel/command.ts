@@ -1,10 +1,14 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { arrayParser, dateParser } from '@/cli/parsers';
+import { dateParser } from '@/cli/parsers';
 
 export const cancelCommand = buildCommand({
   loader: async () => {
@@ -17,17 +21,17 @@ export const cancelCommand = buildCommand({
         scopes: [ScopeName.ViewRequests, ScopeName.RequestApproval],
       }),
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request actions to cancel',
       },
       statuses: {
-        kind: 'parsed',
-        parse: arrayParser,
+        kind: 'enum',
+        values: Object.values(RequestStatus),
+        variadic: ',',
         brief: 'The request statuses to cancel. Comma-separated list.',
-        default:
-          'REQUEST_MADE,WAITING,ENRICHING,COMPILING,DELAYED,APPROVING,SECONDARY,SECONDARY_APPROVING',
+        optional: true,
       },
       requestIds: {
         kind: 'parsed',
