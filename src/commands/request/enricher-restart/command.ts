@@ -1,5 +1,9 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestAction,
+  RequestEnricherStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -22,15 +26,15 @@ export const enricherRestartCommand = buildCommand({
         brief: 'The ID of the enricher to restart',
       },
       actions: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestAction),
         variadic: ',',
         brief: 'The request action to restart',
         optional: true,
       },
       requestEnricherStatuses: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: Object.values(RequestEnricherStatus),
         variadic: ',',
         brief: 'The request enricher statuses to restart',
         optional: true,
