@@ -1,5 +1,5 @@
-import * as fs from 'node:fs';
 import type { LocalContext } from '@/context';
+import { pushCronIdentifiersFromCsv } from '@/lib/cron';
 
 interface MarkIdentifiersCompletedCommandFlags {
   file: string;
@@ -11,27 +11,19 @@ interface MarkIdentifiersCompletedCommandFlags {
 
 export async function markIdentifiersCompleted(
   this: LocalContext,
-  flags: MarkIdentifiersCompletedCommandFlags,
+  {
+    file,
+    transcendUrl,
+    auth,
+    sombraAuth,
+    dataSiloId,
+  }: MarkIdentifiersCompletedCommandFlags,
 ): Promise<void> {
-  console.log(
-    'Marking identifiers as completed for data silo:',
-    flags.dataSiloId,
-  );
-  console.log('Input file:', flags.file);
-
-  // Check if the file exists
-  if (!fs.existsSync(flags.file)) {
-    throw new Error(`File not found: ${flags.file}`);
-  }
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Reading the CSV file
-  // 2. Parsing the identifiers
-  // 3. Making API calls to mark them as completed
-
-  // Simulate async work
-  await new Promise((resolve) => setTimeout(resolve, 100));
-
-  console.log('Mark identifiers completed command finished');
+  await pushCronIdentifiersFromCsv({
+    file,
+    transcendUrl,
+    auth,
+    sombraAuth,
+    dataSiloId,
+  });
 }
