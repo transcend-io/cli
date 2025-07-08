@@ -42,8 +42,8 @@ jobs:
             echo "$ALL_CHANGED_FILES";
             echo ""
             echo "Please bump the version in package.json using one of:";
-            echo "  - yarn version patch (for bug fixes)";
-            echo "  - yarn version minor (for new features)";
-            echo "  - yarn version major (for breaking changes)";
+            echo "  - npm version patch (for bug fixes)";
+            echo "  - npm version minor (for new features)";
+            echo "  - npm version major (for breaking changes)";
             exit 1;
           fi

@@ -12,8 +12,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "arcanis.vscode-zipfs",
-        "slevesque.vscode-zipexplorer",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "bcanzanella.openmatchingfiles",

@@ -6,53 +6,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - name: Build the typescript code
         run: pnpm build
       - uses: actions/upload-artifact@v4
         with:
           name: build artifacts
-          path: build/
+          path: dist/
 
   run-mocha:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - run: pnpm test
 
   run-depcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - run: pnpm depcheck
 
   generate-json-schema:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - run: pnpm script:transcend-json-schema
       - run: pnpm script:pathfinder-json-schema
       - name: Ensure no files changed
@@ -65,11 +45,7 @@ jobs:
         with:
           fetch-depth: 100 # need the history to do a changed files check below (source, origin)
       - uses: actions/setup-python@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - uses: pre-commit/action@v3.0.0
         with:
           extra_args: --source ${{ github.event.pull_request.base.sha || 'HEAD~1' }} --origin ${{ github.event.pull_request.head.sha || 'HEAD' }}
@@ -85,10 +61,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - name: Configure NPM authentication
         run: |
           npm config set npmAlwaysAuth true
@@ -107,10 +80,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-      - run: pnpm install
+      - uses: ./.github/commands/dependencies/install_deps
       - name: Configure Github Packages authentication
         run: |
           npm config set npmAlwaysAuth true
