@@ -1,4 +1,7 @@
 #!/usr/bin/env/node
+
+// TODO DELETE
+
 import { listFiles } from './api-keys';
 import { consentManagersToBusinessEntities } from './consent-manager';
 import { readTranscendYaml, writeTranscendYaml } from './readTranscendYaml';
