@@ -1,5 +1,8 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "eslint.trace.server": "messages",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.formatOnSave": true,

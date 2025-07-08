@@ -2,7 +2,7 @@
   "compilerOptions": {
     "noEmit": true,
     "rootDir": ".",
-    "types": ["mocha", "node"],
+    "types": ["node"],
     "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",

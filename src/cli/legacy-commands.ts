@@ -114,7 +114,9 @@ export function logModernCommandRecommendation(
   if (!modernCommand) {
     const modernCommandString = Object.entries(legacyCommandToModernCommandMap)
       .map(([legacyCommand, modernCommand]) => {
-        return `\`${legacyCommand}\` -> \`${app.config.name} ${modernCommand.join(' ')}\``;
+        return `\`${legacyCommand}\` -> \`${
+          app.config.name
+        } ${modernCommand.join(' ')}\``;
       })
       .join('\n');
     console.log(
@@ -124,9 +126,9 @@ export function logModernCommandRecommendation(
   }
 
   console.log(
-    `\`${legacyCommand}\` is deprecated as of v7.0.0.\nUse \`${app.config.name} ${modernCommand.join(
-      ' ',
-    )}\` instead.\n`,
+    `\`${legacyCommand}\` is deprecated as of v7.0.0.\nUse \`${
+      app.config.name
+    } ${modernCommand.join(' ')}\` instead.\n`,
   );
 
   const helpText = getHelpTextForCommand(modernCommand);

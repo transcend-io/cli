@@ -30,7 +30,11 @@ export const createAuthParameter = ({
   if (scopes === 'Varies') {
     return {
       ...parameter,
-      brief: `${parameter.brief} The scopes required will vary depending on the operation performed. If in doubt, the ${TRANSCEND_SCOPES[ScopeName.FullAdmin].title} scope will always work.`,
+      brief: `${
+        parameter.brief
+      } The scopes required will vary depending on the operation performed. If in doubt, the ${
+        TRANSCEND_SCOPES[ScopeName.FullAdmin].title
+      } scope will always work.`,
     };
   }
 
@@ -43,7 +47,9 @@ export const createAuthParameter = ({
 
   return {
     ...parameter,
-    brief: `${parameter.brief} Requires scopes: ${scopes.map((s) => `"${TRANSCEND_SCOPES[s].title}"`).join(', ')}`,
+    brief: `${parameter.brief} Requires scopes: ${scopes
+      .map((s) => `"${TRANSCEND_SCOPES[s].title}"`)
+      .join(', ')}`,
   };
 };
 
