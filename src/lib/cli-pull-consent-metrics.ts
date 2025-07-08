@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// TODO DELETE
+
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
 import colors from 'colors';
