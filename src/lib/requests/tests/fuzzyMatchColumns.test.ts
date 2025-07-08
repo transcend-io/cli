@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect, describe, it } from 'vitest';
 import inquirer from 'inquirer';
 
 import { fuzzyMatchColumns, fuzzySearch, NONE } from '../index';

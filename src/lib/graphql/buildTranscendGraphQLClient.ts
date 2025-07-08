@@ -13,7 +13,7 @@ export function buildTranscendGraphQLClientGeneric(
 ): GraphQLClient {
   // Create a GraphQL client
   // eslint-disable-next-line global-require
-  const { version } = require('../../package.json');
+  const { version } = require('../../../package.json');
   return new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
       ...headers,

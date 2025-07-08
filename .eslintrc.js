@@ -257,6 +257,17 @@ module.exports = {
         'jsdoc/require-jsdoc': 'off',
       },
     },
+    {
+      files: ['**/*.test.ts', '**/*.test.js', '**/*.spec.ts', '**/*.spec.js'],
+      rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          {
+            devDependencies: true,
+          },
+        ],
+      },
+    },
   ],
   settings: {
     /** Allow for typescript alias resolution */

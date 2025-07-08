@@ -1,9 +1,6 @@
-import chai, { expect } from 'chai';
-import deepEqualInAnyOrder from 'deep-equal-in-any-order';
+import { expect, describe, it } from 'vitest';
 
 import { convertToEmptyStrings } from '../convertToEmptyStrings';
-
-chai.use(deepEqualInAnyOrder);
 
 describe('buildDefaultCodecWrapper', () => {
   it('should correctly build a default codec for null', () => {

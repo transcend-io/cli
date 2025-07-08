@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { expect } from 'chai';
+import { expect, describe, it } from 'vitest';
 
 import { checkIfPendingPreferenceUpdatesAreNoOp } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
