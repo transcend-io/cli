@@ -1,11 +1,11 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import { RequestStatus, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { arrayParser, dateParser } from '@/cli/parsers';
+import { dateParser } from '@/cli/parsers';
 
 export const downloadFilesCommand = buildCommand({
   loader: async () => {
@@ -36,10 +36,12 @@ export const downloadFilesCommand = buildCommand({
         optional: true,
       },
       statuses: {
-        kind: 'parsed',
-        parse: arrayParser,
-        brief: 'The request statuses to download. Comma-separated list.',
-        default: 'APPROVING,DOWNLOADABLE',
+        kind: 'enum',
+        values: Object.values(RequestStatus),
+        variadic: ',',
+        brief:
+          'The request statuses to download. Comma-separated list. Defaults to APPROVING,DOWNLOADABLE.',
+        optional: true,
       },
       folderPath: {
         kind: 'parsed',
