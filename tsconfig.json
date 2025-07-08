@@ -23,10 +23,9 @@
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
 
-    "typeRoots": ["@types", "node_modules/@types"],
-    "outDir": "build"
+    "typeRoots": ["src/lib/@types", "node_modules/@types"]
   },
   "include": ["**/*"],
-  "exclude": ["node_modules", "build"],
+  "exclude": ["node_modules", "dist"],
   "references": []
 }
