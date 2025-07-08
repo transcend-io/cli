@@ -1,4 +1,5 @@
 import type { LocalContext } from '@/context';
+import { skipPreflightJobs as skipPreflightJobsHelper } from '@/lib/requests';
 
 interface SkipPreflightJobsCommandFlags {
   auth: string;
@@ -8,16 +9,11 @@ interface SkipPreflightJobsCommandFlags {
 
 export async function skipPreflightJobs(
   this: LocalContext,
-  flags: SkipPreflightJobsCommandFlags,
+  { auth, transcendUrl, enricherIds }: SkipPreflightJobsCommandFlags,
 ): Promise<void> {
-  console.log('Skipping preflight jobs for enrichers:', flags.enricherIds);
-  console.log('Transcend URL:', flags.transcendUrl);
-
-  // TODO: Implement actual API calls to Transcend
-  // This would involve:
-  // 1. Calling the API to skip preflight jobs for the specified enrichers
-  // 2. Processing the list of enricher IDs
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log('Skip preflight jobs command completed');
+  await skipPreflightJobsHelper({
+    transcendUrl,
+    auth,
+    enricherIds,
+  });
 }
