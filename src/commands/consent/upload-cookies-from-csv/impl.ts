@@ -1,17 +1,23 @@
 import type { LocalContext } from '@/context';
+import { uploadCookiesFromCsv as uploadCookiesFromCsvHelper } from '@/lib/consent-manager';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 
 interface UploadCookiesFromCsvCommandFlags {
   auth: string;
-  trackerStatus: string;
+  trackerStatus: ConsentTrackerStatus;
   file: string;
   transcendUrl: string;
 }
 
-export function uploadCookiesFromCsv(
+export async function uploadCookiesFromCsv(
   this: LocalContext,
-  flags: UploadCookiesFromCsvCommandFlags,
-): void {
-  console.log('Upload cookies from CSV command started...');
-  console.log('Flags:', flags);
-  throw new Error('Command not yet implemented');
+  { auth, trackerStatus, file, transcendUrl }: UploadCookiesFromCsvCommandFlags,
+): Promise<void> {
+  // Upload cookies
+  await uploadCookiesFromCsvHelper({
+    auth,
+    trackerStatus,
+    file,
+    transcendUrl,
+  });
 }
