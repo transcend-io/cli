@@ -1,4 +1,21 @@
 import type { LocalContext } from '@/context';
+import colors from 'colors';
+import { writeFileSync } from 'fs';
+
+import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+
+import { logger } from '@/logger';
+import { generateCrossAccountApiKeys } from '@/lib/api-keys';
+import { keyBy } from 'lodash-es';
+
+const SCOPES_BY_TITLE = keyBy(
+  Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
+    ...value,
+    name,
+  })),
+  'title',
+);
+const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
 
 // Command flag interface
 interface GenerateApiKeysCommandFlags {
@@ -14,18 +31,54 @@ interface GenerateApiKeysCommandFlags {
 }
 
 // Command implementation
-export function generateApiKeys(
+export async function generateApiKeys(
   this: LocalContext,
-  flags: GenerateApiKeysCommandFlags,
-): void {
-  console.log('Generate API keys command started...');
-  console.log('Flags:', flags);
+  {
+    email,
+    password,
+    apiKeyTitle,
+    file,
+    scopes,
+    deleteExistingApiKey,
+    createNewApiKey,
+    parentOrganizationId,
+    transcendUrl,
+  }: GenerateApiKeysCommandFlags,
+): Promise<void> {
+  // Validate scopes
+  const splitScopes = scopes.map((x) => x.trim());
+  const invalidScopes = splitScopes.filter(
+    (scopeTitle) => !SCOPES_BY_TITLE[scopeTitle],
+  );
+  if (invalidScopes.length > 0) {
+    logger.error(
+      colors.red(
+        `Failed to parse scopes:"${invalidScopes.join(',')}".\n` +
+          `Expected one of: \n${SCOPE_TITLES.join('\n')}`,
+      ),
+    );
+    process.exit(1);
+  }
 
-  // TODO: Implement the actual functionality
-  // This would involve:
-  // 1. Authenticating with username/password
-  // 2. Creating/deleting API keys across multiple Transcend instances
-  // 3. Writing the results to a JSON file
+  const scopeNames = splitScopes.map(
+    (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName,
+  );
 
-  throw new Error('Command not yet implemented');
+  // Upload privacy requests
+  const { errors, apiKeys } = await generateCrossAccountApiKeys({
+    transcendUrl,
+    password,
+    email,
+    parentOrganizationId,
+    deleteExistingApiKey,
+    createNewApiKey,
+    apiKeyTitle,
+    scopes: scopeNames,
+  });
+
+  // Write to disk
+  writeFileSync(file, `${JSON.stringify(apiKeys, null, 2)}\n`);
+  if (errors.length > 0) {
+    process.exit(1);
+  }
 }
