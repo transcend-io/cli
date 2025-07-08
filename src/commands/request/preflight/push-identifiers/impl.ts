@@ -1,4 +1,5 @@
 import type { LocalContext } from '@/context';
+import { pushManualEnrichmentIdentifiersFromCsv } from '@/lib/manual-enrichment';
 
 interface PushIdentifiersCommandFlags {
   auth: string;
@@ -6,20 +7,29 @@ interface PushIdentifiersCommandFlags {
   sombraAuth?: string;
   transcendUrl: string;
   file: string;
-  silentModeBefore: boolean;
+  markSilent: boolean;
   concurrency: number;
 }
 
-export function pushIdentifiers(
+export async function pushIdentifiers(
   this: LocalContext,
-  flags: PushIdentifiersCommandFlags,
-): void {
-  console.log('Manual enrichment push identifiers command started...');
-  console.log('Flags:', flags);
-
-  // TODO: Implement the actual functionality
-  // This would involve reading identifiers from a CSV file and
-  // uploading them to Transcend for manual enrichment
-
-  throw new Error('Command not yet implemented');
+  {
+    auth,
+    transcendUrl,
+    file,
+    enricherId,
+    concurrency,
+    markSilent,
+    sombraAuth,
+  }: PushIdentifiersCommandFlags,
+): Promise<void> {
+  await pushManualEnrichmentIdentifiersFromCsv({
+    file,
+    transcendUrl,
+    enricherId,
+    concurrency,
+    markSilent,
+    auth,
+    sombraAuth,
+  });
 }

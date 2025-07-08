@@ -34,7 +34,7 @@ export const pushIdentifiersCommand = buildCommand({
         brief: 'Path to the CSV file where requests will be written to',
         default: './manual-enrichment-identifiers.csv',
       },
-      silentModeBefore: {
+      markSilent: {
         kind: 'boolean',
         brief: 'When true, set requests into silent mode before enriching',
         default: false,
