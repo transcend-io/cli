@@ -1,5 +1,5 @@
 import { LanguageKey } from '@transcend-io/internationalization';
-import { DateFromISOString } from 'io-ts-types/lib/DateFromISOString';
+import { DateFromISOString } from 'io-ts-types';
 
 import * as t from 'io-ts';
 import type { PersistedState } from '@transcend-io/persisted-state';
