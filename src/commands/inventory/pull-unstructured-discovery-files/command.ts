@@ -1,5 +1,8 @@
 import { buildCommand } from '@stricli/core';
-import { ScopeName } from '@transcend-io/privacy-types';
+import {
+  ScopeName,
+  UnstructuredSubDataPointRecommendationStatus,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -25,19 +28,22 @@ export const pullUnstructuredDiscoveryFilesCommand = buildCommand({
       dataSiloIds: {
         kind: 'parsed',
         parse: String,
-        brief: 'Comma-separated list of data silo IDs to filter by',
+        brief: 'List of data silo IDs to filter by',
+        variadic: ',',
         optional: true,
       },
       subCategories: {
         kind: 'parsed',
         parse: String,
-        brief: 'Comma-separated list of data categories to filter by',
+        brief: 'List of data categories to filter by',
+        variadic: ',',
         optional: true,
       },
       status: {
-        kind: 'parsed',
-        parse: String,
-        brief: 'Comma-separated list of classification statuses to filter by',
+        kind: 'enum',
+        values: Object.values(UnstructuredSubDataPointRecommendationStatus),
+        brief: 'List of classification statuses to filter by',
+        variadic: ',',
         optional: true,
       },
       includeEncryptedSnippets: {

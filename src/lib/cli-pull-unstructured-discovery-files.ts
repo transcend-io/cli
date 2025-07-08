@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+// TODO DELETE
+
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { uniq } from 'lodash-es';
