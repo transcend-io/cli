@@ -19,7 +19,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * - View Incoming Requests
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-notify-additional-time.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-request-notify-additional-time.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE --createdAtBefore=01/01/2024
  *
  * Standard usage:

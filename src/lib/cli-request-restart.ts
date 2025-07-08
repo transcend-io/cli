@@ -16,7 +16,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  *    - "View the Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-restart.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-request-restart.ts --auth=$TRANSCEND_API_KEY \
  *   --statuses=COMPILING,APPROVING --actions=ERASURE
  *
  * Standard usage:

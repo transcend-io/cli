@@ -13,7 +13,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * Requires an API key with scope for the cron integration being checked on.
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-cron-mark-identifiers-completed.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-cron-mark-identifiers-completed.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *

@@ -18,7 +18,7 @@ import { splitCsvToList } from './requests';
  * https://docs.transcend.io/docs/api-reference/POST/v1/consent-preferences
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-consent-preferences.ts --auth=$TRANSCEND_API_KEY
+ * pnpm exec tsx ./src/cli-pull-consent-preferences.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage:
  * yarn tr-pull-consent-preferences --auth=$TRANSCEND_API_KEY

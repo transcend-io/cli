@@ -23,7 +23,7 @@ import {
  *  - scope for "View the Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-cron-pull-profiles.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-cron-pull-profiles.ts --auth=$TRANSCEND_API_KEY \
  *   --cronDataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --targetDataSiloId=40ec5df2-61f7-41e6-80d7-afe7c2f0e390 \
  *   --actions=ERASURE \

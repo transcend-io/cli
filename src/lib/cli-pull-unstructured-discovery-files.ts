@@ -14,7 +14,7 @@ import { splitCsvToList } from './requests';
  * Sync unstructured discovery files from Transcend inventory to a CSV
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-unstructured-discovery-files.ts --auth=$TRANSCEND_API_KEY
+ * pnpm exec tsx ./src/cli-pull-unstructured-discovery-files.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage
  * yarn cli-pull-unstructured-discovery-files --auth=$TRANSCEND_API_KEY

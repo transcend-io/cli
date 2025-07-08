@@ -19,7 +19,7 @@ import { readTranscendYaml, writeTranscendYaml } from './readTranscendYaml';
  * Requires an API key - no scope required on API key
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-derive-data-silos-from-data-flows.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-derive-data-silos-from-data-flows.ts --auth=$TRANSCEND_API_KEY \
  *   --dataFlowsYmlFolder=./working/data-flows/ \
  *   --dataSilosYmlFolder=./working/data-silos/
  *

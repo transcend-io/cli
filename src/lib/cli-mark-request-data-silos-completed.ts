@@ -20,7 +20,7 @@ const RequestIdRow = t.type({
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-mark-request-data-silos-completed.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-mark-request-data-silos-completed.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *

@@ -18,7 +18,7 @@ import { writeCsv } from './cron';
  * - View the Request Compilation
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-export.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-request-export.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *

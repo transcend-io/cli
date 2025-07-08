@@ -18,7 +18,7 @@ import { SILO_DISCOVERY_CONFIGS } from './code-scanning';
  * @deprecated TODO: https://transcend.height.app/T-32325 - use code scanning instead
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
+ * pnpm exec tsx ./src/cli-discover-silos.ts --scanPath=./myJavascriptProject \
  *   --auth=$TRANSCEND_API_KEY \
  *   --ignoreDirs=build_directories_to_ignore \
  *   --dataSiloId=abcdefgh

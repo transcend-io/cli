@@ -20,7 +20,7 @@ import {
  * Take the output of (await airgap.getMetadata()).services and format into
  * a yaml file that tr-push can push up
  *
- * yarn ts-node ./src/cli-consent-manager-service-json-to-yml.ts \
+ * pnpm exec tsx ./src/cli-consent-manager-service-json-to-yml.ts \
  *   --file=./services.json \
  *   --output=./transcend.yml
  *

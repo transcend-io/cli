@@ -14,7 +14,7 @@ import {
  * Pull resources from OneTrust to Transcend or locally to disk
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
+ * pnpm exec tsx ./src/cli-sync-ot.ts --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY
  *
  * Standard usage
  * yarn cli-sync-ot --hostname=customer.my.onetrust.com --oneTrustAuth=$ONE_TRUST_OAUTH_TOKEN --transcendAuth=$TRANSCEND_API_KEY

@@ -17,7 +17,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * - Request Approval and Communication (only if `approveAfterDownload` is true)
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-download-files.ts --auth=$TRANSCEND_API_KEY --statuses=APPROVING
+ * pnpm exec tsx ./src/cli-request-download-files.ts --auth=$TRANSCEND_API_KEY --statuses=APPROVING
  *
  * Standard usage:
  * yarn tr-request-download-files --auth=$TRANSCEND_API_KEY --statuses=APPROVING

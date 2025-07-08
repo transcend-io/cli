@@ -16,7 +16,7 @@ import { DataCategoryType } from '@transcend-io/privacy-types';
  * Sync datapoints from Transcend inventory to a CSV
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-datapoints.ts --auth=$TRANSCEND_API_KEY
+ * pnpm exec tsx ./src/cli-pull-datapoints.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage
  * yarn cli-pull-datapoints --auth=$TRANSCEND_API_KEY

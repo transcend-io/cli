@@ -19,7 +19,7 @@ import { writeCsv } from './cron';
  * Pull down consent manager metrics for 1 or multiple consent managers
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-pull-consent-metrics.ts --folder=./consent-metrics/ --auth=$TRANSCEND_API_KEY --start=01/01/2023 --end=03/01/2023
+ * pnpm exec tsx ./src/cli-pull-consent-metrics.ts --folder=./consent-metrics/ --auth=$TRANSCEND_API_KEY --start=01/01/2023 --end=03/01/2023
  *
  * Standard usage
  * yarn tr-pull-consent-metrics --folder=./consent-metrics/ --auth=$TRANSCEND_API_KEY --start=01/01/2023 --end=03/01/2023

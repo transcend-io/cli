@@ -14,7 +14,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-skip-preflight-jobs.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-skip-preflight-jobs.ts --auth=$TRANSCEND_API_KEY \
  *   --enricherIds=92636cda-b7c6-48c6-b1b1-2df574596cbc
  *
  * Standard usage:

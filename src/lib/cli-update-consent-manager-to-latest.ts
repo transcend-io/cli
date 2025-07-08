@@ -16,7 +16,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * Requires an API key with scope "Manage Consent Manager Developer Settings".
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-update-consent-manager-to-latest.ts --auth=$TRANSCEND_API_KEY
+ * pnpm exec tsx ./src/cli-update-consent-manager-to-latest.ts --auth=$TRANSCEND_API_KEY
  *
  * Standard usage:
  * yarn tr-update-consent-manager --auth=$TRANSCEND_API_KEY

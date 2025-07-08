@@ -19,7 +19,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  *    - "View the Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-enricher restart.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-request-enricher restart.ts --auth=$TRANSCEND_API_KEY \
  *   --enricherId=03859988-66a8-4e75-bfe7-450e8c9d1bc6
  *
  * Standard usage:

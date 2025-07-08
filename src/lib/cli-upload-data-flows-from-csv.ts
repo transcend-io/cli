@@ -15,7 +15,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  *    - "Manage Data Flows"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-upload-data-flows-from-csv.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-upload-data-flows-from-csv.ts --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
  *   --trackerStatus=LIVE
  *

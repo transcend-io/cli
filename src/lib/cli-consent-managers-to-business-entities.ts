@@ -12,7 +12,7 @@ import { existsSync, lstatSync } from 'fs';
  * Combines folder of consent manager `transcend.yml` files into a single `transcend.yml` file
  * where each consent manager configuration is created as a business entity.
  *
- * yarn ts-node ./src/cli-consent-managers-to-business-entities.ts \
+ * pnpm exec tsx ./src/cli-consent-managers-to-business-entities.ts \
  *   --consentManagerYmlFolder=./working/consent-managers/ \
  *   --output=./combined-business-entities.yml
  *

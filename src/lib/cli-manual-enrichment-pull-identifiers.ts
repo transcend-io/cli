@@ -14,7 +14,7 @@ import { pullManualEnrichmentIdentifiersToCsv } from './manual-enrichment';
  * Requires an API key with scope to View Incoming Requests
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-manual-enrichment-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-manual-enrichment-pull-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --actions=ERASURE \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *

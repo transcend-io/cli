@@ -25,7 +25,7 @@ const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
  * Requires the username and password of user with access to multiple instances.
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-generate-cross-account-api-keys.ts --email=test@transcend.io --email=NE8pGp$s8Gm4Mzb5 \
+ * pnpm exec tsx ./src/cli-generate-cross-account-api-keys.ts --email=test@transcend.io --email=NE8pGp$s8Gm4Mzb5 \
  *   --apiKeyTitle="My Test Key" --scopes="View Email Templates,View Data Map" --file=./secrets.json
  *
  * Standard usage:

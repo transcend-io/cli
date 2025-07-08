@@ -13,7 +13,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * Requires an API key with scope to Manage Request Identity Verification
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-manual-enrichment-push-identifiers.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-manual-enrichment-push-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv
  *
  * Standard usage:

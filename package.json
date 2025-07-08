@@ -70,8 +70,8 @@
     "lint:eslint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && prettier ./transcend-yml-schema-v6.json --write",
-    "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && prettier ./pathfinder-policy-yml-schema.json --write"
+    "script:transcend-json-schema": "tsx scripts/buildTranscendJsonSchema.ts && prettier ./transcend-yml-schema-*.json --write",
+    "script:pathfinder-json-schema": "tsx scripts/buildPathfinderJsonSchema.ts && prettier ./pathfinder-policy-yml-schema.json --write"
   },
   "tsup": {
     "entry": [
@@ -109,7 +109,6 @@
     "fuzzysearch": "^1.0.3",
     "global-agent": "^3.0.0",
     "got": "^11.8.5",
-    "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
     "inquirer": "=7.3.3",
     "inquirer-autocomplete-prompt": "=1.3.0",
@@ -151,8 +150,8 @@
     "eslint-plugin-jsdoc": "^41.1.1",
     "prettier": "^2.8.7",
     "publint": "^0.3.12",
-    "ts-node": "10.9.1",
     "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.0.4",
     "vitest": "^3.2.4"
   },

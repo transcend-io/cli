@@ -15,7 +15,7 @@ import { RequestStatus } from '@transcend-io/privacy-types';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-skip-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-skip-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc
  *
  * Standard usage:

@@ -15,7 +15,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-reject-unverified-identifiers.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-reject-unverified-identifiers.ts --auth=$TRANSCEND_API_KEY \
  *   --identifierNames=email,phone \
  *   --actions=ACCESS,ERASURE
  *

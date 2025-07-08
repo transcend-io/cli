@@ -16,7 +16,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  *    - "View Global Attributes"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-request-upload.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-request-upload.ts --auth=$TRANSCEND_API_KEY \
  *   --file=/Users/michaelfarrell/Desktop/test.csv \
  *   --skipFilterStep=true --isTest=true
  *

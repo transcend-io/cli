@@ -15,7 +15,7 @@ import { splitCsvToList } from './requests';
  * @see https://docs.transcend.io/docs/consent/reference/xdi#addxdihostscript(standalone)
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-build-xdi-sync-endpoint.ts --xdiLocation=https://cdn.your-site.com/xdi.js
+ * pnpm exec tsx ./src/cli-build-xdi-sync-endpoint.ts --xdiLocation=https://cdn.your-site.com/xdi.js
  *
  * Standard usage
  * yarn tr-build-xdi-sync-endpoint --xdiLocation=https://cdn.your-site.com/xdi.js

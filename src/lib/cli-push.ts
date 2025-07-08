@@ -77,7 +77,7 @@ async function syncConfiguration({
  * Push the transcend.yml file remotely into a Transcend instance
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-push.ts --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
+ * pnpm exec tsx ./src/cli-push.ts --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
  *
  * Standard usage
  * yarn tr-push --file=./examples/invalid.yml --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging

@@ -19,7 +19,7 @@ const REPO_ERROR =
  * - softwareDevelopmentKits
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-scan-packages.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-scan-packages.ts --auth=$TRANSCEND_API_KEY \
  *   --scanPath=./ \
  *   --ignoreDirs=build_directories_to_ignore
  *

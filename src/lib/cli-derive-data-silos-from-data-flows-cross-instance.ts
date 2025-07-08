@@ -19,7 +19,7 @@ import { splitCsvToList } from './requests';
  * Requires an API key - no scope required on API key
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-derive-data-silos-from-data-flows-cross-instance.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-derive-data-silos-from-data-flows-cross-instance.ts --auth=$TRANSCEND_API_KEY \
  *   --dataFlowsYmlFolder=./working/data-flows/ \
  *   --output=./transcend.yml
  *

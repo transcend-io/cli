@@ -15,7 +15,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
  * - "Manage Request Compilation"
  *
  * Dev Usage:
- * yarn ts-node ./src/cli-retry-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
+ * pnpm exec tsx ./src/cli-retry-request-data-silos.ts --auth=$TRANSCEND_API_KEY \
  *   --dataSiloId=92636cda-b7c6-48c6-b1b1-2df574596cbc \
  *   --actions=ACCESS,ERASURE
  *
