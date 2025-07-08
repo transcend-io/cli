@@ -91,6 +91,10 @@ export const legacyCommandToModernCommandMap: Record<string, string[]> = {
 
 // All commands have been migrated to the modern command structure
 
+/**
+ *
+ * @param command
+ */
 export function getHelpTextForCommand(command: string[]): string | undefined {
   const helpTextForAllCommands = generateHelpTextForAllCommands(
     app as Application<CommandContext>,
@@ -102,6 +106,7 @@ export function getHelpTextForCommand(command: string[]): string | undefined {
 }
 
 /**
+ * @param legacyCommand
  * @example
  * logModernCommandRecommendation('tr-cron-mark-identifiers-completed');
  */
@@ -113,11 +118,12 @@ export function logModernCommandRecommendation(
   const modernCommand = legacyCommandToModernCommandMap[legacyCommand];
   if (!modernCommand) {
     const modernCommandString = Object.entries(legacyCommandToModernCommandMap)
-      .map(([legacyCommand, modernCommand]) => {
-        return `\`${legacyCommand}\` -> \`${
-          app.config.name
-        } ${modernCommand.join(' ')}\``;
-      })
+      .map(
+        ([legacyCommand, modernCommand]) =>
+          `\`${legacyCommand}\` -> \`${app.config.name} ${modernCommand.join(
+            ' ',
+          )}\``,
+      )
       .join('\n');
     console.log(
       `This command is deprecated as of v7.0.0. Here is a list of new commands, mapped to their legacy command names:\n${modernCommandString}`,

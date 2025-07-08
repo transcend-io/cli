@@ -47,6 +47,7 @@ export const uploadConsentPreferencesCommand = buildCommand({
   },
   docs: {
     brief: 'Upload consent preferences',
-    fullDescription: `This command allows for updating of consent preferences to the Managed Consent Database.`,
+    fullDescription:
+      'This command allows for updating of consent preferences to the Managed Consent Database.',
   },
 });

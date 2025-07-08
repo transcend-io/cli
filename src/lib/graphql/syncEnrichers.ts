@@ -75,7 +75,6 @@ export async function fetchAllEnrichers(
   do {
     const {
       enrichers: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       enrichers: {

@@ -63,7 +63,6 @@ export async function fetchAllAssessmentTemplates(
   do {
     const {
       assessmentFormTemplates: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Templates */
       assessmentFormTemplates: {

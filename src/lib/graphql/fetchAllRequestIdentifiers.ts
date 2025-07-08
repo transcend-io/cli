@@ -77,7 +77,6 @@ export async function fetchAllRequestIdentifiers(
   do {
     let response: unknown;
     try {
-      // eslint-disable-next-line no-await-in-loop
       response = await sombra!
         .post<{
           /** Decrypted identifiers */

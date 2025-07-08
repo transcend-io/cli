@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import uniq from 'lodash/uniq';
-import groupBy from 'lodash/groupBy';
+import { uniq, groupBy } from 'lodash-es';
 
 import yargs from 'yargs-parser';
 import { logger } from '../logger';

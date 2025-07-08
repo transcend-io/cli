@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import colors from 'colors';
 import cliProgress from 'cli-progress';
 
@@ -141,7 +141,7 @@ export async function getFileMetadataForPrivacyRequests(
         let response: RequestFileMetadataResponse;
         try {
           // Grab the file metadata for this request
-          // eslint-disable-next-line no-await-in-loop
+
           const rawResponse = await sombra
             .get(
               `v1/data-subject-request/${requestToDownload.id}/download-keys`,

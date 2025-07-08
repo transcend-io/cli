@@ -23,8 +23,8 @@ import {
   fetchConsentManagerId,
   fetchConsentManagerExperiences,
 } from './fetchConsentManagerId';
-import keyBy from 'lodash/keyBy';
-import { map } from 'bluebird';
+import { keyBy } from 'lodash-es';
+import { map } from '@/lib/bluebird-replace';
 import {
   InitialViewState,
   OnConsentExpiry,

@@ -33,6 +33,7 @@ export const rejectUnverifiedIdentifiersCommand = buildCommand({
   },
   docs: {
     brief: 'Bulk clear out any request identifiers that are unverified',
-    fullDescription: `Bulk clear out any request identifiers that are unverified.`,
+    fullDescription:
+      'Bulk clear out any request identifiers that are unverified.',
   },
 });

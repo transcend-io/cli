@@ -73,7 +73,6 @@ export async function fetchAllVendors(
   do {
     const {
       vendors: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Vendors */
       vendors: {

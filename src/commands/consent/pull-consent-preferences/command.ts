@@ -59,6 +59,7 @@ export const pullConsentPreferencesCommand = buildCommand({
   },
   docs: {
     brief: 'Pull consent preferences',
-    fullDescription: `This command allows for pull of consent preferences from the Managed Consent Database.`,
+    fullDescription:
+      'This command allows for pull of consent preferences from the Managed Consent Database.',
   },
 });

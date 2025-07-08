@@ -1,4 +1,4 @@
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '@/lib/bluebird-replace';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {

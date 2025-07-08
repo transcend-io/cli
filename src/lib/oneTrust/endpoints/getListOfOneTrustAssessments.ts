@@ -26,7 +26,6 @@ export const getListOfOneTrustAssessments = async ({
   const allAssessments: OneTrustAssessment[] = [];
 
   while (currentPage < totalPages) {
-    // eslint-disable-next-line no-await-in-loop
     const { body } = await oneTrust.get(
       `api/assessment/v2/assessments?page=${currentPage}&size=2000`,
     );

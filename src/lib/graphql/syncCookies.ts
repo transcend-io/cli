@@ -3,10 +3,10 @@ import { logger } from '../../logger';
 import { CookieInput } from '../../codecs';
 import colors from 'colors';
 import { UPDATE_OR_CREATE_COOKIES } from './gqls';
-import chunk from 'lodash/chunk';
+import { chunk } from 'lodash-es';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
-import { mapSeries } from 'bluebird';
-// import keyBy from 'lodash/keyBy';
+import { mapSeries } from '@/lib/bluebird-replace';
+// import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;

@@ -55,7 +55,6 @@ export async function fetchConsentPreferences(
   let shouldContinue = true;
 
   while (shouldContinue) {
-    // eslint-disable-next-line no-await-in-loop
     const response = await sombra
       .post('v1/consent-preferences', {
         json: {

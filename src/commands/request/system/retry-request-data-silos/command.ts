@@ -32,6 +32,7 @@ export const retryRequestDataSilosCommand = buildCommand({
   },
   docs: {
     brief: 'Retry request data silos',
-    fullDescription: `This command allows for bulk restarting a set of data silos jobs for open privacy requests. This is equivalent to clicking the "Wipe and Retry" button for a particular data silo across a set of privacy requests.`,
+    fullDescription:
+      'This command allows for bulk restarting a set of data silos jobs for open privacy requests. This is equivalent to clicking the "Wipe and Retry" button for a particular data silo across a set of privacy requests.',
   },
 });

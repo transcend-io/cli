@@ -28,7 +28,6 @@ export async function fetchAllUsers(client: GraphQLClient): Promise<User[]> {
   do {
     const {
       users: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Users */
       users: {

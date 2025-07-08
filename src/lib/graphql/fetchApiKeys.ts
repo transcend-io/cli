@@ -1,8 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { API_KEYS } from './gqls';
-import keyBy from 'lodash/keyBy';
-import uniq from 'lodash/uniq';
-import difference from 'lodash/difference';
+import { keyBy, uniq, difference } from 'lodash-es';
 import { logger } from '../../logger';
 import colors from 'colors';
 import { TranscendInput } from '../../codecs';
@@ -38,7 +36,6 @@ export async function fetchAllApiKeys(
   do {
     const {
       apiKeys: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** API keys */
       apiKeys: {

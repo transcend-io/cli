@@ -63,6 +63,7 @@ export const approveCommand = buildCommand({
   },
   docs: {
     brief: 'Bulk approve a set of privacy requests',
-    fullDescription: `Bulk approve a set of privacy requests from the DSR Automation -> Incoming Requests tab.`,
+    fullDescription:
+      'Bulk approve a set of privacy requests from the DSR Automation -> Incoming Requests tab.',
   },
 });

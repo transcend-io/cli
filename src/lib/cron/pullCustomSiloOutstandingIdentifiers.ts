@@ -12,7 +12,7 @@ import {
 import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -23,6 +23,7 @@ export interface CronIdentifierWithAction extends CronIdentifier {
  * Pull the set of identifiers outstanding for a cron or AVC integration
  *
  * @param options - Options
+ * @returns The identifiers and identifiers formatted for CSV
  */
 export async function pullCustomSiloOutstandingIdentifiers({
   dataSiloId,
@@ -101,7 +102,6 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
     // Fetch a page of identifiers
     while (shouldContinue) {
-      // eslint-disable-next-line no-await-in-loop
       const pageIdentifiers = await pullCronPageOfIdentifiers(sombra, {
         dataSiloId,
         limit: pageLimit,

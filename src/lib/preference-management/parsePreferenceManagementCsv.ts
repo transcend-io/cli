@@ -1,6 +1,6 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import type { Got } from 'got';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import * as t from 'io-ts';
 import colors from 'colors';
 import { FileMetadataState, PreferenceState } from './codecs';

@@ -1,8 +1,6 @@
-import uniq from 'lodash/uniq';
-import groupBy from 'lodash/groupBy';
+import { uniq, groupBy, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import difference from 'lodash/difference';
 import { FileMetadataState } from './codecs';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';

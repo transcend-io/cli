@@ -24,6 +24,7 @@ export const consentManagerServiceJsonToYmlCommand = buildCommand({
   },
   docs: {
     brief: 'Convert consent manager service JSON to YML',
-    fullDescription: `Import the services from an airgap.js file into a Transcend instance.`,
+    fullDescription:
+      'Import the services from an airgap.js file into a Transcend instance.',
   },
 });

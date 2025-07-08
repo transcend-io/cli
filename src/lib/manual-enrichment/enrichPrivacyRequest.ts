@@ -1,7 +1,7 @@
 import type { Got } from 'got';
 import * as t from 'io-ts';
 import { logger } from '../../logger';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import colors from 'colors';
 import { splitCsvToList } from '../requests/splitCsvToList';
 

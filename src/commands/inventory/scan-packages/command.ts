@@ -39,6 +39,7 @@ export const scanPackagesCommand = buildCommand({
   },
   docs: {
     brief: 'Scan packages',
-    fullDescription: `Transcend can scan your codebase to inventory your code packages and dependencies.`,
+    fullDescription:
+      'Transcend can scan your codebase to inventory your code packages and dependencies.',
   },
 });

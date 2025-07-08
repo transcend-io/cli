@@ -26,6 +26,6 @@ export const skipPreflightJobsCommand = buildCommand({
   },
   docs: {
     brief: 'Skip preflight jobs',
-    fullDescription: `This command allows for bulk skipping preflight checks.`,
+    fullDescription: 'This command allows for bulk skipping preflight checks.',
   },
 });

@@ -33,6 +33,7 @@ export const updateConsentManagerCommand = buildCommand({
   },
   docs: {
     brief: 'Update consent manager',
-    fullDescription: `This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this command.`,
+    fullDescription:
+      'This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this command.',
   },
 });

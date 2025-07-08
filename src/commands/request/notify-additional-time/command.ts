@@ -72,6 +72,7 @@ export const notifyAdditionalTimeCommand = buildCommand({
   },
   docs: {
     brief: 'Bulk notify a set of privacy requests that more time is needed',
-    fullDescription: `Bulk notify a set of privacy requests from the DSR Automation -> Incoming Requests tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.`,
+    fullDescription:
+      'Bulk notify a set of privacy requests from the DSR Automation -> Incoming Requests tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.',
   },
 });

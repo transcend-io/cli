@@ -3,7 +3,7 @@
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { join } from 'path';
 import fs, { existsSync, mkdirSync } from 'fs';
 import {

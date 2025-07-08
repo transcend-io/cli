@@ -36,6 +36,7 @@ export const deriveDataSilosFromDataFlowsCommand = buildCommand({
   },
   docs: {
     brief: 'Derive data silos from data flows',
-    fullDescription: `Given a folder of data flow transcend.yml configurations, convert those configurations to set of data silo transcend.yml configurations.`,
+    fullDescription:
+      'Given a folder of data flow transcend.yml configurations, convert those configurations to set of data silo transcend.yml configurations.',
   },
 });

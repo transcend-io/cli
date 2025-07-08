@@ -30,7 +30,6 @@ export async function fetchAllRequestAttributeKeys(
   do {
     const {
       attributeKeys: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       attributeKeys: {

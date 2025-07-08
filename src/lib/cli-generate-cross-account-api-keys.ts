@@ -3,7 +3,7 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 import { writeFileSync } from 'fs';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 
 import { logger } from '../logger';

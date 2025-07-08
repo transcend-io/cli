@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import { valuesOf, decodeCodec } from '@transcend-io/type-utils';
 import {
   IsoCountryCode,

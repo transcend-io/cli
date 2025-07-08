@@ -40,9 +40,7 @@ import {
   ActionItemCode,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
-import flatten from 'lodash/flatten';
-import keyBy from 'lodash/keyBy';
-import mapValues from 'lodash/mapValues';
+import { flatten, keyBy, mapValues } from 'lodash-es';
 import { fetchEnrichedDataSilos } from './syncDataSilos';
 import {
   convertToDataSubjectAllowlist,

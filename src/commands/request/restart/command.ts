@@ -104,6 +104,7 @@ export const restartCommand = buildCommand({
   docs: {
     brief:
       'Bulk update a set of privacy requests based on a set of request filters',
-    fullDescription: `Bulk update a set of privacy requests based on a set of request filters.`,
+    fullDescription:
+      'Bulk update a set of privacy requests based on a set of request filters.',
   },
 });

@@ -127,7 +127,6 @@ export async function writeLargeCsv(
     const chunkNumber = String(i + 1).padStart(String(totalChunks).length, '0');
     const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
 
-    // eslint-disable-next-line no-await-in-loop
     await writeCsv(chunkFilePath, chunk, headers);
     writtenFiles.push(chunkFilePath);
   }

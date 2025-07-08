@@ -2,10 +2,10 @@ import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 import type { Got } from 'got';
 import colors from 'colors';
 import cliProgress from 'cli-progress';
-import chunk from 'lodash/chunk';
+import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import { logger } from '../../logger';
 
 const PreferenceRecordsQueryResponse = t.intersection([
@@ -72,7 +72,6 @@ export async function getPreferencesForIdentifiers(
       const maxAttempts = 3;
       while (attempts < maxAttempts) {
         try {
-          // eslint-disable-next-line no-await-in-loop
           const rawResult = await sombra
             .post(`v1/preferences/${partitionKey}/query`, {
               json: {

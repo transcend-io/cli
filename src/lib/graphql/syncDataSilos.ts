@@ -8,7 +8,7 @@ import {
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries, map } from 'bluebird';
+import { mapSeries, map } from '@/lib/bluebird-replace';
 import {
   DATA_SILOS,
   CREATE_DATA_SILOS,
@@ -33,11 +33,9 @@ import {
   RequestActionObjectResolver,
   SubDataPointDataSubCategoryGuessStatus,
 } from '@transcend-io/privacy-types';
-import sortBy from 'lodash/sortBy';
-import chunk from 'lodash/chunk';
+import { sortBy, chunk, keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
-import keyBy from 'lodash/keyBy';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -112,7 +110,6 @@ export async function fetchAllDataSilos<TDataSilo extends DataSilo>(
   do {
     const {
       dataSilos: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       dataSilos: {
@@ -286,7 +283,6 @@ export async function fetchAllSubDataPoints(
       }
       const {
         subDataPoints: { nodes },
-        // eslint-disable-next-line no-await-in-loop
       } = await makeGraphQLRequest<{
         /** Query response */
         subDataPoints: {
@@ -371,7 +367,6 @@ export async function fetchAllDataPoints(
 
     const {
       dataPoints: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       dataPoints: {
@@ -395,7 +390,6 @@ export async function fetchAllDataPoints(
     }
 
     if (!skipSubDatapoints) {
-      // eslint-disable-next-line no-await-in-loop
       await map(
         nodes,
         /* eslint-disable no-loop-func */

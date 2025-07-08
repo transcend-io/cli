@@ -2,7 +2,7 @@
 
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { existsSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { readTranscendYaml } from './readTranscendYaml';

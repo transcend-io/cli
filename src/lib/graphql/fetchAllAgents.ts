@@ -78,7 +78,6 @@ export async function fetchAllAgents(
   do {
     const {
       agents: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Agents */
       agents: {

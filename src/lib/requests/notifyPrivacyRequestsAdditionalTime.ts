@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import colors from 'colors';
 import { logger } from '../../logger';
 import { RequestAction } from '@transcend-io/privacy-types';

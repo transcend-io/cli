@@ -6,7 +6,7 @@ import {
   getOneTrustRisk,
   getOneTrustUser,
 } from '../endpoints';
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '@/lib/bluebird-replace';
 import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,
@@ -15,7 +15,7 @@ import {
   OneTrustGetRiskResponse,
   OneTrustGetUserResponse,
 } from '@transcend-io/privacy-types';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
 import { GraphQLClient } from 'graphql-request';

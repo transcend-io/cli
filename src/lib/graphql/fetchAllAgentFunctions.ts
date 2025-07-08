@@ -38,7 +38,6 @@ export async function fetchAllAgentFunctions(
   do {
     const {
       agentFunctions: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** AgentFunctions */
       agentFunctions: {

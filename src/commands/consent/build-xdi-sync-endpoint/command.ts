@@ -51,6 +51,7 @@ export const buildXdiSyncEndpointCommand = buildCommand({
   },
   docs: {
     brief: 'Build XDI sync endpoint',
-    fullDescription: `This command allows for building of the XDI Sync Endpoint across a set of Transcend accounts.`,
+    fullDescription:
+      'This command allows for building of the XDI Sync Endpoint across a set of Transcend accounts.',
   },
 });

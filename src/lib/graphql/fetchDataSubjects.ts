@@ -1,14 +1,11 @@
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_DATA_SUBJECT, DATA_SUBJECTS } from './gqls';
-import keyBy from 'lodash/keyBy';
-import flatten from 'lodash/flatten';
-import uniq from 'lodash/uniq';
-import difference from 'lodash/difference';
+import { keyBy, flatten, uniq, difference } from 'lodash-es';
 import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataSubject {

@@ -1,5 +1,5 @@
 import colors from 'colors';
-import chunk from 'lodash/chunk';
+import { chunk, keyBy } from 'lodash-es';
 import { SoftwareDevelopmentKitInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import {
@@ -7,12 +7,11 @@ import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '@/lib/bluebird-replace';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,
 } from './fetchAllSoftwareDevelopmentKits';
-import keyBy from 'lodash/keyBy';
 import { logger } from '../../logger';
 import { CodePackageType } from '@transcend-io/privacy-types';
 

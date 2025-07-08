@@ -3,12 +3,11 @@ import { logger } from '../../logger';
 import { PolicyInput } from '../../codecs';
 import colors from 'colors';
 import { UPDATE_POLICIES } from './gqls';
-import chunk from 'lodash/chunk';
-import { mapSeries } from 'bluebird';
+import { chunk, keyBy } from 'lodash-es';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchAllPolicies } from './fetchAllPolicies';
-import { keyBy } from 'lodash';
 
 const MAX_PAGE_SIZE = 100;
 

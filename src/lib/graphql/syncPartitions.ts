@@ -2,8 +2,8 @@ import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_CONSENT_PARTITION, CONSENT_PARTITIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries } from 'bluebird';
-import difference from 'lodash/difference';
+import { mapSeries } from '@/lib/bluebird-replace';
+import { difference } from 'lodash-es';
 import { logger } from '../../logger';
 import { PartitionInput } from '../../codecs';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
@@ -36,7 +36,6 @@ export async function fetchPartitions(
   do {
     const {
       consentPartitions: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Consent experience */
       consentPartitions: {

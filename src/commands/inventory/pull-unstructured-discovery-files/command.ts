@@ -50,6 +50,7 @@ export const pullUnstructuredDiscoveryFilesCommand = buildCommand({
   },
   docs: {
     brief: 'Pull unstructured discovery files',
-    fullDescription: `This command allows for pulling Unstructured Discovery into a CSV.`,
+    fullDescription:
+      'This command allows for pulling Unstructured Discovery into a CSV.',
   },
 });

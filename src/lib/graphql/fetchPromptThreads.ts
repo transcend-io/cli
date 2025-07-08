@@ -43,7 +43,6 @@ export async function fetchAllPromptThreads(
   do {
     const {
       promptThreads: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** PromptThreads */
       promptThreads: {

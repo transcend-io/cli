@@ -46,7 +46,6 @@ export async function fetchAllRepositories(
   do {
     const {
       repositories: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Repositories */
       repositories: {

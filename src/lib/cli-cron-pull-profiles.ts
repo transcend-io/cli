@@ -4,12 +4,12 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from '../logger';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import { pullCustomSiloOutstandingIdentifiers, writeCsv } from './cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { splitCsvToList } from './requests';
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,

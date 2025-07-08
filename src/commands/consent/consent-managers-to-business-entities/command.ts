@@ -24,6 +24,7 @@ export const consentManagersToBusinessEntitiesCommand = buildCommand({
   },
   docs: {
     brief: 'Convert consent managers to business entities',
-    fullDescription: `This command allows for converting a folder or Consent Manager transcend.yml files into a single transcend.yml file where each consent manager configuration is a Business Entity in the data inventory.`,
+    fullDescription:
+      'This command allows for converting a folder or Consent Manager transcend.yml files into a single transcend.yml file where each consent manager configuration is a Business Entity in the data inventory.',
   },
 });

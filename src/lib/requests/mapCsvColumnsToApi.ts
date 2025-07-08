@@ -1,7 +1,7 @@
 import { getValues, getEntries } from '@transcend-io/type-utils';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import inquirer from 'inquirer';
-import titleCase from 'lodash/startCase';
+import { startCase } from 'lodash-es';
 import {
   ColumnName,
   CachedFileState,

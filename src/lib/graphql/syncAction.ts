@@ -2,7 +2,7 @@ import { ActionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_ACTION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import difference from 'lodash/difference';
+import { difference } from 'lodash-es';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,

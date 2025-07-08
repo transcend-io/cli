@@ -2,7 +2,7 @@ import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import { gql, type GraphQLClient } from 'graphql-request';
-import sortBy from 'lodash/sortBy';
+import { sortBy } from 'lodash-es';
 import type { DataCategoryInput } from '../../codecs';
 import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../../logger';
@@ -113,7 +113,6 @@ export async function pullUnstructuredSubDataPointRecommendations(
     try {
       const {
         unstructuredSubDataPointRecommendations: { nodes },
-        // eslint-disable-next-line no-await-in-loop
       } = await makeGraphQLRequest<{
         /** Query response */
         unstructuredSubDataPointRecommendations: {

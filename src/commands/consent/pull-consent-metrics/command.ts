@@ -44,6 +44,7 @@ export const pullConsentMetricsCommand = buildCommand({
   },
   docs: {
     brief: 'Pull consent metrics',
-    fullDescription: `This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.`,
+    fullDescription:
+      'This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.',
   },
 });

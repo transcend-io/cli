@@ -18,6 +18,7 @@
     // "verbatimModuleSyntax": true,
 
     /* Additional Checks */
+    "esModuleInterop": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

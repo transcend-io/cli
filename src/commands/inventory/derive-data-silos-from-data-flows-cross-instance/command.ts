@@ -40,6 +40,7 @@ export const deriveDataSilosFromDataFlowsCrossInstanceCommand = buildCommand({
   },
   docs: {
     brief: 'Derive data silos from data flows cross instance',
-    fullDescription: `Given a folder of data flow transcend.yml configurations, convert those configurations to a single transcend.yml configurations of all related data silos.`,
+    fullDescription:
+      'Given a folder of data flow transcend.yml configurations, convert those configurations to a single transcend.yml configurations of all related data silos.',
   },
 });

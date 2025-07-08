@@ -126,7 +126,6 @@ export async function fetchAllActionItems(
   do {
     const {
       globalActionItems: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** ActionItems */
       globalActionItems: {

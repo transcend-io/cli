@@ -4,7 +4,7 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 
 import { logger } from '../logger';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { splitCsvToList, pullPrivacyRequests } from './requests';
 import { DEFAULT_TRANSCEND_API } from '../constants';

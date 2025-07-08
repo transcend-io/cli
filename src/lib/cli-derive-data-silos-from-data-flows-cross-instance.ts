@@ -2,7 +2,7 @@
 import { fetchAndIndexCatalogs, buildTranscendGraphQLClient } from './graphql';
 import { join } from 'path';
 import yargs from 'yargs-parser';
-import difference from 'lodash/difference';
+import { difference } from 'lodash-es';
 import colors from 'colors';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';

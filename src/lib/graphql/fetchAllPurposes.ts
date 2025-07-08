@@ -66,7 +66,6 @@ export async function fetchAllPurposes(
   do {
     const {
       purposes: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Purposes */
       purposes: {

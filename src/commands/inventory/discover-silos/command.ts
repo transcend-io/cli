@@ -35,6 +35,7 @@ export const discoverSilosCommand = buildCommand({
   },
   docs: {
     brief: 'Discover silos',
-    fullDescription: `Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data.`,
+    fullDescription:
+      'Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data.',
   },
 });

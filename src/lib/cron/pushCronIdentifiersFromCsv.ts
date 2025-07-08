@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
 import {

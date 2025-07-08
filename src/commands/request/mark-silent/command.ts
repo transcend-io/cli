@@ -59,6 +59,7 @@ export const markSilentCommand = buildCommand({
   },
   docs: {
     brief: 'Bulk update a set of privacy requests to be in silent mode',
-    fullDescription: `Bulk update a set of privacy requests from the DSR Automation -> Incoming Requests tab to be in silent mode.`,
+    fullDescription:
+      'Bulk update a set of privacy requests from the DSR Automation -> Incoming Requests tab to be in silent mode.',
   },
 });

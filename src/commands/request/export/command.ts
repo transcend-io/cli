@@ -67,6 +67,7 @@ export const exportCommand = buildCommand({
   },
   docs: {
     brief: 'Export privacy requests and request identifiers to a CSV file',
-    fullDescription: `Export privacy requests and request identifiers to a CSV file.`,
+    fullDescription:
+      'Export privacy requests and request identifiers to a CSV file.',
   },
 });

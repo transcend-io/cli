@@ -39,6 +39,7 @@ export const skipRequestDataSilosCommand = buildCommand({
   },
   docs: {
     brief: 'Skip request data silos',
-    fullDescription: `This command allows for bulk skipping all open privacy request jobs for a particular data silo. This command is useful if you want to disable a data silo and then clear out any active privacy requests that are still queued up for that data silo.`,
+    fullDescription:
+      'This command allows for bulk skipping all open privacy request jobs for a particular data silo. This command is useful if you want to disable a data silo and then clear out any active privacy requests that are still queued up for that data silo.',
   },
 });

@@ -71,6 +71,7 @@ export const downloadFilesCommand = buildCommand({
   docs: {
     brief:
       'Download the files associated with a Data Subject Access Request (DSAR)',
-    fullDescription: `Download the files associated with a Data Subject Access Request (DSAR) from DSR Automation -> Incoming Requests tab.`,
+    fullDescription:
+      'Download the files associated with a Data Subject Access Request (DSAR) from DSR Automation -> Incoming Requests tab.',
   },
 });

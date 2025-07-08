@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import { logger } from '../../logger';
 import {
   UPDATE_PRIVACY_REQUEST,

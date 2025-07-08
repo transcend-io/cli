@@ -38,6 +38,7 @@ export const uploadDataFlowsFromCsvCommand = buildCommand({
   },
   docs: {
     brief: 'Upload data flows from CSV',
-    fullDescription: `This command allows for uploading of data flows from CSV.`,
+    fullDescription:
+      'This command allows for uploading of data flows from CSV.',
   },
 });

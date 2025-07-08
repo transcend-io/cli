@@ -102,6 +102,7 @@ export const uploadPreferencesCommand = buildCommand({
   },
   docs: {
     brief: 'Upload preferences',
-    fullDescription: `This command allows for updating of preference management data to your Transcend Preference Store.`,
+    fullDescription:
+      'This command allows for updating of preference management data to your Transcend Preference Store.',
   },
 });

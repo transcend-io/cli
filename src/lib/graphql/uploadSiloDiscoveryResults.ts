@@ -1,5 +1,5 @@
-import chunk from 'lodash/chunk';
-import { mapSeries } from 'bluebird';
+import { chunk } from 'lodash-es';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
 import { makeGraphQLRequest } from './makeGraphQLRequest';

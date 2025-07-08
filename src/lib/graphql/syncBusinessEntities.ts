@@ -1,16 +1,15 @@
 import { BusinessEntityInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { UPDATE_BUSINESS_ENTITIES, CREATE_BUSINESS_ENTITY } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy, chunk } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   fetchAllBusinessEntities,
   BusinessEntity,
 } from './fetchAllBusinessEntities';
 import colors from 'colors';
-import chunk from 'lodash/chunk';
 
 /**
  * Input to create a new business entity

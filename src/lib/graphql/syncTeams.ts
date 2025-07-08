@@ -1,9 +1,9 @@
 import { TeamInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '@/lib/bluebird-replace';
 import { UPDATE_TEAM, CREATE_TEAM } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllTeams, Team } from './fetchAllTeams';

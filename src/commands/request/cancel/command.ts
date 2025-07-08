@@ -73,6 +73,7 @@ export const cancelCommand = buildCommand({
   },
   docs: {
     brief: 'Bulk cancel a set of privacy requests',
-    fullDescription: `Bulk cancel a set of privacy requests from the DSR Automation -> Incoming Requests tab.`,
+    fullDescription:
+      'Bulk cancel a set of privacy requests from the DSR Automation -> Incoming Requests tab.',
   },
 });

@@ -55,7 +55,6 @@ export async function fetchAllPrompts(
   do {
     const {
       prompts: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Prompts */
       prompts: {

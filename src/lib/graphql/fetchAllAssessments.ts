@@ -350,7 +350,6 @@ export async function fetchAllAssessments(
   do {
     const {
       assessmentForms: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Forms */
       assessmentForms: {

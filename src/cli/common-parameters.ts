@@ -8,12 +8,16 @@ import { urlParser } from './parsers';
 
 /**
  * Creates a standard authentication parameter
+ *
+ * @param root0
  */
 export const createAuthParameter = ({
   scopes,
   requiresSiloScope = false,
 }: {
+  /** */
   scopes: ScopeName[] | 'Varies';
+  /** */
   requiresSiloScope?: boolean;
 }) => {
   const parameter = {
@@ -55,6 +59,8 @@ export const createAuthParameter = ({
 
 /**
  * Creates a standard Transcend URL parameter
+ *
+ * @param defaultUrl
  */
 export const createTranscendUrlParameter = (
   defaultUrl = 'https://api.transcend.io',

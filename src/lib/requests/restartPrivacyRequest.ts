@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import groupBy from 'lodash/groupBy';
+import { groupBy } from 'lodash-es';
 import { apply, decodeCodec } from '@transcend-io/type-utils';
 import { IdentifierType } from '@transcend-io/privacy-types';
 import type { Got } from 'got';

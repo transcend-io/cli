@@ -1,12 +1,11 @@
 import colors from 'colors';
-import chunk from 'lodash/chunk';
+import { chunk, keyBy } from 'lodash-es';
 import { RepositoryInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_REPOSITORIES, CREATE_REPOSITORY } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '@/lib/bluebird-replace';
 import { fetchAllRepositories, Repository } from './fetchAllRepositories';
-import keyBy from 'lodash/keyBy';
 import { logger } from '../../logger';
 
 const CHUNK_SIZE = 100;

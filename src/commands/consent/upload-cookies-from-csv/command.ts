@@ -32,6 +32,6 @@ export const uploadCookiesFromCsvCommand = buildCommand({
   },
   docs: {
     brief: 'Upload cookies from CSV',
-    fullDescription: `This command allows for uploading cookies from CSV.`,
+    fullDescription: 'This command allows for uploading cookies from CSV.',
   },
 });

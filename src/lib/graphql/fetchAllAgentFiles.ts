@@ -50,7 +50,6 @@ export async function fetchAllAgentFiles(
   do {
     const {
       agentFiles: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** AgentFiles */
       agentFiles: {

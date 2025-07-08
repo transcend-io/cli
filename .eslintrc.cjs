@@ -74,6 +74,8 @@ module.exports = {
 
     /** handled by no-restricted-syntax */
     'guard-for-in': 0,
+    'no-restricted-syntax': 0,
+    'no-await-in-loop': 0,
 
     /**
      * We prefer to use types instead of interfaces

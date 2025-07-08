@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import colors from 'colors';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import yargs from 'yargs-parser';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { writeCsv } from './cron';

@@ -8,7 +8,7 @@ import { DEFAULT_TRANSCEND_API } from '../constants';
 import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
 import { splitCsvToList } from './requests';
 import { readdirSync } from 'fs';
-import { map } from 'bluebird';
+import { map } from '@/lib/bluebird-replace';
 import { basename, join } from 'path';
 
 /**
