@@ -1,4 +1,7 @@
 #!/usr/bin/env/node
+
+// TODO DELETE
+
 import * as t from 'io-ts';
 import { writeTranscendYaml } from './readTranscendYaml';
 import yargs from 'yargs-parser';
