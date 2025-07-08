@@ -1,4 +1,4 @@
-import { buildCommand } from '@stricli/core';
+import { buildCommand, numberParser } from '@stricli/core';
 import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
@@ -89,7 +89,8 @@ export const uploadPreferencesCommand = buildCommand({
       attributes: {
         kind: 'parsed',
         parse: String,
-        brief: 'Attributes to add to any DSR request if created',
+        brief:
+          'Attributes to add to any DSR request if created. Comma-separated list of key:value pairs.',
         default: 'Tags:transcend-cli,Source:transcend-cli',
       },
       receiptFilepath: {
@@ -97,6 +98,12 @@ export const uploadPreferencesCommand = buildCommand({
         parse: String,
         brief: 'Store resulting, continuing where left off',
         default: './preference-management-upload-receipts.json',
+      },
+      concurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief: 'The concurrency to use when uploading in parallel',
+        default: '10',
       },
     },
   },
