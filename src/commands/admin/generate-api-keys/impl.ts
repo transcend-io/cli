@@ -1,4 +1,4 @@
-import type { LocalContext } from '../../../context';
+import type { LocalContext } from '@/context';
 
 // Command flag interface
 interface GenerateApiKeysCommandFlags {

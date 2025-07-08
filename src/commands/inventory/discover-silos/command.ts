@@ -1,7 +1,7 @@
 import { buildCommand } from '@stricli/core';
 import { ScopeName } from '@transcend-io/privacy-types';
-import { createAuthParameter } from '../../../cli/common-parameters';
-import { uuidParser } from '../../../cli/parsers';
+import { createAuthParameter } from '@/cli/common-parameters';
+import { uuidParser } from '@/cli/parsers';
 
 export const discoverSilosCommand = buildCommand({
   loader: async () => {

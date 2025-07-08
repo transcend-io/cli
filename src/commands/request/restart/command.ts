@@ -4,8 +4,8 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '../../../cli/common-parameters';
-import { dateParser } from '../../../cli/parsers';
+} from '@/cli/common-parameters';
+import { dateParser } from '@/cli/parsers';
 
 export const restartCommand = buildCommand({
   loader: async () => {

@@ -4,8 +4,8 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '../../../cli/common-parameters';
-import { arrayParser, dateParser } from '../../../cli/parsers';
+} from '@/cli/common-parameters';
+import { arrayParser, dateParser } from '@/cli/parsers';
 
 export const downloadFilesCommand = buildCommand({
   loader: async () => {

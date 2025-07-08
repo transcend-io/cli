@@ -3,8 +3,8 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '../../../cli/common-parameters';
-import { arrayParser, dateParser } from '../../../cli/parsers';
+} from '@/cli/common-parameters';
+import { arrayParser, dateParser } from '@/cli/parsers';
 
 export const cancelCommand = buildCommand({
   loader: async () => {

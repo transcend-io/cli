@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import type { LocalContext } from '../../../../context';
+import type { LocalContext } from '@/context';
 
 interface MarkIdentifiersCompletedCommandFlags {
   file: string;

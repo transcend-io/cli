@@ -3,8 +3,8 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createSombraAuthParameter,
-} from '../../../cli/common-parameters';
-import { urlParser } from '../../../cli/parsers';
+} from '@/cli/common-parameters';
+import { urlParser } from '@/cli/parsers';
 
 export const uploadPreferencesCommand = buildCommand({
   loader: async () => {

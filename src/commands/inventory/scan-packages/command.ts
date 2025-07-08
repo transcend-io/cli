@@ -3,7 +3,7 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '../../../cli/common-parameters';
+} from '@/cli/common-parameters';
 
 export const scanPackagesCommand = buildCommand({
   loader: async () => {

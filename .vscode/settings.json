@@ -4,9 +4,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "eslint.trace.server": "messages",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.formatOnSave": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   "workbench.iconTheme": "vscode-icons",
@@ -72,7 +73,5 @@
     "yaml",
     "yarnpkg",
     "Ymls"
-  ],
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  ]
 }

@@ -5,8 +5,8 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '../../../../cli/common-parameters';
-import { uuidParser } from '../../../../cli/parsers';
+} from '@/cli/common-parameters';
+import { uuidParser } from '@/cli/parsers';
 
 export const pushIdentifiersCommand = buildCommand({
   loader: async () => {

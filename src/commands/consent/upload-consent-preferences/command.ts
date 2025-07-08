@@ -1,5 +1,5 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { urlParser } from '../../../cli/parsers';
+import { urlParser } from '@/cli/parsers';
 
 export const uploadConsentPreferencesCommand = buildCommand({
   loader: async () => {

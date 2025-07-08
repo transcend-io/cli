@@ -5,7 +5,7 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '../../../../cli/common-parameters';
+} from '@/cli/common-parameters';
 
 export const pullIdentifiersCommand = buildCommand({
   loader: async () => {
