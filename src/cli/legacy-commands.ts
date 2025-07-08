@@ -4,6 +4,7 @@ import {
   type CommandContext,
 } from '@stricli/core';
 import { app } from '../app';
+import { logger } from '@/logger';
 
 // Maps legacy (<7.0.0) command names to their modern command structure
 export const legacyCommandToModernCommandMap: Record<string, string[]> = {
@@ -92,8 +93,10 @@ export const legacyCommandToModernCommandMap: Record<string, string[]> = {
 // All commands have been migrated to the modern command structure
 
 /**
+ * Gets the help text for a command
  *
- * @param command
+ * @param command - The command to get help text for
+ * @returns The help text for the command
  */
 export function getHelpTextForCommand(command: string[]): string | undefined {
   const helpTextForAllCommands = generateHelpTextForAllCommands(
@@ -106,14 +109,16 @@ export function getHelpTextForCommand(command: string[]): string | undefined {
 }
 
 /**
- * @param legacyCommand
+ * Logs a modern command recommendation for a legacy command
+ *
+ * @param legacyCommand - The legacy command to log a modern command recommendation for
  * @example
  * logModernCommandRecommendation('tr-cron-mark-identifiers-completed');
  */
 export function logModernCommandRecommendation(
   legacyCommand: keyof typeof legacyCommandToModernCommandMap,
-) {
-  console.log('[DEPRECATION NOTICE]');
+): void {
+  logger.log('[DEPRECATION NOTICE]');
 
   const modernCommand = legacyCommandToModernCommandMap[legacyCommand];
   if (!modernCommand) {
@@ -125,13 +130,15 @@ export function logModernCommandRecommendation(
           )}\``,
       )
       .join('\n');
-    console.log(
-      `This command is deprecated as of v7.0.0. Here is a list of new commands, mapped to their legacy command names:\n${modernCommandString}`,
+    logger.log(
+      'This command is deprecated as of v7.0.0.' +
+        ` Here is a list of new commands, mapped to their legacy command names:
+${modernCommandString}`,
     );
     return;
   }
 
-  console.log(
+  logger.log(
     `\`${legacyCommand}\` is deprecated as of v7.0.0.\nUse \`${
       app.config.name
     } ${modernCommand.join(' ')}\` instead.\n`,
@@ -144,5 +151,5 @@ export function logModernCommandRecommendation(
     );
   }
 
-  console.log(helpText);
+  logger.log(helpText);
 }
