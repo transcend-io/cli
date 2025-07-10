@@ -212,9 +212,7 @@ const pullResourceTable: Record<
   },
 };
 
-export const inventoryPullDocs = `The API key permissions for this command vary based on the \`resources\` argument:
-
-| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
+const table = `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
   pullResourceTable,
 )
   .map(
@@ -224,3 +222,8 @@ export const inventoryPullDocs = `The API key permissions for this command vary 
         .join(', ')} | ${markdownLink} |`,
   )
   .join('\n')}`;
+
+export default `The API key permissions for this command vary based on the \`resources\` argument:
+
+${table}
+`;

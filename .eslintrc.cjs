@@ -265,7 +265,7 @@ module.exports = {
         '**/*.test.js',
         '**/*.spec.ts',
         '**/*.spec.js',
-        'scripts/**/*',
+        './scripts/**/*',
       ],
       rules: {
         'import/no-extraneous-dependencies': [

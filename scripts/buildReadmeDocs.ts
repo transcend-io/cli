@@ -6,43 +6,39 @@ import {
 import { app } from '@/app';
 import fs from 'node:fs';
 import { execSync } from 'node:child_process';
-import { additionalDocumentation } from './doc-helpers/additionalDocumentation';
+import { fdir } from 'fdir';
+
+// eslint-disable-next-line new-cap
+const docFiles = new fdir()
+  .withRelativePaths()
+  .glob('**/docs.ts')
+  .crawl('./src/commands')
+  .sync();
+
+// For each src/commands/**/docs.ts file, create a key-value pair of the command and the exported Markdown documentation
+const additionalDocumentation: Record<string, string> = Object.fromEntries(
+  await Promise.all(
+    docFiles.map(async (file) => {
+      const command = `transcend ${file.split('/').slice(0, -1).join(' ')}`;
+      const docs = (await import(`@/commands/${file}`)).default;
+      return [command, docs];
+    }),
+  ),
+);
 
 const helpTextForAllCommands = generateHelpTextForAllCommands(
   app as Application<CommandContext>,
 );
 
-/**
- * The keys of the `additionalDocumentation` object.
- */
-type AdditionalDocumentationKey = keyof typeof additionalDocumentation;
-// Used to throw errors on bad keynames in `additionalDocumentation`.
-const additionalDocumentationRemaining = new Set<AdditionalDocumentationKey>(
-  Object.keys(additionalDocumentation) as AdditionalDocumentationKey[],
-);
 const formattedMarkdown: string = helpTextForAllCommands
   .map(([command, helpText]) => {
     let commandDocumentation = `### \`${command}\`\n\n\`\`\`txt\n${helpText}\`\`\``;
-    if (additionalDocumentation[command as AdditionalDocumentationKey]) {
-      commandDocumentation += `\n\n${
-        additionalDocumentation[command as AdditionalDocumentationKey]
-      }`;
+    if (additionalDocumentation[command]) {
+      commandDocumentation += `\n\n${additionalDocumentation[command]}`;
     }
-    additionalDocumentationRemaining.delete(
-      command as AdditionalDocumentationKey,
-    );
     return commandDocumentation;
   })
   .join('\n');
-if (additionalDocumentationRemaining.size > 0) {
-  throw new Error(
-    `Additional documentation was provided for the following commands, but no help text was found for them: ${Array.from(
-      additionalDocumentationRemaining,
-    )
-      .map((key) => `"${key}"`)
-      .join(', ')}`,
-  );
-}
 
 const readme = fs.readFileSync('README.md', 'utf8');
 

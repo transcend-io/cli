@@ -35,6 +35,7 @@
   - [`transcend consent consent-manager-service-json-to-yml`](#transcend-consent-consent-manager-service-json-to-yml)
   - [`transcend consent consent-managers-to-business-entities`](#transcend-consent-consent-managers-to-business-entities)
   - [`transcend inventory pull`](#transcend-inventory-pull)
+  - [`transcend inventory push`](#transcend-inventory-push)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
@@ -791,9 +792,14 @@ USAGE
   transcend inventory pull (--auth value) [--resources apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
   transcend inventory pull --help
 
-Generate's a transcend.yml by pulling the configuration from your connected services view.
+Generates a transcend.yml by pulling the configuration from your Transcend instance.
 
-The API key needs various scopes depending on the resources being pulled.
+The API key needs various scopes depending on the resources being pulled (see the CLI's README for more details).
+
+This command can be helpful if you are looking to:
+
+- Copy your data into another instance
+- Generate a transcend.yml file as a starting point to maintain parts of your data inventory in code.
 
 FLAGS
       --auth                       The Transcend API key. The scopes required will vary depending on the operation performed. If in doubt, the Full Admin scope will always work.
@@ -810,6 +816,8 @@ FLAGS
      [--debug]                     Set to true to include debug logs while pulling the configuration                                                                              [default = false]
   -h  --help                       Print help information and exit
 ```
+
+The API key permissions for this command vary based on the `resources` argument:
 
 | Resource              | Description                                                                                                                          | Scopes                                               | Link                                                                                                                                                                                                                          |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -845,8 +853,6 @@ FLAGS
 | assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
 | purposes              | Consent purposes and related preference management topics.                                                                           | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                              |
 
-_Note: The scopes for `transcend inventory push` are the same as the scopes for `transcend inventory pull`._
-
 ### `transcend inventory push`
 
 ```txt
@@ -854,7 +860,7 @@ USAGE
   transcend inventory push (--auth value) [--file value] [--transcendUrl value] [--pageSize value] [--variables value] [--publishToPrivacyCenter] [--classifyService] [--deleteExtraAttributeValues]
   transcend inventory push --help
 
-Given a transcend.yml file, sync the contents up to your connected services view.
+Given a transcend.yml file, sync the contents up to your Transcend instance.
 
 FLAGS
       --auth                         The Transcend API key. The scopes required will vary depending on the operation performed. If in doubt, the Full Admin scope will always work.
@@ -867,6 +873,8 @@ FLAGS
      [--deleteExtraAttributeValues]  When true and syncing attributes, delete any extra attributes instead of just upserting                                                        [default = false]
   -h  --help                         Print help information and exit
 ```
+
+_Note: The scopes for `transcend inventory push` are the same as the scopes for `transcend inventory pull`._
 
 ### `transcend inventory scan-packages`
 
