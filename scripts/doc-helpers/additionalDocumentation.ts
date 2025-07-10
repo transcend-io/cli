@@ -223,5 +223,7 @@ export const additionalDocumentation = {
           .map((scopeName) => TRANSCEND_SCOPES[scopeName].title)
           .join(', ')} | ${markdownLink} |`,
     )
-    .join('\n')}`,
+    .join(
+      '\n',
+    )}\n_Note: The scopes for \`transcend inventory push\` are the same as the scopes for \`transcend inventory pull\`.`,
 };
