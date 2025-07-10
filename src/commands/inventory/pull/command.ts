@@ -4,7 +4,7 @@ import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '@/cli/common-parameters';
-import { TranscendPullResource } from '../../../enums';
+import { TranscendPullResource } from '@/enums';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
