@@ -108,8 +108,11 @@ export const uploadPreferencesCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Upload preferences',
-    fullDescription:
-      'This command allows for updating of preference management data to your Transcend Preference Store.',
+    brief: 'Upload preference management data to your Preference Store',
+    fullDescription: `Upload preference management data to your Preference Store.
+
+This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.`,
   },
 });

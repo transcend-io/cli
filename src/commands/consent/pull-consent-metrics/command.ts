@@ -44,7 +44,14 @@ export const pullConsentMetricsCommand = buildCommand({
   },
   docs: {
     brief: 'Pull consent metrics',
-    fullDescription:
-      'This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.',
+    fullDescription: `This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.
+
+By default, the consent metrics will be written to a folder named \`consent-metrics\` within the directory where you run the command. You can override the location that these CSVs are written to using the flag \`--folder=./my-folder/\`. This folder will contain a set of CSV files:
+
+- \`CONSENT_CHANGES_TIMESERIES_optIn.csv\` -> this is a feed containing the number of explicit opt in events that happen - these are calls to \`airgap.setConsent(event, { SaleOfInfo: true });\`
+- \`CONSENT_CHANGES_TIMESERIES_optOut.csv\` -> this is a feed containing the number of explicit opt out events that happen - these are calls to \`airgap.setConsent(event, { SaleOfInfo: false });\`
+- \`CONSENT_SESSIONS_BY_REGIME_Default.csv\` -> this contains the number of sessions detected for the bin period
+- \`PRIVACY_SIGNAL_TIMESERIES_DNT.csv\` -> the number of DNT signals detected.
+- \`PRIVACY_SIGNAL_TIMESERIES_GPC.csv\` -> the number of GPC signals detected.`,
   },
 });

@@ -24,7 +24,8 @@ export const markRequestDataSilosCompletedCommand = buildCommand({
       file: {
         kind: 'parsed',
         parse: String,
-        brief: 'Path to the CSV file where identifiers will be written to',
+        brief:
+          'Path to the CSV file where identifiers will be written to. The CSV is expected to have 1 column named "Request Id".',
         default: './request-identifiers.csv',
       },
       transcendUrl: createTranscendUrlParameter(),

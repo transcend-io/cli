@@ -105,9 +105,10 @@ export const uploadCommand = buildCommand({
   },
   docs: {
     brief: 'Upload a set of requests from a CSV',
-    fullDescription: `If you need to upload a set of requests from a CSV, you can run this command.
-This command uses inquirer to prompt the user to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+    fullDescription: `Upload a set of requests from a CSV.
 
-The script will also produce a JSON cache file, that allows for the mappings to be preserved between runs.`,
+This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.`,
   },
 });
