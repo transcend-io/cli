@@ -11,17 +11,17 @@ import { fdir } from 'fdir';
 // eslint-disable-next-line new-cap
 const docFiles = new fdir()
   .withRelativePaths()
-  .glob('**/docs.ts')
+  .glob('**/readme.ts')
   .crawl('./src/commands')
   .sync();
 
-// For each src/commands/**/docs.ts file, create a key-value pair of the command and the exported Markdown documentation
+// For each src/commands/**/readme.ts file, create a key-value pair of the command and the exported Markdown documentation
 const additionalDocumentation: Record<string, string> = Object.fromEntries(
   await Promise.all(
     docFiles.map(async (file) => {
       const command = `transcend ${file.split('/').slice(0, -1).join(' ')}`;
-      const docs = (await import(`@/commands/${file}`)).default;
-      return [command, docs];
+      const readme = (await import(`@/commands/${file}`)).default;
+      return [command, readme];
     }),
   ),
 );
