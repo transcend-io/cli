@@ -54,7 +54,7 @@ export const pushCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Push configuration to Transcend',
+    brief: 'Push metadata from transcend.yml to Transcend',
     fullDescription:
       'Given a transcend.yml file, sync the contents up to your Transcend instance.',
   },

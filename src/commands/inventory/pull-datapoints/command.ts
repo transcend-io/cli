@@ -56,8 +56,6 @@ export const pullDatapointsCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Pull datapoints',
-    fullDescription:
-      'This command allows for pulling your Data Inventory -> Datapoints into a CSV.',
+    brief: 'Export the datapoints from your Data Inventory into a CSV.',
   },
 });

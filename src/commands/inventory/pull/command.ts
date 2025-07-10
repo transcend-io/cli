@@ -98,7 +98,7 @@ export const pullCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Pull configuration from Transcend',
+    brief: 'Pull metadata from Transcend into transcend.yml',
     fullDescription: `Generates a transcend.yml by pulling the configuration from your Transcend instance.
 
 The API key needs various scopes depending on the resources being pulled (see the CLI's README for more details).
