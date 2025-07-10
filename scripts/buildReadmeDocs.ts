@@ -5,14 +5,17 @@ import {
 } from '@stricli/core';
 import { app } from '@/app';
 import fs from 'node:fs';
-// import { legacyCommandToModernCommandMap } from '@/cli/legacy-commands';
+import { execSync } from 'node:child_process';
 
 const helpTextForAllCommands = generateHelpTextForAllCommands(
   app as Application<CommandContext>,
 );
 
 const formattedMarkdown: string = helpTextForAllCommands
-  .map(([command, helpText]) => `## ${command}\n\n\`\`\`txt\n${helpText}\`\`\``)
+  .map(
+    ([command, helpText]) =>
+      `### \`${command}\`\n\n\`\`\`txt\n${helpText}\`\`\``,
+  )
   .join('\n');
 
 const readme = fs.readFileSync('README.md', 'utf8');
@@ -23,3 +26,6 @@ const newReadme = readme.replace(
 );
 
 fs.writeFileSync('README.md', newReadme);
+
+execSync('doctoc README.md', { stdio: 'inherit' });
+execSync('prettier --write README.md', { stdio: 'inherit' });

@@ -260,7 +260,13 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.test.ts', '**/*.test.js', '**/*.spec.ts', '**/*.spec.js'],
+      files: [
+        '**/*.test.ts',
+        '**/*.test.js',
+        '**/*.spec.ts',
+        '**/*.spec.js',
+        'scripts/**/*',
+      ],
       rules: {
         'import/no-extraneous-dependencies': [
           'error',
