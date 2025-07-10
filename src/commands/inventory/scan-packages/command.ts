@@ -38,8 +38,23 @@ export const scanPackagesCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Scan packages',
-    fullDescription:
-      'Transcend can scan your codebase to inventory your code packages and dependencies.',
+    brief: 'Scan dependency management files to inventory code dependencies.',
+    fullDescription: `Transcend scans packages and dependencies for the following frameworks:
+
+- package.json
+- requirements.txt & setup.py
+- Podfile
+- Package.resolved
+- build.gradle
+- pubspec.yaml
+- Gemfile & .gemspec
+- composer.json
+
+This command will scan the folder you point at to look for any of these files. Once found, the build file will be parsed in search of dependencies. Those code packages and dependencies will be uploaded to Transcend. The information uploaded to Transcend is:
+
+- repository name
+- package names
+- dependency names and versions
+- package descriptions`,
   },
 });

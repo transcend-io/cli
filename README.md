@@ -44,6 +44,7 @@
     - [Dynamic Variables](#dynamic-variables)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
+    - [Usage](#usage-3)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
@@ -1163,7 +1164,23 @@ USAGE
   transcend inventory scan-packages (--auth value) [--scanPath value] [--ignoreDirs value]... [--repositoryName value] [--transcendUrl value]
   transcend inventory scan-packages --help
 
-Transcend can scan your codebase to inventory your code packages and dependencies.
+Transcend scans packages and dependencies for the following frameworks:
+
+- package.json
+- requirements.txt & setup.py
+- Podfile
+- Package.resolved
+- build.gradle
+- pubspec.yaml
+- Gemfile & .gemspec
+- composer.json
+
+This command will scan the folder you point at to look for any of these files. Once found, the build file will be parsed in search of dependencies. Those code packages and dependencies will be uploaded to Transcend. The information uploaded to Transcend is:
+
+- repository name
+- package names
+- dependency names and versions
+- package descriptions
 
 FLAGS
       --auth             The Transcend API key. Requires scopes: "Manage Code Scanning"
@@ -1181,7 +1198,9 @@ USAGE
   transcend inventory discover-silos (--scanPath value) (--dataSiloId value) (--auth value) [--fileGlobs value] [--ignoreDirs value] [--transcendUrl value]
   transcend inventory discover-silos --help
 
-Transcend can help scan dependency management files to help detect new data silos where you may be storing user personal data.
+We support scanning for new data silos in JavaScript, Python, Gradle, and CocoaPods projects.
+
+To get started, add a data silo for the corresponding project type with the "silo discovery" plugin enabled. For example, if you want to scan a JavaScript project, add a package.json data silo. Then, specify the data silo ID in the "--dataSiloId" parameter.
 
 FLAGS
       --scanPath       File path in the project to scan
@@ -1192,6 +1211,23 @@ FLAGS
      [--transcendUrl]  URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                  [default = https://api.transcend.io]
   -h  --help           Print help information and exit
 ```
+
+#### Usage
+
+Scan a JavaScript package.json:
+
+```sh
+# Scan a package.json file to look for new data silos
+yarn tr-discover-silos --scanPath=./myJavascriptProject --auth=$TRANSCEND_API_KEY ---dataSiloId=445ee241-5f2a-477b-9948-2a3682a43d0e
+```
+
+Here are some examples of a [Podfile](./examples/code-scanning/test-cocoa-pods/Podfile) and [Gradle file](./examples/code-scanning/test-gradle/build.gradle). These are scanned like:
+
+```sh
+yarn tr-discover-silos --scanPath=./examples/ --auth=$TRANSCEND_API_KEY ---dataSiloId=b6776589-0b7d-466f-8aad-4378ffd3a321
+```
+
+This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
 
 ### `transcend inventory pull-datapoints`
 
