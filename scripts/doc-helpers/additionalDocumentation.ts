@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '@/enums';
 
@@ -186,7 +187,6 @@ const pullResourceTable: Record<
     scopes: [ScopeName.ViewIntlMessages],
     markdownLink:
       '[Privacy Center -> Messages](https://app.transcend.io/privacy-center/messages-internationalization), ' +
-      // eslint-disable-next-line max-len
       '[Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages)',
   },
   [TranscendPullResource.Assessments]: {
@@ -214,7 +214,9 @@ const pullResourceTable: Record<
 };
 
 export const additionalDocumentation = {
-  'transcend inventory pull': `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
+  'transcend inventory pull': `The API key permissions for this command vary based on the \`resources\` argument:
+
+| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
     pullResourceTable,
   )
     .map(
@@ -223,7 +225,8 @@ export const additionalDocumentation = {
           .map((scopeName) => TRANSCEND_SCOPES[scopeName].title)
           .join(', ')} | ${markdownLink} |`,
     )
-    .join(
-      '\n',
-    )}\n_Note: The scopes for \`transcend inventory push\` are the same as the scopes for \`transcend inventory pull\`.`,
+    .join('\n')}`,
+  'transcend inventory push':
+    '_Note: The scopes for `transcend inventory push` are the same as the scopes for `transcend inventory pull`._',
 };
+/* eslint-enable max-len */

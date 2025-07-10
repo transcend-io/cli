@@ -99,8 +99,13 @@ export const pullCommand = buildCommand({
   },
   docs: {
     brief: 'Pull configuration from Transcend',
-    fullDescription: `Generate's a transcend.yml by pulling the configuration from your connected services view.
+    fullDescription: `Generates a transcend.yml by pulling the configuration from your integrations view.
 
-The API key needs various scopes depending on the resources being pulled.`,
+The API key needs various scopes depending on the resources being pulled (see the CLI's README for more details).
+
+This command can be helpful if you are looking to:
+
+- Copy parts of your data map into another instance
+- Generate a transcend.yml file as a starting point to maintain parts of your data map in code.`,
   },
 });

@@ -845,6 +845,8 @@ FLAGS
 | assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
 | purposes              | Consent purposes and related preference management topics.                                                                           | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                              |
 
+_Note: The scopes for `transcend inventory push` are the same as the scopes for `transcend inventory pull`._
+
 ### `transcend inventory push`
 
 ```txt
