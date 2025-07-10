@@ -19,6 +19,19 @@ export interface CronIdentifierWithAction extends CronIdentifier {
   action: RequestAction;
 }
 
+export interface ChunkCallback {
+  /** The chunk of identifiers formatted for CSV */
+  identifiersFormattedForCsv: {
+    [k in string]: string | null | boolean | number;
+  }[];
+  /** The raw identifiers */
+  identifiers: CronIdentifierWithAction[];
+  /** Whether this is the last chunk */
+  isLastChunk: boolean;
+  /** The chunk number (1-based) */
+  chunkNumber: number;
+}
+
 /**
  * Pull the set of identifiers outstanding for a cron or AVC integration
  *
@@ -32,6 +45,8 @@ export async function pullCustomSiloOutstandingIdentifiers({
   pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
   skipRequestCount = false,
+  chunkSize,
+  onChunk,
 }: {
   /** Transcend API key authentication */
   auth: string;
@@ -47,6 +62,10 @@ export async function pullCustomSiloOutstandingIdentifiers({
   sombraAuth?: string;
   /** Skip request count */
   skipRequestCount?: boolean;
+  /** Size of chunks to process. If provided, onChunk callback will be called for each chunk */
+  chunkSize?: number;
+  /** Callback function called when a chunk of identifiers is ready */
+  onChunk?: (chunk: ChunkCallback) => Promise<void>;
 }): Promise<{
   /** Raw Identifiers */
   identifiers: CronIdentifierWithAction[];
@@ -70,12 +89,11 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.magenta(
-      `Pulling ${
-        skipRequestCount ? 'all' : totalRequestCount
+      `Pulling ${skipRequestCount ? (chunkSize ?? 'all') : totalRequestCount
       } outstanding request identifiers ` +
-        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
-          '", "',
-        )}"`,
+      `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+        '", "',
+      )}"`,
     ),
   );
 
@@ -90,11 +108,46 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   // identifiers found in total
   const identifiers: CronIdentifierWithAction[] = [];
+  let chunkNumber = 1;
+  let currentChunk: CronIdentifierWithAction[] = [];
+
+  // Helper function to process a chunk
+  const processChunk = async (isLastChunk = false): Promise<void> => {
+    if (currentChunk.length === 0) return;
+
+    // Format the chunk for CSV
+    const chunkFormattedForCsv = currentChunk.map(({ attributes, ...identifier }) => ({
+      ...identifier,
+      ...attributes.reduce(
+        (acc, val) =>
+          Object.assign(acc, {
+            [val.key]: val.values.join(','),
+          }),
+        {},
+      ),
+    }));
+
+    if (onChunk) {
+      await onChunk({
+        identifiersFormattedForCsv: chunkFormattedForCsv,
+        identifiers: [...currentChunk],
+        isLastChunk,
+        chunkNumber,
+      });
+    }
+
+    // Add to total identifiers for backward compatibility
+    identifiers.push(...currentChunk);
+    currentChunk = [];
+    chunkNumber += 1;
+  };
 
   // map over each action
   if (!skipRequestCount) {
     progressBar.start(totalRequestCount, 0);
   }
+  console.log('actions', actions);
+  console.log('chunkSize', chunkSize);
   await mapSeries(actions, async (action) => {
     let offset = 0;
     let shouldContinue = true;
@@ -108,15 +161,55 @@ export async function pullCustomSiloOutstandingIdentifiers({
         offset,
         requestType: action,
       });
-      identifiers.push(
-        ...pageIdentifiers.map((identifier) => {
-          foundRequestIds.add(identifier.requestId);
-          return {
+      console.log('pulled page of identifiers', pageIdentifiers.length);
+
+      const pageIdentifiersWithAction = pageIdentifiers.map((identifier) => {
+        foundRequestIds.add(identifier.requestId);
+        return {
+          ...identifier,
+          action,
+        };
+      });
+
+      // If chunking is enabled, add to current chunk and process if needed
+      if (chunkSize) {
+        console.log('pushing to current chunk', pageIdentifiersWithAction.length);
+        currentChunk.push(...pageIdentifiersWithAction);
+
+        // Process chunk if it reaches the size limit
+        while (currentChunk.length >= chunkSize) {
+          const chunkToProcess = currentChunk.splice(0, chunkSize);
+          const chunkFormattedForCsv = chunkToProcess.map(({ attributes, ...identifier }) => ({
             ...identifier,
-            action,
-          };
-        }),
-      );
+            ...attributes.reduce(
+              (acc, val) =>
+                Object.assign(acc, {
+                  [val.key]: val.values.join(','),
+                }),
+              {},
+            ),
+          }));
+
+          if (onChunk) {
+            console.log('onChunk', chunkToProcess.length);
+            // eslint-disable-next-line no-await-in-loop
+            await onChunk({
+              identifiersFormattedForCsv: chunkFormattedForCsv,
+              identifiers: chunkToProcess,
+              isLastChunk: false,
+              chunkNumber,
+            });
+          }
+
+          // Add to total identifiers for backward compatibility
+          identifiers.push(...chunkToProcess);
+          chunkNumber += 1;
+        }
+      } else {
+        // Original behavior - add to total identifiers
+        identifiers.push(...pageIdentifiersWithAction);
+      }
+
       shouldContinue = pageIdentifiers.length === pageLimit;
       offset += pageLimit;
       if (!skipRequestCount) {
@@ -131,6 +224,11 @@ export async function pullCustomSiloOutstandingIdentifiers({
     }
   });
 
+  // Process any remaining identifiers in the current chunk
+  if (chunkSize && currentChunk.length > 0) {
+    await processChunk(true);
+  }
+
   if (!skipRequestCount) {
     progressBar.stop();
   }
@@ -139,13 +237,12 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.green(
-      `Successfully pulled ${identifiers.length} outstanding identifiers from ${
-        foundRequestIds.size
+      `Successfully pulled ${identifiers.length} outstanding identifiers from ${foundRequestIds.size
       } requests in "${totalTime / 1000}" seconds!`,
     ),
   );
 
-  // Write out to CSV
+  // Write out to CSV (for backward compatibility when not using chunking)
   const data = identifiers.map(({ attributes, ...identifier }) => ({
     ...identifier,
     ...attributes.reduce(
