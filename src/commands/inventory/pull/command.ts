@@ -28,7 +28,7 @@ export const pullCommand = buildCommand({
       }),
       resources: {
         kind: 'enum',
-        values: Object.values(TranscendPullResource),
+        values: ['all', ...Object.values(TranscendPullResource)],
         brief: `The different resource types to pull in. Defaults to ${DEFAULT_TRANSCEND_PULL_RESOURCES.join(
           ',',
         )}.`,

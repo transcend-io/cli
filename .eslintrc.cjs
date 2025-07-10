@@ -256,6 +256,7 @@ module.exports = {
       files: ['src/commands/**/*'],
       rules: {
         'max-len': 'off',
+        'max-lines': 'off',
         'jsdoc/require-jsdoc': 'off',
       },
     },

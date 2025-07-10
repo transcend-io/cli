@@ -22,7 +22,7 @@ import { validateTranscendAuth } from '@/lib/api-keys';
 
 interface PullCommandFlags {
   auth: string;
-  resources?: TranscendPullResource[];
+  resources?: (TranscendPullResource | 'all')[];
   file: string;
   transcendUrl: string;
   dataSiloIds?: string[];
@@ -55,6 +55,10 @@ export async function pull(
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 
+  const resourcesToPull: TranscendPullResource[] = resources.includes('all')
+    ? Object.values(TranscendPullResource)
+    : (resources as TranscendPullResource[]);
+
   // Sync to Disk
   if (typeof apiKeyOrList === 'string') {
     try {
@@ -64,7 +68,7 @@ export async function pull(
       const configuration = await pullTranscendConfiguration(client, {
         dataSiloIds,
         integrationNames,
-        resources,
+        resources: resourcesToPull,
         pageSize,
         debug,
         skipDatapoints,
@@ -117,7 +121,7 @@ export async function pull(
         const configuration = await pullTranscendConfiguration(client, {
           dataSiloIds,
           integrationNames,
-          resources,
+          resources: resourcesToPull,
           pageSize,
           debug,
           skipDatapoints,

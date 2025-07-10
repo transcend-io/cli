@@ -35,7 +35,13 @@
   - [`transcend consent consent-manager-service-json-to-yml`](#transcend-consent-consent-manager-service-json-to-yml)
   - [`transcend consent consent-managers-to-business-entities`](#transcend-consent-consent-managers-to-business-entities)
   - [`transcend inventory pull`](#transcend-inventory-pull)
+    - [Scopes](#scopes)
+    - [Usage](#usage-1)
   - [`transcend inventory push`](#transcend-inventory-push)
+    - [Scopes](#scopes-1)
+    - [Usage](#usage-2)
+    - [CI Integration](#ci-integration)
+    - [Dynamic Variables](#dynamic-variables)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
@@ -789,7 +795,7 @@ FLAGS
 
 ```txt
 USAGE
-  transcend inventory pull (--auth value) [--resources apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
+  transcend inventory pull (--auth value) [--resources all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
   transcend inventory pull --help
 
 Generates a transcend.yml by pulling the configuration from your Transcend instance.
@@ -803,7 +809,7 @@ This command can be helpful if you are looking to:
 
 FLAGS
       --auth                       The Transcend API key. The scopes required will vary depending on the operation performed. If in doubt, the Full Admin scope will always work.
-     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes, separator = ,]
+     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes, separator = ,]
      [--file]                      Path to the YAML file to pull into                                                                                                             [default = ./transcend.yml]
      [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                   [default = https://api.transcend.io]
      [--dataSiloIds]...            The UUIDs of the data silos that should be pulled into the YAML file                                                                           [separator = ,]
@@ -816,6 +822,8 @@ FLAGS
      [--debug]                     Set to true to include debug logs while pulling the configuration                                                                              [default = false]
   -h  --help                       Print help information and exit
 ```
+
+#### Scopes
 
 The API key permissions for this command vary based on the `resources` argument:
 
@@ -853,6 +861,137 @@ The API key permissions for this command vary based on the `resources` argument:
 | assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
 | purposes              | Consent purposes and related preference management topics.                                                                           | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                              |
 
+#### Usage
+
+```sh
+# Writes out file to ./transcend.yml
+transcend inventory pull --auth=$TRANSCEND_API_KEY
+```
+
+An alternative file destination can be specified:
+
+```sh
+# Writes out file to ./custom/location.yml
+transcend inventory pull --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
+```
+
+Or a specific data silo(s) can be pulled in:
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY ---dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
+```
+
+Or a specific types of data silo(s) can be pulled in:
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake
+```
+
+Specifying the resource types to pull in (the following resources are the default resources):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=apiKeys,templates,dataSilos,enrichers
+```
+
+Pull in data flow and cookie resources, filtering for specific tracker statuses (see [this example](./examples/data-flows-cookies.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataFlows,cookies --trackerStatuses=NEEDS_REVIEW,LIVE
+```
+
+Pull in data silos without any datapoint/table information
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipDatapoints=true
+```
+
+Pull in data silos and datapoints without any subdatapoint/column information
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipSubDatapoints=true
+```
+
+Pull in data silos and datapoints with guessed data categories instead of just approved data categories
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --includeGuessedCategories=true
+```
+
+Pull in attribute definitions only (see [this example](./examples/attributes.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=attributes
+```
+
+Pull in business entities only (see [this example](./examples/business-entities.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=businessEntities
+```
+
+Pull in enrichers and identifiers (see [this example](./examples/enrichers.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=enrichers,identifiers
+```
+
+Pull in onboarding action items (see [this example](./examples/action-items.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=actionItems,actionItemCollections
+```
+
+Pull in consent manager domain list (see [this example](./examples/consent-manager-domains.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=consentManager
+```
+
+Pull in identifier configurations (see [this example](./examples/identifiers.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=identifiers
+```
+
+Pull in request actions configurations (see [this example](./examples/actions.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=actions
+```
+
+Pull in consent manager purposes and preference management topics (see [this example](./examples/purposes.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=purposes
+```
+
+Pull in data subject configurations (see [this example](./examples/data-subjects.yml)):
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSubjects
+```
+
+Pull in assessments and assessment templates.
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=assessments,assessmentTemplates
+```
+
+Pull everything:
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=all
+```
+
+Pull in configuration files across multiple instances
+
+```sh
+transcend admin generate-api-keys --email=test@transcend.io --password=$TRANSCEND_PASSWORD    --scopes="View Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+transcend inventory pull --auth=./transcend-api-keys.json --resources=consentManager --file=./transcend/
+```
+
+Note: This command will overwrite the existing transcend.yml file that you have locally.
+
 ### `transcend inventory push`
 
 ```txt
@@ -874,7 +1013,148 @@ FLAGS
   -h  --help                         Print help information and exit
 ```
 
-_Note: The scopes for `transcend inventory push` are the same as the scopes for `transcend inventory pull`._
+#### Scopes
+
+The scopes for `transcend inventory push` are the same as the scopes for [`transcend inventory pull`](#transcend-inventory-pull).
+
+#### Usage
+
+```sh
+# Looks for file at ./transcend.yml
+transcend inventory push --auth=$TRANSCEND_API_KEY
+```
+
+An alternative file destination can be specified:
+
+```sh
+# Looks for file at custom location ./custom/location.yml
+transcend inventory push --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
+```
+
+Push a single .yml file configuration into multiple Transcend instances. This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
+
+```sh
+transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+transcend inventory pull --auth=$TRANSCEND_API_KEY
+transcend inventory push --auth=./transcend-api-keys.json
+```
+
+Push multiple .yml file configurations into multiple Transcend instances. This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
+
+```sh
+transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+transcend inventory pull --auth=./transcend-api-keys.json --file=./transcend/
+# <edit .yml files in folder in between these steps>
+transcend inventory push --auth=./transcend-api-keys.json --file=./transcend/
+```
+
+Apply service classifier to all data flows.
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataFlows
+transcend inventory push --auth=$TRANSCEND_API_KEY --resources=dataFlows --classifyService=true
+```
+
+Push up attributes, deleting any attributes that are not specified in the transcend.yml file
+
+```sh
+transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=attributes
+transcend inventory push --auth=$TRANSCEND_API_KEY --resources=attributes --deleteExtraAttributeValues=true
+```
+
+Some things to note about this sync process:
+
+1. Any field that is defined in your .yml file will be synced up to app.transcend.io. If any change was made on the Admin Dashboard, it will be overwritten.
+2. If you omit a field from the .yml file, this field will not be synced. This gives you the ability to define as much or as little configuration in your transcend.yml file as you would like, and let the remainder of fields be labeled through the Admin Dashboard
+3. If you define new data subjects, identifiers, data silos or datapoints that were not previously defined on the Admin Dashboard, the CLI will create these new resources automatically.
+4. Currently, this CLI does not handle deleting or renaming of resources. If you need to delete or rename a data silo, identifier, enricher or API key, you should make the change on the Admin Dashboard.
+5. The only resources that this CLI will not auto-generate are:
+
+- a) Data silo owners: If you assign an email address to a data silo, you must first make sure that user is invited into your Transcend instance (https://app.transcend.io/admin/users).
+- b) API keys: This CLI will not create new API keys. You will need to first create the new API keys on the Admin Dashboard (https://app.transcend.io/infrastructure/api-keys). You can then list out the titles of the API keys that you generated in your transcend.yml file, after which the CLI is capable of updating that API key to be able to respond to different data silos in your Data Map
+
+#### CI Integration
+
+Once you have a workflow for creating your transcend.yml file, you will want to integrate your `transcend inventory push` command on your CI.
+
+Below is an example of how to set this up using a Github action:
+
+```yaml
+name: Transcend Data Map Syncing
+# See https://app.transcend.io/privacy-requests/connected-services
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install Transcend CLI
+        run: npm install --global @transcend-io/cli
+
+      # If you have a script that generates your transcend.yml file from
+      # an ORM or infrastructure configuration, add that step here
+      # Leave this step commented out if you want to manage your transcend.yml manually
+      # - name: Generate transcend.yml
+      #   run: ./scripts/generate_transcend_yml.py
+
+      - name: Push Transcend config
+        run: transcend inventory push --auth=${{ secrets.TRANSCEND_API_KEY }}
+```
+
+#### Dynamic Variables
+
+If you are using this CLI to sync your Data Map between multiple Transcend instances, you may find the need to make minor modifications to your configurations between environments. The most notable difference would be the domain where your webhook URLs are hosted on.
+
+The `transcend inventory push` command takes in a parameter `variables`. This is a CSV of `key:value` pairs.
+
+```sh
+transcend inventory push --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
+```
+
+This command could fill out multiple parameters in a YAML file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
+
+```yml
+api-keys:
+  - title: Webhook Key
+enrichers:
+  - title: Basic Identity Enrichment
+    description: Enrich an email address to the userId and phone number
+    # The data silo webhook URL is the same in each environment,
+    # except for the base domain in the webhook URL.
+    url: https://example.<<parameters.domain>>/transcend-enrichment-webhook
+    input-identifier: email
+    output-identifiers:
+      - userId
+      - phone
+      - myUniqueIdentifier
+  - title: Fraud Check
+    description: Ensure the email address is not marked as fraudulent
+    url: https://example.<<parameters.domain>>/transcend-fraud-check
+    input-identifier: email
+    output-identifiers:
+      - email
+    privacy-actions:
+      - ERASURE
+data-silos:
+  - title: Redshift Data Warehouse
+    integrationName: server
+    description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
+    url: https://example.<<parameters.domain>>/transcend-webhook
+    api-key-title: Webhook Key
+```
 
 ### `transcend inventory scan-packages`
 
