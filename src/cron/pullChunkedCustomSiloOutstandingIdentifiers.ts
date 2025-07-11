@@ -13,6 +13,12 @@ import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { mapSeries } from 'bluebird';
+/**
+ * A CSV formatted identifier
+ */
+export type CsvFormattedIdentifier = {
+  [k in string]: string | null | boolean | number;
+};
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -22,14 +28,19 @@ export interface CronIdentifierWithAction extends CronIdentifier {
 /**
  * Pull the set of identifiers outstanding for a cron or AVC integration
  *
+ * This function is designed to be used in a loop, and will call the onSave callback
+ * with a chunk of identifiers when the savePageSize is reached.
+ *
  * @param options - Options
  */
-export async function pullCustomSiloOutstandingIdentifiers({
+export async function pullChunkedCustomSiloOutstandingIdentifiers({
   dataSiloId,
   auth,
   sombraAuth,
   actions,
-  pageLimit = 100,
+  apiPageSize = 100,
+  savePageSize = 1000,
+  onSave,
   transcendUrl = DEFAULT_TRANSCEND_API,
   skipRequestCount = false,
 }: {
@@ -39,8 +50,12 @@ export async function pullCustomSiloOutstandingIdentifiers({
   dataSiloId: string;
   /** The request actions to fetch */
   actions: RequestAction[];
-  /** Page limit when fetching identifiers */
-  pageLimit?: number;
+  /** How many identifiers to pull in a single call to the backend */
+  apiPageSize: number;
+  /** How many identifiers to save at a time (usually to a CSV file, should be a multiple of apiPageSize) */
+  savePageSize: number;
+  /** Callback function called when a chunk of identifiers is ready to be saved */
+  onSave: (chunk: CsvFormattedIdentifier[]) => Promise<void>;
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** Sombra API key authentication */
@@ -50,11 +65,14 @@ export async function pullCustomSiloOutstandingIdentifiers({
 }): Promise<{
   /** Raw Identifiers */
   identifiers: CronIdentifierWithAction[];
-  /** Identifiers formatted for CSV */
-  identifiersFormattedForCsv: {
-    [k in string]: string | null | boolean | number;
-  }[];
 }> {
+  // Validate savePageSize
+  if (savePageSize % apiPageSize !== 0) {
+    throw new Error(
+      `savePageSize must be a multiple of apiPageSize. savePageSize: ${savePageSize}, apiPageSize: ${apiPageSize}`,
+    );
+  }
+
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
@@ -90,6 +108,8 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   // identifiers found in total
   const identifiers: CronIdentifierWithAction[] = [];
+  // current chunk of identifiers to be saved
+  let currentChunk: CsvFormattedIdentifier[] = [];
 
   // map over each action
   if (!skipRequestCount) {
@@ -104,21 +124,45 @@ export async function pullCustomSiloOutstandingIdentifiers({
       // eslint-disable-next-line no-await-in-loop
       const pageIdentifiers = await pullCronPageOfIdentifiers(sombra, {
         dataSiloId,
-        limit: pageLimit,
+        limit: apiPageSize,
         offset,
         requestType: action,
       });
-      identifiers.push(
-        ...pageIdentifiers.map((identifier) => {
+
+      const identifiersWithAction: CronIdentifierWithAction[] =
+        pageIdentifiers.map((identifier) => {
           foundRequestIds.add(identifier.requestId);
           return {
             ...identifier,
             action,
           };
+        });
+
+      const csvFormattedIdentifiers = identifiersWithAction.map(
+        ({ attributes, ...identifier }) => ({
+          ...identifier,
+          ...attributes.reduce(
+            (acc, val) =>
+              Object.assign(acc, {
+                [val.key]: val.values.join(','),
+              }),
+            {},
+          ),
         }),
       );
-      shouldContinue = pageIdentifiers.length === pageLimit;
-      offset += pageLimit;
+
+      identifiers.push(...identifiersWithAction);
+      currentChunk.push(...csvFormattedIdentifiers);
+
+      // Check if we've reached the savePageSize and call the onSave callback
+      if (currentChunk.length >= savePageSize) {
+        // eslint-disable-next-line no-await-in-loop
+        await onSave(currentChunk);
+        currentChunk = [];
+      }
+
+      shouldContinue = pageIdentifiers.length === apiPageSize;
+      offset += apiPageSize;
       if (!skipRequestCount) {
         progressBar.update(foundRequestIds.size);
       } else {
@@ -130,6 +174,11 @@ export async function pullCustomSiloOutstandingIdentifiers({
       }
     }
   });
+
+  // Save any remaining identifiers in the current chunk
+  if (currentChunk.length > 0) {
+    await onSave(currentChunk);
+  }
 
   if (!skipRequestCount) {
     progressBar.stop();
@@ -145,17 +194,5 @@ export async function pullCustomSiloOutstandingIdentifiers({
     ),
   );
 
-  // Write out to CSV
-  const data = identifiers.map(({ attributes, ...identifier }) => ({
-    ...identifier,
-    ...attributes.reduce(
-      (acc, val) =>
-        Object.assign(acc, {
-          [val.key]: val.values.join(','),
-        }),
-      {},
-    ),
-  }));
-
-  return { identifiers, identifiersFormattedForCsv: data };
+  return { identifiers };
 }
