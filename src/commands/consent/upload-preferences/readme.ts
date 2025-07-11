@@ -3,17 +3,17 @@ export default `A sample CSV can be found [here](./examples/cli-upload-preferenc
 Upload consent preferences to partition key \`4d1c5daa-90b7-4d18-aa40-f86a43d2c726\`:
 
 \`\`\`sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 \`\`\`
 
 Upload consent preferences with additional options:
 
 \`\`\`sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
 \`\`\`
 
 Specifying the backend URL, needed for US hosted backend infrastructure:
 
 \`\`\`sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://consent.us.transcend.io
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --consentUrl=https://consent.us.transcend.io
 \`\`\``;
