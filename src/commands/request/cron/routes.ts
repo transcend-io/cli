@@ -11,5 +11,8 @@ export const cronRoutes = buildRouteMap({
   },
   docs: {
     brief: 'Cron commands',
+    hideRoute: {
+      'pull-profiles': true,
+    },
   },
 });
