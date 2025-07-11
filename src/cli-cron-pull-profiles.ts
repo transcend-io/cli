@@ -7,7 +7,7 @@ import { logger } from './logger';
 import uniq from 'lodash/uniq';
 import {
   pullChunkedCustomSiloOutstandingIdentifiers,
-  CsvFormattedIdentifier
+  CsvFormattedIdentifier,
 } from './cron/pullChunkedCustomSiloOutstandingIdentifiers';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -124,7 +124,11 @@ async function main(): Promise<void> {
 
   const parsedPageLimit = parseInt(pageLimit, 10);
   const parsedChunkSize = parseInt(chunkSize, 10);
-  if (Number.isNaN(parsedChunkSize) || parsedChunkSize <= 0 || parsedChunkSize % parsedPageLimit !== 0) {
+  if (
+    Number.isNaN(parsedChunkSize) ||
+    parsedChunkSize <= 0 ||
+    parsedChunkSize % parsedPageLimit !== 0
+  ) {
     logger.error(
       colors.red(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${parsedPageLimit}.`,
@@ -136,7 +140,8 @@ async function main(): Promise<void> {
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
   const { baseName, extension } = parseFilePath(file);
-  const { baseName: baseNameTarget, extension: extensionTarget } = parseFilePath(fileTarget);
+  const { baseName: baseNameTarget, extension: extensionTarget } =
+    parseFilePath(fileTarget);
 
   let allIdentifiersCount = 0;
   let allTargetIdentifiersCount = 0;
@@ -171,7 +176,8 @@ async function main(): Promise<void> {
               .split('/')
               .pop()
               ?.replace(' Information', ''),
-            Comment: 'Customer data deletion request submitted via transcend.io',
+            Comment:
+              'Customer data deletion request submitted via transcend.io',
           };
         });
       },
@@ -183,9 +189,7 @@ async function main(): Promise<void> {
     allTargetIdentifiersCount += results.flat().length;
 
     // Write the identifiers and target identifiers to CSV
-    const headers = uniq(
-      chunk.map((d) => Object.keys(d)).flat(),
-    );
+    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     const numberedFileNameTarget = `${baseNameTarget}-${fileCount}${extensionTarget}`;
     writeCsv(numberedFileName, chunk, headers);

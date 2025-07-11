@@ -101,7 +101,8 @@ export function parseFilePath(filePath: string): {
 } {
   const lastDotIndex = filePath.lastIndexOf('.');
   return {
-    baseName: lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath,
+    baseName:
+      lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath,
     extension: lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv',
   };
 }

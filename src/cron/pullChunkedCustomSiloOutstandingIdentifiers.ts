@@ -53,7 +53,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   /** How many identifiers to pull in a single call to the backend */
   apiPageSize: number;
   /** How many identifiers to save at a time (usually to a CSV file, should be a multiple of apiPageSize) */
-  savePageSize: number
+  savePageSize: number;
   /** Callback function called when a chunk of identifiers is ready to be saved */
   onSave: (chunk: CsvFormattedIdentifier[]) => Promise<void>;
   /** API URL for Transcend backend */
@@ -88,11 +88,12 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.magenta(
-      `Pulling ${skipRequestCount ? 'all' : totalRequestCount
+      `Pulling ${
+        skipRequestCount ? 'all' : totalRequestCount
       } outstanding request identifiers ` +
-      `for data silo: "${dataSiloId}" for requests of types "${actions.join(
-        '", "',
-      )}"`,
+        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+          '", "',
+        )}"`,
     ),
   );
 
@@ -128,24 +129,27 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
         requestType: action,
       });
 
-      const identifiersWithAction: CronIdentifierWithAction[] = pageIdentifiers.map((identifier) => {
-        foundRequestIds.add(identifier.requestId);
-        return {
-          ...identifier,
-          action,
-        };
-      });
+      const identifiersWithAction: CronIdentifierWithAction[] =
+        pageIdentifiers.map((identifier) => {
+          foundRequestIds.add(identifier.requestId);
+          return {
+            ...identifier,
+            action,
+          };
+        });
 
-      const csvFormattedIdentifiers = identifiersWithAction.map(({ attributes, ...identifier }) => ({
-        ...identifier,
-        ...attributes.reduce(
-          (acc, val) =>
-            Object.assign(acc, {
-              [val.key]: val.values.join(','),
-            }),
-          {},
-        ),
-      }));
+      const csvFormattedIdentifiers = identifiersWithAction.map(
+        ({ attributes, ...identifier }) => ({
+          ...identifier,
+          ...attributes.reduce(
+            (acc, val) =>
+              Object.assign(acc, {
+                [val.key]: val.values.join(','),
+              }),
+            {},
+          ),
+        }),
+      );
 
       identifiers.push(...identifiersWithAction);
       currentChunk.push(...csvFormattedIdentifiers);
@@ -184,7 +188,8 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.green(
-      `Successfully pulled ${identifiers.length} outstanding identifiers from ${foundRequestIds.size
+      `Successfully pulled ${identifiers.length} outstanding identifiers from ${
+        foundRequestIds.size
       } requests in "${totalTime / 1000}" seconds!`,
     ),
   );

@@ -5,7 +5,12 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import uniq from 'lodash/uniq';
-import { CsvFormattedIdentifier, parseFilePath, pullChunkedCustomSiloOutstandingIdentifiers, writeCsv } from './cron';
+import {
+  CsvFormattedIdentifier,
+  parseFilePath,
+  pullChunkedCustomSiloOutstandingIdentifiers,
+  writeCsv,
+} from './cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { splitCsvToList } from './requests';
@@ -92,7 +97,7 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
@@ -100,7 +105,11 @@ async function main(): Promise<void> {
 
   const parsedPageLimit = parseInt(pageLimit, 10);
   const parsedChunkSize = parseInt(chunkSize, 10);
-  if (Number.isNaN(parsedChunkSize) || parsedChunkSize <= 0 || parsedChunkSize % parsedPageLimit !== 0) {
+  if (
+    Number.isNaN(parsedChunkSize) ||
+    parsedChunkSize <= 0 ||
+    parsedChunkSize % parsedPageLimit !== 0
+  ) {
     logger.error(
       colors.red(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${parsedPageLimit}.`,
