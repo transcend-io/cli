@@ -7,6 +7,8 @@ import { pullUnstructuredDiscoveryFilesCommand } from './pull-unstructured-disco
 import { pullCommand } from './pull/command';
 import { pushCommand } from './push/command';
 import { scanPackagesCommand } from './scan-packages/command';
+import { consentManagerServiceJsonToYmlCommand } from './consent-manager-service-json-to-yml/command';
+import { consentManagersToBusinessEntitiesCommand } from './consent-managers-to-business-entities/command';
 
 export const inventoryRoutes = buildRouteMap({
   routes: {
@@ -19,6 +21,10 @@ export const inventoryRoutes = buildRouteMap({
     'derive-data-silos-from-data-flows': deriveDataSilosFromDataFlowsCommand,
     'derive-data-silos-from-data-flows-cross-instance':
       deriveDataSilosFromDataFlowsCrossInstanceCommand,
+    'consent-manager-service-json-to-yml':
+      consentManagerServiceJsonToYmlCommand,
+    'consent-managers-to-business-entities':
+      consentManagersToBusinessEntitiesCommand,
   },
   docs: {
     brief: 'Inventory commands',

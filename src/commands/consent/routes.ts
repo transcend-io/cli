@@ -1,7 +1,5 @@
 import { buildRouteMap } from '@stricli/core';
 import { buildXdiSyncEndpointCommand } from './build-xdi-sync-endpoint/command';
-import { consentManagerServiceJsonToYmlCommand } from './consent-manager-service-json-to-yml/command';
-import { consentManagersToBusinessEntitiesCommand } from './consent-managers-to-business-entities/command';
 import { pullConsentMetricsCommand } from './pull-consent-metrics/command';
 import { pullConsentPreferencesCommand } from './pull-consent-preferences/command';
 import { updateConsentManagerCommand } from './update-consent-manager/command';
@@ -20,10 +18,6 @@ export const consentRoutes = buildRouteMap({
     'upload-cookies-from-csv': uploadCookiesFromCsvCommand,
     'upload-data-flows-from-csv': uploadDataFlowsFromCsvCommand,
     'upload-preferences': uploadPreferencesCommand,
-    'consent-manager-service-json-to-yml':
-      consentManagerServiceJsonToYmlCommand,
-    'consent-managers-to-business-entities':
-      consentManagersToBusinessEntitiesCommand,
   },
   docs: {
     brief: 'Consent commands',
