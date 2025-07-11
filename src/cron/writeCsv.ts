@@ -73,6 +73,7 @@ export async function writeCsv(
   data: ObjByString[],
   headers: boolean | string[] = true,
 ): Promise<void> {
+  console.log('writing csv', filePath, data[0], headers);
   const ws = createWriteStream(filePath);
   await new Promise((resolve, reject) => {
     try {
@@ -82,9 +83,11 @@ export async function writeCsv(
         .on('error', reject)
         .on('end', () => resolve(true));
     } catch (err) {
+      console.log('error writing csv', err);
       reject(err);
     }
   });
+  console.log('wrote csv', filePath);
 }
 
 /**

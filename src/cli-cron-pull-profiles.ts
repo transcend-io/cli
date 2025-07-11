@@ -5,7 +5,11 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import uniq from 'lodash/uniq';
-import { pullCustomSiloOutstandingIdentifiers, writeCsv } from './cron';
+// import { writeCsv } from './cron';
+import {
+  pullChunkedCustomSiloOutstandingIdentifiers,
+  CsvFormattedIdentifier
+} from './cron/pullChunkedCustomSiloOutstandingIdentifiers';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from './constants';
 import { splitCsvToList } from './requests';
@@ -14,6 +18,7 @@ import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
 } from './graphql';
+import { writeCsvSync } from './cron/writeCsv';
 
 /**
  * This is a temporary script that can be removed after the launch of workflows v2
@@ -50,6 +55,7 @@ async function main(): Promise<void> {
     targetDataSiloId,
     actions,
     pageLimit = '100',
+    chunkSize = '1000',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -102,78 +108,110 @@ async function main(): Promise<void> {
     logger.error(
       colors.red(
         `Failed to parse actions:"${invalidActions.join(',')}".\n` +
-          `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
+        `Expected one of: \n${Object.values(RequestAction).join('\n')}`,
       ),
     );
     process.exit(1);
   }
 
-  // Pull down outstanding identifiers
-  const { identifiersFormattedForCsv } =
-    await pullCustomSiloOutstandingIdentifiers({
-      transcendUrl,
-      pageLimit: parseInt(pageLimit, 10),
-      actions: parsedActions,
-      auth,
-      sombraAuth,
-      dataSiloId: cronDataSiloId,
-    });
-
-  // Grab the requestIds from the list of silos to process
-  const requestIds = identifiersFormattedForCsv.map(
-    (d) => d.requestId as string,
-  );
-
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  // Pull down target identifiers
-  const results = await map(
-    uniq(requestIds),
-    async (requestId) => {
-      const results = await fetchRequestFilesForRequest(client, {
-        requestId,
-        dataSiloId: targetDataSiloId,
-      });
-      return results.map(({ fileName, remoteId }) => {
-        if (!remoteId) {
-          throw new Error(
-            `Failed to find remoteId for ${fileName} request: ${requestId}`,
-          );
-        }
-        return {
-          RecordId: remoteId,
-          Object: fileName
-            .replace('.json', '')
-            .split('/')
-            .pop()
-            ?.replace(' Information', ''),
-          Comment: 'Customer data deletion request submitted via transcend.io',
-        };
-      });
-    },
-    {
-      concurrency: 10,
-    },
-  );
+  let allIdentifiersCount = 0;
+  let allTargetIdentifiersCount = 0;
 
-  // Write CSV
-  const headers = uniq(
-    identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
-  );
-  writeCsv(file, identifiersFormattedForCsv, headers);
+  // Create onSave callback to handle chunked processing
+  const onSave = async (chunk: CsvFormattedIdentifier[]): Promise<void> => {
+    // Add to all identifiers
+    allIdentifiersCount += chunk.length;
+
+    // Get unique request IDs from this chunk
+    const requestIds = chunk.map((d) => d.requestId as string);
+    const uniqueRequestIds = uniq(requestIds);
+
+    // Pull down target identifiers for this chunk
+    const results = await map(
+      uniqueRequestIds,
+      async (requestId) => {
+        const results = await fetchRequestFilesForRequest(client, {
+          requestId,
+          dataSiloId: targetDataSiloId,
+        });
+        return results.map(({ fileName, remoteId }) => {
+          if (!remoteId) {
+            throw new Error(
+              `Failed to find remoteId for ${fileName} request: ${requestId}`,
+            );
+          }
+          return {
+            RecordId: remoteId,
+            Object: fileName
+              .replace('.json', '')
+              .split('/')
+              .pop()
+              ?.replace(' Information', ''),
+            Comment: 'Customer data deletion request submitted via transcend.io',
+          };
+        });
+      },
+      {
+        concurrency: 10,
+      },
+    );
+
+    allTargetIdentifiersCount += results.flat().length;
+
+    // Write the identifiers and target identifiers to CSV
+    const headers = uniq(
+      chunk.map((d) => Object.keys(d)).flat(),
+    );
+    console.log('headers', headers);
+    // await writeCsv(file, chunk, headers);
+    writeCsvSync(file, chunk, headers);
+    logger.info(
+      colors.green(
+        `Successfully wrote ${chunk.length} identifiers to file "${file}"`,
+      ),
+    );
+
+    const targetIdentifiers = results.flat();
+    const headers2 = uniq(targetIdentifiers.map((d) => Object.keys(d)).flat());
+    console.log('headers2', headers2);
+    writeCsvSync(fileTarget, targetIdentifiers, headers2);
+    logger.info(
+      colors.green(
+        `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,
+      ),
+    );
+
+    logger.info(
+      colors.blue(
+        `Processed chunk of ${chunk.length} identifiers, found ${targetIdentifiers.length} target identifiers`,
+      ),
+    );
+  };
+
+  // Pull down outstanding identifiers using the new chunked function
+  await pullChunkedCustomSiloOutstandingIdentifiers({
+    dataSiloId: cronDataSiloId,
+    auth,
+    sombraAuth,
+    actions: parsedActions,
+    apiPageSize: parseInt(pageLimit, 10),
+    savePageSize: parseInt(chunkSize, 10),
+    onSave,
+    transcendUrl,
+    skipRequestCount: true,
+  });
+
   logger.info(
     colors.green(
-      `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
+      `Successfully wrote ${allIdentifiersCount} identifiers to file "${file}"`,
     ),
   );
-
-  const targetIdentifiers = results.flat();
-  const headers2 = uniq(targetIdentifiers.map((d) => Object.keys(d)).flat());
-  writeCsv(fileTarget, targetIdentifiers, headers2);
   logger.info(
     colors.green(
-      `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,
+      `Successfully wrote ${allTargetIdentifiersCount} identifiers to file "${fileTarget}"`,
     ),
   );
 }
