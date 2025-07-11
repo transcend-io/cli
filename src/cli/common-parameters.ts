@@ -1,5 +1,9 @@
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { urlParser } from './parsers';
+import {
+  DEFAULT_TRANSCEND_API,
+  DEFAULT_TRANSCEND_CONSENT_API,
+} from '@/constants';
 
 /**
  * Common parameter builders for CLI commands
@@ -65,12 +69,28 @@ export const createAuthParameter = ({
  * @returns The parameter object
  */
 export const createTranscendUrlParameter = (
-  defaultUrl = 'https://api.transcend.io',
+  defaultUrl = DEFAULT_TRANSCEND_API,
 ) => ({
   kind: 'parsed' as const,
   parse: urlParser,
   brief:
     'URL of the Transcend backend. Use https://api.us.transcend.io for US hosting',
+  default: defaultUrl,
+});
+
+/**
+ * Creates a standard Consent URL parameter
+ *
+ * @param defaultUrl - The default URL to use if not provided
+ * @returns The parameter object
+ */
+export const createConsentUrlParameter = (
+  defaultUrl = DEFAULT_TRANSCEND_CONSENT_API,
+) => ({
+  kind: 'parsed' as const,
+  parse: urlParser,
+  brief:
+    'URL of the Transcend consent backend. Use https://consent.us.transcend.io for US hosting',
   default: defaultUrl,
 });
 

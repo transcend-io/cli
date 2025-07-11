@@ -1,5 +1,5 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { urlParser } from '@/cli/parsers';
+import { createConsentUrlParameter } from '@/cli/common-parameters';
 
 export const uploadConsentPreferencesCommand = buildCommand({
   loader: async () => {
@@ -30,13 +30,7 @@ export const uploadConsentPreferencesCommand = buildCommand({
         brief: 'The file to pull consent preferences from',
         default: './preferences.csv',
       },
-      consentUrl: {
-        kind: 'parsed',
-        parse: urlParser,
-        brief:
-          'URL of the Transcend Consent backend. Use https://consent.us.transcend.io for US hosting',
-        default: 'https://consent.transcend.io',
-      },
+      consentUrl: createConsentUrlParameter(),
       concurrency: {
         kind: 'parsed',
         parse: numberParser,

@@ -12,14 +12,14 @@ export const ADMIN_DASH_DATAPOINTS = `${ADMIN_DASH}/data-map/data-inventory/data
 
 /**
  * Override default transcend API url using
- * TRANSCEND_API_URL=https://api.us.transcend.io tr-pull ...
+ * TRANSCEND_API_URL=https://api.us.transcend.io transcend ...
  */
 export const DEFAULT_TRANSCEND_API =
   process.env.TRANSCEND_API_URL || 'https://api.transcend.io';
 
 /**
  * Override default transcend API url using
- * TRANSCEND_API_URL=https://consent.us.transcend.io tr-pull ...
+ * TRANSCEND_CONSENT_API_URL=https://consent.us.transcend.io transcend ...
  */
 export const DEFAULT_TRANSCEND_CONSENT_API =
   process.env.TRANSCEND_CONSENT_API_URL || 'https://consent.transcend.io';
