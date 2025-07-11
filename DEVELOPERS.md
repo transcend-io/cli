@@ -7,6 +7,7 @@
 ```bash
 npm i -g corepack@latest
 corepack enable
+corepack install
 ```
 
 2. Install dependencies
