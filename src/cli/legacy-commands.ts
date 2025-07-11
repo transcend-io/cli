@@ -10,11 +10,11 @@ import { logger } from '@/logger';
 export const legacyCommandToModernCommandMap: Record<string, string[]> = {
   'tr-build-xdi-sync-endpoint': ['consent', 'build-xdi-sync-endpoint'],
   'tr-consent-manager-service-json-to-yml': [
-    'consent',
+    'inventory',
     'consent-manager-service-json-to-yml',
   ],
   'tr-consent-managers-to-business-entities': [
-    'consent',
+    'inventory',
     'consent-managers-to-business-entities',
   ],
   'tr-cron-mark-identifiers-completed': [

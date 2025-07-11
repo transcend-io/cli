@@ -53,8 +53,8 @@ All commands have been re-mapped to new commands under the `transcend` namespace
 | Old Command                                           | New Command                                                            |
 | ----------------------------------------------------- | ---------------------------------------------------------------------- |
 | `tr-build-xdi-sync-endpoint`                          | `transcend consent build-xdi-sync-endpoint`                            |
-| `tr-consent-manager-service-json-to-yml`              | `transcend consent consent-manager-service-json-to-yml`                |
-| `tr-consent-managers-to-business-entities`            | `transcend consent consent-managers-to-business-entities`              |
+| `tr-consent-manager-service-json-to-yml`              | `transcend inventory consent-manager-service-json-to-yml`              |
+| `tr-consent-managers-to-business-entities`            | `transcend inventory consent-managers-to-business-entities`            |
 | `tr-cron-mark-identifiers-completed`                  | `transcend request cron mark-identifiers-completed`                    |
 | `tr-cron-pull-identifiers`                            | `transcend request cron pull-identifiers`                              |
 | `tr-derive-data-silos-from-data-flows`                | `transcend inventory derive-data-silos-from-data-flows`                |
