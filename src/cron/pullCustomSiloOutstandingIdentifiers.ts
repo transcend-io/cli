@@ -13,6 +13,7 @@ import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { mapSeries } from 'bluebird';
+import { writeCsv } from './writeCsv';
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -70,12 +71,11 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.magenta(
-      `Pulling ${
-        skipRequestCount ? 'all' : totalRequestCount
+      `Pulling ${skipRequestCount ? 'all' : totalRequestCount
       } outstanding request identifiers ` +
-        `for data silo: "${dataSiloId}" for requests of types "${actions.join(
-          '", "',
-        )}"`,
+      `for data silo: "${dataSiloId}" for requests of types "${actions.join(
+        '", "',
+      )}"`,
     ),
   );
 
@@ -139,8 +139,7 @@ export async function pullCustomSiloOutstandingIdentifiers({
 
   logger.info(
     colors.green(
-      `Successfully pulled ${identifiers.length} outstanding identifiers from ${
-        foundRequestIds.size
+      `Successfully pulled ${identifiers.length} outstanding identifiers from ${foundRequestIds.size
       } requests in "${totalTime / 1000}" seconds!`,
     ),
   );

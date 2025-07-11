@@ -55,7 +55,7 @@ async function main(): Promise<void> {
     actions,
     skipRequestCount = false,
     pageLimit = '100',
-    pagesToSavePerFile = '10',
+    chunkSize = '10000',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -115,8 +115,15 @@ async function main(): Promise<void> {
   }
 
   const parsedPageLimit = parseInt(pageLimit, 10);
-  const parsedPagesToSave = parseInt(pagesToSavePerFile, 10);
-  const chunkSize = parsedPagesToSave ? parsedPagesToSave * parsedPageLimit : parsedPageLimit * 100;
+  const parsedChunkSize = parseInt(chunkSize, 10);
+  if (Number.isNaN(parsedChunkSize) || parsedChunkSize <= 0 || parsedChunkSize % parsedPageLimit !== 0) {
+    logger.error(
+      colors.red(
+        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${parsedPageLimit}.`,
+      ),
+    );
+    process.exit(1);
+  }
 
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -204,7 +211,7 @@ async function main(): Promise<void> {
     sombraAuth,
     actions: parsedActions,
     apiPageSize: parsedPageLimit,
-    savePageSize: chunkSize,
+    savePageSize: parsedChunkSize,
     onSave,
     transcendUrl,
     skipRequestCount: skipRequestCount === 'true',
