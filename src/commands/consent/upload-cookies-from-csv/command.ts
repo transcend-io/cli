@@ -31,6 +31,12 @@ export const uploadCookiesFromCsvCommand = buildCommand({
   },
   docs: {
     brief: 'Upload cookies from CSV',
-    fullDescription: 'This command allows for uploading cookies from CSV.',
+    fullDescription: `Upload cookies from CSV. This command allows for uploading of cookies from CSV.
+
+Step 1) Download the CSV of cookies that you want to edit from the Admin Dashboard under [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies). You can download cookies from both the "Triage" and "Approved" tabs.
+
+Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
+Step 3) Upload the modified CSV file back into the dashboard with this command.`,
   },
 });

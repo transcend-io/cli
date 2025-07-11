@@ -37,7 +37,12 @@ export const uploadDataFlowsFromCsvCommand = buildCommand({
   },
   docs: {
     brief: 'Upload data flows from CSV',
-    fullDescription:
-      'This command allows for uploading of data flows from CSV.',
+    fullDescription: `Upload data flows from CSV. This command allows for uploading of data flows from CSV.
+
+Step 1) Download the CSV of data flows that you want to edit from the Admin Dashboard under [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows). You can download data flows from both the "Triage" and "Approved" tabs.
+
+Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
+Step 3) Upload the modified CSV file back into the dashboard with this command.`,
   },
 });

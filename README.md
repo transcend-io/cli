@@ -214,10 +214,11 @@ USAGE
   transcend request upload (--auth value) [--file value] [--transcendUrl value] [--cacheFilepath value] [--requestReceiptFolder value] [--sombraAuth value] [--concurrency value] [--attributes value] [--isTest] [--isSilent] [--skipSendingReceipt] [--emailIsVerified] [--skipFilterStep] [--dryRun] [--debug] [--defaultPhoneCountryCode value]
   transcend request upload --help
 
-If you need to upload a set of requests from a CSV, you can run this command.
-This command uses inquirer to prompt the user to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+Upload a set of requests from a CSV.
 
-The script will also produce a JSON cache file, that allows for the mappings to be preserved between runs.
+This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.
 
 FLAGS
       --auth                                  The Transcend API key. Requires scopes: "Submit New Data Subject Request", "View Identity Verification Settings", "View Global Attributes"
@@ -453,8 +454,8 @@ This command is useful with the "Bulk Response" UI. The CSV is expected to have 
 FLAGS
       --auth           The Transcend API key. Requires scopes: "Manage Request Compilation"
       --dataSiloId     The ID of the data silo to pull in
-     [--file]          Path to the CSV file where identifiers will be written to                    [default = ./request-identifiers.csv]
-     [--transcendUrl]  URL of the Transcend backend. Use https://api.us.transcend.io for US hosting [default = https://api.transcend.io]
+     [--file]          Path to the CSV file where identifiers will be written to. The CSV is expected to have 1 column named "Request Id". [default = ./request-identifiers.csv]
+     [--transcendUrl]  URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                        [default = https://api.transcend.io]
   -h  --help           Print help information and exit
 ```
 
@@ -630,6 +631,14 @@ USAGE
 
 This command allows for pulling consent manager metrics for a Transcend account, or a set of Transcend accounts.
 
+By default, the consent metrics will be written to a folder named `consent-metrics` within the directory where you run the command. You can override the location that these CSVs are written to using the flag `--folder=./my-folder/`. This folder will contain a set of CSV files:
+
+- `CONSENT_CHANGES_TIMESERIES_optIn.csv` -> this is a feed containing the number of explicit opt in events that happen - these are calls to `airgap.setConsent(event, { SaleOfInfo: true });`
+- `CONSENT_CHANGES_TIMESERIES_optOut.csv` -> this is a feed containing the number of explicit opt out events that happen - these are calls to `airgap.setConsent(event, { SaleOfInfo: false });`
+- `CONSENT_SESSIONS_BY_REGIME_Default.csv` -> this contains the number of sessions detected for the bin period
+- `PRIVACY_SIGNAL_TIMESERIES_DNT.csv` -> the number of DNT signals detected.
+- `PRIVACY_SIGNAL_TIMESERIES_GPC.csv` -> the number of GPC signals detected.
+
 FLAGS
       --auth           The Transcend API key. Requires scopes: "View Consent Manager"
       --start          The start date to pull metrics from
@@ -662,6 +671,18 @@ FLAGS
   -h  --help              Print help information and exit
 ```
 
+Each row in the CSV will include:
+
+| Argument       | Description                                                                                               | Type                      | Default | Required |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | -------- |
+| userId         | Unique ID identifying the user that the preferences ar efor                                               | string                    | N/A     | true     |
+| timestamp      | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
+| purposes       | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | true     |
+| airgapVersion  | Version of airgap where consent was collected                                                             | string                    | N/A     | false    |
+| [purpose name] | Each consent purpose from `purposes` is also included in a column                                         | boolean                   | N/A     | false    |
+| tcf            | IAB TCF string                                                                                            | string - TCF              | N/A     | false    |
+| gpp            | IAB GPP string                                                                                            | string - GPP              | N/A     | false    |
+
 ### `transcend consent update-consent-manager`
 
 ```txt
@@ -669,7 +690,7 @@ USAGE
   transcend consent update-consent-manager (--auth value) (--bundleTypes PRODUCTION|TEST) [--deploy] [--transcendUrl value]
   transcend consent update-consent-manager --help
 
-This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this command.
+This command allows for updating Consent Manager to latest version. The Consent Manager bundle can also be deployed using this command.
 
 FLAGS
       --auth           The Transcend API key. Requires scopes: "Manage Consent Manager Developer Settings"
@@ -697,6 +718,20 @@ FLAGS
      [--concurrency]         The concurrency to use when uploading requests in parallel                               [default = 100]
   -h  --help                 Print help information and exit
 ```
+
+Each row in the CSV must include:
+
+| Argument  | Description                                                                                               | Type                      | Default | Required |
+| --------- | --------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | -------- |
+| userId    | Unique ID identifying the user that the preferences ar efor                                               | string                    | N/A     | true     |
+| timestamp | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
+| purposes  | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | false    |
+| confirmed | Whether consent preferences have been explicitly confirmed or inferred                                    | boolean                   | true    | false    |
+| updated   | Has the consent been updated (including no-change confirmation) since default resolution                  | boolean                   | N/A     | false    |
+| prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
+| gpp       | IAB GPP string                                                                                            | string - GPP              | N/A     | false    |
+
+An sample CSV can be found [here](./examples/preference-upload.csv).
 
 ### `transcend consent upload-cookies-from-csv`
 
@@ -740,7 +775,11 @@ USAGE
   transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--consentUrl value] [--file value] [--directory value] [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value]
   transcend consent upload-preferences --help
 
-This command allows for updating of preference management data to your Transcend Preference Store.
+Upload preference management data to your Preference Store.
+
+This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+
+The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.
 
 FLAGS
       --auth                      The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
@@ -762,6 +801,26 @@ FLAGS
   -h  --help                      Print help information and exit
 ```
 
+A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv). In this example, `Sales` and `Marketing` are two custom Purposes, and `SalesCommunications` and `MarketingCommunications` are Preference Topics. During the interactive CLI prompt, you can map these columns to the slugs stored in Transcend!
+
+Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`:
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+```
+
+Upload consent preferences with additional options:
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure:
+
+```sh
+yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://consent.us.transcend.io
+```
+
 ### `transcend consent consent-manager-service-json-to-yml`
 
 ```txt
@@ -770,6 +829,12 @@ USAGE
   transcend consent consent-manager-service-json-to-yml --help
 
 Import the services from an airgap.js file into a Transcend instance.
+
+Step 1) Run `await airgap.getMetadata()` on a site with airgap
+Step 2) Right click on the printed object, and click `Copy object`
+Step 3) Place output of file in a file named `services.json`
+Step 4) Run `transcend consent consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml`
+Step 5) Run `transcend inventory push --auth=$TRANSCEND_API_KEY --file=./transcend.yml --classifyService=true`
 
 FLAGS
      [--file]    Path to the services.json file, output of await airgap.getMetadata() [default = ./services.json]
@@ -1217,14 +1282,13 @@ FLAGS
 Scan a JavaScript package.json:
 
 ```sh
-# Scan a package.json file to look for new data silos
-yarn tr-discover-silos --scanPath=./myJavascriptProject --auth=$TRANSCEND_API_KEY ---dataSiloId=445ee241-5f2a-477b-9948-2a3682a43d0e
+transcend inventory discover-silos --scanPath=./myJavascriptProject --auth=$TRANSCEND_API_KEY ---dataSiloId=445ee241-5f2a-477b-9948-2a3682a43d0e
 ```
 
 Here are some examples of a [Podfile](./examples/code-scanning/test-cocoa-pods/Podfile) and [Gradle file](./examples/code-scanning/test-gradle/build.gradle). These are scanned like:
 
 ```sh
-yarn tr-discover-silos --scanPath=./examples/ --auth=$TRANSCEND_API_KEY ---dataSiloId=b6776589-0b7d-466f-8aad-4378ffd3a321
+transcend inventory discover-silos --scanPath=./examples/ --auth=$TRANSCEND_API_KEY ---dataSiloId=b6776589-0b7d-466f-8aad-4378ffd3a321
 ```
 
 This call will look for all the package.json files that in the scan path `./myJavascriptProject`, parse each of the dependencies into their individual package names, and send it to our Transcend backend for classification. These classifications can then be viewed [here](https://app.transcend.io/data-map/data-inventory/silo-discovery/triage). The process is the same for scanning requirements.txt, podfiles and build.gradle files.
@@ -1236,7 +1300,7 @@ USAGE
   transcend inventory pull-datapoints (--auth value) [--file value] [--transcendUrl value] [--dataSiloIds value]... [--includeAttributes] [--includeGuessedCategories] [--parentCategories FINANCIAL|HEALTH|CONTACT|LOCATION|DEMOGRAPHIC|ID|ONLINE_ACTIVITY|USER_PROFILE|SOCIAL_MEDIA|CONNECTION|TRACKING|DEVICE|SURVEY|OTHER|UNSPECIFIED|NOT_PERSONAL_DATA|INTEGRATION_IDENTIFIER] [--subCategories value]...
   transcend inventory pull-datapoints --help
 
-This command allows for pulling your Data Inventory -> Datapoints into a CSV.
+Export the datapoints from your Data Inventory into a CSV.
 
 FLAGS
       --auth                       The Transcend API key. Requires scopes: "View Data Inventory"
