@@ -9,15 +9,16 @@ import { urlParser } from './parsers';
 /**
  * Creates a standard authentication parameter
  *
- * @param root0
+ * @param root0 - The scopes and whether it requires a silo scope
+ * @returns The parameter object
  */
 export const createAuthParameter = ({
   scopes,
   requiresSiloScope = false,
 }: {
-  /** */
+  /** The scopes required for the command */
   scopes: ScopeName[] | 'Varies';
-  /** */
+  /** Whether the command requires a silo scope */
   requiresSiloScope?: boolean;
 }) => {
   const parameter = {
@@ -60,7 +61,8 @@ export const createAuthParameter = ({
 /**
  * Creates a standard Transcend URL parameter
  *
- * @param defaultUrl
+ * @param defaultUrl - The default URL to use if not provided
+ * @returns The parameter object
  */
 export const createTranscendUrlParameter = (
   defaultUrl = 'https://api.transcend.io',
@@ -74,6 +76,8 @@ export const createTranscendUrlParameter = (
 
 /**
  * Creates a standard Sombra authentication parameter
+ *
+ * @returns The parameter object
  */
 export const createSombraAuthParameter = () => ({
   kind: 'parsed' as const,

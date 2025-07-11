@@ -24,7 +24,7 @@ export function uuidParser(input: string): string {
 export function urlParser(input: string): string {
   try {
     const url = new URL(input);
-    return url.toString();
+    return url.toString().replace(/\/$/, '');
   } catch {
     throw new Error(`Invalid URL format: ${input}`);
   }
