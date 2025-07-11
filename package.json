@@ -72,7 +72,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "script:transcend-json-schema": "tsx scripts/buildTranscendJsonSchema.ts && prettier ./transcend-yml-schema-*.json --write",
-    "script:pathfinder-json-schema": "tsx scripts/buildPathfinderJsonSchema.ts && prettier ./pathfinder-policy-yml-schema.json --write"
+    "script:pathfinder-json-schema": "tsx scripts/buildPathfinderJsonSchema.ts && prettier ./pathfinder-policy-yml-schema.json --write",
+    "script:build-readme-docs": "tsx scripts/buildReadmeDocs.ts"
   },
   "tsup": {
     "entry": [

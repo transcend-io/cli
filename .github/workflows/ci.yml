@@ -28,13 +28,14 @@ jobs:
       - uses: ./.github/commands/dependencies/install_deps
       - run: pnpm depcheck
 
-  generate-json-schema:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/commands/dependencies/install_deps
       - run: pnpm script:transcend-json-schema
       - run: pnpm script:pathfinder-json-schema
+      - run: pnpm script:build-readme-docs
       - name: Ensure no files changed
         run: git diff --quiet HEAD || (git diff --raw && echo "Detected untracked changes in git after running command '${{ matrix.command }}'" && exit 1)
 
