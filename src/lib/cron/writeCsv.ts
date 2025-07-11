@@ -114,6 +114,7 @@ export function parseFilePath(filePath: string): {
  * @param data - Data to write
  * @param headers - Headers
  * @param chunkSize - Maximum number of rows per file (default 100000)
+ * @returns Array of written file paths
  */
 export async function writeLargeCsv(
   filePath: string,

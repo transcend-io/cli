@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// TODO DELETE
 
 import colors from 'colors';
 import yargs from 'yargs-parser';

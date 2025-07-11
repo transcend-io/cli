@@ -7,10 +7,10 @@ import {
 import { uuidParser } from '@/cli/parsers';
 import { RequestAction } from '@transcend-io/privacy-types';
 
-export const pullIdentifiersCommand = buildCommand({
+export const pullProfilesCommand = buildCommand({
   loader: async () => {
-    const { pullIdentifiers } = await import('./impl');
-    return pullIdentifiers;
+    const { pullProfiles } = await import('./impl');
+    return pullProfiles;
   },
   parameters: {
     flags: {
@@ -18,10 +18,15 @@ export const pullIdentifiersCommand = buildCommand({
         scopes: [],
         requiresSiloScope: true,
       }),
-      dataSiloId: {
+      cronDataSiloId: {
         kind: 'parsed',
         parse: uuidParser,
-        brief: 'The ID of the data silo to pull in',
+        brief: 'The ID of the cron data silo to pull in',
+      },
+      targetDataSiloId: {
+        kind: 'parsed',
+        parse: uuidParser,
+        brief: 'The ID of the target data silo to pull in',
       },
       actions: {
         kind: 'enum',
@@ -34,6 +39,12 @@ export const pullIdentifiersCommand = buildCommand({
         parse: String,
         brief: 'Path to the CSV file where identifiers will be written to',
         default: './cron-identifiers.csv',
+      },
+      fileTarget: {
+        kind: 'parsed',
+        parse: String,
+        brief: 'Path to the CSV file where identifiers will be written to',
+        default: './cron-identifiers-target.csv',
       },
       transcendUrl: createTranscendUrlParameter(),
       sombraAuth: createSombraAuthParameter(),
@@ -59,8 +70,8 @@ export const pullIdentifiersCommand = buildCommand({
     },
   },
   docs: {
-    brief: 'Pull identifiers of outstanding requests for a data silo to a CSV.',
-    fullDescription: `If you are using the cron job integration, you can run this command to pull the outstanding identifiers for the data silo to a CSV.
+    brief: 'Pull profiles of outstanding requests for a data silo to a CSV.',
+    fullDescription: `If you are using the cron job integration, you can run this command to pull the outstanding profiles for the data silo to a CSV.
 
 For large datasets, the output will be automatically split into multiple CSV files to avoid file system size limits. Use the --chunkSize parameter to control the maximum number of rows per file.
 
