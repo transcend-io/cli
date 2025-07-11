@@ -13,7 +13,6 @@ import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { mapSeries } from 'bluebird';
-import { writeCsv } from './writeCsv';
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */

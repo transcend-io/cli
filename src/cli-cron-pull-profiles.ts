@@ -98,6 +98,14 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  if (skipRequestCount === 'true') {
+    logger.info(
+      colors.yellow(
+        'Skipping request count as requested. This may help speed up the call.',
+      ),
+    );
+  }
+
   // Validate actions
   const parsedActions = splitCsvToList(actions) as RequestAction[];
   const invalidActions = parsedActions.filter(
