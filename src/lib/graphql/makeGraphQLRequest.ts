@@ -52,6 +52,17 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
       const result = await client.request(document, variables, requestHeaders);
       return result as T;
     } catch (err) {
+      if (err.message.includes('API key is invalid')) {
+        logger.error(
+          colors.red(
+            'API key is invalid. ' +
+              'Please ensure that the key provided to `transcendAuth` has the proper scope and is not expired, ' +
+              'and that `transcendUrl` corresponds to the correct backend for your organization.',
+          ),
+        );
+        process.exit(1);
+      }
+
       if (KNOWN_ERRORS.some((msg) => err.message.includes(msg))) {
         throw err;
       }
