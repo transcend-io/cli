@@ -10,21 +10,17 @@ import {
   CronIdentifier,
 } from './pullCronPageOfIdentifiers';
 import { RequestAction } from '@transcend-io/privacy-types';
-<<<<<<<< HEAD:src/lib/cron/pullCustomSiloOutstandingIdentifiers.ts
+
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { mapSeries } from '@/lib/bluebird-replace';
-========
-import { logger } from '../logger';
-import { DEFAULT_TRANSCEND_API } from '../constants';
-import { mapSeries } from 'bluebird';
+
 /**
  * A CSV formatted identifier
  */
 export type CsvFormattedIdentifier = {
   [k in string]: string | null | boolean | number;
 };
->>>>>>>> main:src/lib/cron/pullChunkedCustomSiloOutstandingIdentifiers.ts
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -162,7 +158,6 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
       // Check if we've reached the savePageSize and call the onSave callback
       if (currentChunk.length >= savePageSize) {
-        // eslint-disable-next-line no-await-in-loop
         await onSave(currentChunk);
         currentChunk = [];
       }

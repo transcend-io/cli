@@ -77,7 +77,7 @@ export async function writeCsv(
   await new Promise((resolve, reject) => {
     try {
       fastcsv
-        .write(data, { headers })
+        .write(data, { headers, objectMode: true })
         .pipe(ws)
         .on('error', reject)
         .on('end', () => resolve(true));
@@ -85,6 +85,26 @@ export async function writeCsv(
       reject(err);
     }
   });
+}
+
+/**
+ * Parse a file path into a base name and extension
+ *
+ * @param filePath - File path to parse
+ * @returns Base name and extension
+ */
+export function parseFilePath(filePath: string): {
+  /** Base name of the file */
+  baseName: string;
+  /** Extension of the file */
+  extension: string;
+} {
+  const lastDotIndex = filePath.lastIndexOf('.');
+  return {
+    baseName:
+      lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath,
+    extension: lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv',
+  };
 }
 
 /**
@@ -110,13 +130,7 @@ export async function writeLargeCsv(
   // Split data into chunks and write to multiple files
   const writtenFiles: string[] = [];
   const totalChunks = Math.ceil(data.length / chunkSize);
-
-  // Extract the base name and extension from the file path
-  const lastDotIndex = filePath.lastIndexOf('.');
-  const baseName =
-    lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath;
-  const extension =
-    lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv';
+  const { baseName, extension } = parseFilePath(filePath);
 
   for (let i = 0; i < totalChunks; i += 1) {
     const start = i * chunkSize;

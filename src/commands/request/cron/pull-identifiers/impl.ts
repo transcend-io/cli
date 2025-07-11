@@ -4,8 +4,10 @@ import colors from 'colors';
 import { logger } from '@/logger';
 import { uniq } from 'lodash-es';
 import {
-  pullCustomSiloOutstandingIdentifiers,
-  writeLargeCsv,
+  CsvFormattedIdentifier,
+  parseFilePath,
+  pullChunkedCustomSiloOutstandingIdentifiers,
+  writeCsv,
 } from '@/lib/cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 
@@ -43,43 +45,51 @@ export async function pullIdentifiers(
     );
   }
 
-  // Pull down outstanding identifiers
-  const { identifiersFormattedForCsv } =
-    await pullCustomSiloOutstandingIdentifiers({
-      transcendUrl,
-      pageLimit,
-      actions,
-      auth,
-      sombraAuth,
-      dataSiloId,
-      skipRequestCount,
-    });
-
-  // Write CSV (split into multiple files if too large)
-  const headers = uniq(
-    identifiersFormattedForCsv.map((d) => Object.keys(d)).flat(),
-  );
-  const writtenFiles = await writeLargeCsv(
-    file,
-    identifiersFormattedForCsv,
-    headers,
-    chunkSize,
-  );
-
-  if (writtenFiles.length === 1) {
-    logger.info(
-      colors.green(
-        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to file "${file}"`,
+  if (
+    Number.isNaN(chunkSize) ||
+    chunkSize <= 0 ||
+    chunkSize % pageLimit !== 0
+  ) {
+    logger.error(
+      colors.red(
+        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
       ),
     );
-  } else {
-    logger.info(
-      colors.green(
-        `Successfully wrote ${identifiersFormattedForCsv.length} identifiers to ${writtenFiles.length} files:`,
-      ),
-    );
-    writtenFiles.forEach((fileName) => {
-      logger.info(colors.green(`  - ${fileName}`));
-    });
+    process.exit(1);
   }
+
+  const { baseName, extension } = parseFilePath(file);
+  let fileCount = 0;
+
+  const onSave = (chunk: CsvFormattedIdentifier[]): Promise<void> => {
+    const numberedFileName = `${baseName}-${fileCount}${extension}`;
+    logger.info(
+      colors.blue(
+        `Saving ${chunk.length} identifiers to file "${numberedFileName}"`,
+      ),
+    );
+
+    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
+    writeCsv(numberedFileName, chunk, headers);
+    logger.info(
+      colors.green(
+        `Successfully wrote ${chunk.length} identifiers to file "${numberedFileName}"`,
+      ),
+    );
+    fileCount += 1;
+    return Promise.resolve();
+  };
+
+  // Pull down outstanding identifiers
+  await pullChunkedCustomSiloOutstandingIdentifiers({
+    transcendUrl,
+    apiPageSize: pageLimit,
+    savePageSize: chunkSize,
+    onSave,
+    actions,
+    auth,
+    sombraAuth,
+    dataSiloId,
+    skipRequestCount,
+  });
 }
