@@ -5,7 +5,6 @@ import colors from 'colors';
 
 import { logger } from './logger';
 import uniq from 'lodash/uniq';
-// import { writeCsv } from './cron';
 import {
   pullChunkedCustomSiloOutstandingIdentifiers,
   CsvFormattedIdentifier
@@ -18,7 +17,7 @@ import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
 } from './graphql';
-import { writeCsvSync } from './cron/writeCsv';
+import { parseFilePath, writeCsv } from './cron/writeCsv';
 
 /**
  * This is a temporary script that can be removed after the launch of workflows v2
@@ -54,8 +53,9 @@ async function main(): Promise<void> {
     cronDataSiloId,
     targetDataSiloId,
     actions,
+    skipRequestCount = false,
     pageLimit = '100',
-    chunkSize = '1000',
+    pagesToSavePerFile = '10',
   } = yargs(process.argv.slice(2)) as { [k in string]: string };
 
   // Ensure auth is passed
@@ -114,12 +114,18 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const parsedPageLimit = parseInt(pageLimit, 10);
+  const parsedPagesToSave = parseInt(pagesToSavePerFile, 10);
+  const chunkSize = parsedPagesToSave ? parsedPagesToSave * parsedPageLimit : parsedPageLimit * 100;
+
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
+  const { baseName, extension } = parseFilePath(file);
+  const { baseName: baseNameTarget, extension: extensionTarget } = parseFilePath(fileTarget);
 
   let allIdentifiersCount = 0;
   let allTargetIdentifiersCount = 0;
-
+  let fileCount = 0;
   // Create onSave callback to handle chunked processing
   const onSave = async (chunk: CsvFormattedIdentifier[]): Promise<void> => {
     // Add to all identifiers
@@ -165,9 +171,9 @@ async function main(): Promise<void> {
     const headers = uniq(
       chunk.map((d) => Object.keys(d)).flat(),
     );
-    console.log('headers', headers);
-    // await writeCsv(file, chunk, headers);
-    writeCsvSync(file, chunk, headers);
+    const numberedFileName = `${baseName}-${fileCount}${extension}`;
+    const numberedFileNameTarget = `${baseNameTarget}-${fileCount}${extensionTarget}`;
+    writeCsv(numberedFileName, chunk, headers);
     logger.info(
       colors.green(
         `Successfully wrote ${chunk.length} identifiers to file "${file}"`,
@@ -176,8 +182,7 @@ async function main(): Promise<void> {
 
     const targetIdentifiers = results.flat();
     const headers2 = uniq(targetIdentifiers.map((d) => Object.keys(d)).flat());
-    console.log('headers2', headers2);
-    writeCsvSync(fileTarget, targetIdentifiers, headers2);
+    writeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
     logger.info(
       colors.green(
         `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,
@@ -189,6 +194,7 @@ async function main(): Promise<void> {
         `Processed chunk of ${chunk.length} identifiers, found ${targetIdentifiers.length} target identifiers`,
       ),
     );
+    fileCount += 1;
   };
 
   // Pull down outstanding identifiers using the new chunked function
@@ -197,11 +203,11 @@ async function main(): Promise<void> {
     auth,
     sombraAuth,
     actions: parsedActions,
-    apiPageSize: parseInt(pageLimit, 10),
-    savePageSize: parseInt(chunkSize, 10),
+    apiPageSize: parsedPageLimit,
+    savePageSize: chunkSize,
     onSave,
     transcendUrl,
-    skipRequestCount: true,
+    skipRequestCount: skipRequestCount === 'true',
   });
 
   logger.info(

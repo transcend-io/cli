@@ -122,9 +122,8 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
         offset,
         requestType: action,
       });
-      console.log('pulled page of identifiers', pageIdentifiers.length);
 
-      const identifiersWithAction = pageIdentifiers.map((identifier) => {
+      const identifiersWithAction: CronIdentifierWithAction[] = pageIdentifiers.map((identifier) => {
         foundRequestIds.add(identifier.requestId);
         return {
           ...identifier,
@@ -147,8 +146,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
       currentChunk.push(...csvFormattedIdentifiers);
 
       // Check if we've reached the savePageSize and call the onSave callback
-      if (onSave && currentChunk.length >= savePageSize) {
-        console.log('saving chunk', currentChunk.length);
+      if (currentChunk.length >= savePageSize) {
         // eslint-disable-next-line no-await-in-loop
         await onSave(currentChunk);
         currentChunk = [];
@@ -169,7 +167,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   });
 
   // Save any remaining identifiers in the current chunk
-  if (onSave && currentChunk.length > 0) {
+  if (currentChunk.length > 0) {
     await onSave(currentChunk);
   }
 
