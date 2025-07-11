@@ -35,7 +35,7 @@ export const markIdentifiersCompletedCommand = buildCommand({
   },
   docs: {
     brief: 'Mark identifiers as completed after processing.',
-    fullDescription: `This command takes the output of tr-cron-pull-identifiers and notifies Transcend that all of the requests in the CSV have been processed.
+    fullDescription: `This command takes the output of "${name} request cron pull-identifiers" and notifies Transcend that all of the requests in the CSV have been processed.
 This is used in the workflow like:
 
 1. Pull identifiers to CSV:

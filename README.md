@@ -32,8 +32,6 @@
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
-  - [`transcend consent consent-manager-service-json-to-yml`](#transcend-consent-consent-manager-service-json-to-yml)
-  - [`transcend consent consent-managers-to-business-entities`](#transcend-consent-consent-managers-to-business-entities)
   - [`transcend inventory pull`](#transcend-inventory-pull)
     - [Scopes](#scopes)
     - [Usage](#usage-1)
@@ -49,6 +47,8 @@
   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
+  - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
+  - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
     - [Usage](#usage-4)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
@@ -572,7 +572,7 @@ FLAGS
      [--sombraAuth]        The Sombra internal key, use for additional authentication when self-hosting Sombra
      [--pageLimit]         The page limit to use when pulling in pages of identifiers                                                                                                                                                                                                                                                              [default = 100]
      [--skipRequestCount]  Whether to skip the count of all outstanding requests. This is required to render the progress bar, but can take a long time to run if you have a large number of outstanding requests to process. In that case, we recommend setting skipRequestCount=true so that you can still proceed with fetching the identifiers [default = false]
-     [--chunkSize]         Maximum number of rows per CSV file. For large datasets, the output will be automatically split into multiple files to avoid file system size limits. Each file will contain at most this many rows                                                                                                                     [default = 100000]
+     [--chunkSize]         Maximum number of rows per CSV file. For large datasets, the output will be automatically split into multiple files to avoid file system size limits. Each file will contain at most this many rows                                                                                                                     [default = 10000]
   -h  --help               Print help information and exit
 ```
 
@@ -583,7 +583,7 @@ USAGE
   transcend request cron mark-identifiers-completed (--auth value) (--dataSiloId value) [--file value] [--transcendUrl value] [--sombraAuth value]
   transcend request cron mark-identifiers-completed --help
 
-This command takes the output of tr-cron-pull-identifiers and notifies Transcend that all of the requests in the CSV have been processed.
+This command takes the output of "transcend request cron pull-identifiers" and notifies Transcend that all of the requests in the CSV have been processed.
 This is used in the workflow like:
 
 1. Pull identifiers to CSV:
@@ -832,42 +832,6 @@ Specifying the backend URL, needed for US hosted backend infrastructure:
 
 ```sh
 transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --consentUrl=https://consent.us.transcend.io
-```
-
-### `transcend consent consent-manager-service-json-to-yml`
-
-```txt
-USAGE
-  transcend consent consent-manager-service-json-to-yml [--file value] [--output value]
-  transcend consent consent-manager-service-json-to-yml --help
-
-Import the services from an airgap.js file into a Transcend instance.
-
-Step 1) Run `await airgap.getMetadata()` on a site with airgap
-Step 2) Right click on the printed object, and click `Copy object`
-Step 3) Place output of file in a file named `services.json`
-Step 4) Run `transcend consent consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml`
-Step 5) Run `transcend inventory push --auth=$TRANSCEND_API_KEY --file=./transcend.yml --classifyService=true`
-
-FLAGS
-     [--file]    Path to the services.json file, output of await airgap.getMetadata() [default = ./services.json]
-     [--output]  Path to the output transcend.yml to write to                         [default = ./transcend.yml]
-  -h  --help     Print help information and exit
-```
-
-### `transcend consent consent-managers-to-business-entities`
-
-```txt
-USAGE
-  transcend consent consent-managers-to-business-entities (--consentManagerYmlFolder value) [--output value]
-  transcend consent consent-managers-to-business-entities --help
-
-This command allows for converting a folder or Consent Manager transcend.yml files into a single transcend.yml file where each consent manager configuration is a Business Entity in the data inventory.
-
-FLAGS
-      --consentManagerYmlFolder  Path to the folder of Consent Manager transcend.yml files to combine
-     [--output]                  Path to the output transcend.yml with business entity configuration  [default = ./combined-business-entities.yml]
-  -h  --help                     Print help information and exit
 ```
 
 ### `transcend inventory pull`
@@ -1383,6 +1347,42 @@ FLAGS
   -h  --help                Print help information and exit
 ```
 
+### `transcend inventory consent-manager-service-json-to-yml`
+
+```txt
+USAGE
+  transcend inventory consent-manager-service-json-to-yml [--file value] [--output value]
+  transcend inventory consent-manager-service-json-to-yml --help
+
+Import the services from an airgap.js file into a Transcend instance.
+
+Step 1) Run `await airgap.getMetadata()` on a site with airgap
+Step 2) Right click on the printed object, and click `Copy object`
+Step 3) Place output of file in a file named `services.json`
+Step 4) Run `transcend consent consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml`
+Step 5) Run `transcend inventory push --auth=$TRANSCEND_API_KEY --file=./transcend.yml --classifyService=true`
+
+FLAGS
+     [--file]    Path to the services.json file, output of await airgap.getMetadata() [default = ./services.json]
+     [--output]  Path to the output transcend.yml to write to                         [default = ./transcend.yml]
+  -h  --help     Print help information and exit
+```
+
+### `transcend inventory consent-managers-to-business-entities`
+
+```txt
+USAGE
+  transcend inventory consent-managers-to-business-entities (--consentManagerYmlFolder value) [--output value]
+  transcend inventory consent-managers-to-business-entities --help
+
+This command allows for converting a folder or Consent Manager transcend.yml files into a single transcend.yml file where each consent manager configuration is a Business Entity in the data inventory.
+
+FLAGS
+      --consentManagerYmlFolder  Path to the folder of Consent Manager transcend.yml files to combine
+     [--output]                  Path to the output transcend.yml with business entity configuration  [default = ./combined-business-entities.yml]
+  -h  --help                     Print help information and exit
+```
+
 ### `transcend admin generate-api-keys`
 
 ```txt
@@ -1636,4 +1636,4 @@ export async function main(): Promise<void> {
 
 ## Proxy usage
 
-If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable or the `--httpProxy` flag, with a command like `yarn tr-pull --auth=$TRANSCEND_API_KEY --httpProxy="http://localhost:5051"`.
+If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
