@@ -43,6 +43,8 @@ The folders are the namespace of the CLI, so `src/commands/request/cron/pull-ide
 - `src/commands/**/readme.ts` is an optional file that can be used to add additional documentation to README.md for the command. This gets injected into the README.md below the CLI documentation for that command. NOTE: This should be used sparingly, since it is difficult to keep up to date. Prefer to use the `docs` field in the `command.ts` file instead.
 - `src/commands/**/routes.ts` contains the command routes. This must export any new commands.
 
+For more information on the commands and routings, see [the Stricli documentation](https://bloomberg.github.io/stricli/).
+
 ## Generated files
 
 ### README.md
