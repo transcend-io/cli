@@ -100,8 +100,6 @@ export async function pullConsentMetrics(
     ),
   );
 
-  console.log('apiKeyOrList', apiKeyOrList, transcendUrl);
-
   // Sync to Disk
   if (typeof apiKeyOrList === 'string') {
     try {
