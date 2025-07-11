@@ -1,6 +1,5 @@
 .gitignore
 .git/*
-.yarn/*
 **/docs/*
 **/package.json
 **/node_modules/*
@@ -8,7 +7,6 @@
 **/dist/*
 **/builds/*
 **/coverage/*
-**/.yarn/*
 *.testjs
 *.testts
 examples/code-scanning/test-package-json/src/*

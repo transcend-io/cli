@@ -1,12 +1,13 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.nodePath": ".yarn/sdks",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "eslint.trace.server": "messages",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "editor.formatOnSave": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   "workbench.iconTheme": "vscode-icons",
@@ -29,7 +30,6 @@
     "**/tsconfig.tsbuildinfo": true,
     "**/build": true,
     "**/builds": true,
-    "**/.yarn": true,
     "**/.caches": true,
     "**/.pnp.*": true
   },
@@ -73,7 +73,5 @@
     "yaml",
     "yarnpkg",
     "Ymls"
-  ],
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  ]
 }

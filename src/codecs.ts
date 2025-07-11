@@ -60,8 +60,8 @@ import {
   UserPrivacySignalEnum,
   OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
-import { buildEnabledRouteType } from './helpers/buildEnabledRouteType';
-import { buildAIIntegrationType } from './helpers/buildAIIntegrationType';
+import { buildEnabledRouteType } from './lib/helpers/buildEnabledRouteType';
+import { buildAIIntegrationType } from './lib/helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
 import { LanguageKey } from '@transcend-io/internationalization';
 

@@ -4,6 +4,7 @@ cron-identifiers.csv
 manual-enrichment-identifiers.csv
 preference-management-upload-receipts.json
 build/
+dist/
 privacy-request-upload-receipts/
 dsr-files/
 
