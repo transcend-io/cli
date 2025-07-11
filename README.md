@@ -50,6 +50,7 @@
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
+    - [Usage](#usage-4)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
@@ -740,7 +741,13 @@ USAGE
   transcend consent upload-cookies-from-csv (--auth value) (--trackerStatus LIVE|NEEDS_REVIEW) [--file value] [--transcendUrl value]
   transcend consent upload-cookies-from-csv --help
 
-This command allows for uploading cookies from CSV.
+Upload cookies from CSV. This command allows for uploading of cookies from CSV.
+
+Step 1) Download the CSV of cookies that you want to edit from the Admin Dashboard under [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies). You can download cookies from both the "Triage" and "Approved" tabs.
+
+Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
+Step 3) Upload the modified CSV file back into the dashboard with this command.
 
 FLAGS
       --auth           The Transcend API key. Requires scopes: "Manage Data Flows"
@@ -757,7 +764,13 @@ USAGE
   transcend consent upload-data-flows-from-csv (--auth value) (--trackerStatus LIVE|NEEDS_REVIEW) [--file value] [--classifyService] [--transcendUrl value]
   transcend consent upload-data-flows-from-csv --help
 
-This command allows for uploading of data flows from CSV.
+Upload data flows from CSV. This command allows for uploading of data flows from CSV.
+
+Step 1) Download the CSV of data flows that you want to edit from the Admin Dashboard under [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows). You can download data flows from both the "Triage" and "Approved" tabs.
+
+Step 2) You can edit the contents of the CSV file as needed. You may adjust the "Purpose" column, adjust the "Notes" column, add "Owners" and "Teams" or even add custom columns with additional metadata.
+
+Step 3) Upload the modified CSV file back into the dashboard with this command.
 
 FLAGS
       --auth              The Transcend API key. Requires scopes: "Manage Data Flows"
@@ -806,19 +819,19 @@ A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv).
 Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`:
 
 ```sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
 Upload consent preferences with additional options:
 
 ```sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./preferences.csv --dryRun=true --skipWorkflowTriggers=true --skipConflictUpdates=true --isSilent=false --attributes="Tags:transcend-cli,Source:transcend-cli" --receiptFilepath=./preference-management-upload-receipts.json
 ```
 
 Specifying the backend URL, needed for US hosted backend infrastructure:
 
 ```sh
-yarn tr-upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://consent.us.transcend.io
+transcend consent upload-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --consentUrl=https://consent.us.transcend.io
 ```
 
 ### `transcend consent consent-manager-service-json-to-yml`
@@ -1394,6 +1407,56 @@ FLAGS
      [--parentOrganizationId]                           Filter for only a specific organization by ID, returning all child accounts associated with that organization
      [--transcendUrl]                                   URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                  [default = https://api.transcend.io]
   -h  --help                                            Print help information and exit
+```
+
+#### Usage
+
+```sh
+transcend admin generate-api-keys --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json
+```
+
+Specifying the backend URL, needed for US hosted backend infrastructure.
+
+```sh
+transcend admin generate-api-keys --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --transcendUrl=https://api.us.transcend.io
+```
+
+Filter for only a specific organization by ID, returning all child accounts associated with that organization. Can use the following GQL query on the [EU GraphQL Playground](https://api.us.transcend.io/graphql) or [US GraphQL Playground](https://api.us.transcend.io/graphql).
+
+```gql
+query {
+  user {
+    organization {
+      id
+      parentOrganizationId
+    }
+  }
+}
+```
+
+```sh
+transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --parentOrganizationId=7098bb38-070d-4f26-8fa4-1b61b9cdef77
+```
+
+Delete all API keys with a certain title.
+
+```sh
+transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --createNewApiKey=false
+```
+
+Throw error if an API key already exists with that title, default behavior is to delete the existing API key and create a new one with that same title.
+
+```sh
+transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
+   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" -file=./working/auth.json \
+   --deleteExistingApiKey=false
 ```
 
 ### `transcend migration sync-ot`
