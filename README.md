@@ -87,7 +87,7 @@ _The CLI commands which interact with Transcend's API will default to using Tran
 
 ## transcend.yml
 
-Within your git repositories, you can define a file `transcend.yml`. This file allows you define part of your Data Map in code. Using the cli, you can sync that configuration back to the Transcend Admin Dashboard (https://app.transcend.io/privacy-requests/connected-services).
+Within your git repositories, you can define a file `transcend.yml`. This file allows you define part of your Data Map in code. Using the CLI, you can sync that configuration back to the Transcend Admin Dashboard (https://app.transcend.io/privacy-requests/connected-services).
 
 You can find various examples for your `transcend.yml` file in the [examples/](./examples/) folder. If you are looking for a starting point to copy and paste, [simple.yml](./examples/simple.yml) is a good place to start. This file is annotated with links and documentations that new members of your team can use if they come across the file.
 
@@ -108,7 +108,7 @@ The structure of `transcend.yml` looks something like the following:
 # See https://docs.transcend.io/docs/authentication
 # Define API keys that may be shared across data silos
 # in the data map. When creating new data silos through the YAML
-# cli, it is possible to specify which API key should be associated
+# CLI, it is possible to specify which API key should be associated
 # with the newly created data silo.
 api-keys:
   - title: Webhook Key
@@ -1421,7 +1421,7 @@ USAGE
 
 This command allows for creating API keys across multiple Transcend instances. This is useful for customers that are managing many Transcend instances and need to regularly create, cycle or delete API keys across all of their instances.
 
-Unlike the other commands that rely on API key authentication, this command relies upon username/password authentication. This command will spit out the API keys into a JSON file, and that JSON file can be used in subsequent cli commands.
+Unlike the other commands that rely on API key authentication, this command relies upon username/password authentication. This command will spit out the API keys into a JSON file, and that JSON file can be used in subsequent CLI commands.
 
 Authentication requires your email and password for the Transcend account. This command will only generate API keys for Transcend instances where you have the permission to "Manage API Keys".
 
@@ -1665,4 +1665,4 @@ export async function main(): Promise<void> {
 
 ## Proxy usage
 
-If you are trying to use the cli inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
+If you are trying to use the CLI inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
