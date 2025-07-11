@@ -7,8 +7,8 @@ import colors from 'colors';
 import cliProgress from 'cli-progress';
 import {
   pullCronPageOfIdentifiers,
+  CronIdentifier,
 } from './pullCronPageOfIdentifiers';
-import type { CronIdentifierWithAction } from './pullCustomSiloOutstandingIdentifiers';
 import { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../logger';
 import { DEFAULT_TRANSCEND_API } from '../constants';
@@ -19,6 +19,11 @@ import { mapSeries } from 'bluebird';
 export type CsvFormattedIdentifier = {
   [k in string]: string | null | boolean | number;
 };
+
+export interface CronIdentifierWithAction extends CronIdentifier {
+  /** The request action that the identifier relates to */
+  action: RequestAction;
+}
 
 /**
  * Pull the set of identifiers outstanding for a cron or AVC integration
