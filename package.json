@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "7.0.0-alpha.10",
+  "version": "7.0.0-alpha.11",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -85,6 +85,8 @@
     "format": [
       "esm"
     ],
+    "sourcemap": true,
+    "dts": true,
     "tsconfig": "tsconfig.json",
     "clean": true,
     "splitting": true,
