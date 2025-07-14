@@ -1,4 +1,4 @@
-import { map, mapSeries } from 'bluebird';
+import { mapSeries } from 'bluebird';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
 import {
@@ -78,7 +78,7 @@ export async function pushCronIdentifiersFromCsv({
       ),
     );
 
-    await map(
+    await mapSeries(
       chunk,
       async (identifier) => {
         try {
@@ -98,7 +98,6 @@ export async function pushCronIdentifiersFromCsv({
         }
         progressBar.update(successCount + failureCount);
       },
-      { concurrency },
     );
 
     // Sleep between chunks (except for the last chunk)
