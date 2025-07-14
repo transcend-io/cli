@@ -1,4 +1,4 @@
-import { mapSeries } from 'bluebird';
+import { map, mapSeries } from 'bluebird';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
 import {
@@ -78,7 +78,8 @@ export async function pushCronIdentifiersFromCsv({
       ),
     );
 
-    await mapSeries(
+    // Process the items of the chunk concurrently
+    await map(
       chunk,
       async (identifier) => {
         try {
@@ -91,7 +92,7 @@ export async function pushCronIdentifiersFromCsv({
         } catch (e) {
           logger.error(
             colors.red(
-              `Error notifying Transcend for identifier "${identifier.identifier}" - ${e.message}`,
+              `Error notifying Transcend for identifier "${identifier.identifier}" - ${e?.message}`,
             ),
           );
           errorCount += 1;
