@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "7.0.0-alpha.11",
+  "version": "7.0.0-alpha.13",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   "license": "UNLICENSED",
   "main": "dist/index.js",
   "bin": {
-    "@transcend-io/transcend": "dist/bin/cli.js",
+    "transcend": "dist/bin/cli.js",
     "__cli_bash_complete": "dist/bin/bash-complete.js",
     "__tr-build-xdi-sync-endpoint": "dist/bin/deprecated-command.js",
     "__tr-consent-manager-service-json-to-yml": "dist/bin/deprecated-command.js",
