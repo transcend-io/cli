@@ -38,7 +38,7 @@ export async function pushCronIdentifiersFromCsv({
   transcendUrl?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
-  /** Sleep time in milliseconds between chunks of concurrent calls */
+  /** Sleep time in seconds between chunks of concurrent calls */
   sleepSeconds?: number;
 }): Promise<number> {
   // Create sombra instance to communicate with
@@ -71,7 +71,7 @@ export async function pushCronIdentifiersFromCsv({
   // Process in chunks with sleep intervals
   const chunks = chunk(activeResults, concurrency);
   const totalChunks = chunks.length;
-  const processChunk = async (chunk: CronIdentifierPush[], chunkIndex: number): Promise<void> => {
+  const processChunk = async (items: CronIdentifierPush[], chunkIndex: number): Promise<void> => {
     logger.info(
       colors.blue(
         `Processing chunk ${chunkIndex + 1}/${totalChunks} (${chunk.length} items)`,
@@ -80,7 +80,7 @@ export async function pushCronIdentifiersFromCsv({
 
     // Process the items of the chunk concurrently
     await map(
-      chunk,
+      items,
       async (identifier) => {
         try {
           const success = await markCronIdentifierCompleted(sombra, identifier);
