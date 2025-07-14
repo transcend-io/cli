@@ -89,6 +89,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      newtype-ts:
+        specifier: ^0.3.5
+        version: 0.3.5(fp-ts@2.16.10)(monocle-ts@2.3.13(fp-ts@2.16.10))
       query-string:
         specifier: '=7.0.0'
         version: 7.0.0
