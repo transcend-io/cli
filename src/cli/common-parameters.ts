@@ -4,6 +4,8 @@ import {
   DEFAULT_TRANSCEND_API,
   DEFAULT_TRANSCEND_CONSENT_API,
 } from '@/constants';
+import type { LocalContext } from '@/context';
+import type { TypedFlagParameter } from '@stricli/core';
 
 /**
  * Common parameter builders for CLI commands
@@ -24,7 +26,7 @@ export const createAuthParameter = ({
   scopes: ScopeName[] | 'Varies';
   /** Whether the command requires a silo scope */
   requiresSiloScope?: boolean;
-}) => {
+}): TypedFlagParameter<string, LocalContext> => {
   const parameter = {
     kind: 'parsed' as const,
     parse: String,
@@ -70,8 +72,8 @@ export const createAuthParameter = ({
  */
 export const createTranscendUrlParameter = (
   defaultUrl = DEFAULT_TRANSCEND_API,
-) => ({
-  kind: 'parsed' as const,
+): TypedFlagParameter<string, LocalContext> => ({
+  kind: 'parsed',
   parse: urlParser,
   brief:
     'URL of the Transcend backend. Use https://api.us.transcend.io for US hosting',
@@ -86,8 +88,8 @@ export const createTranscendUrlParameter = (
  */
 export const createConsentUrlParameter = (
   defaultUrl = DEFAULT_TRANSCEND_CONSENT_API,
-) => ({
-  kind: 'parsed' as const,
+): TypedFlagParameter<string, LocalContext> => ({
+  kind: 'parsed',
   parse: urlParser,
   brief:
     'URL of the Transcend consent backend. Use https://consent.us.transcend.io for US hosting',
@@ -99,10 +101,13 @@ export const createConsentUrlParameter = (
  *
  * @returns The parameter object
  */
-export const createSombraAuthParameter = () => ({
-  kind: 'parsed' as const,
+export const createSombraAuthParameter = (): TypedFlagParameter<
+  string | undefined,
+  LocalContext
+> => ({
+  kind: 'parsed',
   parse: String,
   brief:
     'The Sombra internal key, use for additional authentication when self-hosting Sombra',
-  optional: true as const,
+  optional: true,
 });
