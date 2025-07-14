@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "7.0.0-alpha.14",
+  "version": "7.0.0-alpha.16",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -123,6 +123,7 @@
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash-es": "^4.17.21",
+    "monocle-ts": "^2.3.13",
     "newtype-ts": "^0.3.5",
     "query-string": "=7.0.0",
     "semver": "^7.6.0",
