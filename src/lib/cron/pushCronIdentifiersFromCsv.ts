@@ -1,4 +1,5 @@
-import { map } from '@/lib/bluebird-replace';
+import { map, mapSeries } from '@/lib/bluebird-replace';
+import { chunk } from 'lodash-es';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
 import {
@@ -23,6 +24,7 @@ export async function pushCronIdentifiersFromCsv({
   sombraAuth,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
+  sleepSeconds = 10,
 }: {
   /** CSV file path */
   file: string;
@@ -36,6 +38,8 @@ export async function pushCronIdentifiersFromCsv({
   transcendUrl?: string;
   /** Sombra API key authentication */
   sombraAuth?: string;
+  /** Sleep time in seconds between chunks of concurrent calls */
+  sleepSeconds?: number;
 }): Promise<number> {
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
@@ -63,9 +67,24 @@ export async function pushCronIdentifiersFromCsv({
   let failureCount = 0;
   let errorCount = 0;
   progressBar.start(activeResults.length, 0);
-  await map(
-    activeResults,
-    async (identifier) => {
+
+  // Process in chunks with sleep intervals
+  const chunks = chunk(activeResults, concurrency);
+  const totalChunks = chunks.length;
+  const processChunk = async (
+    items: CronIdentifierPush[],
+    chunkIndex: number,
+  ): Promise<void> => {
+    logger.info(
+      colors.blue(
+        `Processing chunk ${chunkIndex + 1}/${totalChunks} (${
+          chunk.length
+        } items)`,
+      ),
+    );
+
+    // Process the items of the chunk concurrently
+    await map(items, async (identifier) => {
       try {
         const success = await markCronIdentifierCompleted(sombra, identifier);
         if (success) {
@@ -76,15 +95,28 @@ export async function pushCronIdentifiersFromCsv({
       } catch (e) {
         logger.error(
           colors.red(
-            `Error notifying Transcend for identifier "${identifier.identifier}" - ${e.message}`,
+            `Error notifying Transcend for identifier "${identifier.identifier}" - ${e?.message}`,
           ),
         );
         errorCount += 1;
       }
       progressBar.update(successCount + failureCount);
-    },
-    { concurrency },
-  );
+    });
+
+    // Sleep between chunks (except for the last chunk)
+    if (sleepSeconds > 0 && chunkIndex < totalChunks - 1) {
+      logger.info(
+        colors.yellow(`Sleeping for ${sleepSeconds}s before next chunk...`),
+      );
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, sleepSeconds * 1000);
+      });
+    }
+  };
+
+  // Process all chunks sequentially
+  await mapSeries(chunks, processChunk);
 
   progressBar.stop();
   const t1 = new Date().getTime();
