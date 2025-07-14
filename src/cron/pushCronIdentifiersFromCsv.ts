@@ -71,42 +71,42 @@ export async function pushCronIdentifiersFromCsv({
   // Process in chunks with sleep intervals
   const chunks = chunk(activeResults, concurrency);
   const totalChunks = chunks.length;
-  const processChunk = async (items: CronIdentifierPush[], chunkIndex: number): Promise<void> => {
+  const processChunk = async (
+    items: CronIdentifierPush[],
+    chunkIndex: number,
+  ): Promise<void> => {
     logger.info(
       colors.blue(
-        `Processing chunk ${chunkIndex + 1}/${totalChunks} (${chunk.length} items)`,
+        `Processing chunk ${chunkIndex + 1}/${totalChunks} (${
+          chunk.length
+        } items)`,
       ),
     );
 
     // Process the items of the chunk concurrently
-    await map(
-      items,
-      async (identifier) => {
-        try {
-          const success = await markCronIdentifierCompleted(sombra, identifier);
-          if (success) {
-            successCount += 1;
-          } else {
-            failureCount += 1;
-          }
-        } catch (e) {
-          logger.error(
-            colors.red(
-              `Error notifying Transcend for identifier "${identifier.identifier}" - ${e?.message}`,
-            ),
-          );
-          errorCount += 1;
+    await map(items, async (identifier) => {
+      try {
+        const success = await markCronIdentifierCompleted(sombra, identifier);
+        if (success) {
+          successCount += 1;
+        } else {
+          failureCount += 1;
         }
-        progressBar.update(successCount + failureCount);
-      },
-    );
+      } catch (e) {
+        logger.error(
+          colors.red(
+            `Error notifying Transcend for identifier "${identifier.identifier}" - ${e?.message}`,
+          ),
+        );
+        errorCount += 1;
+      }
+      progressBar.update(successCount + failureCount);
+    });
 
     // Sleep between chunks (except for the last chunk)
     if (sleepSeconds > 0 && chunkIndex < totalChunks - 1) {
       logger.info(
-        colors.yellow(
-          `Sleeping for ${sleepSeconds}s before next chunk...`,
-        ),
+        colors.yellow(`Sleeping for ${sleepSeconds}s before next chunk...`),
       );
 
       await new Promise((resolve) => {
@@ -124,7 +124,8 @@ export async function pushCronIdentifiersFromCsv({
 
   logger.info(
     colors.green(
-      `Successfully notified Transcend for ${successCount} identifiers in "${totalTime / 1000
+      `Successfully notified Transcend for ${successCount} identifiers in "${
+        totalTime / 1000
       }" seconds!`,
     ),
   );
@@ -132,7 +133,7 @@ export async function pushCronIdentifiersFromCsv({
     logger.info(
       colors.magenta(
         `There were ${failureCount} identifiers that were not in a state to be updated.` +
-        'They likely have already been resolved.',
+          'They likely have already been resolved.',
       ),
     );
   }
