@@ -1,17 +1,20 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 import {
   fetchAndIndexCatalogs,
   buildTranscendGraphQLClient,
-} from '@/lib/graphql';
+} from '../../../lib/graphql';
 import { join } from 'path';
 import { difference } from 'lodash-es';
 import colors from 'colors';
-import { logger } from '@/logger';
-import { dataFlowsToDataSilos } from '@/lib/consent-manager/dataFlowsToDataSilos';
-import { DataFlowInput } from '@/codecs';
+import { logger } from '../../../logger';
+import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import { DataFlowInput } from '../../../codecs';
 import { existsSync, lstatSync } from 'fs';
-import { listFiles } from '@/lib/api-keys';
-import { readTranscendYaml, writeTranscendYaml } from '@/lib/readTranscendYaml';
+import { listFiles } from '../../../lib/api-keys';
+import {
+  readTranscendYaml,
+  writeTranscendYaml,
+} from '../../../lib/readTranscendYaml';
 
 interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
   auth: string;

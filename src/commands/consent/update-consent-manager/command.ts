@@ -3,7 +3,7 @@ import { ConsentBundleType, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
+} from '../../../lib/cli/common-parameters';
 
 export const updateConsentManagerCommand = buildCommand({
   loader: async () => {

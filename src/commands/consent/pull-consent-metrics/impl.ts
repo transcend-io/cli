@@ -1,17 +1,17 @@
-import type { LocalContext } from '@/context';
-import { logger } from '@/logger';
+import type { LocalContext } from '../../../context';
+import { logger } from '../../../logger';
 import colors from 'colors';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../../../lib/bluebird-replace';
 import { join } from 'path';
 import fs, { existsSync, mkdirSync } from 'fs';
 import {
   buildTranscendGraphQLClient,
   ConsentManagerMetricBin,
-} from '@/lib/graphql';
-import { validateTranscendAuth } from '@/lib/api-keys';
-import { ADMIN_DASH_INTEGRATIONS } from '@/constants';
-import { pullConsentManagerMetrics } from '@/lib/consent-manager';
-import { writeCsv } from '@/lib/cron';
+} from '../../../lib/graphql';
+import { validateTranscendAuth } from '../../../lib/api-keys';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
+import { writeCsv } from '../../../lib/cron';
 
 interface PullConsentMetricsCommandFlags {
   auth: string;

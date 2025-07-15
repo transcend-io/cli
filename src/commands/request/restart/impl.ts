@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { bulkRestartRequests } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import { bulkRestartRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
 interface RestartCommandFlags {

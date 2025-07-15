@@ -1,6 +1,6 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../../context';
 import type { RequestStatus } from '@transcend-io/privacy-types';
-import { skipRequestDataSilos as skipRequestDataSilosHelper } from '@/lib/requests';
+import { skipRequestDataSilos as skipRequestDataSilosHelper } from '../../../../lib/requests';
 
 interface SkipRequestDataSilosCommandFlags {
   auth: string;

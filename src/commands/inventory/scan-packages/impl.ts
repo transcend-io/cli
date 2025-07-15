@@ -1,9 +1,12 @@
-import type { LocalContext } from '@/context';
-import { logger } from '@/logger';
+import type { LocalContext } from '../../../context';
+import { logger } from '../../../logger';
 import colors from 'colors';
-import { ADMIN_DASH } from '@/constants';
-import { findCodePackagesInFolder } from '@/lib/code-scanning';
-import { buildTranscendGraphQLClient, syncCodePackages } from '@/lib/graphql';
+import { ADMIN_DASH } from '../../../constants';
+import { findCodePackagesInFolder } from '../../../lib/code-scanning';
+import {
+  buildTranscendGraphQLClient,
+  syncCodePackages,
+} from '../../../lib/graphql';
 import { execSync } from 'child_process';
 
 const REPO_ERROR =

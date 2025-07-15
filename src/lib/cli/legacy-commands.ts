@@ -4,7 +4,7 @@ import {
   type CommandContext,
 } from '@stricli/core';
 import { app } from '../../app';
-import { logger } from '@/logger';
+import { logger } from '../../logger';
 
 // Maps legacy (<7.0.0) command names to their modern command structure
 export const legacyCommandToModernCommandMap: Record<string, string[]> = {

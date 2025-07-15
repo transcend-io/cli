@@ -2,7 +2,7 @@ import { buildCommand, numberParser } from '@stricli/core';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
+} from '../../../lib/cli/common-parameters';
 
 export const pushCommand = buildCommand({
   loader: async () => {

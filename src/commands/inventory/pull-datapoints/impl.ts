@@ -1,12 +1,12 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 import { uniq, groupBy } from 'lodash-es';
 
-import { logger } from '@/logger';
+import { logger } from '../../../logger';
 import colors from 'colors';
-import { buildTranscendGraphQLClient } from '@/lib/graphql';
-import { ADMIN_DASH_DATAPOINTS } from '@/constants';
-import { pullAllDatapoints } from '@/lib/data-inventory';
-import { writeCsv } from '@/lib/cron';
+import { buildTranscendGraphQLClient } from '../../../lib/graphql';
+import { ADMIN_DASH_DATAPOINTS } from '../../../constants';
+import { pullAllDatapoints } from '../../../lib/data-inventory';
+import { writeCsv } from '../../../lib/cron';
 import { DataCategoryType } from '@transcend-io/privacy-types';
 
 interface PullDatapointsCommandFlags {

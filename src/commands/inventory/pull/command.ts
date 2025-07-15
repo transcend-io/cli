@@ -3,8 +3,8 @@ import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
-import { TranscendPullResource } from '@/enums';
+} from '../../../lib/cli/common-parameters';
+import { TranscendPullResource } from '../../../enums';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,

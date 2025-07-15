@@ -1,5 +1,8 @@
-import type { LocalContext } from '@/context';
-import { splitCsvToList, uploadPrivacyRequestsFromCsv } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import {
+  splitCsvToList,
+  uploadPrivacyRequestsFromCsv,
+} from '../../../lib/requests';
 
 interface UploadCommandFlags {
   auth: string;

@@ -1,11 +1,14 @@
-import type { LocalContext } from '@/context';
-import { listFiles } from '@/lib/api-keys';
-import { consentManagersToBusinessEntities as consentManagersToBusinessEntitiesHelper } from '@/lib/consent-manager';
-import { readTranscendYaml, writeTranscendYaml } from '@/lib/readTranscendYaml';
+import type { LocalContext } from '../../../context';
+import { listFiles } from '../../../lib/api-keys';
+import { consentManagersToBusinessEntities as consentManagersToBusinessEntitiesHelper } from '../../../lib/consent-manager';
+import {
+  readTranscendYaml,
+  writeTranscendYaml,
+} from '../../../lib/readTranscendYaml';
 import { join } from 'path';
 
 import colors from 'colors';
-import { logger } from '@/logger';
+import { logger } from '../../../logger';
 import { existsSync, lstatSync } from 'fs';
 
 interface ConsentManagersToBusinessEntitiesCommandFlags {

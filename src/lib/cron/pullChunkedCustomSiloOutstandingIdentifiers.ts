@@ -13,7 +13,7 @@ import { RequestAction } from '@transcend-io/privacy-types';
 
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 
 /**
  * A CSV formatted identifier

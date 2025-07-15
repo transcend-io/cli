@@ -5,7 +5,7 @@ import cliProgress from 'cli-progress';
 import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
-import { map } from '@/lib/bluebird-replace';
+import { map } from '../bluebird-replace';
 import { logger } from '../../logger';
 
 const PreferenceRecordsQueryResponse = t.intersection([

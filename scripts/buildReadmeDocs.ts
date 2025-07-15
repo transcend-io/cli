@@ -3,7 +3,7 @@ import {
   type Application,
   type CommandContext,
 } from '@stricli/core';
-import { app } from '@/app';
+import { app } from '../src/app';
 import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import { fdir } from 'fdir';
@@ -20,7 +20,7 @@ const additionalDocumentation: Record<string, string> = Object.fromEntries(
   await Promise.all(
     docFiles.map(async (file) => {
       const command = `transcend ${file.split('/').slice(0, -1).join(' ')}`;
-      const readme = (await import(`@/commands/${file}`)).default;
+      const readme = (await import(`../src/commands/${file}`)).default;
       return [command, readme];
     }),
   ),

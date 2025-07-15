@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { pushManualEnrichmentIdentifiersFromCsv } from '@/lib/manual-enrichment';
+import type { LocalContext } from '../../../../context';
+import { pushManualEnrichmentIdentifiersFromCsv } from '../../../../lib/manual-enrichment';
 
 interface PushIdentifiersCommandFlags {
   auth: string;

@@ -42,7 +42,7 @@ import {
   fetchAllLargeLanguageModels,
 } from '../graphql/fetchLargeLanguageModels';
 import { groupBy, keyBy, uniq, chunk } from 'lodash-es';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import {
   PromptThread,
   fetchAllPromptThreads,

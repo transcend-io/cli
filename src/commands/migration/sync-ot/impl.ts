@@ -1,17 +1,17 @@
-import type { LocalContext } from '@/context';
-import { logger } from '@/logger';
+import type { LocalContext } from '../../../context';
+import { logger } from '../../../logger';
 import colors from 'colors';
-import { createOneTrustGotInstance } from '@/lib/oneTrust';
+import { createOneTrustGotInstance } from '../../../lib/oneTrust';
 import {
   OneTrustFileFormat,
   OneTrustPullResource,
   OneTrustPullSource,
-} from '@/enums';
-import { buildTranscendGraphQLClient } from '@/lib/graphql';
+} from '../../../enums';
+import { buildTranscendGraphQLClient } from '../../../lib/graphql';
 import {
   syncOneTrustAssessmentsFromFile,
   syncOneTrustAssessmentsFromOneTrust,
-} from '@/lib/oneTrust/helpers';
+} from '../../../lib/oneTrust/helpers';
 
 // Command flag interface
 interface SyncOtCommandFlags {

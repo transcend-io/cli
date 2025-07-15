@@ -1,14 +1,14 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../../context';
 import colors from 'colors';
 
-import { logger } from '@/logger';
+import { logger } from '../../../../logger';
 import { uniq } from 'lodash-es';
 import {
   CsvFormattedIdentifier,
   parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
   writeCsv,
-} from '@/lib/cron';
+} from '../../../../lib/cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 
 interface PullIdentifiersCommandFlags {

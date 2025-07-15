@@ -7,7 +7,7 @@ import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries, map } from '@/lib/bluebird-replace';
+import { mapSeries, map } from '../bluebird-replace';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,

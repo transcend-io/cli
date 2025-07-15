@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { skipPreflightJobs as skipPreflightJobsHelper } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import { skipPreflightJobs as skipPreflightJobsHelper } from '../../../lib/requests';
 
 interface SkipPreflightJobsCommandFlags {
   auth: string;

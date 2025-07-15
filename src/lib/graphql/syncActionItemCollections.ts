@@ -1,6 +1,6 @@
 import { ActionItemCollectionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import {
   UPDATE_ACTION_ITEM_COLLECTION,
   CREATE_ACTION_ITEM_COLLECTION,

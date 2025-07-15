@@ -5,7 +5,7 @@ import { uniq, groupBy } from 'lodash-es';
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
 import colors from 'colors';
-import { buildTranscendGraphQLClient } from '@/lib/graphql';
+import { buildTranscendGraphQLClient } from './graphql';
 import { ADMIN_DASH_DATAPOINTS, DEFAULT_TRANSCEND_API } from '../constants';
 import { pullAllDatapoints } from './data-inventory';
 import { writeCsv } from './cron';

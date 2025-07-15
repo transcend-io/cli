@@ -17,7 +17,7 @@ import {
 } from '../graphql';
 import { logger } from '../../logger';
 import type { DataCategoryInput, ProcessingPurposeInput } from '../../codecs';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 
 export interface DataSiloCsvPreview {
   /** ID of dataSilo */

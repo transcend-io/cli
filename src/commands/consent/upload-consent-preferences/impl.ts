@@ -1,8 +1,8 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 
-import { uploadConsents } from '@/lib/consent-manager/uploadConsents';
-import { ConsentPreferenceUpload } from '@/lib/consent-manager/types';
-import { readCsv } from '@/lib/requests';
+import { uploadConsents } from '../../../lib/consent-manager/uploadConsents';
+import { ConsentPreferenceUpload } from '../../../lib/consent-manager/types';
+import { readCsv } from '../../../lib/requests';
 
 interface UploadConsentPreferencesCommandFlags {
   base64EncryptionKey: string;

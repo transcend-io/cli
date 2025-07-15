@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { bulkRetryEnrichers } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import { bulkRetryEnrichers } from '../../../lib/requests';
 import type {
   RequestAction,
   RequestEnricherStatus,

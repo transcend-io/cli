@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { pushCronIdentifiersFromCsv } from '@/lib/cron';
+import type { LocalContext } from '../../../../context';
+import { pushCronIdentifiersFromCsv } from '../../../../lib/cron';
 
 interface MarkIdentifiersCompletedCommandFlags {
   file: string;

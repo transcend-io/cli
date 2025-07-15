@@ -1,4 +1,4 @@
-import { map } from '@/lib/bluebird-replace';
+import { map } from '../bluebird-replace';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import colors from 'colors';

@@ -4,7 +4,7 @@
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
 import colors from 'colors';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from './bluebird-replace';
 import { join } from 'path';
 import fs from 'fs';
 import {

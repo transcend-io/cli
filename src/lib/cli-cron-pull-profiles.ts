@@ -16,7 +16,7 @@ import {
 import { RequestAction } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../constants';
 import { splitCsvToList } from './requests';
-import { map } from '@/lib/bluebird-replace';
+import { map } from './bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,

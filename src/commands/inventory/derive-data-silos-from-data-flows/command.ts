@@ -2,7 +2,7 @@ import { buildCommand } from '@stricli/core';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
+} from '../../../lib/cli/common-parameters';
 
 export const deriveDataSilosFromDataFlowsCommand = buildCommand({
   loader: async () => {

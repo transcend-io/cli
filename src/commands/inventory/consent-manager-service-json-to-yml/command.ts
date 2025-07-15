@@ -1,4 +1,4 @@
-import { name } from '@/constants';
+import { name } from '../../../constants';
 import { buildCommand } from '@stricli/core';
 
 export const consentManagerServiceJsonToYmlCommand = buildCommand({

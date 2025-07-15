@@ -3,8 +3,8 @@ import { urlParser } from './parsers';
 import {
   DEFAULT_TRANSCEND_API,
   DEFAULT_TRANSCEND_CONSENT_API,
-} from '@/constants';
-import type { LocalContext } from '@/context';
+} from '../../constants';
+import type { LocalContext } from '../../context';
 import type { TypedFlagParameter } from '@stricli/core';
 
 /**

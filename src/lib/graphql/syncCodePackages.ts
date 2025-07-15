@@ -4,7 +4,7 @@ import { GraphQLClient } from 'graphql-request';
 import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { logger } from '../../logger';
 import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
-import { map, mapSeries } from '@/lib/bluebird-replace';
+import { map, mapSeries } from '../bluebird-replace';
 import { CodePackageInput, RepositoryInput } from '../../codecs';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';

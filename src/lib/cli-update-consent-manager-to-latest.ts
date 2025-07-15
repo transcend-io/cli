@@ -5,7 +5,7 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from './bluebird-replace';
 
 import { logger } from '../logger';
 import { updateConsentManagerVersionToLatest } from './consent-manager';

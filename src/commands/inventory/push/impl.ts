@@ -1,21 +1,21 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 
-import { logger } from '@/logger';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { logger } from '../../../logger';
+import { mapSeries } from '../../../lib/bluebird-replace';
 import { existsSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { readTranscendYaml } from '@/lib/readTranscendYaml';
+import { readTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
 import {
   buildTranscendGraphQLClient,
   syncConfigurationToTranscend,
-} from '@/lib/graphql';
+} from '../../../lib/graphql';
 
-import { ADMIN_DASH_INTEGRATIONS } from '@/constants';
-import { TranscendInput } from '@/codecs';
-import { validateTranscendAuth, listFiles } from '@/lib/api-keys';
-import { mergeTranscendInputs } from '@/lib/mergeTranscendInputs';
-import { parseVariablesFromString } from '@/lib/helpers/parseVariablesFromString';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import { TranscendInput } from '../../../codecs';
+import { validateTranscendAuth, listFiles } from '../../../lib/api-keys';
+import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
+import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
 
 /**
  * Sync configuration to Transcend

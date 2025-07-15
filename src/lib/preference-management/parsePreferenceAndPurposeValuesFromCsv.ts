@@ -3,7 +3,7 @@ import colors from 'colors';
 import inquirer from 'inquirer';
 import { FileMetadataState } from './codecs';
 import { logger } from '../../logger';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';

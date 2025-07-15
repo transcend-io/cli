@@ -4,8 +4,8 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
-import { dateParser } from '@/lib/cli/parsers';
+} from '../../../lib/cli/common-parameters';
+import { dateParser } from '../../../lib/cli/parsers';
 
 export const pullConsentPreferencesCommand = buildCommand({
   loader: async () => {

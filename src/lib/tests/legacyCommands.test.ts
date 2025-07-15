@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import {
   getHelpTextForCommand,
   legacyCommandToModernCommandMap,
-} from '@/lib/cli/legacy-commands';
+} from '../cli/legacy-commands';
 
 describe('legacy command mappings', () => {
   // Get all legacy commands that have modern command mappings

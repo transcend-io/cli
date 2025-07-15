@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { markSilentPrivacyRequests } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import { markSilentPrivacyRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
 interface MarkSilentCommandFlags {

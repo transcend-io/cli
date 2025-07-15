@@ -1,5 +1,5 @@
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
-import { TranscendPullResource } from '@/enums';
+import { TranscendPullResource } from '../../../enums';
 
 // Additional documentation for help text
 const pullResourceTable: Record<

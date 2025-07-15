@@ -1,6 +1,6 @@
 import { AgentFunctionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import { UPDATE_AGENT_FUNCTIONS, CREATE_AGENT_FUNCTION } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';

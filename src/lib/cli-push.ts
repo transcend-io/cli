@@ -3,7 +3,7 @@
 // TODO DELETE
 import yargs from 'yargs-parser';
 import { logger } from '../logger';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from './bluebird-replace';
 import { existsSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { readTranscendYaml } from './readTranscendYaml';

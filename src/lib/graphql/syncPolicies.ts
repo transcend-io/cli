@@ -4,7 +4,7 @@ import { PolicyInput } from '../../codecs';
 import colors from 'colors';
 import { UPDATE_POLICIES } from './gqls';
 import { chunk, keyBy } from 'lodash-es';
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchAllPolicies } from './fetchAllPolicies';

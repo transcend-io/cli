@@ -1,6 +1,6 @@
 import { buildCommand } from '@stricli/core';
-import { createTranscendUrlParameter } from '@/lib/cli/common-parameters';
-import { uuidParser } from '@/lib/cli/parsers';
+import { createTranscendUrlParameter } from '../../../lib/cli/common-parameters';
+import { uuidParser } from '../../../lib/cli/parsers';
 
 export const generateApiKeysCommand = buildCommand({
   loader: async () => {

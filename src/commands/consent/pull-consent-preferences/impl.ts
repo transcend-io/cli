@@ -1,8 +1,8 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 
-import { fetchConsentPreferences } from '@/lib/consent-manager';
-import { writeCsv } from '@/lib/cron';
-import { createSombraGotInstance } from '@/lib/graphql';
+import { fetchConsentPreferences } from '../../../lib/consent-manager';
+import { writeCsv } from '../../../lib/cron';
+import { createSombraGotInstance } from '../../../lib/graphql';
 
 interface PullConsentPreferencesCommandFlags {
   auth: string;

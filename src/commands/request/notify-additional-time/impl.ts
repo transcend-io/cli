@@ -1,5 +1,5 @@
-import type { LocalContext } from '@/context';
-import { notifyPrivacyRequestsAdditionalTime } from '@/lib/requests';
+import type { LocalContext } from '../../../context';
+import { notifyPrivacyRequestsAdditionalTime } from '../../../lib/requests';
 import type { RequestAction } from '@transcend-io/privacy-types';
 
 interface NotifyAdditionalTimeCommandFlags {

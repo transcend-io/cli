@@ -1,15 +1,15 @@
-import type { LocalContext } from '@/context';
+import type { LocalContext } from '../../../context';
 import * as t from 'io-ts';
-import { writeTranscendYaml } from '@/lib/readTranscendYaml';
+import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
-import { logger } from '@/logger';
+import { logger } from '../../../logger';
 import { existsSync, readFileSync } from 'fs';
 import { decodeCodec } from '@transcend-io/type-utils';
 import {
   ConsentManagerServiceMetadata,
   CookieInput,
   DataFlowInput,
-} from '@/codecs';
+} from '../../../codecs';
 import {
   ConsentTrackerStatus,
   DataFlowScope,

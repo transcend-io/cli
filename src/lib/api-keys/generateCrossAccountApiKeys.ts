@@ -1,4 +1,4 @@
-import { mapSeries } from '@/lib/bluebird-replace';
+import { mapSeries } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClientGeneric,
   loginUser,

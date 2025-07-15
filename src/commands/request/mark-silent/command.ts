@@ -7,8 +7,8 @@ import {
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/lib/cli/common-parameters';
-import { dateParser } from '@/lib/cli/parsers';
+} from '../../../lib/cli/common-parameters';
+import { dateParser } from '../../../lib/cli/parsers';
 
 export const markSilentCommand = buildCommand({
   loader: async () => {

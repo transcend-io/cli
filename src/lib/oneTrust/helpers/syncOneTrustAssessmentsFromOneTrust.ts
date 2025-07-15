@@ -6,7 +6,7 @@ import {
   getOneTrustRisk,
   getOneTrustUser,
 } from '../endpoints';
-import { mapSeries, map } from '@/lib/bluebird-replace';
+import { mapSeries, map } from '../../bluebird-replace';
 import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,

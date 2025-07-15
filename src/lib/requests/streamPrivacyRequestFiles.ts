@@ -1,4 +1,4 @@
-import { map } from '@/lib/bluebird-replace';
+import { map } from '../bluebird-replace';
 import colors from 'colors';
 import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 import type { Got } from 'got';
