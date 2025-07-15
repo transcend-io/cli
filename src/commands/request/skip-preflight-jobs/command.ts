@@ -3,7 +3,7 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
+} from '@/lib/cli/common-parameters';
 
 export const skipPreflightJobsCommand = buildCommand({
   loader: async () => {

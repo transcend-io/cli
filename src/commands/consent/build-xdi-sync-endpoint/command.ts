@@ -3,8 +3,8 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
-import { arrayParser } from '@/cli/parsers';
+} from '@/lib/cli/common-parameters';
+import { arrayParser } from '@/lib/cli/parsers';
 
 export const buildXdiSyncEndpointCommand = buildCommand({
   loader: async () => {

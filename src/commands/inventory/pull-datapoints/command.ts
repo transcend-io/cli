@@ -3,7 +3,7 @@ import { DataCategoryType, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
+} from '@/lib/cli/common-parameters';
 
 export const pullDatapointsCommand = buildCommand({
   loader: async () => {

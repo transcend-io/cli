@@ -4,7 +4,7 @@ import {
   createAuthParameter,
   createConsentUrlParameter,
   createSombraAuthParameter,
-} from '@/cli/common-parameters';
+} from '@/lib/cli/common-parameters';
 
 export const uploadPreferencesCommand = buildCommand({
   loader: async () => {

@@ -3,8 +3,8 @@ import {
   createAuthParameter,
   createSombraAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
-import { uuidParser } from '@/cli/parsers';
+} from '@/lib/cli/common-parameters';
+import { uuidParser } from '@/lib/cli/parsers';
 import { RequestAction } from '@transcend-io/privacy-types';
 
 export const pullProfilesCommand = buildCommand({

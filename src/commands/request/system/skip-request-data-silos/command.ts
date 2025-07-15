@@ -3,8 +3,8 @@ import { RequestStatus, ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
-import { uuidParser } from '@/cli/parsers';
+} from '@/lib/cli/common-parameters';
+import { uuidParser } from '@/lib/cli/parsers';
 
 export const skipRequestDataSilosCommand = buildCommand({
   loader: async () => {

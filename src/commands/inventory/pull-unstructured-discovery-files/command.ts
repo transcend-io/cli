@@ -6,7 +6,7 @@ import {
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
+} from '@/lib/cli/common-parameters';
 
 export const pullUnstructuredDiscoveryFilesCommand = buildCommand({
   loader: async () => {

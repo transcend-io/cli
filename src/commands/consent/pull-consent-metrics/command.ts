@@ -3,8 +3,8 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
-import { dateParser } from '@/cli/parsers';
+} from '@/lib/cli/common-parameters';
+import { dateParser } from '@/lib/cli/parsers';
 
 export const pullConsentMetricsCommand = buildCommand({
   loader: async () => {

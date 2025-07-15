@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { logModernCommandRecommendation } from '../cli/legacy-commands';
+import { logModernCommandRecommendation } from '../lib/cli/legacy-commands';
 
 /**
  * Runs when a deprecated command is called.

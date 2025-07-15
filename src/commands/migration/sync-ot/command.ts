@@ -3,7 +3,7 @@ import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
+} from '@/lib/cli/common-parameters';
 import { OneTrustPullResource, OneTrustPullSource } from '@/enums';
 import type { LocalContext } from '@/context';
 

@@ -1,5 +1,5 @@
 import { buildCommand, numberParser } from '@stricli/core';
-import { createConsentUrlParameter } from '@/cli/common-parameters';
+import { createConsentUrlParameter } from '@/lib/cli/common-parameters';
 
 export const uploadConsentPreferencesCommand = buildCommand({
   loader: async () => {

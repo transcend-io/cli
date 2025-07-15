@@ -7,8 +7,8 @@ import {
 import {
   createAuthParameter,
   createTranscendUrlParameter,
-} from '@/cli/common-parameters';
-import { dateParser } from '@/cli/parsers';
+} from '@/lib/cli/common-parameters';
+import { dateParser } from '@/lib/cli/parsers';
 
 export const approveCommand = buildCommand({
   loader: async () => {
