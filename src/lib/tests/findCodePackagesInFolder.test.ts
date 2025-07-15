@@ -10,7 +10,7 @@ describe('findCodePackagesInFolder', () => {
     expect(
       await findCodePackagesInFolder({
         repositoryName: 'transcend-io/cli',
-        scanPath: join(__dirname, '../../examples/code-scanning'),
+        scanPath: join(__dirname, '../../../examples/code-scanning'),
       }),
     ).to.deep.equal([
       {

@@ -10,7 +10,7 @@ describe.skip('getGitFilesThatChanged', () => {
       getGitFilesThatChanged({
         baseBranch: 'main',
         githubRepo: 'https://github.com/transcend-io/cli.git',
-        rootDirectory: join(__dirname, '../../'),
+        rootDirectory: join(__dirname, '../../../'),
       }),
     ).to.deep.equal({
       changedFiles: [

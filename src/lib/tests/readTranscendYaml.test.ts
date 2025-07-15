@@ -3,7 +3,7 @@ import { join } from 'path';
 
 import { readTranscendYaml } from '../../index';
 
-const EXAMPLE_DIR = join(__dirname, '..', '..', 'examples');
+const EXAMPLE_DIR = join(__dirname, '..', '..', '..', 'examples');
 
 describe('readTranscendYaml', () => {
   it('simple.yml should pass the codec validation for TranscendInput', () => {
