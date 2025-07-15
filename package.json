@@ -13,7 +13,7 @@
   "main": "dist/index.cjs",
   "bin": {
     "transcend": "dist/bin/cli.cjs",
-    "__transcend_cli_bash_complete": "dist/bin/bash-complete.cjs",
+    "__transcend_bash_complete": "dist/bin/bash-complete.cjs",
     "__tr-build-xdi-sync-endpoint": "dist/bin/deprecated-command.cjs",
     "__tr-consent-manager-service-json-to-yml": "dist/bin/deprecated-command.cjs",
     "__tr-consent-managers-to-business-entities": "dist/bin/deprecated-command.cjs",
