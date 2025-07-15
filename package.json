@@ -118,7 +118,6 @@
     "@types/yargs-parser": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
-    "@yarnpkg/sdks": "^3.0.0-rc.42",
     "chai": "^4.3.7",
     "deep-equal-in-any-order": "^1.0.28",
     "depcheck": "^1.4.3",

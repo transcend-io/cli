@@ -3,32 +3,27 @@
     "context": ".",
     "dockerfile": "Dockerfile"
   },
-  "install": "yarn install",
+  "install": "pnpm install",
   "terminals": [
     {
-      "name": "yarn build",
+      "name": "pnpm build",
       "description": "Build the project",
-      "command": "yarn build"
+      "command": "pnpm build"
     },
     {
-      "name": "yarn clean",
-      "description": "Clean the project",
-      "command": "yarn clean"
-    },
-    {
-      "name": "yarn lint",
+      "name": "pnpm lint",
       "description": "Lint the project",
-      "command": "yarn lint"
+      "command": "pnpm lint"
     },
     {
-      "name": "yarn prepublish",
+      "name": "pnpm prepublish",
       "description": "Pre-publish the project",
-      "command": "yarn prepublish"
+      "command": "pnpm prepublish"
     },
     {
-      "name": "yarn test",
+      "name": "pnpm test",
       "description": "Test the project",
-      "command": "yarn test"
+      "command": "pnpm test"
     },
     {
       "name": "pre-commit",
