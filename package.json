@@ -55,15 +55,13 @@
     "package.json"
   ],
   "scripts": {
-    "update:sdks": "yarn sdks base",
-    "update:deps": "yarn upgrade-interactive && yarn update:sdks",
-    "build": "yarn tsc --build",
-    "clean": "yarn tsc --build --clean",
-    "lint": "yarn eslint src --ext .ts",
-    "prepublish": "yarn build",
-    "test": "yarn mocha './src/**/*.test.ts' --reporter-option maxDiffSize=0",
-    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && yarn prettier ./transcend-yml-schema-v6.json --write",
-    "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && yarn prettier ./pathfinder-policy-yml-schema.json --write"
+    "build": "pnpm tsc --build",
+    "clean": "pnpm tsc --build --clean",
+    "lint": "pnpm eslint src --ext .ts",
+    "prepublish": "pnpm build",
+    "test": "pnpm mocha './src/**/*.test.ts' --reporter-option maxDiffSize=0",
+    "script:transcend-json-schema": "ts-node --transpile-only scripts/buildTranscendJsonSchema.ts && pnpm prettier ./transcend-yml-schema-v6.json --write",
+    "script:pathfinder-json-schema": "ts-node --transpile-only scripts/buildPathfinderJsonSchema.ts && pnpm prettier ./pathfinder-policy-yml-schema.json --write"
   },
   "dependencies": {
     "@transcend-io/airgap.js-types": "^12.12.1",
@@ -135,5 +133,5 @@
     "ts-node": "10.9.1",
     "typescript": "^5.0.4"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
 }
