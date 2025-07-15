@@ -1,5 +1,5 @@
 # [Choice] Node.js version (use -bullseye variants on local arm64/Apple Silicon): 18, 16, 14, 18-bullseye, 16-bullseye, 14-bullseye, 18-buster, 16-buster, 14-buster
-ARG VARIANT=16-bullseye
+ARG VARIANT=18-bullseye
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
 
 USER root
@@ -32,8 +32,10 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && mkdir -p /root/.local/share \
     && tldr -u
 
-# Install specific yarn version globally
-RUN npm install -g "yarn@2.4.3"
+# Install pnpm globally
+RUN npm i -g corepack@latest
+RUN corepack enable
+RUN corepack install
 
 # Install pre-commit globally (this doesn't need the repo to be present)
 RUN pip3 install pre-commit
@@ -47,6 +49,6 @@ WORKDIR /home/ubuntu
 
 # The agent will handle:
 # 1. Cloning the repository
-# 2. Running `yarn install`
-# 3. Running `yarn tsc --build`
+# 2. Running `pnpm install`
+# 3. Running `pnpm exec tsc --build`
 # 4. Setting up pre-commit hooks

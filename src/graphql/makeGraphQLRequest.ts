@@ -38,11 +38,11 @@ const KNOWN_ERRORS = [
  * @param maxRequests - Max number of requests
  * @returns Response
  */
-export async function makeGraphQLRequest<T, V = Variables>(
+export async function makeGraphQLRequest<T, V extends Variables = Variables>(
   client: GraphQLClient,
   document: RequestDocument,
   variables?: V,
-  requestHeaders?: RequestInit['headers'],
+  requestHeaders?: Record<string, string> | string[][] | Headers,
   maxRequests = MAX_RETRIES,
 ): Promise<T> {
   let retryCount = 0;
@@ -51,7 +51,7 @@ export async function makeGraphQLRequest<T, V = Variables>(
     try {
       // eslint-disable-next-line no-await-in-loop
       const result = await client.request(document, variables, requestHeaders);
-      return result;
+      return result as T;
     } catch (err) {
       if (err.message.includes('API key is invalid')) {
         logger.error(

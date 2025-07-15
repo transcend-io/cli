@@ -13,17 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-      - run: yarn
+      - uses: ./.github/commands/dependencies/install_deps
 
       # Install
-      - run: yarn up @transcend-io/internationalization
-      - run: yarn up @transcend-io/privacy-types
-      - run: yarn up @transcend-io/persisted-state
-      - run: yarn up @transcend-io/type-utils
+      - run: pnpm up "@transcend-io/*" --latest
 
       - name: Create Pull Request
         id: cpr
