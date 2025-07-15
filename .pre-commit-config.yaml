@@ -45,7 +45,7 @@ repos:
       - id: eslint
         name: Eslint
         description: 'Run static code linting'
-        entry: pnpm run lint --fix
+        entry: pnpm run lint:eslint --fix
         language: node
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
         types: [file]
