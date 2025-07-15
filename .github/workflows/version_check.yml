@@ -25,7 +25,7 @@ jobs:
             scripts/
             package.json
             README.md
-            yarn.lock
+            pnpm-lock.yaml
 
       - name: Check if package.json version has been modified
         shell: bash
