@@ -62,9 +62,6 @@ importers:
       got:
         specifier: ^11.8.5
         version: 11.8.6
-      graphql:
-        specifier: ^16.6.0
-        version: 16.11.0
       graphql-request:
         specifier: ^5.0.0
         version: 5.2.0(graphql@16.11.0)
