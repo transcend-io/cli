@@ -26,6 +26,14 @@ repos:
         args: [--allow-missing-credentials]
       - id: check-yaml
         files: (yaml$|yml$)
+  - repo: local
+    hooks:
+      - id: docs
+        name: Docs
+        description: 'Run static code linting'
+        entry: pnpm run docgen
+        language: node
+        files: (README\.md|src/commands/.*\.ts)
   - repo: https://github.com/thlorenz/doctoc
     rev: v1.4.0
     hooks:
@@ -41,10 +49,3 @@ repos:
         language: node
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
         types: [file]
-  - repo: local
-    hooks:
-      - id: docs
-        name: Docs
-        description: 'Run static code linting'
-        entry: pnpm run script:build-readme-docs
-        language: node

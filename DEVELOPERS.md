@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+## Table of Contents
+
+- [Developers](#developers)
+  - [Getting started](#getting-started)
+  - [Repo Structure](#repo-structure)
+  - [Generated files](#generated-files)
+    - [README.md](#readmemd)
+    - [transcend.yml and pathfinder.yml JSON schemas](#transcendyml-and-pathfinderyml-json-schemas)
+  - [Testing](#testing)
+  - [Publishing](#publishing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Developers
 
 ## Getting started
@@ -50,7 +66,7 @@ For more information on the commands and routings, see [the Stricli documentatio
 ### README.md
 
 ```bash
-pnpm script:build-readme-docs
+pnpm docgen
 ```
 
 This will generate the README.md file from the command documentation.

@@ -1,6 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+## Table of Contents
+
 - [Changelog](#changelog)
 - [Overview](#overview)
 - [Installation](#installation)
@@ -715,7 +717,7 @@ FLAGS
       --base64SigningKey     The signing key used to prove authentication of consent request
       --partition            The partition key to download consent preferences to
      [--file]                The file to pull consent preferences from                                                [default = ./preferences.csv]
-     [--consentUrl]          URL of the Transcend Consent backend. Use https://consent.us.transcend.io for US hosting [default = https://consent.transcend.io]
+     [--consentUrl]          URL of the Transcend consent backend. Use https://consent.us.transcend.io for US hosting [default = https://consent.transcend.io]
      [--concurrency]         The concurrency to use when uploading requests in parallel                               [default = 100]
   -h  --help                 Print help information and exit
 ```
@@ -798,7 +800,7 @@ FLAGS
       --auth                      The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
       --partition                 The partition key to download consent preferences to
      [--sombraAuth]               The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--consentUrl]               URL of the Transcend backend. Use https://consent.us.transcend.io for US hosting                                                                      [default = https://consent.transcend.io]
+     [--consentUrl]               URL of the Transcend consent backend. Use https://consent.us.transcend.io for US hosting                                                              [default = https://consent.transcend.io]
      [--file]                     Path to the CSV file to load preferences from
      [--directory]                Path to the directory of CSV files to load preferences from
      [--dryRun]                   Whether to do a dry run only - will write results to receiptFilepath without updating Transcend                                                       [default = false]
