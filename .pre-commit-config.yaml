@@ -35,7 +35,7 @@ repos:
         language: node
         files: (README\.md|src/commands/.*\.ts)
   - repo: https://github.com/thlorenz/doctoc
-    rev: v1.4.0
+    rev: v2.2.0
     hooks:
       - id: doctoc
         exclude: (.github)
