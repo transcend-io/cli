@@ -13,7 +13,7 @@ import {
 } from './graphql';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { validateTranscendAuth } from './api-keys';
-import { writeTranscendYaml } from '../readTranscendYaml';
+import { writeTranscendYaml } from './readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from '../constants';
 import { splitCsvToList } from './requests';
 import { TranscendPullResource } from '../enums';

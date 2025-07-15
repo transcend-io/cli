@@ -3,10 +3,10 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { splitCsvToList, bulkRestartRequests } from './requests';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { DEFAULT_TRANSCEND_API } from './constants';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Run a command to bulk restart a set of privacy requests

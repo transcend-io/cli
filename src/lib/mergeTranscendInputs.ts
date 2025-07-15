@@ -1,4 +1,4 @@
-import { TranscendInput } from './codecs';
+import { TranscendInput } from '../codecs';
 import { getEntries } from '@transcend-io/type-utils';
 
 /**

@@ -1,6 +1,6 @@
 #!/usr/bin/env/node
 import * as t from 'io-ts';
-import { writeTranscendYaml } from '../readTranscendYaml';
+import { writeTranscendYaml } from './readTranscendYaml';
 import yargs from 'yargs-parser';
 import colors from 'colors';
 import { logger } from '../logger';

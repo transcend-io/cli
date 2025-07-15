@@ -3,10 +3,10 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { splitCsvToList, markSilentPrivacyRequests } from './requests';
-import { DEFAULT_TRANSCEND_API } from './constants';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Bulk update requests to be in silent mode

@@ -4,9 +4,9 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 import { RequestAction } from '@transcend-io/privacy-types';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { retryRequestDataSilos } from './requests';
-import { DEFAULT_TRANSCEND_API } from './constants';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Bulk wipe and retry a set of requests for a specific data silo

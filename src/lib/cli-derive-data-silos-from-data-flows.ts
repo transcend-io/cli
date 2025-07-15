@@ -11,7 +11,7 @@ import { DataFlowInput } from '../codecs';
 import { splitCsvToList } from './requests';
 import { existsSync, lstatSync } from 'fs';
 import { listFiles } from './api-keys';
-import { readTranscendYaml, writeTranscendYaml } from '../readTranscendYaml';
+import { readTranscendYaml, writeTranscendYaml } from './readTranscendYaml';
 
 /**
  * Derive the set of data silos that can be derived from a set of data flows.

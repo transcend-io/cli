@@ -4,9 +4,9 @@ import yargs from 'yargs-parser';
 import colors from 'colors';
 import { RequestAction } from '@transcend-io/privacy-types';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import { removeUnverifiedRequestIdentifiers, splitCsvToList } from './requests';
-import { DEFAULT_TRANSCEND_API } from './constants';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 
 /**
  * Clear out a set of unverified identifiers

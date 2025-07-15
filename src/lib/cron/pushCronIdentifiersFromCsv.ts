@@ -6,9 +6,9 @@ import {
   CronIdentifierPush,
 } from './markCronIdentifierCompleted';
 import cliProgress from 'cli-progress';
-import { logger } from '../logger';
+import { logger } from '../../logger';
 import { readCsv } from '../requests';
-import { DEFAULT_TRANSCEND_API } from '../constants';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
 import chunk from 'lodash/chunk';
 
 /**

@@ -5,7 +5,7 @@ import { logger } from '../logger';
 import { mapSeries } from 'bluebird';
 import { existsSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { readTranscendYaml } from '../readTranscendYaml';
+import { readTranscendYaml } from './readTranscendYaml';
 import colors from 'colors';
 import {
   buildTranscendGraphQLClient,
@@ -15,7 +15,7 @@ import {
 import { ADMIN_DASH_INTEGRATIONS, DEFAULT_TRANSCEND_API } from '../constants';
 import { TranscendInput } from '../codecs';
 import { validateTranscendAuth, listFiles } from './api-keys';
-import { mergeTranscendInputs } from '../mergeTranscendInputs';
+import { mergeTranscendInputs } from './mergeTranscendInputs';
 import { parseVariablesFromString } from './helpers/parseVariablesFromString';
 
 /**

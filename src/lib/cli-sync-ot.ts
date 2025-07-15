@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { logger } from './logger';
+import { logger } from '../logger';
 
 import colors from 'colors';
 import { parseCliSyncOtArguments, createOneTrustGotInstance } from './oneTrust';
-import { OneTrustPullResource, OneTrustPullSource } from './enums';
+import { OneTrustPullResource, OneTrustPullSource } from '../enums';
 import { buildTranscendGraphQLClient } from './graphql';
 import {
   syncOneTrustAssessmentsFromFile,

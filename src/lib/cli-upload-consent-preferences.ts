@@ -3,8 +3,8 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 
-import { logger } from './logger';
-import { DEFAULT_TRANSCEND_CONSENT_API } from './constants';
+import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_CONSENT_API } from '../constants';
 import { uploadConsents } from './consent-manager/uploadConsents';
 import { ConsentPreferenceUpload } from './consent-manager/types';
 import { readCsv } from './requests';

@@ -3,8 +3,8 @@
 import yargs from 'yargs-parser';
 import colors from 'colors';
 
-import { logger } from './logger';
-import { DEFAULT_TRANSCEND_API } from './constants';
+import { logger } from '../logger';
+import { DEFAULT_TRANSCEND_API } from '../constants';
 import { uploadPreferenceManagementPreferencesInteractive } from './preference-management';
 import { splitCsvToList } from './requests';
 import { readdirSync } from 'fs';

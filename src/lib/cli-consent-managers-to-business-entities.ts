@@ -1,7 +1,7 @@
 #!/usr/bin/env/node
 import { listFiles } from './api-keys';
 import { consentManagersToBusinessEntities } from './consent-manager';
-import { readTranscendYaml, writeTranscendYaml } from '../readTranscendYaml';
+import { readTranscendYaml, writeTranscendYaml } from './readTranscendYaml';
 import { join } from 'path';
 import yargs from 'yargs-parser';
 import colors from 'colors';

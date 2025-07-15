@@ -1,7 +1,7 @@
 import { decodeCodec, ObjByString } from '@transcend-io/type-utils';
 import yaml from 'js-yaml';
 import { readFileSync, writeFileSync } from 'fs';
-import { TranscendInput } from './codecs';
+import { TranscendInput } from '../codecs';
 
 export const VARIABLE_PARAMETERS_REGEXP = /<<parameters\.(.+?)>>/;
 export const VARIABLE_PARAMETERS_NAME = 'parameters';

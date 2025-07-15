@@ -10,7 +10,7 @@ import { dataFlowsToDataSilos } from './consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../codecs';
 import { existsSync, lstatSync } from 'fs';
 import { listFiles } from './api-keys';
-import { readTranscendYaml, writeTranscendYaml } from '../readTranscendYaml';
+import { readTranscendYaml, writeTranscendYaml } from './readTranscendYaml';
 import { splitCsvToList } from './requests';
 
 /**

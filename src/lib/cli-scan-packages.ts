@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import yargs from 'yargs-parser';
-import { logger } from './logger';
+import { logger } from '../logger';
 import colors from 'colors';
-import { ADMIN_DASH, DEFAULT_TRANSCEND_API } from './constants';
+import { ADMIN_DASH, DEFAULT_TRANSCEND_API } from '../constants';
 import { findCodePackagesInFolder } from './code-scanning';
 import { buildTranscendGraphQLClient, syncCodePackages } from './graphql';
 import { execSync } from 'child_process';
