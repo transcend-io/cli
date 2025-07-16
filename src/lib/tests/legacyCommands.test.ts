@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   getHelpTextForCommand,
-  legacyCommandToModernCommandMap,
+  LEGACY_COMMAND_TO_MODERN_COMMAND_MAP,
 } from '../cli/legacy-commands';
 
 describe('legacy command mappings', () => {
@@ -14,7 +14,7 @@ describe('legacy command mappings', () => {
   }[] = [];
 
   for (const [legacyCommand, modernCommand] of Object.entries(
-    legacyCommandToModernCommandMap,
+    LEGACY_COMMAND_TO_MODERN_COMMAND_MAP,
   )) {
     mappedCommands.push({ legacyCommand, modernCommand });
   }

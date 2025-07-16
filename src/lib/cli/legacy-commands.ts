@@ -7,7 +7,7 @@ import { app } from '../../app';
 import { logger } from '../../logger';
 
 // Maps legacy (<7.0.0) command names to their modern command structure
-export const legacyCommandToModernCommandMap: Record<string, string[]> = {
+export const LEGACY_COMMAND_TO_MODERN_COMMAND_MAP: Record<string, string[]> = {
   'tr-build-xdi-sync-endpoint': ['consent', 'build-xdi-sync-endpoint'],
   'tr-consent-manager-service-json-to-yml': [
     'inventory',
@@ -116,13 +116,15 @@ export function getHelpTextForCommand(command: string[]): string | undefined {
  * logModernCommandRecommendation('tr-cron-mark-identifiers-completed');
  */
 export function logModernCommandRecommendation(
-  legacyCommand: keyof typeof legacyCommandToModernCommandMap,
+  legacyCommand: keyof typeof LEGACY_COMMAND_TO_MODERN_COMMAND_MAP,
 ): void {
   logger.log('[DEPRECATION NOTICE]');
 
-  const modernCommand = legacyCommandToModernCommandMap[legacyCommand];
+  const modernCommand = LEGACY_COMMAND_TO_MODERN_COMMAND_MAP[legacyCommand];
   if (!modernCommand) {
-    const modernCommandString = Object.entries(legacyCommandToModernCommandMap)
+    const modernCommandString = Object.entries(
+      LEGACY_COMMAND_TO_MODERN_COMMAND_MAP,
+    )
       .map(
         ([legacyCommand, modernCommand]) =>
           `\`${legacyCommand}\` -> \`${app.config.name} ${modernCommand.join(
