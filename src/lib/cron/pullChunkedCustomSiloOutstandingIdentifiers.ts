@@ -10,9 +10,11 @@ import {
   CronIdentifier,
 } from './pullCronPageOfIdentifiers';
 import { RequestAction } from '@transcend-io/privacy-types';
+
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
+
 /**
  * A CSV formatted identifier
  */
@@ -32,6 +34,7 @@ export interface CronIdentifierWithAction extends CronIdentifier {
  * with a chunk of identifiers when the savePageSize is reached.
  *
  * @param options - Options
+ * @returns The identifiers and identifiers formatted for CSV
  */
 export async function pullChunkedCustomSiloOutstandingIdentifiers({
   dataSiloId,
@@ -121,7 +124,6 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
     // Fetch a page of identifiers
     while (shouldContinue) {
-      // eslint-disable-next-line no-await-in-loop
       const pageIdentifiers = await pullCronPageOfIdentifiers(sombra, {
         dataSiloId,
         limit: apiPageSize,
@@ -156,7 +158,6 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
       // Check if we've reached the savePageSize and call the onSave callback
       if (currentChunk.length >= savePageSize) {
-        // eslint-disable-next-line no-await-in-loop
         await onSave(currentChunk);
         currentChunk = [];
       }

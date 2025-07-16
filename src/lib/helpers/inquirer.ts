@@ -7,6 +7,7 @@ import { ObjByString } from '@transcend-io/type-utils';
  * Inquirer confirm text
  *
  * @param options - Options
+ * @returns The response
  */
 export async function inquirerConfirmBoolean({
   message,
@@ -31,6 +32,7 @@ export async function inquirerConfirmBoolean({
  * Inquirer confirm text
  *
  * @param options - Options
+ * @returns The response
  */
 export async function inquirerConfirmText({
   message,
@@ -56,6 +58,7 @@ export async function inquirerConfirmText({
  * Inquirer auto complete
  *
  * @param options - Options
+ * @returns The response
  */
 export async function inquirerAutoComplete({
   defaultValue,

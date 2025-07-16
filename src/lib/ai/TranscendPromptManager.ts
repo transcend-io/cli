@@ -1,6 +1,4 @@
 /* eslint-disable max-lines */
-import chunk from 'lodash/chunk';
-import uniq from 'lodash/uniq';
 import {
   Optionalize,
   Requirize,
@@ -32,7 +30,6 @@ import {
   fetchPromptsWithVariables,
 } from '../graphql/fetchPrompts';
 import { GraphQLClient } from 'graphql-request';
-import keyBy from 'lodash/keyBy';
 import {
   PromptStatus,
   ChatCompletionRole,
@@ -44,8 +41,8 @@ import {
   LargeLanguageModel,
   fetchAllLargeLanguageModels,
 } from '../graphql/fetchLargeLanguageModels';
-import groupBy from 'lodash/groupBy';
-import { mapSeries } from 'bluebird';
+import { groupBy, keyBy, uniq, chunk } from 'lodash-es';
+import { mapSeries } from '../bluebird-replace';
 import {
   PromptThread,
   fetchAllPromptThreads,

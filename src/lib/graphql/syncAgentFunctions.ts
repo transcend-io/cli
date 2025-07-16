@@ -1,9 +1,9 @@
 import { AgentFunctionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { UPDATE_AGENT_FUNCTIONS, CREATE_AGENT_FUNCTION } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import {
@@ -16,6 +16,7 @@ import {
  *
  * @param client - GraphQL client
  * @param agentFunction - Input
+ * @returns Created agent function
  */
 export async function createAgentFunction(
   client: GraphQLClient,

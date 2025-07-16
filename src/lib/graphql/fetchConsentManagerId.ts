@@ -173,7 +173,6 @@ export async function fetchConsentManagerExperiences(
   do {
     const {
       experiences: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Consent experience */
       experiences: {

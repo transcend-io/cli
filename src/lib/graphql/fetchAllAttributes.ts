@@ -61,7 +61,6 @@ export async function fetchAllAttributeValues(
   do {
     const {
       attributeValues: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       attributeValues: {
@@ -104,7 +103,6 @@ export async function fetchAllAttributes(
   do {
     const {
       attributeKeys: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       attributeKeys: {
@@ -116,7 +114,6 @@ export async function fetchAllAttributes(
       offset,
     });
     attributes.push(
-      // eslint-disable-next-line no-await-in-loop
       ...(await Promise.all(
         nodes.map(async (node) => ({
           ...node,

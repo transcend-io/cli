@@ -51,7 +51,6 @@ export async function fetchAllSoftwareDevelopmentKits(
   do {
     const {
       softwareDevelopmentKits: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Software development kits */
       softwareDevelopmentKits: {

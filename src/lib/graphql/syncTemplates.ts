@@ -41,7 +41,6 @@ export async function fetchAllTemplates(
   do {
     const {
       templates: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       templates: {

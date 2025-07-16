@@ -1,7 +1,7 @@
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import colors from 'colors';
 import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
-import { Got } from 'got/dist/source';
+import type { Got } from 'got';
 import { logger } from '../../logger';
 
 /**

@@ -1,6 +1,6 @@
 import { AttributeInput } from '../../codecs';
 import colors from 'colors';
-import keyBy from 'lodash/keyBy';
+import { keyBy, difference, groupBy } from 'lodash-es';
 import { GraphQLClient } from 'graphql-request';
 import {
   CREATE_ATTRIBUTE,
@@ -11,9 +11,7 @@ import {
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { Attribute } from './fetchAllAttributes';
-import difference from 'lodash/difference';
-import groupBy from 'lodash/groupBy';
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import { logger } from '../../logger';
 
 /**

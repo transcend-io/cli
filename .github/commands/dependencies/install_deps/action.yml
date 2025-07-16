@@ -20,6 +20,7 @@ runs:
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
     - uses: actions/cache@v4
       name: Setup pnpm cache
       with:
@@ -27,7 +28,9 @@ runs:
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
+
     - name: Install dependencies
       run: pnpm install
       shell: bash
 # Note: You don't need to run pnpm store prune at the end; post-action has already taken care of that.
+

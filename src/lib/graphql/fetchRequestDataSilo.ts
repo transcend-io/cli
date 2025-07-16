@@ -61,7 +61,6 @@ export async function fetchRequestDataSilos(
   do {
     const {
       requestDataSilos: { nodes, totalCount },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Request Data Silos */
       requestDataSilos: {

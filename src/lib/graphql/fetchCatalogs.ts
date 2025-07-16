@@ -30,7 +30,6 @@ export async function fetchAllCatalogs(
   do {
     const {
       catalogs: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** integration catalogs */
       catalogs: {

@@ -30,7 +30,6 @@ export async function fetchAllPromptPartials(
   do {
     const {
       promptPartials: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** PromptPartials */
       promptPartials: {

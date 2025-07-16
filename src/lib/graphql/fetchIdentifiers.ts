@@ -1,14 +1,11 @@
 import { GraphQLClient } from 'graphql-request';
 import { IdentifierType, RequestAction } from '@transcend-io/privacy-types';
 import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
-import keyBy from 'lodash/keyBy';
-import uniq from 'lodash/uniq';
-import flatten from 'lodash/flatten';
+import { keyBy, uniq, flatten, difference } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
-import difference from 'lodash/difference';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Identifier {
@@ -66,7 +63,6 @@ export async function fetchAllIdentifiers(
   do {
     const {
       identifiers: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Identifiers */
       identifiers: {

@@ -1,40 +1,33 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "incremental": true,
-    "target": "es2019",
-    "module": "commonjs",
-    "lib": ["esnext", "es2020", "es2019", "dom"],
-    "allowJs": false,
-    "checkJs": false, // speeds up webpack and tsc
-    "declaration": true,
-    "composite": true,
-    "declarationMap": true,
-    "sourceMap": true,
-
-    /* Strict Type-Checking Options */
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["esnext"],
+    "skipLibCheck": true,
     "strict": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    // "noPropertyAccessFromIndexSignature": true,
+    // "noUncheckedIndexedAccess": true,
+    // "verbatimModuleSyntax": true,
 
     /* Additional Checks */
+    "esModuleInterop": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
 
-    /* Module Resolution Options */
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "typeRoots": ["@types", "node_modules/@types"],
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "build",
-    "tsBuildInfoFile": "./build/tsbuildinfo",
-    "rootDir": "src",
-    "types": ["mocha", "node"]
+    "typeRoots": ["src/lib/@types", "node_modules/@types"],
+    "baseUrl": "."
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "build"],
+  "include": ["**/*"],
+  "exclude": ["node_modules", "dist"],
   "references": []
 }

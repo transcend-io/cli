@@ -1,7 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import colors from 'colors';
-import groupBy from 'lodash/groupBy';
+import { groupBy } from 'lodash-es';
 
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
@@ -23,6 +23,7 @@ export interface ExportedPrivacyRequest extends PrivacyRequest {
  * Pull down a list of privacy requests
  *
  * @param options - Options
+ * @returns The requests with request identifiers and requests formatted for CSV
  */
 export async function pullPrivacyRequests({
   auth,

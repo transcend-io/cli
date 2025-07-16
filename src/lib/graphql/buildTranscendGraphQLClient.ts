@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
+import { version } from '../../../package.json';
 
 /**
  * Create a GraphQL client
@@ -12,8 +13,6 @@ export function buildTranscendGraphQLClientGeneric(
   headers: Record<string, string>,
 ): GraphQLClient {
   // Create a GraphQL client
-  // eslint-disable-next-line global-require
-  const { version } = require('../../../package.json');
   return new GraphQLClient(`${transcendUrl}/graphql`, {
     headers: {
       ...headers,

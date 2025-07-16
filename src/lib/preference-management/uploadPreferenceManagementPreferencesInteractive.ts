@@ -7,8 +7,8 @@ import {
   Purpose,
 } from '../graphql';
 import colors from 'colors';
-import { map } from 'bluebird';
-import chunk from 'lodash/chunk';
+import { map } from '../bluebird-replace';
+import { chunk } from 'lodash-es';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';

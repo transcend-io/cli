@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { ObjByString } from '@transcend-io/type-utils';
 import colors from 'colors';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { NONE } from './constants';
 import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
@@ -24,7 +24,7 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
   // loop over
   while (keepFiltering) {
     // Prompt user for column to filter on
-    // eslint-disable-next-line no-await-in-loop
+
     const { filterColumnName } = await inquirer.prompt<{
       /** Name of column to filter on */
       filterColumnName: string;
@@ -43,7 +43,7 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
     keepFiltering = NONE !== filterColumnName;
     if (keepFiltering) {
       const options = getUniqueValuesForColumn(filteredRows, filterColumnName);
-      // eslint-disable-next-line no-await-in-loop
+
       const { valuesToKeep } = await inquirer.prompt<{
         /** Values to keep  */
         valuesToKeep: string[];

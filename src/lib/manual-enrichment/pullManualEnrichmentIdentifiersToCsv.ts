@@ -1,8 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import colors from 'colors';
-import groupBy from 'lodash/groupBy';
-import uniq from 'lodash/uniq';
+import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { writeCsv } from '../cron/writeCsv';
 import {
@@ -28,12 +27,13 @@ export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
  * Pull the set of manual enrichment jobs to CSV
  *
  * @param options - Options
+ * @returns List of requests with identifiers
  */
 export async function pullManualEnrichmentIdentifiersToCsv({
   file,
   auth,
   sombraAuth,
-  requestActions,
+  requestActions = [],
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -46,7 +46,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   /** Concurrency */
   concurrency?: number;
   /** The request actions to fetch */
-  requestActions: RequestAction[];
+  requestActions?: RequestAction[];
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<PrivacyRequestWithIdentifiers[]> {

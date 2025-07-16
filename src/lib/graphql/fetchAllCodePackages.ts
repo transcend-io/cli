@@ -65,7 +65,6 @@ export async function fetchAllCodePackages(
   do {
     const {
       codePackages: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Code packages */
       codePackages: {

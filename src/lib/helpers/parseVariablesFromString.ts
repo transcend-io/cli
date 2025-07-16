@@ -12,6 +12,11 @@ export function parseVariablesFromString(variables: string): {
   const vars: { [k in string]: string } = {};
   splitVars.forEach((variable) => {
     const [k, v] = variable.split(':');
+    if (!k || !v) {
+      throw new Error(
+        `Invalid variable: ${variable}. Expected format: key:value`,
+      );
+    }
     vars[k] = v;
   });
   return vars;

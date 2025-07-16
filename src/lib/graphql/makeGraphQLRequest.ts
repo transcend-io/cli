@@ -49,7 +49,6 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
-      // eslint-disable-next-line no-await-in-loop
       const result = await client.request(document, variables, requestHeaders);
       return result as T;
     } catch (err) {
@@ -80,7 +79,6 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
           ),
         );
 
-        // eslint-disable-next-line no-await-in-loop
         await sleepPromise(sleepTime);
       }
 

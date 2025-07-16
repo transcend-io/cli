@@ -11,6 +11,7 @@ import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
  *
  * @param client - GraphQL client
  * @param privacyCenter - The privacy center input
+ * @returns Whether the privacy center was synced successfully
  */
 export async function syncPrivacyCenter(
   client: GraphQLClient,

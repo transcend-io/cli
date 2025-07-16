@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect, describe, it } from 'vitest';
 
 import { getGitFilesThatChanged } from '../ai/getGitFilesThatChanged';
 import { join } from 'path';
@@ -10,7 +10,7 @@ describe.skip('getGitFilesThatChanged', () => {
       getGitFilesThatChanged({
         baseBranch: 'main',
         githubRepo: 'https://github.com/transcend-io/cli.git',
-        rootDirectory: join(__dirname, '../../../'),
+        rootDirectory: join(__dirname, '../../'),
       }),
     ).to.deep.equal({
       changedFiles: [

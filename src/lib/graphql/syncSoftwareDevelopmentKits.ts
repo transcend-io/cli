@@ -1,5 +1,5 @@
 import colors from 'colors';
-import chunk from 'lodash/chunk';
+import { chunk, keyBy } from 'lodash-es';
 import { SoftwareDevelopmentKitInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import {
@@ -7,12 +7,11 @@ import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '../bluebird-replace';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,
 } from './fetchAllSoftwareDevelopmentKits';
-import keyBy from 'lodash/keyBy';
 import { logger } from '../../logger';
 import { CodePackageType } from '@transcend-io/privacy-types';
 
@@ -23,7 +22,7 @@ const CHUNK_SIZE = 100;
  *
  * @param client - GraphQL client
  * @param input - Software development kit input
- * @returns Software development kit ID
+ * @returns Created software development kit
  */
 export async function createSoftwareDevelopmentKit(
   client: GraphQLClient,
@@ -78,6 +77,7 @@ export async function createSoftwareDevelopmentKit(
  *
  * @param client - GraphQL client
  * @param inputs - Software development kit input
+ * @returns Updated software development kits
  */
 export async function updateSoftwareDevelopmentKits(
   client: GraphQLClient,
@@ -135,7 +135,7 @@ export async function updateSoftwareDevelopmentKits(
  * @param client - GraphQL client
  * @param softwareDevelopmentKits - Software development kits
  * @param concurrency - Concurrency
- * @returns True if synced successfully
+ * @returns The software development kits that were upserted and whether the sync was successful
  */
 export async function syncSoftwareDevelopmentKits(
   client: GraphQLClient,

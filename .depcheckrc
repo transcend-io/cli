@@ -1,1 +1,1 @@
-ignores: ["depcheck", "prettier"]
+ignores: ["depcheck", "prettier", "doctoc"]

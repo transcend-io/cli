@@ -1,15 +1,12 @@
 /* eslint-disable max-lines */
-import keyBy from 'lodash/keyBy';
+import { keyBy, uniq, chunk, sortBy } from 'lodash-es';
 import {
   type DataCategoryType,
   SubDataPointDataSubCategoryGuessStatus,
 } from '@transcend-io/privacy-types';
-import uniq from 'lodash/uniq';
-import chunk from 'lodash/chunk';
 import cliProgress from 'cli-progress';
 import { gql } from 'graphql-request';
 import colors from 'colors';
-import sortBy from 'lodash/sortBy';
 import type { GraphQLClient } from 'graphql-request';
 import {
   DATAPOINT_EXPORT,
@@ -20,7 +17,7 @@ import {
 } from '../graphql';
 import { logger } from '../../logger';
 import type { DataCategoryInput, ProcessingPurposeInput } from '../../codecs';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 
 export interface DataSiloCsvPreview {
   /** ID of dataSilo */
@@ -89,6 +86,7 @@ export interface DatapointFilterOptions {
  *
  * @param client - Client to use for the request
  * @param options - Options
+ * @returns The subdatapoints
  */
 async function pullSubDatapoints(
   client: GraphQLClient,
@@ -152,7 +150,6 @@ async function pullSubDatapoints(
     try {
       const {
         subDataPoints: { nodes },
-        // eslint-disable-next-line no-await-in-loop
       } = await makeGraphQLRequest<{
         /** Query response */
         subDataPoints: {
@@ -261,6 +258,7 @@ async function pullSubDatapoints(
  *
  * @param client - Client to use for the request
  * @param options - Options
+ * @returns The datapoints
  */
 async function pullDatapoints(
   client: GraphQLClient,
@@ -347,6 +345,7 @@ async function pullDatapoints(
  *
  * @param client - Client to use for the request
  * @param options - Options
+ * @returns The data silos
  */
 async function pullDataSilos(
   client: GraphQLClient,
@@ -431,6 +430,7 @@ async function pullDataSilos(
  *
  * @param client - Client to use for the request
  * @param options - Options
+ * @returns The datapoints and data silos
  */
 export async function pullAllDatapoints(
   client: GraphQLClient,

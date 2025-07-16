@@ -15,5 +15,5 @@ Example repository of database models.
 ### Setup
 
 - CD into this folder
-- Install with: `yarn install`
-- Run with `yarn node src/index.ts`
+- Install with: `pnpm install`
+- Run with `pnpm exec node src/index.ts`

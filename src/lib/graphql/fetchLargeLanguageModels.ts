@@ -33,7 +33,6 @@ export async function fetchAllLargeLanguageModels(
   do {
     const {
       largeLanguageModels: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** LargeLanguageModels */
       largeLanguageModels: {

@@ -37,7 +37,6 @@ export async function fetchAllRequestIdentifierMetadata(
   do {
     const {
       requestIdentifiers: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Request Identifiers */
       requestIdentifiers: {

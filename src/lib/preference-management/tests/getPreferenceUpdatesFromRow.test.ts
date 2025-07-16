@@ -1,11 +1,8 @@
 /* eslint-disable max-lines */
-import chai, { expect } from 'chai';
-import deepEqualInAnyOrder from 'deep-equal-in-any-order';
+import { expect, describe, it } from 'vitest';
 
 import { getPreferenceUpdatesFromRow } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
-
-chai.use(deepEqualInAnyOrder);
 
 describe('getPreferenceUpdatesFromRow', () => {
   it('should parse boolean updates', () => {

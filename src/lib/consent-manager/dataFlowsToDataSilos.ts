@@ -1,5 +1,5 @@
 import { DataFlowInput, DataSiloInput } from '../../codecs';
-import union from 'lodash/union';
+import { union } from 'lodash-es';
 import { IndexedCatalogs } from '../graphql';
 
 /**

@@ -66,7 +66,6 @@ export async function fetchAllPreferenceTopics(
   do {
     const {
       preferenceTopics: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Preference topics */
       preferenceTopics: {

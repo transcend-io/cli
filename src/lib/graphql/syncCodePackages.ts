@@ -1,13 +1,10 @@
-import chunk from 'lodash/chunk';
-import uniq from 'lodash/uniq';
-import keyBy from 'lodash/keyBy';
-import uniqBy from 'lodash/uniqBy';
+import { chunk, uniq, keyBy, uniqBy } from 'lodash-es';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { logger } from '../../logger';
 import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
-import { map, mapSeries } from 'bluebird';
+import { map, mapSeries } from '../bluebird-replace';
 import { CodePackageInput, RepositoryInput } from '../../codecs';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -74,6 +71,7 @@ export async function createCodePackage(
  *
  * @param client - GraphQL client
  * @param inputs - Code package input
+ * @returns Code packages that were updated
  */
 export async function updateCodePackages(
   client: GraphQLClient,
@@ -129,7 +127,7 @@ export async function updateCodePackages(
  * @param client - GraphQL Client
  * @param codePackages - Packages to upload
  * @param concurrency - How many concurrent requests to make
- * @returns True if successful, false if any updates failed
+ * @returns True if successful, false if any updates failed, or an error occurs
  */
 export async function syncCodePackages(
   client: GraphQLClient,

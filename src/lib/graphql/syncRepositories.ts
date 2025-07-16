@@ -1,12 +1,11 @@
 import colors from 'colors';
-import chunk from 'lodash/chunk';
+import { chunk, keyBy } from 'lodash-es';
 import { RepositoryInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_REPOSITORIES, CREATE_REPOSITORY } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { map, mapSeries } from 'bluebird';
+import { mapSeries, map } from '../bluebird-replace';
 import { fetchAllRepositories, Repository } from './fetchAllRepositories';
-import keyBy from 'lodash/keyBy';
 import { logger } from '../../logger';
 
 const CHUNK_SIZE = 100;
@@ -16,7 +15,7 @@ const CHUNK_SIZE = 100;
  *
  * @param client - GraphQL client
  * @param input - Repository input
- * @returns Repository ID
+ * @returns Created repository
  */
 export async function createRepository(
   client: GraphQLClient,
@@ -57,6 +56,7 @@ export async function createRepository(
  *
  * @param client - GraphQL client
  * @param inputs - Repository input
+ * @returns Updated repositories
  */
 export async function updateRepositories(
   client: GraphQLClient,
@@ -104,7 +104,7 @@ export async function updateRepositories(
  * @param client - GraphQL client
  * @param repositories - Repositories
  * @param concurrency - Concurrency
- * @returns True if synced successfully
+ * @returns The repositories that were upserted and whether the sync was successful
  */
 export async function syncRepositories(
   client: GraphQLClient,

@@ -1,4 +1,5 @@
-import { map, mapSeries } from 'bluebird';
+import { map, mapSeries } from '../bluebird-replace';
+import { chunk } from 'lodash-es';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';
 import {
@@ -9,7 +10,6 @@ import cliProgress from 'cli-progress';
 import { logger } from '../../logger';
 import { readCsv } from '../requests';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import chunk from 'lodash/chunk';
 
 /**
  * Given a CSV of cron job outputs, mark all requests as completed in Transcend

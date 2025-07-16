@@ -1,9 +1,9 @@
 import { VendorInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { UPDATE_VENDORS, CREATE_VENDOR } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllVendors, Vendor } from './fetchAllVendors';
@@ -13,6 +13,7 @@ import { fetchAllVendors, Vendor } from './fetchAllVendors';
  *
  * @param client - GraphQL client
  * @param vendor - Input
+ * @returns Created vendor
  */
 export async function createVendor(
   client: GraphQLClient,

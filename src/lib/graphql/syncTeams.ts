@@ -1,9 +1,9 @@
 import { TeamInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { UPDATE_TEAM, CREATE_TEAM } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllTeams, Team } from './fetchAllTeams';
@@ -13,6 +13,7 @@ import { fetchAllTeams, Team } from './fetchAllTeams';
  *
  * @param client - GraphQL client
  * @param team - Input
+ * @returns Created team
  */
 export async function createTeam(
   client: GraphQLClient,
@@ -46,6 +47,7 @@ export async function createTeam(
  * @param client - GraphQL client
  * @param input - Team input to update
  * @param teamId - ID of team
+ * @returns Updated team
  */
 export async function updateTeam(
   client: GraphQLClient,

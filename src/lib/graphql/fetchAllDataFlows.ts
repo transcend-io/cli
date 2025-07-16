@@ -73,7 +73,6 @@ export async function fetchAllDataFlows(
   do {
     const {
       dataFlows: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Query response */
       dataFlows: {

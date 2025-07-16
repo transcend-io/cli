@@ -53,7 +53,6 @@ export async function fetchAllTeams(client: GraphQLClient): Promise<Team[]> {
   do {
     const {
       teams: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Teams */
       teams: {

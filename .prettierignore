@@ -46,4 +46,5 @@ pnpm-lock.yaml
 .idea
 .gitkeep
 transcend-yml-schema-*.json
+dist/
 *.pnp.*

@@ -55,7 +55,6 @@ export async function fetchAllDataCategories(
   do {
     const {
       dataSubCategories: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** DataCategories */
       dataSubCategories: {

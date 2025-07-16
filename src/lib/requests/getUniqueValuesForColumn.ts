@@ -1,5 +1,5 @@
 import { ObjByString } from '@transcend-io/type-utils';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 
 /**
  * Return the unique set of values for a column in a CSV

@@ -114,6 +114,7 @@ export function parseFilePath(filePath: string): {
  * @param data - Data to write
  * @param headers - Headers
  * @param chunkSize - Maximum number of rows per file (default 100000)
+ * @returns Array of written file paths
  */
 export async function writeLargeCsv(
   filePath: string,
@@ -141,7 +142,6 @@ export async function writeLargeCsv(
     const chunkNumber = String(i + 1).padStart(String(totalChunks).length, '0');
     const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
 
-    // eslint-disable-next-line no-await-in-loop
     await writeCsv(chunkFilePath, chunk, headers);
     writtenFiles.push(chunkFilePath);
   }

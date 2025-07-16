@@ -46,7 +46,6 @@ export async function fetchAllActions(
   do {
     const {
       actions: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Actions */
       actions: {

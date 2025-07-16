@@ -1,8 +1,8 @@
 /* eslint-disable max-lines */
 import colors from 'colors';
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import * as t from 'io-ts';
-import uniq from 'lodash/uniq';
+import { uniq } from 'lodash-es';
 import cliProgress from 'cli-progress';
 import { join } from 'path';
 import { PersistedState } from '@transcend-io/persisted-state';

@@ -1,10 +1,9 @@
-import uniq from 'lodash/uniq';
+import { uniq, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import difference from 'lodash/difference';
 import { FileMetadataState } from './codecs';
 import { logger } from '../../logger';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';

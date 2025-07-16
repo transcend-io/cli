@@ -54,7 +54,6 @@ export async function fetchAllBusinessEntities(
   do {
     const {
       businessEntities: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Business entities */
       businessEntities: {

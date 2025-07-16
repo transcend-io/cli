@@ -131,7 +131,6 @@ export async function fetchAllRequests(
   do {
     const {
       requests: { nodes, totalCount },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** Requests */
       requests: {

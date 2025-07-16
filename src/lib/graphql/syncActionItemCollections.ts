@@ -1,12 +1,12 @@
 import { ActionItemCollectionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import {
   UPDATE_ACTION_ITEM_COLLECTION,
   CREATE_ACTION_ITEM_COLLECTION,
 } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import {
@@ -19,6 +19,7 @@ import {
  *
  * @param client - GraphQL client
  * @param actionItemCollection - Input
+ * @returns Created action item collection
  */
 export async function createActionItemCollection(
   client: GraphQLClient,

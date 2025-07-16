@@ -1,11 +1,9 @@
 import { ActionItemInput } from '../../codecs';
-import uniq from 'lodash/uniq';
-import chunk from 'lodash/chunk';
+import { uniq, keyBy, chunk } from 'lodash-es';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import { UPDATE_ACTION_ITEMS, CREATE_ACTION_ITEMS } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllActionItems, ActionItem } from './fetchAllActionItems';

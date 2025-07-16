@@ -2,7 +2,7 @@ import { createTranscendConsentGotInstance } from '../graphql';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
-import { map } from 'bluebird';
+import { map } from '../bluebird-replace';
 import { createConsentToken } from './createConsentToken';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';

@@ -35,7 +35,6 @@ export async function fetchRequestFilesForRequest(
   do {
     const {
       requestFiles: { nodes },
-      // eslint-disable-next-line no-await-in-loop
     } = await makeGraphQLRequest<{
       /** RequestFiles */
       requestFiles: {

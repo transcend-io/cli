@@ -1,12 +1,12 @@
 import { ProcessingPurposeInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird-replace';
 import {
   UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
   CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
 } from './gqls';
 import { logger } from '../../logger';
-import keyBy from 'lodash/keyBy';
+import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import {
@@ -19,6 +19,7 @@ import {
  *
  * @param client - GraphQL client
  * @param processingPurpose - Input
+ * @returns Created processing purpose
  */
 export async function createProcessingPurpose(
   client: GraphQLClient,
