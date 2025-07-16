@@ -63,12 +63,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: ./.github/commands/dependencies/install_deps
-      - name: Configure NPM authentication
+      - name: Configure npm authentication
         run: |
-          npm config set npmAlwaysAuth true
-          npm config set npmAuthToken ${{ secrets.NPM_TOKEN }}
-      - name: Publish to pnpm/npm
-        run: npm publish
+          pnpm config set always-auth true
+          pnpm config set _authToken "${{ secrets.NPM_TOKEN }}"
+      - name: Publish to npm
+        run: pnpm publish
 
   build-to-github-packages:
     if: github.ref == 'refs/heads/main'
@@ -82,11 +82,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: ./.github/commands/dependencies/install_deps
-      - name: Configure Github Packages authentication
+      - name: Configure GitHub Packages authentication
         run: |
-          npm config set npmAlwaysAuth true
-          npm config set npmRegistryServer https://npm.pkg.github.com
-          npm config set npmPublishRegistry https://npm.pkg.github.com
-          npm config set npmAuthToken ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to Github packages
-        run: npm publish
+          pnpm config set always-auth true
+          pnpm config set registry https://npm.pkg.github.com
+          pnpm config set //npm.pkg.github.com/:_authToken "${{ secrets.GITHUB_TOKEN }}"
+      - name: Publish to GitHub Packages
+        run: pnpm publish
