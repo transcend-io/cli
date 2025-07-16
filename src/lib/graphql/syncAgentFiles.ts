@@ -13,6 +13,7 @@ import { fetchAllAgentFiles, AgentFile } from './fetchAllAgentFiles';
  *
  * @param client - GraphQL client
  * @param agentFile - Input
+ * @returns Created agent file
  */
 export async function createAgentFile(
   client: GraphQLClient,

@@ -238,6 +238,9 @@ module.exports = {
     /** Should not alias this to another command */
     '@typescript-eslint/no-this-alias': ['error'],
 
+    /** We use non-null assertions in a lot of places */
+    '@typescript-eslint/no-non-null-assertion': 0,
+
     /** Prevent use of global variables */
     'no-restricted-globals': ['error'],
 

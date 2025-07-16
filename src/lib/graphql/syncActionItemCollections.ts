@@ -19,6 +19,7 @@ import {
  *
  * @param client - GraphQL client
  * @param actionItemCollection - Input
+ * @returns Created action item collection
  */
 export async function createActionItemCollection(
   client: GraphQLClient,

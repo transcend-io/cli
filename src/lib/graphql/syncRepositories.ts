@@ -15,7 +15,7 @@ const CHUNK_SIZE = 100;
  *
  * @param client - GraphQL client
  * @param input - Repository input
- * @returns Repository ID
+ * @returns Created repository
  */
 export async function createRepository(
   client: GraphQLClient,
@@ -56,6 +56,7 @@ export async function createRepository(
  *
  * @param client - GraphQL client
  * @param inputs - Repository input
+ * @returns Updated repositories
  */
 export async function updateRepositories(
   client: GraphQLClient,
@@ -103,7 +104,7 @@ export async function updateRepositories(
  * @param client - GraphQL client
  * @param repositories - Repositories
  * @param concurrency - Concurrency
- * @returns True if synced successfully
+ * @returns The repositories that were upserted and whether the sync was successful
  */
 export async function syncRepositories(
   client: GraphQLClient,

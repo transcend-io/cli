@@ -16,6 +16,7 @@ import {
  *
  * @param client - GraphQL client
  * @param agentFunction - Input
+ * @returns Created agent function
  */
 export async function createAgentFunction(
   client: GraphQLClient,

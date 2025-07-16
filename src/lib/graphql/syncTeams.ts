@@ -13,6 +13,7 @@ import { fetchAllTeams, Team } from './fetchAllTeams';
  *
  * @param client - GraphQL client
  * @param team - Input
+ * @returns Created team
  */
 export async function createTeam(
   client: GraphQLClient,
@@ -46,6 +47,7 @@ export async function createTeam(
  * @param client - GraphQL client
  * @param input - Team input to update
  * @param teamId - ID of team
+ * @returns Updated team
  */
 export async function updateTeam(
   client: GraphQLClient,

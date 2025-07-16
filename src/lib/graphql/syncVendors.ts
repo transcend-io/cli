@@ -13,6 +13,7 @@ import { fetchAllVendors, Vendor } from './fetchAllVendors';
  *
  * @param client - GraphQL client
  * @param vendor - Input
+ * @returns Created vendor
  */
 export async function createVendor(
   client: GraphQLClient,

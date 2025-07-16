@@ -22,7 +22,7 @@ const CHUNK_SIZE = 100;
  *
  * @param client - GraphQL client
  * @param input - Software development kit input
- * @returns Software development kit ID
+ * @returns Created software development kit
  */
 export async function createSoftwareDevelopmentKit(
   client: GraphQLClient,
@@ -77,6 +77,7 @@ export async function createSoftwareDevelopmentKit(
  *
  * @param client - GraphQL client
  * @param inputs - Software development kit input
+ * @returns Updated software development kits
  */
 export async function updateSoftwareDevelopmentKits(
   client: GraphQLClient,
@@ -134,7 +135,7 @@ export async function updateSoftwareDevelopmentKits(
  * @param client - GraphQL client
  * @param softwareDevelopmentKits - Software development kits
  * @param concurrency - Concurrency
- * @returns True if synced successfully
+ * @returns The software development kits that were upserted and whether the sync was successful
  */
 export async function syncSoftwareDevelopmentKits(
   client: GraphQLClient,

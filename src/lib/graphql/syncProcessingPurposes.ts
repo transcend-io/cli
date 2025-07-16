@@ -19,6 +19,7 @@ import {
  *
  * @param client - GraphQL client
  * @param processingPurpose - Input
+ * @returns Created processing purpose
  */
 export async function createProcessingPurpose(
   client: GraphQLClient,

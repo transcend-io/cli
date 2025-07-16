@@ -16,6 +16,7 @@ import colors from 'colors';
  *
  * @param client - GraphQL client
  * @param businessEntity - Input
+ * @returns Created business entity
  */
 export async function createBusinessEntity(
   client: GraphQLClient,

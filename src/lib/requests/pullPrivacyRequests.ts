@@ -23,6 +23,7 @@ export interface ExportedPrivacyRequest extends PrivacyRequest {
  * Pull down a list of privacy requests
  *
  * @param options - Options
+ * @returns The requests with request identifiers and requests formatted for CSV
  */
 export async function pullPrivacyRequests({
   auth,

@@ -16,6 +16,7 @@ import {
  *
  * @param client - GraphQL client
  * @param dataCategory - Input
+ * @returns Created data category
  */
 export async function createDataCategory(
   client: GraphQLClient,
