@@ -1,5 +1,5 @@
-import * as crypto from "node:crypto";
-import * as jwt from "jsonwebtoken";
+import * as crypto from 'node:crypto';
+import * as jwt from 'jsonwebtoken';
 
 /**
  * Function to create a consent manager token
@@ -13,16 +13,16 @@ import * as jwt from "jsonwebtoken";
 export function createConsentToken(
   userId: string,
   base64EncryptionKey: string,
-  base64SigningKey: string
+  base64SigningKey: string,
 ): string {
   // Read on for where to find these keys
-  const signingKey = Buffer.from(base64SigningKey, "base64");
-  const encryptionKey = Buffer.from(base64EncryptionKey, "base64");
+  const signingKey = Buffer.from(base64SigningKey, 'base64');
+  const encryptionKey = Buffer.from(base64EncryptionKey, 'base64');
 
   // NIST's AES-KWP implementation { aes 48 } - see https://tools.ietf.org/html/rfc5649
-  const encryptionAlgorithm = "id-aes256-wrap-pad";
+  const encryptionAlgorithm = 'id-aes256-wrap-pad';
   // Initial Value for AES-KWP integrity check - see https://tools.ietf.org/html/rfc5649#section-3
-  const iv = Buffer.from("A65959A6", "hex");
+  const iv = Buffer.from('A65959A6', 'hex');
   // Set up encryption algorithm
   const cipher = crypto.createCipheriv(encryptionAlgorithm, encryptionKey, iv);
 
@@ -30,7 +30,7 @@ export function createConsentToken(
   const encryptedIdentifier = Buffer.concat([
     cipher.update(userId),
     cipher.final(),
-  ]).toString("base64");
+  ]).toString('base64');
 
   // Create the JWT content - jwt.sign will add a 'iat' (issued at) field to the payload
   // If you wanted to add something manually, consider
@@ -42,7 +42,7 @@ export function createConsentToken(
 
   // Create a JSON web token and HMAC it with SHA-384
   const consentToken = jwt.sign(jwtPayload, signingKey, {
-    algorithm: "HS384",
+    algorithm: 'HS384',
   });
 
   return consentToken;

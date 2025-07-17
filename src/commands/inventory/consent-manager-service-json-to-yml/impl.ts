@@ -1,19 +1,19 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from 'node:fs';
 import {
   ConsentTrackerStatus,
   DataFlowScope,
-} from "@transcend-io/privacy-types";
-import { decodeCodec } from "@transcend-io/type-utils";
-import colors from "colors";
-import * as t from "io-ts";
+} from '@transcend-io/privacy-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import colors from 'colors';
+import * as t from 'io-ts';
 import {
   ConsentManagerServiceMetadata,
   CookieInput,
   DataFlowInput,
-} from "../../../codecs";
-import type { LocalContext } from "../../../context";
-import { writeTranscendYaml } from "../../../lib/readTranscendYaml";
-import { logger } from "../../../logger";
+} from '../../../codecs';
+import type { LocalContext } from '../../../context';
+import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface ConsentManagerServiceJsonToYmlCommandFlags {
   file: string;
@@ -22,7 +22,7 @@ interface ConsentManagerServiceJsonToYmlCommandFlags {
 
 export function consentManagerServiceJsonToYml(
   this: LocalContext,
-  { file, output }: ConsentManagerServiceJsonToYmlCommandFlags
+  { file, output }: ConsentManagerServiceJsonToYmlCommandFlags,
 ): void {
   // Ensure files exist
   if (!existsSync(file)) {
@@ -33,7 +33,7 @@ export function consentManagerServiceJsonToYml(
   // Read in each consent manager configuration
   const services = decodeCodec(
     t.array(ConsentManagerServiceMetadata),
-    readFileSync(file, "utf-8")
+    readFileSync(file, 'utf-8'),
   );
 
   // Create data flows and cookie configurations
@@ -41,7 +41,7 @@ export function consentManagerServiceJsonToYml(
   const cookies: CookieInput[] = [];
   for (const service of services) {
     for (const dataFlow of service.dataFlows.filter(
-      ({ type }) => type !== DataFlowScope.CSP
+      ({ type }) => type !== DataFlowScope.CSP,
     )) {
       dataFlows.push({
         value: dataFlow.value,
@@ -62,13 +62,13 @@ export function consentManagerServiceJsonToYml(
 
   // write to disk
   writeTranscendYaml(output, {
-    "data-flows": dataFlows,
+    'data-flows': dataFlows,
     cookies,
   });
 
   logger.info(
     colors.green(
-      `Successfully wrote ${dataFlows.length} data flows and ${cookies.length} cookies to file "${output}"`
-    )
+      `Successfully wrote ${dataFlows.length} data flows and ${cookies.length} cookies to file "${output}"`,
+    ),
   );
 }

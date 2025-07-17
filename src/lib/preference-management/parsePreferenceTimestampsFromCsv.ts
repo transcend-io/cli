@@ -1,10 +1,10 @@
-import colors from "colors";
-import inquirer from "inquirer";
-import { difference, uniq } from "lodash-es";
-import { logger } from "../../logger";
-import { FileMetadataState } from "./codecs";
+import colors from 'colors';
+import inquirer from 'inquirer';
+import { difference, uniq } from 'lodash-es';
+import { logger } from '../../logger';
+import { FileMetadataState } from './codecs';
 
-export const NONE_PREFERENCE_MAP = "[NONE]";
+export const NONE_PREFERENCE_MAP = '[NONE]';
 
 /**
  * Parse timestamps from a CSV list of preferences
@@ -20,7 +20,7 @@ export const NONE_PREFERENCE_MAP = "[NONE]";
  */
 export async function parsePreferenceTimestampsFromCsv(
   preferences: Record<string, string>[],
-  currentState: FileMetadataState
+  currentState: FileMetadataState,
 ): Promise<FileMetadataState> {
   // Determine columns to map
   const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
@@ -38,16 +38,16 @@ export async function parsePreferenceTimestampsFromCsv(
       timestampName: string;
     }>([
       {
-        name: "timestampName",
+        name: 'timestampName',
         message:
-          "Choose the column that will be used as the timestamp of last preference update",
-        type: "list",
+          'Choose the column that will be used as the timestamp of last preference update',
+        type: 'list',
         default:
           remainingColumnsForTimestamp.find((col) =>
-            col.toLowerCase().includes("date")
+            col.toLowerCase().includes('date'),
           ) ||
           remainingColumnsForTimestamp.find((col) =>
-            col.toLowerCase().includes("time")
+            col.toLowerCase().includes('time'),
           ) ||
           remainingColumnsForTimestamp[0],
         choices: [...remainingColumnsForTimestamp, NONE_PREFERENCE_MAP],
@@ -56,7 +56,7 @@ export async function parsePreferenceTimestampsFromCsv(
     currentState.timestampColum = timestampName;
   }
   logger.info(
-    colors.magenta(`Using timestamp column "${currentState.timestampColum}"`)
+    colors.magenta(`Using timestamp column "${currentState.timestampColum}"`),
   );
 
   // Validate that all rows have valid timestamp
@@ -70,14 +70,14 @@ export async function parsePreferenceTimestampsFromCsv(
         `The timestamp column "${
           currentState.timestampColum
         }" is missing a value for the following rows: ${timestampColumnsMissing.join(
-          "\n"
-        )}`
+          '\n',
+        )}`,
       );
     }
     logger.info(
       colors.magenta(
-        `The timestamp column "${currentState.timestampColum}" is present for all row`
-      )
+        `The timestamp column "${currentState.timestampColum}" is present for all row`,
+      ),
     );
   }
   return currentState;

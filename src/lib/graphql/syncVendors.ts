@@ -1,12 +1,12 @@
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { keyBy } from "lodash-es";
-import { VendorInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { fetchAllVendors, Vendor } from "./fetchAllVendors";
-import { CREATE_VENDOR, UPDATE_VENDORS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { VendorInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { fetchAllVendors, Vendor } from './fetchAllVendors';
+import { CREATE_VENDOR, UPDATE_VENDORS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new vendor
@@ -17,8 +17,8 @@ import { makeGraphQLRequest } from "./makeGraphQLRequest";
  */
 export async function createVendor(
   client: GraphQLClient,
-  vendor: VendorInput
-): Promise<Pick<Vendor, "id" | "title">> {
+  vendor: VendorInput,
+): Promise<Pick<Vendor, 'id' | 'title'>> {
   const input = {
     title: vendor.title,
     description: vendor.description,
@@ -52,7 +52,7 @@ export async function createVendor(
  */
 export async function updateVendors(
   client: GraphQLClient,
-  vendorIdParis: [VendorInput, string][]
+  vendorIdParis: [VendorInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_VENDORS, {
     input: {
@@ -83,7 +83,7 @@ export async function updateVendors(
  */
 export async function syncVendors(
   client: GraphQLClient,
-  inputs: VendorInput[]
+  inputs: VendorInput[],
 ): Promise<boolean> {
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" vendors...`));
@@ -94,9 +94,9 @@ export async function syncVendors(
   const existingVendors = await fetchAllVendors(client);
 
   // Look up by title
-  const vendorByTitle: Record<string, Pick<Vendor, "id" | "title">> = keyBy(
+  const vendorByTitle: Record<string, Pick<Vendor, 'id' | 'title'>> = keyBy(
     existingVendors,
-    "title"
+    'title',
   );
 
   // Create new vendors
@@ -108,14 +108,14 @@ export async function syncVendors(
       const newVendor = await createVendor(client, vendor);
       vendorByTitle[newVendor.title] = newVendor;
       logger.info(
-        colors.green(`Successfully synced vendor "${vendor.title}"!`)
+        colors.green(`Successfully synced vendor "${vendor.title}"!`),
       );
     } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync vendor "${vendor.title}"! - ${error.message}`
-        )
+          `Failed to sync vendor "${vendor.title}"! - ${error.message}`,
+        ),
       );
     }
   });
@@ -125,17 +125,17 @@ export async function syncVendors(
     logger.info(colors.magenta(`Updating "${inputs.length}" vendors!`));
     await updateVendors(
       client,
-      inputs.map((input) => [input, vendorByTitle[input.title].id])
+      inputs.map((input) => [input, vendorByTitle[input.title].id]),
     );
     logger.info(
-      colors.green(`Successfully synced "${inputs.length}" vendors!`)
+      colors.green(`Successfully synced "${inputs.length}" vendors!`),
     );
   } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" vendors ! - ${error.message}`
-      )
+        `Failed to sync "${inputs.length}" vendors ! - ${error.message}`,
+      ),
     );
   }
 

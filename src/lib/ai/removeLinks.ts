@@ -6,5 +6,5 @@
  */
 export function removeLinks(inputString: string): string {
   const regex = /(https?:\/\/[^\s]+)/g;
-  return inputString.replaceAll(regex, "<link-omitted>");
+  return inputString.replaceAll(regex, '<link-omitted>');
 }

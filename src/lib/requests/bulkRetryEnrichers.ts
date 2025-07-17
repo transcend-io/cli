@@ -2,19 +2,19 @@ import {
   RequestAction,
   RequestEnricherStatus,
   RequestStatus,
-} from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { difference } from "lodash-es";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+} from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { difference } from 'lodash-es';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchAllRequestEnrichers,
   fetchAllRequests,
   retryRequestEnricher,
-} from "../graphql";
+} from '../graphql';
 
 /**
  * Restart a bunch of request enrichers
@@ -56,13 +56,13 @@ export async function bulkRetryEnrichers({
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  logger.info(colors.magenta("Fetching requests to restart..."));
+  logger.info(colors.magenta('Fetching requests to restart...'));
 
   const requests = await fetchAllRequests(client, {
     actions: requestActions,
@@ -78,15 +78,15 @@ export async function bulkRetryEnrichers({
   if (requestIds.length > 0 && requestIds.length !== requests.length) {
     const missingRequests = difference(
       requestIds,
-      requests.map(({ id }) => id)
+      requests.map(({ id }) => id),
     );
     if (missingRequests.length > 0) {
       logger.error(
         colors.red(
           `Failed to find the following requests by ID: ${missingRequests.join(
-            ","
-          )}.`
-        )
+            ',',
+          )}.`,
+        ),
       );
       process.exit(1);
     }
@@ -105,7 +105,7 @@ export async function bulkRetryEnrichers({
       const requestEnrichersToRestart = requestEnrichers.filter(
         (requestEnricher) =>
           requestEnricher.enricher.id === enricherId &&
-          requestEnricherStatuses.includes(requestEnricher.status)
+          requestEnricherStatuses.includes(requestEnricher.status),
       );
       await map(requestEnrichersToRestart, async (requestEnricher) => {
         await retryRequestEnricher(client, requestEnricher.id);
@@ -116,7 +116,7 @@ export async function bulkRetryEnrichers({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -130,7 +130,7 @@ export async function bulkRetryEnrichers({
         requests.length
       } requests and ${totalRestarted} enrichers in "${
         totalTime / 1000
-      }" seconds.`
-    )
+      }" seconds.`,
+    ),
   );
 }

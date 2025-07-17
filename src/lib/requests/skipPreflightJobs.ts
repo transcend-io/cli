@@ -1,19 +1,19 @@
 import {
   RequestEnricherStatus,
   RequestStatus,
-} from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
+} from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchAllRequestEnrichers,
   fetchAllRequests,
   makeGraphQLRequest,
   SKIP_REQUEST_ENRICHER,
-} from "../graphql";
+} from '../graphql';
 
 /**
  * Given an enricher ID, mark all open request enrichers as skipped
@@ -52,16 +52,16 @@ export async function skipPreflightJobs({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Processing enricher: "${enricherIds.join(",")}" fetched "${
+      `Processing enricher: "${enricherIds.join(',')}" fetched "${
         requests.length
-      }" in enriching status.`
-    )
+      }" in enriching status.`,
+    ),
   );
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   let total = 0;
@@ -81,7 +81,7 @@ export async function skipPreflightJobs({
             RequestEnricherStatus.Resolved,
             RequestEnricherStatus.Skipped,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ].includes(enricher.status as any)
+          ].includes(enricher.status as any),
       );
 
       // FIXME
@@ -98,7 +98,7 @@ export async function skipPreflightJobs({
           } catch (error) {
             if (
               !error.message.includes(
-                "Client error: Cannot skip Request enricher because it has already completed"
+                'Client error: Cannot skip Request enricher because it has already completed',
               )
             ) {
               throw error;
@@ -109,7 +109,7 @@ export async function skipPreflightJobs({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -120,8 +120,8 @@ export async function skipPreflightJobs({
     colors.green(
       `Successfully skipped "${totalSkipped}" for  "${
         requests.length
-      }" requests in "${totalTime / 1000}" seconds!`
-    )
+      }" requests in "${totalTime / 1000}" seconds!`,
+    ),
   );
   return requests.length;
 }

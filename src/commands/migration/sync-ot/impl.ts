@@ -1,17 +1,17 @@
-import colors from "colors";
-import type { LocalContext } from "../../../context";
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
 import {
   OneTrustFileFormat,
   OneTrustPullResource,
   OneTrustPullSource,
-} from "../../../enums";
-import { buildTranscendGraphQLClient } from "../../../lib/graphql";
-import { createOneTrustGotInstance } from "../../../lib/oneTrust";
+} from '../../../enums';
+import { buildTranscendGraphQLClient } from '../../../lib/graphql';
+import { createOneTrustGotInstance } from '../../../lib/oneTrust';
 import {
   syncOneTrustAssessmentsFromFile,
   syncOneTrustAssessmentsFromOneTrust,
-} from "../../../lib/oneTrust/helpers";
-import { logger } from "../../../logger";
+} from '../../../lib/oneTrust/helpers';
+import { logger } from '../../../logger';
 
 // Command flag interface
 interface SyncOtCommandFlags {
@@ -39,34 +39,34 @@ export async function syncOt(
     file,
     dryRun,
     debug,
-  }: SyncOtCommandFlags
+  }: SyncOtCommandFlags,
 ): Promise<void> {
   // Must be able to authenticate to transcend to sync resources to it
   if (!dryRun && !transcendAuth) {
     throw new Error(
-      'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}'
+      'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
     );
   }
 
   // If trying to sync to disk, must specify a file path
   if (dryRun && !file) {
     throw new Error(
-      'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json'
+      'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json',
     );
   }
 
   if (file) {
-    const splitFile = file.split(".");
+    const splitFile = file.split('.');
     if (splitFile.length < 2) {
       throw new Error(
-        'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.'
+        'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.',
       );
     }
     if (splitFile.at(-1) !== OneTrustFileFormat.Json) {
       throw new Error(
         `Expected the format of the "file" parameters '${file}' to be '${
           OneTrustFileFormat.Json
-        }', but got '${splitFile.at(-1)}'.`
+        }', but got '${splitFile.at(-1)}'.`,
       );
     }
   }
@@ -76,28 +76,28 @@ export async function syncOt(
     // must specify the OneTrust hostname
     if (!hostname) {
       throw new Error(
-        'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com'
+        'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com',
       );
     }
     // must specify the OneTrust auth
     if (!oneTrustAuth) {
       throw new Error(
-        'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN'
+        'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
       );
     }
   } else {
     // if reading the assessments from a file, must specify a file to read from
     if (!file) {
       throw new Error(
-        'Must specify a "file" parameter to read the OneTrust assessments from. e.g. --source=./oneTrustAssessments.json'
+        'Must specify a "file" parameter to read the OneTrust assessments from. e.g. --source=./oneTrustAssessments.json',
       );
     }
 
     // Cannot try reading from file and save assessments to a file simultaneously
     if (dryRun) {
       throw new Error(
-        "Cannot read and write to a file simultaneously." +
-          ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`
+        'Cannot read and write to a file simultaneously.' +
+          ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`,
       );
     }
   }
@@ -134,7 +134,7 @@ export async function syncOt(
     throw new Error(
       `An error occurred syncing the resource ${resource} from OneTrust: ${
         debug ? error.stack : error.message
-      }`
+      }`,
     );
   }
 
@@ -142,8 +142,8 @@ export async function syncOt(
   logger.info(
     colors.green(
       `Successfully synced OneTrust ${resource} to ${
-        dryRun ? `disk at "${file}"` : "Transcend"
-      }!`
-    )
+        dryRun ? `disk at "${file}"` : 'Transcend'
+      }!`,
+    ),
   );
 }

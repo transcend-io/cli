@@ -1,15 +1,15 @@
-import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchAllRequests,
   makeGraphQLRequest,
   UPDATE_PRIVACY_REQUEST,
-} from "../graphql";
+} from '../graphql';
 
 /**
  * Mark a set of privacy requests to be in silent mode
@@ -61,7 +61,7 @@ export async function markSilentPrivacyRequests({
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // Pull in the requests
@@ -76,7 +76,7 @@ export async function markSilentPrivacyRequests({
 
   // Notify Transcend
   logger.info(
-    colors.magenta(`Marking "${allRequests.length}" as silent mode.`)
+    colors.magenta(`Marking "${allRequests.length}" as silent mode.`),
   );
 
   let total = 0;
@@ -94,7 +94,7 @@ export async function markSilentPrivacyRequests({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -105,8 +105,8 @@ export async function markSilentPrivacyRequests({
     colors.green(
       `Successfully marked ${total} requests as silent mode in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
   return allRequests.length;
 }

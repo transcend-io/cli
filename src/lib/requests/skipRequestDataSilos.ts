@@ -1,15 +1,15 @@
-import { RequestStatus } from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+import { RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   CHANGE_REQUEST_DATA_SILO_STATUS,
   fetchRequestDataSilos,
   makeGraphQLRequest,
-} from "../graphql";
+} from '../graphql';
 
 /**
  * Given a data silo ID, mark all open request data silos as skipped
@@ -21,7 +21,7 @@ export async function skipRequestDataSilos({
   dataSiloId,
   auth,
   concurrency = 100,
-  status = "SKIPPED",
+  status = 'SKIPPED',
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
 }: {
@@ -30,7 +30,7 @@ export async function skipRequestDataSilos({
   /** Data Silo ID to pull down jobs for */
   dataSiloId: string;
   /** Status to set */
-  status?: "SKIPPED" | "RESOLVED";
+  status?: 'SKIPPED' | 'RESOLVED';
   /** Upload concurrency */
   concurrency?: number;
   /** API URL for Transcend backend */
@@ -53,14 +53,14 @@ export async function skipRequestDataSilos({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Processing data silo: "${dataSiloId}" marking "${requestDataSilos.length}" requests as skipped.`
-    )
+      `Processing data silo: "${dataSiloId}" marking "${requestDataSilos.length}" requests as skipped.`,
+    ),
   );
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   let total = 0;
@@ -77,7 +77,7 @@ export async function skipRequestDataSilos({
           status,
         });
       } catch (error) {
-        if (!error.message.includes("Client error: Request must be active:")) {
+        if (!error.message.includes('Client error: Request must be active:')) {
           throw error;
         }
       }
@@ -85,7 +85,7 @@ export async function skipRequestDataSilos({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -96,8 +96,8 @@ export async function skipRequestDataSilos({
     colors.green(
       `Successfully skipped  "${requestDataSilos.length}" requests in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
   return requestDataSilos.length;
 }

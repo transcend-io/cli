@@ -1,19 +1,19 @@
-import { CodePackageType } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { chunk, keyBy } from "lodash-es";
-import { SoftwareDevelopmentKitInput } from "../../codecs";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
+import { CodePackageType } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy } from 'lodash-es';
+import { SoftwareDevelopmentKitInput } from '../../codecs';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,
-} from "./fetchAllSoftwareDevelopmentKits";
+} from './fetchAllSoftwareDevelopmentKits';
 import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
   UPDATE_SOFTWARE_DEVELOPMENT_KITS,
-} from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const CHUNK_SIZE = 100;
 
@@ -51,7 +51,7 @@ export async function createSoftwareDevelopmentKit(
     teamIds?: string[];
     /** Team names */
     teamNames?: string[];
-  }
+  },
 ): Promise<SoftwareDevelopmentKit> {
   const {
     createSoftwareDevelopmentKit: { softwareDevelopmentKit },
@@ -66,8 +66,8 @@ export async function createSoftwareDevelopmentKit(
   });
   logger.info(
     colors.green(
-      `Successfully created software development kit "${input.name}"!`
-    )
+      `Successfully created software development kit "${input.name}"!`,
+    ),
   );
   return softwareDevelopmentKit;
 }
@@ -106,7 +106,7 @@ export async function updateSoftwareDevelopmentKits(
     teamIds?: string[];
     /** Team names */
     teamNames?: string[];
-  }[]
+  }[],
 ): Promise<SoftwareDevelopmentKit[]> {
   const {
     updateSoftwareDevelopmentKits: { softwareDevelopmentKits },
@@ -123,8 +123,8 @@ export async function updateSoftwareDevelopmentKits(
   });
   logger.info(
     colors.green(
-      `Successfully updated ${inputs.length} software development kits!`
-    )
+      `Successfully updated ${inputs.length} software development kits!`,
+    ),
   );
   return softwareDevelopmentKits;
 }
@@ -140,7 +140,7 @@ export async function updateSoftwareDevelopmentKits(
 export async function syncSoftwareDevelopmentKits(
   client: GraphQLClient,
   softwareDevelopmentKits: SoftwareDevelopmentKitInput[],
-  concurrency = 20
+  concurrency = 20,
 ): Promise<{
   /** The SDKs that were upserted */
   softwareDevelopmentKits: SoftwareDevelopmentKit[];
@@ -149,13 +149,13 @@ export async function syncSoftwareDevelopmentKits(
 }> {
   let encounteredError = false;
   const sdks: SoftwareDevelopmentKit[] = [];
-  logger.info(colors.magenta("Syncing software development kits..."));
+  logger.info(colors.magenta('Syncing software development kits...'));
 
   // Index existing software development kits
   const existing = await fetchAllSoftwareDevelopmentKits(client);
   const softwareDevelopmentKitByTitle = keyBy(
     existing,
-    ({ name, codePackageType }) => JSON.stringify({ name, codePackageType })
+    ({ name, codePackageType }) => JSON.stringify({ name, codePackageType }),
   );
 
   // Determine which software development kits are new vs existing
@@ -168,7 +168,7 @@ export async function syncSoftwareDevelopmentKits(
           codePackageType: sdkInput.codePackageType,
         })
       ]?.id,
-    ]
+    ],
   );
 
   // Create the new software development kits
@@ -178,8 +178,8 @@ export async function syncSoftwareDevelopmentKits(
   try {
     logger.info(
       colors.magenta(
-        `Creating "${newSoftwareDevelopmentKits.length}" new software development kits...`
-      )
+        `Creating "${newSoftwareDevelopmentKits.length}" new software development kits...`,
+      ),
     );
     await map(
       newSoftwareDevelopmentKits,
@@ -189,32 +189,32 @@ export async function syncSoftwareDevelopmentKits(
       },
       {
         concurrency,
-      }
+      },
     );
     logger.info(
       colors.green(
-        `Successfully synced ${newSoftwareDevelopmentKits.length} software development kits!`
-      )
+        `Successfully synced ${newSoftwareDevelopmentKits.length} software development kits!`,
+      ),
     );
   } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to create software development kits! - ${error.message}`
-      )
+        `Failed to create software development kits! - ${error.message}`,
+      ),
     );
   }
 
   // Update existing software development kits
   const existingSoftwareDevelopmentKits =
     mapSoftwareDevelopmentKitsToExisting.filter(
-      (x): x is [SoftwareDevelopmentKitInput, string] => !!x[1]
+      (x): x is [SoftwareDevelopmentKitInput, string] => !!x[1],
     );
   const chunks = chunk(existingSoftwareDevelopmentKits, CHUNK_SIZE);
   logger.info(
     colors.magenta(
-      `Updating "${existingSoftwareDevelopmentKits.length}" software development kits...`
-    )
+      `Updating "${existingSoftwareDevelopmentKits.length}" software development kits...`,
+    ),
   );
 
   await mapSeries(chunks, async (chunk) => {
@@ -225,27 +225,27 @@ export async function syncSoftwareDevelopmentKits(
         chunk.map(([{ codePackageType, ...input }, id]) => ({
           ...input,
           id,
-        }))
+        })),
       );
       sdks.push(...updatedSdks);
       logger.info(
         colors.green(
-          `Successfully updated "${existingSoftwareDevelopmentKits.length}" software development kits!`
-        )
+          `Successfully updated "${existingSoftwareDevelopmentKits.length}" software development kits!`,
+        ),
       );
     } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to update software development kits! - ${error.message}`
-        )
+          `Failed to update software development kits! - ${error.message}`,
+        ),
       );
     }
 
     logger.info(
       colors.green(
-        `Synced "${softwareDevelopmentKits.length}" software development kits!`
-      )
+        `Synced "${softwareDevelopmentKits.length}" software development kits!`,
+      ),
     );
   });
 

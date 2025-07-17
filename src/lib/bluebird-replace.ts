@@ -7,7 +7,7 @@
  */
 export async function mapSeries<R, U>(
   array: R[],
-  iterator: (item: R, index: number, arrayLength: number) => Promise<U>
+  iterator: (item: R, index: number, arrayLength: number) => Promise<U>,
 ): Promise<U[]> {
   const results = [];
   for (let index = 0; index < array.length; index += 1) {
@@ -30,7 +30,7 @@ export async function map<R, U>(
   options: {
     /** Concurrency level for the Promise.all call */
     concurrency?: number;
-  } = {}
+  } = {},
 ): Promise<U[]> {
   const { concurrency = Infinity } = options;
   const results: U[] = Array.from({ length: array.length });
@@ -46,7 +46,7 @@ export async function map<R, U>(
     const promise = iterator(
       array[currentIndex],
       currentIndex,
-      array.length
+      array.length,
     ).then((result) => {
       results[currentIndex] = result;
     });

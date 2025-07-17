@@ -1,8 +1,8 @@
-import { GraphQLClient } from "graphql-request";
-import { IdentifierInput } from "../../codecs";
-import type { DataSubject } from "./fetchDataSubjects";
-import { UPDATE_IDENTIFIER } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { GraphQLClient } from 'graphql-request';
+import { IdentifierInput } from '../../codecs';
+import type { DataSubject } from './fetchDataSubjects';
+import { UPDATE_IDENTIFIER } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Sync the consent manager
@@ -26,7 +26,7 @@ export async function syncIdentifier(
     identifierId: string;
     /** When true, skip publishing to privacy center */
     skipPublish?: boolean;
-  }
+  },
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_IDENTIFIER, {
     input: {

@@ -3,13 +3,13 @@ import {
   IsoCountrySubdivisionCode,
   RequestAction,
   RequestStatus,
-} from "@transcend-io/privacy-types";
-import { decodeCodec, valuesOf } from "@transcend-io/type-utils";
-import type { Got } from "got";
-import * as t from "io-ts";
-import { uniq } from "lodash-es";
-import { PrivacyRequestInput } from "./mapCsvRowsToRequestInputs";
-import { ParsedAttributeInput } from "./parseAttributesFromString";
+} from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { uniq } from 'lodash-es';
+import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
+import { ParsedAttributeInput } from './parseAttributesFromString';
 
 export const PrivacyRequestResponse = t.type({
   id: t.string,
@@ -27,7 +27,7 @@ export const PrivacyRequestResponse = t.type({
     t.type({
       attributeKey: t.type({ name: t.string }),
       name: t.string,
-    })
+    }),
   ),
 });
 
@@ -46,7 +46,7 @@ export async function submitPrivacyRequest(
   sombra: Got,
   input: PrivacyRequestInput,
   {
-    details = "",
+    details = '',
     isTest = false,
     emailIsVerified = true,
     skipSendingReceipt = false,
@@ -65,14 +65,14 @@ export async function submitPrivacyRequest(
     details?: string;
     /** Additional attributes to tag the requests with */
     additionalAttributes?: ParsedAttributeInput[];
-  } = {}
+  } = {},
 ): Promise<PrivacyRequestResponse> {
   // Merge the per-request attributes with the
   // global attributes
   const mergedAttributes = [...additionalAttributes];
   for (const attribute of input.attributes || []) {
     const existing = mergedAttributes.find(
-      (attribute_) => attribute_.key === attribute.key
+      (attribute_) => attribute_.key === attribute.key,
     );
     if (existing) {
       existing.values.push(...attribute.values);
@@ -86,7 +86,7 @@ export async function submitPrivacyRequest(
   let response: unknown;
   try {
     response = await sombra
-      .post("v1/data-subject-request", {
+      .post('v1/data-subject-request', {
         json: {
           type: input.requestType,
           subject: {
@@ -110,8 +110,8 @@ export async function submitPrivacyRequest(
                         country: input.country,
                       }
                     : input.countrySubDivision
-                    ? { country: input.countrySubDivision.split("-")[0] }
-                    : {}),
+                      ? { country: input.countrySubDivision.split('-')[0] }
+                      : {}),
                   ...(input.countrySubDivision
                     ? { countrySubDivision: input.countrySubDivision }
                     : {}),
@@ -128,7 +128,7 @@ export async function submitPrivacyRequest(
     throw new Error(
       `Received an error from server: ${
         error?.response?.body || error?.message
-      }`
+      }`,
     );
   }
 
@@ -136,7 +136,7 @@ export async function submitPrivacyRequest(
     t.type({
       request: PrivacyRequestResponse,
     }),
-    response
+    response,
   );
   return requestResponse;
 }

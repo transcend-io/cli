@@ -2,8 +2,8 @@ import {
   PreferenceQueryResponseItem,
   PreferenceStorePurposeResponse,
   PreferenceTopicType,
-} from "@transcend-io/privacy-types";
-import { PreferenceTopic } from "../graphql";
+} from '@transcend-io/privacy-types';
+import { PreferenceTopic } from '../graphql';
 
 /**
  * Check if the pending set of updates will result in a change of
@@ -22,7 +22,7 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
   /** The pending updates */
   pendingUpdates: Record<
     string,
-    Omit<PreferenceStorePurposeResponse, "purpose">
+    Omit<PreferenceStorePurposeResponse, 'purpose'>
   >;
   /** The preference topic configurations */
   preferenceTopics: PreferenceTopic[];
@@ -32,7 +32,7 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
     ([purposeName, { preferences = [], enabled }]) => {
       // Ensure the purpose exists
       const currentPurpose = currentConsentRecord.purposes.find(
-        (existingPurpose) => existingPurpose.purpose === purposeName
+        (existingPurpose) => existingPurpose.purpose === purposeName,
       );
 
       // If no purpose exists, then it is not a conflict
@@ -49,7 +49,7 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
       return !!preferences.find(({ topic, choice }) => {
         // find matching topic
         const currentPreference = (currentPurpose.preferences || []).find(
-          (existingPreference) => existingPreference.topic === topic
+          (existingPreference) => existingPreference.topic === topic,
         );
 
         // if no topic exists, no conflict
@@ -59,7 +59,7 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
 
         // Determine type of preference topic
         const preferenceTopic = preferenceTopics.find(
-          (x) => x.slug === topic && x.purpose.trackingType === purposeName
+          (x) => x.slug === topic && x.purpose.trackingType === purposeName,
         );
         if (!preferenceTopic) {
           throw new Error(`Could not find preference topic for ${topic}`);
@@ -84,17 +84,17 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
             return (
               sortedCurrentValues.length !== sortedNewValues.length ||
               !sortedCurrentValues.every(
-                (x, index) => x === sortedNewValues[index]
+                (x, index) => x === sortedNewValues[index],
               )
             );
           }
           default: {
             throw new Error(
-              `Unknown preference topic type: ${preferenceTopic.type}`
+              `Unknown preference topic type: ${preferenceTopic.type}`,
             );
           }
         }
       });
-    }
+    },
   );
 }

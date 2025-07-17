@@ -1,8 +1,8 @@
-import fs from "node:fs";
-import { OneTrustEnrichedAssessment } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { logger } from "../../../logger";
-import { oneTrustAssessmentToJson } from "./oneTrustAssessmentToJson";
+import fs from 'node:fs';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { logger } from '../../../logger';
+import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 /**
  * Write the assessment to disk at the specified file path.
@@ -29,8 +29,8 @@ export const syncOneTrustAssessmentToDisk = ({
     colors.magenta(
       `Writing enriched assessment ${
         index + 1
-      } of ${total} to file "${file}"...`
-    )
+      } of ${total} to file "${file}"...`,
+    ),
   );
 
   if (index === 0) {
@@ -41,7 +41,7 @@ export const syncOneTrustAssessmentToDisk = ({
         index,
         total,
         wrap: false,
-      })
+      }),
     );
   } else {
     fs.appendFileSync(
@@ -51,7 +51,7 @@ export const syncOneTrustAssessmentToDisk = ({
         index,
         total,
         wrap: false,
-      })
+      }),
     );
   }
 };

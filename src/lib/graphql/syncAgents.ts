@@ -1,12 +1,12 @@
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { keyBy } from "lodash-es";
-import { AgentInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { Agent, fetchAllAgents } from "./fetchAllAgents";
-import { CREATE_AGENT, UPDATE_AGENTS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { AgentInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { Agent, fetchAllAgents } from './fetchAllAgents';
+import { CREATE_AGENT, UPDATE_AGENTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new agent
@@ -17,16 +17,16 @@ import { makeGraphQLRequest } from "./makeGraphQLRequest";
  */
 export async function createAgent(
   client: GraphQLClient,
-  agent: AgentInput
-): Promise<Pick<Agent, "id" | "name" | "agentId">> {
+  agent: AgentInput,
+): Promise<Pick<Agent, 'id' | 'name' | 'agentId'>> {
   const input = {
     name: agent.name,
     description: agent.description,
     codeInterpreterEnabled: agent.codeInterpreterEnabled,
     retrievalEnabled: agent.retrievalEnabled,
     promptTitle: agent.prompt,
-    largeLanguageModelName: agent["large-language-model"].name,
-    largeLanguageModelClient: agent["large-language-model"].client,
+    largeLanguageModelName: agent['large-language-model'].name,
+    largeLanguageModelClient: agent['large-language-model'].client,
     // TODO: https://transcend.height.app/T-32760 - agentFunction, agentFile
     // TODO: https://transcend.height.app/T-31994 - owners and teams
   };
@@ -51,7 +51,7 @@ export async function createAgent(
  */
 export async function updateAgents(
   client: GraphQLClient,
-  agentIdParis: [AgentInput, string][]
+  agentIdParis: [AgentInput, string][],
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENTS, {
     input: {
@@ -76,7 +76,7 @@ export async function updateAgents(
  */
 export async function syncAgents(
   client: GraphQLClient,
-  inputs: AgentInput[]
+  inputs: AgentInput[],
 ): Promise<boolean> {
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" agents...`));
@@ -89,8 +89,8 @@ export async function syncAgents(
   // Look up by name
   const agentByName: Record<
     string,
-    Pick<Agent, "id" | "name" | "agentId">
-  > = keyBy(existingAgents, "name");
+    Pick<Agent, 'id' | 'name' | 'agentId'>
+  > = keyBy(existingAgents, 'name');
 
   // Create new agents
   const newAgents = inputs.filter((input) => !agentByName[input.name]);
@@ -104,7 +104,7 @@ export async function syncAgents(
     } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync agent "${agent.name}"! - ${error.message}`)
+        colors.red(`Failed to sync agent "${agent.name}"! - ${error.message}`),
       );
     }
   });
@@ -114,15 +114,15 @@ export async function syncAgents(
     logger.info(colors.magenta(`Updating "${inputs.length}" agents!`));
     await updateAgents(
       client,
-      inputs.map((input) => [input, agentByName[input.name].id])
+      inputs.map((input) => [input, agentByName[input.name].id]),
     );
     logger.info(colors.green(`Successfully synced "${inputs.length}" agents!`));
   } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" agents ! - ${error.message}`
-      )
+        `Failed to sync "${inputs.length}" agents ! - ${error.message}`,
+      ),
     );
   }
 

@@ -1,11 +1,11 @@
 import {
   PreferenceStorePurposeResponse,
   PreferenceTopicType,
-} from "@transcend-io/privacy-types";
-import { apply } from "@transcend-io/type-utils";
-import { PreferenceTopic } from "../graphql";
-import { splitCsvToList } from "../requests";
-import { PurposeRowMapping } from "./codecs";
+} from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
+import { PreferenceTopic } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { PurposeRowMapping } from './codecs';
 
 /**
  * Parse an arbitrary object to the Transcend PUT /v1/preference update shape
@@ -42,7 +42,7 @@ export function getPreferenceUpdatesFromRow({
   purposeSlugs: string[];
   /** The preference topics */
   preferenceTopics: PreferenceTopic[];
-}): Record<string, Omit<PreferenceStorePurposeResponse, "purpose">> {
+}): Record<string, Omit<PreferenceStorePurposeResponse, 'purpose'>> {
   // Create a result object to store the parsed preferences
   const result: Record<string, Partial<PreferenceStorePurposeResponse>> = {};
 
@@ -54,14 +54,14 @@ export function getPreferenceUpdatesFromRow({
     // Ensure the purpose is valid
     if (!purposeSlugs.includes(purpose)) {
       throw new Error(
-        `Invalid purpose slug: ${purpose}, expected: ${purposeSlugs.join(", ")}`
+        `Invalid purpose slug: ${purpose}, expected: ${purposeSlugs.join(', ')}`,
       );
     }
 
     // CHeck if parsing a preference or just the top level purpose
     if (preference) {
       const preferenceTopic = preferenceTopics.find(
-        (x) => x.slug === preference && x.purpose.trackingType === purpose
+        (x) => x.slug === preference && x.purpose.trackingType === purpose,
       );
       if (!preferenceTopic) {
         const allowedTopics = preferenceTopics
@@ -70,8 +70,8 @@ export function getPreferenceUpdatesFromRow({
         throw new Error(
           `Invalid preference slug: ${preference} for purpose: ${purpose}. ` +
             `Allowed preference slugs for purpose are: ${allowedTopics.join(
-              ","
-            )}`
+              ',',
+            )}`,
         );
       }
 
@@ -89,14 +89,14 @@ export function getPreferenceUpdatesFromRow({
       const rawValue = row[columnName];
       const rawMapping = valueMapping[rawValue];
       const trimmedMapping =
-        typeof rawMapping === "string" ? rawMapping.trim() || null : null;
+        typeof rawMapping === 'string' ? rawMapping.trim() || null : null;
 
       // handle each type of preference
       switch (preferenceTopic.type) {
         case PreferenceTopicType.Boolean: {
-          if (typeof rawMapping !== "boolean") {
+          if (typeof rawMapping !== 'boolean') {
             throw new TypeError(
-              `Invalid value for boolean preference: ${preference}, expected boolean, got: ${rawValue}`
+              `Invalid value for boolean preference: ${preference}, expected boolean, got: ${rawValue}`,
             );
           }
           result[purpose].preferences.push({
@@ -108,9 +108,9 @@ export function getPreferenceUpdatesFromRow({
           break;
         }
         case PreferenceTopicType.Select: {
-          if (typeof rawMapping !== "string" && rawMapping !== null) {
+          if (typeof rawMapping !== 'string' && rawMapping !== null) {
             throw new Error(
-              `Invalid value for select preference: ${preference}, expected string or null, got: ${rawValue}`
+              `Invalid value for select preference: ${preference}, expected string or null, got: ${rawValue}`,
             );
           }
 
@@ -124,7 +124,7 @@ export function getPreferenceUpdatesFromRow({
               `Invalid value for select preference: ${preference}, expected one of: ` +
                 `${preferenceTopic.preferenceOptionValues
                   .map(({ slug }) => slug)
-                  .join(", ")}, got: ${rawValue}`
+                  .join(', ')}, got: ${rawValue}`,
             );
           }
 
@@ -138,9 +138,9 @@ export function getPreferenceUpdatesFromRow({
           break;
         }
         case PreferenceTopicType.MultiSelect: {
-          if (typeof rawValue !== "string") {
+          if (typeof rawValue !== 'string') {
             throw new TypeError(
-              `Invalid value for multi select preference: ${preference}, expected string, got: ${rawValue}`
+              `Invalid value for multi select preference: ${preference}, expected string, got: ${rawValue}`,
             );
           }
           // Update preferences
@@ -150,12 +150,12 @@ export function getPreferenceUpdatesFromRow({
               selectValues: splitCsvToList(rawValue)
                 .map((value) => {
                   const result = valueMapping[value];
-                  if (typeof result !== "string") {
+                  if (typeof result !== 'string') {
                     throw new TypeError(
                       `Invalid value for multi select preference: ${preference}, ` +
                         `expected one of: ${preferenceTopic.preferenceOptionValues
                           .map(({ slug }) => slug)
-                          .join(", ")}, got: ${value}`
+                          .join(', ')}, got: ${value}`,
                     );
                   }
                   return result;
@@ -182,9 +182,9 @@ export function getPreferenceUpdatesFromRow({
 
   // Ensure that enabled is provided
   return apply(result, (x, purposeName) => {
-    if (typeof x.enabled !== "boolean") {
+    if (typeof x.enabled !== 'boolean') {
       throw new TypeError(
-        `No mapping provided for purpose.enabled=true/false value: ${purposeName}`
+        `No mapping provided for purpose.enabled=true/false value: ${purposeName}`,
       );
     }
     return {

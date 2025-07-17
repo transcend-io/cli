@@ -2,8 +2,8 @@ import {
   PreferenceQueryResponseItem,
   PreferenceStorePurposeResponse,
   PreferenceTopicType,
-} from "@transcend-io/privacy-types";
-import { PreferenceTopic } from "../graphql";
+} from '@transcend-io/privacy-types';
+import { PreferenceTopic } from '../graphql';
 
 /**
  * Check if the pending set of updates are exactly the same as the current consent record.
@@ -21,7 +21,7 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
   /** The pending updates */
   pendingUpdates: Record<
     string,
-    Omit<PreferenceStorePurposeResponse, "purpose">
+    Omit<PreferenceStorePurposeResponse, 'purpose'>
   >;
   /** The preference topic configurations */
   preferenceTopics: PreferenceTopic[];
@@ -31,7 +31,7 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
     ([purposeName, { preferences = [], enabled }]) => {
       // Ensure the purpose exists
       const currentPurpose = currentConsentRecord.purposes.find(
-        (existingPurpose) => existingPurpose.purpose === purposeName
+        (existingPurpose) => existingPurpose.purpose === purposeName,
       );
 
       // Ensure purpose.enabled is in sync
@@ -53,7 +53,7 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
 
           // Determine type of preference topic
           const preferenceTopic = preferenceTopics.find(
-            (x) => x.slug === topic && x.purpose.trackingType === purposeName
+            (x) => x.slug === topic && x.purpose.trackingType === purposeName,
           );
           if (!preferenceTopic) {
             throw new Error(`Could not find preference topic for ${topic}`);
@@ -80,18 +80,18 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
               return (
                 sortedCurrentValues.length === sortedNewValues.length &&
                 sortedCurrentValues.every(
-                  (x, index) => x === sortedNewValues[index]
+                  (x, index) => x === sortedNewValues[index],
                 )
               );
             }
             default: {
               throw new Error(
-                `Unknown preference topic type: ${preferenceTopic.type}`
+                `Unknown preference topic type: ${preferenceTopic.type}`,
               );
             }
           }
-        })
+        }),
       );
-    }
+    },
   );
 }

@@ -1,17 +1,17 @@
-import fs, { existsSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
-import colors from "colors";
-import { ADMIN_DASH_INTEGRATIONS } from "../../../constants";
-import type { LocalContext } from "../../../context";
-import { validateTranscendAuth } from "../../../lib/api-keys";
-import { mapSeries } from "../../../lib/bluebird-replace";
-import { pullConsentManagerMetrics } from "../../../lib/consent-manager";
-import { writeCsv } from "../../../lib/cron";
+import fs, { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import colors from 'colors';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { validateTranscendAuth } from '../../../lib/api-keys';
+import { mapSeries } from '../../../lib/bluebird-replace';
+import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
+import { writeCsv } from '../../../lib/cron';
 import {
   buildTranscendGraphQLClient,
   ConsentManagerMetricBin,
-} from "../../../lib/graphql";
-import { logger } from "../../../logger";
+} from '../../../lib/graphql';
+import { logger } from '../../../logger';
 
 interface PullConsentMetricsCommandFlags {
   auth: string;
@@ -31,7 +31,7 @@ export async function pullConsentMetrics(
     folder,
     bin,
     transcendUrl,
-  }: PullConsentMetricsCommandFlags
+  }: PullConsentMetricsCommandFlags,
 ): Promise<void> {
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -40,8 +40,8 @@ export async function pullConsentMetrics(
   if (fs.existsSync(folder) && !fs.lstatSync(folder).isDirectory()) {
     logger.error(
       colors.red(
-        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"'
-      )
+        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
+      ),
     );
     process.exit(1);
   }
@@ -53,9 +53,9 @@ export async function pullConsentMetrics(
       colors.red(
         `Failed to parse argument "bin" with value "${bin}"\n` +
           `Expected one of: \n${Object.values(ConsentManagerMetricBin).join(
-            "\n"
-          )}`
-      )
+            '\n',
+          )}`,
+      ),
     );
     process.exit(1);
   }
@@ -66,16 +66,16 @@ export async function pullConsentMetrics(
   if (Number.isNaN(startDate.getTime())) {
     logger.error(
       colors.red(
-        `Start date provided is invalid date. Got --start="${start}" expected --start="01/01/2023"`
-      )
+        `Start date provided is invalid date. Got --start="${start}" expected --start="01/01/2023"`,
+      ),
     );
     process.exit(1);
   }
   if (Number.isNaN(endDate.getTime())) {
     logger.error(
       colors.red(
-        `End date provided is invalid date. Got --end="${end}" expected --end="01/01/2023"`
-      )
+        `End date provided is invalid date. Got --end="${end}" expected --end="01/01/2023"`,
+      ),
     );
     process.exit(1);
   }
@@ -83,8 +83,8 @@ export async function pullConsentMetrics(
     logger.error(
       colors.red(
         `Got a start date "${startDate.toISOString()}" that was larger than the end date "${endDate.toISOString()}". ` +
-          "Start date must be before end date."
-      )
+          'Start date must be before end date.',
+      ),
     );
     process.exit(1);
   }
@@ -96,12 +96,12 @@ export async function pullConsentMetrics(
 
   logger.info(
     colors.magenta(
-      `Pulling consent metrics from start=${startDate.toString()} to end=${endDate.toISOString()} with bin size "${bin}"`
-    )
+      `Pulling consent metrics from start=${startDate.toString()} to end=${endDate.toISOString()} with bin size "${bin}"`,
+    ),
   );
 
   // Sync to Disk
-  if (typeof apiKeyOrList === "string") {
+  if (typeof apiKeyOrList === 'string') {
     try {
       // Create a GraphQL client
       const client = buildTranscendGraphQLClient(transcendUrl, apiKeyOrList);
@@ -118,20 +118,20 @@ export async function pullConsentMetrics(
         for (const { points, name } of metrics) {
           const file = join(folder, `${metricName}_${name}.csv`);
           logger.info(
-            colors.magenta(`Writing configuration to file "${file}"...`)
+            colors.magenta(`Writing configuration to file "${file}"...`),
           );
           writeCsv(
             file,
             points.map(({ key, value }) => ({
               timestamp: key,
               value,
-            }))
+            })),
           );
         }
       }
     } catch (error) {
       logger.error(
-        colors.red(`An error occurred syncing the schema: ${error.message}`)
+        colors.red(`An error occurred syncing the schema: ${error.message}`),
       );
       process.exit(1);
     }
@@ -139,8 +139,8 @@ export async function pullConsentMetrics(
     // Indicate success
     logger.info(
       colors.green(
-        `Successfully synced consent metrics to disk in folder "${folder}"! View at ${ADMIN_DASH_INTEGRATIONS}`
-      )
+        `Successfully synced consent metrics to disk in folder "${folder}"! View at ${ADMIN_DASH_INTEGRATIONS}`,
+      ),
     );
   } else {
     const encounteredErrors: string[] = [];
@@ -150,8 +150,8 @@ export async function pullConsentMetrics(
       }] `;
       logger.info(
         colors.magenta(
-          `~~~\n\n${prefix}Attempting to pull consent metrics...\n\n~~~`
-        )
+          `~~~\n\n${prefix}Attempting to pull consent metrics...\n\n~~~`,
+        ),
       );
 
       // Create a GraphQL client
@@ -175,20 +175,20 @@ export async function pullConsentMetrics(
           for (const { points, name } of metrics) {
             const file = join(subFolder, `${metricName}_${name}.csv`);
             logger.info(
-              colors.magenta(`Writing configuration to file "${file}"...`)
+              colors.magenta(`Writing configuration to file "${file}"...`),
             );
             writeCsv(
               file,
               points.map(({ key, value }) => ({
                 timestamp: key,
                 value,
-              }))
+              })),
             );
           }
         }
 
         logger.info(
-          colors.green(`${prefix}Successfully pulled configuration!`)
+          colors.green(`${prefix}Successfully pulled configuration!`),
         );
       } catch {
         logger.error(colors.red(`${prefix}Failed to sync configuration.`));
@@ -200,9 +200,9 @@ export async function pullConsentMetrics(
       logger.info(
         colors.red(
           `Sync encountered errors for "${encounteredErrors.join(
-            ","
-          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`
-        )
+            ',',
+          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
       );
 
       process.exit(1);

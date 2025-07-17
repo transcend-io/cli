@@ -1,20 +1,20 @@
-import { ConsentPreferencesBody } from "@transcend-io/airgap.js-types";
-import { decodeCodec } from "@transcend-io/type-utils";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import * as t from "io-ts";
-import { DEFAULT_TRANSCEND_CONSENT_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
-import { createTranscendConsentGotInstance } from "../graphql";
-import { createConsentToken } from "./createConsentToken";
-import type { ConsentPreferenceUpload } from "./types";
+import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import * as t from 'io-ts';
+import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { createTranscendConsentGotInstance } from '../graphql';
+import { createConsentToken } from './createConsentToken';
+import type { ConsentPreferenceUpload } from './types';
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
 
 export const PurposeMap = t.record(
   t.string,
-  t.union([t.boolean, t.literal("Auto")])
+  t.union([t.boolean, t.literal('Auto')]),
 );
 
 /**
@@ -48,15 +48,15 @@ export async function uploadConsents({
 
   // Ensure usp strings are valid
   const invalidUspStrings = preferences.filter(
-    (pref) => pref.usp && !USP_STRING_REGEX.test(pref.usp)
+    (pref) => pref.usp && !USP_STRING_REGEX.test(pref.usp),
   );
   if (invalidUspStrings.length > 0) {
     throw new Error(
       `Received invalid usp strings: ${JSON.stringify(
         invalidUspStrings,
         null,
-        2
-      )}`
+        2,
+      )}`,
     );
   }
 
@@ -79,29 +79,29 @@ export async function uploadConsents({
       `Received invalid purpose maps: ${JSON.stringify(
         invalidPurposeMaps,
         null,
-        2
-      )}`
+        2,
+      )}`,
     );
   }
 
   // Ensure usp or preferences are provided
   const invalidInputs = preferences.filter(
-    (pref) => !pref.usp && !pref.purposes
+    (pref) => !pref.usp && !pref.purposes,
   );
   if (invalidInputs.length > 0) {
     throw new Error(
       `Received invalid inputs, expected either purposes or usp to be defined: ${JSON.stringify(
         invalidInputs,
         null,
-        2
-      )}`
+        2,
+      )}`,
     );
   }
 
   logger.info(
     colors.magenta(
-      `Uploading ${preferences.length} user preferences to partition ${partition}`
-    )
+      `Uploading ${preferences.length} user preferences to partition ${partition}`,
+    ),
   );
 
   // Time duration
@@ -109,7 +109,7 @@ export async function uploadConsents({
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // Build a GraphQL client
@@ -119,7 +119,7 @@ export async function uploadConsents({
     preferences,
     async ({
       userId,
-      confirmed = "true",
+      confirmed = 'true',
       updated,
       prompted,
       purposes,
@@ -128,7 +128,7 @@ export async function uploadConsents({
       const token = createConsentToken(
         userId,
         base64EncryptionKey,
-        base64SigningKey
+        base64SigningKey,
       );
 
       // parse usp string
@@ -140,14 +140,14 @@ export async function uploadConsents({
         token,
         partition,
         consent: {
-          confirmed: confirmed === "true",
+          confirmed: confirmed === 'true',
           purposes: purposes
             ? decodeCodec(PurposeMap, purposes)
             : consent.usp
-            ? { SaleOfInfo: saleStatus === "Y" }
-            : {},
-          ...(updated ? { updated: updated === "true" } : {}),
-          ...(prompted ? { prompted: prompted === "true" } : {}),
+              ? { SaleOfInfo: saleStatus === 'Y' }
+              : {},
+          ...(updated ? { updated: updated === 'true' } : {}),
+          ...(prompted ? { prompted: prompted === 'true' } : {}),
           ...consent,
         },
       } as ConsentPreferencesBody;
@@ -155,13 +155,13 @@ export async function uploadConsents({
       // Make the request
       try {
         await transcendConsentApi
-          .post("sync", {
+          .post('sync', {
             json: input,
           })
           .json();
       } catch (error) {
         try {
-          const parsed = JSON.parse(error?.response?.body || "{}");
+          const parsed = JSON.parse(error?.response?.body || '{}');
           if (parsed.error) {
             logger.error(colors.red(`Error: ${parsed.error}`));
           }
@@ -171,14 +171,14 @@ export async function uploadConsents({
         throw new Error(
           `Received an error from server: ${
             error?.response?.body || error?.message
-          }`
+          }`,
         );
       }
 
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -191,7 +191,7 @@ export async function uploadConsents({
         preferences.length
       } user preferences to partition ${partition} in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
 }

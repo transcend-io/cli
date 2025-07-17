@@ -1,19 +1,19 @@
-import { LanguageKey } from "@transcend-io/internationalization";
+import { LanguageKey } from '@transcend-io/internationalization';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   RequestAction,
   RequestOrigin,
   RequestStatus,
-} from "@transcend-io/privacy-types";
-import { valuesOf } from "@transcend-io/type-utils";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import * as t from "io-ts";
-import { logger } from "../../logger";
-import { REQUESTS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from '@transcend-io/privacy-types';
+import { valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import * as t from 'io-ts';
+import { logger } from '../../logger';
+import { REQUESTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export const PrivacyRequest = t.intersection([
   t.type({
@@ -53,7 +53,7 @@ export const PrivacyRequest = t.intersection([
         id: t.string,
         attributeKey: t.type({ name: t.string, id: t.string }),
         name: t.string,
-      })
+      }),
     ),
   }),
   t.partial({
@@ -111,15 +111,15 @@ export async function fetchAllRequests(
      * at runtime while other filters are applied at the GraphQL level.
      */
     requestIds?: string[];
-  } = {}
+  } = {},
 ): Promise<PrivacyRequest[]> {
-  logger.info(colors.magenta("Fetching requests..."));
+  logger.info(colors.magenta('Fetching requests...'));
 
   // create a new progress bar instance and use shades_classic theme
   const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // read in requests
@@ -178,20 +178,20 @@ export async function fetchAllRequests(
     colors.green(
       `Completed fetching of ${requests.length} request in "${
         totalTime / 1000
-      }" seconds.`
-    )
+      }" seconds.`,
+    ),
   );
 
   // Filter down requests by request ID
   let allRequests = requests;
   if (requestIds && requestIds.length > 0) {
     allRequests = allRequests.filter((request) =>
-      requestIds.includes(request.id)
+      requestIds.includes(request.id),
     );
     logger.info(
       colors.green(
-        `Filtered down to ${allRequests.length} requests based on ${requestIds.length} provided IDs.`
-      )
+        `Filtered down to ${allRequests.length} requests based on ${requestIds.length} provided IDs.`,
+      ),
     );
   }
 

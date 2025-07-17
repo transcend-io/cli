@@ -1,6 +1,6 @@
-import { GraphQLClient } from "graphql-request";
-import { ASSUME_ROLE, DETERMINE_LOGIN_METHOD, LOGIN } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { GraphQLClient } from 'graphql-request';
+import { ASSUME_ROLE, DETERMINE_LOGIN_METHOD, LOGIN } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface OrganizationPreview {
   /** Name of organization */
@@ -37,7 +37,7 @@ export async function loginUser(
     email: string;
     /** Password of user */
     password: string;
-  }
+  },
 ): Promise<{
   /** Cookie to be used to make subsequent requests */
   loginCookie: string;
@@ -80,9 +80,9 @@ export async function loginUser(
   } = res.data;
 
   // Get login cookie from response
-  const loginCookie = res.headers.get("set-cookie");
-  if (!loginCookie?.includes("laravel")) {
-    throw new Error("Failed to get login cookie in response");
+  const loginCookie = res.headers.get('set-cookie');
+  if (!loginCookie?.includes('laravel')) {
+    throw new Error('Failed to get login cookie in response');
   }
 
   return {
@@ -107,7 +107,7 @@ export async function assumeRole(
     email: string;
     /** Role of user assuming into */
     roleId: string;
-  }
+  },
 ): Promise<void> {
   const {
     determineLoginMethod: { loginMethod },

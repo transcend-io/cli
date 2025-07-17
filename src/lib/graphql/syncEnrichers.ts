@@ -4,13 +4,13 @@ import {
   IsoCountrySubdivisionCode,
   PreflightRequestStatus,
   RequestAction,
-} from "@transcend-io/privacy-types";
-import { GraphQLClient } from "graphql-request";
-import { EnricherInput } from "../../codecs";
-import { DataSubject } from "./fetchDataSubjects";
-import { Identifier } from "./fetchIdentifiers";
-import { CREATE_ENRICHER, ENRICHERS, UPDATE_ENRICHER } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { EnricherInput } from '../../codecs';
+import { DataSubject } from './fetchDataSubjects';
+import { Identifier } from './fetchIdentifiers';
+import { CREATE_ENRICHER, ENRICHERS, UPDATE_ENRICHER } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Enricher {
   /** ID of enricher */
@@ -65,7 +65,7 @@ const PAGE_SIZE = 20;
  */
 export async function fetchAllEnrichers(
   client: GraphQLClient,
-  title?: string
+  title?: string,
 ): Promise<Enricher[]> {
   const enrichers: Enricher[] = [];
   let offset = 0;
@@ -113,16 +113,16 @@ export async function syncEnricher(
     identifierByName: Record<string, Identifier>;
     /** Lookup data subject by name */
     dataSubjectsByName: Record<string, DataSubject>;
-  }
+  },
 ): Promise<void> {
   // Whether to continue looping
   const matches = await fetchAllEnrichers(client, enricher.title);
   const existingEnricher = matches.find(
-    ({ title }) => title === enricher.title
+    ({ title }) => title === enricher.title,
   );
 
   // Map to data subject Ids
-  const dataSubjectIds = enricher["data-subjects"]?.map((subject) => {
+  const dataSubjectIds = enricher['data-subjects']?.map((subject) => {
     const existing = dataSubjectsByName[subject];
     if (!existing) {
       throw new Error(`Failed to find a data subject with name: ${subject}`);
@@ -131,9 +131,9 @@ export async function syncEnricher(
   });
 
   // If enricher exists, update it, else create new
-  const inputIdentifier = enricher["input-identifier"];
+  const inputIdentifier = enricher['input-identifier'];
   const actionUpdates =
-    enricher["privacy-actions"] || Object.values(RequestAction);
+    enricher['privacy-actions'] || Object.values(RequestAction);
   if (existingEnricher) {
     await makeGraphQLRequest(client, UPDATE_ENRICHER, {
       input: {
@@ -144,19 +144,19 @@ export async function syncEnricher(
         testRegex: enricher.testRegex,
         lookerQueryTitle: enricher.lookerQueryTitle,
         expirationDuration:
-          typeof enricher.expirationDuration === "number"
+          typeof enricher.expirationDuration === 'number'
             ? enricher.expirationDuration.toString()
             : undefined,
         transitionRequestStatus: enricher.transitionRequestStatus,
         phoneNumbers: enricher.phoneNumbers,
         regionList: enricher.regionList,
         dataSubjectIds,
-        description: enricher.description || "",
+        description: enricher.description || '',
         inputIdentifier: inputIdentifier
           ? identifierByName[inputIdentifier].id
           : undefined,
-        identifiers: enricher["output-identifiers"].map(
-          (id) => identifierByName[id].id
+        identifiers: enricher['output-identifiers'].map(
+          (id) => identifierByName[id].id,
         ),
         ...(existingEnricher.type === EnricherType.Sombra
           ? {}
@@ -173,17 +173,17 @@ export async function syncEnricher(
         testRegex: enricher.testRegex,
         lookerQueryTitle: enricher.lookerQueryTitle,
         expirationDuration:
-          typeof enricher.expirationDuration === "number"
+          typeof enricher.expirationDuration === 'number'
             ? enricher.expirationDuration.toString()
             : undefined,
         transitionRequestStatus: enricher.transitionRequestStatus,
         phoneNumbers: enricher.phoneNumbers,
         dataSubjectIds,
         regionList: enricher.regionList,
-        description: enricher.description || "",
+        description: enricher.description || '',
         inputIdentifier: identifierByName[inputIdentifier].id,
-        identifiers: enricher["output-identifiers"].map(
-          (id) => identifierByName[id].id
+        identifiers: enricher['output-identifiers'].map(
+          (id) => identifierByName[id].id,
         ),
         actions: actionUpdates,
       },

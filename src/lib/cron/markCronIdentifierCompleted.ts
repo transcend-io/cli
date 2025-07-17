@@ -1,5 +1,5 @@
-import type { Got } from "got";
-import * as t from "io-ts";
+import type { Got } from 'got';
+import * as t from 'io-ts';
 
 /**
  * Minimal set required to mark as completed
@@ -22,13 +22,13 @@ export type CronIdentifierPush = t.TypeOf<typeof CronIdentifierPush>;
  */
 export async function markCronIdentifierCompleted(
   sombra: Got,
-  { nonce, identifier }: CronIdentifierPush
+  { nonce, identifier }: CronIdentifierPush,
 ): Promise<boolean> {
   try {
     // Make the GraphQL request
-    await sombra.put("v1/data-silo", {
+    await sombra.put('v1/data-silo', {
       headers: {
-        "x-transcend-nonce": nonce,
+        'x-transcend-nonce': nonce,
       },
       json: {
         profiles: [
@@ -47,7 +47,7 @@ export async function markCronIdentifierCompleted(
     throw new Error(
       `Received an error from server: ${
         error?.response?.body || error?.message
-      }`
+      }`,
     );
   }
 }

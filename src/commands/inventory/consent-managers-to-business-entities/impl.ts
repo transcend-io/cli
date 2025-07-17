@@ -1,14 +1,14 @@
-import { existsSync, lstatSync } from "node:fs";
-import { join } from "node:path";
-import colors from "colors";
-import type { LocalContext } from "../../../context";
-import { listFiles } from "../../../lib/api-keys";
-import { consentManagersToBusinessEntities as consentManagersToBusinessEntitiesHelper } from "../../../lib/consent-manager";
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
+import { listFiles } from '../../../lib/api-keys';
+import { consentManagersToBusinessEntities as consentManagersToBusinessEntitiesHelper } from '../../../lib/consent-manager';
 import {
   readTranscendYaml,
   writeTranscendYaml,
-} from "../../../lib/readTranscendYaml";
-import { logger } from "../../../logger";
+} from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface ConsentManagersToBusinessEntitiesCommandFlags {
   consentManagerYmlFolder: string;
@@ -20,7 +20,7 @@ export function consentManagersToBusinessEntities(
   {
     consentManagerYmlFolder,
     output,
-  }: ConsentManagersToBusinessEntitiesCommandFlags
+  }: ConsentManagersToBusinessEntitiesCommandFlags,
 ): void {
   // Ensure folder is passed
   if (
@@ -28,15 +28,15 @@ export function consentManagersToBusinessEntities(
     !lstatSync(consentManagerYmlFolder).isDirectory()
   ) {
     logger.error(
-      colors.red(`Folder does not exist: "${consentManagerYmlFolder}"`)
+      colors.red(`Folder does not exist: "${consentManagerYmlFolder}"`),
     );
     process.exit(1);
   }
 
   // Read in each consent manager configuration
   const inputs = listFiles(consentManagerYmlFolder).map((directory) => {
-    const { "consent-manager": consentManager } = readTranscendYaml(
-      join(consentManagerYmlFolder, directory)
+    const { 'consent-manager': consentManager } = readTranscendYaml(
+      join(consentManagerYmlFolder, directory),
     );
     return { name: directory, input: consentManager };
   });
@@ -46,12 +46,12 @@ export function consentManagersToBusinessEntities(
 
   // write to disk
   writeTranscendYaml(output, {
-    "business-entities": businessEntities,
+    'business-entities': businessEntities,
   });
 
   logger.info(
     colors.green(
-      `Successfully wrote ${businessEntities.length} business entities to file "${output}"`
-    )
+      `Successfully wrote ${businessEntities.length} business entities to file "${output}"`,
+    ),
   );
 }

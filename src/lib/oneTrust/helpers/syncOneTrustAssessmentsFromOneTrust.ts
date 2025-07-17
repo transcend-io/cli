@@ -4,22 +4,22 @@ import {
   OneTrustEnrichedAssessment,
   OneTrustGetRiskResponse,
   OneTrustGetUserResponse,
-} from "@transcend-io/privacy-types";
-import colors from "colors";
-import type { Got } from "got";
-import { GraphQLClient } from "graphql-request";
-import { uniq } from "lodash-es";
-import { logger } from "../../../logger";
-import { map, mapSeries } from "../../bluebird-replace";
+} from '@transcend-io/privacy-types';
+import colors from 'colors';
+import type { Got } from 'got';
+import { GraphQLClient } from 'graphql-request';
+import { uniq } from 'lodash-es';
+import { logger } from '../../../logger';
+import { map, mapSeries } from '../../bluebird-replace';
 import {
   getListOfOneTrustAssessments,
   getOneTrustAssessment,
   getOneTrustRisk,
   getOneTrustUser,
-} from "../endpoints";
-import { enrichOneTrustAssessment } from "./enrichOneTrustAssessment";
-import { syncOneTrustAssessmentToDisk } from "./syncOneTrustAssessmentToDisk";
-import { syncOneTrustAssessmentToTranscend } from "./syncOneTrustAssessmentToTranscend";
+} from '../endpoints';
+import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
+import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
+import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
 export interface AssessmentForm {
   /** ID of Assessment Form */
@@ -49,7 +49,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
   file?: string;
 }): Promise<void> => {
   // fetch the list of all assessments in the OneTrust organization
-  logger.info("Getting list of all assessments from OneTrust...");
+  logger.info('Getting list of all assessments from OneTrust...');
   const assessments = await getListOfOneTrustAssessments({ oneTrust });
 
   // a cache of OneTrust users so we avoid requesting already fetched users
@@ -62,7 +62,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
       length: Math.ceil(assessments.length / BATCH_SIZE),
     },
     (_, index) =>
-      assessments.slice(index * BATCH_SIZE, (index + 1) * BATCH_SIZE)
+      assessments.slice(index * BATCH_SIZE, (index + 1) * BATCH_SIZE),
   );
 
   // process each batch and sync the batch right away so it's garbage collected and we don't run out of memory
@@ -75,7 +75,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
       async (assessment, index) => {
         const assessmentNumber = BATCH_SIZE * batch + index + 1;
         logger.info(
-          `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`
+          `[assessment ${assessmentNumber} of ${assessments.length}]: fetching details...`,
         );
         const { templateName, assessmentId } = assessment;
         const assessmentDetails = await getOneTrustAssessment({
@@ -87,7 +87,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
         let creator = oneTrustCachedUsers[creatorId];
         if (!creator) {
           logger.info(
-            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching creator...`
+            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching creator...`,
           );
           try {
             creator = await getOneTrustUser({
@@ -99,8 +99,8 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
             logger.warn(
               colors.yellow(
                 `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch form creator.` +
-                  `\tcreatorId: ${creatorId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`
-              )
+                  `\tcreatorId: ${creatorId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+              ),
             );
           }
         }
@@ -110,7 +110,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
         let approversDetails: OneTrustGetUserResponse[][] = [];
         if (approvers.length > 0) {
           logger.info(
-            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching approvers...`
+            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching approvers...`,
           );
           approversDetails = await map(
             approvers.map(({ id }) => id),
@@ -126,13 +126,13 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                 logger.warn(
                   colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a form approver.` +
-                      `\tapproverId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`
-                  )
+                      `\tapproverId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+                  ),
                 );
                 return [];
               }
             },
-            { concurrency: 5 }
+            { concurrency: 5 },
           );
         }
 
@@ -140,12 +140,12 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
         const { respondents } = assessmentDetails;
         // if a user is an internal respondents, their 'name' field can't be an email.
         const internalRespondents = respondents.filter(
-          (r) => !r.name.includes("@")
+          (r) => !r.name.includes('@'),
         );
         let respondentsDetails: OneTrustGetUserResponse[][] = [];
         if (internalRespondents.length > 0) {
           logger.info(
-            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching respondents...`
+            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching respondents...`,
           );
           respondentsDetails = await map(
             internalRespondents.map(({ id }) => id),
@@ -161,13 +161,13 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                 logger.warn(
                   colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a respondent.` +
-                      `\trespondentId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`
-                  )
+                      `\trespondentId: ${userId}. Assessment Title: ${assessment.name}. Template Title: ${templateName}`,
+                  ),
                 );
                 return [];
               }
             },
-            { concurrency: 5 }
+            { concurrency: 5 },
           );
         }
 
@@ -176,20 +176,20 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
         const riskIds = uniq(
           assessmentDetails.sections.flatMap((s: OneTrustAssessmentSection) =>
             s.questions.flatMap((q: OneTrustAssessmentQuestion) =>
-              (q.risks ?? []).flatMap((r) => r.riskId)
-            )
-          )
+              (q.risks ?? []).flatMap((r) => r.riskId),
+            ),
+          ),
         );
         if (riskIds.length > 0) {
           logger.info(
-            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching risks...`
+            `[assessment ${assessmentNumber} of ${assessments.length}]: fetching risks...`,
           );
           riskDetails = await map(
             riskIds,
             (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId }),
             {
               concurrency: 5,
-            }
+            },
           );
         }
 
@@ -205,7 +205,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
 
         batchEnrichedAssessments.push(enrichedAssessment);
       },
-      { concurrency: BATCH_SIZE }
+      { concurrency: BATCH_SIZE },
     );
 
     // sync assessments in series to avoid concurrency bugs
@@ -232,7 +232,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
             index: globalIndex,
           });
         }
-      }
+      },
     );
   });
 };

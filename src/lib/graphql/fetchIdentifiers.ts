@@ -1,12 +1,12 @@
-import { IdentifierType, RequestAction } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { difference, flatten, keyBy, uniq } from "lodash-es";
-import { TranscendInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { IdentifierType, RequestAction } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, flatten, keyBy, uniq } from 'lodash-es';
+import { TranscendInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Identifier {
   /** ID of identifier */
@@ -53,7 +53,7 @@ const PAGE_SIZE = 20;
  * @returns All identifiers in the organization
  */
 export async function fetchAllIdentifiers(
-  client: GraphQLClient
+  client: GraphQLClient,
 ): Promise<Identifier[]> {
   const identifiers: Identifier[] = [];
   let offset = 0;
@@ -93,38 +93,40 @@ export async function fetchAllIdentifiers(
 export async function fetchIdentifiersAndCreateMissing(
   {
     enrichers = [],
-    "data-silos": dataSilos = [],
+    'data-silos': dataSilos = [],
     identifiers = [],
   }: TranscendInput,
   client: GraphQLClient,
-  skipPublish = false
+  skipPublish = false,
 ): Promise<Record<string, Identifier>> {
   // Grab all existing identifiers
   const allIdentifiers = await fetchAllIdentifiers(client);
 
   // Create a map
-  const identifiersByName = keyBy(allIdentifiers, "name");
+  const identifiersByName = keyBy(allIdentifiers, 'name');
 
   // Determine expected set of identifiers
   const expectedIdentifiers = uniq([
     ...flatten(
       enrichers.map((enricher) => [
-        enricher["input-identifier"],
-        ...enricher["output-identifiers"],
-      ])
+        enricher['input-identifier'],
+        ...enricher['output-identifiers'],
+      ]),
     ),
-    ...flatten(dataSilos.map((dataSilo) => dataSilo["identity-keys"])),
+    ...flatten(dataSilos.map((dataSilo) => dataSilo['identity-keys'])),
     ...identifiers.map(({ name }) => name),
   ]).filter((x) => !!x);
   const missingIdentifiers = difference(
     expectedIdentifiers,
-    allIdentifiers.map(({ name }) => name)
+    allIdentifiers.map(({ name }) => name),
   );
 
   // If there are missing identifiers, create new ones
   if (missingIdentifiers.length > 0) {
     logger.info(
-      colors.magenta(`Creating ${missingIdentifiers.length} new identifiers...`)
+      colors.magenta(
+        `Creating ${missingIdentifiers.length} new identifiers...`,
+      ),
     );
     const { newIdentifierTypes } = await makeGraphQLRequest<{
       /** Query response */
@@ -134,7 +136,7 @@ export async function fetchIdentifiersAndCreateMissing(
       }[];
     }>(client, NEW_IDENTIFIER_TYPES);
     const nativeTypesRemaining = new Set(
-      newIdentifierTypes.map(({ name }) => name)
+      newIdentifierTypes.map(({ name }) => name),
     );
     await mapSeries(missingIdentifiers, async (identifier) => {
       logger.info(colors.magenta(`Creating identifier ${identifier}...`));
@@ -147,7 +149,7 @@ export async function fetchIdentifiersAndCreateMissing(
       }>(client, CREATE_IDENTIFIER, {
         input: {
           name: identifier,
-          type: nativeTypesRemaining.has(identifier!) ? identifier : "custom",
+          type: nativeTypesRemaining.has(identifier!) ? identifier : 'custom',
           skipPublish,
         },
       });

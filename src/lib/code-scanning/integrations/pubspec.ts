@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
-import { dirname } from "node:path";
-import { CodePackageType } from "@transcend-io/privacy-types";
-import yaml from "js-yaml";
-import { CodeScanningConfig } from "../types";
+import { readFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { CodePackageType } from '@transcend-io/privacy-types';
+import yaml from 'js-yaml';
+import { CodeScanningConfig } from '../types';
 
 /**
  * Remove YAML comments from a string
@@ -12,10 +12,10 @@ import { CodeScanningConfig } from "../types";
  */
 function removeYAMLComments(yamlString: string): string {
   return yamlString
-    .split("\n")
+    .split('\n')
     .map((line) => {
       // Remove inline comments
-      const commentIndex = line.indexOf("#");
+      const commentIndex = line.indexOf('#');
       if (
         commentIndex !== -1 && // Check if '#' is not inside a string
         !line.slice(0, Math.max(0, commentIndex)).includes('"') &&
@@ -26,15 +26,15 @@ function removeYAMLComments(yamlString: string): string {
       return line;
     })
     .filter((line) => line.length > 0)
-    .join("\n");
+    .join('\n');
 }
 
 export const pubspec: CodeScanningConfig = {
-  supportedFiles: ["pubspec.yml"],
-  ignoreDirs: ["build"],
+  supportedFiles: ['pubspec.yml'],
+  ignoreDirs: ['build'],
   scanFunction: (filePath) => {
     const directory = dirname(filePath);
-    const fileContents = readFileSync(filePath, "utf-8");
+    const fileContents = readFileSync(filePath, 'utf-8');
     const {
       name,
       description,
@@ -52,30 +52,30 @@ export const pubspec: CodeScanningConfig = {
     };
     return [
       {
-        name: name || directory.split("/").pop()!,
+        name: name || directory.split('/').pop()!,
         description,
         type: CodePackageType.RequirementsTxt,
         softwareDevelopmentKits: [
           ...Object.entries(dependencies).map(([name, version]) => ({
             name,
             version:
-              typeof version === "string"
+              typeof version === 'string'
                 ? version
-                : typeof version === "number"
-                ? version.toString()
-                : version?.sdk,
+                : typeof version === 'number'
+                  ? version.toString()
+                  : version?.sdk,
           })),
           ...Object.entries(development_dependencies).map(
             ([name, version]) => ({
               name,
               version:
-                typeof version === "string"
+                typeof version === 'string'
                   ? version
-                  : typeof version === "number"
-                  ? version.toString()
-                  : version?.sdk,
+                  : typeof version === 'number'
+                    ? version.toString()
+                    : version?.sdk,
               isDevDependency: true,
-            })
+            }),
           ),
         ],
       },

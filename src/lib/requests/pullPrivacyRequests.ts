@@ -1,9 +1,9 @@
-import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { groupBy } from "lodash-es";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { groupBy } from 'lodash-es';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
@@ -11,7 +11,7 @@ import {
   fetchAllRequests,
   PrivacyRequest,
   RequestIdentifier,
-} from "../graphql";
+} from '../graphql';
 
 export interface ExportedPrivacyRequest extends PrivacyRequest {
   /** Request identifiers */
@@ -67,13 +67,13 @@ export async function pullPrivacyRequests({
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
   // Log date range
-  let dateRange = "";
+  let dateRange = '';
   if (createdAtBefore) {
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
     dateRange += `${
-      dateRange ? ", and" : ""
+      dateRange ? ', and' : ''
     } after ${createdAtAfter.toISOString()}`;
   }
 
@@ -83,9 +83,9 @@ export async function pullPrivacyRequests({
       `${
         actions.length > 0
           ? `Pulling requests of type "${actions.join('" , "')}"`
-          : "Pulling all requests"
-      }${dateRange}`
-    )
+          : 'Pulling all requests'
+      }${dateRange}`,
+    ),
   );
 
   // fetch the requests
@@ -107,7 +107,7 @@ export async function pullPrivacyRequests({
         sombra,
         {
           requestId: request.id,
-        }
+        },
       );
       return {
         ...request,
@@ -116,11 +116,11 @@ export async function pullPrivacyRequests({
     },
     {
       concurrency: pageLimit,
-    }
+    },
   );
 
   logger.info(
-    colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`)
+    colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),
   );
 
   // Write out to CSV
@@ -144,32 +144,35 @@ export async function pullPrivacyRequests({
       coreIdentifier,
       ...request
     }) => ({
-      "Request ID": id,
-      "Created At": createdAt,
+      'Request ID': id,
+      'Created At': createdAt,
       Email: email,
-      "Core Identifier": coreIdentifier,
-      "Request Type": type,
-      "Data Subject Type": subjectType,
+      'Core Identifier': coreIdentifier,
+      'Request Type': type,
+      'Data Subject Type': subjectType,
       Status: status,
       Country: country,
-      "Country Sub Division": countrySubDivision,
+      'Country Sub Division': countrySubDivision,
       Details: details,
       Origin: origin,
-      "Silent Mode": isSilent,
-      "Is Test Request": isTest,
+      'Silent Mode': isSilent,
+      'Is Test Request': isTest,
       Language: locale,
       ...request,
       ...Object.fromEntries(
-        Object.entries(groupBy(attributeValues, "attributeKey.name")).map(
-          ([name, values]) => [name, values.map(({ name }) => name).join(",")]
-        )
+        Object.entries(groupBy(attributeValues, 'attributeKey.name')).map(
+          ([name, values]) => [name, values.map(({ name }) => name).join(',')],
+        ),
       ),
       ...Object.fromEntries(
-        Object.entries(groupBy(requestIdentifiers, "name")).map(
-          ([name, values]) => [name, values.map(({ value }) => value).join(",")]
-        )
+        Object.entries(groupBy(requestIdentifiers, 'name')).map(
+          ([name, values]) => [
+            name,
+            values.map(({ value }) => value).join(','),
+          ],
+        ),
       ),
-    })
+    }),
   );
 
   return { requestsWithRequestIdentifiers, requestsFormattedForCsv: data };

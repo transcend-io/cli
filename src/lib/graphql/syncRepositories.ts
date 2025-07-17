@@ -1,12 +1,12 @@
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { chunk, keyBy } from "lodash-es";
-import { RepositoryInput } from "../../codecs";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
-import { fetchAllRepositories, Repository } from "./fetchAllRepositories";
-import { CREATE_REPOSITORY, UPDATE_REPOSITORIES } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy } from 'lodash-es';
+import { RepositoryInput } from '../../codecs';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { fetchAllRepositories, Repository } from './fetchAllRepositories';
+import { CREATE_REPOSITORY, UPDATE_REPOSITORIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const CHUNK_SIZE = 100;
 
@@ -34,7 +34,7 @@ export async function createRepository(
     teamIds?: string[];
     /** Team names */
     teamNames?: string[];
-  }
+  },
 ): Promise<Repository> {
   const {
     createRepository: { repository },
@@ -77,7 +77,7 @@ export async function updateRepositories(
     teamIds?: string[];
     /** Team names */
     teamNames?: string[];
-  }[]
+  }[],
 ): Promise<Repository[]> {
   const {
     updateRepositories: { repositories },
@@ -93,7 +93,7 @@ export async function updateRepositories(
     },
   });
   logger.info(
-    colors.green(`Successfully updated ${inputs.length} repositories!`)
+    colors.green(`Successfully updated ${inputs.length} repositories!`),
   );
   return repositories;
 }
@@ -109,7 +109,7 @@ export async function updateRepositories(
 export async function syncRepositories(
   client: GraphQLClient,
   repositories: RepositoryInput[],
-  concurrency = 20
+  concurrency = 20,
 ): Promise<{
   /** The repositories that were upserted */
   repositories: Repository[];
@@ -121,7 +121,7 @@ export async function syncRepositories(
 
   // Index existing repositories
   const existing = await fetchAllRepositories(client);
-  const repositoryByName = keyBy(existing, "name");
+  const repositoryByName = keyBy(existing, 'name');
 
   // Determine which repositories are new vs existing
   const mapRepositoriesToExisting = repositories.map((repoInput) => [
@@ -135,7 +135,9 @@ export async function syncRepositories(
     .map(([repoInput]) => repoInput as RepositoryInput);
   try {
     logger.info(
-      colors.magenta(`Creating "${newRepositories.length}" new repositories...`)
+      colors.magenta(
+        `Creating "${newRepositories.length}" new repositories...`,
+      ),
     );
     await map(
       newRepositories,
@@ -145,27 +147,27 @@ export async function syncRepositories(
       },
       {
         concurrency,
-      }
+      },
     );
     logger.info(
       colors.green(
-        `Successfully synced ${newRepositories.length} repositories!`
-      )
+        `Successfully synced ${newRepositories.length} repositories!`,
+      ),
     );
   } catch (error) {
     encounteredError = true;
     logger.info(
-      colors.red(`Failed to create repositories! - ${error.message}`)
+      colors.red(`Failed to create repositories! - ${error.message}`),
     );
   }
 
   // Update existing repositories
   const existingRepositories = mapRepositoriesToExisting.filter(
-    (x): x is [RepositoryInput, string] => !!x[1]
+    (x): x is [RepositoryInput, string] => !!x[1],
   );
   const chunks = chunk(existingRepositories, CHUNK_SIZE);
   logger.info(
-    colors.magenta(`Updating "${existingRepositories.length}" repositories...`)
+    colors.magenta(`Updating "${existingRepositories.length}" repositories...`),
   );
 
   await mapSeries(chunks, async (chunk) => {
@@ -175,18 +177,18 @@ export async function syncRepositories(
         chunk.map(([input, id]) => ({
           ...input,
           id,
-        }))
+        })),
       );
       repos.push(...updatedRepos);
       logger.info(
         colors.green(
-          `Successfully updated "${existingRepositories.length}" repositories!`
-        )
+          `Successfully updated "${existingRepositories.length}" repositories!`,
+        ),
       );
     } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to update repositories! - ${error.message}`)
+        colors.red(`Failed to update repositories! - ${error.message}`),
       );
     }
 

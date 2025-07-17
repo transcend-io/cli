@@ -1,11 +1,11 @@
-import { readdirSync } from "node:fs";
-import { basename, join } from "node:path";
-import colors from "colors";
-import type { LocalContext } from "../../../context";
-import { map } from "../../../lib/bluebird-replace";
-import { uploadPreferenceManagementPreferencesInteractive } from "../../../lib/preference-management";
-import { splitCsvToList } from "../../../lib/requests";
-import { logger } from "../../../logger";
+import { readdirSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
+import { map } from '../../../lib/bluebird-replace';
+import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
+import { splitCsvToList } from '../../../lib/requests';
+import { logger } from '../../../logger';
 
 interface UploadPreferencesCommandFlags {
   auth: string;
@@ -33,7 +33,7 @@ export async function uploadPreferences(
     partition,
     sombraAuth,
     consentUrl,
-    file = "",
+    file = '',
     directory,
     dryRun,
     skipExistingRecordCheck,
@@ -44,13 +44,13 @@ export async function uploadPreferences(
     isSilent,
     attributes,
     concurrency,
-  }: UploadPreferencesCommandFlags
+  }: UploadPreferencesCommandFlags,
 ): Promise<void> {
   if (!!directory && !!file) {
     logger.error(
       colors.red(
-        "Cannot provide both a directory and a file. Please provide only one."
-      )
+        'Cannot provide both a directory and a file. Please provide only one.',
+      ),
     );
     process.exit(1);
   }
@@ -58,8 +58,8 @@ export async function uploadPreferences(
   if (!file && !directory) {
     logger.error(
       colors.red(
-        "A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences"
-      )
+        'A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences',
+      ),
     );
     process.exit(1);
   }
@@ -69,11 +69,11 @@ export async function uploadPreferences(
   if (directory) {
     try {
       const filesInDirectory = readdirSync(directory);
-      const csvFiles = filesInDirectory.filter((file) => file.endsWith(".csv"));
+      const csvFiles = filesInDirectory.filter((file) => file.endsWith('.csv'));
 
       if (csvFiles.length === 0) {
         logger.error(
-          colors.red(`No CSV files found in directory: ${directory}`)
+          colors.red(`No CSV files found in directory: ${directory}`),
         );
         process.exit(1);
       }
@@ -88,8 +88,8 @@ export async function uploadPreferences(
   } else {
     try {
       // Verify file exists and is a CSV
-      if (!file.endsWith(".csv")) {
-        logger.error(colors.red("File must be a CSV file"));
+      if (!file.endsWith('.csv')) {
+        logger.error(colors.red('File must be a CSV file'));
         process.exit(1);
       }
       files.push(file);
@@ -102,23 +102,23 @@ export async function uploadPreferences(
 
   logger.info(
     colors.green(
-      `Processing ${files.length} consent preferences files for partition: ${partition}`
-    )
+      `Processing ${files.length} consent preferences files for partition: ${partition}`,
+    ),
   );
-  logger.debug(`Files to process: ${files.join(", ")}`);
+  logger.debug(`Files to process: ${files.join(', ')}`);
 
   if (skipExistingRecordCheck) {
     logger.info(
       colors.bgYellow(
-        `Skipping existing record check: ${skipExistingRecordCheck}`
-      )
+        `Skipping existing record check: ${skipExistingRecordCheck}`,
+      ),
     );
   }
 
   await map(
     files,
     async (filePath) => {
-      const fileName = basename(filePath).replace(".csv", "");
+      const fileName = basename(filePath).replace('.csv', '');
       await uploadPreferenceManagementPreferencesInteractive({
         receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
         auth,
@@ -135,6 +135,6 @@ export async function uploadPreferences(
         forceTriggerWorkflows,
       });
     },
-    { concurrency }
+    { concurrency },
   );
 }

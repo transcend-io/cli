@@ -1,22 +1,22 @@
-import { ConsentTrackerStatus } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { DataFlowCsvInput, DataFlowInput } from "../../codecs";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { buildTranscendGraphQLClient, syncDataFlows } from "../graphql";
-import { splitCsvToList } from "../requests";
-import { readCsv } from "../requests/readCsv";
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { DataFlowCsvInput, DataFlowInput } from '../../codecs';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { readCsv } from '../requests/readCsv';
 
 const OMIT_COLUMNS = new Set([
-  "ID",
-  "Activity",
-  "Encounters",
-  "Last Seen At",
-  "Has Native Do Not Sell/Share Support",
-  "IAB USP API Support",
-  "Service Description",
-  "Website URL",
-  "Categories of Recipients",
+  'ID',
+  'Activity',
+  'Encounters',
+  'Last Seen At',
+  'Has Native Do Not Sell/Share Support',
+  'IAB USP API Support',
+  'Service Description',
+  'Website URL',
+  'Categories of Recipients',
 ]);
 
 /**
@@ -61,7 +61,7 @@ export async function uploadDataFlowsFromCsv({
       Status,
       Owners,
       Teams,
-      "Connections Made To": value,
+      'Connections Made To': value,
       ...rest
     }): DataFlowInput => ({
       value,
@@ -84,22 +84,22 @@ export async function uploadDataFlowsFromCsv({
           key,
           values: splitCsvToList(value),
         })),
-    })
+    }),
   );
 
   // Upload the data flows into Transcend dashboard
   const syncedDataFlows = await syncDataFlows(
     client,
     validatedDataFlowInputs,
-    classifyService
+    classifyService,
   );
 
   // Log errors
   if (!syncedDataFlows) {
     logger.error(
       colors.red(
-        "Encountered error(s) syncing data flows from CSV, see logs above for more info. "
-      )
+        'Encountered error(s) syncing data flows from CSV, see logs above for more info. ',
+      ),
     );
     process.exit(1);
   }
