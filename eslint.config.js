@@ -32,6 +32,7 @@ const eslintConfig = tseslint.config(
         },
       ],
       'unicorn/no-nested-ternary': 'off',
+      'unicorn/no-null': 'off',
     },
   },
   {
