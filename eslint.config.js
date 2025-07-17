@@ -28,7 +28,7 @@ const eslintConfig = tseslint.config(
       'unicorn/filename-case': [
         'error',
         {
-          case: 'kebabCase',
+          case: 'camelCase',
         },
       ],
       'unicorn/no-nested-ternary': 'off',
