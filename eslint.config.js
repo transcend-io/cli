@@ -28,7 +28,11 @@ const eslintConfig = tseslint.config(
       'unicorn/filename-case': [
         'error',
         {
-          case: 'camelCase',
+          cases: {
+            camelCase: true,
+            // (for classes only)
+            pascalCase: true,
+          },
         },
       ],
       'unicorn/no-nested-ternary': 'off',
