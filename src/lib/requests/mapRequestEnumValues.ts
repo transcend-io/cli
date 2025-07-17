@@ -6,7 +6,6 @@ import {
   IsoCountrySubdivisionCode,
   RequestAction,
 } from '@transcend-io/privacy-types';
-import { ObjByString } from '@transcend-io/type-utils';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
@@ -25,7 +24,7 @@ import { mapEnumValues } from './mapEnumValues';
  */
 export async function mapRequestEnumValues(
   client: GraphQLClient,
-  requests: ObjByString[],
+  requests: Record<string, string>[],
   {
     state,
     columnNameMap,
@@ -37,8 +36,14 @@ export async function mapRequestEnumValues(
   },
 ): Promise<void> {
   // Get mapped value
-  const getMappedName = (attribute: ColumnName): string =>
-    state.getValue('columnNames', attribute) || columnNameMap[attribute]!;
+  const getMappedName = (attribute: ColumnName): string => {
+    const value =
+      state.getValue('columnNames', attribute) ?? columnNameMap[attribute];
+    if (value === undefined) {
+      throw new Error(`Column name ${attribute} is not mapped`);
+    }
+    return value;
+  };
 
   // Fetch all data subjects in the organization
   const { internalSubjects } = await makeGraphQLRequest<{

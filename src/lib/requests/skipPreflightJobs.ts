@@ -52,9 +52,7 @@ export async function skipPreflightJobs({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Processing enricher: "${enricherIds.join(',')}" fetched "${
-        requests.length
-      }" in enriching status.`,
+      `Processing enricher: "${enricherIds.join(',')}" fetched "${requests.length.toLocaleString()}" in enriching status.`,
     ),
   );
 
@@ -77,11 +75,12 @@ export async function skipPreflightJobs({
       const requestEnrichersFiltered = requestEnrichers.filter(
         (enricher) =>
           enricherIds.includes(enricher.enricher.id) &&
-          ![
-            RequestEnricherStatus.Resolved,
-            RequestEnricherStatus.Skipped,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ].includes(enricher.status as any),
+          !(
+            [
+              RequestEnricherStatus.Resolved,
+              RequestEnricherStatus.Skipped,
+            ] as RequestEnricherStatus[]
+          ).includes(enricher.status),
       );
 
       // FIXME
@@ -96,6 +95,10 @@ export async function skipPreflightJobs({
             });
             totalSkipped += 1;
           } catch (error) {
+            if (!(error instanceof Error)) {
+              throw new TypeError('Unknown CLI Error', { cause: error });
+            }
+
             if (
               !error.message.includes(
                 'Client error: Cannot skip Request enricher because it has already completed',
@@ -118,9 +121,11 @@ export async function skipPreflightJobs({
 
   logger.info(
     colors.green(
-      `Successfully skipped "${totalSkipped}" for  "${
-        requests.length
-      }" requests in "${totalTime / 1000}" seconds!`,
+      `Successfully skipped "${totalSkipped.toLocaleString()}" for "${requests.length.toLocaleString()}" requests in "${(
+        totalTime / 1000
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   return requests.length;

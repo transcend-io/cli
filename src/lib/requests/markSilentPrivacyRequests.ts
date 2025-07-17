@@ -76,7 +76,9 @@ export async function markSilentPrivacyRequests({
 
   // Notify Transcend
   logger.info(
-    colors.magenta(`Marking "${allRequests.length}" as silent mode.`),
+    colors.magenta(
+      `Marking "${allRequests.length.toLocaleString()}" as silent mode.`,
+    ),
   );
 
   let total = 0;
@@ -103,9 +105,11 @@ export async function markSilentPrivacyRequests({
 
   logger.info(
     colors.green(
-      `Successfully marked ${total} requests as silent mode in "${
+      `Successfully marked ${total.toLocaleString()} requests as silent mode in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   return allRequests.length;

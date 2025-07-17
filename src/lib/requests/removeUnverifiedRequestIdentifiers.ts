@@ -98,9 +98,11 @@ export async function removeUnverifiedRequestIdentifiers({
 
   logger.info(
     colors.green(
-      `Successfully cleared out unverified identifiers "${
+      `Successfully cleared out unverified identifiers "${(
         totalTime / 1000
-      }" seconds for ${total} requests, ${processed} identifiers were cleared out!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds for ${total.toLocaleString()} requests, ${processed.toLocaleString()} identifiers were cleared out!`,
     ),
   );
   return allRequests.length;

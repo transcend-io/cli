@@ -57,9 +57,9 @@ export async function restartPrivacyRequest(
                       )
                       .map((ri) => ({
                         ...ri,
-                        type: Object.values(IdentifierType).includes(
-                          ri.name as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-                        )
+                        type: (
+                          Object.values(IdentifierType) as string[]
+                        ).includes(ri.name)
                           ? ri.name
                           : IdentifierType.Custom,
                       })),

@@ -97,9 +97,9 @@ export async function skipRequestDataSilos({
 
   logger.info(
     colors.green(
-      `Successfully skipped  "${requestDataSilos.length.toLocaleString()}" requests in "${
+      `Successfully skipped  "${requestDataSilos.length.toLocaleString()}" requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, { maximumFractionDigits: 2 })}" seconds!`,
     ),
   );
   return requestDataSilos.length;

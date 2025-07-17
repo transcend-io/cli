@@ -56,7 +56,7 @@ export async function retryRequestDataSilos({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Retrying requests for Data Silo: "${dataSiloId}", restarting "${allRequests.length}" requests.`,
+      `Retrying requests for Data Silo: "${dataSiloId}", restarting "${allRequests.length.toLocaleString()}" requests.`,
     ),
   );
 
@@ -79,6 +79,10 @@ export async function retryRequestDataSilos({
           requestDataSiloId: requestDataSilo.id,
         });
       } catch (error) {
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+
         // some requests may not have this data silo connected
         if (!error.message.includes('Failed to find RequestDataSilo')) {
           throw error;
@@ -98,9 +102,12 @@ export async function retryRequestDataSilos({
 
   logger.info(
     colors.green(
-      `Successfully notified Transcend in "${
-        totalTime / 1000
-      }" seconds for ${total} requests, ${skipped} requests were skipped because data silo was not attached to the request!`,
+      `Successfully notified Transcend in "${(totalTime / 1000).toLocaleString(
+        undefined,
+        {
+          maximumFractionDigits: 2,
+        },
+      )}" seconds for ${total.toLocaleString()} requests, ${skipped.toLocaleString()} requests were skipped because data silo was not attached to the request!`,
     ),
   );
   return allRequests.length;

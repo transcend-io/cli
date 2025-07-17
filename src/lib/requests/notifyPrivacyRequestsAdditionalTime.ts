@@ -95,7 +95,7 @@ export async function notifyPrivacyRequestsAdditionalTime({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Notifying "${allRequests.length}" that more time is needed.`,
+      `Notifying "${allRequests.length.toLocaleString()}" that more time is needed.`,
     ),
   );
 
@@ -125,9 +125,11 @@ export async function notifyPrivacyRequestsAdditionalTime({
 
   logger.info(
     colors.green(
-      `Successfully marked ${total} requests as silent mode in "${
+      `Successfully marked ${total.toLocaleString()} requests as silent mode in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   return allRequests.length;
