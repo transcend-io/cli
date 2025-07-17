@@ -14,16 +14,19 @@ const documentFiles = new fdir()
   .crawl('./src/commands')
   .sync();
 
-// For each src/commands/**/readme.ts file, create a key-value pair of the command and the exported Markdown documentation
-const additionalDocumentation: Record<string, string> = Object.fromEntries(
-  await Promise.all(
-    documentFiles.map(async (file) => {
-      const command = `transcend ${file.split('/').slice(0, -1).join(' ')}`;
-      const readme = (await import(`../src/commands/${file}`)).default;
-      return [command, readme];
-    }),
-  ),
+const entriesOfAdditionalDocumentation: [string, string][] = await Promise.all(
+  documentFiles.map(async (file) => {
+    const command = `transcend ${file.split('/').slice(0, -1).join(' ')}`;
+    const { default: readme } = (await import(`../src/commands/${file}`)) as {
+      default: string;
+    };
+    return [command, readme];
+  }),
 );
+
+// For each src/commands/**/readme.ts file, create a key-value pair of the command and the exported Markdown documentation
+const additionalDocumentation: Record<string, string> =
+  Object.fromEntries<string>(entriesOfAdditionalDocumentation);
 
 const helpTextForAllCommands = generateHelpTextForAllCommands(
   app as Application<CommandContext>,
@@ -48,7 +51,10 @@ const newReadme = readme.replaceAll(
 
 fs.writeFileSync('README.md', newReadme);
 
-execSync('doctoc README.md --title "\n## Table of Contents" --maxlevel 5', {
-  stdio: 'inherit',
-});
-execSync('prettier --write README.md', { stdio: 'inherit' });
+execSync(
+  'pnpm exec doctoc README.md --title "\n## Table of Contents" --maxlevel 5',
+  {
+    stdio: 'inherit',
+  },
+);
+execSync('pnpm exec prettier --write README.md', { stdio: 'inherit' });
