@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 
-export const ConsentPreferenceBase = t.intersection([
+const ConsentPreferenceBase = t.intersection([
   t.type({
     /** User ID */
     userId: t.string,
@@ -28,7 +28,7 @@ export const ConsentPreferenceBase = t.intersection([
 ]);
 
 /** Type override */
-export type ConsentPreferenceBase = t.TypeOf<typeof ConsentPreferenceUpload>;
+type ConsentPreferenceBase = t.TypeOf<typeof ConsentPreferenceUpload>;
 
 export const ConsentPreferenceUpload = t.intersection([
   ConsentPreferenceBase,

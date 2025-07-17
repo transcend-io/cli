@@ -1,7 +1,8 @@
 import colors from 'colors';
-import type { Got } from 'got';
+import { type Got } from 'got';
 import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
+import { isSombraError } from '../graphql';
 import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 
 /**
@@ -47,7 +48,10 @@ export async function streamPrivacyRequestFiles(
             onFileDownloaded(metadata, fileResponse);
           });
       } catch (error) {
-        if (error?.response?.body?.includes('fileMetadata#verify')) {
+        if (
+          isSombraError(error) &&
+          error.response.body.includes('fileMetadata#verify')
+        ) {
           logger.error(
             colors.red(
               `Failed to pull file for: ${metadata.fileName} (request:${requestId}) - JWT expired. ` +
@@ -58,9 +62,14 @@ export async function streamPrivacyRequestFiles(
           );
           return;
         }
+
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+
         throw new Error(
           `Received an error from server: ${
-            error?.response?.body || error?.message
+            isSombraError(error) ? error.response.body : error.message
           }`,
         );
       }

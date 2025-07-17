@@ -47,7 +47,7 @@ export async function parsePreferenceIdentifiersFromCsv(
         default:
           remainingColumnsForIdentifier.find((col) =>
             col.toLowerCase().includes('email'),
-          ) || remainingColumnsForIdentifier[0],
+          ) ?? remainingColumnsForIdentifier[0],
         choices: remainingColumnsForIdentifier,
       },
     ]);
@@ -59,9 +59,18 @@ export async function parsePreferenceIdentifiersFromCsv(
     ),
   );
 
+  if (!currentState.identifierColumn) {
+    throw new TypeError('No identifier column found');
+  }
+  if (!currentState.timestampColum) {
+    throw new TypeError('No timestamp column found');
+  }
+
+  const { identifierColumn, timestampColum } = currentState;
+
   // Validate that the identifier column is present for all rows and unique
   const identifierColumnsMissing = preferences
-    .map((pref, ind) => (pref[currentState.identifierColumn!] ? null : [ind]))
+    .map((pref, ind) => (pref[identifierColumn] ? null : [ind]))
     .filter((x): x is number[] => !!x)
     .flat();
   if (identifierColumnsMissing.length > 0) {
@@ -82,32 +91,30 @@ export async function parsePreferenceIdentifiersFromCsv(
 
     // Filter out rows missing an identifier
     const previous = preferences.length;
-    preferences = preferences.filter(
-      (pref) => pref[currentState.identifierColumn!],
-    );
+    preferences = preferences.filter((pref) => pref[identifierColumn]);
     logger.info(
       colors.yellow(
-        `Skipped ${previous - preferences.length} rows missing an identifier`,
+        `Skipped ${(previous - preferences.length).toLocaleString()} rows missing an identifier`,
       ),
     );
   }
   logger.info(
     colors.magenta(
-      `The identifier column "${currentState.identifierColumn}" is present for all rows`,
+      `The identifier column "${identifierColumn}" is present for all rows`,
     ),
   );
 
   // Validate that all identifiers are unique
-  const rowsByUserId = groupBy(preferences, currentState.identifierColumn);
+  const rowsByUserId = groupBy(preferences, identifierColumn);
   const duplicateIdentifiers = Object.entries(rowsByUserId).filter(
     ([, rows]) => rows.length > 1,
   );
   if (duplicateIdentifiers.length > 0) {
     const message = `The identifier column "${
-      currentState.identifierColumn
+      identifierColumn
     }" has duplicate values for the following rows: ${duplicateIdentifiers
       .slice(0, 10)
-      .map(([userId, rows]) => `${userId} (${rows.length})`)
+      .map(([userId, rows]) => `${userId} (${rows.length.toLocaleString()})`)
       .join('\n')}`;
     logger.warn(colors.yellow(message));
 
@@ -123,8 +130,8 @@ export async function parsePreferenceIdentifiersFromCsv(
       .map(([, rows]) => {
         const sorted = rows.sort(
           (a, b) =>
-            new Date(b[currentState.timestampColum!]).getTime() -
-            new Date(a[currentState.timestampColum!]).getTime(),
+            new Date(b[timestampColum]).getTime() -
+            new Date(a[timestampColum]).getTime(),
         );
         return sorted[0];
       })

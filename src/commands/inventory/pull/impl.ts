@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
@@ -128,7 +128,7 @@ export async function pull(
           trackerStatuses,
         });
 
-        const filePath = join(file, `${apiKey.organizationName}.yml`);
+        const filePath = path.join(file, `${apiKey.organizationName}.yml`);
         logger.info(
           colors.magenta(`Writing configuration to file "${filePath}"...`),
         );

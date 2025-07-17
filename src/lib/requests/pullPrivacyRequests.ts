@@ -120,7 +120,9 @@ export async function pullPrivacyRequests({
   );
 
   logger.info(
-    colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),
+    colors.magenta(
+      `Pulled ${requestsWithRequestIdentifiers.length.toLocaleString()} requests`,
+    ),
   );
 
   // Write out to CSV

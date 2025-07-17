@@ -1,7 +1,17 @@
-import got, { Got } from 'got';
+import got, { Got, RequestError, Response } from 'got';
 import { buildTranscendGraphQLClient } from './buildTranscendGraphQLClient';
 import { ORGANIZATION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+
+interface SombraError extends Omit<RequestError, 'response'> {
+  response: Response<string>;
+}
+
+export function isSombraError(error: unknown): error is SombraError {
+  return (
+    error instanceof RequestError && typeof error.response?.body === 'string'
+  );
+}
 
 /**
  * Instantiate an instance of got that is capable of making requests

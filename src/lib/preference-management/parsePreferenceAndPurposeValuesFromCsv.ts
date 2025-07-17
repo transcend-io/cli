@@ -6,7 +6,7 @@ import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
 import { splitCsvToList } from '../requests';
-import { FileMetadataState } from './codecs';
+import { FileMetadataState, type PurposeRowMapping } from './codecs';
 
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
@@ -59,7 +59,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     const uniqueValues = uniq(preferences.map((x) => x[col]));
 
     // Map the column to a purpose
-    let purposeMapping = currentState.columnToPurposeName[col];
+    let purposeMapping = currentState.columnToPurposeName[col] as
+      | PurposeRowMapping
+      | undefined;
     if (purposeMapping) {
       logger.info(
         colors.magenta(
@@ -164,7 +166,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           return;
         }
 
-        if (preferenceTopic.type === PreferenceTopicType.MultiSelect) {
+        if (
+          (preferenceTopic.type as string) === PreferenceTopicType.MultiSelect
+        ) {
           const parsedValues = splitCsvToList(value);
           // need to do this serially
           await mapSeries(parsedValues, async (parsedValue) => {

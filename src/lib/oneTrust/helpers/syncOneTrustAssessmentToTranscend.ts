@@ -9,7 +9,7 @@ import {
 } from '../../graphql';
 import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
-export interface AssessmentForm {
+interface AssessmentForm {
   /** ID of Assessment Form */
   id: string;
   /** Title of Assessment Form */

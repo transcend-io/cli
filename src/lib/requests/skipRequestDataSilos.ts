@@ -53,7 +53,7 @@ export async function skipRequestDataSilos({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Processing data silo: "${dataSiloId}" marking "${requestDataSilos.length}" requests as skipped.`,
+      `Processing data silo: "${dataSiloId}" marking "${requestDataSilos.length.toLocaleString()}" requests as skipped.`,
     ),
   );
 
@@ -77,7 +77,10 @@ export async function skipRequestDataSilos({
           status,
         });
       } catch (error) {
-        if (!error.message.includes('Client error: Request must be active:')) {
+        if (
+          !(error instanceof Error) ||
+          !error.message.includes('Client error: Request must be active:')
+        ) {
           throw error;
         }
       }
@@ -94,9 +97,9 @@ export async function skipRequestDataSilos({
 
   logger.info(
     colors.green(
-      `Successfully skipped  "${requestDataSilos.length}" requests in "${
+      `Successfully skipped  "${requestDataSilos.length.toLocaleString()}" requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, { maximumFractionDigits: 2 })}" seconds!`,
     ),
   );
   return requestDataSilos.length;

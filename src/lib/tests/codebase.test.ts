@@ -75,7 +75,10 @@ async function checkExport(
       .relative(process.cwd(), filePath)
       .replaceAll('\\', '/');
 
-    const module = await import(`../../../${relativePath}`);
+    const module = (await import(`../../../${relativePath}`)) as Record<
+      string,
+      unknown
+    >;
 
     return exportName in module && module[exportName] !== undefined;
   } catch {

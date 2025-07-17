@@ -40,7 +40,7 @@ export async function scanPackages(
         `cd ${scanPath} && git config --get remote.origin.url`,
       );
       // Trim and parse the URL
-      const url = name.toString('utf-8').trim();
+      const url = name.toString('utf8').trim();
       [gitRepositoryName] = url.includes('https:')
         ? url.split('/').slice(3).join('/').split('.')
         : (url.split(':').pop() || '').split('.');

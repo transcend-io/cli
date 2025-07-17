@@ -70,7 +70,11 @@ export async function approvePrivacyRequests({
   });
 
   // Notify Transcend
-  logger.info(colors.magenta(`Approving "${allRequests.length}" requests.`));
+  logger.info(
+    colors.magenta(
+      `Approving "${allRequests.length.toLocaleString()}" requests.`,
+    ),
+  );
 
   let total = 0;
   let skipped = 0;
@@ -98,7 +102,10 @@ export async function approvePrivacyRequests({
           input: { requestId: requestToApprove.id },
         });
       } catch (error) {
-        if (error.message.includes('Request must be in an approving state,')) {
+        if (
+          error instanceof Error &&
+          error.message.includes('Request must be in an approving state,')
+        ) {
           skipped += 1;
         }
       }
@@ -113,13 +120,17 @@ export async function approvePrivacyRequests({
   const t1 = Date.now();
   const totalTime = t1 - t0;
   if (skipped > 0) {
-    logger.info(colors.yellow(`${skipped} requests were skipped.`));
+    logger.info(
+      colors.yellow(`${skipped.toLocaleString()} requests were skipped.`),
+    );
   }
   logger.info(
     colors.green(
-      `Successfully approved ${total} requests in "${
+      `Successfully approved ${total.toLocaleString()} requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   return allRequests.length;

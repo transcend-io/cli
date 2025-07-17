@@ -15,16 +15,17 @@ import * as t from 'io-ts';
 export function readCsv<T extends t.Any>(
   pathToFile: string,
   codec: T,
-  options: Options = { columns: true },
+  options: Options = { columns: true } as Options,
 ): t.TypeOf<T>[] {
   // read file contents and parse
-  const fileContent = parse(readFileSync(pathToFile, 'utf-8'), options);
+  const fileContent: unknown = parse(readFileSync(pathToFile, 'utf8'), options);
 
   // validate codec
   const data = decodeCodec(t.array(codec), fileContent);
 
   // remove any special characters from object keys
   const parsed = data.map((datum) =>
+    // eslint-disable-next-line unicorn/no-array-reduce
     Object.entries(datum).reduce(
       (accumulator, [key, value]) =>
         Object.assign(accumulator, {

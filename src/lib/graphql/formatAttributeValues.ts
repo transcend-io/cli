@@ -1,6 +1,6 @@
 import type { DataSiloAttributeValue } from './syncDataSilos';
 
-export interface FormattedAttribute {
+interface FormattedAttribute {
   /** Attribute key */
   key: string;
   /** Attribute values */

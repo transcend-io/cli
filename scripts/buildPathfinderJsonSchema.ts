@@ -13,7 +13,7 @@
  */
 
 import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import { toJsonSchema } from '@transcend-io/type-utils';
 import { PathfinderPolicy } from '../src/codecs';
 
@@ -30,6 +30,9 @@ const jsonSchema = {
   ...toJsonSchema(PathfinderPolicy, true),
 };
 
-const schemaFilePath = join(process.cwd(), 'pathfinder-policy-yml-schema.json');
+const schemaFilePath = path.join(
+  process.cwd(),
+  'pathfinder-policy-yml-schema.json',
+);
 
-writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, null, 2)}\n`);
+writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, undefined, 2)}\n`);

@@ -8,6 +8,7 @@ import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
+import { isSombraError } from '../graphql';
 import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 import { ParsedAttributeInput } from './parseAttributesFromString';
 
@@ -70,7 +71,7 @@ export async function submitPrivacyRequest(
   // Merge the per-request attributes with the
   // global attributes
   const mergedAttributes = [...additionalAttributes];
-  for (const attribute of input.attributes || []) {
+  for (const attribute of input.attributes ?? []) {
     const existing = mergedAttributes.find(
       (attribute_) => attribute_.key === attribute.key,
     );
@@ -125,9 +126,13 @@ export async function submitPrivacyRequest(
       })
       .json();
   } catch (error) {
+    if (!(error instanceof Error)) {
+      throw new TypeError('Unknown CLI Error', { cause: error });
+    }
+
     throw new Error(
       `Received an error from server: ${
-        error?.response?.body || error?.message
+        isSombraError(error) ? error.response.body : error.message
       }`,
     );
   }

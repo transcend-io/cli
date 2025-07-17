@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { listFiles } from '../../api-keys';
@@ -15,15 +15,13 @@ export const gemfile: CodeScanningConfig = {
   supportedFiles: ['Gemfile'],
   ignoreDirs: ['bin'],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
-    const directory = dirname(filePath);
+    const fileContents = readFileSync(filePath, 'utf8');
+    const directory = path.dirname(filePath);
     const filesInFolder = listFiles(directory);
 
     // parse gemspec file for name
     const gemspec = filesInFolder.find((file) => file === '.gemspec');
-    const gemspecContents = gemspec
-      ? readFileSync(gemspec, 'utf-8')
-      : undefined;
+    const gemspecContents = gemspec ? readFileSync(gemspec, 'utf8') : undefined;
     const gemfileName = gemspecContents
       ? (GEMFILE_PACKAGE_NAME_REGEX.exec(gemspecContents) || [])[2]
       : undefined;

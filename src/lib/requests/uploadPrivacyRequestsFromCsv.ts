@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import path from 'node:path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
@@ -11,6 +11,7 @@ import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestAttributeKeys,
+  isSombraError,
 } from '../graphql';
 import { CachedFileState, CachedRequestState } from './constants';
 import { extractClientError } from './extractClientError';
@@ -106,11 +107,10 @@ export async function uploadPrivacyRequestsFromCsv({
   });
 
   // Create a new state file to store the requests from this run
-  const requestCacheFile = join(
+  const filenameWithoutExtension = path.basename(file, path.extname(file));
+  const requestCacheFile = path.join(
     requestReceiptFolder,
-    `tr-request-upload-${new Date().toISOString()}-${file
-      .split('/')
-      .pop()}`.replace('.csv', '.json'),
+    `tr-request-upload-${new Date().toISOString()}-${filenameWithoutExtension}.json`,
   );
   const requestState = new PersistedState(
     requestCacheFile,
@@ -190,12 +190,12 @@ export async function uploadPrivacyRequestsFromCsv({
       // The identifier to log, only include personal data if debug mode is on
       const requestLogId = debug
         ? `email:${requestInput.email} | coreIdentifier:${requestInput.coreIdentifier}`
-        : `row:${ind.toString()}`;
+        : `row:${ind.toLocaleString()}`;
 
       if (debug) {
         logger.info(
           colors.magenta(
-            `[${ind + 1}/${requestInputs.length}] Importing: ${JSON.stringify(
+            `[${(ind + 1).toLocaleString()}/${requestInputs.length.toLocaleString()}] Importing: ${JSON.stringify(
               requestInput,
               null,
               2,
@@ -235,14 +235,12 @@ export async function uploadPrivacyRequestsFromCsv({
         if (debug) {
           logger.info(
             colors.green(
-              `[${ind + 1}/${
-                requestInputs.length
-              }] Successfully submitted the test data subject request: "${requestLogId}"`,
+              `[${(ind + 1).toLocaleString()}/${requestInputs.length.toLocaleString()}] Successfully submitted the test data subject request: "${requestLogId}"`,
             ),
           );
           logger.info(
             colors.green(
-              `[${ind + 1}/${requestInputs.length}] View it at: "${
+              `[${(ind + 1).toLocaleString()}/${requestInputs.length.toLocaleString()}] View it at: "${
                 requestResponse.link
               }"`,
             ),
@@ -260,11 +258,14 @@ export async function uploadPrivacyRequestsFromCsv({
         });
         await requestState.setValue(successfulRequests, 'successfulRequests');
       } catch (error) {
-        const message = `${error.message} - ${JSON.stringify(
-          error.response?.body,
-          null,
-          2,
-        )}`;
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+        const message = `${error.message} - ${
+          isSombraError(error)
+            ? JSON.stringify(error.response.body, null, 2)
+            : ''
+        }`;
         const clientError = extractClientError(message);
 
         if (
@@ -273,9 +274,7 @@ export async function uploadPrivacyRequestsFromCsv({
           if (debug) {
             logger.info(
               colors.yellow(
-                `[${ind + 1}/${
-                  requestInputs.length
-                }] Skipping request as it is a duplicate`,
+                `[${(ind + 1).toLocaleString()}/${requestInputs.length.toLocaleString()}] Skipping request as it is a duplicate`,
               ),
             );
           }
@@ -291,17 +290,17 @@ export async function uploadPrivacyRequestsFromCsv({
           failingRequests.push({
             ...requestInput,
             rowIndex: ind,
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             error: clientError || message,
             attemptedAt: new Date().toISOString(),
           });
           await requestState.setValue(failingRequests, 'failingRequests');
           if (debug) {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             logger.error(colors.red(clientError || message));
             logger.error(
               colors.red(
-                `[${ind + 1}/${
-                  requestInputs.length
-                }] Failed to submit request for: "${requestLogId}"`,
+                `[${(ind + 1).toLocaleString()}/${requestInputs.length.toLocaleString()}] Failed to submit request for: "${requestLogId}"`,
               ),
             );
           }
@@ -324,16 +323,20 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Log completion time
   logger.info(
-    colors.green(`Completed upload in "${totalTime / 1000}" seconds.`),
+    colors.green(
+      `Completed upload in "${(totalTime / 1000).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds.`,
+    ),
   );
 
   // Log duplicates
   if (requestState.getValue('duplicateRequests').length > 0) {
     logger.info(
       colors.yellow(
-        `Encountered "${
-          requestState.getValue('duplicateRequests').length
-        }" duplicate requests. ` +
+        `Encountered "${requestState
+          .getValue('duplicateRequests')
+          .length.toLocaleString()}" duplicate requests. ` +
           `See "${requestCacheFile}" to review the core identifiers for these requests.`,
       ),
     );
@@ -341,14 +344,11 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Log errors
   if (requestState.getValue('failingRequests').length > 0) {
-    logger.error(
-      colors.red(
-        `Encountered "${
-          requestState.getValue('failingRequests').length
-        }" errors. ` +
-          `See "${requestCacheFile}" to review the error messages and inputs.`,
-      ),
+    throw new Error(
+      `Encountered "${requestState
+        .getValue('failingRequests')
+        .length.toLocaleString()}" errors. ` +
+        `See "${requestCacheFile}" to review the error messages and inputs.`,
     );
-    process.exit(1);
   }
 }

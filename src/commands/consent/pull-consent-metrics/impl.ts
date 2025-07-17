@@ -1,5 +1,5 @@
 import fs, { existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import type { LocalContext } from '../../../context';
@@ -116,7 +116,7 @@ export async function pullConsentMetrics(
       // Write to file
       for (const [metricName, metrics] of Object.entries(configuration)) {
         for (const { points, name } of metrics) {
-          const file = join(folder, `${metricName}_${name}.csv`);
+          const file = path.join(folder, `${metricName}_${name}.csv`);
           logger.info(
             colors.magenta(`Writing configuration to file "${file}"...`),
           );
@@ -165,7 +165,7 @@ export async function pullConsentMetrics(
         });
 
         // ensure folder exists for that organization
-        const subFolder = join(folder, apiKey.organizationName);
+        const subFolder = path.join(folder, apiKey.organizationName);
         if (!existsSync(subFolder)) {
           mkdirSync(subFolder);
         }
@@ -173,7 +173,7 @@ export async function pullConsentMetrics(
         // Write to file
         for (const [metricName, metrics] of Object.entries(configuration)) {
           for (const { points, name } of metrics) {
-            const file = join(subFolder, `${metricName}_${name}.csv`);
+            const file = path.join(subFolder, `${metricName}_${name}.csv`);
             logger.info(
               colors.magenta(`Writing configuration to file "${file}"...`),
             );

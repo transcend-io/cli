@@ -1,4 +1,5 @@
 import { PersistedState } from '@transcend-io/persisted-state';
+import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import type { Got } from 'got';
 import * as t from 'io-ts';
@@ -67,7 +68,7 @@ export async function parsePreferenceManagementCsvWithCache(
     pendingConflictUpdates: {},
     skippedUpdates: {},
     // Load in the last fetched time
-    ...((fileMetadata[file] || {}) as Partial<FileMetadataState>),
+    ...((fileMetadata[file] ?? {}) as Partial<FileMetadataState>),
     lastFetchedAt: new Date().toISOString(),
   };
 
@@ -103,10 +104,14 @@ export async function parsePreferenceManagementCsvWithCache(
   fileMetadata[file] = currentState;
   await cache.setValue(fileMetadata, 'fileMetadata');
 
+  if (!currentState.identifierColumn) {
+    throw new TypeError('No identifier column found');
+  }
+
+  const { identifierColumn } = currentState;
+
   // Grab existing preference store records
-  const identifiers = preferences.map(
-    (pref) => pref[currentState.identifierColumn!],
-  );
+  const identifiers = preferences.map((pref) => pref[identifierColumn]);
   const existingConsentRecords = skipExistingRecordCheck
     ? []
     : await getPreferencesForIdentifiers(sombra, {
@@ -123,7 +128,7 @@ export async function parsePreferenceManagementCsvWithCache(
   // Process each row
   for (const pref of preferences) {
     // Grab unique Id for the user
-    const userId = pref[currentState.identifierColumn!];
+    const userId = pref[identifierColumn];
 
     // determine updates for user
     const pendingUpdates = getPreferenceUpdatesFromRow({
@@ -134,7 +139,9 @@ export async function parsePreferenceManagementCsvWithCache(
     });
 
     // Grab current state of the update
-    const currentConsentRecord = consentRecordByIdentifier[userId];
+    const currentConsentRecord = consentRecordByIdentifier[userId] as
+      | PreferenceQueryResponseItem
+      | undefined;
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
         `No existing consent record found for user with id: ${userId}. 
@@ -183,7 +190,12 @@ export async function parsePreferenceManagementCsvWithCache(
   const t1 = Date.now();
   logger.info(
     colors.green(
-      `Successfully pre-processed file: "${file}" in ${(t1 - t0) / 1000}s`,
+      `Successfully pre-processed file: "${file}" in ${(
+        (t1 - t0) /
+        1000
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}s`,
     ),
   );
 }

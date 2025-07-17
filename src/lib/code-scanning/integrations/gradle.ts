@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { CodeScanningConfig } from '../types';
 
@@ -28,8 +28,8 @@ export const gradle: CodeScanningConfig = {
     'gradle-wrapper.properties',
   ],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
-    const directory = dirname(filePath);
+    const fileContents = readFileSync(filePath, 'utf8');
+    const directory = path.dirname(filePath);
 
     const targets = findAllWithRegex(
       {

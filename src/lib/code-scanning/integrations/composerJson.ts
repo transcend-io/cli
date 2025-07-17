@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { CodePackageSdk } from '../../../codecs';
 import { CodeScanningConfig } from '../types';
 
@@ -7,8 +7,8 @@ export const composerJson: CodeScanningConfig = {
   supportedFiles: ['composer.json'],
   ignoreDirs: ['vendor', 'node_modules', 'cache', 'build', 'dist'],
   scanFunction: (filePath) => {
-    const file = readFileSync(filePath, 'utf-8');
-    const directory = dirname(filePath);
+    const file = readFileSync(filePath, 'utf8');
+    const directory = path.dirname(filePath);
     const asJson = JSON.parse(file);
     const {
       name,

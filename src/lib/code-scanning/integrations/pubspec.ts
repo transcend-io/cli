@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import yaml from 'js-yaml';
 import { CodeScanningConfig } from '../types';
@@ -33,8 +33,8 @@ export const pubspec: CodeScanningConfig = {
   supportedFiles: ['pubspec.yml'],
   ignoreDirs: ['build'],
   scanFunction: (filePath) => {
-    const directory = dirname(filePath);
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const directory = path.dirname(filePath);
+    const fileContents = readFileSync(filePath, 'utf8');
     const {
       name,
       description,

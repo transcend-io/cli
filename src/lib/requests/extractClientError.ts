@@ -7,5 +7,7 @@ const CLIENT_ERROR = /{\\"message\\":\\"(.+?)\\",/;
  * @returns Client error or null
  */
 export function extractClientError(error: string): string | null {
-  return CLIENT_ERROR.test(error) ? CLIENT_ERROR.exec(error)![1] : null;
+  return CLIENT_ERROR.test(error)
+    ? (CLIENT_ERROR.exec(error)?.[1] ?? null)
+    : null;
 }

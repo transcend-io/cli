@@ -1,8 +1,9 @@
 import colors from 'colors';
-import type { Got } from 'got';
+import { type Got } from 'got';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
 import { logger } from '../../logger';
+import { isSombraError } from '../graphql';
 import { splitCsvToList } from '../requests/splitCsvToList';
 
 const ADMIN_URL =
@@ -33,7 +34,7 @@ export async function enrichPrivacyRequest(
   if (!rawId) {
     // error
     const message = `Request ID must be provided to enricher request.${
-      index ? ` Found error in row: ${index}` : ''
+      index ? ` Found error in row: ${index.toLocaleString()}` : ''
     }`;
     logger.error(colors.red(message));
     throw new Error(message);
@@ -42,6 +43,7 @@ export async function enrichPrivacyRequest(
   const id = rawId.toLowerCase();
 
   // Pull out the identifiers
+  // eslint-disable-next-line unicorn/no-array-reduce
   const enrichedIdentifiers = Object.entries(rest).reduce<
     Record<string, string[]>
   >((accumulator, [key, value]) => {
@@ -76,7 +78,7 @@ export async function enrichPrivacyRequest(
   } catch (error) {
     // skip if already enriched
     if (
-      typeof error.response.body === 'string' &&
+      isSombraError(error) &&
       error.response.body.includes('Cannot update a resolved RequestEnricher')
     ) {
       logger.warn(
@@ -87,12 +89,15 @@ export async function enrichPrivacyRequest(
       return false;
     }
 
-    // error
-    logger.error(
-      colors.red(
-        `Failed to enricher identifiers for request with id: ${ADMIN_URL}${id} - ${error.message} - ${error.response.body}`,
-      ),
-    );
+    // Error message
+    let message = `Failed to enricher identifiers for request with id: ${ADMIN_URL}${id}`;
+    if (error instanceof Error) {
+      message += ` - ${error.message}`;
+    }
+    if (isSombraError(error)) {
+      message += ` - ${error.response.body}`;
+    }
+    logger.error(colors.red(message));
     throw error;
   }
 }

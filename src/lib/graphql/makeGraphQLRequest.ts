@@ -1,8 +1,10 @@
+/* eslint-disable unicorn/filename-case */
 import colors from 'colors';
-import type {
-  GraphQLClient,
-  RequestDocument,
-  Variables,
+import {
+  ClientError,
+  type GraphQLClient,
+  type RequestDocument,
+  type Variables,
 } from 'graphql-request';
 import { logger } from '../../logger';
 
@@ -40,29 +42,31 @@ const KNOWN_ERRORS = [
  * @param maxRequests - Max number of requests
  * @returns Response
  */
-export async function makeGraphQLRequest<T, V extends Variables = Variables>(
+export async function makeGraphQLRequest<T>(
   client: GraphQLClient,
   document: RequestDocument,
-  variables?: V,
+  variables?: Variables,
   requestHeaders?: Record<string, string> | string[][] | Headers,
   maxRequests = MAX_RETRIES,
 ): Promise<T> {
   let retryCount = 0;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
     try {
       const result = await client.request(document, variables, requestHeaders);
       return result as T;
     } catch (error) {
+      if (!(error instanceof Error)) {
+        throw new TypeError('Unknown CLI Error', { cause: error });
+      }
+
       if (error.message.includes('API key is invalid')) {
-        logger.error(
-          colors.red(
-            'API key is invalid. ' +
-              'Please ensure that the key provided to `transcendAuth` has the proper scope and is not expired, ' +
-              'and that `transcendUrl` corresponds to the correct backend for your organization.',
-          ),
+        throw new Error(
+          'API key is invalid. ' +
+            'Please ensure that the key provided to `transcendAuth` has the proper scope and is not expired, ' +
+            'and that `transcendUrl` corresponds to the correct backend for your organization.',
         );
-        process.exit(1);
       }
 
       if (KNOWN_ERRORS.some((message) => error.message.includes(message))) {
@@ -70,15 +74,18 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
       }
 
       // wait for rate limit to resolve
-      if (error.message.startsWith('Client error: Too many requests')) {
-        const rateLimitResetAt =
-          error.response.headers?.get('x-ratelimit-reset');
+      if (
+        error instanceof ClientError &&
+        error.message.startsWith('Client error: Too many requests')
+      ) {
+        const headers = error.response.headers as Headers | undefined;
+        const rateLimitResetAt = headers?.get('x-ratelimit-reset');
         const sleepTime = rateLimitResetAt
           ? new Date(rateLimitResetAt).getTime() - Date.now() + 100
           : 1000 * 10;
         logger.log(
           colors.yellow(
-            `DETECTED RATE LIMIT: ${error.message}. Sleeping for ${sleepTime}ms`,
+            `DETECTED RATE LIMIT: ${error.message}. Sleeping for ${sleepTime.toLocaleString()}ms`,
           ),
         );
 
@@ -91,7 +98,7 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
       retryCount += 1;
       logger.log(
         colors.yellow(
-          `REQUEST FAILED: ${error.message}. Retrying ${retryCount}/${maxRequests}...`,
+          `REQUEST FAILED: ${error.message}. Retrying ${retryCount.toLocaleString()}/${maxRequests.toLocaleString()}...`,
         ),
       );
     }

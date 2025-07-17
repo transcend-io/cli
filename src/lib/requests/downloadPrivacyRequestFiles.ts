@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import path from 'node:path';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
@@ -99,7 +99,7 @@ export async function downloadPrivacyRequestFiles({
     requestFileMetadata,
     async ([request, metadata]) => {
       // Create a new folder to store request files
-      const requestFolder = join(folderPath, request.id);
+      const requestFolder = path.join(folderPath, request.id);
       if (!existsSync(requestFolder)) {
         mkdirSync(requestFolder);
       }
@@ -111,8 +111,8 @@ export async function downloadPrivacyRequestFiles({
         onFileDownloaded: (fil, stream) => {
           // Ensure a folder exists for the file
           // filename looks like Health/heartbeat.csv
-          const filePath = join(requestFolder, fil.fileName);
-          const folder = dirname(filePath);
+          const filePath = path.join(requestFolder, fil.fileName);
+          const folder = path.dirname(filePath);
           if (!existsSync(folder)) {
             mkdirSync(folder, { recursive: true });
           }
@@ -143,14 +143,18 @@ export async function downloadPrivacyRequestFiles({
 
   logger.info(
     colors.green(
-      `Successfully downloaded ${total} requests in "${
+      `Successfully downloaded ${total.toLocaleString()} requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   if (totalApproved > 0) {
     logger.info(
-      colors.green(`Approved ${totalApproved} requests in Transcend.`),
+      colors.green(
+        `Approved ${totalApproved.toLocaleString()} requests in Transcend.`,
+      ),
     );
   }
   return allRequests.length;

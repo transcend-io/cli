@@ -81,14 +81,11 @@ export async function bulkRetryEnrichers({
       requests.map(({ id }) => id),
     );
     if (missingRequests.length > 0) {
-      logger.error(
-        colors.red(
-          `Failed to find the following requests by ID: ${missingRequests.join(
-            ',',
-          )}.`,
-        ),
+      throw new Error(
+        `Failed to find the following requests by ID: ${missingRequests.join(
+          ',',
+        )}.`,
       );
-      process.exit(1);
     }
   }
 
@@ -126,11 +123,11 @@ export async function bulkRetryEnrichers({
   // Log completion time
   logger.info(
     colors.green(
-      `Completed restarting of ${
-        requests.length
-      } requests and ${totalRestarted} enrichers in "${
+      `Completed restarting of ${requests.length.toLocaleString()} requests and ${totalRestarted.toLocaleString()} enrichers in "${(
         totalTime / 1000
-      }" seconds.`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds.`,
     ),
   );
 }

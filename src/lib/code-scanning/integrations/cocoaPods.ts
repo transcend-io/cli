@@ -11,7 +11,7 @@ export const cocoaPods: CodeScanningConfig = {
   supportedFiles: ['Podfile'],
   ignoreDirs: ['Pods'],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
 
     const targets = findAllWithRegex(
       {

@@ -12,6 +12,7 @@ import {
   createSombraGotInstance,
   fetchAllPreferenceTopics,
   fetchAllPurposes,
+  isSombraError,
   PreferenceTopic,
   Purpose,
 } from '../graphql';
@@ -87,12 +88,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   logger.info(
     colors.magenta(
       'Restored cache, there are: \n' +
-        `${
-          Object.values(failingRequests).length
-        } failing requests to be retried\n` +
-        `${
-          Object.values(pendingRequests).length
-        } pending requests to be processed\n` +
+        `${Object.values(
+          failingRequests,
+        ).length.toLocaleString()} failing requests to be retried\n` +
+        `${Object.values(
+          pendingRequests,
+        ).length.toLocaleString()} pending requests to be processed\n` +
         `The following files are stored in cache and will be used:\n${Object.keys(
           fileMetadata,
         )
@@ -138,23 +139,23 @@ export async function uploadPreferenceManagementPreferencesInteractive({
 
   logger.info(
     colors.magenta(
-      `Found ${
-        Object.entries(metadata.pendingSafeUpdates).length
-      } safe updates in ${file}`,
+      `Found ${Object.entries(
+        metadata.pendingSafeUpdates,
+      ).length.toLocaleString()} safe updates in ${file}`,
     ),
   );
   logger.info(
     colors.magenta(
-      `Found ${
-        Object.entries(metadata.pendingConflictUpdates).length
-      } conflict updates in ${file}`,
+      `Found ${Object.entries(
+        metadata.pendingConflictUpdates,
+      ).length.toLocaleString()} conflict updates in ${file}`,
     ),
   );
   logger.info(
     colors.magenta(
-      `Found ${
-        Object.entries(metadata.skippedUpdates).length
-      } skipped updates in ${file}`,
+      `Found ${Object.entries(
+        metadata.skippedUpdates,
+      ).length.toLocaleString()} skipped updates in ${file}`,
     ),
   );
 
@@ -167,9 +168,10 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   })) {
     // Determine timestamp
     const timestamp =
-      metadata.timestampColum === NONE_PREFERENCE_MAP
+      metadata.timestampColum === NONE_PREFERENCE_MAP ||
+      metadata.timestampColum === undefined
         ? new Date()
-        : new Date(update[metadata.timestampColum!]);
+        : new Date(update[metadata.timestampColum]);
 
     // Determine updates
     const updates = getPreferenceUpdatesFromRow({
@@ -200,9 +202,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   if (dryRun) {
     logger.info(
       colors.green(
-        `Dry run complete, exiting. ${
-          Object.values(pendingUpdates).length
-        } pending updates. Check file: ${receiptFilepath}`,
+        `Dry run complete, exiting. ${Object.values(
+          pendingUpdates,
+        ).length.toLocaleString()} pending updates. Check file: ${receiptFilepath}`,
       ),
     );
     return;
@@ -210,9 +212,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
 
   logger.info(
     colors.magenta(
-      `Uploading ${
-        Object.values(pendingUpdates).length
-      } preferences to partition: ${partition}`,
+      `Uploading ${Object.values(
+        pendingUpdates,
+      ).length.toLocaleString()} preferences to partition: ${partition}`,
     ),
   );
 
@@ -245,20 +247,27 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           })
           .json();
       } catch (error) {
-        try {
-          const parsed = JSON.parse(error?.response?.body || '{}');
-          if (parsed.error) {
-            logger.error(colors.red(`Error: ${parsed.error}`));
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+
+        if (isSombraError(error)) {
+          try {
+            const parsed = JSON.parse(error.response.body) as Record<
+              string,
+              unknown
+            >;
+            if ('error' in parsed && typeof parsed.error === 'string') {
+              logger.error(colors.red(`Error: ${parsed.error}`));
+            }
+          } catch {
+            // continue
           }
-        } catch {
-          // continue
         }
         logger.error(
           colors.red(
-            `Failed to upload ${
-              currentChunk.length
-            } user preferences to partition ${partition}: ${
-              error?.response?.body || error?.message
+            `Failed to upload ${currentChunk.length.toLocaleString()} user preferences to partition ${partition}: ${
+              isSombraError(error) ? error.response.body : error.message
             }`,
           ),
         );
@@ -267,7 +276,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           failingUpdates[userId] = {
             uploadedAt: new Date().toISOString(),
             update,
-            error: error?.response?.body || error?.message || 'Unknown error',
+            error: isSombraError(error) ? error.response.body : error.message,
           };
         }
         await preferenceState.setValue(failingUpdates, 'failingUpdates');
@@ -286,11 +295,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   const totalTime = t1 - t0;
   logger.info(
     colors.green(
-      `Successfully uploaded ${
-        updatesToRun.length
-      } user preferences to partition ${partition} in "${
+      `Successfully uploaded ${updatesToRun.length.toLocaleString()} user preferences to partition ${partition} in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
 }

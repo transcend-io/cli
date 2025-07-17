@@ -1,4 +1,16 @@
-import got, { Got } from 'got';
+import got, { Got, RequestError, type Response } from 'got';
+
+interface TranscendConsentError extends Omit<RequestError, 'response'> {
+  response: Response<string>;
+}
+
+export function isTranscendConsentError(
+  error: unknown,
+): error is TranscendConsentError {
+  return (
+    error instanceof RequestError && typeof error.response?.body === 'string'
+  );
+}
 
 /**
  * Instantiate an instance of got that is capable of making requests

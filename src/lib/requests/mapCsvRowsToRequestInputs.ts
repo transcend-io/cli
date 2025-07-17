@@ -8,7 +8,7 @@ import {
   NORMALIZE_PHONE_NUMBER,
   RequestAction,
 } from '@transcend-io/privacy-types';
-import { ObjByString, valuesOf } from '@transcend-io/type-utils';
+import { valuesOf } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
 import { DateFromISOString } from 'io-ts-types';
 import { AttributeKey } from '../graphql';
@@ -132,7 +132,7 @@ export function normalizeIdentifierValue(
  * @returns [raw input, request input] list
  */
 export function mapCsvRowsToRequestInputs(
-  requestInputs: ObjByString[],
+  requestInputs: Record<string, string>[],
   state: PersistedState<typeof CachedFileState>,
   {
     columnNameMap,
@@ -154,8 +154,16 @@ export function mapCsvRowsToRequestInputs(
   },
 ): [Record<string, string>, PrivacyRequestInput][] {
   // map the CSV to request input
-  const getMappedName = (attribute: ColumnName): string =>
-    state.getValue('columnNames', attribute) || columnNameMap[attribute]!;
+  // Get mapped value
+  const getMappedName = (attribute: ColumnName): string => {
+    const value =
+      state.getValue('columnNames', attribute) ?? columnNameMap[attribute];
+    if (value === undefined) {
+      throw new Error(`Column name ${attribute} is not mapped`);
+    }
+    return value;
+  };
+
   return requestInputs.map(
     (input): [Record<string, string>, PrivacyRequestInput] => {
       // The extra identifiers to upload for this request
@@ -166,9 +174,9 @@ export function mapCsvRowsToRequestInputs(
         // filter out skipped identifiers
         .filter(([, columnName]) => columnName !== NONE)) {
         // Determine the identifier type being specified
-        const identifierType = Object.values(IdentifierType).includes(
-          identifierName as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-        )
+        const identifierType = (
+          Object.values(IdentifierType) as string[]
+        ).includes(identifierName)
           ? (identifierName as IdentifierType)
           : IdentifierType.Custom;
 
@@ -182,9 +190,7 @@ export function mapCsvRowsToRequestInputs(
           );
           if (normalized) {
             // Initialize
-            if (!attestedExtraIdentifiers[identifierType]) {
-              attestedExtraIdentifiers[identifierType] = [];
-            }
+            attestedExtraIdentifiers[identifierType] ??= [];
 
             // Add the identifier
             attestedExtraIdentifiers[identifierType].push({
@@ -211,7 +217,7 @@ export function mapCsvRowsToRequestInputs(
           attributes.push({
             values: isMulti
               ? splitCsvToList(attributeValueString)
-              : attributeValueString,
+              : [attributeValueString],
             key: attributeName,
           });
         }

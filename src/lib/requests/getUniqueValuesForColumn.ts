@@ -1,4 +1,3 @@
-import { ObjByString } from '@transcend-io/type-utils';
 import { uniq } from 'lodash-es';
 
 /**
@@ -9,8 +8,8 @@ import { uniq } from 'lodash-es';
  * @returns Unique set of values in that column
  */
 export function getUniqueValuesForColumn(
-  rows: ObjByString[],
+  rows: Record<string, string>[],
   columnName: string,
 ): string[] {
-  return uniq(rows.flatMap((row) => row[columnName] || ''));
+  return uniq(rows.flatMap((row) => row[columnName] ?? ''));
 }

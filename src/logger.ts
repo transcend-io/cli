@@ -7,7 +7,7 @@ export const logger = console;
 
 // When the proxy env var of flag is specified, initiate the proxy
 const { httpProxy = process.env.http_proxy } = yargs(process.argv.slice(2));
-if (httpProxy) {
+if (httpProxy && typeof httpProxy === 'string') {
   logger.info(colors.green(`Initializing proxy: ${httpProxy}`));
 
   // Use global-agent, which overrides `request` based requests

@@ -277,7 +277,9 @@ export class TranscendPromptManager<
    */
   async fetchPromptsAndMetadata(): Promise<TranscendPromptsAndVariables> {
     // Determine what to fetch
-    const promptDefinitions = getValues(this.prompts);
+    const promptDefinitions = getValues<TranscendPrompt<t.Any, t.Any>>(
+      this.prompts,
+    );
     const promptIds = promptDefinitions
       .map(({ id }) => id)
       .filter((x): x is string => !!x);
@@ -285,7 +287,7 @@ export class TranscendPromptManager<
       .map(({ title }) => title)
       .filter((x): x is string => !!x);
     const agentNames = uniq(
-      promptDefinitions.flatMap(({ agentNames }) => agentNames || []),
+      promptDefinitions.flatMap(({ agentNames }) => agentNames ?? []),
     );
 
     // Fetch prompts and data
@@ -624,22 +626,28 @@ export class TranscendPromptManager<
         `promptRunMessages[0].role is expected to be = ${ChatCompletionRole.System}`,
       );
     }
-    if (
-      options.promptRunMessages.at(-1).role !== ChatCompletionRole.Assistant
-    ) {
+
+    const lastMessage = options.promptRunMessages.at(-1);
+    if (!lastMessage) {
+      throw new Error('promptRunMessages is expected to have length > 0');
+    }
+    if (lastMessage.role !== ChatCompletionRole.Assistant) {
       throw new Error(
-        `promptRunMessages[${
+        `promptRunMessages[${(
           options.promptRunMessages.length - 1
-        }].role is expected to be = ${ChatCompletionRole.Assistant}`,
+        ).toString()}].role is expected to be = ${ChatCompletionRole.Assistant}`,
       );
     }
-    const response = options.promptRunMessages.at(-1).content;
+    const response = lastMessage.content;
 
     let parsed: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
     try {
       // Parse the response
       parsed = this.parseAiResponse(promptName, response);
     } catch (error) {
+      if (!(error instanceof Error)) {
+        throw new TypeError('Unknown CLI Error', { cause: error });
+      }
       await reportPromptRun(this.graphQLClient, {
         productArea: PromptRunProductArea.PromptManager,
         ...options,

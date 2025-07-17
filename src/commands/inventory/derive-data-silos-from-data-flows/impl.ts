@@ -1,7 +1,5 @@
 import { existsSync, lstatSync } from 'node:fs';
-import { join } from 'node:path';
-import colors from 'colors';
-import { DataFlowInput } from '../../../codecs';
+import path from 'node:path';
 import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
 import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
@@ -35,12 +33,9 @@ export async function deriveDataSilosFromDataFlows(
 ): Promise<void> {
   // Ensure folder is passed to dataFlowsYmlFolder
   if (!dataFlowsYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
+    throw new Error(
+      'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
     );
-    process.exit(1);
   }
 
   // Ensure folder is passed
@@ -48,18 +43,14 @@ export async function deriveDataSilosFromDataFlows(
     !existsSync(dataFlowsYmlFolder) ||
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
-    logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
+    throw new Error(`Folder does not exist: "${dataFlowsYmlFolder}"`);
   }
 
   // Ensure folder is passed to dataSilosYmlFolder
   if (!dataSilosYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataSilosYmlFolder=./working/data-silos/',
-      ),
+    throw new Error(
+      'Missing required arg: --dataSilosYmlFolder=./working/data-silos/',
     );
-    process.exit(1);
   }
 
   // Ensure folder is passed
@@ -67,8 +58,7 @@ export async function deriveDataSilosFromDataFlows(
     !existsSync(dataSilosYmlFolder) ||
     !lstatSync(dataSilosYmlFolder).isDirectory()
   ) {
-    logger.error(colors.red(`Folder does not exist: "${dataSilosYmlFolder}"`));
-    process.exit(1);
+    throw new Error(`Folder does not exist: "${dataSilosYmlFolder}"`);
   }
 
   // Fetch all integrations in the catalog
@@ -80,7 +70,7 @@ export async function deriveDataSilosFromDataFlows(
   for (const directory of listFiles(dataFlowsYmlFolder)) {
     // read in the data flows for a specific instance
     const { 'data-flows': dataFlows = [] } = readTranscendYaml(
-      join(dataFlowsYmlFolder, directory),
+      path.join(dataFlowsYmlFolder, directory),
     );
 
     // map the data flows to data silos
@@ -94,10 +84,12 @@ export async function deriveDataSilosFromDataFlows(
 
     // combine and write to yml file
     const dataSilos = [...adTechDataSilos, ...siteTechDataSilos];
-    logger.log(`Total Services: ${dataSilos.length}`);
-    logger.log(`Ad Tech Services: ${adTechDataSilos.length}`);
-    logger.log(`Site Tech Services: ${siteTechDataSilos.length}`);
-    writeTranscendYaml(join(dataSilosYmlFolder, directory), {
+    logger.log(`Total Services: ${dataSilos.length.toLocaleString()}`);
+    logger.log(`Ad Tech Services: ${adTechDataSilos.length.toLocaleString()}`);
+    logger.log(
+      `Site Tech Services: ${siteTechDataSilos.length.toLocaleString()}`,
+    );
+    writeTranscendYaml(path.join(dataSilosYmlFolder, directory), {
       'data-silos': ignoreYmls.includes(directory) ? [] : dataSilos,
     });
   }

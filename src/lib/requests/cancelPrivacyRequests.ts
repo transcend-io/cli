@@ -103,7 +103,7 @@ export async function cancelPrivacyRequests({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Canceling "${allRequests.length}" requests${
+      `Canceling "${allRequests.length.toLocaleString()}" requests${
         cancelationTemplate
           ? ` Using template: ${cancelationTemplate.title}`
           : ''
@@ -155,9 +155,11 @@ export async function cancelPrivacyRequests({
 
   logger.info(
     colors.green(
-      `Successfully canceled ${total} requests in "${
+      `Successfully canceled ${total.toLocaleString()} requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   return allRequests.length;

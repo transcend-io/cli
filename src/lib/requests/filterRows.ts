@@ -1,4 +1,3 @@
-import { ObjByString } from '@transcend-io/type-utils';
 import colors from 'colors';
 import inquirer from 'inquirer';
 import { uniq } from 'lodash-es';
@@ -13,7 +12,9 @@ import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
  * @param rows - Rows to filter
  * @returns Filtered rows
  */
-export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
+export async function filterRows(
+  rows: Record<string, string>[],
+): Promise<Record<string, string>[]> {
   // Determine set of column names
   const columnNames = uniq(rows.flatMap((x) => Object.keys(x)));
 
@@ -32,7 +33,7 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
       {
         name: 'filterColumnName',
 
-        message: `If you need to filter the list of requests to import, choose the column to filter on. Currently ${filteredRows.length} rows.`,
+        message: `If you need to filter the list of requests to import, choose the column to filter on. Currently ${filteredRows.length.toLocaleString()} rows.`,
         type: 'list',
         default: columnNames,
         choices: [NONE, ...columnNames],
@@ -63,6 +64,10 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
     }
   }
 
-  logger.info(colors.magenta(`Importing ${filteredRows.length} requests`));
+  logger.info(
+    colors.magenta(
+      `Importing ${filteredRows.length.toLocaleString()} requests`,
+    ),
+  );
   return filteredRows;
 }

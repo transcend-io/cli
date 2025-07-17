@@ -526,7 +526,7 @@ describe('getPreferenceUpdatesFromRow', () => {
       });
       expect.fail('Should have thrown');
     } catch (error) {
-      expect(error.message).to.include('No mapping provided');
+      expect((error as Error).message).to.include('No mapping provided');
     }
   });
 
@@ -590,7 +590,7 @@ describe('getPreferenceUpdatesFromRow', () => {
       });
       expect.fail('Should have thrown');
     } catch (error) {
-      expect(error.message).to.equal(
+      expect((error as Error).message).to.equal(
         'Invalid purpose slug: InvalidPurpose, expected: Marketing, Advertising',
       );
     }
@@ -652,7 +652,7 @@ describe('getPreferenceUpdatesFromRow', () => {
       });
       expect.fail('Should have thrown');
     } catch (error) {
-      expect(error.message).to.equal(
+      expect((error as Error).message).to.equal(
         'Invalid value for select preference: SingleSelectPreference, expected string or null, got: true',
       );
     }
@@ -714,7 +714,7 @@ describe('getPreferenceUpdatesFromRow', () => {
       });
       expect.fail('Should have thrown');
     } catch (error) {
-      expect(error.message).to.equal(
+      expect((error as Error).message).to.equal(
         'Invalid value for multi select preference: MultiSelectPreference, expected one of: Value1, Value2, got: true',
       );
     }

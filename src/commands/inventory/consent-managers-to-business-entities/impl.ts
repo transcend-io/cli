@@ -1,5 +1,5 @@
 import { existsSync, lstatSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
@@ -36,7 +36,7 @@ export function consentManagersToBusinessEntities(
   // Read in each consent manager configuration
   const inputs = listFiles(consentManagerYmlFolder).map((directory) => {
     const { 'consent-manager': consentManager } = readTranscendYaml(
-      join(consentManagerYmlFolder, directory),
+      path.join(consentManagerYmlFolder, directory),
     );
     return { name: directory, input: consentManager };
   });

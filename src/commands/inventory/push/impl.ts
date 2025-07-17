@@ -1,5 +1,5 @@
 import { existsSync, lstatSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import { TranscendInput } from '../../../codecs';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
@@ -104,7 +104,7 @@ export async function push(
   let fileList: string[];
   fileList =
     Array.isArray(apiKeyOrList) && lstatSync(file).isDirectory()
-      ? listFiles(file).map((filePath) => join(file, filePath))
+      ? listFiles(file).map((filePath) => path.join(file, filePath))
       : file.split(',');
 
   // Ensure at least one file is parsed
