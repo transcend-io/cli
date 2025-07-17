@@ -42,12 +42,12 @@ export function getGitFilesThatChanged({
   // Latest commit on base branch. If we are on the base branch, we take the prior commit
   const latestBasedCommit = execSync(
     `git ls-remote ${githubRepo} "refs/heads/${baseBranch}" | cut -f 1`,
-    { encoding: 'utf-8' },
+    { encoding: 'utf8' },
   ).split('\n')[0];
 
   // This commit
   const latestThisCommit = execSync('git rev-parse HEAD', {
-    encoding: 'utf-8',
+    encoding: 'utf8',
   }).split('\n')[0];
 
   // Ensure commits are present
@@ -60,7 +60,7 @@ export function getGitFilesThatChanged({
     `git fetch && git diff --name-only "${
       baseBranch || latestBasedCommit
     }...${latestThisCommit}" -- ${rootDirectory}`,
-    { encoding: 'utf-8' },
+    { encoding: 'utf8' },
   );
 
   // Filter out block list
@@ -79,7 +79,7 @@ export function getGitFilesThatChanged({
   const fileDiffs: Record<string, string> = {};
   for (const file of filteredChanges) {
     const contents = execSync(`git show ${latestThisCommit}:${file}`, {
-      encoding: 'utf-8',
+      encoding: 'utf8',
     });
     fileDiffs[file] = contents;
   }

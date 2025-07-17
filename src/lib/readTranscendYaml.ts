@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { decodeCodec, ObjByString } from '@transcend-io/type-utils';
+import { decodeCodec } from '@transcend-io/type-utils';
 import yaml from 'js-yaml';
 import { TranscendInput } from '../codecs';
 
@@ -17,7 +17,7 @@ export const VARIABLE_PARAMETERS_NAME = 'parameters';
  */
 export function replaceVariablesInYaml(
   input: string,
-  variables: ObjByString,
+  variables: Record<string, string>,
   extraErrorMessage = '',
 ): string {
   let contents = input;
@@ -30,7 +30,7 @@ export function replaceVariablesInYaml(
 
   // Throw error if unfilled variables
   if (VARIABLE_PARAMETERS_REGEXP.test(contents)) {
-    const [, name] = VARIABLE_PARAMETERS_REGEXP.exec(contents) || [];
+    const [, name] = VARIABLE_PARAMETERS_REGEXP.exec(contents) ?? [];
     throw new Error(
       `Found variable that was not set: ${name}.
 Make sure you are passing all parameters through the --${VARIABLE_PARAMETERS_NAME}=${name}:value-for-param flag.
@@ -51,10 +51,10 @@ ${extraErrorMessage}`,
  */
 export function readTranscendYaml(
   filePath: string,
-  variables: ObjByString = {},
+  variables: Record<string, string> = {},
 ): TranscendInput {
   // Read in contents
-  const fileContents = readFileSync(filePath, 'utf-8');
+  const fileContents = readFileSync(filePath, 'utf8');
 
   // Replace variables
   const replacedVariables = replaceVariablesInYaml(

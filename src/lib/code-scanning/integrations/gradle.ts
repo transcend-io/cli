@@ -28,7 +28,7 @@ export const gradle: CodeScanningConfig = {
     'gradle-wrapper.properties',
   ],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const directory = path.dirname(filePath);
 
     const targets = findAllWithRegex(

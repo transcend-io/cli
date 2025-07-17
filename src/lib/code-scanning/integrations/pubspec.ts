@@ -34,7 +34,7 @@ export const pubspec: CodeScanningConfig = {
   ignoreDirs: ['build'],
   scanFunction: (filePath) => {
     const directory = path.dirname(filePath);
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const {
       name,
       description,

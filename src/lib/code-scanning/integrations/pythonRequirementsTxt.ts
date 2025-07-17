@@ -13,20 +13,20 @@ export const pythonRequirementsTxt: CodeScanningConfig = {
   supportedFiles: ['requirements.txt'],
   ignoreDirs: ['build', 'lib', 'lib64'],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const directory = path.dirname(filePath);
     const filesInFolder = listFiles(directory);
 
     // parse setup file for name
     const setupFile = filesInFolder.find((file) => file === 'setup.py');
     const setupFileContents = setupFile
-      ? readFileSync(path.join(directory, setupFile), 'utf-8')
+      ? readFileSync(path.join(directory, setupFile), 'utf8')
       : undefined;
     const packageName = setupFileContents
-      ? (PACKAGE_NAME.exec(setupFileContents) || [])[2]
+      ? (PACKAGE_NAME.exec(setupFileContents) ?? [])[2]
       : undefined;
     const packageDescription = setupFileContents
-      ? (PACKAGE_DESCRIPTION.exec(setupFileContents) || [])[2]
+      ? (PACKAGE_DESCRIPTION.exec(setupFileContents) ?? [])[2]
       : undefined;
 
     const targets = findAllWithRegex(
@@ -39,7 +39,9 @@ export const pythonRequirementsTxt: CodeScanningConfig = {
 
     return [
       {
-        name: packageName || directory.split('/').pop()!,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        name: packageName || path.basename(directory),
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         description: packageDescription || undefined,
         type: CodePackageType.RequirementsTxt,
         softwareDevelopmentKits: targets.map((package_) => ({

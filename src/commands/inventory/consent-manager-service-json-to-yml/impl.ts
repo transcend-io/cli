@@ -33,7 +33,7 @@ export function consentManagerServiceJsonToYml(
   // Read in each consent manager configuration
   const services = decodeCodec(
     t.array(ConsentManagerServiceMetadata),
-    readFileSync(file, 'utf-8'),
+    readFileSync(file, 'utf8'),
   );
 
   // Create data flows and cookie configurations

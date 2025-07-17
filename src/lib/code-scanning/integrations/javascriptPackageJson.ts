@@ -7,7 +7,7 @@ export const javascriptPackageJson: CodeScanningConfig = {
   supportedFiles: ['package.json'],
   ignoreDirs: ['node_modules', 'serverless-build', 'lambda-build'],
   scanFunction: (filePath) => {
-    const file = readFileSync(filePath, 'utf-8');
+    const file = readFileSync(filePath, 'utf8');
     const directory = path.dirname(filePath);
     const asJson = JSON.parse(file);
     const {

@@ -24,7 +24,7 @@ export const swift: CodeScanningConfig = {
   supportedFiles: ['Package.resolved'],
   ignoreDirs: [],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
 
     const parsed = decodeCodec(SwiftPackage, fileContents);
 

@@ -26,7 +26,7 @@ export const syncOneTrustAssessmentsFromFile = ({
   return new Promise((resolve, reject) => {
     // Create a readable stream from the file
     const fileStream = createReadStream(file, {
-      encoding: 'utf-8',
+      encoding: 'utf8',
       highWaterMark: 64 * 1024, // 64KB chunks
     });
 

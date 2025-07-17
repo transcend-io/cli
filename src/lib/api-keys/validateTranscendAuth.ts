@@ -26,7 +26,7 @@ export function validateTranscendAuth(auth: string): string | StoredApiKey[] {
   // Read from disk
   if (existsSync(auth)) {
     // validate that file is a list of API keys
-    return decodeCodec(t.array(StoredApiKey), readFileSync(auth, 'utf-8'));
+    return decodeCodec(t.array(StoredApiKey), readFileSync(auth, 'utf8'));
   }
 
   // Return as single API key

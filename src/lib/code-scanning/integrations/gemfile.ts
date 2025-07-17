@@ -15,15 +15,13 @@ export const gemfile: CodeScanningConfig = {
   supportedFiles: ['Gemfile'],
   ignoreDirs: ['bin'],
   scanFunction: (filePath) => {
-    const fileContents = readFileSync(filePath, 'utf-8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const directory = path.dirname(filePath);
     const filesInFolder = listFiles(directory);
 
     // parse gemspec file for name
     const gemspec = filesInFolder.find((file) => file === '.gemspec');
-    const gemspecContents = gemspec
-      ? readFileSync(gemspec, 'utf-8')
-      : undefined;
+    const gemspecContents = gemspec ? readFileSync(gemspec, 'utf8') : undefined;
     const gemfileName = gemspecContents
       ? (GEMFILE_PACKAGE_NAME_REGEX.exec(gemspecContents) || [])[2]
       : undefined;

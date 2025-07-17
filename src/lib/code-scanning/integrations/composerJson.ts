@@ -7,7 +7,7 @@ export const composerJson: CodeScanningConfig = {
   supportedFiles: ['composer.json'],
   ignoreDirs: ['vendor', 'node_modules', 'cache', 'build', 'dist'],
   scanFunction: (filePath) => {
-    const file = readFileSync(filePath, 'utf-8');
+    const file = readFileSync(filePath, 'utf8');
     const directory = path.dirname(filePath);
     const asJson = JSON.parse(file);
     const {
