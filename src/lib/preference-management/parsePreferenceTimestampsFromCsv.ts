@@ -45,10 +45,10 @@ export async function parsePreferenceTimestampsFromCsv(
         default:
           remainingColumnsForTimestamp.find((col) =>
             col.toLowerCase().includes('date'),
-          ) ||
+          ) ??
           remainingColumnsForTimestamp.find((col) =>
             col.toLowerCase().includes('time'),
-          ) ||
+          ) ??
           remainingColumnsForTimestamp[0],
         choices: [...remainingColumnsForTimestamp, NONE_PREFERENCE_MAP],
       },
@@ -60,9 +60,13 @@ export async function parsePreferenceTimestampsFromCsv(
   );
 
   // Validate that all rows have valid timestamp
-  if (currentState.timestampColum !== NONE_PREFERENCE_MAP) {
+  if (
+    currentState.timestampColum !== NONE_PREFERENCE_MAP &&
+    currentState.timestampColum
+  ) {
+    const { timestampColum } = currentState;
     const timestampColumnsMissing = preferences
-      .map((pref, ind) => (pref[currentState.timestampColum!] ? null : [ind]))
+      .map((pref, ind) => (pref[timestampColum] ? null : [ind]))
       .filter((x): x is number[] => !!x)
       .flat();
     if (timestampColumnsMissing.length > 0) {
