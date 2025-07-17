@@ -24,10 +24,20 @@ const eslintConfig = tseslint.config(
     },
   },
   {
-    // CJS compatibility for src directory
+    rules: {
+      'unicorn/filename-case': [
+        'error',
+        {
+          case: 'kebabCase',
+        },
+      ],
+    },
+  },
+  {
+    // CJS compatibility for src directory since it's also a library
     files: ['src/**/*'],
-    // The bin directory is always ESM
-    ignores: ['src/bin/**/*'],
+    // The CLI does not require CJS compatibility
+    ignores: ['src/bin/**/*', 'src/commands/**/*'],
     rules: {
       // Ban top-level await
       'unicorn/prefer-top-level-await': 'off',
