@@ -1,12 +1,12 @@
-import { TableEncryptionType } from "@transcend-io/privacy-types";
-import { decodeCodec, valuesOf } from "@transcend-io/type-utils";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import type { Got } from "got";
-import * as t from "io-ts";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
-import { PrivacyRequest } from "../graphql";
+import { TableEncryptionType } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { PrivacyRequest } from '../graphql';
 
 export const IntlMessage = t.type({
   /** The message key */
@@ -93,7 +93,7 @@ export type RequestFileMetadataResponse = t.TypeOf<
  * @returns The number of requests canceled
  */
 export async function getFileMetadataForPrivacyRequests(
-  requests: Pick<PrivacyRequest, "id" | "status">[],
+  requests: Pick<PrivacyRequest, 'id' | 'status'>[],
   {
     sombra,
     concurrency = 5,
@@ -105,10 +105,10 @@ export async function getFileMetadataForPrivacyRequests(
     limit?: number;
     /** Concurrency limit for approving */
     concurrency?: number;
-  }
-): Promise<[Pick<PrivacyRequest, "id" | "status">, RequestFileMetadata[]][]> {
+  },
+): Promise<[Pick<PrivacyRequest, 'id' | 'status'>, RequestFileMetadata[]][]> {
   logger.info(
-    colors.magenta(`Pulling file metadata for ${requests.length} requests`)
+    colors.magenta(`Pulling file metadata for ${requests.length} requests`),
   );
 
   // Time duration
@@ -116,7 +116,7 @@ export async function getFileMetadataForPrivacyRequests(
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // Start timer
@@ -127,9 +127,9 @@ export async function getFileMetadataForPrivacyRequests(
   const results = await map(
     requests,
     async (
-      requestToDownload
+      requestToDownload,
     ): Promise<
-      [Pick<PrivacyRequest, "id" | "status">, RequestFileMetadata[]]
+      [Pick<PrivacyRequest, 'id' | 'status'>, RequestFileMetadata[]]
     > => {
       const localResults: RequestFileMetadata[] = [];
 
@@ -149,7 +149,7 @@ export async function getFileMetadataForPrivacyRequests(
                   limit,
                   offset,
                 },
-              }
+              },
             )
             .json();
           response = decodeCodec(RequestFileMetadataResponse, rawResponse);
@@ -163,7 +163,7 @@ export async function getFileMetadataForPrivacyRequests(
           throw new Error(
             `Received an error from server: ${
               error?.response?.body || error?.message
-            }`
+            }`,
           );
         }
       }
@@ -172,7 +172,7 @@ export async function getFileMetadataForPrivacyRequests(
       progressBar.update(total);
       return [requestToDownload, localResults];
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -183,8 +183,8 @@ export async function getFileMetadataForPrivacyRequests(
     colors.green(
       `Successfully downloaded file metadata ${requests.length} requests in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
 
   return results;

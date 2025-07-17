@@ -36,7 +36,7 @@
 export function convertToEmptyStrings<T>(input: T): any {
   // Handle null/undefined
   if (input === null || input === undefined) {
-    return "";
+    return '';
   }
 
   // Handle arrays
@@ -45,15 +45,15 @@ export function convertToEmptyStrings<T>(input: T): any {
   }
 
   // Handle objects
-  if (typeof input === "object") {
+  if (typeof input === 'object') {
     return Object.fromEntries(
       Object.entries(input).map<Record<string, any>>(([key, value]) => [
         key,
         convertToEmptyStrings(value),
-      ])
+      ]),
     );
   }
 
   // Handle primitives
-  return "";
+  return '';
 }

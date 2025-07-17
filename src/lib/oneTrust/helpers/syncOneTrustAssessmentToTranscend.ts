@@ -1,13 +1,13 @@
-import { OneTrustEnrichedAssessment } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { ImportOnetrustAssessmentsInput } from "../../../codecs";
-import { logger } from "../../../logger";
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { ImportOnetrustAssessmentsInput } from '../../../codecs';
+import { logger } from '../../../logger';
 import {
   IMPORT_ONE_TRUST_ASSESSMENT_FORMS,
   makeGraphQLRequest,
-} from "../../graphql";
-import { oneTrustAssessmentToJson } from "./oneTrustAssessmentToJson";
+} from '../../graphql';
+import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 export interface AssessmentForm {
   /** ID of Assessment Form */
@@ -40,9 +40,9 @@ export const syncOneTrustAssessmentToTranscend = async ({
   logger.info(
     colors.magenta(
       `Writing enriched assessment ${index + 1} ${
-        total ? `of ${total} ` : " "
-      }to Transcend...`
-    )
+        total ? `of ${total} ` : ' '
+      }to Transcend...`,
+    ),
   );
 
   // convert the OneTrust assessment object into a json record
@@ -71,10 +71,10 @@ export const syncOneTrustAssessmentToTranscend = async ({
     logger.error(
       colors.red(
         `Failed to sync assessment ${index + 1} ${
-          total ? `of ${total} ` : " "
+          total ? `of ${total} ` : ' '
         }to Transcend.\n` +
-          `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}\n`
-      )
+          `\tAssessment Title: ${assessment.name}. Template Title: ${assessment.template.name}\n`,
+      ),
     );
   }
 };

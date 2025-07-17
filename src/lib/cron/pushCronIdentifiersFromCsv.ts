@@ -1,15 +1,15 @@
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { chunk } from "lodash-es";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
-import { createSombraGotInstance } from "../graphql";
-import { readCsv } from "../requests";
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { chunk } from 'lodash-es';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { createSombraGotInstance } from '../graphql';
+import { readCsv } from '../requests';
 import {
   CronIdentifierPush,
   markCronIdentifierCompleted,
-} from "./markCronIdentifierCompleted";
+} from './markCronIdentifierCompleted';
 
 /**
  * Given a CSV of cron job outputs, mark all requests as completed in Transcend
@@ -51,8 +51,8 @@ export async function pushCronIdentifiersFromCsv({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Notifying Transcend for data silo "${dataSiloId}" marking "${activeResults.length}" identifiers as completed.`
-    )
+      `Notifying Transcend for data silo "${dataSiloId}" marking "${activeResults.length}" identifiers as completed.`,
+    ),
   );
 
   // Time duration
@@ -60,7 +60,7 @@ export async function pushCronIdentifiersFromCsv({
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   let successCount = 0;
@@ -73,14 +73,14 @@ export async function pushCronIdentifiersFromCsv({
   const totalChunks = chunks.length;
   const processChunk = async (
     items: CronIdentifierPush[],
-    chunkIndex: number
+    chunkIndex: number,
   ): Promise<void> => {
     logger.info(
       colors.blue(
         `Processing chunk ${chunkIndex + 1}/${totalChunks} (${
           chunk.length
-        } items)`
-      )
+        } items)`,
+      ),
     );
 
     // Process the items of the chunk concurrently
@@ -95,8 +95,8 @@ export async function pushCronIdentifiersFromCsv({
       } catch (error) {
         logger.error(
           colors.red(
-            `Error notifying Transcend for identifier "${identifier.identifier}" - ${error?.message}`
-          )
+            `Error notifying Transcend for identifier "${identifier.identifier}" - ${error?.message}`,
+          ),
         );
         errorCount += 1;
       }
@@ -106,7 +106,7 @@ export async function pushCronIdentifiersFromCsv({
     // Sleep between chunks (except for the last chunk)
     if (sleepSeconds > 0 && chunkIndex < totalChunks - 1) {
       logger.info(
-        colors.yellow(`Sleeping for ${sleepSeconds}s before next chunk...`)
+        colors.yellow(`Sleeping for ${sleepSeconds}s before next chunk...`),
       );
 
       await new Promise((resolve) => {
@@ -126,24 +126,24 @@ export async function pushCronIdentifiersFromCsv({
     colors.green(
       `Successfully notified Transcend for ${successCount} identifiers in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
   if (failureCount) {
     logger.info(
       colors.magenta(
         `There were ${failureCount} identifiers that were not in a state to be updated.` +
-          "They likely have already been resolved."
-      )
+          'They likely have already been resolved.',
+      ),
     );
   }
   if (errorCount) {
     logger.error(
       colors.red(
-        `There were ${errorCount} identifiers that failed to be updated. Please review the logs for more information.`
-      )
+        `There were ${errorCount} identifiers that failed to be updated. Please review the logs for more information.`,
+      ),
     );
-    throw new Error("Failed to update all identifiers");
+    throw new Error('Failed to update all identifiers');
   }
   return activeResults.length;
 }

@@ -1,14 +1,14 @@
-import { ConsentTrackerStatus } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { chunk } from "lodash-es";
-import { DataFlowInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { fetchAllDataFlows } from "./fetchAllDataFlows";
-import { fetchConsentManagerId } from "./fetchConsentManagerId";
-import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk } from 'lodash-es';
+import { DataFlowInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;
 
@@ -22,7 +22,7 @@ const MAX_PAGE_SIZE = 100;
 export async function updateDataFlows(
   client: GraphQLClient,
   dataFlowInputs: [DataFlowInput, string][],
-  classifyService = false
+  classifyService = false,
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
 
@@ -70,7 +70,7 @@ export async function updateDataFlows(
 export async function createDataFlows(
   client: GraphQLClient,
   dataFlowInputs: DataFlowInput[],
-  classifyService = false
+  classifyService = false,
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
   // TODO: https://transcend.height.app/T-19841 - add with custom purposes
@@ -117,7 +117,7 @@ export async function createDataFlows(
 export async function syncDataFlows(
   client: GraphQLClient,
   dataFlows: DataFlowInput[],
-  classifyService: boolean
+  classifyService: boolean,
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(colors.magenta(`Syncing "${dataFlows.length}" data flows...`));
@@ -127,8 +127,8 @@ export async function syncDataFlows(
   const notUnique = dataFlows.filter(
     (dataFlow) =>
       dataFlows.filter(
-        (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type
-      ).length > 1
+        (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type,
+      ).length > 1,
   );
 
   // Throw error to prompt user to de-dupe before uploading
@@ -136,13 +136,13 @@ export async function syncDataFlows(
     throw new Error(
       `Failed to upload data flows as there were non-unique entries found: ${notUnique
         .map(({ value }) => value)
-        .join(",")}`
+        .join(',')}`,
     );
   }
 
   // Fetch existing data flows to determine whether we are creating a new data flow
   // or updating an existing data flow
-  logger.info(colors.magenta("Fetching data flows..."));
+  logger.info(colors.magenta('Fetching data flows...'));
   const [existingLiveDataFlows, existingInReviewDataFlows] = await Promise.all([
     fetchAllDataFlows(client, ConsentTrackerStatus.Live),
     fetchAllDataFlows(client, ConsentTrackerStatus.NeedsReview),
@@ -153,7 +153,7 @@ export async function syncDataFlows(
   const mapDataFlowsToExisting = dataFlows.map((dataFlow) => [
     dataFlow,
     allDataFlows.find(
-      (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type
+      (flow) => dataFlow.value === flow.value && dataFlow.type === flow.type,
     )?.id,
   ]);
 
@@ -163,11 +163,11 @@ export async function syncDataFlows(
     .map(([flow]) => flow as DataFlowInput);
   try {
     logger.info(
-      colors.magenta(`Creating "${newDataFlows.length}" new data flows...`)
+      colors.magenta(`Creating "${newDataFlows.length}" new data flows...`),
     );
     await createDataFlows(client, newDataFlows, classifyService);
     logger.info(
-      colors.green(`Successfully synced ${newDataFlows.length} data flows!`)
+      colors.green(`Successfully synced ${newDataFlows.length} data flows!`),
     );
   } catch (error) {
     encounteredError = true;
@@ -176,17 +176,17 @@ export async function syncDataFlows(
 
   // Update existing data flows
   const existingDataFlows = mapDataFlowsToExisting.filter(
-    (x): x is [DataFlowInput, string] => !!x[1]
+    (x): x is [DataFlowInput, string] => !!x[1],
   );
   try {
     logger.info(
-      colors.magenta(`Updating "${existingDataFlows.length}" data flows...`)
+      colors.magenta(`Updating "${existingDataFlows.length}" data flows...`),
     );
     await updateDataFlows(client, existingDataFlows, classifyService);
     logger.info(
       colors.green(
-        `Successfully updated "${existingDataFlows.length}" data flows!`
-      )
+        `Successfully updated "${existingDataFlows.length}" data flows!`,
+      ),
     );
   } catch (error) {
     encounteredError = true;

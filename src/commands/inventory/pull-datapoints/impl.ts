@@ -1,12 +1,12 @@
-import { DataCategoryType } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { groupBy, uniq } from "lodash-es";
-import { ADMIN_DASH_DATAPOINTS } from "../../../constants";
-import type { LocalContext } from "../../../context";
-import { writeCsv } from "../../../lib/cron";
-import { pullAllDatapoints } from "../../../lib/data-inventory";
-import { buildTranscendGraphQLClient } from "../../../lib/graphql";
-import { logger } from "../../../logger";
+import { DataCategoryType } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { groupBy, uniq } from 'lodash-es';
+import { ADMIN_DASH_DATAPOINTS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { writeCsv } from '../../../lib/cron';
+import { pullAllDatapoints } from '../../../lib/data-inventory';
+import { buildTranscendGraphQLClient } from '../../../lib/graphql';
+import { logger } from '../../../logger';
 
 interface PullDatapointsCommandFlags {
   auth: string;
@@ -30,7 +30,7 @@ export async function pullDatapoints(
     includeGuessedCategories,
     parentCategories,
     subCategories = [],
-  }: PullDatapointsCommandFlags
+  }: PullDatapointsCommandFlags,
 ): Promise<void> {
   try {
     // Create a GraphQL client
@@ -48,28 +48,28 @@ export async function pullDatapoints(
     let headers: string[] = [];
     const inputs = dataPoints.map((point) => {
       const result = {
-        "Property ID": point.id,
-        "Data Silo": point.dataSilo.title,
+        'Property ID': point.id,
+        'Data Silo': point.dataSilo.title,
         Object: point.dataPoint.name,
-        "Object Path": point.dataPoint.path.join("."),
+        'Object Path': point.dataPoint.path.join('.'),
         Property: point.name,
-        "Property Description": point.description,
-        "Data Categories": point.categories
+        'Property Description': point.description,
+        'Data Categories': point.categories
           .map((category) => `${category.category}:${category.name}`)
-          .join(", "),
-        "Guessed Category": point.pendingCategoryGuesses?.[0]
+          .join(', '),
+        'Guessed Category': point.pendingCategoryGuesses?.[0]
           ? `${point.pendingCategoryGuesses[0].category.category}:${point.pendingCategoryGuesses[0].category.name}`
-          : "",
-        "Processing Purposes": point.purposes
+          : '',
+        'Processing Purposes': point.purposes
           .map((purpose) => `${purpose.purpose}:${purpose.name}`)
-          .join(", "),
+          .join(', '),
         ...Object.entries(
           groupBy(
             point.attributeValues || [],
-            ({ attributeKey }) => attributeKey.name
-          )
+            ({ attributeKey }) => attributeKey.name,
+          ),
         ).reduce<Record<string, string>>((accumulator, [key, values]) => {
-          accumulator[key] = values.map((value) => value.name).join(",");
+          accumulator[key] = values.map((value) => value.name).join(',');
           return accumulator;
         }, {}),
       };
@@ -79,7 +79,7 @@ export async function pullDatapoints(
     writeCsv(file, inputs, headers);
   } catch (error) {
     logger.error(
-      colors.red(`An error occurred syncing the datapoints: ${error.message}`)
+      colors.red(`An error occurred syncing the datapoints: ${error.message}`),
     );
     process.exit(1);
   }
@@ -87,7 +87,7 @@ export async function pullDatapoints(
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced datapoints to disk at ${file}! View at ${ADMIN_DASH_DATAPOINTS}`
-    )
+      `Successfully synced datapoints to disk at ${file}! View at ${ADMIN_DASH_DATAPOINTS}`,
+    ),
   );
 }

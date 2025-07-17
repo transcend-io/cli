@@ -1,19 +1,19 @@
-import type { RequestAction } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { uniq } from "lodash-es";
-import type { LocalContext } from "../../../../context";
-import { map } from "../../../../lib/bluebird-replace";
+import type { RequestAction } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { uniq } from 'lodash-es';
+import type { LocalContext } from '../../../../context';
+import { map } from '../../../../lib/bluebird-replace';
 import {
   parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
   writeCsv,
   type CsvFormattedIdentifier,
-} from "../../../../lib/cron";
+} from '../../../../lib/cron';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
-} from "../../../../lib/graphql";
-import { logger } from "../../../../logger";
+} from '../../../../lib/graphql';
+import { logger } from '../../../../logger';
 
 interface PullProfilesCommandFlags {
   file: string;
@@ -43,13 +43,13 @@ export async function pullProfiles(
     skipRequestCount,
     pageLimit,
     chunkSize,
-  }: PullProfilesCommandFlags
+  }: PullProfilesCommandFlags,
 ): Promise<void> {
   if (skipRequestCount) {
     logger.info(
       colors.yellow(
-        "Skipping request count as requested. This may help speed up the call."
-      )
+        'Skipping request count as requested. This may help speed up the call.',
+      ),
     );
   }
 
@@ -60,8 +60,8 @@ export async function pullProfiles(
   ) {
     logger.error(
       colors.red(
-        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`
-      )
+        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
+      ),
     );
     process.exit(1);
   }
@@ -95,24 +95,24 @@ export async function pullProfiles(
         return results.map(({ fileName, remoteId }) => {
           if (!remoteId) {
             throw new Error(
-              `Failed to find remoteId for ${fileName} request: ${requestId}`
+              `Failed to find remoteId for ${fileName} request: ${requestId}`,
             );
           }
           return {
             RecordId: remoteId,
             Object: fileName
-              .replace(".json", "")
-              .split("/")
+              .replace('.json', '')
+              .split('/')
               .pop()
-              ?.replace(" Information", ""),
+              ?.replace(' Information', ''),
             Comment:
-              "Customer data deletion request submitted via transcend.io",
+              'Customer data deletion request submitted via transcend.io',
           };
         });
       },
       {
         concurrency: 10,
-      }
+      },
     );
 
     allTargetIdentifiersCount += results.flat().length;
@@ -124,8 +124,8 @@ export async function pullProfiles(
     writeCsv(numberedFileName, chunk, headers);
     logger.info(
       colors.green(
-        `Successfully wrote ${chunk.length} identifiers to file "${file}"`
-      )
+        `Successfully wrote ${chunk.length} identifiers to file "${file}"`,
+      ),
     );
 
     const targetIdentifiers = results.flat();
@@ -133,14 +133,14 @@ export async function pullProfiles(
     writeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
     logger.info(
       colors.green(
-        `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`
-      )
+        `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,
+      ),
     );
 
     logger.info(
       colors.blue(
-        `Processed chunk of ${chunk.length} identifiers, found ${targetIdentifiers.length} target identifiers`
-      )
+        `Processed chunk of ${chunk.length} identifiers, found ${targetIdentifiers.length} target identifiers`,
+      ),
     );
     fileCount += 1;
   };
@@ -160,12 +160,12 @@ export async function pullProfiles(
 
   logger.info(
     colors.green(
-      `Successfully wrote ${allIdentifiersCount} identifiers to file "${file}"`
-    )
+      `Successfully wrote ${allIdentifiersCount} identifiers to file "${file}"`,
+    ),
   );
   logger.info(
     colors.green(
-      `Successfully wrote ${allTargetIdentifiersCount} identifiers to file "${fileTarget}"`
-    )
+      `Successfully wrote ${allTargetIdentifiersCount} identifiers to file "${fileTarget}"`,
+    ),
   );
 }

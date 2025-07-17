@@ -1,12 +1,12 @@
-import { RequestActionObjectResolver } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { difference, flatten, keyBy, uniq } from "lodash-es";
-import { TranscendInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { CREATE_DATA_SUBJECT, DATA_SUBJECTS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, flatten, keyBy, uniq } from 'lodash-es';
+import { TranscendInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { CREATE_DATA_SUBJECT, DATA_SUBJECTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataSubject {
   /** ID of data subject */
@@ -36,7 +36,7 @@ export interface DataSubject {
  * @returns List of data subject configurations
  */
 export async function fetchAllDataSubjects(
-  client: GraphQLClient
+  client: GraphQLClient,
 ): Promise<DataSubject[]> {
   // Fetch all data subjects in the organization
   const { internalSubjects } = await makeGraphQLRequest<{
@@ -56,18 +56,18 @@ export async function fetchAllDataSubjects(
  */
 export async function ensureAllDataSubjectsExist(
   {
-    "data-silos": dataSilos = [],
-    "data-subjects": dataSubjects = [],
+    'data-silos': dataSilos = [],
+    'data-subjects': dataSubjects = [],
     enrichers = [],
   }: TranscendInput,
   client: GraphQLClient,
-  fetchAll = false
+  fetchAll = false,
 ): Promise<Record<string, DataSubject>> {
   // Only need to fetch data subjects if specified in config
   const expectedDataSubjects = uniq([
-    ...flatten(dataSilos.map((silo) => silo["data-subjects"] || []) || []),
+    ...flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
     ...flatten(
-      enrichers.map((enricher) => enricher["data-subjects"] || []) || []
+      enrichers.map((enricher) => enricher['data-subjects'] || []) || [],
     ),
     ...dataSubjects.map((subject) => subject.type),
   ]);
@@ -77,20 +77,20 @@ export async function ensureAllDataSubjectsExist(
 
   // Fetch all data subjects in the organization
   const internalSubjects = await fetchAllDataSubjects(client);
-  const dataSubjectByName = keyBy(internalSubjects, "type");
+  const dataSubjectByName = keyBy(internalSubjects, 'type');
 
   // Determine expected set of data subjects to create
   const missingDataSubjects = difference(
     expectedDataSubjects,
-    internalSubjects.map(({ type }) => type)
+    internalSubjects.map(({ type }) => type),
   );
 
   // If there are missing data subjects, create new ones
   if (missingDataSubjects.length > 0) {
     logger.info(
       colors.magenta(
-        `Creating ${missingDataSubjects.length} new data subjects...`
-      )
+        `Creating ${missingDataSubjects.length} new data subjects...`,
+      ),
     );
     await mapSeries(missingDataSubjects, async (dataSubject) => {
       logger.info(colors.magenta(`Creating data subject ${dataSubject}...`));
@@ -122,7 +122,7 @@ export async function ensureAllDataSubjectsExist(
  */
 export function convertToDataSubjectBlockList(
   dataSubjectTypes: string[],
-  allDataSubjects: Record<string, DataSubject>
+  allDataSubjects: Record<string, DataSubject>,
 ): string[] {
   for (const type of dataSubjectTypes) {
     if (!allDataSubjects[type]) {
@@ -144,7 +144,7 @@ export function convertToDataSubjectBlockList(
  */
 export function convertToDataSubjectAllowlist(
   dataSubjectTypes: string[],
-  allDataSubjects: Record<string, DataSubject>
+  allDataSubjects: Record<string, DataSubject>,
 ): string[] {
   for (const type of dataSubjectTypes) {
     if (!allDataSubjects[type]) {

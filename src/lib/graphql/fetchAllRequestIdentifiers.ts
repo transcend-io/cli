@@ -1,13 +1,13 @@
-import { IdentifierType } from "@transcend-io/privacy-types";
-import { decodeCodec, valuesOf } from "@transcend-io/type-utils";
-import type { Got } from "got";
-import { GraphQLClient } from "graphql-request";
-import * as t from "io-ts";
-import semver from "semver";
-import { SOMBRA_VERSION } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { IdentifierType } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import type { Got } from 'got';
+import { GraphQLClient } from 'graphql-request';
+import * as t from 'io-ts';
+import semver from 'semver';
+import { SOMBRA_VERSION } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-const MIN_SOMBRA_VERSION_TO_DECRYPT = "7.180";
+const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
 
 const RequestIdentifier = t.type({
   /** ID of request */
@@ -45,7 +45,7 @@ export async function fetchAllRequestIdentifiers(
   }: {
     /** ID of request to filter on */
     requestId: string;
-  }
+  },
 ): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
   let offset = 0;
@@ -69,7 +69,7 @@ export async function fetchAllRequestIdentifiers(
 
   if (version && semver.lt(version, MIN_SOMBRA_VERSION_TO_DECRYPT)) {
     throw new Error(
-      `Please upgrade Sombra to ${MIN_SOMBRA_VERSION_TO_DECRYPT} or greater to use this command.`
+      `Please upgrade Sombra to ${MIN_SOMBRA_VERSION_TO_DECRYPT} or greater to use this command.`,
     );
   }
 
@@ -80,7 +80,7 @@ export async function fetchAllRequestIdentifiers(
         .post<{
           /** Decrypted identifiers */
           identifiers: RequestIdentifier[];
-        }>("v1/request-identifiers", {
+        }>('v1/request-identifiers', {
           json: {
             first: PAGE_SIZE,
             offset,
@@ -92,13 +92,13 @@ export async function fetchAllRequestIdentifiers(
       throw new Error(
         `Failed to fetch request identifiers: ${
           error?.response?.body || error?.message
-        }`
+        }`,
       );
     }
 
     const { identifiers: nodes } = decodeCodec(
       RequestIdentifiersResponse,
-      response
+      response,
     );
 
     requestIdentifiers.push(...nodes);

@@ -1,11 +1,11 @@
-import type { UnstructuredSubDataPointRecommendationStatus } from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { gql, type GraphQLClient } from "graphql-request";
-import { sortBy } from "lodash-es";
-import type { DataCategoryInput } from "../../codecs";
-import { logger } from "../../logger";
-import { ENTRY_COUNT, makeGraphQLRequest } from "../graphql";
+import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { gql, type GraphQLClient } from 'graphql-request';
+import { sortBy } from 'lodash-es';
+import type { DataCategoryInput } from '../../codecs';
+import { logger } from '../../logger';
+import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
@@ -68,7 +68,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
   }: EntryFilterOptions & {
     /** Page size to pull in */
     pageSize?: number;
-  } = {}
+  } = {},
 ): Promise<UnstructuredSubDataPointRecommendationCsvPreview[]> {
   const unstructuredSubDataPointRecommendations: UnstructuredSubDataPointRecommendationCsvPreview[] =
     [];
@@ -79,7 +79,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   // Filters
@@ -102,7 +102,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
     filterBy,
   });
 
-  logger.info(colors.magenta("[Step 1/3] Pulling in all subdatapoints"));
+  logger.info(colors.magenta('[Step 1/3] Pulling in all subdatapoints'));
 
   progressBar.start(totalCount, 0);
   let total = 0;
@@ -138,8 +138,8 @@ export async function pullUnstructuredSubDataPointRecommendations(
                 dataSiloId
                 scannedObjectPathId
                 scannedObjectId
-                ${includeEncryptedSnippets ? "name" : ""}
-                ${includeEncryptedSnippets ? "contextSnippet" : ""}
+                ${includeEncryptedSnippets ? 'name' : ''}
+                ${includeEncryptedSnippets ? 'contextSnippet' : ''}
                 dataSubCategory {
                   name
                   category
@@ -158,7 +158,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
           filterBy: {
             ...filterBy,
           },
-        }
+        },
       );
 
       cursor = nodes.at(-1)?.id;
@@ -170,8 +170,8 @@ export async function pullUnstructuredSubDataPointRecommendations(
     } catch (error) {
       logger.error(
         colors.red(
-          `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`
-        )
+          `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`,
+        ),
       );
       throw error;
     }
@@ -181,14 +181,14 @@ export async function pullUnstructuredSubDataPointRecommendations(
   const t1 = Date.now();
   const totalTime = t1 - t0;
 
-  const sorted = sortBy(unstructuredSubDataPointRecommendations, "name");
+  const sorted = sortBy(unstructuredSubDataPointRecommendations, 'name');
 
   logger.info(
     colors.green(
       `Successfully pulled in ${sorted.length} subdatapoints in ${
         totalTime / 1000
-      } seconds!`
-    )
+      } seconds!`,
+    ),
   );
   return sorted;
 }

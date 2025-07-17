@@ -5,8 +5,8 @@ import {
   InitialViewState,
   OnConsentExpiry,
   UserPrivacySignalEnum,
-} from "@transcend-io/airgap.js-types";
-import { LanguageKey } from "@transcend-io/internationalization";
+} from '@transcend-io/airgap.js-types';
+import { LanguageKey } from '@transcend-io/internationalization';
 import {
   ActionItemCode,
   ActionItemPriorityOverride,
@@ -58,12 +58,12 @@ import {
   UnknownRequestPolicy,
   UnstructuredSubDataPointRecommendationStatus,
   UspapiOption,
-} from "@transcend-io/privacy-types";
-import { applyEnum, valuesOf } from "@transcend-io/type-utils";
-import * as t from "io-ts";
-import { OpenAIRouteName, PathfinderPolicyName } from "./enums";
-import { buildAIIntegrationType } from "./lib/helpers/buildAIIntegrationType";
-import { buildEnabledRouteType } from "./lib/helpers/buildEnabledRouteType";
+} from '@transcend-io/privacy-types';
+import { applyEnum, valuesOf } from '@transcend-io/type-utils';
+import * as t from 'io-ts';
+import { OpenAIRouteName, PathfinderPolicyName } from './enums';
+import { buildAIIntegrationType } from './lib/helpers/buildAIIntegrationType';
+import { buildEnabledRouteType } from './lib/helpers/buildEnabledRouteType';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -126,11 +126,11 @@ export const TeamInput = t.intersection([
   }),
   t.partial({
     /** SSO department for automated provisioning */
-    "sso-department": t.string,
+    'sso-department': t.string,
     /** SSO group name for automated provisioning */
-    "sso-group": t.string,
+    'sso-group': t.string,
     /** SSO title mapping for automated provisioning */
-    "sso-title": t.string,
+    'sso-title': t.string,
     /** List of user emails on the team */
     users: t.array(t.string),
     /** List of scopes that the team should have */
@@ -162,7 +162,7 @@ export const EnricherInput = t.intersection([
      * The names of the identifiers that can be resolved by this enricher.
      * i.e. email -> [userId, phone, advertisingId]
      */
-    "output-identifiers": t.array(t.string),
+    'output-identifiers': t.array(t.string),
   }),
   t.partial({
     /** Internal description for why the enricher is needed */
@@ -176,7 +176,7 @@ export const EnricherInput = t.intersection([
      * Whenever a privacy request contains this identifier, the webhook will
      * be called with the value of that identifier as input
      */
-    "input-identifier": t.string,
+    'input-identifier': t.string,
     /**
      * A regular expression that can be used to match on for cancelation
      */
@@ -199,16 +199,16 @@ export const EnricherInput = t.intersection([
     phoneNumbers: t.array(t.string),
     /** The list of regions that should trigger the preflight check */
     regionList: t.array(
-      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode })
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
     ),
     /**
      * Specify which data subjects the enricher should run for
      */
-    "data-subjects": t.array(t.string),
+    'data-subjects': t.array(t.string),
     /** Headers to include in the webhook */
     headers: t.array(WebhookHeader),
     /** The privacy actions that the enricher should run against */
-    "privacy-actions": t.array(valuesOf(RequestAction)),
+    'privacy-actions': t.array(valuesOf(RequestAction)),
   }),
 ]);
 
@@ -355,7 +355,7 @@ export const AgentInput = t.intersection([
     /** Whether the agent has retrieval enabled */
     retrievalEnabled: t.boolean,
     /** Large language model powering the agent */
-    "large-language-model": t.type({
+    'large-language-model': t.type({
       /** Name of the model */
       name: t.string,
       /** Client of the model */
@@ -383,11 +383,11 @@ export const AgentInput = t.intersection([
     /**
      * The names of the functions that the agent has access to
      */
-    "agent-functions": t.array(t.string),
+    'agent-functions': t.array(t.string),
     /**
      * The names of the files that the agent has access to for retrieval
      */
-    "agent-files": t.array(t.string),
+    'agent-files': t.array(t.string),
   }),
 ]);
 
@@ -646,19 +646,19 @@ export const FieldInput = t.intersection([
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
-    "guessed-categories": t.array(DataCategoryGuessInput),
+    'guessed-categories': t.array(DataCategoryGuessInput),
     /**
      * When true, this subdatapoint should be revealed in a data access request.
      * When false, this field should be redacted
      */
-    "access-request-visibility-enabled": t.boolean,
+    'access-request-visibility-enabled': t.boolean,
     /**
      * When true, this subdatapoint should be redacted during an erasure request.
      * There normally is a choice of enabling hard deletion or redaction at the
      * datapoint level, but if redaction is enabled, this column can be used
      * to define which fields should be redacted.
      */
-    "erasure-request-redaction-enabled": t.boolean,
+    'erasure-request-redaction-enabled': t.boolean,
     /** Attributes tagged to subdatapoint */
     attributes: t.array(AttributePreview),
   }),
@@ -701,21 +701,21 @@ export const DatapointInput = t.intersection([
      *
      * @see https://docs.transcend.io/docs/privacy-requests/connecting-data-silos/saas-tools#configuring-an-integration
      */
-    "data-collection-tag": t.string,
+    'data-collection-tag': t.string,
     /**
      * The SQL queries that should be run for that datapoint in a privacy request.
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
-    "privacy-action-queries": t.partial(
-      applyEnum(RequestActionObjectResolver, () => t.string)
+    'privacy-action-queries': t.partial(
+      applyEnum(RequestActionObjectResolver, () => t.string),
     ),
     /**
      * The types of privacy actions that this datapoint can implement
      *
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/actions.ts
      */
-    "privacy-actions": t.array(valuesOf(RequestActionObjectResolver)),
+    'privacy-actions': t.array(valuesOf(RequestActionObjectResolver)),
     /**
      * Provide field-level metadata for this datapoint.
      * This is often the column metadata
@@ -742,30 +742,30 @@ export type DatapointInput = t.TypeOf<typeof DatapointInput>;
 
 export const PromptAVendorEmailSettings = t.partial({
   /** The email address of the user to notify when a promptAPerson integration */
-  "notify-email-address": t.string,
+  'notify-email-address': t.string,
   /**
    * The frequency with which we should be sending emails for this data silo, in milliseconds.
    */
-  "send-frequency": t.number,
+  'send-frequency': t.number,
   /**
    * The type of emails to send for this data silo, i.e. send an email for each DSR, across all open DSRs,
    * or per profile in a DSR.
    */
-  "send-type": valuesOf(PromptAVendorEmailSendType),
+  'send-type': valuesOf(PromptAVendorEmailSendType),
   /**
    * Indicates whether prompt-a-vendor emails should include a list of identifiers
    * in addition to a link to the bulk processing UI.
    */
-  "include-identifiers-attachment": t.boolean,
+  'include-identifiers-attachment': t.boolean,
   /**
    * Indicates what kind of link to generate as part of the emails sent out for this Prompt-a-Vendor silo.
    */
-  "completion-link-type": valuesOf(PromptAVendorEmailCompletionLinkType),
+  'completion-link-type': valuesOf(PromptAVendorEmailCompletionLinkType),
   /**
    * The frequency with which we should retry sending emails for this data silo, in milliseconds.
    * Needs to be a string because the number can be larger than the MAX_INT
    */
-  "manual-work-retry-frequency": t.string,
+  'manual-work-retry-frequency': t.string,
 });
 
 /** Type override */
@@ -975,11 +975,11 @@ export const ActionInput = t.intersection([
     regionDetectionMethod: valuesOf(RegionDetectionMethod),
     /** The list of regions to show in the form */
     regionList: t.array(
-      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode })
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
     ),
     /** The list of regions NOT to show in the form */
     regionBlockList: t.array(
-      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode })
+      valuesOf({ ...IsoCountryCode, ...IsoCountrySubdivisionCode }),
     ),
   }),
 ]);
@@ -1128,7 +1128,7 @@ export const ConsentManageExperienceInput = t.intersection([
       t.partial({
         countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
         country: valuesOf(IsoCountryCode),
-      })
+      }),
     ),
     /** How to handle consent expiry */
     onConsentExpiry: valuesOf(OnConsentExpiry),
@@ -1145,14 +1145,14 @@ export const ConsentManageExperienceInput = t.intersection([
       t.type({
         /** Slug of purpose */
         trackingType: t.string,
-      })
+      }),
     ),
     /** Purposes that are opted out by default in a particular experience */
     optedOutPurposes: t.array(
       t.type({
         /** Slug of purpose */
         trackingType: t.string,
-      })
+      }),
     ),
     /**
      * Browser languages that define this regional experience
@@ -1344,13 +1344,13 @@ export const DataSiloInput = t.intersection([
   }),
   t.partial({
     /** For prompt a person or database integrations, the underlying integration name */
-    "outer-type": t.string,
+    'outer-type': t.string,
     /** A description for that data silo */
     description: t.string,
     /** The webhook URL to notify for data privacy requests */
     url: t.string,
     /** The title of the API key that will be used to respond to privacy requests */
-    "api-key-title": t.string,
+    'api-key-title': t.string,
     /** Custom headers to include in outbound webhook */
     headers: t.array(WebhookHeader),
     /**
@@ -1358,18 +1358,18 @@ export const DataSiloInput = t.intersection([
      * This field can be omitted, and the default assumption will be that the system may potentially
      * contain PII for any potential data subject type.
      */
-    "data-subjects": t.array(t.string),
+    'data-subjects': t.array(t.string),
     /**
      * When this data silo implements a privacy request, these are the identifiers
      * that should be looked up within this system.
      */
-    "identity-keys": t.array(t.string),
+    'identity-keys': t.array(t.string),
     /**
      * When a data erasure request is being performed, this data silo should not be deleted from
      * until all of the following data silos were deleted first. This list can contain other internal
      * systems defined in this file, as well as any of the SaaS tools connected in your Transcend instance.
      */
-    "deletion-dependencies": t.array(t.string),
+    'deletion-dependencies': t.array(t.string),
     /**
      * The email addresses of the employees within your company that are the go-to individuals
      * for managing this data silo
@@ -1396,7 +1396,7 @@ export const DataSiloInput = t.intersection([
     /**
      * Configure email notification settings for privacy requests
      */
-    "email-settings": PromptAVendorEmailSettings,
+    'email-settings': PromptAVendorEmailSettings,
     /** Country of data silo hosting */
     country: valuesOf(IsoCountryCode),
     /** Sub-division of data silo hosting */
@@ -1484,13 +1484,13 @@ export type ActionItemInput = t.TypeOf<typeof ActionItemInput>;
 export const AssessmentRuleInput = t.intersection([
   t.type({
     /** The reference id of the question whose answer is compared by this rule */
-    "depends-on-question-reference-id": t.string,
+    'depends-on-question-reference-id': t.string,
     /** The operator to use when comparing the question answer to the operands */
-    "comparison-operator": valuesOf(ComparisonOperator),
+    'comparison-operator': valuesOf(ComparisonOperator),
   }),
   t.partial({
     /** The values to compare the question answer to */
-    "comparison-operands": t.array(t.string),
+    'comparison-operands': t.array(t.string),
   }),
 ]);
 
@@ -1499,28 +1499,28 @@ export type AssessmentRuleInput = t.TypeOf<typeof AssessmentRuleInput>;
 
 export interface AssessmentNestedRuleInput {
   /** The operator to use when comparing the nested rules */
-  "logic-operator": LogicOperator;
+  'logic-operator': LogicOperator;
   /** The rules to evaluate and be compared with to other using the LogicOperator */
   rules?: AssessmentRuleInput[];
   /** The nested rules to add one more level of nesting to the rules. They are also compared to each other. */
-  "nested-rules"?: AssessmentNestedRuleInput[];
+  'nested-rules'?: AssessmentNestedRuleInput[];
 }
 
 export const AssessmentNestedRuleInput: t.RecursiveType<
   t.Type<AssessmentNestedRuleInput>
-> = t.recursion("AssessmentNestedRuleInput", (self) =>
+> = t.recursion('AssessmentNestedRuleInput', (self) =>
   t.intersection([
     t.type({
       /** The operator to use when comparing the nested rules */
-      "logic-operator": valuesOf(LogicOperator),
+      'logic-operator': valuesOf(LogicOperator),
     }),
     t.partial({
       /** The rules to evaluate and be compared with to other using the LogicOperator */
       rules: t.array(AssessmentRuleInput),
       /** The nested rules to add one more level of nesting to the rules. They are also compared to each other. */
-      "nested-rules": t.array(self),
+      'nested-rules': t.array(self),
     }),
-  ])
+  ]),
 );
 
 export const AssessmentDisplayLogicInput = t.intersection([
@@ -1532,7 +1532,7 @@ export const AssessmentDisplayLogicInput = t.intersection([
     /** The rule to evaluate */
     rule: AssessmentRuleInput,
     /** The nested rule to evaluate */
-    "nested-rule": AssessmentNestedRuleInput,
+    'nested-rule': AssessmentNestedRuleInput,
   }),
 ]);
 
@@ -1543,11 +1543,11 @@ export type AssessmentDisplayLogicInput = t.TypeOf<
 
 export const RiskAssignmentInput = t.partial({
   /** The risk level to assign to the question */
-  "risk-level": t.string,
+  'risk-level': t.string,
   /** The risk matrix column to assign to a question. */
-  "risk-matrix-column": t.string,
+  'risk-matrix-column': t.string,
   /** The risk matrix row to assign to a question. */
-  "risk-matrix-row": t.string,
+  'risk-matrix-row': t.string,
 });
 
 /** Type override */
@@ -1556,17 +1556,17 @@ export type RiskAssignmentInput = t.TypeOf<typeof RiskAssignmentInput>;
 export const RiskLogicInput = t.intersection([
   t.type({
     /** The values to compare */
-    "comparison-operands": t.array(t.string),
+    'comparison-operands': t.array(t.string),
     /** The operator */
-    "comparison-operator": valuesOf(ComparisonOperator),
+    'comparison-operator': valuesOf(ComparisonOperator),
   }),
   t.partial({
     /** The risk level to assign to the question */
-    "risk-level": t.string,
+    'risk-level': t.string,
     /** The risk matrix column to assign to a question. */
-    "risk-matrix-column": t.string,
+    'risk-matrix-column': t.string,
     /** The risk matrix row to assign to a question. */
-    "risk-matrix-row": t.string,
+    'risk-matrix-row': t.string,
   }),
 ]);
 
@@ -1592,41 +1592,41 @@ export const AssessmentSectionQuestionInput = t.intersection([
   }),
   t.partial({
     /** The sub-type of the assessment question */
-    "sub-type": valuesOf(AssessmentQuestionSubType),
+    'sub-type': valuesOf(AssessmentQuestionSubType),
     /** The question placeholder */
     placeholder: t.string,
     /** The question description */
     description: t.string,
     /** Whether an answer is required */
-    "is-required": t.boolean,
+    'is-required': t.boolean,
     /** Used to identify the question within a form or template so it can be referenced in conditional logic. */
-    "reference-id": t.string,
+    'reference-id': t.string,
     /** Display logic for the question */
-    "display-logic": AssessmentDisplayLogicInput,
+    'display-logic': AssessmentDisplayLogicInput,
     /** Risk logic for the question */
-    "risk-logic": t.array(RiskLogicInput),
+    'risk-logic': t.array(RiskLogicInput),
     /** Risk category titles for the question */
-    "risk-categories": t.array(t.string),
+    'risk-categories': t.array(t.string),
     /** Risk framework titles for the question */
-    "risk-framework": t.string,
+    'risk-framework': t.string,
     /** Answer options for the question */
-    "answer-options": t.array(AssessmentAnswerOptionInput),
+    'answer-options': t.array(AssessmentAnswerOptionInput),
     /** The selected answers to the assessments */
-    "selected-answers": t.array(t.string),
+    'selected-answers': t.array(t.string),
     /** Allowed MIME types for the question */
-    "allowed-mime-types": t.array(t.string),
+    'allowed-mime-types': t.array(t.string),
     /** Allow selecting other options */
-    "allow-select-other": t.boolean,
+    'allow-select-other': t.boolean,
     /** Sync model for the question */
-    "sync-model": valuesOf(AssessmentSyncModel),
+    'sync-model': valuesOf(AssessmentSyncModel),
     /** Sync column for the question */
-    "sync-column": valuesOf(AssessmentSyncColumn),
+    'sync-column': valuesOf(AssessmentSyncColumn),
     /** Attribute key / custom field name for the question */
-    "attribute-key": t.string,
+    'attribute-key': t.string,
     /** Require risk evaluation for the question */
-    "require-risk-evaluation": t.boolean,
+    'require-risk-evaluation': t.boolean,
     /** Require risk matrix evaluation for the question */
-    "require-risk-matrix-evaluation": t.boolean,
+    'require-risk-matrix-evaluation': t.boolean,
   }),
 ]);
 
@@ -1646,11 +1646,11 @@ export const AssessmentSectionInput = t.intersection([
     /** Email address of those assigned */
     assignees: t.array(t.string),
     /** Email address of those externally assigned */
-    "external-assignees": t.array(t.string),
+    'external-assignees': t.array(t.string),
     /** Status of section */
     status: t.string,
     /** Whether assessment is reviewed */
-    "is-reviewed": t.boolean,
+    'is-reviewed': t.boolean,
   }),
 ]);
 
@@ -1661,7 +1661,7 @@ export const AssessmentRetentionScheduleInput = t.type({
   /** The retention schedule type */
   type: valuesOf(RetentionScheduleType),
   /** The duration of the retention schedule in days */
-  "duration-days": t.number,
+  'duration-days': t.number,
   /** The operation to perform on the retention schedule */
   operand: valuesOf(RetentionScheduleOperation),
 });
@@ -1690,15 +1690,15 @@ export const AssessmentTemplateInput = t.intersection([
     /** Whether the template is in a locked status */
     locked: t.boolean,
     /** ID of parent template this was cloned from */
-    "parent-id": t.string,
+    'parent-id': t.string,
     /** Whether the template is archived */
     archived: t.boolean,
     /** The date that the assessment was created */
-    "created-at": t.string,
+    'created-at': t.string,
     /** The names of the custom fields associated to this assessment template */
-    "attribute-keys": t.array(t.string),
+    'attribute-keys': t.array(t.string),
     /** The retention schedule configuration */
-    "retention-schedule": AssessmentRetentionScheduleInput,
+    'retention-schedule': AssessmentRetentionScheduleInput,
     /** The titles of the email templates used in the assessment template */
     templates: t.array(t.string),
   }),
@@ -1736,7 +1736,7 @@ export const AssessmentInput = t.intersection([
     /** The emails of the transcend users assigned to the assessment */
     assignees: t.array(t.string),
     /** The emails of the external emails assigned to the assessment */
-    "external-assignees": t.array(t.string),
+    'external-assignees': t.array(t.string),
     /** The emails of the assessment reviewers */
     reviewers: t.array(t.string),
     /** Whether the assessment is in a locked status */
@@ -1748,25 +1748,25 @@ export const AssessmentInput = t.intersection([
     /**
      * Whether the form title is an internal label only, and the group title should be used in communications with assignees
      */
-    "title-is-internal": t.boolean,
+    'title-is-internal': t.boolean,
     /** The date that the assessment is due */
-    "due-date": t.string,
+    'due-date': t.string,
     /** The date that the assessment was created */
-    "created-at": t.string,
+    'created-at': t.string,
     /** The date that the assessment was assigned at */
-    "assigned-at": t.string,
+    'assigned-at': t.string,
     /** The date that the assessment was submitted at */
-    "submitted-at": t.string,
+    'submitted-at': t.string,
     /** The date that the assessment was approved at */
-    "approved-at": t.string,
+    'approved-at': t.string,
     /** The date that the assessment was rejected at */
-    "rejected-at": t.string,
+    'rejected-at': t.string,
     /** The linked data inventory resources */
     resources: t.array(AssessmentResourceInput),
     /** The linked data inventory synced rows */
     rows: t.array(AssessmentResourceInput),
     /** The assessment retention schedule */
-    "retention-schedule": AssessmentRetentionScheduleInput,
+    'retention-schedule': AssessmentRetentionScheduleInput,
     /** The assessment custom fields */
     attributes: t.array(AttributePreview),
   }),
@@ -1798,9 +1798,9 @@ export const ConsentPreferenceTopic = t.intersection([
   }),
   t.partial({
     /** Default value */
-    "default-configuration": t.string,
+    'default-configuration': t.string,
     /** Whether the preference topic is shown in privacy center */
-    "show-in-privacy-center": t.boolean,
+    'show-in-privacy-center': t.boolean,
     /** The options when type is single or multi select */
     options: t.array(ConsentPreferenceTopicOptionValue),
   }),
@@ -1822,23 +1822,23 @@ export const ConsentPurpose = t.intersection([
     /** Description of purpose */
     description: t.string,
     /** Whether purpose is active */
-    "is-active": t.boolean,
+    'is-active': t.boolean,
     /** Whether purpose is configurable */
     configurable: t.boolean,
     /** Display order of purpose for privacy center */
-    "display-order": t.number,
+    'display-order': t.number,
     /** Whether purpose is shown in privacy center */
-    "show-in-privacy-center": t.boolean,
+    'show-in-privacy-center': t.boolean,
     /** Whether purpose is show in consent manger */
-    "show-in-consent-manager": t.boolean,
+    'show-in-consent-manager': t.boolean,
     /** The preference topics configured for the purpose */
-    "preference-topics": t.array(ConsentPreferenceTopic),
+    'preference-topics': t.array(ConsentPreferenceTopic),
     /** Authentication level for purpose on privacy center */
-    "auth-level": valuesOf(PreferenceStoreAuthLevel),
+    'auth-level': valuesOf(PreferenceStoreAuthLevel),
     /** Opt out signals that should instantly opt out of this purpose */
-    "opt-out-signals": t.array(valuesOf(UserPrivacySignalEnum)),
+    'opt-out-signals': t.array(valuesOf(UserPrivacySignalEnum)),
     /** Default consent value */
-    "default-consent": valuesOf(DefaultConsentOption),
+    'default-consent': valuesOf(DefaultConsentOption),
   }),
 ]);
 
@@ -1849,15 +1849,15 @@ export const TranscendInput = t.partial({
   /**
    * Action items
    */
-  "action-items": t.array(ActionItemInput),
+  'action-items': t.array(ActionItemInput),
   /**
    * Action item collections
    */
-  "action-item-collections": t.array(ActionItemCollectionInput),
+  'action-item-collections': t.array(ActionItemCollectionInput),
   /**
    * API key definitions
    */
-  "api-keys": t.array(ApiKeyInput),
+  'api-keys': t.array(ApiKeyInput),
   /** Team definitions */
   teams: t.array(TeamInput),
   /**
@@ -1875,7 +1875,7 @@ export const TranscendInput = t.partial({
   /**
    * Business entity definitions
    */
-  "business-entities": t.array(BusinessEntityInput),
+  'business-entities': t.array(BusinessEntityInput),
   /**
    * Vendor definitions
    */
@@ -1883,15 +1883,15 @@ export const TranscendInput = t.partial({
   /**
    * Data categories definitions
    */
-  "data-categories": t.array(DataCategoryInput),
+  'data-categories': t.array(DataCategoryInput),
   /**
    * Vendor definitions
    */
-  "processing-purposes": t.array(ProcessingPurposeInput),
+  'processing-purposes': t.array(ProcessingPurposeInput),
   /**
    * Data subject definitions
    */
-  "data-subjects": t.array(DataSubjectInput),
+  'data-subjects': t.array(DataSubjectInput),
   /**
    * Action definitions
    */
@@ -1903,11 +1903,11 @@ export const TranscendInput = t.partial({
   /**
    * Data silo definitions
    */
-  "data-silos": t.array(DataSiloInput),
+  'data-silos': t.array(DataSiloInput),
   /**
    * Data flow definitions
    */
-  "data-flows": t.array(DataFlowInput),
+  'data-flows': t.array(DataFlowInput),
   /**
    * Cookie definitions
    */
@@ -1915,7 +1915,7 @@ export const TranscendInput = t.partial({
   /**
    * Consent manager definition
    */
-  "consent-manager": ConsentManagerInput,
+  'consent-manager': ConsentManagerInput,
   /**
    * Prompt definitions
    */
@@ -1923,11 +1923,11 @@ export const TranscendInput = t.partial({
   /**
    * Prompt partial definitions
    */
-  "prompt-partials": t.array(PromptPartialInput),
+  'prompt-partials': t.array(PromptPartialInput),
   /**
    * Prompt group definitions
    */
-  "prompt-groups": t.array(PromptGroupInput),
+  'prompt-groups': t.array(PromptGroupInput),
   /**
    * Agent definitions
    */
@@ -1935,15 +1935,15 @@ export const TranscendInput = t.partial({
   /**
    * Agent function definitions
    */
-  "agent-functions": t.array(AgentFunctionInput),
+  'agent-functions': t.array(AgentFunctionInput),
   /**
    * Agent file definitions
    */
-  "agent-files": t.array(AgentFileInput),
+  'agent-files': t.array(AgentFileInput),
   /**
    * The privacy center configuration
    */
-  "privacy-center": PrivacyCenterInput,
+  'privacy-center': PrivacyCenterInput,
   /**
    * The policies configuration
    */
@@ -1957,7 +1957,7 @@ export const TranscendInput = t.partial({
   /**
    * The full list of assessment templates
    */
-  "assessment-templates": t.array(AssessmentTemplateInput),
+  'assessment-templates': t.array(AssessmentTemplateInput),
   /**
    * The full list of assessment results
    */
@@ -1992,7 +1992,7 @@ export type StoredApiKey = t.TypeOf<typeof StoredApiKey>;
 export const DataFlowCsvInput = t.intersection([
   t.type({
     /** The value of the data flow (host or regex) */
-    "Connections Made To": t.string,
+    'Connections Made To': t.string,
     /** The type of the data flow */
     Type: valuesOf(DataFlowScope),
     /** The CSV of purposes mapped to that data flow */
@@ -2058,7 +2058,7 @@ export const ConsentManagerServiceMetadata = t.type({
       name: t.string,
       /** Allowed purposes */
       trackingPurposes: t.array(t.string),
-    })
+    }),
   ),
   /** Data Flows */
   dataFlows: t.array(
@@ -2069,7 +2069,7 @@ export const ConsentManagerServiceMetadata = t.type({
       type: valuesOf(DataFlowScope),
       /** Allowed purposes */
       trackingPurposes: t.array(t.string),
-    })
+    }),
   ),
 });
 

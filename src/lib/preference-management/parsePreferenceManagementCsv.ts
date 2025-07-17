@@ -1,19 +1,19 @@
-import { PersistedState } from "@transcend-io/persisted-state";
-import colors from "colors";
-import type { Got } from "got";
-import * as t from "io-ts";
-import { keyBy } from "lodash-es";
-import { logger } from "../../logger";
-import { PreferenceTopic } from "../graphql";
-import { readCsv } from "../requests";
-import { checkIfPendingPreferenceUpdatesAreNoOp } from "./checkIfPendingPreferenceUpdatesAreNoOp";
-import { checkIfPendingPreferenceUpdatesCauseConflict } from "./checkIfPendingPreferenceUpdatesCauseConflict";
-import { FileMetadataState, PreferenceState } from "./codecs";
-import { getPreferencesForIdentifiers } from "./getPreferencesForIdentifiers";
-import { getPreferenceUpdatesFromRow } from "./getPreferenceUpdatesFromRow";
-import { parsePreferenceAndPurposeValuesFromCsv } from "./parsePreferenceAndPurposeValuesFromCsv";
-import { parsePreferenceIdentifiersFromCsv } from "./parsePreferenceIdentifiersFromCsv";
-import { parsePreferenceTimestampsFromCsv } from "./parsePreferenceTimestampsFromCsv";
+import { PersistedState } from '@transcend-io/persisted-state';
+import colors from 'colors';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { keyBy } from 'lodash-es';
+import { logger } from '../../logger';
+import { PreferenceTopic } from '../graphql';
+import { readCsv } from '../requests';
+import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
+import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
+import { FileMetadataState, PreferenceState } from './codecs';
+import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
+import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
+import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
+import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
+import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
 
 /**
  * Parse a file into the cache
@@ -48,13 +48,13 @@ export async function parsePreferenceManagementCsvWithCache(
     /** Wheather to force workflow triggers */
     forceTriggerWorkflows: boolean;
   },
-  cache: PersistedState<typeof PreferenceState>
+  cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
   // Start the timer
   const t0 = Date.now();
 
   // Get the current metadata
-  const fileMetadata = cache.getValue("fileMetadata");
+  const fileMetadata = cache.getValue('fileMetadata');
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
@@ -74,20 +74,20 @@ export async function parsePreferenceManagementCsvWithCache(
   // Validate that all timestamps are present in the file
   currentState = await parsePreferenceTimestampsFromCsv(
     preferences,
-    currentState
+    currentState,
   );
   fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, "fileMetadata");
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Validate that all identifiers are present and unique
   const result = await parsePreferenceIdentifiersFromCsv(
     preferences,
-    currentState
+    currentState,
   );
   currentState = result.currentState;
   preferences = result.preferences;
   fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, "fileMetadata");
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Ensure all other columns are mapped to purpose and preference
   // slug values
@@ -98,14 +98,14 @@ export async function parsePreferenceManagementCsvWithCache(
       preferenceTopics,
       purposeSlugs,
       forceTriggerWorkflows,
-    }
+    },
   );
   fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, "fileMetadata");
+  await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Grab existing preference store records
   const identifiers = preferences.map(
-    (pref) => pref[currentState.identifierColumn!]
+    (pref) => pref[currentState.identifierColumn!],
   );
   const existingConsentRecords = skipExistingRecordCheck
     ? []
@@ -113,7 +113,7 @@ export async function parsePreferenceManagementCsvWithCache(
         identifiers: identifiers.map((x) => ({ value: x })),
         partitionKey,
       });
-  const consentRecordByIdentifier = keyBy(existingConsentRecords, "userId");
+  const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
 
   // Clear out previous updates
   currentState.pendingConflictUpdates = {};
@@ -138,7 +138,7 @@ export async function parsePreferenceManagementCsvWithCache(
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
         `No existing consent record found for user with id: ${userId}. 
-        When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`
+        When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
       );
     }
     // Check if the update can be skipped
@@ -179,11 +179,11 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Read in the file
   fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, "fileMetadata");
+  await cache.setValue(fileMetadata, 'fileMetadata');
   const t1 = Date.now();
   logger.info(
     colors.green(
-      `Successfully pre-processed file: "${file}" in ${(t1 - t0) / 1000}s`
-    )
+      `Successfully pre-processed file: "${file}" in ${(t1 - t0) / 1000}s`,
+    ),
   );
 }

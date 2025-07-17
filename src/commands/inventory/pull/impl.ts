@@ -1,26 +1,26 @@
-import fs from "node:fs";
-import { join } from "node:path";
-import { ConsentTrackerStatus } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { ADMIN_DASH_INTEGRATIONS } from "../../../constants";
-import type { LocalContext } from "../../../context";
-import { TranscendPullResource } from "../../../enums";
-import { validateTranscendAuth } from "../../../lib/api-keys";
-import { mapSeries } from "../../../lib/bluebird-replace";
+import fs from 'node:fs';
+import { join } from 'node:path';
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { TranscendPullResource } from '../../../enums';
+import { validateTranscendAuth } from '../../../lib/api-keys';
+import { mapSeries } from '../../../lib/bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   pullTranscendConfiguration,
-} from "../../../lib/graphql";
-import { writeTranscendYaml } from "../../../lib/readTranscendYaml";
-import { logger } from "../../../logger";
+} from '../../../lib/graphql';
+import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 import {
   DEFAULT_CONSENT_TRACKER_STATUSES,
   DEFAULT_TRANSCEND_PULL_RESOURCES,
-} from "./command";
+} from './command';
 
 interface PullCommandFlags {
   auth: string;
-  resources?: (TranscendPullResource | "all")[];
+  resources?: (TranscendPullResource | 'all')[];
   file: string;
   transcendUrl: string;
   dataSiloIds?: string[];
@@ -48,17 +48,17 @@ export async function pull(
     skipSubDatapoints,
     includeGuessedCategories,
     debug,
-  }: PullCommandFlags
+  }: PullCommandFlags,
 ): Promise<void> {
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 
-  const resourcesToPull: TranscendPullResource[] = resources.includes("all")
+  const resourcesToPull: TranscendPullResource[] = resources.includes('all')
     ? Object.values(TranscendPullResource)
     : (resources as TranscendPullResource[]);
 
   // Sync to Disk
-  if (typeof apiKeyOrList === "string") {
+  if (typeof apiKeyOrList === 'string') {
     try {
       // Create a GraphQL client
       const client = buildTranscendGraphQLClient(transcendUrl, apiKeyOrList);
@@ -82,8 +82,8 @@ export async function pull(
         colors.red(
           `An error occurred syncing the schema: ${
             debug ? error.stack : error.message
-          }`
-        )
+          }`,
+        ),
       );
       process.exit(1);
     }
@@ -91,13 +91,13 @@ export async function pull(
     // Indicate success
     logger.info(
       colors.green(
-        `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH_INTEGRATIONS}`
-      )
+        `Successfully synced yaml file to disk at ${file}! View at ${ADMIN_DASH_INTEGRATIONS}`,
+      ),
     );
   } else {
     if (!fs.lstatSync(file).isDirectory()) {
       throw new Error(
-        "File is expected to be a folder when passing in a list of API keys to pull from. e.g. --file=./working/"
+        'File is expected to be a folder when passing in a list of API keys to pull from. e.g. --file=./working/',
       );
     }
 
@@ -108,8 +108,8 @@ export async function pull(
       }] `;
       logger.info(
         colors.magenta(
-          `~~~\n\n${prefix}Attempting to pull configuration...\n\n~~~`
-        )
+          `~~~\n\n${prefix}Attempting to pull configuration...\n\n~~~`,
+        ),
       );
 
       // Create a GraphQL client
@@ -130,18 +130,18 @@ export async function pull(
 
         const filePath = join(file, `${apiKey.organizationName}.yml`);
         logger.info(
-          colors.magenta(`Writing configuration to file "${filePath}"...`)
+          colors.magenta(`Writing configuration to file "${filePath}"...`),
         );
         writeTranscendYaml(filePath, configuration);
 
         logger.info(
-          colors.green(`${prefix}Successfully pulled configuration!`)
+          colors.green(`${prefix}Successfully pulled configuration!`),
         );
       } catch (error) {
         logger.error(
           colors.red(
-            `${prefix}Failed to sync configuration. - ${error.message}`
-          )
+            `${prefix}Failed to sync configuration. - ${error.message}`,
+          ),
         );
         encounteredErrors.push(apiKey.organizationName);
       }
@@ -151,9 +151,9 @@ export async function pull(
       logger.info(
         colors.red(
           `Sync encountered errors for "${encounteredErrors.join(
-            ","
-          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`
-        )
+            ',',
+          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
       );
 
       process.exit(1);

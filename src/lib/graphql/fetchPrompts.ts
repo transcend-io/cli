@@ -1,10 +1,10 @@
 import {
   PromptResponseFormat,
   PromptStatus,
-} from "@transcend-io/privacy-types";
-import { GraphQLClient } from "graphql-request";
-import { PROMPTS, PROMPTS_WITH_VARIABLES } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { PROMPTS, PROMPTS_WITH_VARIABLES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Prompt {
   /** ID of prompt */
@@ -45,7 +45,7 @@ export async function fetchAllPrompts(
     ids?: string[];
     /** Filter by titles */
     titles?: string[];
-  } = {}
+  } = {},
 ): Promise<Prompt[]> {
   const prompts: Prompt[] = [];
   let offset = 0;
@@ -165,7 +165,7 @@ export async function fetchPromptsWithVariables(
     promptIds?: string[];
     /** Filter by prompt titles */
     promptTitles?: string[];
-  } = {}
+  } = {},
 ): Promise<TranscendPromptsAndVariables> {
   const { promptsWithVariables } = await makeGraphQLRequest<{
     /** Prompts */

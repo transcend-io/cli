@@ -10,7 +10,7 @@
  */
 export function splitCsvToList(value: string): string[] {
   return value
-    .split(",")
+    .split(',')
     .map((x) => x.trim())
     .filter(Boolean);
 }

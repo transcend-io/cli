@@ -1,13 +1,13 @@
 import {
   RequestDataSiloStatus,
   RequestStatus,
-} from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { logger } from "../../logger";
-import { REQUEST_DATA_SILOS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { logger } from '../../logger';
+import { REQUEST_DATA_SILOS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface RequestDataSilo {
   /** ID of RequestDataSilo */
@@ -44,13 +44,13 @@ export async function fetchRequestDataSilos(
     requestStatuses?: RequestStatus[];
     /** When true, skip logging */
     skipLog?: boolean;
-  }
+  },
 ): Promise<RequestDataSilo[]> {
   // create a new progress bar instance and use shades_classic theme
   const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
 
   const requestDataSilos: RequestDataSilo[] = [];
@@ -101,8 +101,8 @@ export async function fetchRequestDataSilos(
       colors.green(
         `Completed fetching of ${
           requestDataSilos.length
-        } request data silos in "${totalTime / 1000}" seconds.`
-      )
+        } request data silos in "${totalTime / 1000}" seconds.`,
+      ),
     );
   }
 
@@ -126,7 +126,7 @@ export async function fetchRequestDataSilo(
     requestId: string;
     /** Data silo ID */
     dataSiloId: string;
-  }
+  },
 ): Promise<RequestDataSilo> {
   const nodes = await fetchRequestDataSilos(client, {
     requestId,
@@ -135,7 +135,7 @@ export async function fetchRequestDataSilo(
   });
   if (nodes.length !== 1) {
     throw new Error(
-      `Failed to find RequestDataSilo with requestId:${requestId},dataSiloId:${dataSiloId}`
+      `Failed to find RequestDataSilo with requestId:${requestId},dataSiloId:${dataSiloId}`,
     );
   }
 

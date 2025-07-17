@@ -6,24 +6,24 @@ import {
   PromptAVendorEmailSendType,
   RequestActionObjectResolver,
   SubDataPointDataSubCategoryGuessStatus,
-} from "@transcend-io/privacy-types";
-import { apply } from "@transcend-io/type-utils";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { chunk, keyBy, sortBy } from "lodash-es";
+} from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy, sortBy } from 'lodash-es';
 import {
   DataCategoryInput,
   DataSiloInput,
   ProcessingPurposeInput,
-} from "../../codecs";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
-import { ApiKey } from "./fetchApiKeys";
+} from '../../codecs';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { ApiKey } from './fetchApiKeys';
 import {
   convertToDataSubjectBlockList,
   DataSubject,
-} from "./fetchDataSubjects";
+} from './fetchDataSubjects';
 import {
   CREATE_DATA_SILOS,
   DATA_POINTS,
@@ -33,8 +33,8 @@ import {
   SUB_DATA_POINTS_WITH_GUESSES,
   UPDATE_DATA_SILOS,
   UPDATE_OR_CREATE_DATA_POINT,
-} from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -93,12 +93,12 @@ export async function fetchAllDataSilos<TDataSilo extends DataSilo>(
     integrationNames?: string[];
     /** GQL query for data silos */
     gql?: string;
-  }
+  },
 ): Promise<TDataSilo[]> {
   logger.info(
     colors.magenta(
-      `Fetching ${ids.length === 0 ? "all" : ids.length} Data Silos...`
-    )
+      `Fetching ${ids.length === 0 ? 'all' : ids.length} Data Silos...`,
+    ),
   );
 
   const dataSilos: TDataSilo[] = [];
@@ -131,13 +131,13 @@ export async function fetchAllDataSilos<TDataSilo extends DataSilo>(
   logger.info(
     colors.green(
       `Found a total of ${dataSilos.length} data silo${
-        ids.length > 0 ? ` matching IDs ${ids.join(",")}` : ""
+        ids.length > 0 ? ` matching IDs ${ids.join(',')}` : ''
       }s${
         integrationNames.length > 0
-          ? ` matching integrationNames ${integrationNames.join(",")}`
-          : ""
-      }`
-    )
+          ? ` matching integrationNames ${integrationNames.join(',')}`
+          : ''
+      }`,
+    ),
   );
 
   return dataSilos.sort((a, b) => a.title.localeCompare(b.title));
@@ -266,7 +266,7 @@ export async function fetchAllSubDataPoints(
     pageSize: number;
     /** When true, metadata around guessed data categories should be included */
     includeGuessedCategories?: boolean;
-  }
+  },
 ): Promise<SubDataPoint[]> {
   const subDataPoints: SubDataPoint[] = [];
 
@@ -277,7 +277,7 @@ export async function fetchAllSubDataPoints(
     try {
       if (debug) {
         logger.log(
-          colors.magenta(`Pulling in subdatapoints for offset ${offset}`)
+          colors.magenta(`Pulling in subdatapoints for offset ${offset}`),
         );
       }
       const {
@@ -299,7 +299,7 @@ export async function fetchAllSubDataPoints(
             dataPoints: [dataPointId],
           },
           offset,
-        }
+        },
       );
 
       subDataPoints.push(...nodes);
@@ -309,20 +309,20 @@ export async function fetchAllSubDataPoints(
       if (debug) {
         logger.log(
           colors.green(
-            `Pulled in subdatapoints for offset ${offset} for dataPointId=${dataPointId}`
-          )
+            `Pulled in subdatapoints for offset ${offset} for dataPointId=${dataPointId}`,
+          ),
         );
       }
     } catch (error) {
       logger.error(
         colors.red(
-          `An error fetching subdatapoints for offset ${offset} for dataPointId=${dataPointId}`
-        )
+          `An error fetching subdatapoints for offset ${offset} for dataPointId=${dataPointId}`,
+        ),
       );
       throw error;
     }
   } while (shouldContinue);
-  return sortBy(subDataPoints, "name");
+  return sortBy(subDataPoints, 'name');
 }
 
 /**
@@ -350,7 +350,7 @@ export async function fetchAllDataPoints(
     skipSubDatapoints?: boolean;
     /** When true, metadata around guessed data categories should be included */
     includeGuessedCategories?: boolean;
-  }
+  },
 ): Promise<DataPointWithSubDataPoint[]> {
   const dataPoints: DataPointWithSubDataPoint[] = [];
 
@@ -383,8 +383,8 @@ export async function fetchAllDataPoints(
     if (debug) {
       logger.info(
         colors.magenta(
-          `Fetched ${nodes.length} datapoints at offset: ${offset}`
-        )
+          `Fetched ${nodes.length} datapoints at offset: ${offset}`,
+        ),
       );
     }
 
@@ -397,8 +397,8 @@ export async function fetchAllDataPoints(
             if (debug) {
               logger.info(
                 colors.magenta(
-                  `Fetching subdatapoints for ${node.name} for datapoint offset ${offset}`
-                )
+                  `Fetching subdatapoints for ${node.name} for datapoint offset ${offset}`,
+                ),
               );
             }
 
@@ -410,22 +410,22 @@ export async function fetchAllDataPoints(
             dataPoints.push({
               ...node,
               subDataPoints: subDataPoints.sort((a, b) =>
-                a.name.localeCompare(b.name)
+                a.name.localeCompare(b.name),
               ),
             });
 
             if (debug) {
               logger.info(
                 colors.green(
-                  `Successfully fetched subdatapoints for ${node.name}`
-                )
+                  `Successfully fetched subdatapoints for ${node.name}`,
+                ),
               );
             }
           } catch (error) {
             logger.error(
               colors.red(
-                `An error fetching subdatapoints for ${node.name} datapoint offset ${offset}`
-              )
+                `An error fetching subdatapoints for ${node.name} datapoint offset ${offset}`,
+              ),
             );
             throw error;
           }
@@ -433,14 +433,14 @@ export async function fetchAllDataPoints(
 
         {
           concurrency: 5,
-        }
+        },
       );
 
       if (debug) {
         logger.info(
           colors.green(
-            `Fetched all subdatapoints for page of datapoints at offset: ${offset}`
-          )
+            `Fetched all subdatapoints for page of datapoints at offset: ${offset}`,
+          ),
         );
       }
     }
@@ -587,7 +587,7 @@ export async function fetchEnrichedDataSilos(
     skipSubDatapoints?: boolean;
     /** When true, metadata around guessed data categories should be included */
     includeGuessedCategories?: boolean;
-  }
+  },
 ): Promise<[DataSiloEnriched, DataPointWithSubDataPoint[]][]> {
   const dataSilos: [DataSiloEnriched, DataPointWithSubDataPoint[]][] = [];
 
@@ -605,8 +605,8 @@ export async function fetchEnrichedDataSilos(
     await mapSeries(silos, async (silo, index) => {
       logger.info(
         colors.magenta(
-          `[${index + 1}/${silos.length}] Fetching data silo - ${silo.title}`
-        )
+          `[${index + 1}/${silos.length}] Fetching data silo - ${silo.title}`,
+        ),
       );
 
       const dataPoints = await fetchAllDataPoints(client, silo.id, {
@@ -621,8 +621,8 @@ export async function fetchEnrichedDataSilos(
           colors.green(
             `[${index + 1}/${
               silos.length
-            }] Successfully fetched datapoint for - ${silo.title}`
-          )
+            }] Successfully fetched datapoint for - ${silo.title}`,
+          ),
         );
       }
 
@@ -632,8 +632,8 @@ export async function fetchEnrichedDataSilos(
 
   logger.info(
     colors.green(
-      `Successfully fetched all ${silos.length} data silo configurations`
-    )
+      `Successfully fetched all ${silos.length} data silo configurations`,
+    ),
   );
 
   return dataSilos;
@@ -661,7 +661,7 @@ export async function syncDataSilos(
     dataSubjectsByName: Record<string, DataSubject>;
     /** API key title to API key */
     apiKeysByTitle: Record<string, ApiKey>;
-  }
+  },
 ): Promise<{
   /** Whether successfully updated */
   success: boolean;
@@ -681,20 +681,20 @@ export async function syncDataSilos(
   });
 
   // Create a mapping of title -> existing silo, if it exists
-  const existingDataSiloByTitle = keyBy<Pick<DataSilo, "id" | "title">>(
+  const existingDataSiloByTitle = keyBy<Pick<DataSilo, 'id' | 'title'>>(
     existingDataSilos,
-    "title"
+    'title',
   );
 
   // Create new silos that do not exist
   const newDataSiloInputs = dataSilos.filter(
-    ({ title }) => !existingDataSiloByTitle[title]
+    ({ title }) => !existingDataSiloByTitle[title],
   );
   if (newDataSiloInputs.length > 0) {
     logger.info(
       colors.magenta(
-        `Creating "${newDataSiloInputs.length}" data silos that did not exist...`
-      )
+        `Creating "${newDataSiloInputs.length}" data silos that did not exist...`,
+      ),
     );
 
     // Batch the creation
@@ -706,11 +706,11 @@ export async function syncDataSilos(
         /** Mutation result */
         createDataSilos: {
           /** New data silos */
-          dataSilos: Pick<DataSilo, "id" | "title">[];
+          dataSilos: Pick<DataSilo, 'id' | 'title'>[];
         };
       }>(client, CREATE_DATA_SILOS, {
         input: dependencyUpdateChunk.map((input) => ({
-          name: input["outer-type"] || input.integrationName,
+          name: input['outer-type'] || input.integrationName,
           title: input.title,
           country: input.country,
           countrySubDivision: input.countrySubDivision,
@@ -725,8 +725,8 @@ export async function syncDataSilos(
 
     logger.info(
       colors.green(
-        `Successfully created "${newDataSiloInputs.length}" data silos!`
-      )
+        `Successfully created "${newDataSiloInputs.length}" data silos!`,
+      ),
     );
   }
 
@@ -737,14 +737,14 @@ export async function syncDataSilos(
       colors.magenta(
         `[Batch ${ind + 1}/${chunkedUpdates.length}] Syncing "${
           dataSiloUpdateChunk.length
-        }" data silos`
-      )
+        }" data silos`,
+      ),
     );
     await makeGraphQLRequest<{
       /** Mutation result */
       updateDataSilos: {
         /** New data silos */
-        dataSilos: Pick<DataSilo, "id" | "title">[];
+        dataSilos: Pick<DataSilo, 'id' | 'title'>[];
       };
     }>(client, UPDATE_DATA_SILOS, {
       input: {
@@ -755,37 +755,37 @@ export async function syncDataSilos(
           url: input.url,
           headers: input.headers,
           description: input.description,
-          identifiers: input["identity-keys"],
+          identifiers: input['identity-keys'],
           isLive: !input.disabled,
           ownerEmails: input.owners,
           teamNames: input.teams,
           // clear out if not specified, otherwise the update needs to be applied after
           // all data silos are created
-          dependedOnDataSiloTitles: input["deletion-dependencies"]
+          dependedOnDataSiloTitles: input['deletion-dependencies']
             ? undefined
             : [],
-          apiKeyId: input["api-key-title"]
-            ? apiKeysByTitle[input["api-key-title"]].id
+          apiKeyId: input['api-key-title']
+            ? apiKeysByTitle[input['api-key-title']].id
             : undefined,
-          dataSubjectBlockListIds: input["data-subjects"]
+          dataSubjectBlockListIds: input['data-subjects']
             ? convertToDataSubjectBlockList(
-                input["data-subjects"],
-                dataSubjectsByName
+                input['data-subjects'],
+                dataSubjectsByName,
               )
             : undefined,
           attributes: input.attributes,
           businessEntityTitles: input.businessEntityTitles,
           // AVC settings
-          notifyEmailAddress: input["email-settings"]?.["notify-email-address"],
+          notifyEmailAddress: input['email-settings']?.['notify-email-address'],
           promptAVendorEmailSendFrequency:
-            input["email-settings"]?.["send-frequency"],
-          promptAVendorEmailSendType: input["email-settings"]?.["send-type"],
+            input['email-settings']?.['send-frequency'],
+          promptAVendorEmailSendType: input['email-settings']?.['send-type'],
           promptAVendorEmailIncludeIdentifiersAttachment:
-            input["email-settings"]?.["include-identifiers-attachment"],
+            input['email-settings']?.['include-identifiers-attachment'],
           promptAVendorEmailCompletionLinkType:
-            input["email-settings"]?.["completion-link-type"],
+            input['email-settings']?.['completion-link-type'],
           manualWorkRetryFrequency:
-            input["email-settings"]?.["manual-work-retry-frequency"],
+            input['email-settings']?.['manual-work-retry-frequency'],
         })),
       },
     });
@@ -793,8 +793,8 @@ export async function syncDataSilos(
       colors.green(
         `[Batch ${ind + 1}/${chunkedUpdates.length}] Synced "${
           dataSiloUpdateChunk.length
-        }" data silos!`
-      )
+        }" data silos!`,
+      ),
     );
   });
 
@@ -803,18 +803,18 @@ export async function syncDataSilos(
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
   const dataSilosWithDataPoints = dataSilos.filter(
-    ({ datapoints = [] }) => datapoints.length > 0
+    ({ datapoints = [] }) => datapoints.length > 0,
   );
   const totalDataPoints = dataSilos
     .map(({ datapoints = [] }) => datapoints.length)
     .reduce((accumulator, count) => accumulator + count, 0);
   logger.info(
     colors.magenta(
-      `Syncing "${totalDataPoints}" datapoints from "${dataSilosWithDataPoints.length}" data silos...`
-    )
+      `Syncing "${totalDataPoints}" datapoints from "${dataSilosWithDataPoints.length}" data silos...`,
+    ),
   );
   progressBar.start(totalDataPoints, 0);
   let total = 0;
@@ -841,21 +841,21 @@ export async function syncDataSilos(
                     categories: categories
                       ? categories.map((category) => ({
                           ...category,
-                          name: category.name || "Other",
+                          name: category.name || 'Other',
                         }))
                       : undefined,
                     purposes: purposes
                       ? purposes.map((purpose) => ({
                           ...purpose,
-                          name: purpose.name || "Other",
+                          name: purpose.name || 'Other',
                         }))
                       : undefined,
                     attributes,
                     accessRequestVisibilityEnabled:
-                      rest["access-request-visibility-enabled"],
+                      rest['access-request-visibility-enabled'],
                     erasureRequestRedactionEnabled:
-                      rest["erasure-request-redaction-enabled"],
-                  })
+                      rest['erasure-request-redaction-enabled'],
+                  }),
               )
             : undefined;
 
@@ -875,27 +875,27 @@ export async function syncDataSilos(
                   teamNames: datapoint.teams,
                 }
               : {}),
-            ...(datapoint["data-collection-tag"]
-              ? { dataCollectionTag: datapoint["data-collection-tag"] }
+            ...(datapoint['data-collection-tag']
+              ? { dataCollectionTag: datapoint['data-collection-tag'] }
               : {}),
-            querySuggestions: datapoint["privacy-action-queries"]
-              ? Object.entries(datapoint["privacy-action-queries"]).map(
+            querySuggestions: datapoint['privacy-action-queries']
+              ? Object.entries(datapoint['privacy-action-queries']).map(
                   ([key, value]) => ({
                     requestType: key,
                     suggestedQuery: value,
-                  })
+                  }),
                 )
               : undefined,
-            enabledActions: datapoint["privacy-actions"] || [], // clear out when not specified
+            enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
             subDataPoints: fields,
           };
 
           // Ensure no duplicate sub-datapoints are provided
           const subDataPointsToUpdate = (payload.subDataPoints || []).map(
-            ({ name }) => name
+            ({ name }) => name,
           );
           const duplicateDataPoints = subDataPointsToUpdate.filter(
-            (name, index) => subDataPointsToUpdate.indexOf(name) !== index
+            (name, index) => subDataPointsToUpdate.indexOf(name) !== index,
           );
           if (duplicateDataPoints.length > 0) {
             logger.info(
@@ -903,9 +903,9 @@ export async function syncDataSilos(
                 `\nCannot update datapoint "${
                   datapoint.key
                 }" as it has duplicate sub-datapoints with the same name: \n${duplicateDataPoints.join(
-                  "\n"
-                )}`
-              )
+                  '\n',
+                )}`,
+              ),
             );
             encounteredError = true;
           } else {
@@ -913,13 +913,13 @@ export async function syncDataSilos(
               await makeGraphQLRequest(
                 client,
                 UPDATE_OR_CREATE_DATA_POINT,
-                payload
+                payload,
               );
             } catch (error) {
               logger.info(
                 colors.red(
-                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${error.message}`
-                )
+                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${error.message}`,
+                ),
               );
               encounteredError = true;
             }
@@ -931,7 +931,7 @@ export async function syncDataSilos(
     },
     {
       concurrency: 10,
-    }
+    },
   );
 
   progressBar.stop();
@@ -944,8 +944,8 @@ export async function syncDataSilos(
         dataSilos.length
       }" data silos and "${totalDataPoints}" datapoints in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
   return {
     success: !encounteredError,
@@ -962,13 +962,13 @@ export async function syncDataSilos(
  */
 export async function syncDataSiloDependencies(
   client: GraphQLClient,
-  dependencyUpdates: [string, string[]][]
+  dependencyUpdates: [string, string[]][],
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(
     colors.magenta(
-      `Syncing "${dependencyUpdates.length}" data silo dependencies...`
-    )
+      `Syncing "${dependencyUpdates.length}" data silo dependencies...`,
+    ),
   );
 
   // Batch the updates
@@ -976,15 +976,15 @@ export async function syncDataSiloDependencies(
   await mapSeries(chunkedUpdates, async (dependencyUpdateChunk, ind) => {
     logger.info(
       colors.magenta(
-        `[Batch ${ind}/${dependencyUpdateChunk.length}] Updating "${dependencyUpdateChunk.length}" data silos...`
-      )
+        `[Batch ${ind}/${dependencyUpdateChunk.length}] Updating "${dependencyUpdateChunk.length}" data silos...`,
+      ),
     );
     try {
       await makeGraphQLRequest<{
         /** Mutation result */
         updateDataSilos: {
           /** New data silos */
-          dataSilos: Pick<DataSilo, "id" | "title">[];
+          dataSilos: Pick<DataSilo, 'id' | 'title'>[];
         };
       }>(client, UPDATE_DATA_SILOS, {
         input: {
@@ -992,23 +992,23 @@ export async function syncDataSiloDependencies(
             ([id, dependedOnDataSiloTitles]) => ({
               id,
               dependedOnDataSiloTitles,
-            })
+            }),
           ),
         },
       });
       logger.info(
         colors.green(
           `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
-            `Synced "${dependencyUpdateChunk.length}" data silos!`
-        )
+            `Synced "${dependencyUpdateChunk.length}" data silos!`,
+        ),
       );
     } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
           `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
-            `Failed to update "${dependencyUpdateChunk.length}" silos! - ${error.message}`
-        )
+            `Failed to update "${dependencyUpdateChunk.length}" silos! - ${error.message}`,
+        ),
       );
     }
   });

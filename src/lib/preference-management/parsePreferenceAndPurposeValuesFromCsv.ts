@@ -1,12 +1,12 @@
-import { PreferenceTopicType } from "@transcend-io/privacy-types";
-import colors from "colors";
-import inquirer from "inquirer";
-import { difference, uniq } from "lodash-es";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { PreferenceTopic } from "../graphql";
-import { splitCsvToList } from "../requests";
-import { FileMetadataState } from "./codecs";
+import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import inquirer from 'inquirer';
+import { difference, uniq } from 'lodash-es';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { PreferenceTopic } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { FileMetadataState } from './codecs';
 
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
@@ -30,7 +30,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     preferenceTopics: PreferenceTopic[];
     /** Force workflow triggers */
     forceTriggerWorkflows: boolean;
-  }
+  },
 ): Promise<FileMetadataState> {
   // Determine columns to map
   const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
@@ -44,7 +44,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     if (forceTriggerWorkflows) {
       return currentState;
     }
-    throw new Error("No other columns to process");
+    throw new Error('No other columns to process');
   }
 
   // The purpose and preferences to map to
@@ -63,8 +63,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     if (purposeMapping) {
       logger.info(
         colors.magenta(
-          `Column "${col}" is associated with purpose "${purposeMapping.purpose}"`
-        )
+          `Column "${col}" is associated with purpose "${purposeMapping.purpose}"`,
+        ),
       );
     } else {
       const { purposeName } = await inquirer.prompt<{
@@ -72,14 +72,14 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         purposeName: string;
       }>([
         {
-          name: "purposeName",
+          name: 'purposeName',
           message: `Choose the purpose that column ${col} is associated with`,
-          type: "list",
+          type: 'list',
           default: purposeNames.find((x) => x.startsWith(purposeSlugs[0])),
           choices: purposeNames,
         },
       ]);
-      const [purposeSlug, preferenceSlug] = purposeName.split("->");
+      const [purposeSlug, preferenceSlug] = purposeName.split('->');
       purposeMapping = {
         purpose: purposeSlug,
         preference: preferenceSlug || null,
@@ -92,8 +92,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
       if (purposeMapping.valueMapping[value] !== undefined) {
         logger.info(
           colors.magenta(
-            `Value "${value}" is associated with purpose value "${purposeMapping.valueMapping[value]}"`
-          )
+            `Value "${value}" is associated with purpose value "${purposeMapping.valueMapping[value]}"`,
+          ),
         );
         return;
       }
@@ -104,10 +104,10 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           purposeValue: boolean;
         }>([
           {
-            name: "purposeValue",
+            name: 'purposeValue',
             message: `Choose the purpose value for value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-            type: "confirm",
-            default: value !== "false",
+            type: 'confirm',
+            default: value !== 'false',
           },
         ]);
         purposeMapping.valueMapping[value] = purposeValue;
@@ -116,18 +116,18 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
       // if preference is not null, this column is for a specific preference
       if (purposeMapping.preference !== null) {
         const preferenceTopic = preferenceTopics.find(
-          (x) => x.slug === purposeMapping.preference
+          (x) => x.slug === purposeMapping.preference,
         );
         if (!preferenceTopic) {
           logger.error(
             colors.red(
-              `Preference topic "${purposeMapping.preference}" not found`
-            )
+              `Preference topic "${purposeMapping.preference}" not found`,
+            ),
           );
           return;
         }
         const preferenceOptions = preferenceTopic.preferenceOptionValues.map(
-          ({ slug }) => slug
+          ({ slug }) => slug,
         );
 
         if (preferenceTopic.type === PreferenceTopicType.Boolean) {
@@ -136,10 +136,10 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
             preferenceValue: boolean;
           }>([
             {
-              name: "preferenceValue",
+              name: 'preferenceValue',
               message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-              type: "confirm",
-              default: value !== "false",
+              type: 'confirm',
+              default: value !== 'false',
             },
           ]);
           purposeMapping.valueMapping[value] = preferenceValue;
@@ -152,10 +152,10 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
             preferenceValue: boolean;
           }>([
             {
-              name: "preferenceValue",
+              name: 'preferenceValue',
 
               message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-              type: "list",
+              type: 'list',
               choices: preferenceOptions,
               default: preferenceOptions.find((x) => x === value),
             },
@@ -177,10 +177,10 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
               preferenceValue: boolean;
             }>([
               {
-                name: "preferenceValue",
+                name: 'preferenceValue',
 
                 message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
-                type: "list",
+                type: 'list',
                 choices: preferenceOptions,
                 default: preferenceOptions.find((x) => x === parsedValue),
               },
@@ -191,7 +191,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         }
 
         throw new Error(
-          `Unknown preference topic type: ${preferenceTopic.type}`
+          `Unknown preference topic type: ${preferenceTopic.type}`,
         );
       }
     });

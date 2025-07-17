@@ -1,9 +1,9 @@
-import { getEntries } from "@transcend-io/type-utils";
-import colors from "colors";
-import fastGlob from "fast-glob";
-import { CodePackageInput } from "../../codecs";
-import { logger } from "../../logger";
-import { CODE_SCANNING_CONFIGS } from "./constants";
+import { getEntries } from '@transcend-io/type-utils';
+import colors from 'colors';
+import fastGlob from 'fast-glob';
+import { CodePackageInput } from '../../codecs';
+import { logger } from '../../logger';
+import { CODE_SCANNING_CONFIGS } from './constants';
 
 /**
  * Helper to scan and discovery all of the code packages within a folder
@@ -36,34 +36,34 @@ export async function findCodePackagesInFolder({
       ].filter((dir) => dir.length > 0);
       try {
         const filesToScan: string[] = await fastGlob(
-          `${scanPath}/**/${supportedFiles.join("|")}`,
+          `${scanPath}/**/${supportedFiles.join('|')}`,
           {
             ignore: directoriesToIgnore.map(
-              (dir: string) => `${scanPath}/**/${dir}`
+              (dir: string) => `${scanPath}/**/${dir}`,
             ),
             unique: true,
             onlyFiles: true,
-          }
+          },
         );
         logger.info(
           colors.magenta(
-            `Scanning: ${filesToScan.length} files of type ${codePackageType}`
-          )
+            `Scanning: ${filesToScan.length} files of type ${codePackageType}`,
+          ),
         );
         const allPackages = filesToScan.flatMap((filePath) =>
           scanFunction(filePath).map((result) => ({
             ...result,
-            relativePath: filePath.replace(`${scanPath}/`, ""),
-          }))
+            relativePath: filePath.replace(`${scanPath}/`, ''),
+          })),
         );
         logger.info(
           colors.green(
             `Found: ${allPackages.length} packages and ${
               allPackages.flatMap(
-                ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits
+                ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits,
               ).length
-            } sdks`
-          )
+            } sdks`,
+          ),
         );
 
         return allPackages.map(
@@ -71,14 +71,14 @@ export async function findCodePackagesInFolder({
             ...package_,
             type: codePackageType,
             repositoryName,
-          })
+          }),
         );
       } catch (error) {
         throw new Error(
-          `Error scanning globs ${supportedFiles} with error: ${error}`
+          `Error scanning globs ${supportedFiles} with error: ${error}`,
         );
       }
-    })
+    }),
   );
 
   return allCodePackages.flat();

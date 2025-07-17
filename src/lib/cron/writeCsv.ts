@@ -1,6 +1,6 @@
-import { appendFileSync, createWriteStream, writeFileSync } from "node:fs";
-import { ObjByString } from "@transcend-io/type-utils";
-import * as fastcsv from "fast-csv";
+import { appendFileSync, createWriteStream, writeFileSync } from 'node:fs';
+import { ObjByString } from '@transcend-io/type-utils';
+import * as fastcsv from 'fast-csv';
 
 /**
  * Escape a CSV value
@@ -9,7 +9,7 @@ import * as fastcsv from "fast-csv";
  * @returns Escaped value
  */
 function escapeCsvValue(value: string): string {
-  if (value.includes('"') || value.includes(",") || value.includes("\n")) {
+  if (value.includes('"') || value.includes(',') || value.includes('\n')) {
     return `"${value.replaceAll('"', '""')}"`;
   }
   return value;
@@ -24,7 +24,7 @@ function escapeCsvValue(value: string): string {
 export function writeCsvSync(
   filePath: string,
   data: ObjByString[],
-  headers: string[]
+  headers: string[],
 ): void {
   const rows: string[][] = [];
 
@@ -33,8 +33,8 @@ export function writeCsvSync(
 
   // Build CSV content with proper escaping
   const csvContent = rows
-    .map((row) => row.map(escapeCsvValue).join(","))
-    .join("\n");
+    .map((row) => row.map(escapeCsvValue).join(','))
+    .join('\n');
 
   // Write to file, overwriting existing content
   writeFileSync(filePath, csvContent);
@@ -53,8 +53,8 @@ export function appendCsvSync(filePath: string, data: ObjByString[]): void {
 
   // Build CSV content with proper escaping
   const csvContent = rows
-    .map((row) => row.map(escapeCsvValue).join(","))
-    .join("\n");
+    .map((row) => row.map(escapeCsvValue).join(','))
+    .join('\n');
 
   // Append to file with leading newline
   appendFileSync(filePath, `\n${csvContent}`);
@@ -70,7 +70,7 @@ export function appendCsvSync(filePath: string, data: ObjByString[]): void {
 export async function writeCsv(
   filePath: string,
   data: ObjByString[],
-  headers: boolean | string[] = true
+  headers: boolean | string[] = true,
 ): Promise<void> {
   const ws = createWriteStream(filePath);
   await new Promise((resolve, reject) => {
@@ -78,8 +78,8 @@ export async function writeCsv(
       fastcsv
         .write(data, { headers, objectMode: true })
         .pipe(ws)
-        .on("error", reject)
-        .on("end", () => {
+        .on('error', reject)
+        .on('end', () => {
           resolve(true);
         });
     } catch (error) {
@@ -100,14 +100,14 @@ export function parseFilePath(filePath: string): {
   /** Extension of the file */
   extension: string;
 } {
-  const lastDotIndex = filePath.lastIndexOf(".");
+  const lastDotIndex = filePath.lastIndexOf('.');
   return {
     baseName:
       lastDotIndex === -1
         ? filePath
         : filePath.slice(0, Math.max(0, lastDotIndex)),
     extension:
-      lastDotIndex === -1 ? ".csv" : filePath.slice(Math.max(0, lastDotIndex)),
+      lastDotIndex === -1 ? '.csv' : filePath.slice(Math.max(0, lastDotIndex)),
   };
 }
 
@@ -124,7 +124,7 @@ export async function writeLargeCsv(
   filePath: string,
   data: ObjByString[],
   headers: boolean | string[] = true,
-  chunkSize = 100_000
+  chunkSize = 100_000,
 ): Promise<string[]> {
   if (data.length <= chunkSize) {
     // If data is small enough, write to single file
@@ -145,7 +145,7 @@ export async function writeLargeCsv(
     // Create filename with chunk number and zero-padding
     const chunkNumber = String(index + 1).padStart(
       String(totalChunks).length,
-      "0"
+      '0',
     );
     const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
 

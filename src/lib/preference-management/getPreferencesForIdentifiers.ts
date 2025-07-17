@@ -1,12 +1,12 @@
-import { PreferenceQueryResponseItem } from "@transcend-io/privacy-types";
-import { decodeCodec } from "@transcend-io/type-utils";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import type { Got } from "got";
-import * as t from "io-ts";
-import { chunk } from "lodash-es";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { chunk } from 'lodash-es';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 
 const PreferenceRecordsQueryResponse = t.intersection([
   t.type({
@@ -19,10 +19,10 @@ const PreferenceRecordsQueryResponse = t.intersection([
 ]);
 
 const MSGS = [
-  "ENOTFOUND",
-  "ETIMEDOUT",
-  "504 Gateway Time-out",
-  "Task timed out after",
+  'ENOTFOUND',
+  'ETIMEDOUT',
+  '504 Gateway Time-out',
+  'Task timed out after',
 ];
 
 /**
@@ -48,7 +48,7 @@ export async function getPreferencesForIdentifiers(
     partitionKey: string;
     /** Whether to skip logging */
     skipLogging?: boolean;
-  }
+  },
 ): Promise<PreferenceQueryResponseItem[]> {
   const results: PreferenceQueryResponseItem[] = [];
   const groupedIdentifiers = chunk(identifiers, 100);
@@ -57,7 +57,7 @@ export async function getPreferencesForIdentifiers(
   const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
   if (!skipLogging) {
     progressBar.start(identifiers.length, 0);
@@ -90,28 +90,28 @@ export async function getPreferencesForIdentifiers(
           break; // Exit loop if successful
         } catch (error) {
           attempts += 1;
-          const message = error?.response?.body || error?.message || "";
+          const message = error?.response?.body || error?.message || '';
           if (
             attempts >= maxAttempts ||
             !MSGS.some((errorMessage) => message.includes(errorMessage))
           ) {
             throw new Error(
-              `Received an error from server after ${attempts} attempts: ${message}`
+              `Received an error from server after ${attempts} attempts: ${message}`,
             );
           }
 
           logger.warn(
             colors.yellow(
               `[RETRYING FAILED REQUEST - Attempt ${attempts}] ` +
-                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${message}`
-            )
+                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${message}`,
+            ),
           );
         }
       }
     },
     {
       concurrency: 40,
-    }
+    },
   );
 
   progressBar.stop();
@@ -121,7 +121,7 @@ export async function getPreferencesForIdentifiers(
   if (!skipLogging) {
     // Log completion time
     logger.info(
-      colors.green(`Completed download in "${totalTime / 1000}" seconds.`)
+      colors.green(`Completed download in "${totalTime / 1000}" seconds.`),
     );
   }
 

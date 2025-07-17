@@ -1,20 +1,20 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
-import cliProgress from "cli-progress";
-import colors from "colors";
-import { DEFAULT_TRANSCEND_API } from "../../constants";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   APPROVE_PRIVACY_REQUEST,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequests,
   makeGraphQLRequest,
-} from "../graphql";
-import { getFileMetadataForPrivacyRequests } from "./getFileMetadataForPrivacyRequests";
-import { streamPrivacyRequestFiles } from "./streamPrivacyRequestFiles";
+} from '../graphql';
+import { getFileMetadataForPrivacyRequests } from './getFileMetadataForPrivacyRequests';
+import { streamPrivacyRequestFiles } from './streamPrivacyRequestFiles';
 
 /**
  * Download a set of privacy requests to disk
@@ -81,14 +81,14 @@ export async function downloadPrivacyRequestFiles({
     {
       sombra,
       concurrency,
-    }
+    },
   );
 
   // Start timer for download process
   const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic
+    cliProgress.Presets.shades_classic,
   );
   let total = 0;
   let totalApproved = 0;
@@ -134,7 +134,7 @@ export async function downloadPrivacyRequestFiles({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency }
+    { concurrency },
   );
 
   progressBar.stop();
@@ -145,12 +145,12 @@ export async function downloadPrivacyRequestFiles({
     colors.green(
       `Successfully downloaded ${total} requests in "${
         totalTime / 1000
-      }" seconds!`
-    )
+      }" seconds!`,
+    ),
   );
   if (totalApproved > 0) {
     logger.info(
-      colors.green(`Approved ${totalApproved} requests in Transcend.`)
+      colors.green(`Approved ${totalApproved} requests in Transcend.`),
     );
   }
   return allRequests.length;

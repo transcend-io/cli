@@ -1,8 +1,8 @@
-import colors from "colors";
-import type { Got } from "got";
-import { logger } from "../../logger";
-import { map } from "../bluebird-replace";
-import { RequestFileMetadata } from "./getFileMetadataForPrivacyRequests";
+import colors from 'colors';
+import type { Got } from 'got';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 
 /**
  * This function will take in a set of file metadata for privacy requests
@@ -28,7 +28,7 @@ export async function streamPrivacyRequestFiles(
     onFileDownloaded: (metadata: RequestFileMetadata, stream: Buffer) => void;
     /** Concurrent downloads at once */
     concurrency?: number;
-  }
+  },
 ): Promise<void> {
   // Loop over each file
   await map(
@@ -37,7 +37,7 @@ export async function streamPrivacyRequestFiles(
       try {
         // Construct the stream
         await sombra
-          .get("v1/files", {
+          .get('v1/files', {
             searchParams: {
               downloadKey: metadata.downloadKey,
             },
@@ -47,26 +47,26 @@ export async function streamPrivacyRequestFiles(
             onFileDownloaded(metadata, fileResponse);
           });
       } catch (error) {
-        if (error?.response?.body?.includes("fileMetadata#verify")) {
+        if (error?.response?.body?.includes('fileMetadata#verify')) {
           logger.error(
             colors.red(
               `Failed to pull file for: ${metadata.fileName} (request:${requestId}) - JWT expired. ` +
-                "This likely means that the file is no longer available. " +
-                "Try restarting the request from scratch in Transcend Admin Dashboard. " +
-                "Skipping the download of this file."
-            )
+                'This likely means that the file is no longer available. ' +
+                'Try restarting the request from scratch in Transcend Admin Dashboard. ' +
+                'Skipping the download of this file.',
+            ),
           );
           return;
         }
         throw new Error(
           `Received an error from server: ${
             error?.response?.body || error?.message
-          }`
+          }`,
         );
       }
     },
     {
       concurrency,
-    }
+    },
   );
 }

@@ -1,19 +1,19 @@
-import { existsSync, lstatSync } from "node:fs";
-import { join } from "node:path";
-import colors from "colors";
-import { TranscendInput } from "../../../codecs";
-import { ADMIN_DASH_INTEGRATIONS } from "../../../constants";
-import type { LocalContext } from "../../../context";
-import { listFiles, validateTranscendAuth } from "../../../lib/api-keys";
-import { mapSeries } from "../../../lib/bluebird-replace";
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
+import colors from 'colors';
+import { TranscendInput } from '../../../codecs';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { listFiles, validateTranscendAuth } from '../../../lib/api-keys';
+import { mapSeries } from '../../../lib/bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   syncConfigurationToTranscend,
-} from "../../../lib/graphql";
-import { parseVariablesFromString } from "../../../lib/helpers/parseVariablesFromString";
-import { mergeTranscendInputs } from "../../../lib/mergeTranscendInputs";
-import { readTranscendYaml } from "../../../lib/readTranscendYaml";
-import { logger } from "../../../logger";
+} from '../../../lib/graphql';
+import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
+import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
+import { readTranscendYaml } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 /**
  * Sync configuration to Transcend
@@ -57,14 +57,14 @@ async function syncConfiguration({
         publishToPrivacyCenter,
         classifyService,
         deleteExtraAttributeValues,
-      }
+      },
     );
     return !encounteredError;
   } catch (error) {
     logger.error(
       colors.red(
-        `An unexpected error occurred syncing the schema: ${error.message}`
-      )
+        `An unexpected error occurred syncing the schema: ${error.message}`,
+      ),
     );
     return false;
   }
@@ -84,7 +84,7 @@ interface PushCommandFlags {
 export async function push(
   this: LocalContext,
   {
-    file = "./transcend.yml",
+    file = './transcend.yml',
     transcendUrl,
     auth,
     variables,
@@ -92,7 +92,7 @@ export async function push(
     publishToPrivacyCenter,
     classifyService,
     deleteExtraAttributeValues,
-  }: PushCommandFlags
+  }: PushCommandFlags,
 ): Promise<void> {
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -105,11 +105,11 @@ export async function push(
   fileList =
     Array.isArray(apiKeyOrList) && lstatSync(file).isDirectory()
       ? listFiles(file).map((filePath) => join(file, filePath))
-      : file.split(",");
+      : file.split(',');
 
   // Ensure at least one file is parsed
   if (fileList.length === 0) {
-    throw new Error("No file specified!");
+    throw new Error('No file specified!');
   }
 
   const transcendInputs = fileList.map((filePath) => {
@@ -119,8 +119,8 @@ export async function push(
     } else {
       logger.error(
         colors.red(
-          `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`
-        )
+          `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`,
+        ),
       );
       process.exit(1);
     }
@@ -131,20 +131,20 @@ export async function push(
       logger.info(colors.green(`Successfully read in "${filePath}"`));
       return {
         content: newContents,
-        name: filePath.split("/").pop()!.replace(".yml", ""),
+        name: filePath.split('/').pop()!.replace('.yml', ''),
       };
     } catch (error) {
       logger.error(
         colors.red(
-          `The shape of your yaml file is invalid with the following errors: ${error.message}`
-        )
+          `The shape of your yaml file is invalid with the following errors: ${error.message}`,
+        ),
       );
       process.exit(1);
     }
   });
 
   // process a single API key
-  if (typeof apiKeyOrList === "string") {
+  if (typeof apiKeyOrList === 'string') {
     // if passed multiple inputs, merge them together
     const [base, ...rest] = transcendInputs.map(({ content }) => content);
     const contents = mergeTranscendInputs(base, ...rest);
@@ -164,8 +164,8 @@ export async function push(
     if (!success) {
       logger.info(
         colors.red(
-          `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`
-        )
+          `Sync encountered errors. View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
       );
 
       process.exit(1);
@@ -177,12 +177,12 @@ export async function push(
       transcendInputs.length !== apiKeyOrList.length
     ) {
       throw new Error(
-        "Expected list of yml files to be equal to the list of API keys." +
+        'Expected list of yml files to be equal to the list of API keys.' +
           `Got ${transcendInputs.length} YML file${
-            transcendInputs.length === 1 ? "" : "s"
+            transcendInputs.length === 1 ? '' : 's'
           } and ${apiKeyOrList.length} API key${
-            apiKeyOrList.length === 1 ? "" : "s"
-          }`
+            apiKeyOrList.length === 1 ? '' : 's'
+          }`,
       );
     }
 
@@ -193,8 +193,8 @@ export async function push(
       }] `;
       logger.info(
         colors.magenta(
-          `~~~\n\n${prefix}Attempting to push configuration...\n\n~~~`
-        )
+          `~~~\n\n${prefix}Attempting to push configuration...\n\n~~~`,
+        ),
       );
 
       // use the merged contents if 1 yml passed, else use the contents that map to that organization
@@ -202,15 +202,15 @@ export async function push(
         transcendInputs.length === 1
           ? transcendInputs[0].content
           : transcendInputs.find(
-              (input) => input.name === apiKey.organizationName
+              (input) => input.name === apiKey.organizationName,
             )?.content;
 
       // Throw error if cannot find a yml file matching that organization name
       if (!useContents) {
         logger.error(
           colors.red(
-            `${prefix}Failed to find transcend.yml file for organization: "${apiKey.organizationName}".`
-          )
+            `${prefix}Failed to find transcend.yml file for organization: "${apiKey.organizationName}".`,
+          ),
         );
         encounteredErrors.push(apiKey.organizationName);
         return;
@@ -228,7 +228,7 @@ export async function push(
 
       if (success) {
         logger.info(
-          colors.green(`${prefix}Successfully pushed configuration!`)
+          colors.green(`${prefix}Successfully pushed configuration!`),
         );
       } else {
         logger.error(colors.red(`${prefix}Failed to sync configuration.`));
@@ -240,9 +240,9 @@ export async function push(
       logger.info(
         colors.red(
           `Sync encountered errors for "${encounteredErrors.join(
-            ","
-          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`
-        )
+            ',',
+          )}". View output above for more information, or check out ${ADMIN_DASH_INTEGRATIONS}`,
+        ),
       );
 
       process.exit(1);
@@ -252,7 +252,7 @@ export async function push(
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced yaml file to Transcend! View at ${ADMIN_DASH_INTEGRATIONS}`
-    )
+      `Successfully synced yaml file to Transcend! View at ${ADMIN_DASH_INTEGRATIONS}`,
+    ),
   );
 }

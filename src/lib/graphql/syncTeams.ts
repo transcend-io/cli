@@ -1,12 +1,12 @@
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { keyBy } from "lodash-es";
-import { TeamInput } from "../../codecs";
-import { logger } from "../../logger";
-import { mapSeries } from "../bluebird-replace";
-import { fetchAllTeams, Team } from "./fetchAllTeams";
-import { CREATE_TEAM, UPDATE_TEAM } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { TeamInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { fetchAllTeams, Team } from './fetchAllTeams';
+import { CREATE_TEAM, UPDATE_TEAM } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new team
@@ -17,14 +17,14 @@ import { makeGraphQLRequest } from "./makeGraphQLRequest";
  */
 export async function createTeam(
   client: GraphQLClient,
-  team: TeamInput
-): Promise<Pick<Team, "id" | "name">> {
+  team: TeamInput,
+): Promise<Pick<Team, 'id' | 'name'>> {
   const input = {
     name: team.name,
     description: team.description,
-    ssoTitle: team["sso-title"],
-    ssoDepartment: team["sso-department"],
-    ssoGroup: team["sso-group"],
+    ssoTitle: team['sso-title'],
+    ssoDepartment: team['sso-department'],
+    ssoGroup: team['sso-group'],
     scopes: team.scopes,
     userEmails: team.users,
   };
@@ -52,8 +52,8 @@ export async function createTeam(
 export async function updateTeam(
   client: GraphQLClient,
   input: TeamInput,
-  teamId: string
-): Promise<Pick<Team, "id" | "name">> {
+  teamId: string,
+): Promise<Pick<Team, 'id' | 'name'>> {
   const { updateTeam } = await makeGraphQLRequest<{
     /** Update team mutation */
     updateTeam: {
@@ -65,9 +65,9 @@ export async function updateTeam(
       id: teamId,
       name: input.name,
       description: input.description,
-      ssoTitle: input["sso-title"],
-      ssoDepartment: input["sso-department"],
-      ssoGroup: input["sso-group"],
+      ssoTitle: input['sso-title'],
+      ssoDepartment: input['sso-department'],
+      ssoGroup: input['sso-group'],
       scopes: input.scopes,
       userEmails: input.users,
     },
@@ -84,7 +84,7 @@ export async function updateTeam(
  */
 export async function syncTeams(
   client: GraphQLClient,
-  inputs: TeamInput[]
+  inputs: TeamInput[],
 ): Promise<boolean> {
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" teams...`));
@@ -95,9 +95,9 @@ export async function syncTeams(
   const existingTeams = await fetchAllTeams(client);
 
   // Look up by name
-  const teamsByName: Record<string, Pick<Team, "id" | "name">> = keyBy(
+  const teamsByName: Record<string, Pick<Team, 'id' | 'name'>> = keyBy(
     existingTeams,
-    "name"
+    'name',
   );
 
   // Create new teams
@@ -113,7 +113,7 @@ export async function syncTeams(
     } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync team "${team.name}"! - ${error.message}`)
+        colors.red(`Failed to sync team "${team.name}"! - ${error.message}`),
       );
     }
   });
@@ -124,14 +124,14 @@ export async function syncTeams(
       const newTeam = await updateTeam(
         client,
         input,
-        teamsByName[input.name].id
+        teamsByName[input.name].id,
       );
       teamsByName[newTeam.name] = newTeam;
       logger.info(colors.green(`Successfully updated team "${input.name}"!`));
     } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync team "${input.name}"! - ${error.message}`)
+        colors.red(`Failed to sync team "${input.name}"! - ${error.message}`),
       );
     }
   });

@@ -1,19 +1,19 @@
-import { CodePackageType } from "@transcend-io/privacy-types";
-import colors from "colors";
-import { GraphQLClient } from "graphql-request";
-import { chunk, keyBy, uniq, uniqBy } from "lodash-es";
-import { CodePackageInput, RepositoryInput } from "../../codecs";
-import { logger } from "../../logger";
-import { map, mapSeries } from "../bluebird-replace";
-import { CodePackage, fetchAllCodePackages } from "./fetchAllCodePackages";
-import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
-import { syncRepositories } from "./syncRepositories";
-import { syncSoftwareDevelopmentKits } from "./syncSoftwareDevelopmentKits";
+import { CodePackageType } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy, uniq, uniqBy } from 'lodash-es';
+import { CodePackageInput, RepositoryInput } from '../../codecs';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
+import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { syncRepositories } from './syncRepositories';
+import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
 
 const CHUNK_SIZE = 100;
 
-const LOOKUP_SPLIT_KEY = "%%%%";
+const LOOKUP_SPLIT_KEY = '%%%%';
 
 /**
  * Create a new code package
@@ -47,7 +47,7 @@ export async function createCodePackage(
     teamIds?: string[];
     /** Names of teams */
     teamNames?: string[];
-  }
+  },
 ): Promise<CodePackage> {
   const {
     createCodePackage: { codePackage },
@@ -61,7 +61,7 @@ export async function createCodePackage(
     input,
   });
   logger.info(
-    colors.green(`Successfully created code package "${input.name}"!`)
+    colors.green(`Successfully created code package "${input.name}"!`),
   );
   return codePackage;
 }
@@ -100,7 +100,7 @@ export async function updateCodePackages(
     teamIds?: string[];
     /** Names of teams */
     teamNames?: string[];
-  }[]
+  }[],
 ): Promise<CodePackage[]> {
   const {
     updateCodePackages: { codePackages },
@@ -116,7 +116,7 @@ export async function updateCodePackages(
     },
   });
   logger.info(
-    colors.green(`Successfully updated ${inputs.length} code packages!`)
+    colors.green(`Successfully updated ${inputs.length} code packages!`),
   );
   return codePackages;
 }
@@ -132,7 +132,7 @@ export async function updateCodePackages(
 export async function syncCodePackages(
   client: GraphQLClient,
   codePackages: CodePackageInput[],
-  concurrency = 20
+  concurrency = 20,
 ): Promise<boolean> {
   let encounteredError = false;
   const [
@@ -149,34 +149,34 @@ export async function syncCodePackages(
           softwareDevelopmentKits.map(({ name }) => ({
             name,
             codePackageType: type,
-          }))
+          })),
         ),
         ({ name, codePackageType }) =>
-          `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`
+          `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`,
       ),
-      concurrency
+      concurrency,
     ),
     // make sure all Repositories exist
     syncRepositories(
       client,
-      uniqBy(codePackages, "repositoryName").map(
+      uniqBy(codePackages, 'repositoryName').map(
         ({ repositoryName }) =>
           ({
             name: repositoryName,
             url: `https://github.com/${repositoryName}`,
-          } as RepositoryInput)
-      )
+          }) as RepositoryInput,
+      ),
     ),
   ]);
 
   const softwareDevelopmentKitLookup = keyBy(
     existingSoftwareDevelopmentKits,
     ({ name, codePackageType }) =>
-      `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`
+      `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`,
   );
   const codePackagesLookup = keyBy(
     existingCodePackages,
-    ({ name, type }) => `${name}${LOOKUP_SPLIT_KEY}${type}`
+    ({ name, type }) => `${name}${LOOKUP_SPLIT_KEY}${type}`,
   );
 
   // Determine which codePackages are new vs existing
@@ -194,8 +194,8 @@ export async function syncCodePackages(
   try {
     logger.info(
       colors.magenta(
-        `Creating "${newCodePackages.length}" new code packages...`
-      )
+        `Creating "${newCodePackages.length}" new code packages...`,
+      ),
     );
     await map(
       newCodePackages,
@@ -212,11 +212,11 @@ export async function syncCodePackages(
                       ];
                     if (!sdk) {
                       throw new Error(
-                        `Failed to find SDK with name: "${name}"`
+                        `Failed to find SDK with name: "${name}"`,
                       );
                     }
                     return sdk.id;
-                  })
+                  }),
                 ),
               }
             : {}),
@@ -224,28 +224,28 @@ export async function syncCodePackages(
       },
       {
         concurrency,
-      }
+      },
     );
     logger.info(
       colors.green(
-        `Successfully synced ${newCodePackages.length} code packages!`
-      )
+        `Successfully synced ${newCodePackages.length} code packages!`,
+      ),
     );
   } catch (error) {
     encounteredError = true;
     logger.info(
-      colors.red(`Failed to create code packages! - ${error.message}`)
+      colors.red(`Failed to create code packages! - ${error.message}`),
     );
   }
 
   // Update existing codePackages
   const existingCodePackageInputs = mapCodePackagesToExisting.filter(
-    (x): x is [CodePackageInput, string] => !!x[1]
+    (x): x is [CodePackageInput, string] => !!x[1],
   );
   logger.info(
     colors.magenta(
-      `Updating "${existingCodePackageInputs.length}" code packages...`
-    )
+      `Updating "${existingCodePackageInputs.length}" code packages...`,
+    ),
   );
   const chunks = chunk(existingCodePackageInputs, CHUNK_SIZE);
 
@@ -267,25 +267,25 @@ export async function syncCodePackages(
                         ];
                       if (!sdk) {
                         throw new Error(
-                          `Failed to find SDK with name: "${name}"`
+                          `Failed to find SDK with name: "${name}"`,
                         );
                       }
                       return sdk.id;
-                    })
+                    }),
                   ),
                 }
               : {}),
             id,
-          })
-        )
+          }),
+        ),
       );
       logger.info(
-        colors.green(`Successfully updated "${chunk.length}" code packages!`)
+        colors.green(`Successfully updated "${chunk.length}" code packages!`),
       );
     } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to update code packages! - ${error.message}`)
+        colors.red(`Failed to update code packages! - ${error.message}`),
       );
     }
   });

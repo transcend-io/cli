@@ -9,10 +9,10 @@ import {
   ProcessingPurpose,
   RetentionScheduleOperation,
   RetentionScheduleType,
-} from "@transcend-io/privacy-types";
-import { GraphQLClient } from "graphql-request";
-import { ASSESSMENTS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+} from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { ASSESSMENTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Represents an assessment with various properties and metadata.
@@ -340,7 +340,7 @@ const PAGE_SIZE = 20;
  * @returns All assessments in the organization
  */
 export async function fetchAllAssessments(
-  client: GraphQLClient
+  client: GraphQLClient,
 ): Promise<Assessment[]> {
   const assessments: Assessment[] = [];
   let offset = 0;

@@ -1,9 +1,9 @@
-import { writeFileSync } from "node:fs";
-import colors from "colors";
-import type { LocalContext } from "../../../context";
-import { validateTranscendAuth } from "../../../lib/api-keys";
-import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from "../../../lib/consent-manager";
-import { logger } from "../../../logger";
+import { writeFileSync } from 'node:fs';
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
+import { validateTranscendAuth } from '../../../lib/api-keys';
+import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from '../../../lib/consent-manager';
+import { logger } from '../../../logger';
 
 interface BuildXdiSyncEndpointCommandFlags {
   auth: string;
@@ -25,7 +25,7 @@ export async function buildXdiSyncEndpoint(
     domainBlockList,
     xdiAllowedCommands,
     transcendUrl,
-  }: BuildXdiSyncEndpointCommandFlags
+  }: BuildXdiSyncEndpointCommandFlags,
 ): Promise<void> {
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -45,9 +45,9 @@ export async function buildXdiSyncEndpoint(
       `Successfully constructed sync endpoint for sync groups: ${JSON.stringify(
         syncGroups,
         null,
-        2
-      )}`
-    )
+        2,
+      )}`,
+    ),
   );
 
   // Write to disk

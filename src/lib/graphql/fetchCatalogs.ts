@@ -1,6 +1,6 @@
-import { GraphQLClient } from "graphql-request";
-import { CATALOGS } from "./gqls";
-import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { GraphQLClient } from 'graphql-request';
+import { CATALOGS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Catalog {
   /** Integration name */
@@ -20,7 +20,7 @@ const PAGE_SIZE = 100;
  * @returns Integration catalogs
  */
 export async function fetchAllCatalogs(
-  client: GraphQLClient
+  client: GraphQLClient,
 ): Promise<Catalog[]> {
   const catalogs: Catalog[] = [];
   let offset = 0;
@@ -45,7 +45,7 @@ export async function fetchAllCatalogs(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
   return catalogs.sort((a, b) =>
-    a.integrationName.localeCompare(b.integrationName)
+    a.integrationName.localeCompare(b.integrationName),
   );
 }
 
@@ -76,7 +76,7 @@ export async function fetchAndIndexCatalogs(client: GraphQLClient): Promise<
     catalogs.map<Record<string, string>>((catalog) => [
       catalog.integrationName,
       catalog.title,
-    ])
+    ]),
   );
 
   // Create mapping from service name to boolean indicate if service has API integration support
@@ -84,7 +84,7 @@ export async function fetchAndIndexCatalogs(client: GraphQLClient): Promise<
     catalogs.map<Record<string, boolean>>((catalog) => [
       catalog.integrationName,
       catalog.hasApiFunctionality,
-    ])
+    ]),
   );
 
   return {
