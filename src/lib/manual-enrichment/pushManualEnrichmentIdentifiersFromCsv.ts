@@ -54,7 +54,9 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
 
   // Notify Transcend
   logger.info(
-    colors.magenta(`Enriching "${activeResults.length}" privacy requests.`),
+    colors.magenta(
+      `Enriching "${activeResults.length.toLocaleString()}" privacy requests.`,
+    ),
   );
 
   let successCount = 0;
@@ -99,17 +101,21 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
 
   logger.info(
     colors.green(
-      `Successfully notified Transcend! \n Success count: ${successCount}.`,
+      `Successfully notified Transcend! \n Success count: ${successCount.toLocaleString()}.`,
     ),
   );
 
   if (skippedCount > 0) {
-    logger.info(colors.magenta(`Skipped count: ${skippedCount}.`));
+    logger.info(
+      colors.magenta(`Skipped count: ${skippedCount.toLocaleString()}.`),
+    );
   }
 
   if (errorCount > 0) {
-    logger.info(colors.red(`Error Count: ${errorCount}.`));
-    throw new Error(`Failed to enrich: ${errorCount} requests.`);
+    logger.info(colors.red(`Error Count: ${errorCount.toLocaleString()}.`));
+    throw new Error(
+      `Failed to enrich: ${errorCount.toLocaleString()} requests.`,
+    );
   }
 
   return activeResults.length;

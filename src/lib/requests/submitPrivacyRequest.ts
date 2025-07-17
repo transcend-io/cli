@@ -8,6 +8,7 @@ import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
+import { isSombraError } from '../graphql';
 import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 import { ParsedAttributeInput } from './parseAttributesFromString';
 
@@ -125,11 +126,13 @@ export async function submitPrivacyRequest(
       })
       .json();
   } catch (error) {
+    if (!(error instanceof Error)) {
+      throw new TypeError('Unknown CLI Error', { cause: error });
+    }
+
     throw new Error(
       `Received an error from server: ${
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        (error as { response?: { body: string } }).response?.body ||
-        (error as { message: string }).message
+        isSombraError(error) ? error.response.body : error.message
       }`,
     );
   }

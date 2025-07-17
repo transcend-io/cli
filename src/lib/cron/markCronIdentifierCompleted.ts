@@ -1,5 +1,6 @@
-import type { Got } from 'got';
+import { RequestError, type Got } from 'got';
 import * as t from 'io-ts';
+import { isSombraError } from '../graphql';
 
 /**
  * Minimal set required to mark as completed
@@ -41,12 +42,17 @@ export async function markCronIdentifierCompleted(
     return true;
   } catch (error) {
     // handle gracefully
-    if (error.response?.statusCode === 409) {
+    if (error instanceof RequestError && error.response?.statusCode === 409) {
       return false;
     }
+
+    if (!(error instanceof Error)) {
+      throw new TypeError('Unknown CLI Error', { cause: error });
+    }
+
     throw new Error(
       `Received an error from server: ${
-        error?.response?.body || error?.message
+        isSombraError(error) ? error.response.body : error.message
       }`,
     );
   }
