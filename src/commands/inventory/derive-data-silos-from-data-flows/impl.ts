@@ -1,5 +1,5 @@
 import { existsSync, lstatSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import { DataFlowInput } from '../../../codecs';
 import type { LocalContext } from '../../../context';
@@ -80,7 +80,7 @@ export async function deriveDataSilosFromDataFlows(
   for (const directory of listFiles(dataFlowsYmlFolder)) {
     // read in the data flows for a specific instance
     const { 'data-flows': dataFlows = [] } = readTranscendYaml(
-      join(dataFlowsYmlFolder, directory),
+      path.join(dataFlowsYmlFolder, directory),
     );
 
     // map the data flows to data silos
@@ -97,7 +97,7 @@ export async function deriveDataSilosFromDataFlows(
     logger.log(`Total Services: ${dataSilos.length}`);
     logger.log(`Ad Tech Services: ${adTechDataSilos.length}`);
     logger.log(`Site Tech Services: ${siteTechDataSilos.length}`);
-    writeTranscendYaml(join(dataSilosYmlFolder, directory), {
+    writeTranscendYaml(path.join(dataSilosYmlFolder, directory), {
       'data-silos': ignoreYmls.includes(directory) ? [] : dataSilos,
     });
   }

@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import path from 'node:path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import cliProgress from 'cli-progress';
@@ -100,7 +100,7 @@ export async function bulkRestartRequests({
   );
 
   // Create a new state file to store the requests from this run
-  const cacheFile = join(
+  const cacheFile = path.join(
     requestReceiptFolder,
     `tr-request-restart-${new Date().toISOString()}`,
   );

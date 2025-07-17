@@ -1,5 +1,5 @@
 import { readdirSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import type { LocalContext } from '../../../context';
 import { map } from '../../../lib/bluebird-replace';
@@ -79,7 +79,7 @@ export async function uploadPreferences(
       }
 
       // Add full paths for each CSV file
-      files.push(...csvFiles.map((file) => join(directory, file)));
+      files.push(...csvFiles.map((file) => path.join(directory, file)));
     } catch (error) {
       logger.error(colors.red(`Failed to read directory: ${directory}`));
       logger.error(colors.red((error as Error).message));
@@ -118,9 +118,9 @@ export async function uploadPreferences(
   await map(
     files,
     async (filePath) => {
-      const fileName = basename(filePath).replace('.csv', '');
+      const fileName = path.basename(filePath).replace('.csv', '');
       await uploadPreferenceManagementPreferencesInteractive({
-        receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
+        receiptFilepath: path.join(receiptFileDir, `${fileName}-receipts.json`),
         auth,
         sombraAuth,
         file: filePath,

@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import path from 'node:path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
@@ -106,7 +106,7 @@ export async function uploadPrivacyRequestsFromCsv({
   });
 
   // Create a new state file to store the requests from this run
-  const requestCacheFile = join(
+  const requestCacheFile = path.join(
     requestReceiptFolder,
     `tr-request-upload-${new Date().toISOString()}-${file
       .split('/')

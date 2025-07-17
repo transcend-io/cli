@@ -1,5 +1,5 @@
 import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 
 /**
  * List the folders in a directory
@@ -9,6 +9,6 @@ import { join } from 'node:path';
  */
 export function listDirectories(startDir: string): string[] {
   return readdirSync(startDir).filter((entryName) =>
-    statSync(join(startDir, entryName)).isDirectory(),
+    statSync(path.join(startDir, entryName)).isDirectory(),
   );
 }

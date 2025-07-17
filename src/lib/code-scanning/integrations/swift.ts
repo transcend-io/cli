@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import path from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { decodeCodec } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
@@ -30,7 +30,7 @@ export const swift: CodeScanningConfig = {
 
     return [
       {
-        name: dirname(filePath).split('/').pop() || '', // FIXME pull from Package.swift ->> name if possible
+        name: path.dirname(filePath).split('/').pop() || '', // FIXME pull from Package.swift ->> name if possible
         type: CodePackageType.CocoaPods, // FIXME should be swift
         softwareDevelopmentKits: parsed.pins.map((target) => ({
           name: target.identity,

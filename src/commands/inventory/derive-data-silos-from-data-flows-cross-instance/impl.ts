@@ -1,5 +1,5 @@
 import { existsSync, lstatSync } from 'node:fs';
-import { join } from 'node:path';
+import path from 'node:path';
 import colors from 'colors';
 import { difference } from 'lodash-es';
 import { DataFlowInput } from '../../../codecs';
@@ -60,7 +60,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
   const dataSiloInputs = listFiles(dataFlowsYmlFolder).map((directory) => {
     // read in the data flows for a specific instance
     const { 'data-flows': dataFlows = [] } = readTranscendYaml(
-      join(dataFlowsYmlFolder, directory),
+      path.join(dataFlowsYmlFolder, directory),
     );
 
     // map the data flows to data silos

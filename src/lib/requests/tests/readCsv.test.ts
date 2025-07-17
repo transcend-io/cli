@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import path from 'node:path';
 import * as t from 'io-ts';
 import { describe, expect, it } from 'vitest';
 import { readCsv } from '../index';
@@ -6,7 +6,7 @@ import { readCsv } from '../index';
 describe('readCsv', () => {
   it('should successfully parse a csv', () => {
     expect(
-      readCsv(join(__dirname, 'sample.csv'), t.record(t.string, t.string)),
+      readCsv(path.join(__dirname, 'sample.csv'), t.record(t.string, t.string)),
     ).to.deep.equal([
       {
         CASL_STATUS: 'Undefined',
@@ -36,19 +36,28 @@ describe('readCsv', () => {
 
   it('throw an error for invalid file', () => {
     expect(() =>
-      readCsv(join(__dirname, 'sample.csv'), t.type({ notValid: t.string })),
+      readCsv(
+        path.join(__dirname, 'sample.csv'),
+        t.type({ notValid: t.string }),
+      ),
     ).to.throw('Failed to decode codec');
   });
 
   it('throw an error for invalid codec', () => {
     expect(() =>
-      readCsv(join(__dirname, 'sample.csvs'), t.record(t.string, t.string)),
+      readCsv(
+        path.join(__dirname, 'sample.csvs'),
+        t.record(t.string, t.string),
+      ),
     ).to.throw('ENOENT: no such file or directory, open');
   });
 
   it('throw an error for invalid format', () => {
     expect(() =>
-      readCsv(join(__dirname, 'readCsv.test.ts'), t.record(t.string, t.string)),
+      readCsv(
+        path.join(__dirname, 'readCsv.test.ts'),
+        t.record(t.string, t.string),
+      ),
     ).to.throw();
   });
 });
