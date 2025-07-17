@@ -11,6 +11,7 @@ import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestAttributeKeys,
+  isSombraError,
 } from '../graphql';
 import { CachedFileState, CachedRequestState } from './constants';
 import { extractClientError } from './extractClientError';
@@ -257,11 +258,14 @@ export async function uploadPrivacyRequestsFromCsv({
         });
         await requestState.setValue(successfulRequests, 'successfulRequests');
       } catch (error) {
-        const message = `${(error as { message: string }).message} - ${JSON.stringify(
-          (error as { response?: { body: string } }).response?.body,
-          null,
-          2,
-        )}`;
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+        const message = `${error.message} - ${
+          isSombraError(error)
+            ? JSON.stringify(error.response.body, null, 2)
+            : ''
+        }`;
         const clientError = extractClientError(message);
 
         if (
@@ -320,7 +324,9 @@ export async function uploadPrivacyRequestsFromCsv({
   // Log completion time
   logger.info(
     colors.green(
-      `Completed upload in "${(totalTime / 1000).toLocaleString()}" seconds.`,
+      `Completed upload in "${(totalTime / 1000).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds.`,
     ),
   );
 
