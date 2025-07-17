@@ -1,20 +1,20 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
+import { LanguageKey } from '@transcend-io/internationalization';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   CompletedRequestStatus,
-  RequestAction,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  RequestAction,
 } from '@transcend-io/privacy-types';
-import { LanguageKey } from '@transcend-io/internationalization';
 import { ObjByString } from '@transcend-io/type-utils';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
-import { makeGraphQLRequest, DataSubject, DATA_SUBJECTS } from '../graphql';
-import { CachedFileState, NONE, ColumnName } from './constants';
-import { mapEnumValues } from './mapEnumValues';
-import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { DATA_SUBJECTS, DataSubject, makeGraphQLRequest } from '../graphql';
+import { CachedFileState, ColumnName, NONE } from './constants';
 import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
+import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { mapEnumValues } from './mapEnumValues';
 
 /**
  * Map the values in a CSV to the enum values in Transcend

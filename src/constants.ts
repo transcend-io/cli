@@ -1,6 +1,6 @@
 import { ScopeName } from '@transcend-io/privacy-types';
-import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
+import { TranscendPullResource } from './enums';
 
 export { description, version } from '../package.json';
 export const name = 'transcend';

@@ -1,12 +1,12 @@
-import { AgentInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_AGENTS, CREATE_AGENT } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
-import { fetchAllAgents, Agent } from './fetchAllAgents';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { AgentInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { Agent, fetchAllAgents } from './fetchAllAgents';
+import { CREATE_AGENT, UPDATE_AGENTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new agent

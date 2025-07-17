@@ -1,5 +1,5 @@
-import { TranscendInput } from '../codecs';
 import { getEntries } from '@transcend-io/type-utils';
+import { TranscendInput } from '../codecs';
 
 /**
  * Combine a set of TranscendInput yaml files into a single yaml

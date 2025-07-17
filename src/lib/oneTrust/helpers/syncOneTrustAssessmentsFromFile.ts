@@ -1,12 +1,11 @@
-import { decodeCodec } from '@transcend-io/type-utils';
-import colors from 'colors';
-import { logger } from '../../../logger';
-import JSONStream from 'JSONStream';
-
 import { createReadStream } from 'fs';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
-import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
+import { decodeCodec } from '@transcend-io/type-utils';
+import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
+import JSONStream from 'JSONStream';
+import { logger } from '../../../logger';
+import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
 /**
  * Reads assessments from a file and syncs them to Transcend.

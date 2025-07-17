@@ -1,7 +1,6 @@
-import * as fastcsv from 'fast-csv';
-import { createWriteStream, writeFileSync, appendFileSync } from 'fs';
-
+import { appendFileSync, createWriteStream, writeFileSync } from 'fs';
 import { ObjByString } from '@transcend-io/type-utils';
+import * as fastcsv from 'fast-csv';
 
 /**
  * Escape a CSV value

@@ -1,51 +1,51 @@
 /* eslint-disable max-lines */
+import type { Handlebars } from '@transcend-io/handlebars-utils';
 import {
-  Optionalize,
-  Requirize,
+  createHandlebarsWithHelpers,
+  HandlebarsInput,
+} from '@transcend-io/handlebars-utils';
+import {
+  ChatCompletionRole,
+  LargeLanguageModelClient,
+  PromptRunProductArea,
+  PromptStatus,
+  QueueStatus,
+} from '@transcend-io/privacy-types';
+import { Secret } from '@transcend-io/secret-value';
+import {
   apply,
   decodeCodec,
   getValues,
+  Optionalize,
+  Requirize,
 } from '@transcend-io/type-utils';
-import type { Handlebars } from '@transcend-io/handlebars-utils';
-import { Secret } from '@transcend-io/secret-value';
+import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
+import { chunk, groupBy, keyBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { mapSeries } from '../bluebird-replace';
 import {
   Agent,
   AgentFile,
   AgentFileFilterBy,
-  ReportPromptRunInput,
   buildTranscendGraphQLClient,
   fetchAllAgentFiles,
   fetchAllAgents,
   reportPromptRun,
+  ReportPromptRunInput,
 } from '../graphql';
 import {
-  HandlebarsInput,
-  createHandlebarsWithHelpers,
-} from '@transcend-io/handlebars-utils';
-import {
-  TranscendPromptTemplated,
-  TranscendPromptsAndVariables,
-  fetchPromptsWithVariables,
-} from '../graphql/fetchPrompts';
-import { GraphQLClient } from 'graphql-request';
-import {
-  PromptStatus,
-  ChatCompletionRole,
-  PromptRunProductArea,
-  QueueStatus,
-  LargeLanguageModelClient,
-} from '@transcend-io/privacy-types';
-import {
-  LargeLanguageModel,
   fetchAllLargeLanguageModels,
+  LargeLanguageModel,
 } from '../graphql/fetchLargeLanguageModels';
-import { groupBy, keyBy, uniq, chunk } from 'lodash-es';
-import { mapSeries } from '../bluebird-replace';
 import {
-  PromptThread,
+  fetchPromptsWithVariables,
+  TranscendPromptsAndVariables,
+  TranscendPromptTemplated,
+} from '../graphql/fetchPrompts';
+import {
   fetchAllPromptThreads,
+  PromptThread,
 } from '../graphql/fetchPromptThreads';
 
 /**
@@ -340,8 +340,8 @@ export class TranscendPromptManager<
       const result = id
         ? promptById[id]
         : title
-        ? promptByTitle[title]
-        : undefined;
+          ? promptByTitle[title]
+          : undefined;
       if (!result) {
         throw new Error(
           `Failed to find prompt with title: "${title}" and id: "${id}"`,

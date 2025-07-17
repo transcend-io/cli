@@ -1,7 +1,7 @@
-import * as t from 'io-ts';
-import { decodeCodec } from '@transcend-io/type-utils';
 import { RequestAction } from '@transcend-io/privacy-types';
+import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
+import * as t from 'io-ts';
 
 export const CronIdentifier = t.type({
   /** The identifier value */

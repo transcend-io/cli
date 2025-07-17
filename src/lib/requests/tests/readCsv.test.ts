@@ -1,7 +1,6 @@
-import { expect, describe, it } from 'vitest';
 import { join } from 'path';
 import * as t from 'io-ts';
-
+import { describe, expect, it } from 'vitest';
 import { readCsv } from '../index';
 
 describe('readCsv', () => {

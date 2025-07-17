@@ -1,7 +1,6 @@
-import { expect, describe, it } from 'vitest';
-
-import { getGitFilesThatChanged } from '../ai/getGitFilesThatChanged';
 import { join } from 'path';
+import { describe, expect, it } from 'vitest';
+import { getGitFilesThatChanged } from '../ai/getGitFilesThatChanged';
 
 // not easy to test this but can uncomment to run against current commit
 describe.skip('getGitFilesThatChanged', () => {

@@ -1,9 +1,9 @@
-import type { LocalContext } from '../../../context';
-import { bulkRetryEnrichers } from '../../../lib/requests';
 import type {
   RequestAction,
   RequestEnricherStatus,
 } from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../context';
+import { bulkRetryEnrichers } from '../../../lib/requests';
 
 interface EnricherRestartCommandFlags {
   auth: string;

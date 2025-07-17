@@ -1,10 +1,10 @@
-import { PrivacyCenterInput } from '../../codecs';
-import { logger } from '../../logger';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
+import { PrivacyCenterInput } from '../../codecs';
+import { logger } from '../../logger';
+import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { UPDATE_PRIVACY_CENTER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 
 /**
  * Sync the privacy center

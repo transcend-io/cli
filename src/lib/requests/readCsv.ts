@@ -1,9 +1,8 @@
+import { readFileSync } from 'fs';
+import { decodeCodec } from '@transcend-io/type-utils';
 import type { Options } from 'csv-parse';
 import { parse } from 'csv-parse/sync';
-import { readFileSync } from 'fs';
 import * as t from 'io-ts';
-
-import { decodeCodec } from '@transcend-io/type-utils';
 
 /**
  * Read in a CSV and validate its shape

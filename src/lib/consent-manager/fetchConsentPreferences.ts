@@ -1,6 +1,6 @@
-import * as t from 'io-ts';
 import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
+import * as t from 'io-ts';
 import { ConsentPreferenceFetch } from './types';
 
 export const ConsentPreferenceResponse = t.intersection([

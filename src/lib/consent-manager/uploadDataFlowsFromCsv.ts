@@ -1,11 +1,11 @@
-import colors from 'colors';
-import { logger } from '../../logger';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
-import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
-import { readCsv } from '../requests/readCsv';
-import { DataFlowInput, DataFlowCsvInput } from '../../codecs';
-import { splitCsvToList } from '../requests';
+import colors from 'colors';
+import { DataFlowCsvInput, DataFlowInput } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { readCsv } from '../requests/readCsv';
 
 const OMIT_COLUMNS = [
   'ID',

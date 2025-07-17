@@ -1,6 +1,6 @@
-import { difference } from 'lodash-es';
-import fastGlob from 'fast-glob';
 import { execSync } from 'child_process';
+import fastGlob from 'fast-glob';
+import { difference } from 'lodash-es';
 
 /**
  * Function thats gets the git files that have changed

@@ -1,7 +1,7 @@
-import type { LocalContext } from '../../../context';
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { uniq } from 'lodash-es';
+import type { LocalContext } from '../../../context';
 import { writeCsv } from '../../../lib/cron';
 import { pullUnstructuredSubDataPointRecommendations } from '../../../lib/data-inventory';
 import { buildTranscendGraphQLClient } from '../../../lib/graphql';

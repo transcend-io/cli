@@ -1,14 +1,14 @@
-import { GraphQLClient } from 'graphql-request';
-import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
-import { chunk } from 'lodash-es';
-import { mapSeries } from '../bluebird-replace';
-import { DataFlowInput } from '../../codecs';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
-import { logger } from '../../logger';
-import colors from 'colors';
-import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk } from 'lodash-es';
+import { DataFlowInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;
 

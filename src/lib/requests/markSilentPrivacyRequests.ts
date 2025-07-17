@@ -1,15 +1,15 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  UPDATE_PRIVACY_REQUEST,
+  buildTranscendGraphQLClient,
   fetchAllRequests,
   makeGraphQLRequest,
-  buildTranscendGraphQLClient,
+  UPDATE_PRIVACY_REQUEST,
 } from '../graphql';
-import cliProgress from 'cli-progress';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 
 /**
  * Mark a set of privacy requests to be in silent mode

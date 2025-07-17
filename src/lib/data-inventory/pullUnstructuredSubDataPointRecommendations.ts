@@ -4,8 +4,8 @@ import colors from 'colors';
 import { gql, type GraphQLClient } from 'graphql-request';
 import { sortBy } from 'lodash-es';
 import type { DataCategoryInput } from '../../codecs';
-import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../../logger';
+import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */

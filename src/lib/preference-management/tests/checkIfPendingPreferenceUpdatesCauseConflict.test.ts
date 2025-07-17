@@ -1,9 +1,8 @@
 /* eslint-disable max-lines */
-import { expect, describe, it } from 'vitest';
-
-import { checkIfPendingPreferenceUpdatesCauseConflict } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import { describe, expect, it } from 'vitest';
 import { PreferenceTopic } from '../../graphql';
+import { checkIfPendingPreferenceUpdatesCauseConflict } from '../index';
 
 const DEFAULT_VALUES = {
   userId: 'test@transcend.io',

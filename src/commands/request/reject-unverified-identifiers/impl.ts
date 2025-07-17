@@ -1,6 +1,6 @@
+import type { RequestAction } from '@transcend-io/privacy-types';
 import type { LocalContext } from '../../../context';
 import { removeUnverifiedRequestIdentifiers } from '../../../lib/requests';
-import type { RequestAction } from '@transcend-io/privacy-types';
 
 interface RejectUnverifiedIdentifiersCommandFlags {
   auth: string;

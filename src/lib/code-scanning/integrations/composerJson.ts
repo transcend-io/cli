@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
-import { CodePackageSdk } from '../../../codecs';
 import { dirname } from 'path';
+import { CodePackageSdk } from '../../../codecs';
+import { CodeScanningConfig } from '../types';
 
 export const composerJson: CodeScanningConfig = {
   supportedFiles: ['composer.json'],

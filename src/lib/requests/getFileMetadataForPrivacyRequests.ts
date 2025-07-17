@@ -1,13 +1,12 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-
-import { PrivacyRequest } from '../graphql';
-import * as t from 'io-ts';
-import type { Got } from 'got';
-import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
-import { logger } from '../../logger';
 import { TableEncryptionType } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { PrivacyRequest } from '../graphql';
 
 export const IntlMessage = t.type({
   /** The message key */

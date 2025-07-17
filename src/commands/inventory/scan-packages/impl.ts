@@ -1,13 +1,13 @@
-import type { LocalContext } from '../../../context';
-import { logger } from '../../../logger';
+import { execSync } from 'child_process';
 import colors from 'colors';
 import { ADMIN_DASH } from '../../../constants';
+import type { LocalContext } from '../../../context';
 import { findCodePackagesInFolder } from '../../../lib/code-scanning';
 import {
   buildTranscendGraphQLClient,
   syncCodePackages,
 } from '../../../lib/graphql';
-import { execSync } from 'child_process';
+import { logger } from '../../../logger';
 
 const REPO_ERROR =
   'A repository name must be provided. ' +

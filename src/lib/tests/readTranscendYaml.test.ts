@@ -1,6 +1,5 @@
-import { expect, describe, it } from 'vitest';
 import { join } from 'path';
-
+import { describe, expect, it } from 'vitest';
 import { readTranscendYaml } from '../../index';
 
 const EXAMPLE_DIR = join(__dirname, '..', '..', '..', 'examples');

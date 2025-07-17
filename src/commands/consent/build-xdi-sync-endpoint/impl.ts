@@ -1,9 +1,9 @@
-import type { LocalContext } from '../../../context';
-import { logger } from '../../../logger';
-import colors from 'colors';
 import { writeFileSync } from 'fs';
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from '../../../lib/consent-manager';
+import { logger } from '../../../logger';
 
 interface BuildXdiSyncEndpointCommandFlags {
   auth: string;

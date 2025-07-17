@@ -1,6 +1,6 @@
-import { DataSubjectInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { UPDATE_DATA_SUBJECT, TOGGLE_DATA_SUBJECT } from './gqls';
+import { DataSubjectInput } from '../../codecs';
+import { TOGGLE_DATA_SUBJECT, UPDATE_DATA_SUBJECT } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**

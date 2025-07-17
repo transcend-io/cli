@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { CookieInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_OR_CREATE_COOKIES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk } from 'lodash-es';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { CookieInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { UPDATE_OR_CREATE_COOKIES } from './gqls';
 // import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

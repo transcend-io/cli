@@ -2,10 +2,10 @@ import {
   PreferenceStorePurposeResponse,
   PreferenceTopicType,
 } from '@transcend-io/privacy-types';
-import { PurposeRowMapping } from './codecs';
 import { apply } from '@transcend-io/type-utils';
 import { PreferenceTopic } from '../graphql';
 import { splitCsvToList } from '../requests';
+import { PurposeRowMapping } from './codecs';
 
 /**
  * Parse an arbitrary object to the Transcend PUT /v1/preference update shape

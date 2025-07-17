@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
-import { CodePackageSdk } from '../../../codecs';
-import { findAllWithRegex } from '@transcend-io/type-utils';
 import { CodePackageType } from '@transcend-io/privacy-types';
+import { findAllWithRegex } from '@transcend-io/type-utils';
+import { CodePackageSdk } from '../../../codecs';
+import { CodeScanningConfig } from '../types';
 
 const POD_TARGET_REGEX = /target ('|")(.*?)('|")/;
 const POD_PACKAGE_REGEX = /pod ('|")(.*?)('|")(, ('|")~> (.+?)('|")|)/;

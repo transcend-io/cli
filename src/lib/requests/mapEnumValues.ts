@@ -1,6 +1,6 @@
+import { apply, ObjByString } from '@transcend-io/type-utils';
 import inquirer from 'inquirer';
 import autoCompletePrompt from 'inquirer-autocomplete-prompt';
-import { apply, ObjByString } from '@transcend-io/type-utils';
 import { fuzzySearch } from './fuzzyMatchColumns';
 
 /**

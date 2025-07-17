@@ -1,15 +1,15 @@
-import { DataCategoryInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_DATA_SUB_CATEGORIES, CREATE_DATA_SUB_CATEGORY } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { DataCategoryInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
-  fetchAllDataCategories,
   DataSubCategory,
+  fetchAllDataCategories,
 } from './fetchAllDataCategories';
+import { CREATE_DATA_SUB_CATEGORY, UPDATE_DATA_SUB_CATEGORIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new data category

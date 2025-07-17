@@ -1,15 +1,15 @@
-import { chunk, uniq, keyBy, uniqBy } from 'lodash-es';
+import { CodePackageType } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
-import { logger } from '../../logger';
-import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
-import { map, mapSeries } from '../bluebird-replace';
+import { chunk, keyBy, uniq, uniqBy } from 'lodash-es';
 import { CodePackageInput, RepositoryInput } from '../../codecs';
-import { CodePackageType } from '@transcend-io/privacy-types';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { syncRepositories } from './syncRepositories';
+import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
 
 const CHUNK_SIZE = 100;
 
@@ -166,7 +166,7 @@ export async function syncCodePackages(
           ({
             name: repositoryName,
             url: `https://github.com/${repositoryName}`,
-          } as RepositoryInput),
+          }) as RepositoryInput,
       ),
     ),
   ]);

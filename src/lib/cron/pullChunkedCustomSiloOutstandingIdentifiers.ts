@@ -1,19 +1,18 @@
+import { RequestAction } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchRequestDataSiloActiveCount,
 } from '../graphql';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
 import {
-  pullCronPageOfIdentifiers,
   CronIdentifier,
+  pullCronPageOfIdentifiers,
 } from './pullCronPageOfIdentifiers';
-import { RequestAction } from '@transcend-io/privacy-types';
-
-import { logger } from '../../logger';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from '../bluebird-replace';
 
 /**
  * A CSV formatted identifier

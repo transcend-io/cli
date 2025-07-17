@@ -1,16 +1,16 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import {
-  RETRY_REQUEST_DATA_SILO,
-  fetchRequestDataSilo,
-  fetchAllRequests,
-  makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-} from '../graphql';
 import cliProgress from 'cli-progress';
+import colors from 'colors';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  fetchAllRequests,
+  fetchRequestDataSilo,
+  makeGraphQLRequest,
+  RETRY_REQUEST_DATA_SILO,
+} from '../graphql';
 
 /**
  * Retry a set of RequestDataSilos

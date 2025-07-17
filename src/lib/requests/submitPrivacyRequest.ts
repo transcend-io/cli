@@ -1,13 +1,13 @@
-import * as t from 'io-ts';
-import { uniq } from 'lodash-es';
-import { valuesOf, decodeCodec } from '@transcend-io/type-utils';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   RequestAction,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
+import * as t from 'io-ts';
+import { uniq } from 'lodash-es';
 import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 import { ParsedAttributeInput } from './parseAttributesFromString';
 
@@ -110,8 +110,8 @@ export async function submitPrivacyRequest(
                         country: input.country,
                       }
                     : input.countrySubDivision
-                    ? { country: input.countrySubDivision.split('-')[0] }
-                    : {}),
+                      ? { country: input.countrySubDivision.split('-')[0] }
+                      : {}),
                   ...(input.countrySubDivision
                     ? { countrySubDivision: input.countrySubDivision }
                     : {}),

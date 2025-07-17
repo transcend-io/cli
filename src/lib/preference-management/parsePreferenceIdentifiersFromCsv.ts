@@ -1,9 +1,9 @@
-import { uniq, groupBy, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, groupBy, uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
+import { FileMetadataState } from './codecs';
 
 /* eslint-disable no-param-reassign */
 

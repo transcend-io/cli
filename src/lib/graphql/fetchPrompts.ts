@@ -1,10 +1,10 @@
+import {
+  PromptResponseFormat,
+  PromptStatus,
+} from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { PROMPTS, PROMPTS_WITH_VARIABLES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import {
-  PromptStatus,
-  PromptResponseFormat,
-} from '@transcend-io/privacy-types';
 
 export interface Prompt {
   /** ID of prompt */

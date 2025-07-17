@@ -1,12 +1,11 @@
-import type { LocalContext } from '../../../context';
+import { readdirSync } from 'fs';
+import { basename, join } from 'path';
 import colors from 'colors';
-
-import { logger } from '../../../logger';
+import type { LocalContext } from '../../../context';
+import { map } from '../../../lib/bluebird-replace';
 import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { splitCsvToList } from '../../../lib/requests';
-import { readdirSync } from 'fs';
-import { map } from '../../../lib/bluebird-replace';
-import { basename, join } from 'path';
+import { logger } from '../../../logger';
 
 interface UploadPreferencesCommandFlags {
   auth: string;

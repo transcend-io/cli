@@ -1,6 +1,6 @@
-import { TemplateInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { TEMPLATES, CREATE_TEMPLATE } from './gqls';
+import { TemplateInput } from '../../codecs';
+import { CREATE_TEMPLATE, TEMPLATES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Template {

@@ -1,9 +1,9 @@
-import fastGlob from 'fast-glob';
-import colors from 'colors';
-import { CodePackageInput } from '../../codecs';
 import { getEntries } from '@transcend-io/type-utils';
-import { CODE_SCANNING_CONFIGS } from './constants';
+import colors from 'colors';
+import fastGlob from 'fast-glob';
+import { CodePackageInput } from '../../codecs';
 import { logger } from '../../logger';
+import { CODE_SCANNING_CONFIGS } from './constants';
 
 /**
  * Helper to scan and discovery all of the code packages within a folder

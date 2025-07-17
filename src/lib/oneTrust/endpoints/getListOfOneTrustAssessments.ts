@@ -1,10 +1,10 @@
-import { Got } from 'got';
-import { logger } from '../../../logger';
-import { decodeCodec } from '@transcend-io/type-utils';
 import {
   OneTrustAssessment,
   OneTrustGetListOfAssessmentsResponse,
 } from '@transcend-io/privacy-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import { Got } from 'got';
+import { logger } from '../../../logger';
 
 /**
  * Fetch a list of all assessments from the OneTrust client.

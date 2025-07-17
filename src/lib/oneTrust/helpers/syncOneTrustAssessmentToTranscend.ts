@@ -1,12 +1,12 @@
-import { logger } from '../../../logger';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
+import { ImportOnetrustAssessmentsInput } from '../../../codecs';
+import { logger } from '../../../logger';
 import {
   IMPORT_ONE_TRUST_ASSESSMENT_FORMS,
   makeGraphQLRequest,
 } from '../../graphql';
-import { ImportOnetrustAssessmentsInput } from '../../../codecs';
-import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 export interface AssessmentForm {

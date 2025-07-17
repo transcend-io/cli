@@ -1,12 +1,12 @@
-import { PromptInput } from '../../codecs';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { UPDATE_PROMPTS, CREATE_PROMPT } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { keyBy } from 'lodash-es';
+import { PromptInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
 import { fetchAllPrompts } from './fetchPrompts';
-import { keyBy } from 'lodash-es';
-import { logger } from '../../logger';
+import { CREATE_PROMPT, UPDATE_PROMPTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Create a new prompt

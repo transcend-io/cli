@@ -1,12 +1,12 @@
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
-import type { Got } from 'got';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
 import * as t from 'io-ts';
-import { map } from '../bluebird-replace';
+import { chunk } from 'lodash-es';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 
 const PreferenceRecordsQueryResponse = t.intersection([
   t.type({

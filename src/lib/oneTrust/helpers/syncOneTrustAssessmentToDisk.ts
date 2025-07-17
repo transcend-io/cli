@@ -1,8 +1,8 @@
-import { logger } from '../../../logger';
-import colors from 'colors';
 import fs from 'fs';
-import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { logger } from '../../../logger';
+import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 
 /**
  * Write the assessment to disk at the specified file path.

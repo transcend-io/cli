@@ -1,19 +1,19 @@
-import type { LocalContext } from '../../../context';
-import {
-  fetchAndIndexCatalogs,
-  buildTranscendGraphQLClient,
-} from '../../../lib/graphql';
+import { existsSync, lstatSync } from 'fs';
 import { join } from 'path';
 import colors from 'colors';
-import { logger } from '../../../logger';
-import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
+import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import {
+  buildTranscendGraphQLClient,
+  fetchAndIndexCatalogs,
+} from '../../../lib/graphql';
 import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface DeriveDataSilosFromDataFlowsCommandFlags {
   auth: string;

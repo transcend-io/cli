@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { DETERMINE_LOGIN_METHOD, ASSUME_ROLE, LOGIN } from './gqls';
+import { ASSUME_ROLE, DETERMINE_LOGIN_METHOD, LOGIN } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface OrganizationPreview {

@@ -1,7 +1,7 @@
+import { CodePackageType } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { CODE_PACKAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { CodePackageType } from '@transcend-io/privacy-types';
 
 export interface CodePackage {
   /** ID of code package */

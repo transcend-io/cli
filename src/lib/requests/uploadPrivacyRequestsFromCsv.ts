@@ -1,29 +1,29 @@
 /* eslint-disable max-lines */
-import colors from 'colors';
-import { map } from '../bluebird-replace';
-import * as t from 'io-ts';
-import { uniq } from 'lodash-es';
-import cliProgress from 'cli-progress';
 import { join } from 'path';
 import { PersistedState } from '@transcend-io/persisted-state';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import * as t from 'io-ts';
+import { uniq } from 'lodash-es';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  createSombraGotInstance,
   buildTranscendGraphQLClient,
+  createSombraGotInstance,
   fetchAllRequestAttributeKeys,
 } from '../graphql';
-import { mapRequestEnumValues } from './mapRequestEnumValues';
-import { CachedRequestState, CachedFileState } from './constants';
+import { CachedFileState, CachedRequestState } from './constants';
+import { extractClientError } from './extractClientError';
+import { filterRows } from './filterRows';
+import { mapColumnsToAttributes } from './mapColumnsToAttributes';
+import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
 import { mapCsvColumnsToApi } from './mapCsvColumnsToApi';
+import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
+import { mapRequestEnumValues } from './mapRequestEnumValues';
 import { parseAttributesFromString } from './parseAttributesFromString';
 import { readCsv } from './readCsv';
 import { submitPrivacyRequest } from './submitPrivacyRequest';
-import { mapColumnsToAttributes } from './mapColumnsToAttributes';
-import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
-import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
-import { filterRows } from './filterRows';
-import { extractClientError } from './extractClientError';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 
 /**
  * Upload a set of privacy requests from CSV

@@ -1,15 +1,15 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
-import {
-  CHANGE_REQUEST_DATA_SILO_STATUS,
-  makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-  fetchRequestDataSilos,
-} from '../graphql';
-import cliProgress from 'cli-progress';
 import { RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  CHANGE_REQUEST_DATA_SILO_STATUS,
+  fetchRequestDataSilos,
+  makeGraphQLRequest,
+} from '../graphql';
 
 /**
  * Given a data silo ID, mark all open request data silos as skipped

@@ -1,8 +1,8 @@
+import colors from 'colors';
 import type { Got } from 'got';
 import * as t from 'io-ts';
-import { logger } from '../../logger';
 import { uniq } from 'lodash-es';
-import colors from 'colors';
+import { logger } from '../../logger';
 import { splitCsvToList } from '../requests/splitCsvToList';
 
 const ADMIN_URL =

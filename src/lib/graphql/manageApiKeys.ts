@@ -1,7 +1,7 @@
+import { ScopeName } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_API_KEY, DELETE_API_KEY } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { ScopeName } from '@transcend-io/privacy-types';
 
 export interface CreatedApiKey {
   /** ID of API key */

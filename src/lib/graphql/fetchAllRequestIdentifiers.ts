@@ -4,7 +4,6 @@ import type { Got } from 'got';
 import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
 import semver from 'semver';
-
 import { SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

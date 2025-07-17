@@ -1,13 +1,13 @@
-import { PromptGroupInput } from '../../codecs';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { UPDATE_PROMPT_GROUPS, CREATE_PROMPT_GROUP } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { keyBy } from 'lodash-es';
+import { PromptGroupInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
 import { fetchAllPromptGroups } from './fetchPromptGroups';
-import { keyBy } from 'lodash-es';
-import { logger } from '../../logger';
 import { fetchAllPrompts } from './fetchPrompts';
+import { CREATE_PROMPT_GROUP, UPDATE_PROMPT_GROUPS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface EditPromptGroupInput {
   /** Title of prompt group */

@@ -1,16 +1,16 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import {
-  REMOVE_REQUEST_IDENTIFIERS,
-  fetchAllRequests,
-  fetchAllRequestIdentifierMetadata,
-  makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-} from '../graphql';
 import cliProgress from 'cli-progress';
+import colors from 'colors';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  fetchAllRequestIdentifierMetadata,
+  fetchAllRequests,
+  makeGraphQLRequest,
+  REMOVE_REQUEST_IDENTIFIERS,
+} from '../graphql';
 
 /**
  * Remove a set of unverified request identifier

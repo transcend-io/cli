@@ -1,47 +1,47 @@
 /* eslint-disable max-lines */
-import { TranscendInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { TranscendInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
+import { fetchAllActions } from './fetchAllActions';
+import { fetchAllAttributes } from './fetchAllAttributes';
+import { fetchApiKeys } from './fetchApiKeys';
+import {
+  ensureAllDataSubjectsExist,
+  fetchAllDataSubjects,
+} from './fetchDataSubjects';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
 } from './fetchIdentifiers';
-import { syncIdentifier } from './syncIdentifier';
-import { syncEnricher } from './syncEnrichers';
-import { syncAttribute } from './syncAttribute';
-import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
-import { syncCookies } from './syncCookies';
-import {
-  fetchAllDataSubjects,
-  ensureAllDataSubjectsExist,
-} from './fetchDataSubjects';
-import { syncTeams } from './syncTeams';
-import { syncDataSubject } from './syncDataSubject';
-import { fetchApiKeys } from './fetchApiKeys';
-import { syncPrompts } from './syncPrompts';
-import { syncPolicies } from './syncPolicies';
-import { syncIntlMessages } from './syncIntlMessages';
-import { syncPrivacyCenter } from './syncPrivacyCenter';
-import { syncConsentManager } from './syncConsentManager';
-import { fetchAllAttributes } from './fetchAllAttributes';
-import { syncBusinessEntities } from './syncBusinessEntities';
-import { syncDataFlows } from './syncDataFlows';
 import { syncAction } from './syncAction';
-import { syncTemplate } from './syncTemplates';
-import { fetchAllActions } from './fetchAllActions';
-import { syncPromptPartials } from './syncPromptPartials';
-import { syncPromptGroups } from './syncPromptGroups';
-import { syncAgents } from './syncAgents';
 import { syncActionItemCollections } from './syncActionItemCollections';
 import { syncActionItems } from './syncActionItems';
-import { syncAgentFunctions } from './syncAgentFunctions';
 import { syncAgentFiles } from './syncAgentFiles';
-import { syncVendors } from './syncVendors';
+import { syncAgentFunctions } from './syncAgentFunctions';
+import { syncAgents } from './syncAgents';
+import { syncAttribute } from './syncAttribute';
+import { syncBusinessEntities } from './syncBusinessEntities';
+import { syncConsentManager } from './syncConsentManager';
+import { syncCookies } from './syncCookies';
 import { syncDataCategories } from './syncDataCategories';
-import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncDataFlows } from './syncDataFlows';
+import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
+import { syncDataSubject } from './syncDataSubject';
+import { syncEnricher } from './syncEnrichers';
+import { syncIdentifier } from './syncIdentifier';
+import { syncIntlMessages } from './syncIntlMessages';
 import { syncPartitions } from './syncPartitions';
+import { syncPolicies } from './syncPolicies';
+import { syncPrivacyCenter } from './syncPrivacyCenter';
+import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncPromptGroups } from './syncPromptGroups';
+import { syncPromptPartials } from './syncPromptPartials';
+import { syncPrompts } from './syncPrompts';
+import { syncTeams } from './syncTeams';
+import { syncTemplate } from './syncTemplates';
+import { syncVendors } from './syncVendors';
 
 const CONCURRENCY = 10;
 

@@ -1,19 +1,19 @@
-import { mapSeries, map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
-import {
-  makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-  fetchAllRequestEnrichers,
-  fetchAllRequests,
-  SKIP_REQUEST_ENRICHER,
-} from '../graphql';
-import cliProgress from 'cli-progress';
 import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  fetchAllRequestEnrichers,
+  fetchAllRequests,
+  makeGraphQLRequest,
+  SKIP_REQUEST_ENRICHER,
+} from '../graphql';
 
 /**
  * Given an enricher ID, mark all open request enrichers as skipped

@@ -1,8 +1,8 @@
-import { map } from '../bluebird-replace';
 import colors from 'colors';
-import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 import type { Got } from 'got';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 
 /**
  * This function will take in a set of file metadata for privacy requests

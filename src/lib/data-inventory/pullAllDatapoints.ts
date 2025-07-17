@@ -1,23 +1,23 @@
 /* eslint-disable max-lines */
-import { keyBy, uniq, chunk, sortBy } from 'lodash-es';
 import {
-  type DataCategoryType,
   SubDataPointDataSubCategoryGuessStatus,
+  type DataCategoryType,
 } from '@transcend-io/privacy-types';
 import cliProgress from 'cli-progress';
-import { gql } from 'graphql-request';
 import colors from 'colors';
+import { gql } from 'graphql-request';
 import type { GraphQLClient } from 'graphql-request';
-import {
-  DATAPOINT_EXPORT,
-  DATA_SILO_EXPORT,
-  type DataSiloAttributeValue,
-  SUB_DATA_POINTS_COUNT,
-  makeGraphQLRequest,
-} from '../graphql';
-import { logger } from '../../logger';
+import { chunk, keyBy, sortBy, uniq } from 'lodash-es';
 import type { DataCategoryInput, ProcessingPurposeInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import {
+  DATA_SILO_EXPORT,
+  DATAPOINT_EXPORT,
+  makeGraphQLRequest,
+  SUB_DATA_POINTS_COUNT,
+  type DataSiloAttributeValue,
+} from '../graphql';
 
 export interface DataSiloCsvPreview {
   /** ID of dataSilo */

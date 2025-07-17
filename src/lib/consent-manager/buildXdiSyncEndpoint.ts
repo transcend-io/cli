@@ -1,11 +1,10 @@
 import colors from 'colors';
-
-import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { difference } from 'lodash-es';
-import { map } from '../bluebird-replace';
 import { StoredApiKey } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { domainToHost } from './domainToHost';
 
 /**

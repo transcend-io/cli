@@ -1,11 +1,11 @@
+import type { TypedFlagParameter } from '@stricli/core';
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
-import { urlParser } from './parsers';
 import {
   DEFAULT_TRANSCEND_API,
   DEFAULT_TRANSCEND_CONSENT_API,
 } from '../../constants';
 import type { LocalContext } from '../../context';
-import type { TypedFlagParameter } from '@stricli/core';
+import { urlParser } from './parsers';
 
 /**
  * Common parameter builders for CLI commands

@@ -1,19 +1,19 @@
 import type { RequestAction } from '@transcend-io/privacy-types';
-import { logger } from '../../../../logger';
 import colors from 'colors';
 import { uniq } from 'lodash-es';
-import { map } from '../../../../lib/bluebird-replace';
-import {
-  buildTranscendGraphQLClient,
-  fetchRequestFilesForRequest,
-} from '../../../../lib/graphql';
 import type { LocalContext } from '../../../../context';
+import { map } from '../../../../lib/bluebird-replace';
 import {
   parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
   writeCsv,
   type CsvFormattedIdentifier,
 } from '../../../../lib/cron';
+import {
+  buildTranscendGraphQLClient,
+  fetchRequestFilesForRequest,
+} from '../../../../lib/graphql';
+import { logger } from '../../../../logger';
 
 interface PullProfilesCommandFlags {
   file: string;

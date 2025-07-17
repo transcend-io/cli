@@ -1,15 +1,15 @@
-import { map, mapSeries } from '../bluebird-replace';
-import { chunk } from 'lodash-es';
-import { createSombraGotInstance } from '../graphql';
-import colors from 'colors';
-import {
-  markCronIdentifierCompleted,
-  CronIdentifierPush,
-} from './markCronIdentifierCompleted';
 import cliProgress from 'cli-progress';
-import { logger } from '../../logger';
-import { readCsv } from '../requests';
+import colors from 'colors';
+import { chunk } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { createSombraGotInstance } from '../graphql';
+import { readCsv } from '../requests';
+import {
+  CronIdentifierPush,
+  markCronIdentifierCompleted,
+} from './markCronIdentifierCompleted';
 
 /**
  * Given a CSV of cron job outputs, mark all requests as completed in Transcend

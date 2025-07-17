@@ -1,25 +1,25 @@
-import {
-  buildTranscendGraphQLClient,
-  createSombraGotInstance,
-  fetchAllPurposes,
-  fetchAllPreferenceTopics,
-  PreferenceTopic,
-  Purpose,
-} from '../graphql';
+import { PersistedState } from '@transcend-io/persisted-state';
+import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
 import { chunk } from 'lodash-es';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
 import { logger } from '../../logger';
-import cliProgress from 'cli-progress';
+import { map } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchAllPreferenceTopics,
+  fetchAllPurposes,
+  PreferenceTopic,
+  Purpose,
+} from '../graphql';
 import { parseAttributesFromString } from '../requests';
-import { PersistedState } from '@transcend-io/persisted-state';
-import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
 import { PreferenceState } from './codecs';
-import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
-import { apply } from '@transcend-io/type-utils';
-import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
+import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
+import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
 
 /**
  * Upload a set of consent preferences

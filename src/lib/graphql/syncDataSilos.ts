@@ -1,41 +1,41 @@
 /* eslint-disable max-lines */
+import {
+  ConfidenceLabel,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+  PromptAVendorEmailCompletionLinkType,
+  PromptAVendorEmailSendType,
+  RequestActionObjectResolver,
+  SubDataPointDataSubCategoryGuessStatus,
+} from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
 import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy, sortBy } from 'lodash-es';
 import {
   DataCategoryInput,
   DataSiloInput,
   ProcessingPurposeInput,
 } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
-import colors from 'colors';
-import { mapSeries, map } from '../bluebird-replace';
-import {
-  DATA_SILOS,
-  CREATE_DATA_SILOS,
-  UPDATE_OR_CREATE_DATA_POINT,
-  DATA_POINTS,
-  SUB_DATA_POINTS,
-  UPDATE_DATA_SILOS,
-  DATA_SILOS_ENRICHED,
-  SUB_DATA_POINTS_WITH_GUESSES,
-} from './gqls';
+import { map, mapSeries } from '../bluebird-replace';
+import { ApiKey } from './fetchApiKeys';
 import {
   convertToDataSubjectBlockList,
   DataSubject,
 } from './fetchDataSubjects';
-import { ApiKey } from './fetchApiKeys';
 import {
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
-  PromptAVendorEmailCompletionLinkType,
-  PromptAVendorEmailSendType,
-  ConfidenceLabel,
-  RequestActionObjectResolver,
-  SubDataPointDataSubCategoryGuessStatus,
-} from '@transcend-io/privacy-types';
-import { sortBy, chunk, keyBy } from 'lodash-es';
+  CREATE_DATA_SILOS,
+  DATA_POINTS,
+  DATA_SILOS,
+  DATA_SILOS_ENRICHED,
+  SUB_DATA_POINTS,
+  SUB_DATA_POINTS_WITH_GUESSES,
+  UPDATE_DATA_SILOS,
+  UPDATE_OR_CREATE_DATA_POINT,
+} from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { apply } from '@transcend-io/type-utils';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */

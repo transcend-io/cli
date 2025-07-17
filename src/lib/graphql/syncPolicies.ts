@@ -1,13 +1,13 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { PolicyInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_POLICIES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk, keyBy } from 'lodash-es';
+import { PolicyInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchAllPolicies } from './fetchAllPolicies';
+import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+import { UPDATE_POLICIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;
 

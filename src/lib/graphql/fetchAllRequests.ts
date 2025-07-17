@@ -1,19 +1,19 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
-import { REQUESTS } from './gqls';
-import * as t from 'io-ts';
-import cliProgress from 'cli-progress';
-import { valuesOf } from '@transcend-io/type-utils';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { LanguageKey } from '@transcend-io/internationalization';
 import {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
   RequestAction,
   RequestOrigin,
   RequestStatus,
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
+import { valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import * as t from 'io-ts';
 import { logger } from '../../logger';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { REQUESTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export const PrivacyRequest = t.intersection([
   t.type({

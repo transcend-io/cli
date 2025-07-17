@@ -1,6 +1,3 @@
-import { EnricherInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { ENRICHERS, CREATE_ENRICHER, UPDATE_ENRICHER } from './gqls';
 import {
   EnricherType,
   IsoCountryCode,
@@ -8,9 +5,12 @@ import {
   PreflightRequestStatus,
   RequestAction,
 } from '@transcend-io/privacy-types';
-import { Identifier } from './fetchIdentifiers';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { GraphQLClient } from 'graphql-request';
+import { EnricherInput } from '../../codecs';
 import { DataSubject } from './fetchDataSubjects';
+import { Identifier } from './fetchIdentifiers';
+import { CREATE_ENRICHER, ENRICHERS, UPDATE_ENRICHER } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Enricher {
   /** ID of enricher */

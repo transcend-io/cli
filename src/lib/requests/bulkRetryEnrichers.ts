@@ -3,18 +3,18 @@ import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import { difference } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchAllRequestEnrichers,
   fetchAllRequests,
   retryRequestEnricher,
 } from '../graphql';
-import { logger } from '../../logger';
 
 /**
  * Restart a bunch of request enrichers

@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
 import { IdentifierType, RequestAction } from '@transcend-io/privacy-types';
-import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
-import { keyBy, uniq, flatten, difference } from 'lodash-es';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, flatten, keyBy, uniq } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
-import colors from 'colors';
 import { mapSeries } from '../bluebird-replace';
+import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Identifier {

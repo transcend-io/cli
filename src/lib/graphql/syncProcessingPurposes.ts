@@ -1,18 +1,18 @@
-import { ProcessingPurposeInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import {
-  UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
-  CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
-} from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { ProcessingPurposeInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   fetchAllProcessingPurposes,
   ProcessingPurposeSubCategory,
 } from './fetchAllProcessingPurposes';
+import {
+  CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
+  UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new processing purpose

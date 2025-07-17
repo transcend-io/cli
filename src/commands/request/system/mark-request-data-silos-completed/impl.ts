@@ -1,10 +1,9 @@
-import type { LocalContext } from '../../../../context';
 import colors from 'colors';
 import * as t from 'io-ts';
-
-import { logger } from '../../../../logger';
+import type { LocalContext } from '../../../../context';
 import { markRequestDataSiloIdsCompleted } from '../../../../lib/cron';
 import { readCsv } from '../../../../lib/requests';
+import { logger } from '../../../../logger';
 
 const RequestIdRow = t.type({
   'Request Id': t.string,

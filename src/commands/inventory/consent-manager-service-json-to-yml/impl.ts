@@ -1,19 +1,19 @@
-import type { LocalContext } from '../../../context';
-import * as t from 'io-ts';
-import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
-import colors from 'colors';
-import { logger } from '../../../logger';
 import { existsSync, readFileSync } from 'fs';
+import {
+  ConsentTrackerStatus,
+  DataFlowScope,
+} from '@transcend-io/privacy-types';
 import { decodeCodec } from '@transcend-io/type-utils';
+import colors from 'colors';
+import * as t from 'io-ts';
 import {
   ConsentManagerServiceMetadata,
   CookieInput,
   DataFlowInput,
 } from '../../../codecs';
-import {
-  ConsentTrackerStatus,
-  DataFlowScope,
-} from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../context';
+import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface ConsentManagerServiceJsonToYmlCommandFlags {
   file: string;

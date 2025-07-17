@@ -1,12 +1,12 @@
-import { uniq, difference } from 'lodash-es';
+import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
-import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';
+import { FileMetadataState } from './codecs';
 
 /* eslint-disable no-param-reassign */
 

@@ -1,8 +1,8 @@
-import { uniq, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, uniq } from 'lodash-es';
 import { logger } from '../../logger';
+import { FileMetadataState } from './codecs';
 
 export const NONE_PREFERENCE_MAP = '[NONE]';
 

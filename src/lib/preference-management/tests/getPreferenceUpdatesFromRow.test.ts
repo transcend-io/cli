@@ -1,8 +1,7 @@
 /* eslint-disable max-lines */
-import { expect, describe, it } from 'vitest';
-
-import { getPreferenceUpdatesFromRow } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import { describe, expect, it } from 'vitest';
+import { getPreferenceUpdatesFromRow } from '../index';
 
 describe('getPreferenceUpdatesFromRow', () => {
   it('should parse boolean updates', () => {

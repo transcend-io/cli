@@ -1,4 +1,3 @@
-import { logger } from '../../../logger';
 import colors from 'colors';
 import yargs from 'yargs-parser';
 import {
@@ -6,6 +5,7 @@ import {
   OneTrustPullResource,
   OneTrustPullSource,
 } from '../../../enums';
+import { logger } from '../../../logger';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 

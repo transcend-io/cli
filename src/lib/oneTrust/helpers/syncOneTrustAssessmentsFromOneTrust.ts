@@ -1,13 +1,3 @@
-import type { Got } from 'got';
-import colors from 'colors';
-import {
-  getListOfOneTrustAssessments,
-  getOneTrustAssessment,
-  getOneTrustRisk,
-  getOneTrustUser,
-} from '../endpoints';
-import { mapSeries, map } from '../../bluebird-replace';
-import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,
   OneTrustAssessmentSection,
@@ -15,10 +5,20 @@ import {
   OneTrustGetRiskResponse,
   OneTrustGetUserResponse,
 } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import type { Got } from 'got';
+import { GraphQLClient } from 'graphql-request';
 import { uniq } from 'lodash-es';
+import { logger } from '../../../logger';
+import { map, mapSeries } from '../../bluebird-replace';
+import {
+  getListOfOneTrustAssessments,
+  getOneTrustAssessment,
+  getOneTrustRisk,
+  getOneTrustUser,
+} from '../endpoints';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
-import { GraphQLClient } from 'graphql-request';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
 export interface AssessmentForm {

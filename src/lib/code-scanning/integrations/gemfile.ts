@@ -1,9 +1,9 @@
 import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
-import { findAllWithRegex } from '@transcend-io/type-utils';
-import { listFiles } from '../../api-keys';
 import { dirname } from 'path';
 import { CodePackageType } from '@transcend-io/privacy-types';
+import { findAllWithRegex } from '@transcend-io/type-utils';
+import { listFiles } from '../../api-keys';
+import { CodeScanningConfig } from '../types';
 
 const GEM_PACKAGE_REGEX = /gem *('|")(.+?)('|")(, *('|")(.+?)('|")|)/;
 const GEMFILE_PACKAGE_NAME_REGEX = /spec\.name *= *('|")(.+?)('|")/;

@@ -1,11 +1,11 @@
-import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import { LanguageKey } from '@transcend-io/internationalization';
 import {
   CompletedRequestStatus,
-  RequestAction,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  RequestAction,
 } from '@transcend-io/privacy-types';
+import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
 
 export const NONE = '[NONE]' as const;

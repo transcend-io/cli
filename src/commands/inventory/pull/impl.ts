@@ -1,24 +1,22 @@
+import fs from 'fs';
+import { join } from 'path';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import type { LocalContext } from '../../../context';
 import { TranscendPullResource } from '../../../enums';
-import {
-  DEFAULT_CONSENT_TRACKER_STATUSES,
-  DEFAULT_TRANSCEND_PULL_RESOURCES,
-} from './command';
-
-import { logger } from '../../../logger';
-import colors from 'colors';
+import { validateTranscendAuth } from '../../../lib/api-keys';
 import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs from 'fs';
 import {
   buildTranscendGraphQLClient,
   pullTranscendConfiguration,
 } from '../../../lib/graphql';
-
 import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
-import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
-import { validateTranscendAuth } from '../../../lib/api-keys';
+import { logger } from '../../../logger';
+import {
+  DEFAULT_CONSENT_TRACKER_STATUSES,
+  DEFAULT_TRANSCEND_PULL_RESOURCES,
+} from './command';
 
 interface PullCommandFlags {
   auth: string;

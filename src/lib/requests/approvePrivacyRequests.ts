@@ -1,20 +1,20 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
 import {
   RequestAction,
   RequestOrigin,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  UPDATE_PRIVACY_REQUEST,
+  APPROVE_PRIVACY_REQUEST,
+  buildTranscendGraphQLClient,
   fetchAllRequests,
   makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-  APPROVE_PRIVACY_REQUEST,
+  UPDATE_PRIVACY_REQUEST,
 } from '../graphql';
-import cliProgress from 'cli-progress';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 
 /**
  * Approve a set of privacy requests

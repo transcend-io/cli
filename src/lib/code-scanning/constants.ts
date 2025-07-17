@@ -1,15 +1,15 @@
-import { CodeScanningConfig } from './types';
+import { CodePackageType } from '@transcend-io/privacy-types';
 import {
   cocoaPods,
+  composerJson,
+  gemfile,
   gradle,
   javascriptPackageJson,
-  gemfile,
-  composerJson,
   pubspec,
-  swift,
   pythonRequirementsTxt,
+  swift,
 } from './integrations';
-import { CodePackageType } from '@transcend-io/privacy-types';
+import { CodeScanningConfig } from './types';
 
 /**
  * @deprecated TODO: https://transcend.height.app/T-32325 - use code scanning instead

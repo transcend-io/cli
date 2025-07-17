@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
+import { dirname } from 'path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import yaml from 'js-yaml';
-import { dirname } from 'path';
+import { CodeScanningConfig } from '../types';
 
 /**
  * Remove YAML comments from a string
@@ -64,8 +64,8 @@ export const pubspec: CodeScanningConfig = {
               typeof version === 'string'
                 ? version
                 : typeof version === 'number'
-                ? version.toString()
-                : version?.sdk,
+                  ? version.toString()
+                  : version?.sdk,
           })),
           ...Object.entries(dev_dependencies).map(([name, version]) => ({
             name,
@@ -73,8 +73,8 @@ export const pubspec: CodeScanningConfig = {
               typeof version === 'string'
                 ? version
                 : typeof version === 'number'
-                ? version.toString()
-                : version?.sdk,
+                  ? version.toString()
+                  : version?.sdk,
             isDevDependency: true,
           })),
         ],

@@ -1,6 +1,6 @@
-import inquirer from 'inquirer';
 import { ObjByString } from '@transcend-io/type-utils';
 import colors from 'colors';
+import inquirer from 'inquirer';
 import { uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { NONE } from './constants';

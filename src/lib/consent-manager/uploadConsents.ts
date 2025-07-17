@@ -1,14 +1,14 @@
-import { createTranscendConsentGotInstance } from '../graphql';
+import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
-import { map } from '../bluebird-replace';
-import { createConsentToken } from './createConsentToken';
 import { logger } from '../../logger';
-import cliProgress from 'cli-progress';
-import { decodeCodec } from '@transcend-io/type-utils';
+import { map } from '../bluebird-replace';
+import { createTranscendConsentGotInstance } from '../graphql';
+import { createConsentToken } from './createConsentToken';
 import type { ConsentPreferenceUpload } from './types';
-import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
 
@@ -144,8 +144,8 @@ export async function uploadConsents({
           purposes: purposes
             ? decodeCodec(PurposeMap, purposes)
             : consent.usp
-            ? { SaleOfInfo: saleStatus === 'Y' }
-            : {},
+              ? { SaleOfInfo: saleStatus === 'Y' }
+              : {},
           ...(updated ? { updated: updated === 'true' } : {}),
           ...(prompted ? { prompted: prompted === 'true' } : {}),
           ...consent,

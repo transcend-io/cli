@@ -1,9 +1,9 @@
+import type { PersistedState } from '@transcend-io/persisted-state';
 import type { GraphQLClient } from 'graphql-request';
 import inquirer from 'inquirer';
 import { AttributeKey } from '../graphql';
 import { CachedFileState } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
-import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Mapping from attribute name to request input parameter

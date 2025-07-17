@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { IntlMessageInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_INTL_MESSAGES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk } from 'lodash-es';
+import { IntlMessageInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import { UPDATE_INTL_MESSAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;

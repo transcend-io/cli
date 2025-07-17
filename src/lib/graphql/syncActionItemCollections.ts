@@ -1,18 +1,18 @@
-import { ActionItemCollectionInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import {
-  UPDATE_ACTION_ITEM_COLLECTION,
-  CREATE_ACTION_ITEM_COLLECTION,
-} from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { ActionItemCollectionInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   ActionItemCollection,
   fetchAllActionItemCollections,
 } from './fetchAllActionItemCollections';
+import {
+  CREATE_ACTION_ITEM_COLLECTION,
+  UPDATE_ACTION_ITEM_COLLECTION,
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new action item collection
@@ -85,9 +85,8 @@ export async function syncActionItemCollections(
   );
 
   // Fetch existing
-  const existingActionItemCollections = await fetchAllActionItemCollections(
-    client,
-  );
+  const existingActionItemCollections =
+    await fetchAllActionItemCollections(client);
 
   // Look up by title
   const collectionByTitle: { [k in string]: ActionItemCollection } = keyBy(

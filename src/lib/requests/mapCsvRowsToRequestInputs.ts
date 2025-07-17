@@ -1,31 +1,29 @@
 import { LanguageKey } from '@transcend-io/internationalization';
-import { DateFromISOString } from 'io-ts-types';
-
-import * as t from 'io-ts';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
-  NORMALIZE_PHONE_NUMBER,
   CompletedRequestStatus,
-  RequestAction,
   IdentifierType,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  NORMALIZE_PHONE_NUMBER,
+  RequestAction,
 } from '@transcend-io/privacy-types';
 import { ObjByString, valuesOf } from '@transcend-io/type-utils';
-
+import * as t from 'io-ts';
+import { DateFromISOString } from 'io-ts-types';
+import { AttributeKey } from '../graphql';
 import {
-  CachedFileState,
   BLANK,
   BULK_APPLY,
+  CachedFileState,
   ColumnName,
   NONE,
 } from './constants';
-import { AttributeKey } from '../graphql';
-import { ColumnNameMap } from './mapCsvColumnsToApi';
-import { splitCsvToList } from './splitCsvToList';
-import { ParsedAttributeInput } from './parseAttributesFromString';
 import { AttributeNameMap } from './mapColumnsToAttributes';
 import { IdentifierNameMap } from './mapColumnsToIdentifiers';
+import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { ParsedAttributeInput } from './parseAttributesFromString';
+import { splitCsvToList } from './splitCsvToList';
 
 /**
  * Shape of additional identifiers
@@ -117,8 +115,8 @@ export function normalizeIdentifierValue(
     return !normalized
       ? ''
       : normalized.startsWith('+')
-      ? normalized
-      : `+${defaultPhoneCountryCode}${normalized}`;
+        ? normalized
+        : `+${defaultPhoneCountryCode}${normalized}`;
   }
   return identifierValue;
 }

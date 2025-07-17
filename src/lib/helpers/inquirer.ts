@@ -1,7 +1,7 @@
+import { ObjByString } from '@transcend-io/type-utils';
 import inquirer from 'inquirer';
 import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 import { fuzzySearch } from '../requests';
-import { ObjByString } from '@transcend-io/type-utils';
 
 /**
  * Inquirer confirm text

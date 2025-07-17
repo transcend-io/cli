@@ -1,11 +1,10 @@
-import type { LocalContext } from '../../../context';
-import colors from 'colors';
-
-import { logger } from '../../../logger';
-import { uniq } from 'lodash-es';
-import { pullPrivacyRequests } from '../../../lib/requests';
-import { writeCsv } from '../../../lib/cron';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { uniq } from 'lodash-es';
+import type { LocalContext } from '../../../context';
+import { writeCsv } from '../../../lib/cron';
+import { pullPrivacyRequests } from '../../../lib/requests';
+import { logger } from '../../../logger';
 
 interface ExportCommandFlags {
   auth: string;

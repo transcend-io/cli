@@ -1,13 +1,13 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-import { REQUEST_DATA_SILOS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
+import { REQUEST_DATA_SILOS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface RequestDataSilo {
   /** ID of RequestDataSilo */

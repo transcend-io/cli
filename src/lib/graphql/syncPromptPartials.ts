@@ -1,12 +1,12 @@
-import { PromptPartialInput } from '../../codecs';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { UPDATE_PROMPT_PARTIALS, CREATE_PROMPT_PARTIAL } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { keyBy } from 'lodash-es';
+import { PromptPartialInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
 import { fetchAllPromptPartials } from './fetchPromptPartials';
-import { keyBy } from 'lodash-es';
-import { logger } from '../../logger';
+import { CREATE_PROMPT_PARTIAL, UPDATE_PROMPT_PARTIALS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Create a new prompt partial
