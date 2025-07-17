@@ -6,7 +6,7 @@ import type { Got } from 'got';
 import * as t from 'io-ts';
 import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
-import { PrivacyRequest } from '../graphql';
+import { isSombraError, PrivacyRequest } from '../graphql';
 
 export const IntlMessage = t.type({
   /** The message key */
@@ -108,7 +108,9 @@ export async function getFileMetadataForPrivacyRequests(
   },
 ): Promise<[Pick<PrivacyRequest, 'id' | 'status'>, RequestFileMetadata[]][]> {
   logger.info(
-    colors.magenta(`Pulling file metadata for ${requests.length} requests`),
+    colors.magenta(
+      `Pulling file metadata for ${requests.length.toLocaleString()} requests`,
+    ),
   );
 
   // Time duration
@@ -160,9 +162,13 @@ export async function getFileMetadataForPrivacyRequests(
           shouldContinue =
             !!response._links.next && response.nodes.length === limit;
         } catch (error) {
+          if (!(error instanceof Error)) {
+            throw new TypeError('Unknown CLI Error', { cause: error });
+          }
+
           throw new Error(
             `Received an error from server: ${
-              error?.response?.body || error?.message
+              isSombraError(error) ? error.response.body : error.message
             }`,
           );
         }
@@ -181,9 +187,11 @@ export async function getFileMetadataForPrivacyRequests(
 
   logger.info(
     colors.green(
-      `Successfully downloaded file metadata ${requests.length} requests in "${
+      `Successfully downloaded file metadata ${requests.length.toLocaleString()} requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
 

@@ -6,7 +6,10 @@ import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
 import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
-import { createTranscendConsentGotInstance } from '../graphql';
+import {
+  createTranscendConsentGotInstance,
+  isTranscendConsentError,
+} from '../graphql';
 import { createConsentToken } from './createConsentToken';
 import type { ConsentPreferenceUpload } from './types';
 
@@ -100,7 +103,7 @@ export async function uploadConsents({
 
   logger.info(
     colors.magenta(
-      `Uploading ${preferences.length} user preferences to partition ${partition}`,
+      `Uploading ${preferences.length.toLocaleString()} user preferences to partition ${partition}`,
     ),
   );
 
@@ -133,7 +136,7 @@ export async function uploadConsents({
 
       // parse usp string
       const [, saleStatus] = consent.usp
-        ? USP_STRING_REGEX.exec(consent.usp) || []
+        ? (USP_STRING_REGEX.exec(consent.usp) ?? [])
         : [];
 
       const input = {
@@ -160,17 +163,27 @@ export async function uploadConsents({
           })
           .json();
       } catch (error) {
-        try {
-          const parsed = JSON.parse(error?.response?.body || '{}');
-          if (parsed.error) {
-            logger.error(colors.red(`Error: ${parsed.error}`));
-          }
-        } catch {
-          // continue
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
         }
+
+        if (isTranscendConsentError(error)) {
+          try {
+            const parsed = JSON.parse(error.response.body) as Record<
+              string,
+              unknown
+            >;
+            if ('error' in parsed && typeof parsed.error === 'string') {
+              logger.error(colors.red(`Error: ${parsed.error}`));
+            }
+          } catch {
+            // continue
+          }
+        }
+
         throw new Error(
           `Received an error from server: ${
-            error?.response?.body || error?.message
+            isTranscendConsentError(error) ? error.response.body : error.message
           }`,
         );
       }
@@ -187,11 +200,11 @@ export async function uploadConsents({
 
   logger.info(
     colors.green(
-      `Successfully uploaded ${
-        preferences.length
-      } user preferences to partition ${partition} in "${
+      `Successfully uploaded ${preferences.length.toLocaleString()} user preferences to partition ${partition} in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
 }

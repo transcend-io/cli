@@ -14,6 +14,7 @@ import {
   fetchAllRequestIdentifiers,
   fetchAllRequests,
 } from '../graphql';
+import { isSombraError } from '../graphql/createSombraGotInstance';
 import { SuccessfulRequest } from './constants';
 import { extractClientError } from './extractClientError';
 import { restartPrivacyRequest } from './restartPrivacyRequest';
@@ -124,7 +125,7 @@ export async function bulkRestartRequests({
   const requests = allRequests.filter(
     (request) => new Date(request.createdAt) < createdAt,
   );
-  logger.info(`Found ${requests.length} requests to process`);
+  logger.info(`Found ${requests.length.toLocaleString()} requests to process`);
 
   if (copyIdentifiers) {
     logger.info('copyIdentifiers detected - All Identifiers will be copied.');
@@ -143,14 +144,11 @@ export async function bulkRestartRequests({
       requests.map(({ id }) => id),
     );
     if (missingRequests.length > 0) {
-      logger.error(
-        colors.red(
-          `Failed to find the following requests by ID: ${missingRequests.join(
-            ',',
-          )}.`,
-        ),
+      throw new Error(
+        `Failed to find the following requests by ID: ${missingRequests.join(
+          ',',
+        )}.`,
       );
-      process.exit(1);
     }
   }
 
@@ -199,11 +197,15 @@ export async function bulkRestartRequests({
         });
         await state.setValue(restartedRequests, 'restartedRequests');
       } catch (error) {
-        const message = `${error.message} - ${JSON.stringify(
-          error.response?.body,
-          null,
-          2,
-        )}`;
+        if (!(error instanceof Error)) {
+          throw new TypeError('Unknown CLI Error', { cause: error });
+        }
+
+        const message = `${error.message} - ${
+          isSombraError(error)
+            ? JSON.stringify(error.response.body, null, 2)
+            : ''
+        }`;
         const clientError = extractClientError(message);
 
         const failingRequests = state.getValue('failingRequests');
@@ -213,7 +215,7 @@ export async function bulkRestartRequests({
           rowIndex: ind,
           coreIdentifier: request.coreIdentifier,
           attemptedAt: new Date().toISOString(),
-          error: clientError || message,
+          error: clientError ?? message,
         });
         await state.setValue(failingRequests, 'failingRequests');
       }
@@ -230,18 +232,20 @@ export async function bulkRestartRequests({
   // Log completion time
   logger.info(
     colors.green(
-      `Completed restarting of requests in "${totalTime / 1000}" seconds.`,
+      `Completed restarting of requests in "${(totalTime / 1000).toLocaleString(
+        undefined,
+        {
+          maximumFractionDigits: 2,
+        },
+      )}" seconds.`,
     ),
   );
 
   // Log errors
   if (state.getValue('failingRequests').length > 0) {
-    logger.error(
-      colors.red(
-        `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
-      ),
+    throw new Error(
+      `Encountered "${state.getValue('failingRequests').length.toLocaleString()}" errors. ` +
+        `See "${cacheFile}" to review the error messages and inputs.`,
     );
-    process.exit(1);
   }
 }

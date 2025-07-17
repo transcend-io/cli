@@ -143,14 +143,18 @@ export async function downloadPrivacyRequestFiles({
 
   logger.info(
     colors.green(
-      `Successfully downloaded ${total} requests in "${
+      `Successfully downloaded ${total.toLocaleString()} requests in "${(
         totalTime / 1000
-      }" seconds!`,
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}" seconds!`,
     ),
   );
   if (totalApproved > 0) {
     logger.info(
-      colors.green(`Approved ${totalApproved} requests in Transcend.`),
+      colors.green(
+        `Approved ${totalApproved.toLocaleString()} requests in Transcend.`,
+      ),
     );
   }
   return allRequests.length;
