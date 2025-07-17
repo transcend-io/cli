@@ -1,6 +1,6 @@
-import { union } from 'lodash-es';
-import { DataFlowInput, DataSiloInput } from '../../codecs';
-import { IndexedCatalogs } from '../graphql';
+import { union } from "lodash-es";
+import { DataFlowInput, DataSiloInput } from "../../codecs";
+import { IndexedCatalogs } from "../graphql";
 
 /**
  * Convert data flow configurations into a set of data silo configurations
@@ -12,13 +12,13 @@ import { IndexedCatalogs } from '../graphql';
 export function dataFlowsToDataSilos(
   inputs: DataFlowInput[],
   {
-    adTechPurposes = ['SaleOfInfo'],
+    adTechPurposes = ["SaleOfInfo"],
     serviceToTitle,
     serviceToSupportedIntegration,
   }: IndexedCatalogs & {
     /** List of purposes that are considered "Ad Tech"  */
     adTechPurposes?: string[];
-  },
+  }
 ): {
   /** List of data silo configurations for site-tech services */
   siteTechDataSilos: DataSiloInput[];
@@ -32,19 +32,19 @@ export function dataFlowsToDataSilos(
   const adTechIntegrations: string[] = [];
 
   // Mapping from service name to list of
-  const serviceToFoundOnDomain: { [k in string]: string[] } = {};
+  const serviceToFoundOnDomain: Record<string, string[]> = {};
 
   // iterate over each flow
-  inputs.forEach((flow) => {
+  for (const flow of inputs) {
     // process data flows with services
     const { service, attributes = [] } = flow;
-    if (!service || service === 'internalService') {
-      return;
+    if (!service || service === "internalService") {
+      continue;
     }
 
     // create mapping to found on domain
     const foundOnDomain = attributes.find(
-      (attr) => attr.key === 'Found on Domain',
+      (attribute) => attribute.key === "Found on Domain"
     );
 
     // Create a list of all domains where the data flow was found
@@ -52,10 +52,10 @@ export function dataFlowsToDataSilos(
       if (!serviceToFoundOnDomain[service]) {
         serviceToFoundOnDomain[service] = [];
       }
-      serviceToFoundOnDomain[service]!.push(
+      serviceToFoundOnDomain[service].push(
         ...foundOnDomain.values.map((v) =>
-          v.replace('https://', '').replace('http://', ''),
-        ),
+          v.replace("https://", "").replace("http://", "")
+        )
       );
       serviceToFoundOnDomain[service] = [
         ...new Set(serviceToFoundOnDomain[service]),
@@ -70,28 +70,28 @@ export function dataFlowsToDataSilos(
       // remove from site tech list
       if (siteTechIntegrations.includes(service)) {
         siteTechIntegrations = siteTechIntegrations.filter(
-          (s) => s !== service,
+          (s) => s !== service
         );
       }
     } else if (!adTechIntegrations.includes(service)) {
       // add to site tech list
       siteTechIntegrations.push(service);
     }
-  });
+  }
 
   // create the list of ad tech integrations
   const adTechDataSilos = [...new Set(adTechIntegrations)].map((service) => ({
     title: serviceToTitle[service],
     ...(serviceToSupportedIntegration[service]
       ? { integrationName: service }
-      : { integrationName: 'promptAPerson', 'outer-type': service }),
+      : { integrationName: "promptAPerson", "outer-type": service }),
     attributes: [
       {
-        key: 'Tech Type',
-        values: ['Ad Tech'],
+        key: "Tech Type",
+        values: ["Ad Tech"],
       },
       {
-        key: 'Found On Domain',
+        key: "Found On Domain",
         values: serviceToFoundOnDomain[service] || [],
       },
     ],
@@ -103,18 +103,18 @@ export function dataFlowsToDataSilos(
       title: serviceToTitle[service],
       ...(serviceToSupportedIntegration[service]
         ? { integrationName: service }
-        : { integrationName: 'promptAPerson', outerType: service }),
+        : { integrationName: "promptAPerson", outerType: service }),
       attributes: [
         {
-          key: 'Tech Type',
-          values: ['Site Tech'],
+          key: "Tech Type",
+          values: ["Site Tech"],
         },
         {
-          key: 'Found On Domain',
+          key: "Found On Domain",
           values: serviceToFoundOnDomain[service] || [],
         },
       ],
-    }),
+    })
   );
 
   return {

@@ -1,18 +1,18 @@
-import colors from 'colors';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+import colors from "colors";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   makeGraphQLRequest,
   UPDATE_PRIVACY_REQUEST,
-} from '../graphql';
-import { readCsv } from '../requests';
+} from "../graphql";
+import { readCsv } from "../requests";
 import {
   enrichPrivacyRequest,
   EnrichPrivacyRequest,
-} from './enrichPrivacyRequest';
+} from "./enrichPrivacyRequest";
 
 /**
  * Push a CSV of enriched requests back into Transcend
@@ -54,7 +54,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
 
   // Notify Transcend
   logger.info(
-    colors.magenta(`Enriching "${activeResults.length}" privacy requests.`),
+    colors.magenta(`Enriching "${activeResults.length}" privacy requests.`)
   );
 
   let successCount = 0;
@@ -75,7 +75,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
           });
 
           logger.info(
-            colors.magenta(`Mark request as silent mode - ${request.id}`),
+            colors.magenta(`Mark request as silent mode - ${request.id}`)
           );
         }
 
@@ -83,24 +83,24 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
           sombra,
           request,
           enricherId,
-          index,
+          index
         );
         if (result) {
           successCount += 1;
         } else {
           skippedCount += 1;
         }
-      } catch (err) {
+      } catch {
         errorCount += 1;
       }
     },
-    { concurrency },
+    { concurrency }
   );
 
   logger.info(
     colors.green(
-      `Successfully notified Transcend! \n Success count: ${successCount}.`,
-    ),
+      `Successfully notified Transcend! \n Success count: ${successCount}.`
+    )
   );
 
   if (skippedCount > 0) {

@@ -1,25 +1,26 @@
-import { RequestAction } from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import { RequestAction } from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchRequestDataSiloActiveCount,
-} from '../graphql';
+} from "../graphql";
 import {
   CronIdentifier,
   pullCronPageOfIdentifiers,
-} from './pullCronPageOfIdentifiers';
+} from "./pullCronPageOfIdentifiers";
 
 /**
  * A CSV formatted identifier
  */
-export type CsvFormattedIdentifier = {
-  [k in string]: string | null | boolean | number;
-};
+export type CsvFormattedIdentifier = Record<
+  string,
+  string | null | boolean | number
+>;
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -71,7 +72,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   // Validate savePageSize
   if (savePageSize % apiPageSize !== 0) {
     throw new Error(
-      `savePageSize must be a multiple of apiPageSize. savePageSize: ${savePageSize}, apiPageSize: ${apiPageSize}`,
+      `savePageSize must be a multiple of apiPageSize. savePageSize: ${savePageSize}, apiPageSize: ${apiPageSize}`
     );
   }
 
@@ -91,20 +92,20 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   logger.info(
     colors.magenta(
       `Pulling ${
-        skipRequestCount ? 'all' : totalRequestCount
+        skipRequestCount ? "all" : totalRequestCount
       } outstanding request identifiers ` +
         `for data silo: "${dataSiloId}" for requests of types "${actions.join(
-          '", "',
-        )}"`,
-    ),
+          '", "'
+        )}"`
+    )
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
   const foundRequestIds = new Set<string>();
 
@@ -142,14 +143,10 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
       const csvFormattedIdentifiers = identifiersWithAction.map(
         ({ attributes, ...identifier }) => ({
           ...identifier,
-          ...attributes.reduce(
-            (acc, val) =>
-              Object.assign(acc, {
-                [val.key]: val.values.join(','),
-              }),
-            {},
+          ...Object.fromEntries(
+            attributes.map((value) => [value.key, value.values.join(",")])
           ),
-        }),
+        })
       );
 
       identifiers.push(...identifiersWithAction);
@@ -163,14 +160,14 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
       shouldContinue = pageIdentifiers.length === apiPageSize;
       offset += apiPageSize;
-      if (!skipRequestCount) {
-        progressBar.update(foundRequestIds.size);
-      } else {
+      if (skipRequestCount) {
         logger.info(
           colors.magenta(
-            `Pulled ${pageIdentifiers.length} outstanding identifiers for ${foundRequestIds.size} requests`,
-          ),
+            `Pulled ${pageIdentifiers.length} outstanding identifiers for ${foundRequestIds.size} requests`
+          )
         );
+      } else {
+        progressBar.update(foundRequestIds.size);
       }
     }
   });
@@ -183,15 +180,15 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   if (!skipRequestCount) {
     progressBar.stop();
   }
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
     colors.green(
       `Successfully pulled ${identifiers.length} outstanding identifiers from ${
         foundRequestIds.size
-      } requests in "${totalTime / 1000}" seconds!`,
-    ),
+      } requests in "${totalTime / 1000}" seconds!`
+    )
   );
 
   return { identifiers };

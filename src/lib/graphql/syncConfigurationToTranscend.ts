@@ -1,47 +1,46 @@
-/* eslint-disable max-lines */
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { TranscendInput } from '../../codecs';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { fetchAllActions } from './fetchAllActions';
-import { fetchAllAttributes } from './fetchAllAttributes';
-import { fetchApiKeys } from './fetchApiKeys';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { TranscendInput } from "../../codecs";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { fetchAllActions } from "./fetchAllActions";
+import { fetchAllAttributes } from "./fetchAllAttributes";
+import { fetchApiKeys } from "./fetchApiKeys";
 import {
   ensureAllDataSubjectsExist,
   fetchAllDataSubjects,
-} from './fetchDataSubjects';
+} from "./fetchDataSubjects";
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
-} from './fetchIdentifiers';
-import { syncAction } from './syncAction';
-import { syncActionItemCollections } from './syncActionItemCollections';
-import { syncActionItems } from './syncActionItems';
-import { syncAgentFiles } from './syncAgentFiles';
-import { syncAgentFunctions } from './syncAgentFunctions';
-import { syncAgents } from './syncAgents';
-import { syncAttribute } from './syncAttribute';
-import { syncBusinessEntities } from './syncBusinessEntities';
-import { syncConsentManager } from './syncConsentManager';
-import { syncCookies } from './syncCookies';
-import { syncDataCategories } from './syncDataCategories';
-import { syncDataFlows } from './syncDataFlows';
-import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
-import { syncDataSubject } from './syncDataSubject';
-import { syncEnricher } from './syncEnrichers';
-import { syncIdentifier } from './syncIdentifier';
-import { syncIntlMessages } from './syncIntlMessages';
-import { syncPartitions } from './syncPartitions';
-import { syncPolicies } from './syncPolicies';
-import { syncPrivacyCenter } from './syncPrivacyCenter';
-import { syncProcessingPurposes } from './syncProcessingPurposes';
-import { syncPromptGroups } from './syncPromptGroups';
-import { syncPromptPartials } from './syncPromptPartials';
-import { syncPrompts } from './syncPrompts';
-import { syncTeams } from './syncTeams';
-import { syncTemplate } from './syncTemplates';
-import { syncVendors } from './syncVendors';
+} from "./fetchIdentifiers";
+import { syncAction } from "./syncAction";
+import { syncActionItemCollections } from "./syncActionItemCollections";
+import { syncActionItems } from "./syncActionItems";
+import { syncAgentFiles } from "./syncAgentFiles";
+import { syncAgentFunctions } from "./syncAgentFunctions";
+import { syncAgents } from "./syncAgents";
+import { syncAttribute } from "./syncAttribute";
+import { syncBusinessEntities } from "./syncBusinessEntities";
+import { syncConsentManager } from "./syncConsentManager";
+import { syncCookies } from "./syncCookies";
+import { syncDataCategories } from "./syncDataCategories";
+import { syncDataFlows } from "./syncDataFlows";
+import { syncDataSiloDependencies, syncDataSilos } from "./syncDataSilos";
+import { syncDataSubject } from "./syncDataSubject";
+import { syncEnricher } from "./syncEnrichers";
+import { syncIdentifier } from "./syncIdentifier";
+import { syncIntlMessages } from "./syncIntlMessages";
+import { syncPartitions } from "./syncPartitions";
+import { syncPolicies } from "./syncPolicies";
+import { syncPrivacyCenter } from "./syncPrivacyCenter";
+import { syncProcessingPurposes } from "./syncProcessingPurposes";
+import { syncPromptGroups } from "./syncPromptGroups";
+import { syncPromptPartials } from "./syncPromptPartials";
+import { syncPrompts } from "./syncPrompts";
+import { syncTeams } from "./syncTeams";
+import { syncTemplate } from "./syncTemplates";
+import { syncVendors } from "./syncVendors";
 
 const CONCURRENCY = 10;
 
@@ -71,7 +70,7 @@ export async function syncConfigurationToTranscend(
     deleteExtraAttributeValues?: boolean;
     /** classify data flow service if missing */
     classifyService?: boolean;
-  },
+  }
 ): Promise<boolean> {
   let encounteredError = false;
 
@@ -82,26 +81,26 @@ export async function syncConfigurationToTranscend(
     attributes,
     actions,
     identifiers,
-    'data-subjects': dataSubjects,
-    'business-entities': businessEntities,
+    "data-subjects": dataSubjects,
+    "business-entities": businessEntities,
     enrichers,
     cookies,
-    'consent-manager': consentManager,
-    'data-silos': dataSilos,
-    'data-flows': dataFlows,
+    "consent-manager": consentManager,
+    "data-silos": dataSilos,
+    "data-flows": dataFlows,
     prompts,
-    'prompt-groups': promptGroups,
-    'prompt-partials': promptPartials,
+    "prompt-groups": promptGroups,
+    "prompt-partials": promptPartials,
     agents,
-    'agent-functions': agentFunctions,
-    'agent-files': agentFiles,
+    "agent-functions": agentFunctions,
+    "agent-files": agentFiles,
     vendors,
-    'data-categories': dataCategories,
-    'processing-purposes': processingPurposes,
-    'action-items': actionItems,
-    'action-item-collections': actionItemCollections,
+    "data-categories": dataCategories,
+    "processing-purposes": processingPurposes,
+    "action-items": actionItems,
+    "action-item-collections": actionItemCollections,
     teams,
-    'privacy-center': privacyCenter,
+    "privacy-center": privacyCenter,
     messages,
     policies,
     partitions,
@@ -114,9 +113,9 @@ export async function syncConfigurationToTranscend(
         ? fetchIdentifiersAndCreateMissing(
             input,
             client,
-            !publishToPrivacyCenter,
+            !publishToPrivacyCenter
           )
-        : ({} as { [k in string]: Identifier }),
+        : ({} as Record<string, Identifier>),
       // Grab all data subjects in the organization
       dataSilos || dataSubjects || enrichers
         ? ensureAllDataSubjectsExist(input, client)
@@ -124,22 +123,22 @@ export async function syncConfigurationToTranscend(
       // Grab API keys
       dataSilos &&
       dataSilos
-        .map((dataSilo) => dataSilo['api-key-title'] || [])
-        .reduce((acc, lst) => acc + lst.length, 0) > 0
+        .map((dataSilo) => dataSilo["api-key-title"] || [])
+        .reduce((accumulator, lst) => accumulator + lst.length, 0) > 0
         ? fetchApiKeys(input, client)
         : {},
     ]);
 
   // Sync consent manager
   if (consentManager) {
-    logger.info(colors.magenta('Syncing consent manager...'));
+    logger.info(colors.magenta("Syncing consent manager..."));
     try {
       await syncConsentManager(client, consentManager);
-      logger.info(colors.green('Successfully synced consent manager!'));
-    } catch (err) {
+      logger.info(colors.green("Successfully synced consent manager!"));
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync consent manager! - ${err.message}`),
+        colors.red(`Failed to sync consent manager! - ${error.message}`)
       );
     }
   }
@@ -166,7 +165,7 @@ export async function syncConfigurationToTranscend(
   // Sync email templates
   if (templates) {
     logger.info(
-      colors.magenta(`Syncing "${templates.length}" email templates...`),
+      colors.magenta(`Syncing "${templates.length}" email templates...`)
     );
     await map(
       templates,
@@ -175,20 +174,20 @@ export async function syncConfigurationToTranscend(
         try {
           await syncTemplate(template, client);
           logger.info(
-            colors.green(`Successfully synced template "${template.title}"!`),
+            colors.green(`Successfully synced template "${template.title}"!`)
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync template "${template.title}"! - ${err.message}`,
-            ),
+              `Failed to sync template "${template.title}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${templates.length}" email templates!`));
   }
@@ -197,7 +196,7 @@ export async function syncConfigurationToTranscend(
   if (businessEntities) {
     const businessEntitySuccess = await syncBusinessEntities(
       client,
-      businessEntities,
+      businessEntities
     );
     encounteredError = encounteredError || !businessEntitySuccess;
   }
@@ -212,7 +211,7 @@ export async function syncConfigurationToTranscend(
   if (dataCategories) {
     const dataCategoriesSuccess = await syncDataCategories(
       client,
-      dataCategories,
+      dataCategories
     );
     encounteredError = encounteredError || !dataCategoriesSuccess;
   }
@@ -221,7 +220,7 @@ export async function syncConfigurationToTranscend(
   if (processingPurposes) {
     const processingPurposesSuccess = await syncProcessingPurposes(
       client,
-      processingPurposes,
+      processingPurposes
     );
     encounteredError = encounteredError || !processingPurposesSuccess;
   }
@@ -242,7 +241,7 @@ export async function syncConfigurationToTranscend(
   if (agentFunctions) {
     const agentFunctionsSuccess = await syncAgentFunctions(
       client,
-      agentFunctions,
+      agentFunctions
     );
     encounteredError = encounteredError || !agentFunctionsSuccess;
   }
@@ -263,7 +262,7 @@ export async function syncConfigurationToTranscend(
   if (actionItemCollections) {
     const actionItemCollectionsSuccess = await syncActionItemCollections(
       client,
-      actionItemCollections,
+      actionItemCollections
     );
     encounteredError = encounteredError || !actionItemCollectionsSuccess;
   }
@@ -277,7 +276,7 @@ export async function syncConfigurationToTranscend(
       attributes,
       async (attribute) => {
         const existing = existingAttributes.find(
-          (attr) => attr.name === attribute.name,
+          (attribute_) => attribute_.name === attribute.name
         );
 
         logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
@@ -287,20 +286,20 @@ export async function syncConfigurationToTranscend(
             deleteExtraAttributeValues,
           });
           logger.info(
-            colors.green(`Successfully synced attribute "${attribute.name}"!`),
+            colors.green(`Successfully synced attribute "${attribute.name}"!`)
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
-            ),
+              `Failed to sync attribute "${attribute.name}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${attributes.length}" attributes!`));
   }
@@ -325,20 +324,20 @@ export async function syncConfigurationToTranscend(
             dataSubjectsByName,
           });
           logger.info(
-            colors.green(`Successfully synced enricher "${enricher.title}"!`),
+            colors.green(`Successfully synced enricher "${enricher.title}"!`)
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync enricher "${enricher.title}"! - ${err.message}`,
-            ),
+              `Failed to sync enricher "${enricher.title}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${enrichers.length}" enrichers!`));
   }
@@ -347,7 +346,7 @@ export async function syncConfigurationToTranscend(
   if (identifiers) {
     // Fetch existing
     logger.info(
-      colors.magenta(`Syncing "${identifiers.length}" identifiers...`),
+      colors.magenta(`Syncing "${identifiers.length}" identifiers...`)
     );
     await map(
       identifiers,
@@ -355,12 +354,12 @@ export async function syncConfigurationToTranscend(
         const existing = identifierByName[identifier.name];
         if (!existing) {
           throw new Error(
-            `Failed to find identifier with name: ${identifier.type}. Should have been auto-created by cli.`,
+            `Failed to find identifier with name: ${identifier.type}. Should have been auto-created by cli.`
           );
         }
 
         logger.info(
-          colors.magenta(`Syncing identifier "${identifier.type}"...`),
+          colors.magenta(`Syncing identifier "${identifier.type}"...`)
         );
         try {
           await syncIdentifier(client, {
@@ -370,22 +369,20 @@ export async function syncConfigurationToTranscend(
             skipPublish: !publishToPrivacyCenter,
           });
           logger.info(
-            colors.green(
-              `Successfully synced identifier "${identifier.type}"!`,
-            ),
+            colors.green(`Successfully synced identifier "${identifier.type}"!`)
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync identifier "${identifier.type}"! - ${err.message}`,
-            ),
+              `Failed to sync identifier "${identifier.type}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${identifiers.length}" identifiers!`));
   }
@@ -399,11 +396,11 @@ export async function syncConfigurationToTranscend(
       actions,
       async (action) => {
         const existing = existingActions.find(
-          (act) => act.type === action.type,
+          (act) => act.type === action.type
         );
         if (!existing) {
           throw new Error(
-            `Failed to find action with type: ${action.type}. Should have already existing in the organization.`,
+            `Failed to find action with type: ${action.type}. Should have already existing in the organization.`
           );
         }
 
@@ -415,20 +412,20 @@ export async function syncConfigurationToTranscend(
             skipPublish: !publishToPrivacyCenter,
           });
           logger.info(
-            colors.green(`Successfully synced action "${action.type}"!`),
+            colors.green(`Successfully synced action "${action.type}"!`)
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync action "${action.type}"! - ${err.message}`,
-            ),
+              `Failed to sync action "${action.type}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${actions.length}" actions!`));
   }
@@ -437,23 +434,23 @@ export async function syncConfigurationToTranscend(
   if (dataSubjects) {
     // Fetch existing
     logger.info(
-      colors.magenta(`Syncing "${dataSubjects.length}" data subjects...`),
+      colors.magenta(`Syncing "${dataSubjects.length}" data subjects...`)
     );
     const existingDataSubjects = await fetchAllDataSubjects(client);
     await map(
       dataSubjects,
       async (dataSubject) => {
         const existing = existingDataSubjects.find(
-          (subj) => subj.type === dataSubject.type,
+          (subj) => subj.type === dataSubject.type
         );
         if (!existing) {
           throw new Error(
-            `Failed to find data subject with type: ${dataSubject.type}. Should have already existing in the organization.`,
+            `Failed to find data subject with type: ${dataSubject.type}. Should have already existing in the organization.`
           );
         }
 
         logger.info(
-          colors.magenta(`Syncing data subject "${dataSubject.type}"...`),
+          colors.magenta(`Syncing data subject "${dataSubject.type}"...`)
         );
         try {
           await syncDataSubject(client, {
@@ -463,21 +460,21 @@ export async function syncConfigurationToTranscend(
           });
           logger.info(
             colors.green(
-              `Successfully synced data subject "${dataSubject.type}"!`,
-            ),
+              `Successfully synced data subject "${dataSubject.type}"!`
+            )
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync data subject "${dataSubject.type}"! - ${err.message}`,
-            ),
+              `Failed to sync data subject "${dataSubject.type}"! - ${error.message}`
+            )
           );
         }
       },
       {
         concurrency: CONCURRENCY,
-      },
+      }
     );
     logger.info(colors.green(`Synced "${dataSubjects.length}" data subjects!`));
   }
@@ -487,7 +484,7 @@ export async function syncConfigurationToTranscend(
     const syncedDataFlows = await syncDataFlows(
       client,
       dataFlows,
-      classifyService,
+      classifyService
     );
     encounteredError = encounteredError || !syncedDataFlows;
   }
@@ -521,17 +518,18 @@ export async function syncConfigurationToTranscend(
         dataSubjectsByName,
         apiKeysByTitle: apiKeyTitleMap,
         pageSize,
-      },
-    );
-    dataSilos?.forEach((dataSilo) => {
-      // Queue up dependency update
-      if (dataSilo['deletion-dependencies']) {
-        dependencyUpdates.push([
-          dataSiloTitleToId[dataSilo.title],
-          dataSilo['deletion-dependencies'],
-        ]);
       }
-    });
+    );
+    if (dataSilos)
+      for (const dataSilo of dataSilos) {
+        // Queue up dependency update
+        if (dataSilo["deletion-dependencies"]) {
+          dependencyUpdates.push([
+            dataSiloTitleToId[dataSilo.title],
+            dataSilo["deletion-dependencies"],
+          ]);
+        }
+      }
     encounteredError = encounteredError || !success;
   }
 
@@ -546,4 +544,3 @@ export async function syncConfigurationToTranscend(
 
   return encounteredError;
 }
-/* eslint-enable max-lines */

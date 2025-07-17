@@ -1,9 +1,9 @@
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   CANCEL_PRIVACY_REQUEST,
@@ -12,7 +12,7 @@ import {
   makeGraphQLRequest,
   Template,
   UPDATE_PRIVACY_REQUEST,
-} from '../graphql';
+} from "../graphql";
 
 /**
  * Cancel a set of privacy requests
@@ -66,11 +66,11 @@ export async function cancelPrivacyRequests({
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Grab the template with that title
@@ -78,14 +78,14 @@ export async function cancelPrivacyRequests({
   if (cancellationTitle) {
     const matchingTemplates = await fetchAllTemplates(
       client,
-      cancellationTitle,
+      cancellationTitle
     );
     const exactTitleMatch = matchingTemplates.find(
-      (template) => template.title === cancellationTitle,
+      (template) => template.title === cancellationTitle
     );
     if (!exactTitleMatch) {
       throw new Error(
-        `Failed to find a template with title: "${cancellationTitle}"`,
+        `Failed to find a template with title: "${cancellationTitle}"`
       );
     }
     cancelationTemplate = exactTitleMatch;
@@ -106,9 +106,9 @@ export async function cancelPrivacyRequests({
       `Canceling "${allRequests.length}" requests${
         cancelationTemplate
           ? ` Using template: ${cancelationTemplate.title}`
-          : ''
-      }.`,
-    ),
+          : ""
+      }.`
+    )
   );
 
   let total = 0;
@@ -146,19 +146,19 @@ export async function cancelPrivacyRequests({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency },
+    { concurrency }
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
     colors.green(
       `Successfully canceled ${total} requests in "${
         totalTime / 1000
-      }" seconds!`,
-    ),
+      }" seconds!`
+    )
   );
   return allRequests.length;
 }

@@ -1,10 +1,10 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { difference, keyBy, uniq } from 'lodash-es';
-import { TranscendInput } from '../../codecs';
-import { logger } from '../../logger';
-import { API_KEYS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { difference, keyBy, uniq } from "lodash-es";
+import { TranscendInput } from "../../codecs";
+import { logger } from "../../logger";
+import { API_KEYS } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 export interface ApiKey {
   /** ID of API key */
@@ -15,7 +15,7 @@ export interface ApiKey {
 
 const PAGE_SIZE = 20;
 
-const ADMIN_LINK = 'https://app.transcend.io/infrastructure/api-keys';
+const ADMIN_LINK = "https://app.transcend.io/infrastructure/api-keys";
 
 /**
  * Fetch all API keys in an organization
@@ -26,7 +26,7 @@ const ADMIN_LINK = 'https://app.transcend.io/infrastructure/api-keys';
  */
 export async function fetchAllApiKeys(
   client: GraphQLClient,
-  titles?: string[],
+  titles?: string[]
 ): Promise<ApiKey[]> {
   const apiKeys: ApiKey[] = [];
   let offset = 0;
@@ -65,36 +65,36 @@ export async function fetchAllApiKeys(
  */
 export async function fetchApiKeys(
   {
-    'api-keys': apiKeyInputs = [],
-    'data-silos': dataSilos = [],
+    "api-keys": apiKeyInputs = [],
+    "data-silos": dataSilos = [],
   }: TranscendInput,
   client: GraphQLClient,
-  fetchAll = false,
-): Promise<{ [k in string]: ApiKey }> {
+  fetchAll = false
+): Promise<Record<string, ApiKey>> {
   logger.info(
     colors.magenta(
-      `Fetching ${fetchAll ? 'all' : apiKeyInputs.length} API keys...`,
-    ),
+      `Fetching ${fetchAll ? "all" : apiKeyInputs.length} API keys...`
+    )
   );
   const titles = apiKeyInputs.map(({ title }) => title);
   const expectedApiKeyTitles = uniq(
     dataSilos
-      .map((silo) => silo['api-key-title'])
-      .filter((x): x is string => !!x),
+      .map((silo) => silo["api-key-title"])
+      .filter((x): x is string => !!x)
   );
   const allTitlesExpected = [...expectedApiKeyTitles, ...titles];
   const apiKeys = await fetchAllApiKeys(
     client,
-    fetchAll ? undefined : [...expectedApiKeyTitles, ...titles],
+    fetchAll ? undefined : [...expectedApiKeyTitles, ...titles]
   );
 
   // Create a map
-  const apiKeysByTitle = keyBy(apiKeys, 'title');
+  const apiKeysByTitle = keyBy(apiKeys, "title");
 
   // Determine expected set of apiKeys expected
   const missingApiKeys = difference(
     allTitlesExpected,
-    apiKeys.map(({ title }) => title),
+    apiKeys.map(({ title }) => title)
   );
 
   // If there are missing apiKeys, throw an error
@@ -102,9 +102,9 @@ export async function fetchApiKeys(
     logger.info(
       colors.red(
         `Failed to find API keys "${missingApiKeys.join(
-          '", "',
-        )}"! Make sure these API keys are created at: ${ADMIN_LINK}`,
-      ),
+          '", "'
+        )}"! Make sure these API keys are created at: ${ADMIN_LINK}`
+      )
     );
     process.exit(1);
   }

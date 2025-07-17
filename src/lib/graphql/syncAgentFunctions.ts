@@ -1,15 +1,15 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { AgentFunctionInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { AgentFunctionInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   AgentFunction,
   fetchAllAgentFunctions,
-} from './fetchAllAgentFunctions';
-import { CREATE_AGENT_FUNCTION, UPDATE_AGENT_FUNCTIONS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "./fetchAllAgentFunctions";
+import { CREATE_AGENT_FUNCTION, UPDATE_AGENT_FUNCTIONS } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Input to create a new agent function
@@ -20,8 +20,8 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function createAgentFunction(
   client: GraphQLClient,
-  agentFunction: AgentFunctionInput,
-): Promise<Pick<AgentFunction, 'id' | 'name'>> {
+  agentFunction: AgentFunctionInput
+): Promise<Pick<AgentFunction, "id" | "name">> {
   const input = {
     name: agentFunction.name,
     description: agentFunction.description,
@@ -50,7 +50,7 @@ export async function createAgentFunction(
  */
 export async function updateAgentFunctions(
   client: GraphQLClient,
-  agentFunctionIdPairs: [AgentFunctionInput, string][],
+  agentFunctionIdPairs: [AgentFunctionInput, string][]
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENT_FUNCTIONS, {
     input: {
@@ -73,7 +73,7 @@ export async function updateAgentFunctions(
  */
 export async function syncAgentFunctions(
   client: GraphQLClient,
-  inputs: AgentFunctionInput[],
+  inputs: AgentFunctionInput[]
 ): Promise<boolean> {
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" agent functions...`));
@@ -84,13 +84,14 @@ export async function syncAgentFunctions(
   const existingAgentFunctions = await fetchAllAgentFunctions(client);
 
   // Look up by name
-  const agentFunctionByName: {
-    [k in string]: Pick<AgentFunction, 'id' | 'name'>;
-  } = keyBy(existingAgentFunctions, 'name');
+  const agentFunctionByName: Record<
+    string,
+    Pick<AgentFunction, "id" | "name">
+  > = keyBy(existingAgentFunctions, "name");
 
   // Create new agent functions
   const newAgentFunctions = inputs.filter(
-    (input) => !agentFunctionByName[input.name],
+    (input) => !agentFunctionByName[input.name]
   );
 
   // Create new agent functions
@@ -100,15 +101,15 @@ export async function syncAgentFunctions(
       agentFunctionByName[newAgentFunction.name] = newAgentFunction;
       logger.info(
         colors.green(
-          `Successfully synced agent function "${agentFunction.name}"!`,
-        ),
+          `Successfully synced agent function "${agentFunction.name}"!`
+        )
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync agent function "${agentFunction.name}"! - ${err.message}`,
-        ),
+          `Failed to sync agent function "${agentFunction.name}"! - ${error.message}`
+        )
       );
     }
   });
@@ -118,17 +119,17 @@ export async function syncAgentFunctions(
     logger.info(colors.magenta(`Updating "${inputs.length}" agent functions!`));
     await updateAgentFunctions(
       client,
-      inputs.map((input) => [input, agentFunctionByName[input.name].id]),
+      inputs.map((input) => [input, agentFunctionByName[input.name].id])
     );
     logger.info(
-      colors.green(`Successfully synced "${inputs.length}" agent functions!`),
+      colors.green(`Successfully synced "${inputs.length}" agent functions!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" agent functions! - ${err.message}`,
-      ),
+        `Failed to sync "${inputs.length}" agent functions! - ${error.message}`
+      )
     );
   }
 

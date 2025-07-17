@@ -1,11 +1,9 @@
-import colors from 'colors';
-import inquirer from 'inquirer';
-import { difference, groupBy, uniq } from 'lodash-es';
-import { logger } from '../../logger';
-import { inquirerConfirmBoolean } from '../helpers';
-import { FileMetadataState } from './codecs';
-
-/* eslint-disable no-param-reassign */
+import colors from "colors";
+import inquirer from "inquirer";
+import { difference, groupBy, uniq } from "lodash-es";
+import { logger } from "../../logger";
+import { inquirerConfirmBoolean } from "../helpers";
+import { FileMetadataState } from "./codecs";
 
 /**
  * Parse identifiers from a CSV list of preferences
@@ -19,7 +17,7 @@ import { FileMetadataState } from './codecs';
  */
 export async function parsePreferenceIdentifiersFromCsv(
   preferences: Record<string, string>[],
-  currentState: FileMetadataState,
+  currentState: FileMetadataState
 ): Promise<{
   /** The updated state */
   currentState: FileMetadataState;
@@ -27,7 +25,7 @@ export async function parsePreferenceIdentifiersFromCsv(
   preferences: Record<string, string>[];
 }> {
   // Determine columns to map
-  const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
 
   // Determine the columns that could potentially be used for identifier
   const remainingColumnsForIdentifier = difference(columnNames, [
@@ -42,13 +40,13 @@ export async function parsePreferenceIdentifiersFromCsv(
       identifierName: string;
     }>([
       {
-        name: 'identifierName',
+        name: "identifierName",
         message:
-          'Choose the column that will be used as the identifier to upload consent preferences by',
-        type: 'list',
+          "Choose the column that will be used as the identifier to upload consent preferences by",
+        type: "list",
         default:
           remainingColumnsForIdentifier.find((col) =>
-            col.toLowerCase().includes('email'),
+            col.toLowerCase().includes("email")
           ) || remainingColumnsForIdentifier[0],
         choices: remainingColumnsForIdentifier,
       },
@@ -56,9 +54,7 @@ export async function parsePreferenceIdentifiersFromCsv(
     currentState.identifierColumn = identifierName;
   }
   logger.info(
-    colors.magenta(
-      `Using identifier column "${currentState.identifierColumn}"`,
-    ),
+    colors.magenta(`Using identifier column "${currentState.identifierColumn}"`)
   );
 
   // Validate that the identifier column is present for all rows and unique
@@ -67,72 +63,71 @@ export async function parsePreferenceIdentifiersFromCsv(
     .filter((x): x is number[] => !!x)
     .flat();
   if (identifierColumnsMissing.length > 0) {
-    const msg = `The identifier column "${
+    const message = `The identifier column "${
       currentState.identifierColumn
     }" is missing a value for the following rows: ${identifierColumnsMissing.join(
-      ', ',
+      ", "
     )}`;
-    logger.warn(colors.yellow(msg));
+    logger.warn(colors.yellow(message));
 
     // Ask user if they would like to skip rows missing an identifier
     const skip = await inquirerConfirmBoolean({
-      message: 'Would you like to skip rows missing an identifier?',
+      message: "Would you like to skip rows missing an identifier?",
     });
     if (!skip) {
-      throw new Error(msg);
+      throw new Error(message);
     }
 
     // Filter out rows missing an identifier
     const previous = preferences.length;
     preferences = preferences.filter(
-      (pref) => pref[currentState.identifierColumn!],
+      (pref) => pref[currentState.identifierColumn!]
     );
     logger.info(
       colors.yellow(
-        `Skipped ${previous - preferences.length} rows missing an identifier`,
-      ),
+        `Skipped ${previous - preferences.length} rows missing an identifier`
+      )
     );
   }
   logger.info(
     colors.magenta(
-      `The identifier column "${currentState.identifierColumn}" is present for all rows`,
-    ),
+      `The identifier column "${currentState.identifierColumn}" is present for all rows`
+    )
   );
 
   // Validate that all identifiers are unique
   const rowsByUserId = groupBy(preferences, currentState.identifierColumn);
   const duplicateIdentifiers = Object.entries(rowsByUserId).filter(
-    ([, rows]) => rows.length > 1,
+    ([, rows]) => rows.length > 1
   );
   if (duplicateIdentifiers.length > 0) {
-    const msg = `The identifier column "${
+    const message = `The identifier column "${
       currentState.identifierColumn
     }" has duplicate values for the following rows: ${duplicateIdentifiers
       .slice(0, 10)
       .map(([userId, rows]) => `${userId} (${rows.length})`)
-      .join('\n')}`;
-    logger.warn(colors.yellow(msg));
+      .join("\n")}`;
+    logger.warn(colors.yellow(message));
 
     // Ask user if they would like to take the most recent update
     // for each duplicate identifier
     const skip = await inquirerConfirmBoolean({
-      message: 'Would you like to automatically take the latest update?',
+      message: "Would you like to automatically take the latest update?",
     });
     if (!skip) {
-      throw new Error(msg);
+      throw new Error(message);
     }
     preferences = Object.entries(rowsByUserId)
       .map(([, rows]) => {
         const sorted = rows.sort(
           (a, b) =>
             new Date(b[currentState.timestampColum!]).getTime() -
-            new Date(a[currentState.timestampColum!]).getTime(),
+            new Date(a[currentState.timestampColum!]).getTime()
         );
         return sorted[0];
       })
-      .filter((x) => x);
+      .filter(Boolean);
   }
 
   return { currentState, preferences };
 }
-/* eslint-enable no-param-reassign */

@@ -1,23 +1,22 @@
-/* eslint-disable max-lines */
 import {
   SubDataPointDataSubCategoryGuessStatus,
   type DataCategoryType,
-} from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import { gql } from 'graphql-request';
-import type { GraphQLClient } from 'graphql-request';
-import { chunk, keyBy, sortBy, uniq } from 'lodash-es';
-import type { DataCategoryInput, ProcessingPurposeInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+} from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import { gql } from "graphql-request";
+import type { GraphQLClient } from "graphql-request";
+import { chunk, keyBy, sortBy, uniq } from "lodash-es";
+import type { DataCategoryInput, ProcessingPurposeInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   DATA_SILO_EXPORT,
   DATAPOINT_EXPORT,
   makeGraphQLRequest,
   SUB_DATA_POINTS_COUNT,
   type DataSiloAttributeValue,
-} from '../graphql';
+} from "../graphql";
 
 export interface DataSiloCsvPreview {
   /** ID of dataSilo */
@@ -100,17 +99,17 @@ async function pullSubDatapoints(
   }: DatapointFilterOptions & {
     /** Page size to pull in */
     pageSize?: number;
-  } = {},
+  } = {}
 ): Promise<SubDataPointCsvPreview[]> {
   const subDataPoints: SubDataPointCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Filters
@@ -139,7 +138,7 @@ async function pullSubDatapoints(
     filterBy,
   });
 
-  logger.info(colors.magenta('[Step 1/3] Pulling in all subdatapoints'));
+  logger.info(colors.magenta("[Step 1/3] Pulling in all subdatapoints"));
 
   progressBar.start(totalCount, 0);
   let total = 0;
@@ -194,7 +193,7 @@ async function pullSubDatapoints(
                   status
                   classifierVersion
                 }`
-                    : ''
+                    : ""
                 }
                 ${
                   includeAttributes
@@ -204,7 +203,7 @@ async function pullSubDatapoints(
                   }
                   name
                 }`
-                    : ''
+                    : ""
                 }
               }
             }
@@ -218,37 +217,37 @@ async function pullSubDatapoints(
             // TODO: https://transcend.height.app/T-40484 - add cursor support
             // ...(cursor ? { cursor: { id: cursor } } : {}),
           },
-        },
+        }
       );
 
-      cursor = nodes[nodes.length - 1]?.id as string;
+      cursor = nodes.at(-1)?.id;
       subDataPoints.push(...nodes);
       shouldContinue = nodes.length === pageSize;
       total += nodes.length;
       offset += nodes.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`,
-        ),
+          `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`
+        )
       );
-      throw err;
+      throw error;
     }
   } while (shouldContinue);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
-  const sorted = sortBy(subDataPoints, 'name');
+  const sorted = sortBy(subDataPoints, "name");
 
   logger.info(
     colors.green(
       `Successfully pulled in ${sorted.length} subdatapoints in ${
         totalTime / 1000
-      } seconds!`,
-    ),
+      } seconds!`
+    )
   );
   return sorted;
 }
@@ -270,23 +269,23 @@ async function pullDatapoints(
     dataPointIds: string[];
     /** Page size to pull in */
     pageSize?: number;
-  },
+  }
 ): Promise<DataPointCsvPreview[]> {
   const dataPoints: DataPointCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   logger.info(
     colors.magenta(
-      `[Step 2/3] Fetching metadata for ${dataPointIds.length} datapoints`,
-    ),
+      `[Step 2/3] Fetching metadata for ${dataPointIds.length} datapoints`
+    )
   );
 
   // Group by 100
@@ -314,28 +313,28 @@ async function pullDatapoints(
       dataPoints.push(...nodes);
       total += dataPointIdsGroup.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching subdatapoints for IDs ${dataPointIdsGroup.join(
-            ', ',
-          )}`,
-        ),
+            ", "
+          )}`
+        )
       );
-      throw err;
+      throw error;
     }
   });
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
     colors.green(
       `Successfully pulled in ${dataPoints.length} dataPoints in ${
         totalTime / 1000
-      } seconds!`,
-    ),
+      } seconds!`
+    )
   );
   return dataPoints;
 }
@@ -357,23 +356,23 @@ async function pullDataSilos(
     dataSiloIds: string[];
     /** Page size to pull in */
     pageSize?: number;
-  },
+  }
 ): Promise<DataSiloCsvPreview[]> {
   const dataSilos: DataSiloCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   logger.info(
     colors.magenta(
-      `[Step 3/3] Fetching metadata for ${dataSiloIds.length} data silos`,
-    ),
+      `[Step 3/3] Fetching metadata for ${dataSiloIds.length} data silos`
+    )
   );
 
   // Group by 100
@@ -401,26 +400,26 @@ async function pullDataSilos(
       dataSilos.push(...nodes);
       total += dataSiloIdsGroup.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `An error fetching data silos for IDs ${dataSiloIdsGroup.join(', ')}`,
-        ),
+          `An error fetching data silos for IDs ${dataSiloIdsGroup.join(", ")}`
+        )
       );
-      throw err;
+      throw error;
     }
   });
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
     colors.green(
       `Successfully pulled in ${dataSilos.length} data silos in ${
         totalTime / 1000
-      } seconds!`,
-    ),
+      } seconds!`
+    )
   );
   return dataSilos;
 }
@@ -444,7 +443,7 @@ export async function pullAllDatapoints(
   }: DatapointFilterOptions & {
     /** Page size to pull in */
     pageSize?: number;
-  } = {},
+  } = {}
 ): Promise<
   (SubDataPointCsvPreview & {
     /** Data point information */
@@ -468,14 +467,14 @@ export async function pullAllDatapoints(
   const dataPoints = await pullDatapoints(client, {
     dataPointIds,
   });
-  const dataPointById = keyBy(dataPoints, 'id');
+  const dataPointById = keyBy(dataPoints, "id");
 
   // The data silo IDs to grab
   const allDataSiloIds = uniq(subDatapoints.map((point) => point.dataSiloId));
   const dataSilos = await pullDataSilos(client, {
     dataSiloIds: allDataSiloIds,
   });
-  const dataSiloById = keyBy(dataSilos, 'id');
+  const dataSiloById = keyBy(dataSilos, "id");
 
   return subDatapoints.map((subDataPoint) => ({
     ...subDataPoint,
@@ -483,4 +482,3 @@ export async function pullAllDatapoints(
     dataSilo: dataSiloById[subDataPoint.dataSiloId],
   }));
 }
-/* eslint-enable max-lines */

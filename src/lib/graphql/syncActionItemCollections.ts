@@ -1,18 +1,18 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { ActionItemCollectionInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { ActionItemCollectionInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   ActionItemCollection,
   fetchAllActionItemCollections,
-} from './fetchAllActionItemCollections';
+} from "./fetchAllActionItemCollections";
 import {
   CREATE_ACTION_ITEM_COLLECTION,
   UPDATE_ACTION_ITEM_COLLECTION,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Input to create a new action item collection
@@ -23,11 +23,11 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function createActionItemCollection(
   client: GraphQLClient,
-  actionItemCollection: ActionItemCollectionInput,
-): Promise<Pick<ActionItemCollection, 'id' | 'title'>> {
+  actionItemCollection: ActionItemCollectionInput
+): Promise<Pick<ActionItemCollection, "id" | "title">> {
   const input = {
     title: actionItemCollection.title,
-    description: actionItemCollection.description || '',
+    description: actionItemCollection.description || "",
     hidden: actionItemCollection.hidden || false,
     productLine: actionItemCollection.productLine,
   };
@@ -54,7 +54,7 @@ export async function createActionItemCollection(
 export async function updateActionItemCollection(
   client: GraphQLClient,
   input: ActionItemCollectionInput,
-  actionItemCollectionId: string,
+  actionItemCollectionId: string
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_ACTION_ITEM_COLLECTION, {
     input: {
@@ -76,27 +76,28 @@ export async function updateActionItemCollection(
  */
 export async function syncActionItemCollections(
   client: GraphQLClient,
-  inputs: ActionItemCollectionInput[],
+  inputs: ActionItemCollectionInput[]
 ): Promise<boolean> {
   let encounteredError = false;
   // Fetch existing
   logger.info(
-    colors.magenta(`Syncing "${inputs.length}" action item collections...`),
+    colors.magenta(`Syncing "${inputs.length}" action item collections...`)
   );
 
   // Fetch existing
-  const existingActionItemCollections =
-    await fetchAllActionItemCollections(client);
+  const existingActionItemCollections = await fetchAllActionItemCollections(
+    client
+  );
 
   // Look up by title
-  const collectionByTitle: { [k in string]: ActionItemCollection } = keyBy(
+  const collectionByTitle: Record<string, ActionItemCollection> = keyBy(
     existingActionItemCollections,
-    'title',
+    "title"
   );
 
   // Create new actionItems
   const newCollections = inputs.filter(
-    (input) => !collectionByTitle[input.title],
+    (input) => !collectionByTitle[input.title]
   );
 
   // Create new actionItem collections
@@ -105,15 +106,15 @@ export async function syncActionItemCollections(
       await createActionItemCollection(client, input);
       logger.info(
         colors.green(
-          `Successfully created action item collection "${input.title}"!`,
-        ),
+          `Successfully created action item collection "${input.title}"!`
+        )
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to create action item collection "${input.title}"! - ${err.message}`,
-        ),
+          `Failed to create action item collection "${input.title}"! - ${error.message}`
+        )
       );
     }
   });
@@ -127,15 +128,15 @@ export async function syncActionItemCollections(
       await updateActionItemCollection(client, input, actionItemId);
       logger.info(
         colors.green(
-          `Successfully synced action item collection "${input.title}"!`,
-        ),
+          `Successfully synced action item collection "${input.title}"!`
+        )
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync action item collection "${input.title}"! - ${err.message}`,
-        ),
+          `Failed to sync action item collection "${input.title}"! - ${error.message}`
+        )
       );
     }
   });

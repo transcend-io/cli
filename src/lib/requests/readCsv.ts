@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
-import { decodeCodec } from '@transcend-io/type-utils';
-import type { Options } from 'csv-parse';
-import { parse } from 'csv-parse/sync';
-import * as t from 'io-ts';
+import { readFileSync } from "node:fs";
+import { decodeCodec } from "@transcend-io/type-utils";
+import type { Options } from "csv-parse";
+import { parse } from "csv-parse/sync";
+import * as t from "io-ts";
 
 /**
  * Read in a CSV and validate its shape
@@ -15,10 +15,10 @@ import * as t from 'io-ts';
 export function readCsv<T extends t.Any>(
   pathToFile: string,
   codec: T,
-  options: Options = { columns: true },
+  options: Options = { columns: true }
 ): t.TypeOf<T>[] {
   // read file contents and parse
-  const fileContent = parse(readFileSync(pathToFile, 'utf-8'), options);
+  const fileContent = parse(readFileSync(pathToFile, "utf-8"), options);
 
   // validate codec
   const data = decodeCodec(t.array(codec), fileContent);
@@ -26,12 +26,12 @@ export function readCsv<T extends t.Any>(
   // remove any special characters from object keys
   const parsed = data.map((datum) =>
     Object.entries(datum).reduce(
-      (acc, [key, value]) =>
-        Object.assign(acc, {
-          [key.replace(/[^a-z_.+\-A-Z -~]/g, '')]: value,
+      (accumulator, [key, value]) =>
+        Object.assign(accumulator, {
+          [key.replaceAll(/[^a-z_.+\-A-Z -~]/g, "")]: value,
         }),
-      {} as T,
-    ),
+      {} as T
+    )
   );
   return parsed;
 }

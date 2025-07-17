@@ -1,7 +1,7 @@
-import { RequestAction } from '@transcend-io/privacy-types';
-import { decodeCodec } from '@transcend-io/type-utils';
-import type { Got } from 'got';
-import * as t from 'io-ts';
+import { RequestAction } from "@transcend-io/privacy-types";
+import { decodeCodec } from "@transcend-io/type-utils";
+import type { Got } from "got";
+import * as t from "io-ts";
 
 export const CronIdentifier = t.type({
   /** The identifier value */
@@ -25,7 +25,7 @@ export const CronIdentifier = t.type({
     t.type({
       key: t.string,
       values: t.array(t.string),
-    }),
+    })
   ),
 });
 
@@ -56,7 +56,7 @@ export async function pullCronPageOfIdentifiers(
     limit?: number;
     /** Page to pull in */
     offset?: number;
-  },
+  }
 ): Promise<CronIdentifier[]> {
   try {
     // Make the GraphQL request
@@ -73,12 +73,14 @@ export async function pullCronPageOfIdentifiers(
       t.type({
         items: t.array(CronIdentifier),
       }),
-      response,
+      response
     );
     return items;
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Received an error from server: ${err?.response?.body || err?.message}`,
+      `Received an error from server: ${
+        error?.response?.body || error?.message
+      }`
     );
   }
 }

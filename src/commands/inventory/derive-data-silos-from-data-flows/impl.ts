@@ -1,19 +1,19 @@
-import { existsSync, lstatSync } from 'fs';
-import { join } from 'path';
-import colors from 'colors';
-import { DataFlowInput } from '../../../codecs';
-import type { LocalContext } from '../../../context';
-import { listFiles } from '../../../lib/api-keys';
-import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import { existsSync, lstatSync } from "node:fs";
+import { join } from "node:path";
+import colors from "colors";
+import { DataFlowInput } from "../../../codecs";
+import type { LocalContext } from "../../../context";
+import { listFiles } from "../../../lib/api-keys";
+import { dataFlowsToDataSilos } from "../../../lib/consent-manager/dataFlowsToDataSilos";
 import {
   buildTranscendGraphQLClient,
   fetchAndIndexCatalogs,
-} from '../../../lib/graphql';
+} from "../../../lib/graphql";
 import {
   readTranscendYaml,
   writeTranscendYaml,
-} from '../../../lib/readTranscendYaml';
-import { logger } from '../../../logger';
+} from "../../../lib/readTranscendYaml";
+import { logger } from "../../../logger";
 
 interface DeriveDataSilosFromDataFlowsCommandFlags {
   auth: string;
@@ -31,14 +31,14 @@ export async function deriveDataSilosFromDataFlows(
     dataSilosYmlFolder,
     ignoreYmls = [],
     transcendUrl,
-  }: DeriveDataSilosFromDataFlowsCommandFlags,
+  }: DeriveDataSilosFromDataFlowsCommandFlags
 ): Promise<void> {
   // Ensure folder is passed to dataFlowsYmlFolder
   if (!dataFlowsYmlFolder) {
     logger.error(
       colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
+        "Missing required arg: --dataFlowsYmlFolder=./working/data-flows/"
+      )
     );
     process.exit(1);
   }
@@ -56,8 +56,8 @@ export async function deriveDataSilosFromDataFlows(
   if (!dataSilosYmlFolder) {
     logger.error(
       colors.red(
-        'Missing required arg: --dataSilosYmlFolder=./working/data-silos/',
-      ),
+        "Missing required arg: --dataSilosYmlFolder=./working/data-silos/"
+      )
     );
     process.exit(1);
   }
@@ -77,19 +77,19 @@ export async function deriveDataSilosFromDataFlows(
     await fetchAndIndexCatalogs(client);
 
   // List of each data flow yml file
-  listFiles(dataFlowsYmlFolder).forEach((directory) => {
+  for (const directory of listFiles(dataFlowsYmlFolder)) {
     // read in the data flows for a specific instance
-    const { 'data-flows': dataFlows = [] } = readTranscendYaml(
-      join(dataFlowsYmlFolder, directory),
+    const { "data-flows": dataFlows = [] } = readTranscendYaml(
+      join(dataFlowsYmlFolder, directory)
     );
 
     // map the data flows to data silos
     const { adTechDataSilos, siteTechDataSilos } = dataFlowsToDataSilos(
-      dataFlows as DataFlowInput[],
+      dataFlows,
       {
         serviceToSupportedIntegration,
         serviceToTitle,
-      },
+      }
     );
 
     // combine and write to yml file
@@ -98,7 +98,7 @@ export async function deriveDataSilosFromDataFlows(
     logger.log(`Ad Tech Services: ${adTechDataSilos.length}`);
     logger.log(`Site Tech Services: ${siteTechDataSilos.length}`);
     writeTranscendYaml(join(dataSilosYmlFolder, directory), {
-      'data-silos': ignoreYmls.includes(directory) ? [] : dataSilos,
+      "data-silos": ignoreYmls.includes(directory) ? [] : dataSilos,
     });
-  });
+  }
 }

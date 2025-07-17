@@ -1,18 +1,18 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { ProcessingPurposeInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { ProcessingPurposeInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   fetchAllProcessingPurposes,
   ProcessingPurposeSubCategory,
-} from './fetchAllProcessingPurposes';
+} from "./fetchAllProcessingPurposes";
 import {
   CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
   UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Input to create a new processing purpose
@@ -23,8 +23,8 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function createProcessingPurpose(
   client: GraphQLClient,
-  processingPurpose: ProcessingPurposeInput,
-): Promise<Pick<ProcessingPurposeSubCategory, 'id' | 'name' | 'purpose'>> {
+  processingPurpose: ProcessingPurposeInput
+): Promise<Pick<ProcessingPurposeSubCategory, "id" | "name" | "purpose">> {
   const input = {
     name: processingPurpose.name,
     purpose: processingPurpose.purpose,
@@ -52,7 +52,7 @@ export async function createProcessingPurpose(
  */
 export async function updateProcessingPurposes(
   client: GraphQLClient,
-  processingPurposeIdPairs: [ProcessingPurposeInput, string][],
+  processingPurposeIdPairs: [ProcessingPurposeInput, string][]
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES, {
     input: {
@@ -62,7 +62,7 @@ export async function updateProcessingPurposes(
           description: processingPurpose.description,
           // TODO: https://transcend.height.app/T-31994 - add  teams, owners
           attributes: processingPurpose.attributes,
-        }),
+        })
       ),
     },
   });
@@ -77,11 +77,11 @@ export async function updateProcessingPurposes(
  */
 export async function syncProcessingPurposes(
   client: GraphQLClient,
-  inputs: ProcessingPurposeInput[],
+  inputs: ProcessingPurposeInput[]
 ): Promise<boolean> {
   // Fetch existing
   logger.info(
-    colors.magenta(`Syncing "${inputs.length}" processing purposes...`),
+    colors.magenta(`Syncing "${inputs.length}" processing purposes...`)
   );
 
   let encounteredError = false;
@@ -90,16 +90,17 @@ export async function syncProcessingPurposes(
   const existingProcessingPurposes = await fetchAllProcessingPurposes(client);
 
   // Look up by name
-  const processingPurposeByName: {
-    [k in string]: Pick<ProcessingPurposeSubCategory, 'id' | 'name'>;
-  } = keyBy(
+  const processingPurposeByName: Record<
+    string,
+    Pick<ProcessingPurposeSubCategory, "id" | "name">
+  > = keyBy(
     existingProcessingPurposes,
-    ({ name, purpose }) => `${name}:${purpose}`,
+    ({ name, purpose }) => `${name}:${purpose}`
   );
 
   // Create new processing purposes
   const newProcessingPurposes = inputs.filter(
-    (input) => !processingPurposeByName[`${input.name}:${input.purpose}`],
+    (input) => !processingPurposeByName[`${input.name}:${input.purpose}`]
   );
 
   // Create new processing purposes
@@ -107,22 +108,22 @@ export async function syncProcessingPurposes(
     try {
       const newProcessingPurpose = await createProcessingPurpose(
         client,
-        processingPurpose,
+        processingPurpose
       );
       processingPurposeByName[
         `${newProcessingPurpose.name}:${newProcessingPurpose.purpose}`
       ] = newProcessingPurpose;
       logger.info(
         colors.green(
-          `Successfully synced processing purpose "${processingPurpose.name}"!`,
-        ),
+          `Successfully synced processing purpose "${processingPurpose.name}"!`
+        )
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync processing purpose "${processingPurpose.name}"! - ${err.message}`,
-        ),
+          `Failed to sync processing purpose "${processingPurpose.name}"! - ${error.message}`
+        )
       );
     }
   });
@@ -130,26 +131,26 @@ export async function syncProcessingPurposes(
   // Update all processing purposes
   try {
     logger.info(
-      colors.magenta(`Updating "${inputs.length}" processing purposes!`),
+      colors.magenta(`Updating "${inputs.length}" processing purposes!`)
     );
     await updateProcessingPurposes(
       client,
       inputs.map((input) => [
         input,
         processingPurposeByName[`${input.name}:${input.purpose}`].id,
-      ]),
+      ])
     );
     logger.info(
       colors.green(
-        `Successfully synced "${inputs.length}" processing purposes!`,
-      ),
+        `Successfully synced "${inputs.length}" processing purposes!`
+      )
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" processing purposes ! - ${err.message}`,
-      ),
+        `Failed to sync "${inputs.length}" processing purposes ! - ${error.message}`
+      )
     );
   }
 

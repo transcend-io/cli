@@ -1,17 +1,17 @@
-import { writeFileSync } from 'fs';
-import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { keyBy } from 'lodash-es';
-import type { LocalContext } from '../../../context';
-import { generateCrossAccountApiKeys } from '../../../lib/api-keys';
-import { logger } from '../../../logger';
+import { writeFileSync } from "node:fs";
+import { ScopeName, TRANSCEND_SCOPES } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { keyBy } from "lodash-es";
+import type { LocalContext } from "../../../context";
+import { generateCrossAccountApiKeys } from "../../../lib/api-keys";
+import { logger } from "../../../logger";
 
 const SCOPES_BY_TITLE = keyBy(
   Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
     ...value,
     name,
   })),
-  'title',
+  "title"
 );
 const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
 
@@ -41,25 +41,25 @@ export async function generateApiKeys(
     createNewApiKey,
     parentOrganizationId,
     transcendUrl,
-  }: GenerateApiKeysCommandFlags,
+  }: GenerateApiKeysCommandFlags
 ): Promise<void> {
   // Validate scopes
   const splitScopes = scopes.map((x) => x.trim());
   const invalidScopes = splitScopes.filter(
-    (scopeTitle) => !SCOPES_BY_TITLE[scopeTitle],
+    (scopeTitle) => !SCOPES_BY_TITLE[scopeTitle]
   );
   if (invalidScopes.length > 0) {
     logger.error(
       colors.red(
-        `Failed to parse scopes:"${invalidScopes.join(',')}".\n` +
-          `Expected one of: \n${SCOPE_TITLES.join('\n')}`,
-      ),
+        `Failed to parse scopes:"${invalidScopes.join(",")}".\n` +
+          `Expected one of: \n${SCOPE_TITLES.join("\n")}`
+      )
     );
     process.exit(1);
   }
 
   const scopeNames = splitScopes.map(
-    (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName,
+    (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName
   );
 
   // Upload privacy requests

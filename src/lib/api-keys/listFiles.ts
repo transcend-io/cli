@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync } from "node:fs";
 
 /**
  * List the files in a directory
@@ -18,7 +18,7 @@ import { existsSync, readdirSync } from 'fs';
 export function listFiles(
   directory: string,
   validExtensions?: string[],
-  removeExtensions = false,
+  removeExtensions = false
 ): string[] {
   if (!existsSync(directory)) {
     return [];
@@ -27,12 +27,12 @@ export function listFiles(
   const files = readdirSync(directory)
     .filter((fil) =>
       validExtensions
-        ? validExtensions.filter((ext) => fil.endsWith(ext)).length
-        : true,
+        ? validExtensions.filter((extension) => fil.endsWith(extension)).length
+        : true
     )
-    .filter((fil) => fil.indexOf('.') > 0);
+    .filter((fil) => fil.indexOf(".") > 0);
 
   return removeExtensions
-    ? files.map((fil) => fil.replace(/\.[^/.]+$/, ''))
+    ? files.map((fil) => fil.replace(/\.[^/.]+$/, ""))
     : files;
 }

@@ -1,29 +1,28 @@
-/* eslint-disable max-lines */
-import { join } from 'path';
-import { PersistedState } from '@transcend-io/persisted-state';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import * as t from 'io-ts';
-import { uniq } from 'lodash-es';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+import { join } from "node:path";
+import { PersistedState } from "@transcend-io/persisted-state";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import * as t from "io-ts";
+import { uniq } from "lodash-es";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestAttributeKeys,
-} from '../graphql';
-import { CachedFileState, CachedRequestState } from './constants';
-import { extractClientError } from './extractClientError';
-import { filterRows } from './filterRows';
-import { mapColumnsToAttributes } from './mapColumnsToAttributes';
-import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
-import { mapCsvColumnsToApi } from './mapCsvColumnsToApi';
-import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
-import { mapRequestEnumValues } from './mapRequestEnumValues';
-import { parseAttributesFromString } from './parseAttributesFromString';
-import { readCsv } from './readCsv';
-import { submitPrivacyRequest } from './submitPrivacyRequest';
+} from "../graphql";
+import { CachedFileState, CachedRequestState } from "./constants";
+import { extractClientError } from "./extractClientError";
+import { filterRows } from "./filterRows";
+import { mapColumnsToAttributes } from "./mapColumnsToAttributes";
+import { mapColumnsToIdentifiers } from "./mapColumnsToIdentifiers";
+import { mapCsvColumnsToApi } from "./mapCsvColumnsToApi";
+import { mapCsvRowsToRequestInputs } from "./mapCsvRowsToRequestInputs";
+import { mapRequestEnumValues } from "./mapRequestEnumValues";
+import { parseAttributesFromString } from "./parseAttributesFromString";
+import { readCsv } from "./readCsv";
+import { submitPrivacyRequest } from "./submitPrivacyRequest";
 
 /**
  * Upload a set of privacy requests from CSV
@@ -37,7 +36,7 @@ export async function uploadPrivacyRequestsFromCsv({
   auth,
   sombraAuth,
   concurrency = 100,
-  defaultPhoneCountryCode = '1', // USA
+  defaultPhoneCountryCode = "1", // USA
   transcendUrl = DEFAULT_TRANSCEND_API,
   attributes = [],
   emailIsVerified = true,
@@ -82,11 +81,11 @@ export async function uploadPrivacyRequestsFromCsv({
   dryRun?: boolean;
 }): Promise<void> {
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Parse out the extra attributes to apply to all requests uploaded
@@ -110,8 +109,8 @@ export async function uploadPrivacyRequestsFromCsv({
   const requestCacheFile = join(
     requestReceiptFolder,
     `tr-request-upload-${new Date().toISOString()}-${file
-      .split('/')
-      .pop()}`.replace('.csv', '.json'),
+      .split("/")
+      .pop()}`.replace(".csv", ".json")
   );
   const requestState = new PersistedState(
     requestCacheFile,
@@ -120,7 +119,7 @@ export async function uploadPrivacyRequestsFromCsv({
       successfulRequests: [],
       duplicateRequests: [],
       failingRequests: [],
-    },
+    }
   );
 
   // Create sombra instance to communicate with
@@ -128,18 +127,18 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Read in the list of integration requests
   const requestsList = readCsv(file, t.record(t.string, t.string));
-  const columnNames = uniq(requestsList.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(requestsList.flatMap((x) => Object.keys(x)));
 
   // Log out an example request
   if (requestsList.length === 0) {
     throw new Error(
-      'No Requests found in list! Ensure the first row of the CSV is a header and the rest are requests.',
+      "No Requests found in list! Ensure the first row of the CSV is a header and the rest are requests."
     );
   }
   if (debug) {
     const firstRequest = requestsList[0];
     logger.info(
-      colors.magenta(`First request: ${JSON.stringify(firstRequest, null, 2)}`),
+      colors.magenta(`First request: ${JSON.stringify(firstRequest, null, 2)}`)
     );
   }
   // Determine what rows in the CSV should be imported
@@ -157,13 +156,13 @@ export async function uploadPrivacyRequestsFromCsv({
   const identifierNameMap = await mapColumnsToIdentifiers(
     client,
     columnNames,
-    state,
+    state
   );
   const attributeNameMap = await mapColumnsToAttributes(
     client,
     columnNames,
     state,
-    requestAttributeKeys,
+    requestAttributeKeys
   );
   await mapRequestEnumValues(client, filteredRequestList, {
     state,
@@ -199,16 +198,16 @@ export async function uploadPrivacyRequestsFromCsv({
             `[${ind + 1}/${requestInputs.length}] Importing: ${JSON.stringify(
               requestInput,
               null,
-              2,
-            )}`,
-          ),
+              2
+            )}`
+          )
         );
       }
 
       // Skip on dry run
       if (dryRun) {
         logger.info(
-          colors.magenta('Bailing out on dry run because dryRun is set'),
+          colors.magenta("Bailing out on dry run because dryRun is set")
         );
         return;
       }
@@ -222,14 +221,14 @@ export async function uploadPrivacyRequestsFromCsv({
             details: `Uploaded by Transcend Cli: "tr-request-upload" : ${JSON.stringify(
               rawRow,
               null,
-              2,
+              2
             )}`,
             isTest,
             emailIsVerified,
             skipSendingReceipt,
             isSilent,
             additionalAttributes: parsedAttributes,
-          },
+          }
         );
 
         // Log success
@@ -238,20 +237,20 @@ export async function uploadPrivacyRequestsFromCsv({
             colors.green(
               `[${ind + 1}/${
                 requestInputs.length
-              }] Successfully submitted the test data subject request: "${requestLogId}"`,
-            ),
+              }] Successfully submitted the test data subject request: "${requestLogId}"`
+            )
           );
           logger.info(
             colors.green(
               `[${ind + 1}/${requestInputs.length}] View it at: "${
                 requestResponse.link
-              }"`,
-            ),
+              }"`
+            )
           );
         }
 
         // Cache successful upload
-        const successfulRequests = requestState.getValue('successfulRequests');
+        const successfulRequests = requestState.getValue("successfulRequests");
         successfulRequests.push({
           id: requestResponse.id,
           link: requestResponse.link,
@@ -259,51 +258,51 @@ export async function uploadPrivacyRequestsFromCsv({
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
-        await requestState.setValue(successfulRequests, 'successfulRequests');
-      } catch (err) {
-        const msg = `${err.message} - ${JSON.stringify(
-          err.response?.body,
+        await requestState.setValue(successfulRequests, "successfulRequests");
+      } catch (error) {
+        const message = `${error.message} - ${JSON.stringify(
+          error.response?.body,
           null,
-          2,
+          2
         )}`;
-        const clientError = extractClientError(msg);
+        const clientError = extractClientError(message);
 
         if (
-          clientError === 'Client error: You have already made this request.'
+          clientError === "Client error: You have already made this request."
         ) {
           if (debug) {
             logger.info(
               colors.yellow(
                 `[${ind + 1}/${
                   requestInputs.length
-                }] Skipping request as it is a duplicate`,
-              ),
+                }] Skipping request as it is a duplicate`
+              )
             );
           }
-          const duplicateRequests = requestState.getValue('duplicateRequests');
+          const duplicateRequests = requestState.getValue("duplicateRequests");
           duplicateRequests.push({
             coreIdentifier: requestInput.coreIdentifier,
             rowIndex: ind,
             attemptedAt: new Date().toISOString(),
           });
-          await requestState.setValue(duplicateRequests, 'duplicateRequests');
+          await requestState.setValue(duplicateRequests, "duplicateRequests");
         } else {
-          const failingRequests = requestState.getValue('failingRequests');
+          const failingRequests = requestState.getValue("failingRequests");
           failingRequests.push({
             ...requestInput,
             rowIndex: ind,
-            error: clientError || msg,
+            error: clientError || message,
             attemptedAt: new Date().toISOString(),
           });
-          await requestState.setValue(failingRequests, 'failingRequests');
+          await requestState.setValue(failingRequests, "failingRequests");
           if (debug) {
-            logger.error(colors.red(clientError || msg));
+            logger.error(colors.red(clientError || message));
             logger.error(
               colors.red(
                 `[${ind + 1}/${
                   requestInputs.length
-                }] Failed to submit request for: "${requestLogId}"`,
-              ),
+                }] Failed to submit request for: "${requestLogId}"`
+              )
             );
           }
         }
@@ -316,41 +315,40 @@ export async function uploadPrivacyRequestsFromCsv({
     },
     {
       concurrency,
-    },
+    }
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time
   logger.info(
-    colors.green(`Completed upload in "${totalTime / 1000}" seconds.`),
+    colors.green(`Completed upload in "${totalTime / 1000}" seconds.`)
   );
 
   // Log duplicates
-  if (requestState.getValue('duplicateRequests').length > 0) {
+  if (requestState.getValue("duplicateRequests").length > 0) {
     logger.info(
       colors.yellow(
         `Encountered "${
-          requestState.getValue('duplicateRequests').length
+          requestState.getValue("duplicateRequests").length
         }" duplicate requests. ` +
-          `See "${requestCacheFile}" to review the core identifiers for these requests.`,
-      ),
+          `See "${requestCacheFile}" to review the core identifiers for these requests.`
+      )
     );
   }
 
   // Log errors
-  if (requestState.getValue('failingRequests').length > 0) {
+  if (requestState.getValue("failingRequests").length > 0) {
     logger.error(
       colors.red(
         `Encountered "${
-          requestState.getValue('failingRequests').length
+          requestState.getValue("failingRequests").length
         }" errors. ` +
-          `See "${requestCacheFile}" to review the error messages and inputs.`,
-      ),
+          `See "${requestCacheFile}" to review the error messages and inputs.`
+      )
     );
     process.exit(1);
   }
 }
-/* eslint-enable max-lines */

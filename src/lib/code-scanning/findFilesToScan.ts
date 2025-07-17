@@ -1,6 +1,6 @@
-import fastGlob from 'fast-glob';
-import { logger } from '../../logger';
-import { CodeScanningConfig } from './types';
+import fastGlob from "fast-glob";
+import { logger } from "../../logger";
+import { CodeScanningConfig } from "./types";
 
 export interface SiloDiscoveryRawResults {
   /** The name of the potential data silo entry */
@@ -37,28 +37,30 @@ export async function findFilesToScan({
 }): Promise<SiloDiscoveryRawResults[]> {
   const { ignoreDirs: IGNORE_DIRS, supportedFiles, scanFunction } = config;
   const globsToSupport =
-    fileGlobs === ''
+    fileGlobs === ""
       ? supportedFiles
-      : supportedFiles.concat(fileGlobs.split(','));
-  const dirsToIgnore = [...ignoreDirs.split(','), ...IGNORE_DIRS].filter(
-    (dir) => dir.length > 0,
+      : supportedFiles.concat(fileGlobs.split(","));
+  const directoriesToIgnore = [...ignoreDirs.split(","), ...IGNORE_DIRS].filter(
+    (dir) => dir.length > 0
   );
   try {
     const filesToScan: string[] = await fastGlob(
-      `${scanPath}/**/${globsToSupport.join('|')}`,
+      `${scanPath}/**/${globsToSupport.join("|")}`,
       {
-        ignore: dirsToIgnore.map((dir: string) => `${scanPath}/**/${dir}`),
+        ignore: directoriesToIgnore.map(
+          (dir: string) => `${scanPath}/**/${dir}`
+        ),
         unique: true,
         onlyFiles: true,
-      },
+      }
     );
     logger.info(`Scanning: ${filesToScan.length} files`);
-    const allPackages = filesToScan
-      .map((filePath: string) => scanFunction(filePath))
-      .flat();
-    const allSdks = allPackages
-      .map((appPackage) => appPackage.softwareDevelopmentKits || [])
-      .flat();
+    const allPackages = filesToScan.flatMap((filePath: string) =>
+      scanFunction(filePath)
+    );
+    const allSdks = allPackages.flatMap(
+      (appPackage) => appPackage.softwareDevelopmentKits || []
+    );
     const uniqueDeps = new Set(allSdks.map((sdk) => sdk.name));
     const deps = [...uniqueDeps];
     logger.info(`Found: ${deps.length} unique dependencies`);
@@ -69,7 +71,7 @@ export async function findFilesToScan({
     }));
   } catch (error) {
     throw new Error(
-      `Error scanning globs ${findFilesToScan} with error: ${error}`,
+      `Error scanning globs ${findFilesToScan} with error: ${error}`
     );
   }
 }

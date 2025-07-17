@@ -1,10 +1,10 @@
-import { ObjByString } from '@transcend-io/type-utils';
-import colors from 'colors';
-import inquirer from 'inquirer';
-import { uniq } from 'lodash-es';
-import { logger } from '../../logger';
-import { NONE } from './constants';
-import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
+import { ObjByString } from "@transcend-io/type-utils";
+import colors from "colors";
+import inquirer from "inquirer";
+import { uniq } from "lodash-es";
+import { logger } from "../../logger";
+import { NONE } from "./constants";
+import { getUniqueValuesForColumn } from "./getUniqueValuesForColumn";
 
 /**
  * Filter a list of CSV rows by column values
@@ -15,7 +15,7 @@ import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
  */
 export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
   // Determine set of column names
-  const columnNames = uniq(rows.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(rows.flatMap((x) => Object.keys(x)));
 
   // update these variables recursively
   let filteredRows = rows;
@@ -30,10 +30,10 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
       filterColumnName: string;
     }>([
       {
-        name: 'filterColumnName',
-        // eslint-disable-next-line max-len
+        name: "filterColumnName",
+
         message: `If you need to filter the list of requests to import, choose the column to filter on. Currently ${filteredRows.length} rows.`,
-        type: 'list',
+        type: "list",
         default: columnNames,
         choices: [NONE, ...columnNames],
       },
@@ -49,16 +49,16 @@ export async function filterRows(rows: ObjByString[]): Promise<ObjByString[]> {
         valuesToKeep: string[];
       }>([
         {
-          name: 'valuesToKeep',
-          message: 'Keep rows matching this value',
-          type: 'checkbox',
+          name: "valuesToKeep",
+          message: "Keep rows matching this value",
+          type: "checkbox",
           default: columnNames,
           choices: options,
         },
       ]);
 
       filteredRows = filteredRows.filter((request) =>
-        valuesToKeep.includes(request[filterColumnName]),
+        valuesToKeep.includes(request[filterColumnName])
       );
     }
   }

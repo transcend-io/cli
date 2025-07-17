@@ -1,4 +1,4 @@
-import { ObjByString } from '@transcend-io/type-utils';
+import { ObjByString } from "@transcend-io/type-utils";
 
 /**
  * Given an object, remove all keys that are null-ish
@@ -7,17 +7,17 @@ import { ObjByString } from '@transcend-io/type-utils';
  * @returns Object with null-ish values removed
  */
 export function filterNullishValuesFromObject<T extends ObjByString>(
-  obj: T,
+  object: T
 ): T {
-  return Object.entries(obj).reduce(
-    (acc, [k, v]) =>
+  return Object.entries(object).reduce(
+    (accumulator, [k, v]) =>
       v !== null &&
       v !== undefined &&
-      v !== '' &&
+      v !== "" &&
       !(Array.isArray(v) && v.length === 0) &&
-      !(typeof v === 'object' && Object.keys(v).length === 0)
-        ? Object.assign(acc, { [k]: v })
-        : acc,
-    {} as T,
+      !(typeof v === "object" && Object.keys(v).length === 0)
+        ? Object.assign(accumulator, { [k]: v })
+        : accumulator,
+    {} as T
   );
 }

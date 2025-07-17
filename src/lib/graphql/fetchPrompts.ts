@@ -1,10 +1,10 @@
 import {
   PromptResponseFormat,
   PromptStatus,
-} from '@transcend-io/privacy-types';
-import { GraphQLClient } from 'graphql-request';
-import { PROMPTS, PROMPTS_WITH_VARIABLES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "@transcend-io/privacy-types";
+import { GraphQLClient } from "graphql-request";
+import { PROMPTS, PROMPTS_WITH_VARIABLES } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 export interface Prompt {
   /** ID of prompt */
@@ -45,7 +45,7 @@ export async function fetchAllPrompts(
     ids?: string[];
     /** Filter by titles */
     titles?: string[];
-  } = {},
+  } = {}
 ): Promise<Prompt[]> {
   const prompts: Prompt[] = [];
   let offset = 0;
@@ -81,7 +81,7 @@ export async function fetchAllPrompts(
 /**
  * The basic metadata needed to use a prompt at runtime
  */
-export type TranscendPromptTemplated = {
+export interface TranscendPromptTemplated {
   /** ID of prompt */
   id: string;
   /** Title of prompt */
@@ -98,12 +98,12 @@ export type TranscendPromptTemplated = {
   maxTokensToSample?: number;
   /** Response format */
   responseFormat?: PromptResponseFormat;
-};
+}
 
 /**
  * The basic metadata needed to use a prompt partial at runtime
  */
-export type TranscendPromptPartialTemplated = {
+export interface TranscendPromptPartialTemplated {
   /** ID of prompt */
   id: string;
   /** Title of prompt */
@@ -112,32 +112,32 @@ export type TranscendPromptPartialTemplated = {
   slug: string;
   /** Content of prompt */
   content: string;
-};
+}
 
 /**
  * Calculated variables
  */
-export type PromptCalculatedVariable = {
+export interface PromptCalculatedVariable {
   /** JSON stringified data to template */
   data: string | null;
   /** Name of variable */
   name: string;
-};
+}
 
 /**
  * Runtime variables
  */
-export type PromptRuntimeVariable = {
+export interface PromptRuntimeVariable {
   /** Type of variable */
   type: string;
   /** Name of variable */
   name: string;
-};
+}
 
 /**
  * Metadata useful for filling variables within a prompt
  */
-export type TranscendPromptsAndVariables = {
+export interface TranscendPromptsAndVariables {
   /** Prompts ready to be templated */
   prompts: TranscendPromptTemplated[];
   /** Prompt partials */
@@ -146,7 +146,7 @@ export type TranscendPromptsAndVariables = {
   calculatedVariables: PromptCalculatedVariable[];
   /** Runtime variables to be templated */
   runtimeVariables: PromptRuntimeVariable[];
-};
+}
 
 /**
  * Fetch prompts with templated variables
@@ -165,7 +165,7 @@ export async function fetchPromptsWithVariables(
     promptIds?: string[];
     /** Filter by prompt titles */
     promptTitles?: string[];
-  } = {},
+  } = {}
 ): Promise<TranscendPromptsAndVariables> {
   const { promptsWithVariables } = await makeGraphQLRequest<{
     /** Prompts */

@@ -1,5 +1,5 @@
-import { ObjByString } from '@transcend-io/type-utils';
-import { uniq } from 'lodash-es';
+import { ObjByString } from "@transcend-io/type-utils";
+import { uniq } from "lodash-es";
 
 /**
  * Return the unique set of values for a column in a CSV
@@ -10,7 +10,7 @@ import { uniq } from 'lodash-es';
  */
 export function getUniqueValuesForColumn(
   rows: ObjByString[],
-  columnName: string,
+  columnName: string
 ): string[] {
-  return uniq(rows.map((row) => row[columnName] || '').flat());
+  return uniq(rows.flatMap((row) => row[columnName] || ""));
 }

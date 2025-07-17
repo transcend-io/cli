@@ -1,11 +1,11 @@
-import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { uniq } from 'lodash-es';
-import type { LocalContext } from '../../../context';
-import { writeCsv } from '../../../lib/cron';
-import { pullUnstructuredSubDataPointRecommendations } from '../../../lib/data-inventory';
-import { buildTranscendGraphQLClient } from '../../../lib/graphql';
-import { logger } from '../../../logger';
+import type { UnstructuredSubDataPointRecommendationStatus } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { uniq } from "lodash-es";
+import type { LocalContext } from "../../../context";
+import { writeCsv } from "../../../lib/cron";
+import { pullUnstructuredSubDataPointRecommendations } from "../../../lib/data-inventory";
+import { buildTranscendGraphQLClient } from "../../../lib/graphql";
+import { logger } from "../../../logger";
 
 interface PullUnstructuredDiscoveryFilesCommandFlags {
   auth: string;
@@ -27,7 +27,7 @@ export async function pullUnstructuredDiscoveryFiles(
     subCategories,
     status,
     includeEncryptedSnippets,
-  }: PullUnstructuredDiscoveryFilesCommandFlags,
+  }: PullUnstructuredDiscoveryFilesCommandFlags
 ): Promise<void> {
   try {
     // Create a GraphQL client
@@ -42,34 +42,34 @@ export async function pullUnstructuredDiscoveryFiles(
 
     logger.info(
       colors.magenta(
-        `Writing unstructured discovery files to file "${file}"...`,
-      ),
+        `Writing unstructured discovery files to file "${file}"...`
+      )
     );
     let headers: string[] = [];
     const inputs = entries.map((entry) => {
       const result = {
-        'Entry ID': entry.id,
-        'Data Silo ID': entry.dataSiloId,
-        'Object Path ID': entry.scannedObjectPathId,
-        'Object ID': entry.scannedObjectId,
+        "Entry ID": entry.id,
+        "Data Silo ID": entry.dataSiloId,
+        "Object Path ID": entry.scannedObjectPathId,
+        "Object ID": entry.scannedObjectId,
         ...(includeEncryptedSnippets
-          ? { Entry: entry.name, 'Context Snippet': entry.contextSnippet }
+          ? { Entry: entry.name, "Context Snippet": entry.contextSnippet }
           : {}),
-        'Data Category': `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
-        'Classification Status': entry.status,
-        'Confidence Score': entry.confidence,
-        'Classification Method': entry.classificationMethod,
-        'Classifier Version': entry.classifierVersion,
+        "Data Category": `${entry.dataSubCategory.category}:${entry.dataSubCategory.name}`,
+        "Classification Status": entry.status,
+        "Confidence Score": entry.confidence,
+        "Classification Method": entry.classificationMethod,
+        "Classifier Version": entry.classifierVersion,
       };
       headers = uniq([...headers, ...Object.keys(result)]);
       return result;
     });
     writeCsv(file, inputs, headers);
-  } catch (err) {
+  } catch (error) {
     logger.error(
       colors.red(
-        `An error occurred syncing the unstructured discovery files: ${err.message}`,
-      ),
+        `An error occurred syncing the unstructured discovery files: ${error.message}`
+      )
     );
     process.exit(1);
   }
@@ -77,7 +77,7 @@ export async function pullUnstructuredDiscoveryFiles(
   // Indicate success
   logger.info(
     colors.green(
-      `Successfully synced unstructured discovery files to disk at ${file}!`,
-    ),
+      `Successfully synced unstructured discovery files to disk at ${file}!`
+    )
   );
 }

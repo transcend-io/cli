@@ -1,10 +1,10 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { decodeCodec, ObjByString } from '@transcend-io/type-utils';
-import yaml from 'js-yaml';
-import { TranscendInput } from '../codecs';
+import { readFileSync, writeFileSync } from "node:fs";
+import { decodeCodec, ObjByString } from "@transcend-io/type-utils";
+import yaml from "js-yaml";
+import { TranscendInput } from "../codecs";
 
 export const VARIABLE_PARAMETERS_REGEXP = /<<parameters\.(.+?)>>/;
-export const VARIABLE_PARAMETERS_NAME = 'parameters';
+export const VARIABLE_PARAMETERS_NAME = "parameters";
 
 /**
  * Function that replaces variables in a text file.
@@ -18,15 +18,15 @@ export const VARIABLE_PARAMETERS_NAME = 'parameters';
 export function replaceVariablesInYaml(
   input: string,
   variables: ObjByString,
-  extraErrorMessage = '',
+  extraErrorMessage = ""
 ): string {
   let contents = input;
   // Replace variables
-  Object.entries(variables).forEach(([name, value]) => {
+  for (const [name, value] of Object.entries(variables)) {
     contents = contents
       .split(`<<${VARIABLE_PARAMETERS_NAME}.${name}>>`)
       .join(value);
-  });
+  }
 
   // Throw error if unfilled variables
   if (VARIABLE_PARAMETERS_REGEXP.test(contents)) {
@@ -34,7 +34,7 @@ export function replaceVariablesInYaml(
     throw new Error(
       `Found variable that was not set: ${name}.
 Make sure you are passing all parameters through the --${VARIABLE_PARAMETERS_NAME}=${name}:value-for-param flag.
-${extraErrorMessage}`,
+${extraErrorMessage}`
     );
   }
 
@@ -51,16 +51,16 @@ ${extraErrorMessage}`,
  */
 export function readTranscendYaml(
   filePath: string,
-  variables: ObjByString = {},
+  variables: ObjByString = {}
 ): TranscendInput {
   // Read in contents
-  const fileContents = readFileSync(filePath, 'utf-8');
+  const fileContents = readFileSync(filePath, "utf-8");
 
   // Replace variables
   const replacedVariables = replaceVariablesInYaml(
     fileContents,
     variables,
-    `Also check that there are no extra variables defined in your yaml: ${filePath}`,
+    `Also check that there are no extra variables defined in your yaml: ${filePath}`
   );
 
   // Validate shape
@@ -75,7 +75,7 @@ export function readTranscendYaml(
  */
 export function writeTranscendYaml(
   filePath: string,
-  input: TranscendInput,
+  input: TranscendInput
 ): void {
   writeFileSync(filePath, yaml.dump(decodeCodec(TranscendInput, input)));
 }

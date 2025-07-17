@@ -1,13 +1,13 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { chunk, keyBy } from 'lodash-es';
-import { PolicyInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
-import { fetchAllPolicies } from './fetchAllPolicies';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
-import { UPDATE_POLICIES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { chunk, keyBy } from "lodash-es";
+import { PolicyInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
+import { fetchAllPolicies } from "./fetchAllPolicies";
+import { fetchPrivacyCenterId } from "./fetchPrivacyCenterId";
+import { UPDATE_POLICIES } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 const MAX_PAGE_SIZE = 100;
 
@@ -19,7 +19,7 @@ const MAX_PAGE_SIZE = 100;
  */
 export async function updatePolicies(
   client: GraphQLClient,
-  policyInputs: [PolicyInput, string | undefined][],
+  policyInputs: [PolicyInput, string | undefined][]
 ): Promise<void> {
   const privacyCenterId = await fetchPrivacyCenterId(client);
 
@@ -62,20 +62,20 @@ export async function updatePolicies(
  */
 export async function syncPolicies(
   client: GraphQLClient,
-  policies: PolicyInput[],
+  policies: PolicyInput[]
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(colors.magenta(`Syncing "${policies.length}" policies...`));
 
   // Ensure no duplicates are being uploaded
   const notUnique = policies.filter(
-    (policy) => policies.filter((pol) => policy.title === pol.title).length > 1,
+    (policy) => policies.filter((pol) => policy.title === pol.title).length > 1
   );
   if (notUnique.length > 0) {
     throw new Error(
       `Failed to upload policies as there were non-unique entries found: ${notUnique
         .map(({ title }) => title)
-        .join(',')}`,
+        .join(",")}`
     );
   }
 
@@ -83,23 +83,23 @@ export async function syncPolicies(
   const existingPolicies = await fetchAllPolicies(client);
   const policiesById = keyBy(
     existingPolicies,
-    ({ title }) => title.defaultMessage,
+    ({ title }) => title.defaultMessage
   );
 
   try {
     logger.info(
-      colors.magenta(`Upserting "${policies.length}" new policies...`),
+      colors.magenta(`Upserting "${policies.length}" new policies...`)
     );
     await updatePolicies(
       client,
-      policies.map((policy) => [policy, policiesById[policy.title]?.id]),
+      policies.map((policy) => [policy, policiesById[policy.title]?.id])
     );
     logger.info(
-      colors.green(`Successfully synced ${policies.length} policies!`),
+      colors.green(`Successfully synced ${policies.length} policies!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create policies! - ${err.message}`));
+    logger.info(colors.red(`Failed to create policies! - ${error.message}`));
   }
 
   return !encounteredError;

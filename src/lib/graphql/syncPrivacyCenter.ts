@@ -1,10 +1,10 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { PrivacyCenterInput } from '../../codecs';
-import { logger } from '../../logger';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
-import { UPDATE_PRIVACY_CENTER } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { PrivacyCenterInput } from "../../codecs";
+import { logger } from "../../logger";
+import { fetchPrivacyCenterId } from "./fetchPrivacyCenterId";
+import { UPDATE_PRIVACY_CENTER } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Sync the privacy center
@@ -15,10 +15,10 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function syncPrivacyCenter(
   client: GraphQLClient,
-  privacyCenter: PrivacyCenterInput,
+  privacyCenter: PrivacyCenterInput
 ): Promise<boolean> {
   let encounteredError = false;
-  logger.info(colors.magenta('Syncing privacy center...'));
+  logger.info(colors.magenta("Syncing privacy center..."));
 
   // Grab the privacy center ID
   const privacyCenterId = await fetchPrivacyCenterId(client);
@@ -54,11 +54,11 @@ export async function syncPrivacyCenter(
           : {}),
       },
     });
-    logger.info(colors.green('Successfully synced privacy center!'));
-  } catch (err) {
+    logger.info(colors.green("Successfully synced privacy center!"));
+  } catch (error) {
     encounteredError = true;
     logger.info(
-      colors.red(`Failed to create privacy center! - ${err.message}`),
+      colors.red(`Failed to create privacy center! - ${error.message}`)
     );
   }
 

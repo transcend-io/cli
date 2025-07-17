@@ -1,12 +1,12 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { AgentFileInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
-import { AgentFile, fetchAllAgentFiles } from './fetchAllAgentFiles';
-import { CREATE_AGENT_FILE, UPDATE_AGENT_FILES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { AgentFileInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
+import { AgentFile, fetchAllAgentFiles } from "./fetchAllAgentFiles";
+import { CREATE_AGENT_FILE, UPDATE_AGENT_FILES } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Input to create a new agent file
@@ -17,8 +17,8 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function createAgentFile(
   client: GraphQLClient,
-  agentFile: AgentFileInput,
-): Promise<Pick<AgentFile, 'id' | 'name' | 'fileId'>> {
+  agentFile: AgentFileInput
+): Promise<Pick<AgentFile, "id" | "name" | "fileId">> {
   const input = {
     name: agentFile.name,
     description: agentFile.description,
@@ -50,7 +50,7 @@ export async function createAgentFile(
  */
 export async function updateAgentFiles(
   client: GraphQLClient,
-  agentFileIdPairs: [AgentFileInput, string][],
+  agentFileIdPairs: [AgentFileInput, string][]
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_AGENT_FILES, {
     input: {
@@ -75,7 +75,7 @@ export async function updateAgentFiles(
  */
 export async function syncAgentFiles(
   client: GraphQLClient,
-  inputs: AgentFileInput[],
+  inputs: AgentFileInput[]
 ): Promise<boolean> {
   // Fetch existing
   logger.info(colors.magenta(`Syncing "${inputs.length}" agent files...`));
@@ -86,9 +86,10 @@ export async function syncAgentFiles(
   const existingAgentFiles = await fetchAllAgentFiles(client);
 
   // Look up by name
-  const agentFileByName: {
-    [k in string]: Pick<AgentFile, 'id' | 'name' | 'fileId'>;
-  } = keyBy(existingAgentFiles, 'name');
+  const agentFileByName: Record<
+    string,
+    Pick<AgentFile, "id" | "name" | "fileId">
+  > = keyBy(existingAgentFiles, "name");
 
   // Create new agent files
   const newAgentFiles = inputs.filter((input) => !agentFileByName[input.name]);
@@ -99,14 +100,14 @@ export async function syncAgentFiles(
       const newAgentFile = await createAgentFile(client, agentFile);
       agentFileByName[newAgentFile.name] = newAgentFile;
       logger.info(
-        colors.green(`Successfully synced agent file "${agentFile.name}"!`),
+        colors.green(`Successfully synced agent file "${agentFile.name}"!`)
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync agent file "${agentFile.name}"! - ${err.message}`,
-        ),
+          `Failed to sync agent file "${agentFile.name}"! - ${error.message}`
+        )
       );
     }
   });
@@ -116,17 +117,17 @@ export async function syncAgentFiles(
     logger.info(colors.magenta(`Updating "${inputs.length}" agent files!`));
     await updateAgentFiles(
       client,
-      inputs.map((input) => [input, agentFileByName[input.name].id]),
+      inputs.map((input) => [input, agentFileByName[input.name].id])
     );
     logger.info(
-      colors.green(`Successfully synced "${inputs.length}" agent files!`),
+      colors.green(`Successfully synced "${inputs.length}" agent files!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" agent files! - ${err.message}`,
-      ),
+        `Failed to sync "${inputs.length}" agent files! - ${error.message}`
+      )
     );
   }
 

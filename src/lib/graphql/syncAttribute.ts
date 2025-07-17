@@ -1,18 +1,18 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { difference, groupBy, keyBy } from 'lodash-es';
-import { AttributeInput } from '../../codecs';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { Attribute } from './fetchAllAttributes';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { difference, groupBy, keyBy } from "lodash-es";
+import { AttributeInput } from "../../codecs";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { Attribute } from "./fetchAllAttributes";
 import {
   CREATE_ATTRIBUTE,
   CREATE_ATTRIBUTE_VALUES,
   DELETE_ATTRIBUTE_VALUE,
   UPDATE_ATTRIBUTE,
   UPDATE_ATTRIBUTE_VALUES,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Sync attribute
@@ -32,7 +32,7 @@ export async function syncAttribute(
     existingAttribute?: Attribute;
     /** When true, delete extra attributes not specified in the list of values */
     deleteExtraAttributeValues?: boolean;
-  },
+  }
 ): Promise<void> {
   // attribute key input
   const input = {
@@ -42,7 +42,16 @@ export async function syncAttribute(
 
   // create or update attribute key
   let attributeKeyId: string;
-  if (!existingAttribute) {
+  if (existingAttribute) {
+    await makeGraphQLRequest(client, UPDATE_ATTRIBUTE, {
+      attributeKeyId: existingAttribute.id,
+      description: existingAttribute.isCustom
+        ? attribute.description
+        : undefined,
+      ...input,
+    });
+    attributeKeyId = existingAttribute.id;
+  } else {
     const {
       createAttributeKey: { attributeKey },
     } = await makeGraphQLRequest<{
@@ -60,27 +69,18 @@ export async function syncAttribute(
       ...input,
     });
     attributeKeyId = attributeKey.id;
-  } else {
-    await makeGraphQLRequest(client, UPDATE_ATTRIBUTE, {
-      attributeKeyId: existingAttribute.id,
-      description: existingAttribute.isCustom
-        ? attribute.description
-        : undefined,
-      ...input,
-    });
-    attributeKeyId = existingAttribute.id;
   }
 
   // upsert attribute values
-  const existingAttributeMap = keyBy(existingAttribute?.values || [], 'name');
+  const existingAttributeMap = keyBy(existingAttribute?.values || [], "name");
   const { existingValues = [], newValues = [] } = groupBy(
     attribute.values || [],
     (field) =>
-      existingAttributeMap[field.name] ? 'existingValues' : 'newValues',
+      existingAttributeMap[field.name] ? "existingValues" : "newValues"
   );
   const removedValues = difference(
     (existingAttribute?.values || []).map(({ name }) => name),
-    (attribute.values || []).map(({ name }) => name),
+    (attribute.values || []).map(({ name }) => name)
   );
 
   // Create new attribute values
@@ -108,7 +108,7 @@ export async function syncAttribute(
       })),
     });
     logger.info(
-      colors.green(`Updated ${existingValues.length} attribute values`),
+      colors.green(`Updated ${existingValues.length} attribute values`)
     );
   }
 
@@ -123,10 +123,10 @@ export async function syncAttribute(
       },
       {
         concurrency: 10,
-      },
+      }
     );
     logger.info(
-      colors.green(`Deleted ${removedValues.length} attribute values`),
+      colors.green(`Deleted ${removedValues.length} attribute values`)
     );
   }
 }

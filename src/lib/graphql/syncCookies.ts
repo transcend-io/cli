@@ -1,13 +1,13 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { chunk } from 'lodash-es';
-import { CookieInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
-import { UPDATE_OR_CREATE_COOKIES } from './gqls';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { chunk } from "lodash-es";
+import { CookieInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
+import { fetchConsentManagerId } from "./fetchConsentManagerId";
+import { UPDATE_OR_CREATE_COOKIES } from "./gqls";
 // import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 const MAX_PAGE_SIZE = 100;
 
@@ -19,7 +19,7 @@ const MAX_PAGE_SIZE = 100;
  */
 export async function updateOrCreateCookies(
   client: GraphQLClient,
-  cookieInputs: CookieInput[],
+  cookieInputs: CookieInput[]
 ): Promise<void> {
   const airgapBundleId = await fetchConsentManagerId(client);
 
@@ -64,7 +64,7 @@ export async function updateOrCreateCookies(
  */
 export async function syncCookies(
   client: GraphQLClient,
-  cookies: CookieInput[],
+  cookies: CookieInput[]
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(colors.magenta(`Syncing "${cookies.length}" cookies...`));
@@ -73,14 +73,14 @@ export async function syncCookies(
   const notUnique = cookies.filter(
     (cookie) =>
       cookies.filter(
-        (cook) => cookie.name === cook.name && cookie.isRegex === cook.isRegex,
-      ).length > 1,
+        (cook) => cookie.name === cook.name && cookie.isRegex === cook.isRegex
+      ).length > 1
   );
   if (notUnique.length > 0) {
     throw new Error(
       `Failed to upload cookies as there were non-unique entries found: ${notUnique
         .map(({ name }) => name)
-        .join(',')}`,
+        .join(",")}`
     );
   }
 
@@ -88,9 +88,9 @@ export async function syncCookies(
     logger.info(colors.magenta(`Upserting "${cookies.length}" new cookies...`));
     await updateOrCreateCookies(client, cookies);
     logger.info(colors.green(`Successfully synced ${cookies.length} cookies!`));
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create cookies! - ${err.message}`));
+    logger.info(colors.red(`Failed to create cookies! - ${error.message}`));
   }
 
   return !encounteredError;

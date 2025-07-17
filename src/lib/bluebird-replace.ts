@@ -7,11 +7,11 @@
  */
 export async function mapSeries<R, U>(
   array: R[],
-  iterator: (item: R, index: number, arrayLength: number) => Promise<U>,
+  iterator: (item: R, index: number, arrayLength: number) => Promise<U>
 ): Promise<U[]> {
   const results = [];
-  for (let i = 0; i < array.length; i += 1) {
-    results.push(await iterator(array[i], i, array.length));
+  for (let index = 0; index < array.length; index += 1) {
+    results.push(await iterator(array[index], index, array.length));
   }
   return results;
 }
@@ -30,10 +30,10 @@ export async function map<R, U>(
   options: {
     /** Concurrency level for the Promise.all call */
     concurrency?: number;
-  } = {},
+  } = {}
 ): Promise<U[]> {
   const { concurrency = Infinity } = options;
-  const results: U[] = new Array(array.length);
+  const results: U[] = Array.from({ length: array.length });
   const executing: Promise<void>[] = [];
   let nextIndex = 0;
 
@@ -46,7 +46,7 @@ export async function map<R, U>(
     const promise = iterator(
       array[currentIndex],
       currentIndex,
-      array.length,
+      array.length
     ).then((result) => {
       results[currentIndex] = result;
     });
@@ -56,7 +56,7 @@ export async function map<R, U>(
 
     // Remove the completed promise from executing array
     const index = executing.indexOf(promise);
-    if (index > -1) {
+    if (index !== -1) {
       executing.splice(index, 1);
     }
   };
@@ -64,7 +64,7 @@ export async function map<R, U>(
   // Start initial batch of promises up to concurrency limit
   const initialBatch = Math.min(concurrency, array.length);
   const initialPromises = [];
-  for (let i = 0; i < initialBatch; i += 1) {
+  for (let index = 0; index < initialBatch; index += 1) {
     initialPromises.push(executeNext());
   }
 

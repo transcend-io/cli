@@ -1,48 +1,48 @@
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LanguageKey } from "@transcend-io/internationalization";
 import {
   CompletedRequestStatus,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   RequestAction,
-} from '@transcend-io/privacy-types';
-import { applyEnum, valuesOf } from '@transcend-io/type-utils';
-import * as t from 'io-ts';
+} from "@transcend-io/privacy-types";
+import { applyEnum, valuesOf } from "@transcend-io/type-utils";
+import * as t from "io-ts";
 
-export const NONE = '[NONE]' as const;
-export const BULK_APPLY = '[APPLY VALUE TO ALL ROWS]' as const;
-export const BLANK = '<blank>' as const;
+export const NONE = "[NONE]" as const;
+export const BULK_APPLY = "[APPLY VALUE TO ALL ROWS]" as const;
+export const BLANK = "<blank>" as const;
 
 /** These are uploaded at the top level of the request */
-export const IDENTIFIER_BLOCK_LIST = ['email', 'coreIdentifier'];
+export const IDENTIFIER_BLOCK_LIST = ["email", "coreIdentifier"];
 
 /**
  * Column names to map
  */
 export enum ColumnName {
   /** The title of the email column */
-  Email = 'email',
+  Email = "email",
   /** The title of the core identifier column */
-  CoreIdentifier = 'coreIdentifier',
+  CoreIdentifier = "coreIdentifier",
   /** The title of the requestType column */
-  RequestType = 'requestType',
+  RequestType = "requestType",
   /** The title of the subjectType column */
-  SubjectType = 'subjectType',
+  SubjectType = "subjectType",
   /** The title of the locale column */
-  Locale = 'locale',
+  Locale = "locale",
   /** The country */
-  Country = 'country',
+  Country = "country",
   /** The country sub division */
-  CountrySubDivision = 'countrySubDivision',
+  CountrySubDivision = "countrySubDivision",
   /** The title of the requestStatus column */
-  RequestStatus = 'requestStatus',
+  RequestStatus = "requestStatus",
   /** The title of the createdAt column */
-  CreatedAt = 'createdAt',
+  CreatedAt = "createdAt",
   /** The title of the dataSiloIds column */
-  DataSiloIds = 'dataSiloIds',
+  DataSiloIds = "dataSiloIds",
 }
 
 /** These parameters are required in the Transcend DSR API */
-export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
+export const IS_REQUIRED: Record<ColumnName, boolean> = {
   [ColumnName.Email]: false,
   [ColumnName.CoreIdentifier]: true,
   [ColumnName.RequestType]: true,
@@ -56,7 +56,7 @@ export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
 };
 
 /** These parameters can be specified for the entire CSV set if needed */
-export const CAN_APPLY_IN_BULK: { [k in ColumnName]?: boolean } = {
+export const CAN_APPLY_IN_BULK: Partial<Record<ColumnName, boolean>> = {
   [ColumnName.RequestType]: true,
   [ColumnName.SubjectType]: true,
 };
@@ -78,17 +78,17 @@ export const CachedFileState = t.type({
   /** Mapping between region and country code */
   regionToCountry: t.record(
     t.string,
-    valuesOf({ ...IsoCountryCode, [NONE]: NONE }),
+    valuesOf({ ...IsoCountryCode, [NONE]: NONE })
   ),
   /** Mapping between region and country sub division code */
   regionToCountrySubDivision: t.record(
     t.string,
-    valuesOf({ ...IsoCountrySubdivisionCode, [NONE]: NONE }),
+    valuesOf({ ...IsoCountrySubdivisionCode, [NONE]: NONE })
   ),
   /** Mapping between request status in import to Transcend request status */
   statusToRequestStatus: t.record(
     t.string,
-    valuesOf({ ...CompletedRequestStatus, [NONE]: NONE }),
+    valuesOf({ ...CompletedRequestStatus, [NONE]: NONE })
   ),
 });
 
@@ -121,7 +121,7 @@ export const CachedRequestState = t.type({
       rowIndex: t.number,
       coreIdentifier: t.string,
       attemptedAt: t.string,
-    }),
+    })
   ),
 });
 

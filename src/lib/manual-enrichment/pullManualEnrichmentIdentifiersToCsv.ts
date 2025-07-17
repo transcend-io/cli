@@ -1,10 +1,10 @@
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { groupBy, uniq } from 'lodash-es';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { writeCsv } from '../cron/writeCsv';
+import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { groupBy, uniq } from "lodash-es";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { writeCsv } from "../cron/writeCsv";
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
@@ -14,7 +14,7 @@ import {
   PrivacyRequest,
   RequestEnricher,
   RequestIdentifier,
-} from '../graphql';
+} from "../graphql";
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */
@@ -57,9 +57,9 @@ export async function pullManualEnrichmentIdentifiersToCsv({
   logger.info(
     colors.magenta(
       `Pulling manual enrichment requests, filtered for actions: ${requestActions.join(
-        ',',
-      )}`,
-    ),
+        ","
+      )}`
+    )
   );
 
   // Pull all privacy requests
@@ -82,7 +82,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
       // Check if manual enrichment exists for that request
       const hasManualEnrichment = requestEnrichers.filter(
-        ({ status }) => status === 'ACTION_REQUIRED',
+        ({ status }) => status === "ACTION_REQUIRED"
       );
 
       // Save request to queue
@@ -92,7 +92,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
           sombra,
           {
             requestId: request.id,
-          },
+          }
         );
         savedRequests.push({
           ...request,
@@ -103,7 +103,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
     },
     {
       concurrency,
-    },
+    }
   );
 
   const data = savedRequests.map(
@@ -115,32 +115,28 @@ export async function pullManualEnrichmentIdentifiersToCsv({
     }) => ({
       ...request,
       // flatten identifiers
-      ...Object.entries(groupBy(requestIdentifiers, 'name')).reduce(
-        (acc, [key, values]) =>
-          Object.assign(acc, {
-            [key]: values.map(({ value }) => value).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(requestIdentifiers, "name")).map(
+          ([key, values]) => [key, values.map(({ value }) => value).join(",")]
+        )
       ),
       // flatten attributes
-      ...Object.entries(groupBy(attributeValues, 'attributeKey.name')).reduce(
-        (acc, [key, values]) =>
-          Object.assign(acc, {
-            [key]: values.map(({ name }) => name).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(attributeValues, "attributeKey.name")).map(
+          ([key, values]) => [key, values.map(({ name }) => name).join(",")]
+        )
       ),
-    }),
+    })
   );
 
   // Write out to CSV
-  const headers = uniq(data.map((d) => Object.keys(d)).flat());
+  const headers = uniq(data.flatMap((d) => Object.keys(d)));
   writeCsv(file, data, headers);
 
   logger.info(
     colors.green(
-      `Successfully wrote ${savedRequests.length} requests to file "${file}"`,
-    ),
+      `Successfully wrote ${savedRequests.length} requests to file "${file}"`
+    )
   );
 
   return savedRequests;

@@ -1,23 +1,23 @@
-import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { DataFlowCsvInput, DataFlowInput } from '../../codecs';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
-import { splitCsvToList } from '../requests';
-import { readCsv } from '../requests/readCsv';
+import { ConsentTrackerStatus } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { DataFlowCsvInput, DataFlowInput } from "../../codecs";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { buildTranscendGraphQLClient, syncDataFlows } from "../graphql";
+import { splitCsvToList } from "../requests";
+import { readCsv } from "../requests/readCsv";
 
-const OMIT_COLUMNS = [
-  'ID',
-  'Activity',
-  'Encounters',
-  'Last Seen At',
-  'Has Native Do Not Sell/Share Support',
-  'IAB USP API Support',
-  'Service Description',
-  'Website URL',
-  'Categories of Recipients',
-];
+const OMIT_COLUMNS = new Set([
+  "ID",
+  "Activity",
+  "Encounters",
+  "Last Seen At",
+  "Has Native Do Not Sell/Share Support",
+  "IAB USP API Support",
+  "Service Description",
+  "Website URL",
+  "Categories of Recipients",
+]);
 
 /**
  * Upload a set of data flows from CSV
@@ -61,7 +61,7 @@ export async function uploadDataFlowsFromCsv({
       Status,
       Owners,
       Teams,
-      'Connections Made To': value,
+      "Connections Made To": value,
       ...rest
     }): DataFlowInput => ({
       value,
@@ -79,27 +79,27 @@ export async function uploadDataFlowsFromCsv({
       attributes: Object.entries(rest)
         // filter out native columns that are exported from the admin dashboard
         // but not custom attributes
-        .filter(([key]) => !OMIT_COLUMNS.includes(key))
+        .filter(([key]) => !OMIT_COLUMNS.has(key))
         .map(([key, value]) => ({
           key,
           values: splitCsvToList(value),
         })),
-    }),
+    })
   );
 
   // Upload the data flows into Transcend dashboard
   const syncedDataFlows = await syncDataFlows(
     client,
     validatedDataFlowInputs,
-    classifyService,
+    classifyService
   );
 
   // Log errors
   if (!syncedDataFlows) {
     logger.error(
       colors.red(
-        'Encountered error(s) syncing data flows from CSV, see logs above for more info. ',
-      ),
+        "Encountered error(s) syncing data flows from CSV, see logs above for more info. "
+      )
     );
     process.exit(1);
   }

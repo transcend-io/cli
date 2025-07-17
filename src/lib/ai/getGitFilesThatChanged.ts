@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
-import fastGlob from 'fast-glob';
-import { difference } from 'lodash-es';
+import { execSync } from "node:child_process";
+import fastGlob from "fast-glob";
+import { difference } from "lodash-es";
 
 /**
  * Function thats gets the git files that have changed
@@ -34,7 +34,7 @@ export function getGitFilesThatChanged({
   /** Current commit */
   commit: string;
   /** File diffs */
-  fileDiffs: { [k in string]: string };
+  fileDiffs: Record<string, string>;
 } {
   // Pull base branch
   execSync(`git fetch origin ${baseBranch}`);
@@ -42,17 +42,17 @@ export function getGitFilesThatChanged({
   // Latest commit on base branch. If we are on the base branch, we take the prior commit
   const latestBasedCommit = execSync(
     `git ls-remote ${githubRepo} "refs/heads/${baseBranch}" | cut -f 1`,
-    { encoding: 'utf-8' },
-  ).split('\n')[0];
+    { encoding: "utf-8" }
+  ).split("\n")[0];
 
   // This commit
-  const latestThisCommit = execSync('git rev-parse HEAD', {
-    encoding: 'utf-8',
-  }).split('\n')[0];
+  const latestThisCommit = execSync("git rev-parse HEAD", {
+    encoding: "utf-8",
+  }).split("\n")[0];
 
   // Ensure commits are present
   if (!latestBasedCommit || !latestThisCommit) {
-    throw new Error('FAILED TO FIND COMMIT RANGE');
+    throw new Error("FAILED TO FIND COMMIT RANGE");
   }
 
   // Get the diff between the given branch and base branch
@@ -60,13 +60,13 @@ export function getGitFilesThatChanged({
     `git fetch && git diff --name-only "${
       baseBranch || latestBasedCommit
     }...${latestThisCommit}" -- ${rootDirectory}`,
-    { encoding: 'utf-8' },
+    { encoding: "utf-8" }
   );
 
   // Filter out block list
   const changedFiles = difference(
-    diff.split('\n').filter((f) => f),
-    fileBlockList,
+    diff.split("\n").filter(Boolean),
+    fileBlockList
   );
 
   // Filter out globs
@@ -76,16 +76,16 @@ export function getGitFilesThatChanged({
       : changedFiles;
 
   // Get the contents of only the changed files
-  const fileDiffs: { [k in string]: string } = {};
-  filteredChanges.forEach((file) => {
+  const fileDiffs: Record<string, string> = {};
+  for (const file of filteredChanges) {
     const contents = execSync(`git show ${latestThisCommit}:${file}`, {
-      encoding: 'utf-8',
+      encoding: "utf-8",
     });
     fileDiffs[file] = contents;
-  });
+  }
 
   // Pull the github repo name
-  const repoName = githubRepo.split('/').pop()!.split('.')[0];
+  const repoName = githubRepo.split("/").pop()!.split(".")[0];
 
   return {
     changedFiles,

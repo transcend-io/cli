@@ -1,10 +1,10 @@
-import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { uniq } from 'lodash-es';
-import type { LocalContext } from '../../../context';
-import { writeCsv } from '../../../lib/cron';
-import { pullPrivacyRequests } from '../../../lib/requests';
-import { logger } from '../../../logger';
+import type { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { uniq } from "lodash-es";
+import type { LocalContext } from "../../../context";
+import { writeCsv } from "../../../lib/cron";
+import { pullPrivacyRequests } from "../../../lib/requests";
+import { logger } from "../../../logger";
 
 interface ExportCommandFlags {
   auth: string;
@@ -21,7 +21,7 @@ interface ExportCommandFlags {
 }
 
 // `export` is a reserved keyword, so we need to prefix it with an underscore
-// eslint-disable-next-line no-underscore-dangle
+
 export async function _export(
   this: LocalContext,
   {
@@ -35,7 +35,7 @@ export async function _export(
     createdAtBefore,
     createdAtAfter,
     showTests,
-  }: ExportCommandFlags,
+  }: ExportCommandFlags
 ): Promise<void> {
   const { requestsFormattedForCsv } = await pullPrivacyRequests({
     transcendUrl,
@@ -50,13 +50,11 @@ export async function _export(
   });
 
   // Write to CSV
-  const headers = uniq(
-    requestsFormattedForCsv.map((d) => Object.keys(d)).flat(),
-  );
+  const headers = uniq(requestsFormattedForCsv.flatMap((d) => Object.keys(d)));
   writeCsv(file, requestsFormattedForCsv, headers);
   logger.info(
     colors.green(
-      `Successfully wrote ${requestsFormattedForCsv.length} requests to file "${file}"`,
-    ),
+      `Successfully wrote ${requestsFormattedForCsv.length} requests to file "${file}"`
+    )
   );
 }

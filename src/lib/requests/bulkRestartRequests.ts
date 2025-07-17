@@ -1,22 +1,22 @@
-import { join } from 'path';
-import { PersistedState } from '@transcend-io/persisted-state';
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import * as t from 'io-ts';
-import { difference } from 'lodash-es';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+import { join } from "node:path";
+import { PersistedState } from "@transcend-io/persisted-state";
+import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import * as t from "io-ts";
+import { difference } from "lodash-es";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
-} from '../graphql';
-import { SuccessfulRequest } from './constants';
-import { extractClientError } from './extractClientError';
-import { restartPrivacyRequest } from './restartPrivacyRequest';
+} from "../graphql";
+import { SuccessfulRequest } from "./constants";
+import { extractClientError } from "./extractClientError";
+import { restartPrivacyRequest } from "./restartPrivacyRequest";
 
 /** Minimal state we need to keep a list of requests */
 const ErrorRequest = t.intersection([
@@ -92,17 +92,17 @@ export async function bulkRestartRequests({
   concurrency?: number;
 }): Promise<void> {
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Create a new state file to store the requests from this run
   const cacheFile = join(
     requestReceiptFolder,
-    `tr-request-restart-${new Date().toISOString()}`,
+    `tr-request-restart-${new Date().toISOString()}`
   );
   const state = new PersistedState(cacheFile, CachedRequestState, {
     restartedRequests: [],
@@ -122,33 +122,33 @@ export async function bulkRestartRequests({
     createdAtAfter,
   });
   const requests = allRequests.filter(
-    (request) => new Date(request.createdAt) < createdAt,
+    (request) => new Date(request.createdAt) < createdAt
   );
   logger.info(`Found ${requests.length} requests to process`);
 
   if (copyIdentifiers) {
-    logger.info('copyIdentifiers detected - All Identifiers will be copied.');
+    logger.info("copyIdentifiers detected - All Identifiers will be copied.");
   }
   if (sendEmailReceipt) {
-    logger.info('sendEmailReceipt detected - Email receipts will be sent.');
+    logger.info("sendEmailReceipt detected - Email receipts will be sent.");
   }
   if (skipWaitingPeriod) {
-    logger.info('skipWaitingPeriod detected - Waiting period will be skipped.');
+    logger.info("skipWaitingPeriod detected - Waiting period will be skipped.");
   }
 
   // Validate request IDs
   if (requestIds.length > 0 && requestIds.length !== requests.length) {
     const missingRequests = difference(
       requestIds,
-      requests.map(({ id }) => id),
+      requests.map(({ id }) => id)
     );
     if (missingRequests.length > 0) {
       logger.error(
         colors.red(
           `Failed to find the following requests by ID: ${missingRequests.join(
-            ',',
-          )}.`,
-        ),
+            ","
+          )}.`
+        )
       );
       process.exit(1);
     }
@@ -185,11 +185,11 @@ export async function bulkRestartRequests({
             skipWaitingPeriod,
             sendEmailReceipt,
             emailIsVerified,
-          },
+          }
         );
 
         // Cache successful upload
-        const restartedRequests = state.getValue('restartedRequests');
+        const restartedRequests = state.getValue("restartedRequests");
         restartedRequests.push({
           id: requestResponse.id,
           link: requestResponse.link,
@@ -197,50 +197,50 @@ export async function bulkRestartRequests({
           coreIdentifier: requestResponse.coreIdentifier,
           attemptedAt: new Date().toISOString(),
         });
-        await state.setValue(restartedRequests, 'restartedRequests');
-      } catch (err) {
-        const msg = `${err.message} - ${JSON.stringify(
-          err.response?.body,
+        await state.setValue(restartedRequests, "restartedRequests");
+      } catch (error) {
+        const message = `${error.message} - ${JSON.stringify(
+          error.response?.body,
           null,
-          2,
+          2
         )}`;
-        const clientError = extractClientError(msg);
+        const clientError = extractClientError(message);
 
-        const failingRequests = state.getValue('failingRequests');
+        const failingRequests = state.getValue("failingRequests");
         failingRequests.push({
           id: request.id,
           link: request.link,
           rowIndex: ind,
           coreIdentifier: request.coreIdentifier,
           attemptedAt: new Date().toISOString(),
-          error: clientError || msg,
+          error: clientError || message,
         });
-        await state.setValue(failingRequests, 'failingRequests');
+        await state.setValue(failingRequests, "failingRequests");
       }
       total += 1;
       progressBar.update(total);
     },
-    { concurrency },
+    { concurrency }
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time
   logger.info(
     colors.green(
-      `Completed restarting of requests in "${totalTime / 1000}" seconds.`,
-    ),
+      `Completed restarting of requests in "${totalTime / 1000}" seconds.`
+    )
   );
 
   // Log errors
-  if (state.getValue('failingRequests').length > 0) {
+  if (state.getValue("failingRequests").length > 0) {
     logger.error(
       colors.red(
-        `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
-      ),
+        `Encountered "${state.getValue("failingRequests").length}" errors. ` +
+          `See "${cacheFile}" to review the error messages and inputs.`
+      )
     );
     process.exit(1);
   }

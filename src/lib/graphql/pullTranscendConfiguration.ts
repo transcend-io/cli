@@ -1,13 +1,12 @@
-/* eslint-disable max-lines */
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LanguageKey } from "@transcend-io/internationalization";
 import {
   ActionItemCode,
   ConsentTrackerStatus,
   RequestAction,
-} from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { flatten, keyBy, mapValues } from 'lodash-es';
+} from "@transcend-io/privacy-types";
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { flatten, keyBy, mapValues } from "lodash-es";
 import {
   ActionInput,
   ActionItemCollectionInput,
@@ -42,53 +41,53 @@ import {
   TeamInput,
   TranscendInput,
   VendorInput,
-} from '../../codecs';
-import { TranscendPullResource } from '../../enums';
-import { logger } from '../../logger';
-import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
-import { fetchAllActionItems } from './fetchAllActionItems';
-import { fetchAllActions } from './fetchAllActions';
-import { fetchAllAgentFiles } from './fetchAllAgentFiles';
-import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
-import { fetchAllAgents } from './fetchAllAgents';
-import { fetchAllAssessments } from './fetchAllAssessments';
-import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
-import { fetchAllAttributes } from './fetchAllAttributes';
-import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
-import { fetchAllCookies } from './fetchAllCookies';
-import { fetchAllDataCategories } from './fetchAllDataCategories';
-import { fetchAllDataFlows } from './fetchAllDataFlows';
-import { fetchAllMessages } from './fetchAllMessages';
-import { fetchAllPolicies } from './fetchAllPolicies';
-import { fetchAllPrivacyCenters } from './fetchAllPrivacyCenters';
-import { fetchAllProcessingPurposes } from './fetchAllProcessingPurposes';
-import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
-import { fetchAllTeams } from './fetchAllTeams';
-import { fetchAllVendors } from './fetchAllVendors';
-import { fetchApiKeys } from './fetchApiKeys';
+} from "../../codecs";
+import { TranscendPullResource } from "../../enums";
+import { logger } from "../../logger";
+import { fetchAllActionItemCollections } from "./fetchAllActionItemCollections";
+import { fetchAllActionItems } from "./fetchAllActionItems";
+import { fetchAllActions } from "./fetchAllActions";
+import { fetchAllAgentFiles } from "./fetchAllAgentFiles";
+import { fetchAllAgentFunctions } from "./fetchAllAgentFunctions";
+import { fetchAllAgents } from "./fetchAllAgents";
+import { fetchAllAssessments } from "./fetchAllAssessments";
+import { fetchAllAssessmentTemplates } from "./fetchAllAssessmentTemplates";
+import { fetchAllAttributes } from "./fetchAllAttributes";
+import { fetchAllBusinessEntities } from "./fetchAllBusinessEntities";
+import { fetchAllCookies } from "./fetchAllCookies";
+import { fetchAllDataCategories } from "./fetchAllDataCategories";
+import { fetchAllDataFlows } from "./fetchAllDataFlows";
+import { fetchAllMessages } from "./fetchAllMessages";
+import { fetchAllPolicies } from "./fetchAllPolicies";
+import { fetchAllPrivacyCenters } from "./fetchAllPrivacyCenters";
+import { fetchAllProcessingPurposes } from "./fetchAllProcessingPurposes";
+import { fetchAllPurposesAndPreferences } from "./fetchAllPurposesAndPreferences";
+import { fetchAllTeams } from "./fetchAllTeams";
+import { fetchAllVendors } from "./fetchAllVendors";
+import { fetchApiKeys } from "./fetchApiKeys";
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
   fetchConsentManagerTheme,
-} from './fetchConsentManagerId';
+} from "./fetchConsentManagerId";
 import {
   convertToDataSubjectAllowlist,
   fetchAllDataSubjects,
-} from './fetchDataSubjects';
-import { fetchAllIdentifiers } from './fetchIdentifiers';
-import { fetchAllPromptGroups } from './fetchPromptGroups';
-import { fetchAllPromptPartials } from './fetchPromptPartials';
-import { fetchAllPrompts } from './fetchPrompts';
-import { formatAttributeValues } from './formatAttributeValues';
+} from "./fetchDataSubjects";
+import { fetchAllIdentifiers } from "./fetchIdentifiers";
+import { fetchAllPromptGroups } from "./fetchPromptGroups";
+import { fetchAllPromptPartials } from "./fetchPromptPartials";
+import { fetchAllPrompts } from "./fetchPrompts";
+import { formatAttributeValues } from "./formatAttributeValues";
 import {
   AssessmentNestedRule,
   parseAssessmentDisplayLogic,
-} from './parseAssessmentDisplayLogic';
-import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
-import { fetchEnrichedDataSilos } from './syncDataSilos';
-import { fetchAllEnrichers } from './syncEnrichers';
-import { fetchPartitions } from './syncPartitions';
-import { fetchAllTemplates } from './syncTemplates';
+} from "./parseAssessmentDisplayLogic";
+import { parseAssessmentRiskLogic } from "./parseAssessmentRiskLogic";
+import { fetchEnrichedDataSilos } from "./syncDataSilos";
+import { fetchAllEnrichers } from "./syncEnrichers";
+import { fetchPartitions } from "./syncPartitions";
+import { fetchAllTemplates } from "./syncTemplates";
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -137,11 +136,11 @@ export async function pullTranscendConfiguration(
     includeGuessedCategories,
     skipSubDatapoints,
     trackerStatuses = Object.values(ConsentTrackerStatus),
-  }: TranscendPullConfigurationInput,
+  }: TranscendPullConfigurationInput
 ): Promise<TranscendInput> {
   if (dataSiloIds.length > 0 && integrationNames.length > 0) {
     throw new Error(
-      'Only 1 of integrationNames OR dataSiloIds can be provided',
+      "Only 1 of integrationNames OR dataSiloIds can be provided"
     );
   }
 
@@ -344,21 +343,21 @@ export async function pullTranscendConfiguration(
 
   // Save API keys
   const apiKeyTitles = flatten(
-    dataSilos.map(([{ apiKeys }]) => apiKeys.map(({ title }) => title)),
+    dataSilos.map(([{ apiKeys }]) => apiKeys.map(({ title }) => title))
   );
   const relevantApiKeys = Object.values(apiKeyTitleMap).filter(({ title }) =>
     resources.includes(TranscendPullResource.ApiKeys)
       ? true
-      : apiKeyTitles.includes(title),
+      : apiKeyTitles.includes(title)
   );
   if (
     relevantApiKeys.length > 0 &&
     resources.includes(TranscendPullResource.ApiKeys)
   ) {
-    result['api-keys'] = relevantApiKeys.map(
+    result["api-keys"] = relevantApiKeys.map(
       ({ title }): ApiKeyInput => ({
         title,
-      }),
+      })
     );
   }
 
@@ -378,7 +377,7 @@ export async function pullTranscendConfiguration(
     consentManager &&
     resources.includes(TranscendPullResource.ConsentManager)
   ) {
-    result['consent-manager'] = {
+    result["consent-manager"] = {
       bundleUrls: {
         TEST: consentManager.testBundleURL,
         PRODUCTION: consentManager.bundleURL,
@@ -399,14 +398,14 @@ export async function pullTranscendConfiguration(
       uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
-      theme: !consentManagerTheme
-        ? undefined
-        : {
+      theme: consentManagerTheme
+        ? {
             primaryColor: consentManagerTheme.primaryColor || undefined,
             fontColor: consentManagerTheme.fontColor || undefined,
             privacyPolicy: consentManagerTheme.privacyPolicy || undefined,
             prompt: consentManagerTheme.prompt,
-          },
+          }
+        : undefined,
       experiences: consentManagerExperiences.map((experience) => ({
         name: experience.name,
         displayName: experience.displayName || undefined,
@@ -504,30 +503,30 @@ export async function pullTranscendConfiguration(
                 return {
                   title,
                   type,
-                  'sub-type': subType,
+                  "sub-type": subType,
                   placeholder,
                   description,
-                  'is-required': isRequired,
-                  'reference-id': referenceId,
-                  'display-logic':
+                  "is-required": isRequired,
+                  "reference-id": referenceId,
+                  "display-logic":
                     displayLogicParsed &&
                     Object.keys(displayLogicParsed).length > 0
                       ? {
                           action: displayLogicParsed.action!,
                           rule: displayLogicParsed.rule
                             ? {
-                                'depends-on-question-reference-id':
+                                "depends-on-question-reference-id":
                                   displayLogicParsed.rule
                                     .dependsOnQuestionReferenceId,
-                                'comparison-operator':
+                                "comparison-operator":
                                   displayLogicParsed.rule.comparisonOperator,
-                                'comparison-operands':
+                                "comparison-operands":
                                   displayLogicParsed.rule.comparisonOperands,
                               }
                             : undefined,
-                          'nested-rule': displayLogicParsed.nestedRule
+                          "nested-rule": displayLogicParsed.nestedRule
                             ? {
-                                'logic-operator':
+                                "logic-operator":
                                   displayLogicParsed.nestedRule.logicOperator,
                                 rules:
                                   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -537,11 +536,11 @@ export async function pullTranscendConfiguration(
                                         .nestedRule as AssessmentNestedRule
                                     ).rules || []
                                   ).map((rule) => ({
-                                    'depends-on-question-reference-id':
+                                    "depends-on-question-reference-id":
                                       rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
+                                    "comparison-operator":
                                       rule.comparisonOperator,
-                                    'comparison-operands':
+                                    "comparison-operands":
                                       rule.comparisonOperands,
                                   })),
                                 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -549,55 +548,55 @@ export async function pullTranscendConfiguration(
                             : undefined,
                         }
                       : undefined,
-                  'risk-logic': riskLogic.map((logic): RiskLogicInput => {
+                  "risk-logic": riskLogic.map((logic): RiskLogicInput => {
                     const parsed = parseAssessmentRiskLogic(logic);
                     return {
-                      'risk-level': parsed.riskAssignment?.riskLevelId,
-                      'comparison-operands': parsed.comparisonOperands,
-                      'comparison-operator': parsed.comparisonOperator,
+                      "risk-level": parsed.riskAssignment?.riskLevelId,
+                      "comparison-operands": parsed.comparisonOperands,
+                      "comparison-operator": parsed.comparisonOperator,
                     };
                   }),
-                  'risk-categories': riskCategories.map(({ title }) => title),
-                  'risk-framework': riskFramework?.title,
-                  'answer-options': answerOptions.map(({ value }) => ({
+                  "risk-categories": riskCategories.map(({ title }) => title),
+                  "risk-framework": riskFramework?.title,
+                  "answer-options": answerOptions.map(({ value }) => ({
                     value,
                   })),
-                  'selected-answers': selectedAnswers.map(({ value }) => value),
-                  'allowed-mime-types': allowedMimeTypes,
-                  'allow-select-other': allowSelectOther,
-                  'sync-model': syncModel || undefined,
-                  'sync-column': syncColumn || undefined,
-                  'attribute-key': attributeKey?.name,
-                  'require-risk-evaluation': requireRiskEvaluation,
-                  'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+                  "selected-answers": selectedAnswers.map(({ value }) => value),
+                  "allowed-mime-types": allowedMimeTypes,
+                  "allow-select-other": allowSelectOther,
+                  "sync-model": syncModel || undefined,
+                  "sync-column": syncColumn || undefined,
+                  "attribute-key": attributeKey?.name,
+                  "require-risk-evaluation": requireRiskEvaluation,
+                  "require-risk-matrix-evaluation": requireRiskMatrixEvaluation,
                 };
-              },
+              }
             ),
             assignees: assignees.map(({ email }) => email),
-            'external-assignees': externalAssignees.map(({ email }) => email),
-            'is-reviewed': isReviewed,
-          }),
+            "external-assignees": externalAssignees.map(({ email }) => email),
+            "is-reviewed": isReviewed,
+          })
         ),
         creator: creator?.email,
         description,
         status,
         assignees: assignees.map(({ email }) => email),
-        'external-assignees': externalAssignees.map(({ email }) => email),
+        "external-assignees": externalAssignees.map(({ email }) => email),
         reviewers: reviewers.map(({ email }) => email),
         locked: isLocked,
         archived: isArchived,
         external: isExternallyCreated,
-        'title-is-internal': titleIsInternal,
-        'due-date': dueDate || undefined,
-        'created-at': createdAt || undefined,
-        'assigned-at': assignedAt || undefined,
-        'submitted-at': submittedAt || undefined,
-        'approved-at': approvedAt || undefined,
-        'rejected-at': rejectedAt || undefined,
-        'retention-schedule': retentionSchedule
+        "title-is-internal": titleIsInternal,
+        "due-date": dueDate || undefined,
+        "created-at": createdAt || undefined,
+        "assigned-at": assignedAt || undefined,
+        "submitted-at": submittedAt || undefined,
+        "approved-at": approvedAt || undefined,
+        "rejected-at": rejectedAt || undefined,
+        "retention-schedule": retentionSchedule
           ? {
               type: retentionSchedule.type,
-              'duration-days': retentionSchedule.durationDays,
+              "duration-days": retentionSchedule.durationDays,
               operand: retentionSchedule.operation,
             }
           : undefined,
@@ -611,9 +610,9 @@ export async function pullTranscendConfiguration(
             title: category
               ? `${category} - ${name}`
               : purpose
-                ? `${purpose} - ${name}`
-                : title || name || type || '',
-          }),
+              ? `${purpose} - ${name}`
+              : title || name || type || "",
+          })
         ),
         rows: syncedRows.map(
           ({ resourceType, title, name, category, type, purpose }) => ({
@@ -621,11 +620,11 @@ export async function pullTranscendConfiguration(
             title: category
               ? `${category} - ${name}`
               : purpose
-                ? `${purpose} - ${name}`
-                : title || name || type || '',
-          }),
+              ? `${purpose} - ${name}`
+              : title || name || type || "",
+          })
         ),
-      }),
+      })
     );
   }
 
@@ -634,7 +633,7 @@ export async function pullTranscendConfiguration(
     assessmentTemplates.length > 0 &&
     resources.includes(TranscendPullResource.AssessmentTemplates)
   ) {
-    result['assessment-templates'] = assessmentTemplates.map(
+    result["assessment-templates"] = assessmentTemplates.map(
       ({
         title,
         description,
@@ -680,30 +679,30 @@ export async function pullTranscendConfiguration(
                 return {
                   title,
                   type,
-                  'sub-type': subType,
+                  "sub-type": subType,
                   placeholder,
                   description,
-                  'is-required': isRequired,
-                  'reference-id': referenceId,
-                  'display-logic':
+                  "is-required": isRequired,
+                  "reference-id": referenceId,
+                  "display-logic":
                     displayLogicParsed &&
                     Object.keys(displayLogicParsed).length > 0
                       ? {
                           action: displayLogicParsed.action!,
                           rule: displayLogicParsed.rule
                             ? {
-                                'depends-on-question-reference-id':
+                                "depends-on-question-reference-id":
                                   displayLogicParsed.rule
                                     .dependsOnQuestionReferenceId,
-                                'comparison-operator':
+                                "comparison-operator":
                                   displayLogicParsed.rule.comparisonOperator,
-                                'comparison-operands':
+                                "comparison-operands":
                                   displayLogicParsed.rule.comparisonOperands,
                               }
                             : undefined,
-                          'nested-rule': displayLogicParsed.nestedRule
+                          "nested-rule": displayLogicParsed.nestedRule
                             ? {
-                                'logic-operator':
+                                "logic-operator":
                                   displayLogicParsed.nestedRule.logicOperator,
                                 rules:
                                   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -713,11 +712,11 @@ export async function pullTranscendConfiguration(
                                         .nestedRule as AssessmentNestedRule
                                     ).rules || []
                                   ).map((rule) => ({
-                                    'depends-on-question-reference-id':
+                                    "depends-on-question-reference-id":
                                       rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
+                                    "comparison-operator":
                                       rule.comparisonOperator,
-                                    'comparison-operands':
+                                    "comparison-operands":
                                       rule.comparisonOperands,
                                   })),
                                 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -725,48 +724,48 @@ export async function pullTranscendConfiguration(
                             : undefined,
                         }
                       : undefined,
-                  'risk-logic': riskLogic.map((logic): RiskLogicInput => {
+                  "risk-logic": riskLogic.map((logic): RiskLogicInput => {
                     const parsed = parseAssessmentRiskLogic(logic);
                     return {
-                      'risk-level': parsed.riskAssignment?.riskLevelId,
-                      'risk-matrix-row': parsed.riskAssignment?.riskMatrixRowId,
-                      'risk-matrix-column':
+                      "risk-level": parsed.riskAssignment?.riskLevelId,
+                      "risk-matrix-row": parsed.riskAssignment?.riskMatrixRowId,
+                      "risk-matrix-column":
                         parsed.riskAssignment?.riskMatrixColumnId,
-                      'comparison-operands': parsed.comparisonOperands,
-                      'comparison-operator': parsed.comparisonOperator,
+                      "comparison-operands": parsed.comparisonOperands,
+                      "comparison-operator": parsed.comparisonOperator,
                     };
                   }),
-                  'risk-categories': riskCategories.map(({ title }) => title),
-                  'risk-framework': riskFramework?.title,
-                  'answer-options': answerOptions.map(({ value }) => ({
+                  "risk-categories": riskCategories.map(({ title }) => title),
+                  "risk-framework": riskFramework?.title,
+                  "answer-options": answerOptions.map(({ value }) => ({
                     value,
                   })),
-                  'allowed-mime-types': allowedMimeTypes,
-                  'allow-select-other': allowSelectOther,
-                  'sync-model': syncModel || undefined,
-                  'sync-column': syncColumn || undefined,
-                  'attribute-key': attributeKey?.name,
-                  'require-risk-evaluation': requireRiskEvaluation,
-                  'require-risk-matrix-evaluation': requireRiskMatrixEvaluation,
+                  "allowed-mime-types": allowedMimeTypes,
+                  "allow-select-other": allowSelectOther,
+                  "sync-model": syncModel || undefined,
+                  "sync-column": syncColumn || undefined,
+                  "attribute-key": attributeKey?.name,
+                  "require-risk-evaluation": requireRiskEvaluation,
+                  "require-risk-matrix-evaluation": requireRiskMatrixEvaluation,
                 };
-              },
+              }
             ),
-          }),
+          })
         ),
         status,
         source,
         creator: creator?.email,
         locked: isLocked,
         archived: isArchived,
-        'created-at': createdAt || undefined,
-        'retention-schedule': retentionSchedule
+        "created-at": createdAt || undefined,
+        "retention-schedule": retentionSchedule
           ? {
               type: retentionSchedule.type,
-              'duration-days': retentionSchedule.durationDays,
+              "duration-days": retentionSchedule.durationDays,
               operand: retentionSchedule.operation,
             }
           : undefined,
-      }),
+      })
     );
   }
 
@@ -776,7 +775,7 @@ export async function pullTranscendConfiguration(
       ({ title, content }): PromptInput => ({
         title,
         content,
-      }),
+      })
     );
   }
 
@@ -785,11 +784,11 @@ export async function pullTranscendConfiguration(
     promptPartials.length > 0 &&
     resources.includes(TranscendPullResource.PromptPartials)
   ) {
-    result['prompt-partials'] = promptPartials.map(
+    result["prompt-partials"] = promptPartials.map(
       ({ title, content }): PromptPartialInput => ({
         title,
         content,
-      }),
+      })
     );
   }
 
@@ -798,12 +797,12 @@ export async function pullTranscendConfiguration(
     promptGroups.length > 0 &&
     resources.includes(TranscendPullResource.PromptGroups)
   ) {
-    result['prompt-groups'] = promptGroups.map(
+    result["prompt-groups"] = promptGroups.map(
       ({ title, description, prompts }): PromptGroupInput => ({
         title,
         description,
         prompts: prompts.map(({ title }) => title),
-      }),
+      })
     );
   }
 
@@ -821,12 +820,12 @@ export async function pullTranscendConfiguration(
       }): TeamInput => ({
         name,
         description,
-        'sso-department': ssoDepartment || undefined,
-        'sso-group': ssoGroup || undefined,
-        'sso-title': ssoTitle || undefined,
+        "sso-department": ssoDepartment || undefined,
+        "sso-group": ssoGroup || undefined,
+        "sso-title": ssoTitle || undefined,
         users: users.map(({ email }) => email),
         scopes: scopes.map(({ name }) => name),
-      }),
+      })
     );
   }
 
@@ -835,7 +834,7 @@ export async function pullTranscendConfiguration(
     dataSubjects.length > 0 &&
     resources.includes(TranscendPullResource.DataSubjects)
   ) {
-    result['data-subjects'] = dataSubjects.map(
+    result["data-subjects"] = dataSubjects.map(
       ({
         type,
         title,
@@ -848,7 +847,7 @@ export async function pullTranscendConfiguration(
         active,
         adminDashboardDefaultSilentMode,
         actions: actions.map(({ type }) => type),
-      }),
+      })
     );
   }
 
@@ -859,7 +858,7 @@ export async function pullTranscendConfiguration(
         title: title?.defaultMessage,
         content: versions?.[0]?.content?.defaultMessage,
         disabledLocales,
-      }),
+      })
     );
   }
 
@@ -876,17 +875,18 @@ export async function pullTranscendConfiguration(
         defaultMessage,
         targetReactIntlId: targetReactIntlId || undefined,
         translations: translations.reduce(
-          (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),
-          {} as Record<LanguageKey, string>,
+          (accumulator, { locale, value }) =>
+            Object.assign(accumulator, { [locale]: value }),
+          {} as Record<LanguageKey, string>
         ),
-      }),
+      })
     );
   }
 
   // Save privacy center
   if (privacyCenters.length > 0) {
     const privacyCenter = privacyCenters[0];
-    result['privacy-center'] = {
+    result["privacy-center"] = {
       isDisabled: privacyCenter.isDisabled,
       showPrivacyRequestButton: privacyCenter.showPrivacyRequestButton,
       showPolicies: privacyCenter.showPolicies,
@@ -914,7 +914,7 @@ export async function pullTranscendConfiguration(
     businessEntities.length > 0 &&
     resources.includes(TranscendPullResource.BusinessEntities)
   ) {
-    result['business-entities'] = businessEntities.map(
+    result["business-entities"] = businessEntities.map(
       ({
         title,
         description,
@@ -936,7 +936,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -963,7 +963,7 @@ export async function pullTranscendConfiguration(
         waitingPeriod,
         regionDetectionMethod,
         regionList: regionList.length > 0 ? regionList : undefined,
-      }),
+      })
     );
   }
 
@@ -1003,7 +1003,7 @@ export async function pullTranscendConfiguration(
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
         displayOrder,
-      }),
+      })
     );
   }
 
@@ -1031,7 +1031,7 @@ export async function pullTranscendConfiguration(
         codeInterpreterEnabled,
         retrievalEnabled,
         prompt: prompt?.title,
-        'large-language-model': {
+        "large-language-model": {
           name: largeLanguageModel.name,
           client: largeLanguageModel.client,
         },
@@ -1041,15 +1041,15 @@ export async function pullTranscendConfiguration(
           owners && owners.length > 0
             ? owners.map(({ email }) => email)
             : undefined,
-        'agent-functions':
+        "agent-functions":
           agentFunctions && agentFunctions.length > 0
             ? agentFunctions.map(({ name }) => name)
             : undefined,
-        'agent-files':
+        "agent-files":
           agentFiles && agentFiles.length > 0
             ? agentFiles.map(({ name }) => name)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1058,7 +1058,7 @@ export async function pullTranscendConfiguration(
     actionItems.length > 0 &&
     resources.includes(TranscendPullResource.ActionItems)
   ) {
-    result['action-items'] = actionItems.map(
+    result["action-items"] = actionItems.map(
       ({
         teams,
         users,
@@ -1088,7 +1088,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1097,7 +1097,7 @@ export async function pullTranscendConfiguration(
     actionItemCollections.length > 0 &&
     resources.includes(TranscendPullResource.ActionItemCollections)
   ) {
-    result['action-item-collections'] = actionItemCollections.map(
+    result["action-item-collections"] = actionItemCollections.map(
       ({
         title,
         description,
@@ -1108,7 +1108,7 @@ export async function pullTranscendConfiguration(
         description: description || undefined,
         hidden,
         productLine,
-      }),
+      })
     );
   }
 
@@ -1117,12 +1117,12 @@ export async function pullTranscendConfiguration(
     agentFunctions.length > 0 &&
     resources.includes(TranscendPullResource.AgentFunctions)
   ) {
-    result['agent-functions'] = agentFunctions.map(
+    result["agent-functions"] = agentFunctions.map(
       ({ name, description, parameters }): AgentFunctionInput => ({
         name,
         description,
         parameters: JSON.stringify(parameters),
-      }),
+      })
     );
   }
 
@@ -1131,14 +1131,14 @@ export async function pullTranscendConfiguration(
     agentFiles.length > 0 &&
     resources.includes(TranscendPullResource.AgentFiles)
   ) {
-    result['agent-files'] = agentFiles.map(
+    result["agent-files"] = agentFiles.map(
       ({ name, description, fileId, size, purpose }): AgentFileInput => ({
         name,
         description,
         fileId,
         size,
         purpose,
-      }),
+      })
     );
   }
 
@@ -1180,7 +1180,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1189,7 +1189,7 @@ export async function pullTranscendConfiguration(
     dataCategories.length > 0 &&
     resources.includes(TranscendPullResource.DataCategories)
   ) {
-    result['data-categories'] = dataCategories.map(
+    result["data-categories"] = dataCategories.map(
       ({
         name,
         category,
@@ -1213,7 +1213,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1222,7 +1222,7 @@ export async function pullTranscendConfiguration(
     processingPurposes.length > 0 &&
     resources.includes(TranscendPullResource.ProcessingPurposes)
   ) {
-    result['processing-purposes'] = processingPurposes.map(
+    result["processing-purposes"] = processingPurposes.map(
       ({
         name,
         purpose,
@@ -1244,7 +1244,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1253,7 +1253,7 @@ export async function pullTranscendConfiguration(
     dataFlows.length > 0 &&
     resources.includes(TranscendPullResource.DataFlows)
   ) {
-    result['data-flows'] = dataFlows.map(
+    result["data-flows"] = dataFlows.map(
       ({
         value,
         type,
@@ -1277,7 +1277,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1307,7 +1307,7 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-      }),
+      })
     );
   }
 
@@ -1333,7 +1333,7 @@ export async function pullTranscendConfiguration(
           color: color || undefined,
           description,
         })),
-      }),
+      })
     );
   }
 
@@ -1359,15 +1359,15 @@ export async function pullTranscendConfiguration(
         title,
         description: description || undefined,
         trackingType,
-        'default-consent': defaultConsent,
+        "default-consent": defaultConsent,
         configurable,
-        'show-in-consent-manager': showInConsentManager,
-        'show-in-privacy-center': showInPrivacyCenter,
-        'is-active': isActive,
-        'display-order': displayOrder,
-        'opt-out-signals': optOutSignals.length > 0 ? optOutSignals : undefined,
-        'auth-level': authLevel || undefined,
-        'preference-topics': topics.map(
+        "show-in-consent-manager": showInConsentManager,
+        "show-in-privacy-center": showInPrivacyCenter,
+        "is-active": isActive,
+        "display-order": displayOrder,
+        "opt-out-signals": optOutSignals.length > 0 ? optOutSignals : undefined,
+        "auth-level": authLevel || undefined,
+        "preference-topics": topics.map(
           ({
             title,
             type,
@@ -1379,8 +1379,8 @@ export async function pullTranscendConfiguration(
             title: title.defaultMessage,
             type,
             description: displayDescription.defaultMessage,
-            'default-configuration': defaultConfiguration,
-            'show-in-privacy-center': showInPrivacyCenter,
+            "default-configuration": defaultConfiguration,
+            "show-in-privacy-center": showInPrivacyCenter,
             ...(preferenceOptionValues.length > 0
               ? {
                   options: preferenceOptionValues.map(({ title, slug }) => ({
@@ -1389,9 +1389,9 @@ export async function pullTranscendConfiguration(
                   })),
                 }
               : {}),
-          }),
+          })
         ),
-      }),
+      })
     );
   }
 
@@ -1428,22 +1428,22 @@ export async function pullTranscendConfiguration(
         title,
         url: url || undefined,
         type,
-        'input-identifier': inputIdentifier?.name,
-        'output-identifiers': identifiers.map(({ name }) => name),
-        'privacy-actions':
+        "input-identifier": inputIdentifier?.name,
+        "output-identifiers": identifiers.map(({ name }) => name),
+        "privacy-actions":
           Object.values(RequestAction).length === actions.length
             ? undefined
             : actions,
         testRegex: testRegex || undefined,
         lookerQueryTitle: lookerQueryTitle || undefined,
-        expirationDuration: parseInt(expirationDuration, 10),
+        expirationDuration: Number.parseInt(expirationDuration, 10),
         transitionRequestStatus: transitionRequestStatus || undefined,
         phoneNumbers:
           phoneNumbers && phoneNumbers.length > 0 ? phoneNumbers : undefined,
         regionList:
           regionList && regionList.length > 0 ? regionList : undefined,
-        'data-subjects': dataSubjects.map(({ type }) => type),
-      }),
+        "data-subjects": dataSubjects.map(({ type }) => type),
+      })
     );
   }
 
@@ -1452,8 +1452,8 @@ export async function pullTranscendConfiguration(
     dataSilos.length > 0 &&
     resources.includes(TranscendPullResource.DataSilos)
   ) {
-    const indexedDataSubjects = keyBy(dataSubjects, 'type');
-    result['data-silos'] = dataSilos.map(
+    const indexedDataSubjects = keyBy(dataSubjects, "type");
+    result["data-silos"] = dataSilos.map(
       ([
         {
           title,
@@ -1486,16 +1486,16 @@ export async function pullTranscendConfiguration(
         title,
         description,
         integrationName: type,
-        'outer-type': outerType || undefined,
+        "outer-type": outerType || undefined,
         url: url || undefined,
-        'api-key-title': apiKeys[0]?.title,
-        'identity-keys': identifiers
+        "api-key-title": apiKeys[0]?.title,
+        "identity-keys": identifiers
           .filter(({ isConnected }) => isConnected)
           .map(({ name }) => name),
         ...(dependentDataSilos.length > 0
           ? {
-              'deletion-dependencies': dependentDataSilos.map(
-                ({ title }) => title,
+              "deletion-dependencies": dependentDataSilos.map(
+                ({ title }) => title
               ),
             }
           : {}),
@@ -1514,23 +1514,23 @@ export async function pullTranscendConfiguration(
         country: country || undefined,
         countrySubDivision: countrySubDivision || undefined,
         disabled: !isLive,
-        'data-subjects':
+        "data-subjects":
           subjectBlocklist.length > 0
             ? convertToDataSubjectAllowlist(
                 subjectBlocklist.map(({ type }) => type),
-                indexedDataSubjects,
+                indexedDataSubjects
               )
             : undefined,
         ...(catalog.hasAvcFunctionality
           ? {
-              'email-settings': {
-                'notify-email-address': notifyEmailAddress || undefined,
-                'send-frequency': promptAVendorEmailSendFrequency,
-                'send-type': promptAVendorEmailSendType,
-                'include-identifiers-attachment':
+              "email-settings": {
+                "notify-email-address": notifyEmailAddress || undefined,
+                "send-frequency": promptAVendorEmailSendFrequency,
+                "send-type": promptAVendorEmailSendType,
+                "include-identifiers-attachment":
                   promptAVendorEmailIncludeIdentifiersAttachment,
-                'completion-link-type': promptAVendorEmailCompletionLinkType,
-                'manual-work-retry-frequency': manualWorkRetryFrequency,
+                "completion-link-type": promptAVendorEmailCompletionLinkType,
+                "manual-work-retry-frequency": manualWorkRetryFrequency,
               },
             }
           : {}),
@@ -1550,18 +1550,18 @@ export async function pullTranscendConfiguration(
               ...(dataPoint.path.length > 0 ? { path: dataPoint.path } : {}),
               ...(dataPoint.dataCollection?.title
                 ? {
-                    'data-collection-tag':
+                    "data-collection-tag":
                       dataPoint.dataCollection.title.defaultMessage,
                   }
                 : {}),
               ...(dataPoint.dbIntegrationQueries.length > 0
                 ? {
-                    'privacy-action-queries': mapValues(
-                      keyBy(dataPoint.dbIntegrationQueries, 'requestType'),
+                    "privacy-action-queries": mapValues(
+                      keyBy(dataPoint.dbIntegrationQueries, "requestType"),
                       (databaseIntegrationQuery) =>
                         databaseIntegrationQuery.suggestedQuery ||
                         databaseIntegrationQuery.query ||
-                        undefined,
+                        undefined
                     ),
                   }
                 : {}),
@@ -1577,10 +1577,10 @@ export async function pullTranscendConfiguration(
                           ...(includeGuessedCategories &&
                           field.pendingCategoryGuesses
                             ? {
-                                'guessed-categories':
+                                "guessed-categories":
                                   field.pendingCategoryGuesses
                                     .filter(
-                                      (guess) => guess.status === 'PENDING',
+                                      (guess) => guess.status === "PENDING"
                                     )
                                     .map((guess) => ({
                                       category: {
@@ -1594,33 +1594,32 @@ export async function pullTranscendConfiguration(
                                     })),
                               }
                             : {}),
-                          'access-request-visibility-enabled':
+                          "access-request-visibility-enabled":
                             field.accessRequestVisibilityEnabled,
-                          'erasure-request-redaction-enabled':
+                          "erasure-request-redaction-enabled":
                             field.erasureRequestRedactionEnabled,
                           attributes:
                             field.attributeValues !== undefined &&
                             field.attributeValues.length > 0
                               ? formatAttributeValues(field.attributeValues)
                               : undefined,
-                        }),
+                        })
                       )
                       .sort((a, b) => a.key.localeCompare(b.key)),
                   }
                 : {}),
-              'privacy-actions': dataPoint.actionSettings
+              "privacy-actions": dataPoint.actionSettings
                 .filter(({ active }) => active)
                 .map(({ type }) => type),
-            }),
+            })
           )
           .sort((a, b) =>
             [...(a.path ?? []), a.key]
-              .join('.')
-              .localeCompare([...(b.path ?? []), b.key].join('.')),
+              .join(".")
+              .localeCompare([...(b.path ?? []), b.key].join("."))
           ),
-      }),
+      })
     );
   }
   return result;
 }
-/* eslint-enable max-lines */

@@ -2,19 +2,19 @@ import {
   RequestAction,
   RequestOrigin,
   RequestStatus,
-} from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+} from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   APPROVE_PRIVACY_REQUEST,
   buildTranscendGraphQLClient,
   fetchAllRequests,
   makeGraphQLRequest,
   UPDATE_PRIVACY_REQUEST,
-} from '../graphql';
+} from "../graphql";
 
 /**
  * Approve a set of privacy requests
@@ -53,11 +53,11 @@ export async function approvePrivacyRequests({
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Pull in the requests
@@ -97,8 +97,8 @@ export async function approvePrivacyRequests({
         await makeGraphQLRequest(client, APPROVE_PRIVACY_REQUEST, {
           input: { requestId: requestToApprove.id },
         });
-      } catch (err) {
-        if (err.message.includes('Request must be in an approving state,')) {
+      } catch (error) {
+        if (error.message.includes("Request must be in an approving state,")) {
           skipped += 1;
         }
       }
@@ -106,11 +106,11 @@ export async function approvePrivacyRequests({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency },
+    { concurrency }
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
   if (skipped > 0) {
     logger.info(colors.yellow(`${skipped} requests were skipped.`));
@@ -119,8 +119,8 @@ export async function approvePrivacyRequests({
     colors.green(
       `Successfully approved ${total} requests in "${
         totalTime / 1000
-      }" seconds!`,
-    ),
+      }" seconds!`
+    )
   );
   return allRequests.length;
 }

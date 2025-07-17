@@ -1,12 +1,12 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { PromptInput } from '../../codecs';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { fetchAllPrompts } from './fetchPrompts';
-import { CREATE_PROMPT, UPDATE_PROMPTS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { PromptInput } from "../../codecs";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { fetchAllPrompts } from "./fetchPrompts";
+import { CREATE_PROMPT, UPDATE_PROMPTS } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Create a new prompt
@@ -22,7 +22,7 @@ export async function createPrompt(
     title: string;
     /** Prompt content */
     content: string;
-  },
+  }
 ): Promise<string> {
   const {
     createPrompt: { prompt },
@@ -51,7 +51,7 @@ export async function createPrompt(
  */
 export async function updatePrompts(
   client: GraphQLClient,
-  input: [PromptInput, string][],
+  input: [PromptInput, string][]
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_PROMPTS, {
     input: {
@@ -75,14 +75,14 @@ export async function updatePrompts(
 export async function syncPrompts(
   client: GraphQLClient,
   prompts: PromptInput[],
-  concurrency = 20,
+  concurrency = 20
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(colors.magenta(`Syncing "${prompts.length}" prompts...`));
 
   // Index existing prompts
   const existing = await fetchAllPrompts(client);
-  const promptByTitle = keyBy(existing, 'title');
+  const promptByTitle = keyBy(existing, "title");
 
   // Determine which prompts are new vs existing
   const mapPromptsToExisting = prompts.map((promptInput) => [
@@ -96,7 +96,7 @@ export async function syncPrompts(
     .map(([promptInput]) => promptInput as PromptInput);
   try {
     logger.info(
-      colors.magenta(`Creating "${newPrompts.length}" new prompts...`),
+      colors.magenta(`Creating "${newPrompts.length}" new prompts...`)
     );
     await map(
       newPrompts,
@@ -105,31 +105,31 @@ export async function syncPrompts(
       },
       {
         concurrency,
-      },
+      }
     );
     logger.info(
-      colors.green(`Successfully synced ${newPrompts.length} prompts!`),
+      colors.green(`Successfully synced ${newPrompts.length} prompts!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create prompts! - ${err.message}`));
+    logger.info(colors.red(`Failed to create prompts! - ${error.message}`));
   }
 
   // Update existing prompts
   const existingPrompts = mapPromptsToExisting.filter(
-    (x): x is [PromptInput, string] => !!x[1],
+    (x): x is [PromptInput, string] => !!x[1]
   );
   try {
     logger.info(
-      colors.magenta(`Updating "${existingPrompts.length}" prompts...`),
+      colors.magenta(`Updating "${existingPrompts.length}" prompts...`)
     );
     await updatePrompts(client, existingPrompts);
     logger.info(
-      colors.green(`Successfully updated "${existingPrompts.length}" prompts!`),
+      colors.green(`Successfully updated "${existingPrompts.length}" prompts!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create prompts! - ${err.message}`));
+    logger.info(colors.red(`Failed to create prompts! - ${error.message}`));
   }
 
   logger.info(colors.green(`Synced "${prompts.length}" prompts!`));

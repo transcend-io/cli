@@ -1,22 +1,22 @@
 import {
   InitialViewState,
   OnConsentExpiry,
-} from '@transcend-io/airgap.js-types';
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
+} from "@transcend-io/airgap.js-types";
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
 import {
   ConsentManageExperienceInput,
   ConsentManagerInput,
-} from '../../codecs';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { fetchAllPurposes } from './fetchAllPurposes';
+} from "../../codecs";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { fetchAllPurposes } from "./fetchAllPurposes";
 import {
   fetchConsentManagerExperiences,
   fetchConsentManagerId,
-} from './fetchConsentManagerId';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+} from "./fetchConsentManagerId";
+import { fetchPrivacyCenterId } from "./fetchPrivacyCenterId";
 import {
   CREATE_CONSENT_EXPERIENCE,
   CREATE_CONSENT_MANAGER,
@@ -30,12 +30,12 @@ import {
   UPDATE_CONSENT_MANAGER_THEME,
   UPDATE_CONSENT_MANAGER_VERSION,
   UPDATE_TOGGLE_USP_API,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchPartitions } from './syncPartitions';
+} from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
+import { fetchPartitions } from "./syncPartitions";
 
 const PURPOSES_LINK =
-  'https://app.transcend.io/consent-manager/regional-experiences/purposes';
+  "https://app.transcend.io/consent-manager/regional-experiences/purposes";
 
 /**
  * Sync consent manager experiences up to Transcend
@@ -45,15 +45,15 @@ const PURPOSES_LINK =
  */
 export async function syncConsentManagerExperiences(
   client: GraphQLClient,
-  experiences: ConsentManageExperienceInput[],
+  experiences: ConsentManageExperienceInput[]
 ): Promise<void> {
   // Fetch existing experiences and
   const existingExperiences = await fetchConsentManagerExperiences(client);
-  const experienceLookup = keyBy(existingExperiences, 'name');
+  const experienceLookup = keyBy(existingExperiences, "name");
 
   // Fetch existing purposes
   const purposes = await fetchAllPurposes(client);
-  const purposeLookup = keyBy(purposes, 'trackingType');
+  const purposeLookup = keyBy(purposes, "trackingType");
 
   // Bulk update or create experiences
   await map(
@@ -65,7 +65,7 @@ export async function syncConsentManagerExperiences(
         if (!existingPurpose) {
           throw new Error(
             `Invalid purpose trackingType provided at consentManager.experiences[${ind}].purposes[${ind2}]: ` +
-              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`
           );
         }
         return existingPurpose.id;
@@ -75,7 +75,7 @@ export async function syncConsentManagerExperiences(
         if (!existingPurpose) {
           throw new Error(
             `Invalid purpose trackingType provided at consentManager.experiences[${ind}].optedOutPurposes[${ind2}]: ` +
-              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`,
+              `${purpose.trackingType}. See list of valid purposes ${PURPOSES_LINK}`
           );
         }
         return existingPurpose.id;
@@ -93,9 +93,9 @@ export async function syncConsentManagerExperiences(
             onConsentExpiry: exp.onConsentExpiry,
             consentExpiry: exp.consentExpiry,
             displayPriority:
-              exp.displayPriority !== existingExperience.displayPriority
-                ? exp.displayPriority
-                : undefined,
+              exp.displayPriority === existingExperience.displayPriority
+                ? undefined
+                : exp.displayPriority,
             viewState: exp.viewState,
             purposes: purposeIds,
             optedOutPurposes: optedOutPurposeIds,
@@ -104,7 +104,7 @@ export async function syncConsentManagerExperiences(
           },
         });
         logger.info(
-          colors.green(`Successfully synced consent experience "${exp.name}"!`),
+          colors.green(`Successfully synced consent experience "${exp.name}"!`)
         );
       } else {
         // create new experience
@@ -125,15 +125,13 @@ export async function syncConsentManagerExperiences(
           },
         });
         logger.info(
-          colors.green(
-            `Successfully created consent experience "${exp.name}"!`,
-          ),
+          colors.green(`Successfully created consent experience "${exp.name}"!`)
         );
       }
     },
     {
       concurrency: 10,
-    },
+    }
   );
 }
 
@@ -145,16 +143,16 @@ export async function syncConsentManagerExperiences(
  */
 export async function syncConsentManager(
   client: GraphQLClient,
-  consentManager: ConsentManagerInput,
+  consentManager: ConsentManagerInput
 ): Promise<void> {
   let airgapBundleId: string;
 
   // ensure the consent manager is created and deployed
   try {
     airgapBundleId = await fetchConsentManagerId(client, 1);
-  } catch (err) {
+  } catch (error) {
     // TODO: https://transcend.height.app/T-23778
-    if (err.message.includes('AirgapBundle not found')) {
+    if (error.message.includes("AirgapBundle not found")) {
       const privacyCenterId = await fetchPrivacyCenterId(client);
 
       const { createConsentManager } = await makeGraphQLRequest<{
@@ -172,7 +170,7 @@ export async function syncConsentManager(
       });
       airgapBundleId = createConsentManager.consentManager.id;
     } else {
-      throw err;
+      throw error;
     }
   }
 
@@ -188,11 +186,11 @@ export async function syncConsentManager(
   if (consentManager.partition) {
     const partitions = await fetchPartitions(client);
     const partitionToUpdate = partitions.find(
-      (part) => part.name === consentManager.partition,
+      (part) => part.name === consentManager.partition
     );
     if (!partitionToUpdate) {
       throw new Error(
-        `Partition "${consentManager.partition}" not found. Please create the partition first.`,
+        `Partition "${consentManager.partition}" not found. Please create the partition first.`
       );
     }
     await makeGraphQLRequest(client, UPDATE_CONSENT_MANAGER_PARTITION, {

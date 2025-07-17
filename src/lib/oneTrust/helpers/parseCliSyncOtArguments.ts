@@ -1,11 +1,11 @@
-import colors from 'colors';
-import yargs from 'yargs-parser';
+import colors from "colors";
+import yargs from "yargs-parser";
 import {
   OneTrustFileFormat,
   OneTrustPullResource,
   OneTrustPullSource,
-} from '../../../enums';
-import { logger } from '../../../logger';
+} from "../../../enums";
+import { logger } from "../../../logger";
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 
@@ -48,21 +48,21 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     source,
   } = yargs(process.argv.slice(2), {
     string: [
-      'file',
-      'hostname',
-      'oneTrustAuth',
-      'resource',
-      'dryRun',
-      'transcendAuth',
-      'transcendUrl',
-      'source',
+      "file",
+      "hostname",
+      "oneTrustAuth",
+      "resource",
+      "dryRun",
+      "transcendAuth",
+      "transcendUrl",
+      "source",
     ],
-    boolean: ['debug', 'dryRun'],
+    boolean: ["debug", "dryRun"],
     default: {
       resource: OneTrustPullResource.Assessments,
       debug: false,
       dryRun: false,
-      transcendUrl: 'https://api.transcend.io',
+      transcendUrl: "https://api.transcend.io",
       source: OneTrustPullSource.OneTrust,
     },
   });
@@ -71,18 +71,16 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   if (!dryRun && !transcendAuth) {
     logger.error(
       colors.red(
-        // eslint-disable-next-line no-template-curly-in-string
-        'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
-      ),
+        'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}'
+      )
     );
     return process.exit(1);
   }
   if (!dryRun && !transcendUrl) {
     logger.error(
       colors.red(
-        // eslint-disable-next-line max-len
-        'Must specify a "transcendUrl" parameter to sync resources to Transcend. e.g. --transcendUrl=https://api.transcend.io',
-      ),
+        'Must specify a "transcendUrl" parameter to sync resources to Transcend. e.g. --transcendUrl=https://api.transcend.io'
+      )
     );
     return process.exit(1);
   }
@@ -91,19 +89,19 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   if (dryRun && !file) {
     logger.error(
       colors.red(
-        'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json',
-      ),
+        'Must set a "file" parameter when "dryRun" is "true". e.g. --file=./oneTrustAssessments.json'
+      )
     );
     return process.exit(1);
   }
 
   if (file) {
-    const splitFile = file.split('.');
+    const splitFile = file.split(".");
     if (splitFile.length < 2) {
       logger.error(
         colors.red(
-          'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.',
-        ),
+          'The "file" parameter has an invalid format. Expected a path with extensions. e.g. --file=./pathToFile.json.'
+        )
       );
       return process.exit(1);
     }
@@ -112,8 +110,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
         colors.red(
           `Expected the format of the "file" parameters '${file}' to be '${
             OneTrustFileFormat.Json
-          }', but got '${splitFile.at(-1)}'.`,
-        ),
+          }', but got '${splitFile.at(-1)}'.`
+        )
       );
       return process.exit(1);
     }
@@ -125,8 +123,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     if (!hostname) {
       logger.error(
         colors.red(
-          'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com',
-        ),
+          'Missing required parameter "hostname". e.g. --hostname=customer.my.onetrust.com'
+        )
       );
       return process.exit(1);
     }
@@ -134,8 +132,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     if (!oneTrustAuth) {
       logger.error(
         colors.red(
-          'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN',
-        ),
+          'Missing required parameter "oneTrustAuth". e.g. --oneTrustAuth=$ONE_TRUST_AUTH_TOKEN'
+        )
       );
       return process.exit(1);
     }
@@ -144,8 +142,8 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     if (!file) {
       logger.error(
         colors.red(
-          'Must specify a "file" parameter to read the OneTrust assessments from. e.g. --source=./oneTrustAssessments.json',
-        ),
+          'Must specify a "file" parameter to read the OneTrust assessments from. e.g. --source=./oneTrustAssessments.json'
+        )
       );
       return process.exit(1);
     }
@@ -154,9 +152,9 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     if (dryRun) {
       logger.error(
         colors.red(
-          'Cannot read and write to a file simultaneously.' +
-            ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`,
-        ),
+          "Cannot read and write to a file simultaneously." +
+            ` Emit the "source" parameter or set it to ${OneTrustPullSource.OneTrust} if "dryRun" is enabled.`
+        )
       );
       return process.exit(1);
     }
@@ -166,9 +164,9 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
     logger.error(
       colors.red(
         `Received invalid resource value: "${resource}". Allowed: ${VALID_RESOURCES.join(
-          ',',
-        )}`,
-      ),
+          ","
+        )}`
+      )
     );
     return process.exit(1);
   }

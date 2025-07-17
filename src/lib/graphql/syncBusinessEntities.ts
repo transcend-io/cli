@@ -1,15 +1,15 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { chunk, keyBy } from 'lodash-es';
-import { BusinessEntityInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { chunk, keyBy } from "lodash-es";
+import { BusinessEntityInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   BusinessEntity,
   fetchAllBusinessEntities,
-} from './fetchAllBusinessEntities';
-import { CREATE_BUSINESS_ENTITY, UPDATE_BUSINESS_ENTITIES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+} from "./fetchAllBusinessEntities";
+import { CREATE_BUSINESS_ENTITY, UPDATE_BUSINESS_ENTITIES } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Input to create a new business entity
@@ -20,7 +20,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  */
 export async function createBusinessEntity(
   client: GraphQLClient,
-  businessEntity: BusinessEntityInput,
+  businessEntity: BusinessEntityInput
 ): Promise<BusinessEntity> {
   const input = {
     title: businessEntity.title,
@@ -55,7 +55,7 @@ export async function createBusinessEntity(
  */
 export async function updateBusinessEntities(
   client: GraphQLClient,
-  businessEntityIdParis: [BusinessEntityInput, string][],
+  businessEntityIdParis: [BusinessEntityInput, string][]
 ): Promise<void> {
   const chunkedUpdates = chunk(businessEntityIdParis, 100);
   await mapSeries(chunkedUpdates, async (chunked) => {
@@ -86,11 +86,11 @@ export async function updateBusinessEntities(
  */
 export async function syncBusinessEntities(
   client: GraphQLClient,
-  inputs: BusinessEntityInput[],
+  inputs: BusinessEntityInput[]
 ): Promise<boolean> {
   // Fetch existing
   logger.info(
-    colors.magenta(`Syncing "${inputs.length}" business entities...`),
+    colors.magenta(`Syncing "${inputs.length}" business entities...`)
   );
 
   let encounteredError = false;
@@ -99,11 +99,11 @@ export async function syncBusinessEntities(
   const existingBusinessEntities = await fetchAllBusinessEntities(client);
 
   // Look up by title
-  const businessEntityByTitle = keyBy(existingBusinessEntities, 'title');
+  const businessEntityByTitle = keyBy(existingBusinessEntities, "title");
 
   // Create new business entities
   const newBusinessEntities = inputs.filter(
-    (input) => !businessEntityByTitle[input.title],
+    (input) => !businessEntityByTitle[input.title]
   );
 
   // Create new business entities
@@ -111,20 +111,20 @@ export async function syncBusinessEntities(
     try {
       const newBusinessEntity = await createBusinessEntity(
         client,
-        businessEntity,
+        businessEntity
       );
       businessEntityByTitle[newBusinessEntity.title] = newBusinessEntity;
       logger.info(
         colors.green(
-          `Successfully synced business entity "${businessEntity.title}"!`,
-        ),
+          `Successfully synced business entity "${businessEntity.title}"!`
+        )
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync business entity "${businessEntity.title}"! - ${err.message}`,
-        ),
+          `Failed to sync business entity "${businessEntity.title}"! - ${error.message}`
+        )
       );
     }
   });
@@ -132,21 +132,21 @@ export async function syncBusinessEntities(
   // Update all business entities
   try {
     logger.info(
-      colors.magenta(`Updating "${inputs.length}" business entities!`),
+      colors.magenta(`Updating "${inputs.length}" business entities!`)
     );
     await updateBusinessEntities(
       client,
-      inputs.map((input) => [input, businessEntityByTitle[input.title].id]),
+      inputs.map((input) => [input, businessEntityByTitle[input.title].id])
     );
     logger.info(
-      colors.green(`Successfully synced "${inputs.length}" business entities!`),
+      colors.green(`Successfully synced "${inputs.length}" business entities!`)
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" business entities ! - ${err.message}`,
-      ),
+        `Failed to sync "${inputs.length}" business entities ! - ${error.message}`
+      )
     );
   }
 

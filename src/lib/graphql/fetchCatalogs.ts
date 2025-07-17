@@ -1,6 +1,6 @@
-import { GraphQLClient } from 'graphql-request';
-import { CATALOGS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { GraphQLClient } from "graphql-request";
+import { CATALOGS } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 export interface Catalog {
   /** Integration name */
@@ -20,7 +20,7 @@ const PAGE_SIZE = 100;
  * @returns Integration catalogs
  */
 export async function fetchAllCatalogs(
-  client: GraphQLClient,
+  client: GraphQLClient
 ): Promise<Catalog[]> {
   const catalogs: Catalog[] = [];
   let offset = 0;
@@ -45,15 +45,15 @@ export async function fetchAllCatalogs(
     shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
   return catalogs.sort((a, b) =>
-    a.integrationName.localeCompare(b.integrationName),
+    a.integrationName.localeCompare(b.integrationName)
   );
 }
 
 export interface IndexedCatalogs {
   /** Mapping from service name to service title */
-  serviceToTitle: { [k in string]: string };
+  serviceToTitle: Record<string, string>;
   /** Mapping from service name to boolean indicate if service has API integration support */
-  serviceToSupportedIntegration: { [k in string]: boolean };
+  serviceToSupportedIntegration: Record<string, boolean>;
 }
 
 /**
@@ -72,19 +72,19 @@ export async function fetchAndIndexCatalogs(client: GraphQLClient): Promise<
   const catalogs = await fetchAllCatalogs(client);
 
   // Create mapping from service name to service title
-  const serviceToTitle = catalogs.reduce(
-    (acc, catalog) =>
-      Object.assign(acc, { [catalog.integrationName]: catalog.title }),
-    {} as { [k in string]: string },
+  const serviceToTitle = Object.fromEntries(
+    catalogs.map<Record<string, string>>((catalog) => [
+      catalog.integrationName,
+      catalog.title,
+    ])
   );
 
   // Create mapping from service name to boolean indicate if service has API integration support
-  const serviceToSupportedIntegration = catalogs.reduce(
-    (acc, catalog) =>
-      Object.assign(acc, {
-        [catalog.integrationName]: catalog.hasApiFunctionality,
-      }),
-    {} as { [k in string]: boolean },
+  const serviceToSupportedIntegration = Object.fromEntries(
+    catalogs.map<Record<string, boolean>>((catalog) => [
+      catalog.integrationName,
+      catalog.hasApiFunctionality,
+    ])
   );
 
   return {

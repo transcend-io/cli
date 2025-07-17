@@ -1,11 +1,11 @@
-import colors from 'colors';
-import { difference } from 'lodash-es';
-import { StoredApiKey } from '../../codecs';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
-import { domainToHost } from './domainToHost';
+import colors from "colors";
+import { difference } from "lodash-es";
+import { StoredApiKey } from "../../codecs";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { buildTranscendGraphQLClient, fetchConsentManager } from "../graphql";
+import { domainToHost } from "./domainToHost";
 
 /**
  * Sync group configuration mapping
@@ -19,11 +19,10 @@ import { domainToHost } from './domainToHost';
  *   ]
  * }
  */
-export type XdiSyncGroups = { [k in string]: string[] };
+export type XdiSyncGroups = Record<string, string[]>;
 
 /** Regular expression for IP addresses - remove these from sync endpoint */
 export const IP_ADDRESS_REGEX =
-  // eslint-disable-next-line max-len
   /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 /**
@@ -39,8 +38,8 @@ export async function buildXdiSyncEndpoint(
     xdiLocation,
     transcendUrl = DEFAULT_TRANSCEND_API,
     removeIpAddresses = true,
-    domainBlockList = ['localhost'],
-    xdiAllowedCommands = 'ConsentManager:Sync',
+    domainBlockList = ["localhost"],
+    xdiAllowedCommands = "ConsentManager:Sync",
   }: {
     /** The file location where the XDI file is hosted */
     xdiLocation: string;
@@ -52,7 +51,7 @@ export async function buildXdiSyncEndpoint(
     domainBlockList?: string[];
     /** Allows XDI commands */
     xdiAllowedCommands?: string;
-  },
+  }
 ): Promise<{
   /** Sync group configurations */
   syncGroups: XdiSyncGroups;
@@ -62,7 +61,7 @@ export async function buildXdiSyncEndpoint(
   // Convert API keys to list
   const apiKeysAsList = Array.isArray(apiKeys)
     ? apiKeys
-    : [{ apiKey: apiKeys, organizationId: '', organizationName: '' }];
+    : [{ apiKey: apiKeys, organizationId: "", organizationName: "" }];
 
   // Fetch configuration for each account
   const consentManagers = await map(
@@ -70,8 +69,8 @@ export async function buildXdiSyncEndpoint(
     async (apiKey) => {
       logger.info(
         colors.magenta(
-          `Pulling consent metadata for organization - ${apiKey.organizationName}`,
-        ),
+          `Pulling consent metadata for organization - ${apiKey.organizationName}`
+        )
       );
 
       // Create a GraphQL client
@@ -81,18 +80,18 @@ export async function buildXdiSyncEndpoint(
       const consentManager = await fetchConsentManager(client);
       return consentManager;
     },
-    { concurrency: 5 },
+    { concurrency: 5 }
   );
 
   // construct the sync groups
   const syncGroups: XdiSyncGroups = {};
-  consentManagers.forEach((consentManager) => {
+  for (const consentManager of consentManagers) {
     // grab the partition key
     const partitionKey =
       // take explicit key first
       consentManager.partition?.partition ||
       // fallback to bundle ID
-      consentManager.bundleURL.split('/').reverse()[1];
+      consentManager.bundleURL.split("/").reverse()[1];
 
     // Ensure that partition exists in the sync groups
     if (!syncGroups[partitionKey]) {
@@ -104,17 +103,17 @@ export async function buildXdiSyncEndpoint(
       consentManager.configuration.domains
         .filter(
           // ignore IP addresses
-          (domain) => !removeIpAddresses || !IP_ADDRESS_REGEX.test(domain),
+          (domain) => !removeIpAddresses || !IP_ADDRESS_REGEX.test(domain)
         )
         .map((domain) => domainToHost(domain)),
       // ignore block list
-      domainBlockList,
+      domainBlockList
     );
     // merge existing sync group with hosts for this consent manager
     syncGroups[partitionKey] = [
       ...new Set([...(syncGroups[partitionKey] || []), ...hosts]),
     ];
-  });
+  }
 
   // Construct the HTML
   const syncEndpointHtml = `

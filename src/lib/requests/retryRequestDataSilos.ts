@@ -1,16 +1,16 @@
-import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import cliProgress from 'cli-progress';
-import colors from 'colors';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
+import { RequestAction, RequestStatus } from "@transcend-io/privacy-types";
+import cliProgress from "cli-progress";
+import colors from "colors";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
 import {
   buildTranscendGraphQLClient,
   fetchAllRequests,
   fetchRequestDataSilo,
   makeGraphQLRequest,
   RETRY_REQUEST_DATA_SILO,
-} from '../graphql';
+} from "../graphql";
 
 /**
  * Retry a set of RequestDataSilos
@@ -40,11 +40,11 @@ export async function retryRequestDataSilos({
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
+    cliProgress.Presets.shades_classic
   );
 
   // Pull in the requests
@@ -56,8 +56,8 @@ export async function retryRequestDataSilos({
   // Notify Transcend
   logger.info(
     colors.magenta(
-      `Retrying requests for Data Silo: "${dataSiloId}", restarting "${allRequests.length}" requests.`,
-    ),
+      `Retrying requests for Data Silo: "${dataSiloId}", restarting "${allRequests.length}" requests.`
+    )
   );
 
   let total = 0;
@@ -78,10 +78,10 @@ export async function retryRequestDataSilos({
         }>(client, RETRY_REQUEST_DATA_SILO, {
           requestDataSiloId: requestDataSilo.id,
         });
-      } catch (err) {
+      } catch (error) {
         // some requests may not have this data silo connected
-        if (!err.message.includes('Failed to find RequestDataSilo')) {
-          throw err;
+        if (!error.message.includes("Failed to find RequestDataSilo")) {
+          throw error;
         }
         skipped += 1;
       }
@@ -89,19 +89,19 @@ export async function retryRequestDataSilos({
       total += 1;
       progressBar.update(total);
     },
-    { concurrency },
+    { concurrency }
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
     colors.green(
       `Successfully notified Transcend in "${
         totalTime / 1000
-      }" seconds for ${total} requests, ${skipped} requests were skipped because data silo was not attached to the request!`,
-    ),
+      }" seconds for ${total} requests, ${skipped} requests were skipped because data silo was not attached to the request!`
+    )
   );
   return allRequests.length;
 }

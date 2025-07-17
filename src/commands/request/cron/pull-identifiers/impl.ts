@@ -1,14 +1,14 @@
-import { RequestAction } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { uniq } from 'lodash-es';
-import type { LocalContext } from '../../../../context';
+import { RequestAction } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { uniq } from "lodash-es";
+import type { LocalContext } from "../../../../context";
 import {
   CsvFormattedIdentifier,
   parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
   writeCsv,
-} from '../../../../lib/cron';
-import { logger } from '../../../../logger';
+} from "../../../../lib/cron";
+import { logger } from "../../../../logger";
 
 interface PullIdentifiersCommandFlags {
   file: string;
@@ -34,13 +34,13 @@ export async function pullIdentifiers(
     pageLimit,
     skipRequestCount,
     chunkSize,
-  }: PullIdentifiersCommandFlags,
+  }: PullIdentifiersCommandFlags
 ): Promise<void> {
   if (skipRequestCount) {
     logger.info(
       colors.yellow(
-        'Skipping request count as requested. This may help speed up the call.',
-      ),
+        "Skipping request count as requested. This may help speed up the call."
+      )
     );
   }
 
@@ -51,8 +51,8 @@ export async function pullIdentifiers(
   ) {
     logger.error(
       colors.red(
-        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
-      ),
+        `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`
+      )
     );
     process.exit(1);
   }
@@ -64,16 +64,16 @@ export async function pullIdentifiers(
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     logger.info(
       colors.blue(
-        `Saving ${chunk.length} identifiers to file "${numberedFileName}"`,
-      ),
+        `Saving ${chunk.length} identifiers to file "${numberedFileName}"`
+      )
     );
 
-    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
+    const headers = uniq(chunk.flatMap((d) => Object.keys(d)));
     writeCsv(numberedFileName, chunk, headers);
     logger.info(
       colors.green(
-        `Successfully wrote ${chunk.length} identifiers to file "${numberedFileName}"`,
-      ),
+        `Successfully wrote ${chunk.length} identifiers to file "${numberedFileName}"`
+      )
     );
     fileCount += 1;
     return Promise.resolve();

@@ -1,9 +1,9 @@
-import { ScopeName } from '@transcend-io/privacy-types';
-import colors from 'colors';
-import { StoredApiKey } from '../../codecs';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
+import { ScopeName } from "@transcend-io/privacy-types";
+import colors from "colors";
+import { StoredApiKey } from "../../codecs";
+import { DEFAULT_TRANSCEND_API } from "../../constants";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
 import {
   assumeRole,
   buildTranscendGraphQLClientGeneric,
@@ -11,7 +11,7 @@ import {
   deleteApiKey,
   fetchAllApiKeys,
   loginUser,
-} from '../graphql';
+} from "../graphql";
 
 export interface ApiKeyGenerateError {
   /** Name of instance */
@@ -64,14 +64,14 @@ export async function generateCrossAccountApiKeys({
   const client = await buildTranscendGraphQLClientGeneric(transcendUrl, {});
 
   // Login the user
-  logger.info(colors.magenta('Logging in using email and password.'));
+  logger.info(colors.magenta("Logging in using email and password."));
   const { roles, loginCookie } = await loginUser(client, { email, password });
   logger.info(
     colors.green(
       `Successfully logged in and found ${roles.length} role${
-        roles.length === 1 ? '' : 's'
-      }!`,
-    ),
+        roles.length === 1 ? "" : "s"
+      }!`
+    )
   );
 
   // Filter down by parentOrganizationId
@@ -79,7 +79,7 @@ export async function generateCrossAccountApiKeys({
     ? roles.filter(
         (role) =>
           role.organization.id === parentOrganizationId ||
-          role.organization.parentOrganizationId === parentOrganizationId,
+          role.organization.parentOrganizationId === parentOrganizationId
       )
     : roles;
 
@@ -96,9 +96,9 @@ export async function generateCrossAccountApiKeys({
   logger.info(
     colors.magenta(
       `Generating API keys with title: ${apiKeyTitle}, scopes: ${scopes.join(
-        ',',
-      )}.`,
-    ),
+        ","
+      )}.`
+    )
   );
 
   // Map over each role
@@ -110,8 +110,8 @@ export async function generateCrossAccountApiKeys({
       // Grab API keys with that title
       logger.info(
         colors.magenta(
-          `Checking if API key already exists in organization "${role.organization.name}" with title: "${apiKeyTitle}".`,
-        ),
+          `Checking if API key already exists in organization "${role.organization.name}" with title: "${apiKeyTitle}".`
+        )
       );
 
       // Delete existing API key
@@ -119,14 +119,14 @@ export async function generateCrossAccountApiKeys({
       if (apiKeyWithTitle && deleteExistingApiKey) {
         logger.info(
           colors.yellow(
-            `Deleting existing API key in "${role.organization.name}" with title: "${apiKeyTitle}".`,
-          ),
+            `Deleting existing API key in "${role.organization.name}" with title: "${apiKeyTitle}".`
+          )
         );
         await deleteApiKey(client, apiKeyWithTitle.id);
         logger.info(
           colors.green(
-            `Successfully deleted API key in "${role.organization.name}" with title: "${apiKeyTitle}".`,
-          ),
+            `Successfully deleted API key in "${role.organization.name}" with title: "${apiKeyTitle}".`
+          )
         );
       } else if (apiKeyWithTitle) {
         // throw error if one exists but not configured to delete
@@ -137,8 +137,8 @@ export async function generateCrossAccountApiKeys({
       if (createNewApiKey) {
         logger.info(
           colors.magenta(
-            `Creating API key in "${role.organization.name}" with title: "${apiKeyTitle}".`,
-          ),
+            `Creating API key in "${role.organization.name}" with title: "${apiKeyTitle}".`
+          )
         );
         const { apiKey } = await createApiKey(client, {
           title: apiKeyTitle,
@@ -151,45 +151,45 @@ export async function generateCrossAccountApiKeys({
         });
         logger.info(
           colors.green(
-            `Successfully created API key in "${role.organization.name}" with title: "${apiKeyTitle}".`,
-          ),
+            `Successfully created API key in "${role.organization.name}" with title: "${apiKeyTitle}".`
+          )
         );
       } else {
         // Delete only
         results.push({
           organizationName: role.organization.name,
           organizationId: role.organization.id,
-          apiKey: '',
+          apiKey: "",
         });
       }
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `Failed to create API key in organization "${role.organization.name}"! - ${err.message}`,
-        ),
+          `Failed to create API key in organization "${role.organization.name}"! - ${error.message}`
+        )
       );
       errors.push({
         organizationName: role.organization.name,
         organizationId: role.organization.id,
-        error: err.message,
+        error: error.message,
       });
     }
   });
   logger.info(
     colors.green(
       `Successfully created ${results.length} API key${
-        results.length === 1 ? '' : 's'
-      }`,
-    ),
+        results.length === 1 ? "" : "s"
+      }`
+    )
   );
 
   if (errors.length > 0) {
     logger.error(
       colors.red(
         `Failed to create ${errors.length} API key${
-          errors.length === 1 ? '' : 's'
-        }!`,
-      ),
+          errors.length === 1 ? "" : "s"
+        }!`
+      )
     );
   }
 

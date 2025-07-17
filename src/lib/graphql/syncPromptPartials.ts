@@ -1,12 +1,12 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { keyBy } from 'lodash-es';
-import { PromptPartialInput } from '../../codecs';
-import { logger } from '../../logger';
-import { map } from '../bluebird-replace';
-import { fetchAllPromptPartials } from './fetchPromptPartials';
-import { CREATE_PROMPT_PARTIAL, UPDATE_PROMPT_PARTIALS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { keyBy } from "lodash-es";
+import { PromptPartialInput } from "../../codecs";
+import { logger } from "../../logger";
+import { map } from "../bluebird-replace";
+import { fetchAllPromptPartials } from "./fetchPromptPartials";
+import { CREATE_PROMPT_PARTIAL, UPDATE_PROMPT_PARTIALS } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 /**
  * Create a new prompt partial
@@ -22,7 +22,7 @@ export async function createPromptPartial(
     title: string;
     /** Prompt content */
     content: string;
-  },
+  }
 ): Promise<string> {
   const {
     createPromptPartial: { promptPartial },
@@ -39,7 +39,7 @@ export async function createPromptPartial(
     input,
   });
   logger.info(
-    colors.green(`Successfully created prompt partial "${input.title}"!`),
+    colors.green(`Successfully created prompt partial "${input.title}"!`)
   );
   return promptPartial.id;
 }
@@ -52,7 +52,7 @@ export async function createPromptPartial(
  */
 export async function updatePromptPartials(
   client: GraphQLClient,
-  input: [PromptPartialInput, string][],
+  input: [PromptPartialInput, string][]
 ): Promise<void> {
   await makeGraphQLRequest(client, UPDATE_PROMPT_PARTIALS, {
     input: {
@@ -63,7 +63,7 @@ export async function updatePromptPartials(
     },
   });
   logger.info(
-    colors.green(`Successfully updated ${input.length} prompt partials!`),
+    colors.green(`Successfully updated ${input.length} prompt partials!`)
   );
 }
 
@@ -78,16 +78,16 @@ export async function updatePromptPartials(
 export async function syncPromptPartials(
   client: GraphQLClient,
   promptPartials: PromptPartialInput[],
-  concurrency = 20,
+  concurrency = 20
 ): Promise<boolean> {
   let encounteredError = false;
   logger.info(
-    colors.magenta(`Syncing "${promptPartials.length}" prompt partials...`),
+    colors.magenta(`Syncing "${promptPartials.length}" prompt partials...`)
   );
 
   // Index existing prompt partials
   const existing = await fetchAllPromptPartials(client);
-  const promptPartialByTitle = keyBy(existing, 'title');
+  const promptPartialByTitle = keyBy(existing, "title");
 
   // Determine which promptPartials are new vs existing
   const mapPromptPartialsToExisting = promptPartials.map((promptInput) => [
@@ -102,8 +102,8 @@ export async function syncPromptPartials(
   try {
     logger.info(
       colors.magenta(
-        `Creating "${newPromptPartials.length}" new prompt partials...`,
-      ),
+        `Creating "${newPromptPartials.length}" new prompt partials...`
+      )
     );
     await map(
       newPromptPartials,
@@ -112,45 +112,45 @@ export async function syncPromptPartials(
       },
       {
         concurrency,
-      },
+      }
     );
     logger.info(
       colors.green(
-        `Successfully synced ${newPromptPartials.length} prompt partials!`,
-      ),
+        `Successfully synced ${newPromptPartials.length} prompt partials!`
+      )
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
-      colors.red(`Failed to create prompt partials! - ${err.message}`),
+      colors.red(`Failed to create prompt partials! - ${error.message}`)
     );
   }
 
   // Update existing promptPartials
   const existingPromptPartials = mapPromptPartialsToExisting.filter(
-    (x): x is [PromptPartialInput, string] => !!x[1],
+    (x): x is [PromptPartialInput, string] => !!x[1]
   );
   try {
     logger.info(
       colors.magenta(
-        `Updating "${existingPromptPartials.length}" prompt partials...`,
-      ),
+        `Updating "${existingPromptPartials.length}" prompt partials...`
+      )
     );
     await updatePromptPartials(client, existingPromptPartials);
     logger.info(
       colors.green(
-        `Successfully updated "${existingPromptPartials.length}" prompt partials!`,
-      ),
+        `Successfully updated "${existingPromptPartials.length}" prompt partials!`
+      )
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
-      colors.red(`Failed to create prompt partials! - ${err.message}`),
+      colors.red(`Failed to create prompt partials! - ${error.message}`)
     );
   }
 
   logger.info(
-    colors.green(`Synced "${promptPartials.length}" prompt partials!`),
+    colors.green(`Synced "${promptPartials.length}" prompt partials!`)
   );
 
   // Return true upon success

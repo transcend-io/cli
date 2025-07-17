@@ -1,12 +1,12 @@
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import { difference } from 'lodash-es';
-import { PartitionInput } from '../../codecs';
-import { logger } from '../../logger';
-import { mapSeries } from '../bluebird-replace';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
-import { CONSENT_PARTITIONS, CREATE_CONSENT_PARTITION } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import colors from "colors";
+import { GraphQLClient } from "graphql-request";
+import { difference } from "lodash-es";
+import { PartitionInput } from "../../codecs";
+import { logger } from "../../logger";
+import { mapSeries } from "../bluebird-replace";
+import { fetchConsentManagerId } from "./fetchConsentManagerId";
+import { CONSENT_PARTITIONS, CREATE_CONSENT_PARTITION } from "./gqls";
+import { makeGraphQLRequest } from "./makeGraphQLRequest";
 
 const PAGE_SIZE = 50;
 
@@ -26,7 +26,7 @@ export interface TranscendPartition {
  * @returns Partition list
  */
 export async function fetchPartitions(
-  client: GraphQLClient,
+  client: GraphQLClient
 ): Promise<TranscendPartition[]> {
   const partitions: TranscendPartition[] = [];
   let offset = 0;
@@ -63,7 +63,7 @@ export async function fetchPartitions(
  */
 export async function syncPartitions(
   client: GraphQLClient,
-  partitionInputs: PartitionInput[],
+  partitionInputs: PartitionInput[]
 ): Promise<boolean> {
   // Grab the bundleId associated with this API key
   const airgapBundleId = await fetchConsentManagerId(client);
@@ -71,7 +71,7 @@ export async function syncPartitions(
   const partitions = await fetchPartitions(client);
   const newPartitionNames = difference(
     partitionInputs.map(({ name }) => name),
-    partitions.map(({ name }) => name),
+    partitions.map(({ name }) => name)
   );
   await mapSeries(newPartitionNames, async (name) => {
     try {
@@ -82,13 +82,13 @@ export async function syncPartitions(
         },
       });
       logger.info(
-        colors.green(`Successfully created consent partition: ${name}!`),
+        colors.green(`Successfully created consent partition: ${name}!`)
       );
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `Failed to create consent partition: ${name}! - ${err.message}`,
-        ),
+          `Failed to create consent partition: ${name}! - ${error.message}`
+        )
       );
       encounteredError = true;
     }

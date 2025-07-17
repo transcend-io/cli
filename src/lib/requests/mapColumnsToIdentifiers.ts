@@ -1,16 +1,14 @@
-import type { PersistedState } from '@transcend-io/persisted-state';
-import type { GraphQLClient } from 'graphql-request';
-import inquirer from 'inquirer';
-import { INITIALIZER, Initializer, makeGraphQLRequest } from '../graphql';
-import { CachedFileState, IDENTIFIER_BLOCK_LIST } from './constants';
-import { fuzzyMatchColumns } from './fuzzyMatchColumns';
+import type { PersistedState } from "@transcend-io/persisted-state";
+import type { GraphQLClient } from "graphql-request";
+import inquirer from "inquirer";
+import { INITIALIZER, Initializer, makeGraphQLRequest } from "../graphql";
+import { CachedFileState, IDENTIFIER_BLOCK_LIST } from "./constants";
+import { fuzzyMatchColumns } from "./fuzzyMatchColumns";
 
 /**
  * Mapping from identifier name to request input parameter
  */
-export type IdentifierNameMap = {
-  [k in string]: string;
-};
+export type IdentifierNameMap = Record<string, string>;
 
 /**
  * Create a mapping from the identifier names that can be included
@@ -25,7 +23,7 @@ export type IdentifierNameMap = {
 export async function mapColumnsToIdentifiers(
   client: GraphQLClient,
   columnNames: string[],
-  state: PersistedState<typeof CachedFileState>,
+  state: PersistedState<typeof CachedFileState>
 ): Promise<IdentifierNameMap> {
   // Grab the initializer
   const { initializer } = await makeGraphQLRequest<{
@@ -36,8 +34,8 @@ export async function mapColumnsToIdentifiers(
   // Determine the columns that should be mapped
   const columnQuestions = initializer.identifiers.filter(
     ({ name }) =>
-      !state.getValue('identifierNames', name) &&
-      !IDENTIFIER_BLOCK_LIST.includes(name),
+      !state.getValue("identifierNames", name) &&
+      !IDENTIFIER_BLOCK_LIST.includes(name)
   );
 
   // Skip mapping when everything is mapped
@@ -45,28 +43,26 @@ export async function mapColumnsToIdentifiers(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<{
-          [k in string]: string;
-        }>(
+        await inquirer.prompt<Record<string, string>>(
           columnQuestions.map(({ name }) => {
             const matches = fuzzyMatchColumns(columnNames, name, false);
             return {
               name,
               message: `Choose the column that will be used to map in the identifier: ${name}`,
-              type: 'list',
+              type: "list",
               default: matches[0],
               choices: matches,
             };
-          }),
+          })
         );
   await Promise.all(
     Object.entries(identifierNameMap).map(([k, v]) =>
-      state.setValue(v, 'identifierNames', k),
-    ),
+      state.setValue(v, "identifierNames", k)
+    )
   );
 
   return {
-    ...state.getValue('identifierNames'),
+    ...state.getValue("identifierNames"),
     ...identifierNameMap,
   };
 }
