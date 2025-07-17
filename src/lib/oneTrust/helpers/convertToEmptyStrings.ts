@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Converts all primitive values in an object or array to empty strings while maintaining structure
  *
@@ -33,7 +30,7 @@
  * //   items: ['', '', '']
  * // }
  */
-export function convertToEmptyStrings<T>(input: T): any {
+export function convertToEmptyStrings(input?: unknown): unknown {
   // Handle null/undefined
   if (input === null || input === undefined) {
     return '';
@@ -47,7 +44,7 @@ export function convertToEmptyStrings<T>(input: T): any {
   // Handle objects
   if (typeof input === 'object') {
     return Object.fromEntries(
-      Object.entries(input).map<Record<string, any>>(([key, value]) => [
+      Object.entries(input).map(([key, value]) => [
         key,
         convertToEmptyStrings(value),
       ]),

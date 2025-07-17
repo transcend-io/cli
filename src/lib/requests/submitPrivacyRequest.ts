@@ -70,7 +70,7 @@ export async function submitPrivacyRequest(
   // Merge the per-request attributes with the
   // global attributes
   const mergedAttributes = [...additionalAttributes];
-  for (const attribute of input.attributes || []) {
+  for (const attribute of input.attributes ?? []) {
     const existing = mergedAttributes.find(
       (attribute_) => attribute_.key === attribute.key,
     );
@@ -127,7 +127,9 @@ export async function submitPrivacyRequest(
   } catch (error) {
     throw new Error(
       `Received an error from server: ${
-        error?.response?.body || error?.message
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        (error as { response?: { body: string } }).response?.body ||
+        (error as { message: string }).message
       }`,
     );
   }

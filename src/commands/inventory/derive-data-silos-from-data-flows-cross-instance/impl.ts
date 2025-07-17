@@ -1,8 +1,6 @@
 import { existsSync, lstatSync } from 'node:fs';
 import path from 'node:path';
-import colors from 'colors';
 import { difference } from 'lodash-es';
-import { DataFlowInput } from '../../../codecs';
 import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
 import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
@@ -36,12 +34,9 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
 ): Promise<void> {
   // Ensure folder is passed to dataFlowsYmlFolder
   if (!dataFlowsYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
+    throw new Error(
+      'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
     );
-    process.exit(1);
   }
 
   // Ensure folder is passed
@@ -49,8 +44,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     !existsSync(dataFlowsYmlFolder) ||
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
-    logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
+    throw new Error(`Folder does not exist: "${dataFlowsYmlFolder}"`);
   }
 
   // Ignore the data flows in these yml files
@@ -88,11 +82,9 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
   } of dataSiloInputs) {
     const allDataSilos = [...adTechDataSilos, ...siteTechDataSilos];
     for (const dataSilo of allDataSilos) {
-      const service = dataSilo['outer-type'] || dataSilo.integrationName;
+      const service = dataSilo['outer-type'] ?? dataSilo.integrationName;
       // create mapping to instance
-      if (!serviceToInstance[service]) {
-        serviceToInstance[service] = [];
-      }
+      serviceToInstance[service] ??= [];
       serviceToInstance[service].push(organizationName);
       serviceToInstance[service] = [...new Set(serviceToInstance[service])];
     }
@@ -103,7 +95,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     ...new Set(
       dataSiloInputs.flatMap(({ adTechDataSilos }) =>
         adTechDataSilos.map(
-          (silo) => silo['outer-type'] || silo.integrationName,
+          (silo) => silo['outer-type'] ?? silo.integrationName,
         ),
       ),
     ),
@@ -115,7 +107,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
       ...new Set(
         dataSiloInputs.flatMap(({ siteTechDataSilos }) =>
           siteTechDataSilos.map(
-            (silo) => silo['outer-type'] || silo.integrationName,
+            (silo) => silo['outer-type'] ?? silo.integrationName,
           ),
         ),
       ),
@@ -128,15 +120,13 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
   for (const { adTechDataSilos, siteTechDataSilos } of dataSiloInputs) {
     const allDataSilos = [...adTechDataSilos, ...siteTechDataSilos];
     for (const dataSilo of allDataSilos) {
-      const service = dataSilo['outer-type'] || dataSilo.integrationName;
+      const service = dataSilo['outer-type'] ?? dataSilo.integrationName;
       const foundOnDomain = dataSilo.attributes?.find(
         (attribute) => attribute.key === 'Found On Domain',
       );
       // create mapping to instance
-      if (!serviceToFoundOnDomain[service]) {
-        serviceToFoundOnDomain[service] = [];
-      }
-      serviceToFoundOnDomain[service].push(...(foundOnDomain?.values || []));
+      serviceToFoundOnDomain[service] ??= [];
+      serviceToFoundOnDomain[service].push(...(foundOnDomain?.values ?? []));
       serviceToFoundOnDomain[service] = [
         ...new Set(serviceToFoundOnDomain[service]),
       ];
@@ -163,22 +153,27 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
         {
           key: 'Business Units',
           values: difference(
-            serviceToInstance[service] || [],
+            service in serviceToInstance ? serviceToInstance[service] : [],
             instancesToIgnore,
           ),
         },
         {
           key: 'Found On Domain',
-          values: serviceToFoundOnDomain[service] || [],
+          values:
+            service in serviceToFoundOnDomain
+              ? serviceToFoundOnDomain[service]
+              : [],
         },
       ],
     }),
   );
 
   // Log output
-  logger.log(`Total Services: ${dataSilos.length}`);
-  logger.log(`Ad Tech Services: ${adTechIntegrations.length}`);
-  logger.log(`Site Tech Services: ${siteTechIntegrations.length}`);
+  logger.log(`Total Services: ${dataSilos.length.toLocaleString()}`);
+  logger.log(`Ad Tech Services: ${adTechIntegrations.length.toLocaleString()}`);
+  logger.log(
+    `Site Tech Services: ${siteTechIntegrations.length.toLocaleString()}`,
+  );
 
   // Write to yaml
   writeTranscendYaml(output, {
