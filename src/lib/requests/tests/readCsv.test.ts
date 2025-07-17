@@ -6,7 +6,10 @@ import { readCsv } from '../index';
 describe('readCsv', () => {
   it('should successfully parse a csv', () => {
     expect(
-      readCsv(path.join(__dirname, 'sample.csv'), t.record(t.string, t.string)),
+      readCsv(
+        path.join(import.meta.dirname, 'sample.csv'),
+        t.record(t.string, t.string),
+      ),
     ).to.deep.equal([
       {
         CASL_STATUS: 'Undefined',
@@ -37,7 +40,7 @@ describe('readCsv', () => {
   it('throw an error for invalid file', () => {
     expect(() =>
       readCsv(
-        path.join(__dirname, 'sample.csv'),
+        path.join(import.meta.dirname, 'sample.csv'),
         t.type({ notValid: t.string }),
       ),
     ).to.throw('Failed to decode codec');
@@ -46,7 +49,7 @@ describe('readCsv', () => {
   it('throw an error for invalid codec', () => {
     expect(() =>
       readCsv(
-        path.join(__dirname, 'sample.csvs'),
+        path.join(import.meta.dirname, 'sample.csvs'),
         t.record(t.string, t.string),
       ),
     ).to.throw('ENOENT: no such file or directory, open');
@@ -55,7 +58,7 @@ describe('readCsv', () => {
   it('throw an error for invalid format', () => {
     expect(() =>
       readCsv(
-        path.join(__dirname, 'readCsv.test.ts'),
+        path.join(import.meta.dirname, 'readCsv.test.ts'),
         t.record(t.string, t.string),
       ),
     ).to.throw();

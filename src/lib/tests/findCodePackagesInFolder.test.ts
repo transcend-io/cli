@@ -723,7 +723,10 @@ describe('findCodePackagesInFolder', () => {
   it('should remove links', async () => {
     const result = await findCodePackagesInFolder({
       repositoryName: 'transcend-io/cli',
-      scanPath: path.join(__dirname, '../../../examples/code-scanning'),
+      scanPath: path.join(
+        import.meta.dirname,
+        '../../../examples/code-scanning',
+      ),
     });
     expect(sortCodePackages(result)).to.deep.equal(sortCodePackages(expected));
   });
