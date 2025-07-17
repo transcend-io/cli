@@ -1,7 +1,7 @@
 // @ts-check
-import eslint from '@eslint/js';
-import eslintPluginUnicorn from 'eslint-plugin-unicorn';
-import tseslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import tseslint from "typescript-eslint";
 
 /**
  * @type {import('typescript-eslint').Config}
@@ -25,34 +25,34 @@ const eslintConfig = tseslint.config(
   },
   {
     rules: {
-      'unicorn/filename-case': [
-        'error',
+      "unicorn/filename-case": [
+        "error",
         {
-          case: 'kebabCase',
+          case: "kebabCase",
         },
       ],
-      'unicorn/no-nested-ternary': 'off',
+      "unicorn/no-nested-ternary": "off",
     },
   },
   {
     // CJS compatibility for src directory since it's also a library
-    files: ['src/**/*'],
+    files: ["src/**/*"],
     // The CLI does not require CJS compatibility
-    ignores: ['src/bin/**/*', 'src/commands/**/*'],
+    ignores: ["src/bin/**/*", "src/commands/**/*"],
     rules: {
       // Ban top-level await
-      'unicorn/prefer-top-level-await': 'off',
-      'no-restricted-syntax': [
-        'error',
+      "unicorn/prefer-top-level-await": "off",
+      "no-restricted-syntax": [
+        "error",
         {
           // Matches await expressions at the top level (direct child of Program)
-          selector: 'Program > ExpressionStatement > AwaitExpression',
-          message: 'Top-level await is not allowed in CJS-compatible files.',
+          selector: "Program > ExpressionStatement > AwaitExpression",
+          message: "Top-level await is not allowed in CJS-compatible files.",
         },
       ],
       // Ban default exports
-      'no-restricted-exports': [
-        'error',
+      "no-restricted-exports": [
+        "error",
         {
           restrictDefaultExports: {
             direct: true,
@@ -66,8 +66,8 @@ const eslintConfig = tseslint.config(
     },
   },
   {
-    ignores: ['dist', 'examples'],
-  },
+    ignores: ["dist", "examples"],
+  }
 );
 
 export default eslintConfig;
