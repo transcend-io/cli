@@ -21,13 +21,6 @@ import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
-export interface AssessmentForm {
-  /** ID of Assessment Form */
-  id: string;
-  /** Title of Assessment Form */
-  name: string;
-}
-
 /**
  * Reads all the assessments from a OneTrust instance and syncs them to Transcend or to Disk.
  *

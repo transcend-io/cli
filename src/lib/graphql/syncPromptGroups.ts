@@ -9,7 +9,7 @@ import { fetchAllPrompts } from './fetchPrompts';
 import { CREATE_PROMPT_GROUP, UPDATE_PROMPT_GROUPS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-export interface EditPromptGroupInput {
+interface EditPromptGroupInput {
   /** Title of prompt group */
   title: string;
   /** Prompt group description */
@@ -25,7 +25,7 @@ export interface EditPromptGroupInput {
  * @param input - Prompt input
  * @returns Prompt group ID
  */
-export async function createPromptGroup(
+async function createPromptGroup(
   client: GraphQLClient,
   input: EditPromptGroupInput,
 ): Promise<string> {
@@ -55,7 +55,7 @@ export async function createPromptGroup(
  * @param client - GraphQL client
  * @param input - Prompt input
  */
-export async function updatePromptGroups(
+async function updatePromptGroups(
   client: GraphQLClient,
   input: [EditPromptGroupInput, string][],
 ): Promise<void> {

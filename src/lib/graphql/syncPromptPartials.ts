@@ -15,7 +15,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  * @param input - Prompt input
  * @returns Prompt partial ID
  */
-export async function createPromptPartial(
+async function createPromptPartial(
   client: GraphQLClient,
   input: {
     /** Title of prompt partial */
@@ -50,7 +50,7 @@ export async function createPromptPartial(
  * @param client - GraphQL client
  * @param input - Prompt input
  */
-export async function updatePromptPartials(
+async function updatePromptPartials(
   client: GraphQLClient,
   input: [PromptPartialInput, string][],
 ): Promise<void> {

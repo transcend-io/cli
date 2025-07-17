@@ -15,7 +15,7 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
  * @param team - Input
  * @returns Created team
  */
-export async function createTeam(
+async function createTeam(
   client: GraphQLClient,
   team: TeamInput,
 ): Promise<Pick<Team, 'id' | 'name'>> {
@@ -49,7 +49,7 @@ export async function createTeam(
  * @param teamId - ID of team
  * @returns Updated team
  */
-export async function updateTeam(
+async function updateTeam(
   client: GraphQLClient,
   input: TeamInput,
   teamId: string,
