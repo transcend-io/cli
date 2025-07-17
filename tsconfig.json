@@ -24,7 +24,6 @@
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
 
-    "typeRoots": ["src/lib/@types", "node_modules/@types"],
     "baseUrl": ".",
     "checkJs": true
   },
