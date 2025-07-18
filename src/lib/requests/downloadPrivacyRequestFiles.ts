@@ -1,18 +1,18 @@
-import { map } from '../bluebird-replace';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
-import colors from 'colors';
-import { logger } from '../../logger';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  fetchAllRequests,
+  APPROVE_PRIVACY_REQUEST,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
+  fetchAllRequests,
   makeGraphQLRequest,
-  APPROVE_PRIVACY_REQUEST,
 } from '../graphql';
-import cliProgress from 'cli-progress';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { getFileMetadataForPrivacyRequests } from './getFileMetadataForPrivacyRequests';
 import { streamPrivacyRequestFiles } from './streamPrivacyRequestFiles';
 
@@ -85,7 +85,7 @@ export async function downloadPrivacyRequestFiles({
   );
 
   // Start timer for download process
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_classic,
@@ -138,7 +138,7 @@ export async function downloadPrivacyRequestFiles({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

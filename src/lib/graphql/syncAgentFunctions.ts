@@ -1,15 +1,15 @@
-import { AgentFunctionInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_AGENT_FUNCTIONS, CREATE_AGENT_FUNCTION } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { AgentFunctionInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
-  fetchAllAgentFunctions,
   AgentFunction,
+  fetchAllAgentFunctions,
 } from './fetchAllAgentFunctions';
+import { CREATE_AGENT_FUNCTION, UPDATE_AGENT_FUNCTIONS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new agent function
@@ -84,9 +84,10 @@ export async function syncAgentFunctions(
   const existingAgentFunctions = await fetchAllAgentFunctions(client);
 
   // Look up by name
-  const agentFunctionByName: {
-    [k in string]: Pick<AgentFunction, 'id' | 'name'>;
-  } = keyBy(existingAgentFunctions, 'name');
+  const agentFunctionByName: Record<
+    string,
+    Pick<AgentFunction, 'id' | 'name'>
+  > = keyBy(existingAgentFunctions, 'name');
 
   // Create new agent functions
   const newAgentFunctions = inputs.filter(
@@ -103,11 +104,11 @@ export async function syncAgentFunctions(
           `Successfully synced agent function "${agentFunction.name}"!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync agent function "${agentFunction.name}"! - ${err.message}`,
+          `Failed to sync agent function "${agentFunction.name}"! - ${error.message}`,
         ),
       );
     }
@@ -123,11 +124,11 @@ export async function syncAgentFunctions(
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" agent functions!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" agent functions! - ${err.message}`,
+        `Failed to sync "${inputs.length}" agent functions! - ${error.message}`,
       ),
     );
   }

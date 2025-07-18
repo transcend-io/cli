@@ -4,13 +4,13 @@
 ## Table of Contents
 
 - [Developers](#developers)
-  - [Getting started](#getting-started)
-  - [Repo Structure](#repo-structure)
-  - [Generated files](#generated-files)
-    - [README.md](#readmemd)
-    - [transcend.yml and pathfinder.yml JSON schemas](#transcendyml-and-pathfinderyml-json-schemas)
-  - [Testing](#testing)
-  - [Publishing](#publishing)
+   - [Getting started](#getting-started)
+   - [Repo Structure](#repo-structure)
+   - [Generated files](#generated-files)
+      - [README.md](#readmemd)
+      - [transcend.yml and pathfinder.yml JSON schemas](#transcendyml-and-pathfinderyml-json-schemas)
+   - [Testing](#testing)
+   - [Publishing](#publishing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

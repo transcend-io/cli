@@ -1,20 +1,20 @@
-import type { LocalContext } from '../../../context';
-import {
-  fetchAndIndexCatalogs,
-  buildTranscendGraphQLClient,
-} from '../../../lib/graphql';
-import { join } from 'path';
-import { difference } from 'lodash-es';
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
 import colors from 'colors';
-import { logger } from '../../../logger';
-import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import { difference } from 'lodash-es';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
+import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import {
+  buildTranscendGraphQLClient,
+  fetchAndIndexCatalogs,
+} from '../../../lib/graphql';
 import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
   auth: string;
@@ -65,7 +65,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
 
     // map the data flows to data silos
     const { adTechDataSilos, siteTechDataSilos } = dataFlowsToDataSilos(
-      dataFlows as DataFlowInput[],
+      dataFlows,
       {
         serviceToSupportedIntegration,
         serviceToTitle,
@@ -80,32 +80,32 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
   });
 
   // Mapping from service name to instances that have that service
-  const serviceToInstance: { [k in string]: string[] } = {};
-  dataSiloInputs.forEach(
-    ({ adTechDataSilos, siteTechDataSilos, organizationName }) => {
-      const allDataSilos = [...adTechDataSilos, ...siteTechDataSilos];
-      allDataSilos.forEach((dataSilo) => {
-        const service = dataSilo['outer-type'] || dataSilo.integrationName;
-        // create mapping to instance
-        if (!serviceToInstance[service]) {
-          serviceToInstance[service] = [];
-        }
-        serviceToInstance[service]!.push(organizationName);
-        serviceToInstance[service] = [...new Set(serviceToInstance[service])];
-      });
-    },
-  );
+  const serviceToInstance: Record<string, string[]> = {};
+  for (const {
+    adTechDataSilos,
+    siteTechDataSilos,
+    organizationName,
+  } of dataSiloInputs) {
+    const allDataSilos = [...adTechDataSilos, ...siteTechDataSilos];
+    for (const dataSilo of allDataSilos) {
+      const service = dataSilo['outer-type'] || dataSilo.integrationName;
+      // create mapping to instance
+      if (!serviceToInstance[service]) {
+        serviceToInstance[service] = [];
+      }
+      serviceToInstance[service].push(organizationName);
+      serviceToInstance[service] = [...new Set(serviceToInstance[service])];
+    }
+  }
 
   // List of ad tech integrations
   const adTechIntegrations = [
     ...new Set(
-      dataSiloInputs
-        .map(({ adTechDataSilos }) =>
-          adTechDataSilos.map(
-            (silo) => silo['outer-type'] || silo.integrationName,
-          ),
-        )
-        .flat(),
+      dataSiloInputs.flatMap(({ adTechDataSilos }) =>
+        adTechDataSilos.map(
+          (silo) => silo['outer-type'] || silo.integrationName,
+        ),
+      ),
     ),
   ];
 
@@ -113,37 +113,35 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
   const siteTechIntegrations = difference(
     [
       ...new Set(
-        dataSiloInputs
-          .map(({ siteTechDataSilos }) =>
-            siteTechDataSilos.map(
-              (silo) => silo['outer-type'] || silo.integrationName,
-            ),
-          )
-          .flat(),
+        dataSiloInputs.flatMap(({ siteTechDataSilos }) =>
+          siteTechDataSilos.map(
+            (silo) => silo['outer-type'] || silo.integrationName,
+          ),
+        ),
       ),
     ],
     adTechIntegrations,
   );
 
   // Mapping from service name to list of
-  const serviceToFoundOnDomain: { [k in string]: string[] } = {};
-  dataSiloInputs.forEach(({ adTechDataSilos, siteTechDataSilos }) => {
+  const serviceToFoundOnDomain: Record<string, string[]> = {};
+  for (const { adTechDataSilos, siteTechDataSilos } of dataSiloInputs) {
     const allDataSilos = [...adTechDataSilos, ...siteTechDataSilos];
-    allDataSilos.forEach((dataSilo) => {
+    for (const dataSilo of allDataSilos) {
       const service = dataSilo['outer-type'] || dataSilo.integrationName;
       const foundOnDomain = dataSilo.attributes?.find(
-        (attr) => attr.key === 'Found On Domain',
+        (attribute) => attribute.key === 'Found On Domain',
       );
       // create mapping to instance
       if (!serviceToFoundOnDomain[service]) {
         serviceToFoundOnDomain[service] = [];
       }
-      serviceToFoundOnDomain[service]!.push(...(foundOnDomain?.values || []));
+      serviceToFoundOnDomain[service].push(...(foundOnDomain?.values || []));
       serviceToFoundOnDomain[service] = [
         ...new Set(serviceToFoundOnDomain[service]),
       ];
-    });
-  });
+    }
+  }
 
   // Fetch all integrations in the catalog
   const client = buildTranscendGraphQLClient(transcendUrl, auth);

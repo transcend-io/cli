@@ -1,94 +1,93 @@
-/* eslint-disable max-lines */
+import { LanguageKey } from '@transcend-io/internationalization';
 import {
-  TranscendInput,
-  ApiKeyInput,
-  DataSiloInput,
-  AttributeInput,
+  ActionItemCode,
+  ConsentTrackerStatus,
+  RequestAction,
+} from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { flatten, keyBy, mapValues } from 'lodash-es';
+import {
   ActionInput,
-  IdentifierInput,
-  BusinessEntityInput,
-  EnricherInput,
-  PromptGroupInput,
-  DataFlowInput,
-  PromptPartialInput,
-  DataSubjectInput,
-  CookieInput,
-  PromptInput,
-  DatapointInput,
-  FieldInput,
-  ProcessingPurposeInput,
-  DataCategoryInput,
-  VendorInput,
+  ActionItemCollectionInput,
+  ActionItemInput,
   AgentFileInput,
   AgentFunctionInput,
   AgentInput,
-  PolicyInput,
-  IntlMessageInput,
-  ActionItemInput,
-  TeamInput,
-  ActionItemCollectionInput,
+  ApiKeyInput,
   AssessmentInput,
-  AssessmentTemplateInput,
   AssessmentSectionInput,
   AssessmentSectionQuestionInput,
-  RiskLogicInput,
+  AssessmentTemplateInput,
+  AttributeInput,
+  BusinessEntityInput,
   ConsentPurpose,
+  CookieInput,
+  DataCategoryInput,
+  DataFlowInput,
+  DatapointInput,
+  DataSiloInput,
+  DataSubjectInput,
+  EnricherInput,
+  FieldInput,
+  IdentifierInput,
+  IntlMessageInput,
+  PolicyInput,
+  ProcessingPurposeInput,
+  PromptGroupInput,
+  PromptInput,
+  PromptPartialInput,
+  RiskLogicInput,
+  TeamInput,
+  TranscendInput,
+  VendorInput,
 } from '../../codecs';
-import {
-  RequestAction,
-  ConsentTrackerStatus,
-  ActionItemCode,
-} from '@transcend-io/privacy-types';
-import { GraphQLClient } from 'graphql-request';
-import { flatten, keyBy, mapValues } from 'lodash-es';
-import { fetchEnrichedDataSilos } from './syncDataSilos';
-import {
-  convertToDataSubjectAllowlist,
-  fetchAllDataSubjects,
-} from './fetchDataSubjects';
+import { TranscendPullResource } from '../../enums';
+import { logger } from '../../logger';
+import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
+import { fetchAllActionItems } from './fetchAllActionItems';
+import { fetchAllActions } from './fetchAllActions';
+import { fetchAllAgentFiles } from './fetchAllAgentFiles';
+import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
+import { fetchAllAgents } from './fetchAllAgents';
+import { fetchAllAssessments } from './fetchAllAssessments';
+import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
+import { fetchAllAttributes } from './fetchAllAttributes';
+import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
+import { fetchAllCookies } from './fetchAllCookies';
+import { fetchAllDataCategories } from './fetchAllDataCategories';
+import { fetchAllDataFlows } from './fetchAllDataFlows';
+import { fetchAllMessages } from './fetchAllMessages';
+import { fetchAllPolicies } from './fetchAllPolicies';
+import { fetchAllPrivacyCenters } from './fetchAllPrivacyCenters';
+import { fetchAllProcessingPurposes } from './fetchAllProcessingPurposes';
+import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
+import { fetchAllTeams } from './fetchAllTeams';
+import { fetchAllVendors } from './fetchAllVendors';
 import { fetchApiKeys } from './fetchApiKeys';
 import {
   fetchConsentManager,
   fetchConsentManagerExperiences,
   fetchConsentManagerTheme,
 } from './fetchConsentManagerId';
-import { fetchAllEnrichers } from './syncEnrichers';
-import { fetchAllDataFlows } from './fetchAllDataFlows';
-import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
-import { fetchAllActions } from './fetchAllActions';
-import { fetchAllAgents } from './fetchAllAgents';
-import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
-import { fetchAllAgentFiles } from './fetchAllAgentFiles';
-import { fetchAllVendors } from './fetchAllVendors';
-import { fetchAllDataCategories } from './fetchAllDataCategories';
-import { fetchAllProcessingPurposes } from './fetchAllProcessingPurposes';
+import {
+  convertToDataSubjectAllowlist,
+  fetchAllDataSubjects,
+} from './fetchDataSubjects';
 import { fetchAllIdentifiers } from './fetchIdentifiers';
-import { fetchAllPrompts } from './fetchPrompts';
-import { fetchAllPromptPartials } from './fetchPromptPartials';
-import { fetchAllPolicies } from './fetchAllPolicies';
-import { fetchAllPrivacyCenters } from './fetchAllPrivacyCenters';
-import { fetchAllMessages } from './fetchAllMessages';
 import { fetchAllPromptGroups } from './fetchPromptGroups';
-import { fetchAllCookies } from './fetchAllCookies';
-import { fetchAllTemplates } from './syncTemplates';
-import { fetchAllAttributes } from './fetchAllAttributes';
+import { fetchAllPromptPartials } from './fetchPromptPartials';
+import { fetchAllPrompts } from './fetchPrompts';
 import { formatAttributeValues } from './formatAttributeValues';
-import { logger } from '../../logger';
-import colors from 'colors';
-import { TranscendPullResource } from '../../enums';
-import { fetchAllActionItems } from './fetchAllActionItems';
-import { fetchAllTeams } from './fetchAllTeams';
-import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
-import { LanguageKey } from '@transcend-io/internationalization';
-import { fetchPartitions } from './syncPartitions';
-import { fetchAllAssessments } from './fetchAllAssessments';
-import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
 import {
   AssessmentNestedRule,
   parseAssessmentDisplayLogic,
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
-import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
+import { fetchEnrichedDataSilos } from './syncDataSilos';
+import { fetchAllEnrichers } from './syncEnrichers';
+import { fetchPartitions } from './syncPartitions';
+import { fetchAllTemplates } from './syncTemplates';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -399,14 +398,14 @@ export async function pullTranscendConfiguration(
       uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
-      theme: !consentManagerTheme
-        ? undefined
-        : {
+      theme: consentManagerTheme
+        ? {
             primaryColor: consentManagerTheme.primaryColor || undefined,
             fontColor: consentManagerTheme.fontColor || undefined,
             privacyPolicy: consentManagerTheme.privacyPolicy || undefined,
             prompt: consentManagerTheme.prompt,
-          },
+          }
+        : undefined,
       experiences: consentManagerExperiences.map((experience) => ({
         name: experience.name,
         displayName: experience.displayName || undefined,
@@ -611,8 +610,8 @@ export async function pullTranscendConfiguration(
             title: category
               ? `${category} - ${name}`
               : purpose
-              ? `${purpose} - ${name}`
-              : title || name || type || '',
+                ? `${purpose} - ${name}`
+                : title || name || type || '',
           }),
         ),
         rows: syncedRows.map(
@@ -621,8 +620,8 @@ export async function pullTranscendConfiguration(
             title: category
               ? `${category} - ${name}`
               : purpose
-              ? `${purpose} - ${name}`
-              : title || name || type || '',
+                ? `${purpose} - ${name}`
+                : title || name || type || '',
           }),
         ),
       }),
@@ -876,7 +875,8 @@ export async function pullTranscendConfiguration(
         defaultMessage,
         targetReactIntlId: targetReactIntlId || undefined,
         translations: translations.reduce(
-          (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),
+          (accumulator, { locale, value }) =>
+            Object.assign(accumulator, { [locale]: value }),
           {} as Record<LanguageKey, string>,
         ),
       }),
@@ -1436,7 +1436,7 @@ export async function pullTranscendConfiguration(
             : actions,
         testRegex: testRegex || undefined,
         lookerQueryTitle: lookerQueryTitle || undefined,
-        expirationDuration: parseInt(expirationDuration, 10),
+        expirationDuration: Number.parseInt(expirationDuration, 10),
         transitionRequestStatus: transitionRequestStatus || undefined,
         phoneNumbers:
           phoneNumbers && phoneNumbers.length > 0 ? phoneNumbers : undefined,
@@ -1623,4 +1623,3 @@ export async function pullTranscendConfiguration(
   }
   return result;
 }
-/* eslint-enable max-lines */

@@ -1,12 +1,10 @@
-import type { LocalContext } from '../../../context';
-import colors from 'colors';
-import { writeFileSync } from 'fs';
-
+import { writeFileSync } from 'node:fs';
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
-
-import { logger } from '../../../logger';
-import { generateCrossAccountApiKeys } from '../../../lib/api-keys';
+import colors from 'colors';
 import { keyBy } from 'lodash-es';
+import type { LocalContext } from '../../../context';
+import { generateCrossAccountApiKeys } from '../../../lib/api-keys';
+import { logger } from '../../../logger';
 
 const SCOPES_BY_TITLE = keyBy(
   Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({

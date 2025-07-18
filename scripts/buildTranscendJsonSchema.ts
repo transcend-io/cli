@@ -12,8 +12,8 @@
  * @see https://github.com/SchemaStore/schemastore
  */
 
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+import { writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { toJsonSchema } from '@transcend-io/type-utils';
 import * as packageJson from '../package.json';
 import { TranscendInput } from '../src/codecs';
@@ -21,7 +21,7 @@ import { TranscendInput } from '../src/codecs';
 const majorVersion = packageJson.version.split('.')[0];
 
 // Create a major version JSON schema definition, and update the latest JSON schema definition.
-[`v${majorVersion}`, 'latest'].forEach((key) => {
+for (const key of [`v${majorVersion}`, 'latest']) {
   const fileName = `transcend-yml-schema-${key}.json`;
 
   const schemaDefaults = {
@@ -38,4 +38,4 @@ const majorVersion = packageJson.version.split('.')[0];
   const schemaFilePath = join(process.cwd(), fileName);
 
   writeFileSync(schemaFilePath, `${JSON.stringify(jsonSchema, null, 2)}\n`);
-});
+}

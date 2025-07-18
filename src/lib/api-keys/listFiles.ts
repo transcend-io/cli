@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync } from 'node:fs';
 
 /**
  * List the files in a directory
@@ -27,7 +27,7 @@ export function listFiles(
   const files = readdirSync(directory)
     .filter((fil) =>
       validExtensions
-        ? validExtensions.filter((ext) => fil.endsWith(ext)).length
+        ? validExtensions.filter((extension) => fil.endsWith(extension)).length
         : true,
     )
     .filter((fil) => fil.indexOf('.') > 0);

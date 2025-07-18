@@ -1,7 +1,7 @@
 import got, { Got } from 'got';
+import { buildTranscendGraphQLClient } from './buildTranscendGraphQLClient';
 import { ORGANIZATION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { buildTranscendGraphQLClient } from './buildTranscendGraphQLClient';
 
 /**
  * Instantiate an instance of got that is capable of making requests

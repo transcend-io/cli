@@ -1,9 +1,9 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { decodeCodec } from '@transcend-io/type-utils';
 import colors from 'colors';
 import * as t from 'io-ts';
-import { logger } from '../../logger';
-import { existsSync, readFileSync } from 'fs';
 import { StoredApiKey } from '../../codecs';
+import { logger } from '../../logger';
 
 /**
  * Determine if the `--auth` parameter is an API key or a path to a JSON

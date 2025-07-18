@@ -1,7 +1,7 @@
+import { ObjByString } from '@transcend-io/type-utils';
 import inquirer from 'inquirer';
 import autoCompletePrompt from 'inquirer-autocomplete-prompt';
 import { fuzzySearch } from '../requests';
-import { ObjByString } from '@transcend-io/type-utils';
 
 /**
  * Inquirer confirm text
@@ -83,11 +83,9 @@ export async function inquirerAutoComplete({
       type: 'autocomplete',
       default: defaultValue,
       source: (answersSoFar: ObjByString, input: string) =>
-        !input
-          ? values
-          : values.filter(
-              (x) => typeof x === 'string' && fuzzySearch(input, x),
-            ),
+        input
+          ? values.filter((x) => typeof x === 'string' && fuzzySearch(input, x))
+          : values,
     },
   ]);
   return response;

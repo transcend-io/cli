@@ -1,5 +1,5 @@
-import { TranscendInput } from '../codecs';
 import { getEntries } from '@transcend-io/type-utils';
+import { TranscendInput } from '../codecs';
 
 /**
  * Combine a set of TranscendInput yaml files into a single yaml
@@ -14,7 +14,7 @@ export function mergeTranscendInputs(
 ): TranscendInput {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cloned: any = JSON.parse(JSON.stringify(base));
-  inputs.forEach((input) => {
+  for (const input of inputs) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getEntries(input).forEach(([key, value]: [any, any]) => {
       if (cloned[key] === undefined) {
@@ -25,6 +25,6 @@ export function mergeTranscendInputs(
         cloned[key] = value;
       }
     });
-  });
+  }
   return cloned;
 }

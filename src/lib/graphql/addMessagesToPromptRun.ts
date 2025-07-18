@@ -1,7 +1,7 @@
+import { ChatCompletionRole, QueueStatus } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { ADD_MESSAGES_TO_PROMPT_RUN } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { QueueStatus, ChatCompletionRole } from '@transcend-io/privacy-types';
 
 export interface AddMessagesToPromptRunInput {
   /** ID of run */

@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { PURPOSES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { UserPrivacySignalEnum } from '@transcend-io/airgap.js-types';
 import {
   DefaultConsentOption,
   PreferenceStoreAuthLevel,
 } from '@transcend-io/privacy-types';
-import { UserPrivacySignalEnum } from '@transcend-io/airgap.js-types';
+import { GraphQLClient } from 'graphql-request';
+import { PURPOSES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Purpose {
   /** ID of purpose */

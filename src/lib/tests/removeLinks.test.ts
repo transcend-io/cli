@@ -1,5 +1,4 @@
-import { expect, describe, it } from 'vitest';
-
+import { describe, expect, it } from 'vitest';
 import { removeLinks } from '../ai/removeLinks';
 
 const TEST_DATA = `

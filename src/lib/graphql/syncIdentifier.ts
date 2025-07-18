@@ -1,8 +1,8 @@
-import { IdentifierInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
+import { IdentifierInput } from '../../codecs';
+import type { DataSubject } from './fetchDataSubjects';
 import { UPDATE_IDENTIFIER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import type { DataSubject } from './fetchDataSubjects';
 
 /**
  * Sync the consent manager
@@ -21,7 +21,7 @@ export async function syncIdentifier(
     /** Identifier update input */
     identifier: IdentifierInput;
     /** Data subject lookup by name */
-    dataSubjectsByName: { [k in string]: DataSubject };
+    dataSubjectsByName: Record<string, DataSubject>;
     /** Existing identifier Id */
     identifierId: string;
     /** When true, skip publishing to privacy center */

@@ -1,9 +1,9 @@
-import { GraphQLClient } from 'graphql-request';
-import { PRIVACY_CENTER } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { LanguageKey } from '@transcend-io/internationalization';
 import { PrivacyCenterThemePartial } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
 import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
+import { PRIVACY_CENTER } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface PrivacyCenter {
   /** ID of the privacy center */

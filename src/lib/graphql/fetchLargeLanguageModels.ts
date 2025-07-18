@@ -1,5 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
 import { LargeLanguageModelClient } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
 import { LARGE_LANGUAGE_MODELS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

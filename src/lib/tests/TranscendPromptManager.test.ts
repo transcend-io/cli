@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'vitest';
 import * as t from 'io-ts';
+import { describe, expect, it } from 'vitest';
 import { TranscendPromptManager } from '../ai/TranscendPromptManager';
 
 describe('TranscendPromptManager', () => {

@@ -1,6 +1,5 @@
-import { expect, describe, it } from 'vitest';
-import { join } from 'path';
-
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
 import { readTranscendYaml } from '../../index';
 
 const EXAMPLE_DIR = join(__dirname, '..', '..', '..', 'examples');
@@ -35,13 +34,13 @@ describe('readTranscendYaml', () => {
       stage: 'Staging',
     });
 
-    expect(result!.enrichers![0].url).to.equal(
+    expect(result.enrichers![0].url).to.equal(
       'https://example.acme.com/transcend-enrichment-webhook',
     );
-    expect(result!.enrichers![1].url).to.equal(
+    expect(result.enrichers![1].url).to.equal(
       'https://example.acme.com/transcend-fraud-check',
     );
-    expect(result!['data-silos']![0].description).to.equal(
+    expect(result['data-silos']![0].description).to.equal(
       'The mega-warehouse that contains a copy over all SQL backed databases - Staging',
     );
   });

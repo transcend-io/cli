@@ -1,11 +1,11 @@
 import { buildCommand, type TypedFlagParameter } from '@stricli/core';
 import { ScopeName } from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../context';
+import { OneTrustPullResource, OneTrustPullSource } from '../../../enums';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '../../../lib/cli/common-parameters';
-import { OneTrustPullResource, OneTrustPullSource } from '../../../enums';
-import type { LocalContext } from '../../../context';
 
 export const syncOtCommand = buildCommand({
   loader: async () => {

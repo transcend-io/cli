@@ -1,9 +1,7 @@
-/* eslint-disable max-lines */
-import { expect, describe, it } from 'vitest';
-
-import { findCodePackagesInFolder } from '../code-scanning/findCodePackagesInFolder';
-import { join } from 'path';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
 import type { CodePackageInput } from '../../codecs';
+import { findCodePackagesInFolder } from '../code-scanning/findCodePackagesInFolder';
 
 const expected: CodePackageInput[] = [
   {
@@ -730,4 +728,3 @@ describe('findCodePackagesInFolder', () => {
     expect(sortCodePackages(result)).to.deep.equal(sortCodePackages(expected));
   });
 });
-/* eslint-enable max-lines */

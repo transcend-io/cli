@@ -4,20 +4,20 @@
  * @param variables - Variables as string
  * @returns Variables as object
  */
-export function parseVariablesFromString(variables: string): {
-  [k in string]: string;
-} {
+export function parseVariablesFromString(
+  variables: string,
+): Record<string, string> {
   // Parse out the variables
-  const splitVars = variables.split(',').filter((x) => !!x);
-  const vars: { [k in string]: string } = {};
-  splitVars.forEach((variable) => {
+  const splitVariables = variables.split(',').filter((x) => !!x);
+  const variables_: Record<string, string> = {};
+  for (const variable of splitVariables) {
     const [k, v] = variable.split(':');
     if (!k || !v) {
       throw new Error(
         `Invalid variable: ${variable}. Expected format: key:value`,
       );
     }
-    vars[k] = v;
-  });
-  return vars;
+    variables_[k] = v;
+  }
+  return variables_;
 }

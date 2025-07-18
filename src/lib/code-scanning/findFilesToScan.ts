@@ -40,25 +40,27 @@ export async function findFilesToScan({
     fileGlobs === ''
       ? supportedFiles
       : supportedFiles.concat(fileGlobs.split(','));
-  const dirsToIgnore = [...ignoreDirs.split(','), ...IGNORE_DIRS].filter(
+  const directoriesToIgnore = [...ignoreDirs.split(','), ...IGNORE_DIRS].filter(
     (dir) => dir.length > 0,
   );
   try {
     const filesToScan: string[] = await fastGlob(
       `${scanPath}/**/${globsToSupport.join('|')}`,
       {
-        ignore: dirsToIgnore.map((dir: string) => `${scanPath}/**/${dir}`),
+        ignore: directoriesToIgnore.map(
+          (dir: string) => `${scanPath}/**/${dir}`,
+        ),
         unique: true,
         onlyFiles: true,
       },
     );
     logger.info(`Scanning: ${filesToScan.length} files`);
-    const allPackages = filesToScan
-      .map((filePath: string) => scanFunction(filePath))
-      .flat();
-    const allSdks = allPackages
-      .map((appPackage) => appPackage.softwareDevelopmentKits || [])
-      .flat();
+    const allPackages = filesToScan.flatMap((filePath: string) =>
+      scanFunction(filePath),
+    );
+    const allSdks = allPackages.flatMap(
+      (appPackage) => appPackage.softwareDevelopmentKits || [],
+    );
     const uniqueDeps = new Set(allSdks.map((sdk) => sdk.name));
     const deps = [...uniqueDeps];
     logger.info(`Found: ${deps.length} unique dependencies`);

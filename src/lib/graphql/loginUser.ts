@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { DETERMINE_LOGIN_METHOD, ASSUME_ROLE, LOGIN } from './gqls';
+import { ASSUME_ROLE, DETERMINE_LOGIN_METHOD, LOGIN } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface OrganizationPreview {
@@ -81,7 +81,7 @@ export async function loginUser(
 
   // Get login cookie from response
   const loginCookie = res.headers.get('set-cookie');
-  if (!loginCookie || !loginCookie.includes('laravel')) {
+  if (!loginCookie?.includes('laravel')) {
     throw new Error('Failed to get login cookie in response');
   }
 

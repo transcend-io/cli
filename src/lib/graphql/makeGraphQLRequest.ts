@@ -1,10 +1,10 @@
+import colors from 'colors';
 import type {
   GraphQLClient,
   RequestDocument,
   Variables,
 } from 'graphql-request';
 import { logger } from '../../logger';
-import colors from 'colors';
 
 const MAX_RETRIES = 4;
 
@@ -16,7 +16,9 @@ const MAX_RETRIES = 4;
  */
 function sleepPromise(sleepTime: number): Promise<number> {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(sleepTime), sleepTime);
+    setTimeout(() => {
+      resolve(sleepTime);
+    }, sleepTime);
   });
 }
 
@@ -46,13 +48,13 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
   maxRequests = MAX_RETRIES,
 ): Promise<T> {
   let retryCount = 0;
-  // eslint-disable-next-line no-constant-condition
+
   while (true) {
     try {
       const result = await client.request(document, variables, requestHeaders);
       return result as T;
-    } catch (err) {
-      if (err.message.includes('API key is invalid')) {
+    } catch (error) {
+      if (error.message.includes('API key is invalid')) {
         logger.error(
           colors.red(
             'API key is invalid. ' +
@@ -63,19 +65,20 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
         process.exit(1);
       }
 
-      if (KNOWN_ERRORS.some((msg) => err.message.includes(msg))) {
-        throw err;
+      if (KNOWN_ERRORS.some((message) => error.message.includes(message))) {
+        throw error;
       }
 
       // wait for rate limit to resolve
-      if (err.message.startsWith('Client error: Too many requests')) {
-        const rateLimitResetAt = err.response.headers?.get('x-ratelimit-reset');
+      if (error.message.startsWith('Client error: Too many requests')) {
+        const rateLimitResetAt =
+          error.response.headers?.get('x-ratelimit-reset');
         const sleepTime = rateLimitResetAt
-          ? new Date(rateLimitResetAt).getTime() - new Date().getTime() + 100
+          ? new Date(rateLimitResetAt).getTime() - Date.now() + 100
           : 1000 * 10;
         logger.log(
           colors.yellow(
-            `DETECTED RATE LIMIT: ${err.message}. Sleeping for ${sleepTime}ms`,
+            `DETECTED RATE LIMIT: ${error.message}. Sleeping for ${sleepTime}ms`,
           ),
         );
 
@@ -83,12 +86,12 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
       }
 
       if (retryCount >= maxRequests) {
-        throw err;
+        throw error;
       }
       retryCount += 1;
       logger.log(
         colors.yellow(
-          `REQUEST FAILED: ${err.message}. Retrying ${retryCount}/${maxRequests}...`,
+          `REQUEST FAILED: ${error.message}. Retrying ${retryCount}/${maxRequests}...`,
         ),
       );
     }

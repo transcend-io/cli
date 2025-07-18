@@ -1,12 +1,12 @@
-import { TeamInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_TEAM, CREATE_TEAM } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { TeamInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import { fetchAllTeams, Team } from './fetchAllTeams';
+import { CREATE_TEAM, UPDATE_TEAM } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new team
@@ -95,7 +95,7 @@ export async function syncTeams(
   const existingTeams = await fetchAllTeams(client);
 
   // Look up by name
-  const teamsByName: { [k in string]: Pick<Team, 'id' | 'name'> } = keyBy(
+  const teamsByName: Record<string, Pick<Team, 'id' | 'name'>> = keyBy(
     existingTeams,
     'name',
   );
@@ -110,10 +110,10 @@ export async function syncTeams(
       const newTeam = await createTeam(client, team);
       teamsByName[newTeam.name] = newTeam;
       logger.info(colors.green(`Successfully created team "${team.name}"!`));
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync team "${team.name}"! - ${err.message}`),
+        colors.red(`Failed to sync team "${team.name}"! - ${error.message}`),
       );
     }
   });
@@ -128,10 +128,10 @@ export async function syncTeams(
       );
       teamsByName[newTeam.name] = newTeam;
       logger.info(colors.green(`Successfully updated team "${input.name}"!`));
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync team "${input.name}"! - ${err.message}`),
+        colors.red(`Failed to sync team "${input.name}"! - ${error.message}`),
       );
     }
   });

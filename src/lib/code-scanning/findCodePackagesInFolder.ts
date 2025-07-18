@@ -1,9 +1,9 @@
-import fastGlob from 'fast-glob';
-import colors from 'colors';
-import { CodePackageInput } from '../../codecs';
 import { getEntries } from '@transcend-io/type-utils';
-import { CODE_SCANNING_CONFIGS } from './constants';
+import colors from 'colors';
+import fastGlob from 'fast-glob';
+import { CodePackageInput } from '../../codecs';
 import { logger } from '../../logger';
+import { CODE_SCANNING_CONFIGS } from './constants';
 
 /**
  * Helper to scan and discovery all of the code packages within a folder
@@ -13,7 +13,7 @@ import { logger } from '../../logger';
  */
 export async function findCodePackagesInFolder({
   scanPath,
-  ignoreDirs = [],
+  ignoreDirs: ignoreDirectories = [],
   repositoryName,
 }: {
   /** The name of the github repository reporting packages for */
@@ -26,18 +26,21 @@ export async function findCodePackagesInFolder({
   const allCodePackages = await Promise.all(
     getEntries(CODE_SCANNING_CONFIGS).map(async ([codePackageType, config]) => {
       const {
-        ignoreDirs: configIgnoreDirs,
+        ignoreDirs: configIgnoreDirectories,
         supportedFiles,
         scanFunction,
       } = config;
-      const dirsToIgnore = [...ignoreDirs, ...configIgnoreDirs].filter(
-        (dir) => dir.length > 0,
-      );
+      const directoriesToIgnore = [
+        ...ignoreDirectories,
+        ...configIgnoreDirectories,
+      ].filter((dir) => dir.length > 0);
       try {
         const filesToScan: string[] = await fastGlob(
           `${scanPath}/**/${supportedFiles.join('|')}`,
           {
-            ignore: dirsToIgnore.map((dir: string) => `${scanPath}/**/${dir}`),
+            ignore: directoriesToIgnore.map(
+              (dir: string) => `${scanPath}/**/${dir}`,
+            ),
             unique: true,
             onlyFiles: true,
           },
@@ -47,29 +50,25 @@ export async function findCodePackagesInFolder({
             `Scanning: ${filesToScan.length} files of type ${codePackageType}`,
           ),
         );
-        const allPackages = filesToScan
-          .map((filePath) =>
-            scanFunction(filePath).map((result) => ({
-              ...result,
-              relativePath: filePath.replace(`${scanPath}/`, ''),
-            })),
-          )
-          .flat();
+        const allPackages = filesToScan.flatMap((filePath) =>
+          scanFunction(filePath).map((result) => ({
+            ...result,
+            relativePath: filePath.replace(`${scanPath}/`, ''),
+          })),
+        );
         logger.info(
           colors.green(
             `Found: ${allPackages.length} packages and ${
-              allPackages
-                .map(
-                  ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits,
-                )
-                .flat().length
+              allPackages.flatMap(
+                ({ softwareDevelopmentKits = [] }) => softwareDevelopmentKits,
+              ).length
             } sdks`,
           ),
         );
 
         return allPackages.map(
-          (pkg): CodePackageInput => ({
-            ...pkg,
+          (package_): CodePackageInput => ({
+            ...package_,
             type: codePackageType,
             repositoryName,
           }),

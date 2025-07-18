@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
-import { CodePackageSdk } from '../../../codecs';
-import { findAllWithRegex } from '@transcend-io/type-utils';
+import { readFileSync } from 'node:fs';
 import { CodePackageType } from '@transcend-io/privacy-types';
+import { findAllWithRegex } from '@transcend-io/type-utils';
+import { CodePackageSdk } from '../../../codecs';
+import { CodeScanningConfig } from '../types';
 
 const POD_TARGET_REGEX = /target ('|")(.*?)('|")/;
 const POD_PACKAGE_REGEX = /pod ('|")(.*?)('|")(, ('|")~> (.+?)('|")|)/;
@@ -41,13 +41,14 @@ export const cocoaPods: CodeScanningConfig = {
       type: CodePackageType.CocoaPods,
       softwareDevelopmentKits: packages
         .filter(
-          (pkg) =>
-            pkg.matchIndex > target.matchIndex &&
-            (!targets[ind + 1] || pkg.matchIndex < targets[ind + 1].matchIndex),
+          (package_) =>
+            package_.matchIndex > target.matchIndex &&
+            (!targets[ind + 1] ||
+              package_.matchIndex < targets[ind + 1].matchIndex),
         )
-        .map((pkg) => ({
-          name: pkg.name,
-          version: pkg.version,
+        .map((package_) => ({
+          name: package_.name,
+          version: package_.version,
         })),
     }));
 

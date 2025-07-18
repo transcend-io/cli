@@ -1,7 +1,7 @@
+import { ScopeName } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { TEAMS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { ScopeName } from '@transcend-io/privacy-types';
 
 export interface Team {
   /** ID of team */

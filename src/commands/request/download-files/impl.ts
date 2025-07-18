@@ -1,6 +1,6 @@
+import { RequestStatus } from '@transcend-io/privacy-types';
 import type { LocalContext } from '../../../context';
 import { downloadPrivacyRequestFiles } from '../../../lib/requests';
-import { RequestStatus } from '@transcend-io/privacy-types';
 
 interface DownloadFilesCommandFlags {
   auth: string;

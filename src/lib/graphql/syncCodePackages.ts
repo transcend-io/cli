@@ -1,15 +1,15 @@
-import { chunk, uniq, keyBy, uniqBy } from 'lodash-es';
+import { CodePackageType } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
-import { logger } from '../../logger';
-import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
-import { map, mapSeries } from '../bluebird-replace';
+import { chunk, keyBy, uniq, uniqBy } from 'lodash-es';
 import { CodePackageInput, RepositoryInput } from '../../codecs';
-import { CodePackageType } from '@transcend-io/privacy-types';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { syncRepositories } from './syncRepositories';
+import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
 
 const CHUNK_SIZE = 100;
 
@@ -145,14 +145,12 @@ export async function syncCodePackages(
     syncSoftwareDevelopmentKits(
       client,
       uniqBy(
-        codePackages
-          .map(({ type, softwareDevelopmentKits = [] }) =>
-            softwareDevelopmentKits.map(({ name }) => ({
-              name,
-              codePackageType: type,
-            })),
-          )
-          .flat(),
+        codePackages.flatMap(({ type, softwareDevelopmentKits = [] }) =>
+          softwareDevelopmentKits.map(({ name }) => ({
+            name,
+            codePackageType: type,
+          })),
+        ),
         ({ name, codePackageType }) =>
           `${name}${LOOKUP_SPLIT_KEY}${codePackageType}`,
       ),
@@ -166,7 +164,7 @@ export async function syncCodePackages(
           ({
             name: repositoryName,
             url: `https://github.com/${repositoryName}`,
-          } as RepositoryInput),
+          }) as RepositoryInput,
       ),
     ),
   ]);
@@ -233,9 +231,11 @@ export async function syncCodePackages(
         `Successfully synced ${newCodePackages.length} code packages!`,
       ),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create code packages! - ${err.message}`));
+    logger.info(
+      colors.red(`Failed to create code packages! - ${error.message}`),
+    );
   }
 
   // Update existing codePackages
@@ -282,10 +282,10 @@ export async function syncCodePackages(
       logger.info(
         colors.green(`Successfully updated "${chunk.length}" code packages!`),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to update code packages! - ${err.message}`),
+        colors.red(`Failed to update code packages! - ${error.message}`),
       );
     }
   });

@@ -51,9 +51,9 @@ export async function fetchAllCatalogs(
 
 export interface IndexedCatalogs {
   /** Mapping from service name to service title */
-  serviceToTitle: { [k in string]: string };
+  serviceToTitle: Record<string, string>;
   /** Mapping from service name to boolean indicate if service has API integration support */
-  serviceToSupportedIntegration: { [k in string]: boolean };
+  serviceToSupportedIntegration: Record<string, boolean>;
 }
 
 /**
@@ -72,19 +72,19 @@ export async function fetchAndIndexCatalogs(client: GraphQLClient): Promise<
   const catalogs = await fetchAllCatalogs(client);
 
   // Create mapping from service name to service title
-  const serviceToTitle = catalogs.reduce(
-    (acc, catalog) =>
-      Object.assign(acc, { [catalog.integrationName]: catalog.title }),
-    {} as { [k in string]: string },
+  const serviceToTitle = Object.fromEntries(
+    catalogs.map<Record<string, string>>((catalog) => [
+      catalog.integrationName,
+      catalog.title,
+    ]),
   );
 
   // Create mapping from service name to boolean indicate if service has API integration support
-  const serviceToSupportedIntegration = catalogs.reduce(
-    (acc, catalog) =>
-      Object.assign(acc, {
-        [catalog.integrationName]: catalog.hasApiFunctionality,
-      }),
-    {} as { [k in string]: boolean },
+  const serviceToSupportedIntegration = Object.fromEntries(
+    catalogs.map<Record<string, boolean>>((catalog) => [
+      catalog.integrationName,
+      catalog.hasApiFunctionality,
+    ]),
   );
 
   return {

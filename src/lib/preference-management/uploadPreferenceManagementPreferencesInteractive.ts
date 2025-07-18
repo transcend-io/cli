@@ -1,25 +1,25 @@
-import {
-  buildTranscendGraphQLClient,
-  createSombraGotInstance,
-  fetchAllPurposes,
-  fetchAllPreferenceTopics,
-  PreferenceTopic,
-  Purpose,
-} from '../graphql';
+import { PersistedState } from '@transcend-io/persisted-state';
+import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
 import { chunk } from 'lodash-es';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
 import { logger } from '../../logger';
-import cliProgress from 'cli-progress';
+import { map } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+  fetchAllPreferenceTopics,
+  fetchAllPurposes,
+  PreferenceTopic,
+  Purpose,
+} from '../graphql';
 import { parseAttributesFromString } from '../requests';
-import { PersistedState } from '@transcend-io/persisted-state';
-import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
 import { PreferenceState } from './codecs';
-import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
-import { apply } from '@transcend-io/type-utils';
-import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
+import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
+import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
 
 /**
  * Upload a set of consent preferences
@@ -159,12 +159,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   );
 
   // Update either safe updates only or safe + conflict
-  Object.entries({
+  for (const [userId, update] of Object.entries({
     ...metadata.pendingSafeUpdates,
     ...(skipConflictUpdates
       ? {}
       : apply(metadata.pendingConflictUpdates, ({ row }) => row)),
-  }).forEach(([userId, update]) => {
+  })) {
     // Determine timestamp
     const timestamp =
       metadata.timestampColum === NONE_PREFERENCE_MAP
@@ -192,7 +192,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         },
       })),
     };
-  });
+  }
   await preferenceState.setValue(pendingUpdates, 'pendingUpdates');
   await preferenceState.setValue({}, 'failingUpdates');
 
@@ -217,7 +217,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
@@ -244,13 +244,13 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             },
           })
           .json();
-      } catch (err) {
+      } catch (error) {
         try {
-          const parsed = JSON.parse(err?.response?.body || '{}');
+          const parsed = JSON.parse(error?.response?.body || '{}');
           if (parsed.error) {
             logger.error(colors.red(`Error: ${parsed.error}`));
           }
-        } catch (e) {
+        } catch {
           // continue
         }
         logger.error(
@@ -258,18 +258,18 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             `Failed to upload ${
               currentChunk.length
             } user preferences to partition ${partition}: ${
-              err?.response?.body || err?.message
+              error?.response?.body || error?.message
             }`,
           ),
         );
         const failingUpdates = preferenceState.getValue('failingUpdates');
-        currentChunk.forEach(([userId, update]) => {
+        for (const [userId, update] of currentChunk) {
           failingUpdates[userId] = {
             uploadedAt: new Date().toISOString(),
             update,
-            error: err?.response?.body || err?.message || 'Unknown error',
+            error: error?.response?.body || error?.message || 'Unknown error',
           };
-        });
+        }
         await preferenceState.setValue(failingUpdates, 'failingUpdates');
       }
 
@@ -282,7 +282,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
   logger.info(
     colors.green(

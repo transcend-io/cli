@@ -1,13 +1,13 @@
-import colors from 'colors';
-import { logger } from '../../logger';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
-import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
-import { readCsv } from '../requests/readCsv';
-import { DataFlowInput, DataFlowCsvInput } from '../../codecs';
-import { splitCsvToList } from '../requests';
+import colors from 'colors';
+import { DataFlowCsvInput, DataFlowInput } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { buildTranscendGraphQLClient, syncDataFlows } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { readCsv } from '../requests/readCsv';
 
-const OMIT_COLUMNS = [
+const OMIT_COLUMNS = new Set([
   'ID',
   'Activity',
   'Encounters',
@@ -17,7 +17,7 @@ const OMIT_COLUMNS = [
   'Service Description',
   'Website URL',
   'Categories of Recipients',
-];
+]);
 
 /**
  * Upload a set of data flows from CSV
@@ -79,7 +79,7 @@ export async function uploadDataFlowsFromCsv({
       attributes: Object.entries(rest)
         // filter out native columns that are exported from the admin dashboard
         // but not custom attributes
-        .filter(([key]) => !OMIT_COLUMNS.includes(key))
+        .filter(([key]) => !OMIT_COLUMNS.has(key))
         .map(([key, value]) => ({
           key,
           values: splitCsvToList(value),

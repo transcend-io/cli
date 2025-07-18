@@ -1,15 +1,15 @@
-import { BusinessEntityInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_BUSINESS_ENTITIES, CREATE_BUSINESS_ENTITY } from './gqls';
-import { logger } from '../../logger';
-import { keyBy, chunk } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import {
-  fetchAllBusinessEntities,
-  BusinessEntity,
-} from './fetchAllBusinessEntities';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy } from 'lodash-es';
+import { BusinessEntityInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import {
+  BusinessEntity,
+  fetchAllBusinessEntities,
+} from './fetchAllBusinessEntities';
+import { CREATE_BUSINESS_ENTITY, UPDATE_BUSINESS_ENTITIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new business entity
@@ -119,11 +119,11 @@ export async function syncBusinessEntities(
           `Successfully synced business entity "${businessEntity.title}"!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync business entity "${businessEntity.title}"! - ${err.message}`,
+          `Failed to sync business entity "${businessEntity.title}"! - ${error.message}`,
         ),
       );
     }
@@ -141,11 +141,11 @@ export async function syncBusinessEntities(
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" business entities!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" business entities ! - ${err.message}`,
+        `Failed to sync "${inputs.length}" business entities ! - ${error.message}`,
       ),
     );
   }

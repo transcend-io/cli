@@ -64,13 +64,13 @@ export function consentManagersToBusinessEntities(
 
   // Log out info on airgap scripts to host
   logger.info('\n\n~~~~~~~~~~~\nAirgap scripts to host:');
-  businessEntities.forEach(({ attributes, title }, ind) => {
+  for (const [ind, { attributes, title }] of businessEntities.entries()) {
     attributes
-      ?.find((attr) => attr.key === 'Airgap Production URL')
+      ?.find((attribute) => attribute.key === 'Airgap Production URL')
       ?.values?.forEach((url) => {
         logger.info(`${ind}) ${title} - ${url}`);
       });
-  });
+  }
 
   return businessEntities;
 }

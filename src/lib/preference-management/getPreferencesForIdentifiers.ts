@@ -1,12 +1,12 @@
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
-import type { Got } from 'got';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
 import * as t from 'io-ts';
-import { map } from '../bluebird-replace';
+import { chunk } from 'lodash-es';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 
 const PreferenceRecordsQueryResponse = t.intersection([
   t.type({
@@ -54,7 +54,7 @@ export async function getPreferencesForIdentifiers(
   const groupedIdentifiers = chunk(identifiers, 100);
 
   // create a new progress bar instance and use shades_classic theme
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_classic,
@@ -88,22 +88,22 @@ export async function getPreferencesForIdentifiers(
           total += group.length;
           progressBar.update(total);
           break; // Exit loop if successful
-        } catch (err) {
+        } catch (error) {
           attempts += 1;
-          const msg = err?.response?.body || err?.message || '';
+          const message = error?.response?.body || error?.message || '';
           if (
             attempts >= maxAttempts ||
-            !MSGS.some((errorMessage) => msg.includes(errorMessage))
+            !MSGS.some((errorMessage) => message.includes(errorMessage))
           ) {
             throw new Error(
-              `Received an error from server after ${attempts} attempts: ${msg}`,
+              `Received an error from server after ${attempts} attempts: ${message}`,
             );
           }
 
           logger.warn(
             colors.yellow(
               `[RETRYING FAILED REQUEST - Attempt ${attempts}] ` +
-                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
+                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${message}`,
             ),
           );
         }
@@ -115,7 +115,7 @@ export async function getPreferencesForIdentifiers(
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   if (!skipLogging) {

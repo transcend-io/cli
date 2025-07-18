@@ -6,6 +6,6 @@ const CLIENT_ERROR = /{\\"message\\":\\"(.+?)\\",/;
  * @param err - Error message
  * @returns Client error or null
  */
-export function extractClientError(err: string): string | null {
-  return CLIENT_ERROR.test(err) ? CLIENT_ERROR.exec(err)![1] : null;
+export function extractClientError(error: string): string | null {
+  return CLIENT_ERROR.test(error) ? CLIENT_ERROR.exec(error)![1] : null;
 }

@@ -1,25 +1,25 @@
-import { GraphQLClient } from 'graphql-request';
 import {
-  ConsentPrecedenceOption,
-  UnknownRequestPolicy,
-  UspapiOption,
-  TelemetryPartitionStrategy,
-  RegionsOperator,
-  IsoCountrySubdivisionCode,
-  IsoCountryCode,
-  BrowserTimeZone,
-  SignedIabAgreementOption,
-} from '@transcend-io/privacy-types';
-import {
-  InitialViewState,
   BrowserLanguage,
+  InitialViewState,
   OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
 import {
-  FETCH_CONSENT_MANAGER_ID,
-  FETCH_CONSENT_MANAGER,
-  EXPERIENCES,
+  BrowserTimeZone,
+  ConsentPrecedenceOption,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+  RegionsOperator,
+  SignedIabAgreementOption,
+  TelemetryPartitionStrategy,
+  UnknownRequestPolicy,
+  UspapiOption,
+} from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import {
   CONSENT_MANAGER_ANALYTICS_DATA,
+  EXPERIENCES,
+  FETCH_CONSENT_MANAGER,
+  FETCH_CONSENT_MANAGER_ID,
   FETCH_CONSENT_MANAGER_THEME,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';

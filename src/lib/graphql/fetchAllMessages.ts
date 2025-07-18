@@ -1,7 +1,7 @@
+import { LanguageKey } from '@transcend-io/internationalization';
 import { GraphQLClient } from 'graphql-request';
 import { MESSAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
 
 export interface Message {
   /** ID of message */

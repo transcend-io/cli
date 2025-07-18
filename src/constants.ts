@@ -1,6 +1,6 @@
 import { ScopeName } from '@transcend-io/privacy-types';
-import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
+import { TranscendPullResource } from './enums';
 
 export { description, version } from '../package.json';
 export const name = 'transcend';
@@ -27,9 +27,10 @@ export const DEFAULT_TRANSCEND_CONSENT_API =
 /**
  * Mapping between resource type and scopes required for cli
  */
-export const TR_PUSH_RESOURCE_SCOPE_MAP: {
-  [k in TranscendPullResource]: ScopeName[];
-} = {
+export const TR_PUSH_RESOURCE_SCOPE_MAP: Record<
+  TranscendPullResource,
+  ScopeName[]
+> = {
   [TranscendPullResource.ApiKeys]: [ScopeName.ViewApiKeys],
   [TranscendPullResource.Templates]: [ScopeName.ManageEmailTemplates],
   [TranscendPullResource.DataSilos]: [
@@ -83,9 +84,10 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
 /**
  * Mapping between resource type and scopes required for cli
  */
-export const TR_PULL_RESOURCE_SCOPE_MAP: {
-  [k in TranscendPullResource]: ScopeName[];
-} = {
+export const TR_PULL_RESOURCE_SCOPE_MAP: Record<
+  TranscendPullResource,
+  ScopeName[]
+> = {
   [TranscendPullResource.ApiKeys]: [ScopeName.ViewApiKeys],
   [TranscendPullResource.Templates]: [ScopeName.ViewEmailTemplates],
   [TranscendPullResource.DataSilos]: [

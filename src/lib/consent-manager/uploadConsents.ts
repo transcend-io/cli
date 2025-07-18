@@ -1,14 +1,14 @@
-import { createTranscendConsentGotInstance } from '../graphql';
+import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
-import { map } from '../bluebird-replace';
-import { createConsentToken } from './createConsentToken';
 import { logger } from '../../logger';
-import cliProgress from 'cli-progress';
-import { decodeCodec } from '@transcend-io/type-utils';
+import { map } from '../bluebird-replace';
+import { createTranscendConsentGotInstance } from '../graphql';
+import { createConsentToken } from './createConsentToken';
 import type { ConsentPreferenceUpload } from './types';
-import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
 
@@ -105,7 +105,7 @@ export async function uploadConsents({
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -144,8 +144,8 @@ export async function uploadConsents({
           purposes: purposes
             ? decodeCodec(PurposeMap, purposes)
             : consent.usp
-            ? { SaleOfInfo: saleStatus === 'Y' }
-            : {},
+              ? { SaleOfInfo: saleStatus === 'Y' }
+              : {},
           ...(updated ? { updated: updated === 'true' } : {}),
           ...(prompted ? { prompted: prompted === 'true' } : {}),
           ...consent,
@@ -159,18 +159,18 @@ export async function uploadConsents({
             json: input,
           })
           .json();
-      } catch (err) {
+      } catch (error) {
         try {
-          const parsed = JSON.parse(err?.response?.body || '{}');
+          const parsed = JSON.parse(error?.response?.body || '{}');
           if (parsed.error) {
             logger.error(colors.red(`Error: ${parsed.error}`));
           }
-        } catch (e) {
+        } catch {
           // continue
         }
         throw new Error(
           `Received an error from server: ${
-            err?.response?.body || err?.message
+            error?.response?.body || error?.message
           }`,
         );
       }
@@ -182,7 +182,7 @@ export async function uploadConsents({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

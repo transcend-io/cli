@@ -1,17 +1,17 @@
-import type { LocalContext } from '../../../context';
-import { logger } from '../../../logger';
+import fs, { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import colors from 'colors';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { validateTranscendAuth } from '../../../lib/api-keys';
 import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs, { existsSync, mkdirSync } from 'fs';
+import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
+import { writeCsv } from '../../../lib/cron';
 import {
   buildTranscendGraphQLClient,
   ConsentManagerMetricBin,
 } from '../../../lib/graphql';
-import { validateTranscendAuth } from '../../../lib/api-keys';
-import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
-import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
-import { writeCsv } from '../../../lib/cron';
+import { logger } from '../../../logger';
 
 interface PullConsentMetricsCommandFlags {
   auth: string;
@@ -114,8 +114,8 @@ export async function pullConsentMetrics(
       });
 
       // Write to file
-      Object.entries(configuration).forEach(([metricName, metrics]) => {
-        metrics.forEach(({ points, name }) => {
+      for (const [metricName, metrics] of Object.entries(configuration)) {
+        for (const { points, name } of metrics) {
           const file = join(folder, `${metricName}_${name}.csv`);
           logger.info(
             colors.magenta(`Writing configuration to file "${file}"...`),
@@ -127,11 +127,11 @@ export async function pullConsentMetrics(
               value,
             })),
           );
-        });
-      });
-    } catch (err) {
+        }
+      }
+    } catch (error) {
       logger.error(
-        colors.red(`An error occurred syncing the schema: ${err.message}`),
+        colors.red(`An error occurred syncing the schema: ${error.message}`),
       );
       process.exit(1);
     }
@@ -171,8 +171,8 @@ export async function pullConsentMetrics(
         }
 
         // Write to file
-        Object.entries(configuration).forEach(([metricName, metrics]) => {
-          metrics.forEach(({ points, name }) => {
+        for (const [metricName, metrics] of Object.entries(configuration)) {
+          for (const { points, name } of metrics) {
             const file = join(subFolder, `${metricName}_${name}.csv`);
             logger.info(
               colors.magenta(`Writing configuration to file "${file}"...`),
@@ -184,13 +184,13 @@ export async function pullConsentMetrics(
                 value,
               })),
             );
-          });
-        });
+          }
+        }
 
         logger.info(
           colors.green(`${prefix}Successfully pulled configuration!`),
         );
-      } catch (err) {
+      } catch {
         logger.error(colors.red(`${prefix}Failed to sync configuration.`));
         encounteredErrors.push(apiKey.organizationName);
       }

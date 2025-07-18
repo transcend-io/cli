@@ -1,15 +1,15 @@
-import type { LocalContext } from '../../../context';
-import { stringify } from 'query-string';
-import { logger } from '../../../logger';
 import colors from 'colors';
+import { stringify } from 'query-string';
 import { ADMIN_DASH } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { SILO_DISCOVERY_CONFIGS } from '../../../lib/code-scanning';
+import { findFilesToScan } from '../../../lib/code-scanning/findFilesToScan';
 import {
-  fetchActiveSiloDiscoPlugin,
   buildTranscendGraphQLClient,
+  fetchActiveSiloDiscoPlugin,
   uploadSiloDiscoveryResults,
 } from '../../../lib/graphql';
-import { findFilesToScan } from '../../../lib/code-scanning/findFilesToScan';
-import { SILO_DISCOVERY_CONFIGS } from '../../../lib/code-scanning';
+import { logger } from '../../../logger';
 
 interface DiscoverSilosCommandFlags {
   scanPath: string;

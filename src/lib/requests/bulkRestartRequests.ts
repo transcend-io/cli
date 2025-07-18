@@ -1,19 +1,19 @@
+import { join } from 'node:path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { difference } from 'lodash-es';
-import { join } from 'path';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
 } from '../graphql';
-import { logger } from '../../logger';
 import { SuccessfulRequest } from './constants';
 import { extractClientError } from './extractClientError';
 import { restartPrivacyRequest } from './restartPrivacyRequest';
@@ -92,7 +92,7 @@ export async function bulkRestartRequests({
   concurrency?: number;
 }): Promise<void> {
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -198,13 +198,13 @@ export async function bulkRestartRequests({
           attemptedAt: new Date().toISOString(),
         });
         await state.setValue(restartedRequests, 'restartedRequests');
-      } catch (err) {
-        const msg = `${err.message} - ${JSON.stringify(
-          err.response?.body,
+      } catch (error) {
+        const message = `${error.message} - ${JSON.stringify(
+          error.response?.body,
           null,
           2,
         )}`;
-        const clientError = extractClientError(msg);
+        const clientError = extractClientError(message);
 
         const failingRequests = state.getValue('failingRequests');
         failingRequests.push({
@@ -213,7 +213,7 @@ export async function bulkRestartRequests({
           rowIndex: ind,
           coreIdentifier: request.coreIdentifier,
           attemptedAt: new Date().toISOString(),
-          error: clientError || msg,
+          error: clientError || message,
         });
         await state.setValue(failingRequests, 'failingRequests');
       }
@@ -224,7 +224,7 @@ export async function bulkRestartRequests({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time

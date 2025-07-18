@@ -1,11 +1,10 @@
-import type { LocalContext } from '../../../context';
-import colors from 'colors';
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from '../../../lib/bluebird-replace';
-
-import { logger } from '../../../logger';
-import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
+import colors from 'colors';
+import type { LocalContext } from '../../../context';
 import { validateTranscendAuth } from '../../../lib/api-keys';
+import { mapSeries } from '../../../lib/bluebird-replace';
+import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
+import { logger } from '../../../logger';
 
 interface UpdateConsentManagerCommandFlags {
   auth: string;

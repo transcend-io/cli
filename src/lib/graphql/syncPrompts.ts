@@ -1,12 +1,12 @@
-import { PromptInput } from '../../codecs';
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { UPDATE_PROMPTS, CREATE_PROMPT } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { keyBy } from 'lodash-es';
+import { PromptInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
 import { fetchAllPrompts } from './fetchPrompts';
-import { keyBy } from 'lodash-es';
-import { logger } from '../../logger';
+import { CREATE_PROMPT, UPDATE_PROMPTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Create a new prompt
@@ -110,9 +110,9 @@ export async function syncPrompts(
     logger.info(
       colors.green(`Successfully synced ${newPrompts.length} prompts!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create prompts! - ${err.message}`));
+    logger.info(colors.red(`Failed to create prompts! - ${error.message}`));
   }
 
   // Update existing prompts
@@ -127,9 +127,9 @@ export async function syncPrompts(
     logger.info(
       colors.green(`Successfully updated "${existingPrompts.length}" prompts!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create prompts! - ${err.message}`));
+    logger.info(colors.red(`Failed to create prompts! - ${error.message}`));
   }
 
   logger.info(colors.green(`Synced "${prompts.length}" prompts!`));

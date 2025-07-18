@@ -1,12 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { ATTRIBUTES, ATTRIBUTE_VALUES } from './gqls';
-
-import { logger } from '../../logger';
-import colors from 'colors';
 import {
   AttributeKeyType,
   AttributeSupportedResourceType,
 } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { logger } from '../../logger';
+import { ATTRIBUTE_VALUES, ATTRIBUTES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface AttributeValue {

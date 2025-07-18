@@ -1,26 +1,26 @@
+import { RequestAction } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchRequestDataSiloActiveCount,
 } from '../graphql';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
 import {
-  pullCronPageOfIdentifiers,
   CronIdentifier,
+  pullCronPageOfIdentifiers,
 } from './pullCronPageOfIdentifiers';
-import { RequestAction } from '@transcend-io/privacy-types';
-
-import { logger } from '../../logger';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from '../bluebird-replace';
 
 /**
  * A CSV formatted identifier
  */
-export type CsvFormattedIdentifier = {
-  [k in string]: string | null | boolean | number;
-};
+export type CsvFormattedIdentifier = Record<
+  string,
+  string | null | boolean | number
+>;
 
 export interface CronIdentifierWithAction extends CronIdentifier {
   /** The request action that the identifier relates to */
@@ -101,7 +101,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -143,12 +143,8 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
       const csvFormattedIdentifiers = identifiersWithAction.map(
         ({ attributes, ...identifier }) => ({
           ...identifier,
-          ...attributes.reduce(
-            (acc, val) =>
-              Object.assign(acc, {
-                [val.key]: val.values.join(','),
-              }),
-            {},
+          ...Object.fromEntries(
+            attributes.map((value) => [value.key, value.values.join(',')]),
           ),
         }),
       );
@@ -164,14 +160,14 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
 
       shouldContinue = pageIdentifiers.length === apiPageSize;
       offset += apiPageSize;
-      if (!skipRequestCount) {
-        progressBar.update(foundRequestIds.size);
-      } else {
+      if (skipRequestCount) {
         logger.info(
           colors.magenta(
             `Pulled ${pageIdentifiers.length} outstanding identifiers for ${foundRequestIds.size} requests`,
           ),
         );
+      } else {
+        progressBar.update(foundRequestIds.size);
       }
     }
   });
@@ -184,7 +180,7 @@ export async function pullChunkedCustomSiloOutstandingIdentifiers({
   if (!skipRequestCount) {
     progressBar.stop();
   }
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

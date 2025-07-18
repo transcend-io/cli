@@ -1,15 +1,15 @@
-import { map, mapSeries } from '../bluebird-replace';
-import { chunk } from 'lodash-es';
-import { createSombraGotInstance } from '../graphql';
-import colors from 'colors';
-import {
-  markCronIdentifierCompleted,
-  CronIdentifierPush,
-} from './markCronIdentifierCompleted';
 import cliProgress from 'cli-progress';
-import { logger } from '../../logger';
-import { readCsv } from '../requests';
+import colors from 'colors';
+import { chunk } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import { createSombraGotInstance } from '../graphql';
+import { readCsv } from '../requests';
+import {
+  CronIdentifierPush,
+  markCronIdentifierCompleted,
+} from './markCronIdentifierCompleted';
 
 /**
  * Given a CSV of cron job outputs, mark all requests as completed in Transcend
@@ -56,7 +56,7 @@ export async function pushCronIdentifiersFromCsv({
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -92,10 +92,10 @@ export async function pushCronIdentifiersFromCsv({
         } else {
           failureCount += 1;
         }
-      } catch (e) {
+      } catch (error) {
         logger.error(
           colors.red(
-            `Error notifying Transcend for identifier "${identifier.identifier}" - ${e?.message}`,
+            `Error notifying Transcend for identifier "${identifier.identifier}" - ${error?.message}`,
           ),
         );
         errorCount += 1;
@@ -119,7 +119,7 @@ export async function pushCronIdentifiersFromCsv({
   await mapSeries(chunks, processChunk);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

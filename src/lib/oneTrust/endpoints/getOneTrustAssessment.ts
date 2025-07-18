@@ -1,6 +1,6 @@
-import { Got } from 'got';
-import { decodeCodec } from '@transcend-io/type-utils';
 import { OneTrustGetAssessmentResponse } from '@transcend-io/privacy-types';
+import { decodeCodec } from '@transcend-io/type-utils';
+import { Got } from 'got';
 
 /**
  * Retrieve details about a particular assessment.

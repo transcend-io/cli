@@ -20,9 +20,10 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
   /** The current consent record */
   currentConsentRecord: PreferenceQueryResponseItem;
   /** The pending updates */
-  pendingUpdates: {
-    [purposeName in string]: Omit<PreferenceStorePurposeResponse, 'purpose'>;
-  };
+  pendingUpdates: Record<
+    string,
+    Omit<PreferenceStorePurposeResponse, 'purpose'>
+  >;
   /** The preference topic configurations */
   preferenceTopics: PreferenceTopic[];
 }): boolean {
@@ -66,27 +67,32 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
 
         // Handle comparison based on type
         switch (preferenceTopic.type) {
-          case PreferenceTopicType.Boolean:
+          case PreferenceTopicType.Boolean: {
             return (
               currentPreference.choice.booleanValue !== choice.booleanValue
             );
-          case PreferenceTopicType.Select:
+          }
+          case PreferenceTopicType.Select: {
             return currentPreference.choice.selectValue !== choice.selectValue;
-          case PreferenceTopicType.MultiSelect:
-            // eslint-disable-next-line no-case-declarations
+          }
+          case PreferenceTopicType.MultiSelect: {
             const sortedCurrentValues = (
               currentPreference.choice.selectValues || []
             ).sort();
-            // eslint-disable-next-line no-case-declarations
+
             const sortedNewValues = (choice.selectValues || []).sort();
             return (
               sortedCurrentValues.length !== sortedNewValues.length ||
-              !sortedCurrentValues.every((x, i) => x === sortedNewValues[i])
+              !sortedCurrentValues.every(
+                (x, index) => x === sortedNewValues[index],
+              )
             );
-          default:
+          }
+          default: {
             throw new Error(
               `Unknown preference topic type: ${preferenceTopic.type}`,
             );
+          }
         }
       });
     },

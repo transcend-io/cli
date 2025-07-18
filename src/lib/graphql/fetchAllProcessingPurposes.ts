@@ -1,7 +1,7 @@
+import { ProcessingPurpose } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { PROCESSING_PURPOSE_SUB_CATEGORIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { ProcessingPurpose } from '@transcend-io/privacy-types';
 
 export interface ProcessingPurposeSubCategory {
   /** ID of processing purpose */

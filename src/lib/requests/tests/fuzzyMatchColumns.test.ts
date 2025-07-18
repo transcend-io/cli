@@ -1,6 +1,5 @@
-import { expect, describe, it } from 'vitest';
 import inquirer from 'inquirer';
-
+import { describe, expect, it } from 'vitest';
 import { fuzzyMatchColumns, fuzzySearch, NONE } from '../index';
 
 describe('fuzzyMatchColumns', () => {

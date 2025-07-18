@@ -1,11 +1,10 @@
 import colors from 'colors';
-
-import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { difference } from 'lodash-es';
-import { map } from '../bluebird-replace';
 import { StoredApiKey } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { domainToHost } from './domainToHost';
 
 /**
@@ -20,11 +19,10 @@ import { domainToHost } from './domainToHost';
  *   ]
  * }
  */
-export type XdiSyncGroups = { [k in string]: string[] };
+export type XdiSyncGroups = Record<string, string[]>;
 
 /** Regular expression for IP addresses - remove these from sync endpoint */
 export const IP_ADDRESS_REGEX =
-  // eslint-disable-next-line max-len
   /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 /**
@@ -87,7 +85,7 @@ export async function buildXdiSyncEndpoint(
 
   // construct the sync groups
   const syncGroups: XdiSyncGroups = {};
-  consentManagers.forEach((consentManager) => {
+  for (const consentManager of consentManagers) {
     // grab the partition key
     const partitionKey =
       // take explicit key first
@@ -115,7 +113,7 @@ export async function buildXdiSyncEndpoint(
     syncGroups[partitionKey] = [
       ...new Set([...(syncGroups[partitionKey] || []), ...hosts]),
     ];
-  });
+  }
 
   // Construct the HTML
   const syncEndpointHtml = `

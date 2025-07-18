@@ -1,20 +1,20 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
 import colors from 'colors';
 import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import { writeCsv } from '../cron/writeCsv';
 import {
-  PrivacyRequest,
-  RequestEnricher,
-  RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestEnrichers,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  PrivacyRequest,
+  RequestEnricher,
+  RequestIdentifier,
 } from '../graphql';
-import { logger } from '../../logger';
 
 export interface PrivacyRequestWithIdentifiers extends PrivacyRequest {
   /** Request Enrichers */
@@ -115,26 +115,22 @@ export async function pullManualEnrichmentIdentifiersToCsv({
     }) => ({
       ...request,
       // flatten identifiers
-      ...Object.entries(groupBy(requestIdentifiers, 'name')).reduce(
-        (acc, [key, values]) =>
-          Object.assign(acc, {
-            [key]: values.map(({ value }) => value).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(requestIdentifiers, 'name')).map(
+          ([key, values]) => [key, values.map(({ value }) => value).join(',')],
+        ),
       ),
       // flatten attributes
-      ...Object.entries(groupBy(attributeValues, 'attributeKey.name')).reduce(
-        (acc, [key, values]) =>
-          Object.assign(acc, {
-            [key]: values.map(({ name }) => name).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(attributeValues, 'attributeKey.name')).map(
+          ([key, values]) => [key, values.map(({ name }) => name).join(',')],
+        ),
       ),
     }),
   );
 
   // Write out to CSV
-  const headers = uniq(data.map((d) => Object.keys(d)).flat());
+  const headers = uniq(data.flatMap((d) => Object.keys(d)));
   writeCsv(file, data, headers);
 
   logger.info(

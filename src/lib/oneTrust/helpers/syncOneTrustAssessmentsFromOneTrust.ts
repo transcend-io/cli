@@ -1,13 +1,3 @@
-import type { Got } from 'got';
-import colors from 'colors';
-import {
-  getListOfOneTrustAssessments,
-  getOneTrustAssessment,
-  getOneTrustRisk,
-  getOneTrustUser,
-} from '../endpoints';
-import { mapSeries, map } from '../../bluebird-replace';
-import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,
   OneTrustAssessmentSection,
@@ -15,10 +5,20 @@ import {
   OneTrustGetRiskResponse,
   OneTrustGetUserResponse,
 } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import type { Got } from 'got';
+import { GraphQLClient } from 'graphql-request';
 import { uniq } from 'lodash-es';
+import { logger } from '../../../logger';
+import { map, mapSeries } from '../../bluebird-replace';
+import {
+  getListOfOneTrustAssessments,
+  getOneTrustAssessment,
+  getOneTrustRisk,
+  getOneTrustUser,
+} from '../endpoints';
 import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
-import { GraphQLClient } from 'graphql-request';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
 export interface AssessmentForm {
@@ -61,7 +61,8 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
     {
       length: Math.ceil(assessments.length / BATCH_SIZE),
     },
-    (_, i) => assessments.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE),
+    (_, index) =>
+      assessments.slice(index * BATCH_SIZE, (index + 1) * BATCH_SIZE),
   );
 
   // process each batch and sync the batch right away so it's garbage collected and we don't run out of memory
@@ -94,7 +95,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
               userId: creatorId,
             });
             oneTrustCachedUsers[creatorId] = creator;
-          } catch (e) {
+          } catch {
             logger.warn(
               colors.yellow(
                 `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch form creator.` +
@@ -121,7 +122,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                   oneTrustCachedUsers[userId] = approver;
                 }
                 return [approver];
-              } catch (e) {
+              } catch {
                 logger.warn(
                   colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a form approver.` +
@@ -156,7 +157,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
                   oneTrustCachedUsers[userId] = respondent;
                 }
                 return [respondent];
-              } catch (e) {
+              } catch {
                 logger.warn(
                   colors.yellow(
                     `[assessment ${assessmentNumber} of ${assessments.length}]: failed to fetch a respondent.` +
@@ -185,7 +186,7 @@ export const syncOneTrustAssessmentsFromOneTrust = async ({
           );
           riskDetails = await map(
             riskIds,
-            (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId as string }),
+            (riskId) => getOneTrustRisk({ oneTrust, riskId: riskId }),
             {
               concurrency: 5,
             },

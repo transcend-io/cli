@@ -1,7 +1,7 @@
+import { TranscendProduct } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { GLOBAL_ACTION_ITEM_COLLECTIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { TranscendProduct } from '@transcend-io/privacy-types';
 
 export interface ActionItemCollection {
   /** ID of collection */

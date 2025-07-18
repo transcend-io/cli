@@ -1,13 +1,13 @@
-import type { LocalContext } from '../../../context';
-import { logger } from '../../../logger';
+import { execSync } from 'node:child_process';
 import colors from 'colors';
 import { ADMIN_DASH } from '../../../constants';
+import type { LocalContext } from '../../../context';
 import { findCodePackagesInFolder } from '../../../lib/code-scanning';
 import {
   buildTranscendGraphQLClient,
   syncCodePackages,
 } from '../../../lib/graphql';
-import { execSync } from 'child_process';
+import { logger } from '../../../logger';
 
 const REPO_ERROR =
   'A repository name must be provided. ' +
@@ -41,15 +41,15 @@ export async function scanPackages(
       );
       // Trim and parse the URL
       const url = name.toString('utf-8').trim();
-      [gitRepositoryName] = !url.includes('https:')
-        ? (url.split(':').pop() || '').split('.')
-        : url.split('/').slice(3).join('/').split('.');
+      [gitRepositoryName] = url.includes('https:')
+        ? url.split('/').slice(3).join('/').split('.')
+        : (url.split(':').pop() || '').split('.');
       if (!gitRepositoryName) {
         logger.error(colors.red(REPO_ERROR));
         process.exit(1);
       }
-    } catch (err) {
-      logger.error(colors.red(`${REPO_ERROR} - Got error: ${err.message}`));
+    } catch (error) {
+      logger.error(colors.red(`${REPO_ERROR} - Got error: ${error.message}`));
       process.exit(1);
     }
   }

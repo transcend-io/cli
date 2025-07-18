@@ -1,9 +1,7 @@
-/* eslint-disable max-lines */
-import { expect, describe, it } from 'vitest';
-
-import { checkIfPendingPreferenceUpdatesAreNoOp } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import { describe, expect, it } from 'vitest';
 import { PreferenceTopic } from '../../graphql';
+import { checkIfPendingPreferenceUpdatesAreNoOp } from '../index';
 
 const DEFAULT_VALUES = {
   userId: 'test@transcend.io',
@@ -486,4 +484,3 @@ describe('checkIfPendingPreferenceUpdatesAreNoOp', () => {
     ).to.equal(false);
   });
 });
-/* eslint-enable max-lines */

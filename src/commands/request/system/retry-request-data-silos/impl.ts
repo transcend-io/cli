@@ -1,5 +1,5 @@
-import type { LocalContext } from '../../../../context';
 import type { RequestAction } from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../../context';
 import { retryRequestDataSilos as retryRequestDataSilosHelper } from '../../../../lib/requests';
 
 interface RetryRequestDataSilosCommandFlags {

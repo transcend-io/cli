@@ -1,31 +1,29 @@
 import { LanguageKey } from '@transcend-io/internationalization';
-import { DateFromISOString } from 'io-ts-types';
-
-import * as t from 'io-ts';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
-  NORMALIZE_PHONE_NUMBER,
   CompletedRequestStatus,
-  RequestAction,
   IdentifierType,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  NORMALIZE_PHONE_NUMBER,
+  RequestAction,
 } from '@transcend-io/privacy-types';
 import { ObjByString, valuesOf } from '@transcend-io/type-utils';
-
+import * as t from 'io-ts';
+import { DateFromISOString } from 'io-ts-types';
+import { AttributeKey } from '../graphql';
 import {
-  CachedFileState,
   BLANK,
   BULK_APPLY,
+  CachedFileState,
   ColumnName,
   NONE,
 } from './constants';
-import { AttributeKey } from '../graphql';
-import { ColumnNameMap } from './mapCsvColumnsToApi';
-import { splitCsvToList } from './splitCsvToList';
-import { ParsedAttributeInput } from './parseAttributesFromString';
 import { AttributeNameMap } from './mapColumnsToAttributes';
 import { IdentifierNameMap } from './mapColumnsToIdentifiers';
+import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { ParsedAttributeInput } from './parseAttributesFromString';
+import { splitCsvToList } from './splitCsvToList';
 
 /**
  * Shape of additional identifiers
@@ -109,16 +107,16 @@ export function normalizeIdentifierValue(
   if (identifierType === IdentifierType.Phone) {
     const normalized = identifierValue
       .replace(NORMALIZE_PHONE_NUMBER, '')
-      .replace(/[()]/g, '')
-      .replace(/[–]/g, '')
-      .replace(/[:]/g, '')
-      .replace(/[‭‬]/g, '')
-      .replace(/[A-Za-z]/g, '');
-    return !normalized
-      ? ''
-      : normalized.startsWith('+')
-      ? normalized
-      : `+${defaultPhoneCountryCode}${normalized}`;
+      .replaceAll(/[()]/g, '')
+      .replaceAll(/[–]/g, '')
+      .replaceAll(/[:]/g, '')
+      .replaceAll(/[‭‬]/g, '')
+      .replaceAll(/[A-Za-z]/g, '');
+    return normalized
+      ? normalized.startsWith('+')
+        ? normalized
+        : `+${defaultPhoneCountryCode}${normalized}`
+      : '';
   }
   return identifierValue;
 }
@@ -162,61 +160,62 @@ export function mapCsvRowsToRequestInputs(
     (input): [Record<string, string>, PrivacyRequestInput] => {
       // The extra identifiers to upload for this request
       const attestedExtraIdentifiers: AttestedExtraIdentifiers = {};
-      Object.entries(identifierNameMap)
+      for (const [identifierName, columnName] of Object.entries(
+        identifierNameMap,
+      )
         // filter out skipped identifiers
-        .filter(([, columnName]) => columnName !== NONE)
-        .forEach(([identifierName, columnName]) => {
-          // Determine the identifier type being specified
-          const identifierType = Object.values(IdentifierType).includes(
-            identifierName as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-          )
-            ? (identifierName as IdentifierType)
-            : IdentifierType.Custom;
+        .filter(([, columnName]) => columnName !== NONE)) {
+        // Determine the identifier type being specified
+        const identifierType = Object.values(IdentifierType).includes(
+          identifierName as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+        )
+          ? (identifierName as IdentifierType)
+          : IdentifierType.Custom;
 
-          // Only add the identifier if the value exists
-          const identifierValue = input[columnName];
-          if (identifierValue) {
-            const normalized = normalizeIdentifierValue(
-              identifierValue,
-              identifierType,
-              defaultPhoneCountryCode,
-            );
-            if (normalized) {
-              // Initialize
-              if (!attestedExtraIdentifiers[identifierType]) {
-                attestedExtraIdentifiers[identifierType] = [];
-              }
-
-              // Add the identifier
-              attestedExtraIdentifiers[identifierType]!.push({
-                value: normalized,
-                name: identifierName,
-              });
+        // Only add the identifier if the value exists
+        const identifierValue = input[columnName];
+        if (identifierValue) {
+          const normalized = normalizeIdentifierValue(
+            identifierValue,
+            identifierType,
+            defaultPhoneCountryCode,
+          );
+          if (normalized) {
+            // Initialize
+            if (!attestedExtraIdentifiers[identifierType]) {
+              attestedExtraIdentifiers[identifierType] = [];
             }
+
+            // Add the identifier
+            attestedExtraIdentifiers[identifierType].push({
+              value: normalized,
+              name: identifierName,
+            });
           }
-        });
+        }
+      }
 
       // The extra attributes to upload for this request
       const attributes: ParsedAttributeInput[] = [];
-      Object.entries(attributeNameMap)
+      for (const [attributeName, columnName] of Object.entries(attributeNameMap)
         // filter out skipped attributes
-        .filter(([, columnName]) => columnName !== NONE)
-        .forEach(([attributeName, columnName]) => {
-          // Only add the identifier if the value exists
-          const attributeValueString = input[columnName];
-          if (attributeValueString) {
-            // Add the attribute
-            const isMulti =
-              requestAttributeKeys.find((attr) => attr.name === attributeName)
-                ?.type === 'MULTI_SELECT';
-            attributes.push({
-              values: isMulti
-                ? splitCsvToList(attributeValueString)
-                : attributeValueString,
-              key: attributeName,
-            });
-          }
-        });
+        .filter(([, columnName]) => columnName !== NONE)) {
+        // Only add the identifier if the value exists
+        const attributeValueString = input[columnName];
+        if (attributeValueString) {
+          // Add the attribute
+          const isMulti =
+            requestAttributeKeys.find(
+              (attribute) => attribute.name === attributeName,
+            )?.type === 'MULTI_SELECT';
+          attributes.push({
+            values: isMulti
+              ? splitCsvToList(attributeValueString)
+              : attributeValueString,
+            key: attributeName,
+          });
+        }
+      }
 
       const requestTypeColumn = getMappedName(ColumnName.RequestType);
       const dataSubjectTypeColumn = getMappedName(ColumnName.SubjectType);

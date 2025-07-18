@@ -1,7 +1,7 @@
+import { CodePackageType } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { SOFTWARE_DEVELOPMENT_KITS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { CodePackageType } from '@transcend-io/privacy-types';
 
 export interface SoftwareDevelopmentKit {
   /** ID of software development kit */

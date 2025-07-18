@@ -1,8 +1,8 @@
+import { LanguageKey } from '@transcend-io/internationalization';
 import { GraphQLClient } from 'graphql-request';
+import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 import { POLICIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
-import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 
 export interface Policy {
   /** ID of policy */

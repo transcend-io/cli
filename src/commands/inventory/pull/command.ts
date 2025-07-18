@@ -1,10 +1,10 @@
 import { buildCommand, numberParser } from '@stricli/core';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import { TranscendPullResource } from '../../../enums';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
 } from '../../../lib/cli/common-parameters';
-import { TranscendPullResource } from '../../../enums';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,

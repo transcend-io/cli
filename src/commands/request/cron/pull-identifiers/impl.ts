@@ -1,15 +1,14 @@
-import type { LocalContext } from '../../../../context';
+import { RequestAction } from '@transcend-io/privacy-types';
 import colors from 'colors';
-
-import { logger } from '../../../../logger';
 import { uniq } from 'lodash-es';
+import type { LocalContext } from '../../../../context';
 import {
   CsvFormattedIdentifier,
   parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
   writeCsv,
 } from '../../../../lib/cron';
-import { RequestAction } from '@transcend-io/privacy-types';
+import { logger } from '../../../../logger';
 
 interface PullIdentifiersCommandFlags {
   file: string;
@@ -69,7 +68,7 @@ export async function pullIdentifiers(
       ),
     );
 
-    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
+    const headers = uniq(chunk.flatMap((d) => Object.keys(d)));
     writeCsv(numberedFileName, chunk, headers);
     logger.info(
       colors.green(

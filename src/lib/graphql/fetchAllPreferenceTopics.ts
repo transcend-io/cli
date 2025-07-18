@@ -1,7 +1,7 @@
+import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { PREFERENCE_TOPICS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { PreferenceTopicType } from '@transcend-io/privacy-types';
 
 export interface PreferenceTopic {
   /** ID of preference topic */

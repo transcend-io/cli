@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
+import { readFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import yaml from 'js-yaml';
-import { dirname } from 'path';
+import { CodeScanningConfig } from '../types';
 
 /**
  * Remove YAML comments from a string
@@ -16,14 +16,12 @@ function removeYAMLComments(yamlString: string): string {
     .map((line) => {
       // Remove inline comments
       const commentIndex = line.indexOf('#');
-      if (commentIndex > -1) {
-        // Check if '#' is not inside a string
-        if (
-          !line.substring(0, commentIndex).includes('"') &&
-          !line.substring(0, commentIndex).includes("'")
-        ) {
-          return line.substring(0, commentIndex).trim();
-        }
+      if (
+        commentIndex !== -1 && // Check if '#' is not inside a string
+        !line.slice(0, Math.max(0, commentIndex)).includes('"') &&
+        !line.slice(0, Math.max(0, commentIndex)).includes("'")
+      ) {
+        return line.slice(0, Math.max(0, commentIndex)).trim();
       }
       return line;
     })
@@ -40,7 +38,7 @@ export const pubspec: CodeScanningConfig = {
     const {
       name,
       description,
-      dev_dependencies = {},
+      dev_dependencies: development_dependencies = {},
       dependencies = {},
     } = yaml.load(removeYAMLComments(fileContents)) as {
       /** Name */
@@ -48,9 +46,9 @@ export const pubspec: CodeScanningConfig = {
       /** Description */
       description?: string;
       /** Dev dependencies */
-      dev_dependencies?: { [k in string]: number | Record<string, string> };
+      dev_dependencies?: Record<string, number | Record<string, string>>;
       /** Dependencies */
-      dependencies?: { [k in string]: number | Record<string, string> };
+      dependencies?: Record<string, number | Record<string, string>>;
     };
     return [
       {
@@ -64,19 +62,21 @@ export const pubspec: CodeScanningConfig = {
               typeof version === 'string'
                 ? version
                 : typeof version === 'number'
-                ? version.toString()
-                : version?.sdk,
+                  ? version.toString()
+                  : version?.sdk,
           })),
-          ...Object.entries(dev_dependencies).map(([name, version]) => ({
-            name,
-            version:
-              typeof version === 'string'
-                ? version
-                : typeof version === 'number'
-                ? version.toString()
-                : version?.sdk,
-            isDevDependency: true,
-          })),
+          ...Object.entries(development_dependencies).map(
+            ([name, version]) => ({
+              name,
+              version:
+                typeof version === 'string'
+                  ? version
+                  : typeof version === 'number'
+                    ? version.toString()
+                    : version?.sdk,
+              isDevDependency: true,
+            }),
+          ),
         ],
       },
     ];

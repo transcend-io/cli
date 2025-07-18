@@ -1,12 +1,12 @@
 import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
-import { CREATE_CONSENT_PARTITION, CONSENT_PARTITIONS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries } from '../bluebird-replace';
 import { difference } from 'lodash-es';
-import { logger } from '../../logger';
 import { PartitionInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { CONSENT_PARTITIONS, CREATE_CONSENT_PARTITION } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const PAGE_SIZE = 50;
 
@@ -84,10 +84,10 @@ export async function syncPartitions(
       logger.info(
         colors.green(`Successfully created consent partition: ${name}!`),
       );
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `Failed to create consent partition: ${name}! - ${err.message}`,
+          `Failed to create consent partition: ${name}! - ${error.message}`,
         ),
       );
       encounteredError = true;

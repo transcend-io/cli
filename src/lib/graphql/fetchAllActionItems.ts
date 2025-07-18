@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { GLOBAL_ACTION_ITEMS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   ActionItemCode,
   ActionItemPriorityOverride,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { GLOBAL_ACTION_ITEMS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface ActionItemRaw {
   /** ID of action item */

@@ -1,6 +1,6 @@
-import { difference } from 'lodash-es';
+import { execSync } from 'node:child_process';
 import fastGlob from 'fast-glob';
-import { execSync } from 'child_process';
+import { difference } from 'lodash-es';
 
 /**
  * Function thats gets the git files that have changed
@@ -34,7 +34,7 @@ export function getGitFilesThatChanged({
   /** Current commit */
   commit: string;
   /** File diffs */
-  fileDiffs: { [k in string]: string };
+  fileDiffs: Record<string, string>;
 } {
   // Pull base branch
   execSync(`git fetch origin ${baseBranch}`);
@@ -65,7 +65,7 @@ export function getGitFilesThatChanged({
 
   // Filter out block list
   const changedFiles = difference(
-    diff.split('\n').filter((f) => f),
+    diff.split('\n').filter(Boolean),
     fileBlockList,
   );
 
@@ -76,13 +76,13 @@ export function getGitFilesThatChanged({
       : changedFiles;
 
   // Get the contents of only the changed files
-  const fileDiffs: { [k in string]: string } = {};
-  filteredChanges.forEach((file) => {
+  const fileDiffs: Record<string, string> = {};
+  for (const file of filteredChanges) {
     const contents = execSync(`git show ${latestThisCommit}:${file}`, {
       encoding: 'utf-8',
     });
     fileDiffs[file] = contents;
-  });
+  }
 
   // Pull the github repo name
   const repoName = githubRepo.split('/').pop()!.split('.')[0];

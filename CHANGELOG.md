@@ -4,13 +4,13 @@
 ## Table of Contents
 
 - [Changelog](#changelog)
-  - [[7.0.0] - 2025-07-10](#700---2025-07-10)
-    - [Improvements](#improvements)
-    - [Breaking Changes](#breaking-changes)
-  - [[6.0.0] - 2024-09-03](#600---2024-09-03)
-    - [Changed](#changed)
-  - [[5.0.0] - 2024-04-23](#500---2024-04-23)
-    - [Changed](#changed-1)
+   - [[7.0.0] - 2025-07-10](#700---2025-07-10)
+      - [Improvements](#improvements)
+      - [Breaking Changes](#breaking-changes)
+   - [[6.0.0] - 2024-09-03](#600---2024-09-03)
+      - [Changed](#changed)
+   - [[5.0.0] - 2024-04-23](#500---2024-04-23)
+      - [Changed](#changed-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -29,22 +29,22 @@ The CLI has been overhauled to be easier to use as a full-featured command line 
 
 - All commands have `--help` flag to print help information. For example:
 
-  ```console
-  $ transcend consent update-consent-manager --help
+   ```console
+   $ transcend consent update-consent-manager --help
 
-  USAGE
-    transcend consent update-consent-manager (--auth value) (--bundleTypes PRODUCTION|TEST) [--deploy] [--transcendUrl value]
-    transcend consent update-consent-manager --help
+   USAGE
+     transcend consent update-consent-manager (--auth value) (--bundleTypes PRODUCTION|TEST) [--deploy] [--transcendUrl value]
+     transcend consent update-consent-manager --help
 
-  This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this command.
+   This command allows for updating Consent Manager to latest version. The consent manager bundle can also be deployed using this command.
 
-  FLAGS
-       --auth           The Transcend API key. Requires scopes: "Manage Consent Manager Developer Settings"
-       --bundleTypes    The bundle types to deploy. Defaults to PRODUCTION,TEST.                            [PRODUCTION|TEST, separator = ,]
-      [--deploy]        When true, deploy the Consent Manager after updating the version                    [default = false]
-      [--transcendUrl]  URL of the Transcend backend. Use https://api.us.transcend.io for US hosting        [default = https://api.transcend.io]
-    -h  --help           Print help information and exit
-  ```
+   FLAGS
+        --auth           The Transcend API key. Requires scopes: "Manage Consent Manager Developer Settings"
+        --bundleTypes    The bundle types to deploy. Defaults to PRODUCTION,TEST.                            [PRODUCTION|TEST, separator = ,]
+       [--deploy]        When true, deploy the Consent Manager after updating the version                    [default = false]
+       [--transcendUrl]  URL of the Transcend backend. Use https://api.us.transcend.io for US hosting        [default = https://api.transcend.io]
+     -h  --help           Print help information and exit
+   ```
 
 - Boolean arguments no longer need to have `=true` or `=false` strings explicitly passed to them. For example, rather than pass `--deploy=true`, you can now pass `--deploy` alone. Passing `--deploy=true` or `--deploy=false` is still supported, as well as other boolean values described [here](https://github.com/bloomberg/stricli/blob/58a10349b427d9e5e7d75bf1767898d095e8544c/packages/core/src/parameter/parser/boolean.ts#L21-L26). For booleans which default to true, you can also prefix `no` to the argument name. For example, `--noDeploy` is equivalent to `--deploy=false`.
 - List arguments can either be passed as a comma-separated string or as several arguments. For example, `--bundleTypes=PRODUCTION,TEST` is equivalent to `--bundleTypes PRODUCTION --bundleTypes TEST`.
@@ -154,50 +154,47 @@ partitions: ...
 ### Changed
 
 - Added support for encrypted identifiers to `tr-manual-enricher-pull-identifiers` command.
+   - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
 
-  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
+   ```
+   Before:
+     yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
+       --actions=ERASURE \
+       --file=/Users/michaelfarrell/Desktop/test.csv
 
-  ```
-  Before:
-    yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
-      --actions=ERASURE \
-      --file=/Users/michaelfarrell/Desktop/test.csv
-
-  Now:
-    yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
-      --sombraAuth=$SOMBRA_INTERNAL_KEY \
-      --actions=ERASURE \
-      --file=/Users/michaelfarrell/Desktop/test.csv
-  ```
+   Now:
+     yarn tr-manual-enricher-pull-identifiers --auth=$TRANSCEND_API_KEY  \
+       --sombraAuth=$SOMBRA_INTERNAL_KEY \
+       --actions=ERASURE \
+       --file=/Users/michaelfarrell/Desktop/test.csv
+   ```
 
 - Added support for encrypted identifiers to `tr-request-export` command.
+   - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
 
-  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required when using self-hosted Sombra, but not for multi-tenant.
+   ```
+   Before:
+     yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
+       --actions=ERASURE \
+       --file=/Users/michaelfarrell/Desktop/test.csv
 
-  ```
-  Before:
-    yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
-      --actions=ERASURE \
-      --file=/Users/michaelfarrell/Desktop/test.csv
-
-  Now:
-    yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
-      --sombraAuth=$SOMBRA_INTERNAL_KEY \
-      --actions=ERASURE \
-      --file=/Users/michaelfarrell/Desktop/test.csv
-  ```
+   Now:
+     yarn tr-request-export --auth=$TRANSCEND_API_KEY  \
+       --sombraAuth=$SOMBRA_INTERNAL_KEY \
+       --actions=ERASURE \
+       --file=/Users/michaelfarrell/Desktop/test.csv
+   ```
 
 - Added support for encrypted identifiers to `tr-request-restart` command, used only when `--copyIdentifiers` argument is specified.
+   - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required only when using `--copyIdentifiers` AND self-hosted Sombra, but is otherwise not required.
 
-  - Now that this command is using Sombra to decrypt request identifiers, you may need to provide the `--sombraAuth` argument. It's required only when using `--copyIdentifiers` AND self-hosted Sombra, but is otherwise not required.
+   ```
+   Before:
+     yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
+       --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
 
-  ```
-  Before:
-    yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
-      --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
-
-  Now:
-    yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
-      --sombraAuth=$SOMBRA_INTERNAL_KEY \
-      --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
-  ```
+   Now:
+     yarn tr-request-restart --auth=$TRANSCEND_API_KEY \
+       --sombraAuth=$SOMBRA_INTERNAL_KEY \
+       --statuses=COMPILING,APPROVING --actions=ERASURE --copyIdentifiers=true
+   ```

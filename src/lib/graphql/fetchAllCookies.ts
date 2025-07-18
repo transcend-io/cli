@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { COOKIES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
 import {
   ConsentTrackerSource,
   ConsentTrackerStatus,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { COOKIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Cookie {
   /** ID of the cookie */

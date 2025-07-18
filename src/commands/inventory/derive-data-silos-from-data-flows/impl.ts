@@ -1,19 +1,19 @@
-import type { LocalContext } from '../../../context';
-import {
-  fetchAndIndexCatalogs,
-  buildTranscendGraphQLClient,
-} from '../../../lib/graphql';
-import { join } from 'path';
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
 import colors from 'colors';
-import { logger } from '../../../logger';
-import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import type { LocalContext } from '../../../context';
 import { listFiles } from '../../../lib/api-keys';
+import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
+import {
+  buildTranscendGraphQLClient,
+  fetchAndIndexCatalogs,
+} from '../../../lib/graphql';
 import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 interface DeriveDataSilosFromDataFlowsCommandFlags {
   auth: string;
@@ -77,7 +77,7 @@ export async function deriveDataSilosFromDataFlows(
     await fetchAndIndexCatalogs(client);
 
   // List of each data flow yml file
-  listFiles(dataFlowsYmlFolder).forEach((directory) => {
+  for (const directory of listFiles(dataFlowsYmlFolder)) {
     // read in the data flows for a specific instance
     const { 'data-flows': dataFlows = [] } = readTranscendYaml(
       join(dataFlowsYmlFolder, directory),
@@ -85,7 +85,7 @@ export async function deriveDataSilosFromDataFlows(
 
     // map the data flows to data silos
     const { adTechDataSilos, siteTechDataSilos } = dataFlowsToDataSilos(
-      dataFlows as DataFlowInput[],
+      dataFlows,
       {
         serviceToSupportedIntegration,
         serviceToTitle,
@@ -100,5 +100,5 @@ export async function deriveDataSilosFromDataFlows(
     writeTranscendYaml(join(dataSilosYmlFolder, directory), {
       'data-silos': ignoreYmls.includes(directory) ? [] : dataSilos,
     });
-  });
+  }
 }

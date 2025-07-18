@@ -1,15 +1,15 @@
-import { DataCategoryInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_DATA_SUB_CATEGORIES, CREATE_DATA_SUB_CATEGORY } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { DataCategoryInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
-  fetchAllDataCategories,
   DataSubCategory,
+  fetchAllDataCategories,
 } from './fetchAllDataCategories';
+import { CREATE_DATA_SUB_CATEGORY, UPDATE_DATA_SUB_CATEGORIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new data category
@@ -83,9 +83,10 @@ export async function syncDataCategories(
   const existingDataCategories = await fetchAllDataCategories(client);
 
   // Look up by name
-  const dataCategoryByName: {
-    [k in string]: Pick<DataSubCategory, 'id' | 'name' | 'category'>;
-  } = keyBy(
+  const dataCategoryByName: Record<
+    string,
+    Pick<DataSubCategory, 'id' | 'name' | 'category'>
+  > = keyBy(
     existingDataCategories,
     ({ name, category }) => `${name}:${category}`,
   );
@@ -107,11 +108,11 @@ export async function syncDataCategories(
           `Successfully synced data category "${dataCategory.name}"!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync data category "${dataCategory.name}"! - ${err.message}`,
+          `Failed to sync data category "${dataCategory.name}"! - ${error.message}`,
         ),
       );
     }
@@ -130,11 +131,11 @@ export async function syncDataCategories(
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" data categories!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" data categories ! - ${err.message}`,
+        `Failed to sync "${inputs.length}" data categories ! - ${error.message}`,
       ),
     );
   }

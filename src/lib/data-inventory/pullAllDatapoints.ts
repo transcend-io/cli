@@ -1,23 +1,22 @@
-/* eslint-disable max-lines */
-import { keyBy, uniq, chunk, sortBy } from 'lodash-es';
 import {
-  type DataCategoryType,
   SubDataPointDataSubCategoryGuessStatus,
+  type DataCategoryType,
 } from '@transcend-io/privacy-types';
 import cliProgress from 'cli-progress';
-import { gql } from 'graphql-request';
 import colors from 'colors';
+import { gql } from 'graphql-request';
 import type { GraphQLClient } from 'graphql-request';
-import {
-  DATAPOINT_EXPORT,
-  DATA_SILO_EXPORT,
-  type DataSiloAttributeValue,
-  SUB_DATA_POINTS_COUNT,
-  makeGraphQLRequest,
-} from '../graphql';
-import { logger } from '../../logger';
+import { chunk, keyBy, sortBy, uniq } from 'lodash-es';
 import type { DataCategoryInput, ProcessingPurposeInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import {
+  DATA_SILO_EXPORT,
+  DATAPOINT_EXPORT,
+  makeGraphQLRequest,
+  SUB_DATA_POINTS_COUNT,
+  type DataSiloAttributeValue,
+} from '../graphql';
 
 export interface DataSiloCsvPreview {
   /** ID of dataSilo */
@@ -105,7 +104,7 @@ async function pullSubDatapoints(
   const subDataPoints: SubDataPointCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
@@ -221,24 +220,24 @@ async function pullSubDatapoints(
         },
       );
 
-      cursor = nodes[nodes.length - 1]?.id as string;
+      cursor = nodes.at(-1)?.id;
       subDataPoints.push(...nodes);
       shouldContinue = nodes.length === pageSize;
       total += nodes.length;
       offset += nodes.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`,
         ),
       );
-      throw err;
+      throw error;
     }
   } while (shouldContinue);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   const sorted = sortBy(subDataPoints, 'name');
@@ -275,7 +274,7 @@ async function pullDatapoints(
   const dataPoints: DataPointCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
@@ -314,7 +313,7 @@ async function pullDatapoints(
       dataPoints.push(...nodes);
       total += dataPointIdsGroup.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching subdatapoints for IDs ${dataPointIdsGroup.join(
@@ -322,12 +321,12 @@ async function pullDatapoints(
           )}`,
         ),
       );
-      throw err;
+      throw error;
     }
   });
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
@@ -362,7 +361,7 @@ async function pullDataSilos(
   const dataSilos: DataSiloCsvPreview[] = [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
@@ -401,18 +400,18 @@ async function pullDataSilos(
       dataSilos.push(...nodes);
       total += dataSiloIdsGroup.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching data silos for IDs ${dataSiloIdsGroup.join(', ')}`,
         ),
       );
-      throw err;
+      throw error;
     }
   });
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
@@ -483,4 +482,3 @@ export async function pullAllDatapoints(
     dataSilo: dataSiloById[subDataPoint.dataSiloId],
   }));
 }
-/* eslint-enable max-lines */

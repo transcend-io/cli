@@ -1,12 +1,12 @@
-import { ActionInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { UPDATE_ACTION } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { difference } from 'lodash-es';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { difference } from 'lodash-es';
+import { ActionInput } from '../../codecs';
+import { UPDATE_ACTION } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const ALL_COUNTRIES_AND_SUBDIVISIONS = [
   ...Object.values(IsoCountryCode),

@@ -1,21 +1,19 @@
-import type { LocalContext } from '../../../context';
-
-import { logger } from '../../../logger';
-import { mapSeries } from '../../../lib/bluebird-replace';
-import { existsSync, lstatSync } from 'fs';
-import { join } from 'path';
-import { readTranscendYaml } from '../../../lib/readTranscendYaml';
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
 import colors from 'colors';
+import { TranscendInput } from '../../../codecs';
+import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { listFiles, validateTranscendAuth } from '../../../lib/api-keys';
+import { mapSeries } from '../../../lib/bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   syncConfigurationToTranscend,
 } from '../../../lib/graphql';
-
-import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
-import { TranscendInput } from '../../../codecs';
-import { validateTranscendAuth, listFiles } from '../../../lib/api-keys';
-import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
 import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
+import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
+import { readTranscendYaml } from '../../../lib/readTranscendYaml';
+import { logger } from '../../../logger';
 
 /**
  * Sync configuration to Transcend
@@ -62,10 +60,10 @@ async function syncConfiguration({
       },
     );
     return !encounteredError;
-  } catch (err) {
+  } catch (error) {
     logger.error(
       colors.red(
-        `An unexpected error occurred syncing the schema: ${err.message}`,
+        `An unexpected error occurred syncing the schema: ${error.message}`,
       ),
     );
     return false;
@@ -100,47 +98,45 @@ export async function push(
   const apiKeyOrList = await validateTranscendAuth(auth);
 
   // Parse out the variables
-  const vars = parseVariablesFromString(variables);
+  const variables_ = parseVariablesFromString(variables);
 
   // check if we are being passed a list of API keys and a list of files
   let fileList: string[];
-  if (Array.isArray(apiKeyOrList) && lstatSync(file).isDirectory()) {
-    fileList = listFiles(file).map((filePath) => join(file, filePath));
-  } else {
-    fileList = file.split(',');
-  }
+  fileList =
+    Array.isArray(apiKeyOrList) && lstatSync(file).isDirectory()
+      ? listFiles(file).map((filePath) => join(file, filePath))
+      : file.split(',');
 
   // Ensure at least one file is parsed
-  if (fileList.length < 1) {
+  if (fileList.length === 0) {
     throw new Error('No file specified!');
   }
 
-  // eslint-disable-next-line array-callback-return,consistent-return
   const transcendInputs = fileList.map((filePath) => {
     // Ensure yaml file exists on disk
-    if (!existsSync(filePath)) {
+    if (existsSync(filePath)) {
+      logger.info(colors.magenta(`Reading file "${filePath}"...`));
+    } else {
       logger.error(
         colors.red(
           `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`,
         ),
       );
       process.exit(1);
-    } else {
-      logger.info(colors.magenta(`Reading file "${filePath}"...`));
     }
 
     try {
       // Read in the yaml file and validate it's shape
-      const newContents = readTranscendYaml(filePath, vars);
+      const newContents = readTranscendYaml(filePath, variables_);
       logger.info(colors.green(`Successfully read in "${filePath}"`));
       return {
         content: newContents,
         name: filePath.split('/').pop()!.replace('.yml', ''),
       };
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `The shape of your yaml file is invalid with the following errors: ${err.message}`,
+          `The shape of your yaml file is invalid with the following errors: ${error.message}`,
         ),
       );
       process.exit(1);

@@ -1,16 +1,14 @@
+import type { PersistedState } from '@transcend-io/persisted-state';
 import type { GraphQLClient } from 'graphql-request';
 import inquirer from 'inquirer';
 import { AttributeKey } from '../graphql';
 import { CachedFileState } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
-import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Mapping from attribute name to request input parameter
  */
-export type AttributeNameMap = {
-  [k in string]: string;
-};
+export type AttributeNameMap = Record<string, string>;
 
 /**
  * Create a mapping from the attributes names that can be included
@@ -39,9 +37,7 @@ export async function mapColumnsToAttributes(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<{
-          [k in string]: string;
-        }>(
+        await inquirer.prompt<Record<string, string>>(
           columnQuestions.map(({ name }) => {
             const matches = fuzzyMatchColumns(columnNames, name, false);
             return {

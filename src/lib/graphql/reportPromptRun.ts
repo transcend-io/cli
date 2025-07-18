@@ -1,12 +1,12 @@
+import {
+  ChatCompletionRole,
+  LargeLanguageModelClient,
+  PromptRunProductArea,
+  QueueStatus,
+} from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { REPORT_PROMPT_RUN } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import {
-  QueueStatus,
-  ChatCompletionRole,
-  PromptRunProductArea,
-  LargeLanguageModelClient,
-} from '@transcend-io/privacy-types';
 
 export interface ReportPromptRunInput {
   /** Name of run */

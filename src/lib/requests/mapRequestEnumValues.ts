@@ -1,20 +1,20 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
+import { LanguageKey } from '@transcend-io/internationalization';
 import type { PersistedState } from '@transcend-io/persisted-state';
 import {
   CompletedRequestStatus,
-  RequestAction,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  RequestAction,
 } from '@transcend-io/privacy-types';
-import { LanguageKey } from '@transcend-io/internationalization';
 import { ObjByString } from '@transcend-io/type-utils';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
-import { makeGraphQLRequest, DataSubject, DATA_SUBJECTS } from '../graphql';
-import { CachedFileState, NONE, ColumnName } from './constants';
-import { mapEnumValues } from './mapEnumValues';
-import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { DATA_SUBJECTS, DataSubject, makeGraphQLRequest } from '../graphql';
+import { CachedFileState, ColumnName, NONE } from './constants';
 import { getUniqueValuesForColumn } from './getUniqueValuesForColumn';
+import { ColumnNameMap } from './mapCsvColumnsToApi';
+import { mapEnumValues } from './mapEnumValues';
 
 /**
  * Map the values in a CSV to the enum values in Transcend
@@ -50,7 +50,7 @@ export async function mapRequestEnumValues(
   logger.info(
     colors.magenta('Determining mapping of columns for request action'),
   );
-  const requestTypeToRequestAction: { [k in string]: RequestAction } =
+  const requestTypeToRequestAction: Record<string, RequestAction> =
     await mapEnumValues(
       getUniqueValuesForColumn(requests, getMappedName(ColumnName.RequestType)),
       Object.values(RequestAction),
@@ -63,17 +63,16 @@ export async function mapRequestEnumValues(
 
   // Map data subject type
   logger.info(colors.magenta('Determining mapping of columns for subject'));
-  const subjectTypeToSubjectName: { [k in string]: string } =
-    await mapEnumValues(
-      getUniqueValuesForColumn(requests, getMappedName(ColumnName.SubjectType)),
-      internalSubjects.map(({ type }) => type),
-      state.getValue('subjectTypeToSubjectName'),
-    );
+  const subjectTypeToSubjectName: Record<string, string> = await mapEnumValues(
+    getUniqueValuesForColumn(requests, getMappedName(ColumnName.SubjectType)),
+    internalSubjects.map(({ type }) => type),
+    state.getValue('subjectTypeToSubjectName'),
+  );
   await state.setValue(subjectTypeToSubjectName, 'subjectTypeToSubjectName');
 
   // Map locale
   logger.info(colors.magenta('Determining mapping of columns for locale'));
-  const languageToLocale: { [k in string]: LanguageKey } = await mapEnumValues(
+  const languageToLocale: Record<string, LanguageKey> = await mapEnumValues(
     getUniqueValuesForColumn(requests, getMappedName(ColumnName.Locale)),
     Object.values(LanguageKey),
     state.getValue('languageToLocale'),
@@ -88,9 +87,10 @@ export async function mapRequestEnumValues(
     colors.magenta('Determining mapping of columns for request status'),
   );
   const requestStatusColumn = getMappedName(ColumnName.RequestStatus);
-  const statusToRequestStatus: {
-    [k in string]: CompletedRequestStatus | typeof NONE;
-  } =
+  const statusToRequestStatus: Record<
+    string,
+    CompletedRequestStatus | typeof NONE
+  > =
     requestStatusColumn === NONE
       ? {}
       : await mapEnumValues(
@@ -103,9 +103,7 @@ export async function mapRequestEnumValues(
   // Map country
   logger.info(colors.magenta('Determining mapping of columns for country'));
   const countryColumn = getMappedName(ColumnName.Country);
-  const regionToCountry: {
-    [k in string]: IsoCountryCode | typeof NONE;
-  } =
+  const regionToCountry: Record<string, IsoCountryCode | typeof NONE> =
     countryColumn === NONE
       ? {}
       : await mapEnumValues(
@@ -120,9 +118,10 @@ export async function mapRequestEnumValues(
     colors.magenta('Determining mapping of columns for country sub division'),
   );
   const countrySubDivisionColumn = getMappedName(ColumnName.CountrySubDivision);
-  const regionToCountrySubDivision: {
-    [k in string]: IsoCountrySubdivisionCode | typeof NONE;
-  } =
+  const regionToCountrySubDivision: Record<
+    string,
+    IsoCountrySubdivisionCode | typeof NONE
+  > =
     countrySubDivisionColumn === NONE
       ? {}
       : await mapEnumValues(

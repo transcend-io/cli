@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
 import { IdentifierType, RequestAction } from '@transcend-io/privacy-types';
-import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
-import { keyBy, uniq, flatten, difference } from 'lodash-es';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, flatten, keyBy, uniq } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
-import colors from 'colors';
 import { mapSeries } from '../bluebird-replace';
+import { CREATE_IDENTIFIER, IDENTIFIERS, NEW_IDENTIFIER_TYPES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Identifier {
@@ -98,7 +98,7 @@ export async function fetchIdentifiersAndCreateMissing(
   }: TranscendInput,
   client: GraphQLClient,
   skipPublish = false,
-): Promise<{ [k in string]: Identifier }> {
+): Promise<Record<string, Identifier>> {
   // Grab all existing identifiers
   const allIdentifiers = await fetchAllIdentifiers(client);
 
@@ -135,7 +135,9 @@ export async function fetchIdentifiersAndCreateMissing(
         name: string;
       }[];
     }>(client, NEW_IDENTIFIER_TYPES);
-    const nativeTypesRemaining = newIdentifierTypes.map(({ name }) => name);
+    const nativeTypesRemaining = new Set(
+      newIdentifierTypes.map(({ name }) => name),
+    );
     await mapSeries(missingIdentifiers, async (identifier) => {
       logger.info(colors.magenta(`Creating identifier ${identifier}...`));
       const { createIdentifier } = await makeGraphQLRequest<{
@@ -147,9 +149,7 @@ export async function fetchIdentifiersAndCreateMissing(
       }>(client, CREATE_IDENTIFIER, {
         input: {
           name: identifier,
-          type: nativeTypesRemaining.includes(identifier!)
-            ? identifier
-            : 'custom',
+          type: nativeTypesRemaining.has(identifier!) ? identifier : 'custom',
           skipPublish,
         },
       });

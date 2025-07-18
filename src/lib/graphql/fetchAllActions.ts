@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   RegionDetectionMethod,
   RequestAction,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
 import { ACTIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

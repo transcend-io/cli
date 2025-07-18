@@ -1,4 +1,5 @@
 import { gql } from 'graphql-request';
+
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true
 // useMaster: false

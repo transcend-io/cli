@@ -1,8 +1,8 @@
 import { ConsentBundleType } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import {
-  UPDATE_CONSENT_MANAGER_TO_LATEST,
   DEPLOY_CONSENT_MANAGER,
+  UPDATE_CONSENT_MANAGER_TO_LATEST,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

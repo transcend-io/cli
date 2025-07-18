@@ -1,13 +1,13 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-import { REQUEST_DATA_SILOS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
+import { REQUEST_DATA_SILOS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface RequestDataSilo {
   /** ID of RequestDataSilo */
@@ -47,7 +47,7 @@ export async function fetchRequestDataSilos(
   },
 ): Promise<RequestDataSilo[]> {
   // create a new progress bar instance and use shades_classic theme
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_classic,
@@ -92,7 +92,7 @@ export async function fetchRequestDataSilos(
   } while (shouldContinue);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time

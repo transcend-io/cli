@@ -1,12 +1,12 @@
-import { VendorInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_VENDORS, CREATE_VENDOR } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { VendorInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import { fetchAllVendors, Vendor } from './fetchAllVendors';
+import { CREATE_VENDOR, UPDATE_VENDORS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new vendor
@@ -94,7 +94,7 @@ export async function syncVendors(
   const existingVendors = await fetchAllVendors(client);
 
   // Look up by title
-  const vendorByTitle: { [k in string]: Pick<Vendor, 'id' | 'title'> } = keyBy(
+  const vendorByTitle: Record<string, Pick<Vendor, 'id' | 'title'>> = keyBy(
     existingVendors,
     'title',
   );
@@ -110,10 +110,12 @@ export async function syncVendors(
       logger.info(
         colors.green(`Successfully synced vendor "${vendor.title}"!`),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync vendor "${vendor.title}"! - ${err.message}`),
+        colors.red(
+          `Failed to sync vendor "${vendor.title}"! - ${error.message}`,
+        ),
       );
     }
   });
@@ -128,11 +130,11 @@ export async function syncVendors(
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" vendors!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" vendors ! - ${err.message}`,
+        `Failed to sync "${inputs.length}" vendors ! - ${error.message}`,
       ),
     );
   }

@@ -1,19 +1,19 @@
-import { mapSeries, map } from '../bluebird-replace';
-import colors from 'colors';
-import { logger } from '../../logger';
-import {
-  makeGraphQLRequest,
-  buildTranscendGraphQLClient,
-  fetchAllRequestEnrichers,
-  fetchAllRequests,
-  SKIP_REQUEST_ENRICHER,
-} from '../graphql';
-import cliProgress from 'cli-progress';
 import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
+import {
+  buildTranscendGraphQLClient,
+  fetchAllRequestEnrichers,
+  fetchAllRequests,
+  makeGraphQLRequest,
+  SKIP_REQUEST_ENRICHER,
+} from '../graphql';
 
 /**
  * Given an enricher ID, mark all open request enrichers as skipped
@@ -42,7 +42,7 @@ export async function skipPreflightJobs({
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // fetch all RequestDataSilos that are open
   const requests = await fetchAllRequests(client, {
@@ -95,13 +95,13 @@ export async function skipPreflightJobs({
               requestEnricherId: requestEnricher.id,
             });
             totalSkipped += 1;
-          } catch (err) {
+          } catch (error) {
             if (
-              !err.message.includes(
+              !error.message.includes(
                 'Client error: Cannot skip Request enricher because it has already completed',
               )
             ) {
-              throw err;
+              throw error;
             }
           }
         });
@@ -113,7 +113,7 @@ export async function skipPreflightJobs({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

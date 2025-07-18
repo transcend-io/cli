@@ -1,7 +1,7 @@
+import { PromptFilePurpose } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { AGENT_FILES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { PromptFilePurpose } from '@transcend-io/privacy-types';
 
 export interface AgentFile {
   /** ID of agentFile */

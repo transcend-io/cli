@@ -12,5 +12,5 @@ export function getUniqueValuesForColumn(
   rows: ObjByString[],
   columnName: string,
 ): string[] {
-  return uniq(rows.map((row) => row[columnName] || '').flat());
+  return uniq(rows.flatMap((row) => row[columnName] || ''));
 }

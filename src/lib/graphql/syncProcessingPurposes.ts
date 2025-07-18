@@ -1,18 +1,18 @@
-import { ProcessingPurposeInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import {
-  UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
-  CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
-} from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { ProcessingPurposeInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   fetchAllProcessingPurposes,
   ProcessingPurposeSubCategory,
 } from './fetchAllProcessingPurposes';
+import {
+  CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
+  UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new processing purpose
@@ -90,9 +90,10 @@ export async function syncProcessingPurposes(
   const existingProcessingPurposes = await fetchAllProcessingPurposes(client);
 
   // Look up by name
-  const processingPurposeByName: {
-    [k in string]: Pick<ProcessingPurposeSubCategory, 'id' | 'name'>;
-  } = keyBy(
+  const processingPurposeByName: Record<
+    string,
+    Pick<ProcessingPurposeSubCategory, 'id' | 'name'>
+  > = keyBy(
     existingProcessingPurposes,
     ({ name, purpose }) => `${name}:${purpose}`,
   );
@@ -117,11 +118,11 @@ export async function syncProcessingPurposes(
           `Successfully synced processing purpose "${processingPurpose.name}"!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync processing purpose "${processingPurpose.name}"! - ${err.message}`,
+          `Failed to sync processing purpose "${processingPurpose.name}"! - ${error.message}`,
         ),
       );
     }
@@ -144,11 +145,11 @@ export async function syncProcessingPurposes(
         `Successfully synced "${inputs.length}" processing purposes!`,
       ),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" processing purposes ! - ${err.message}`,
+        `Failed to sync "${inputs.length}" processing purposes ! - ${error.message}`,
       ),
     );
   }

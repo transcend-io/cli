@@ -1,12 +1,12 @@
-import { AgentFileInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_AGENT_FILES, CREATE_AGENT_FILE } from './gqls';
-import { logger } from '../../logger';
-import { keyBy } from 'lodash-es';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
-import { fetchAllAgentFiles, AgentFile } from './fetchAllAgentFiles';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import { AgentFileInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import { AgentFile, fetchAllAgentFiles } from './fetchAllAgentFiles';
+import { CREATE_AGENT_FILE, UPDATE_AGENT_FILES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new agent file
@@ -86,9 +86,10 @@ export async function syncAgentFiles(
   const existingAgentFiles = await fetchAllAgentFiles(client);
 
   // Look up by name
-  const agentFileByName: {
-    [k in string]: Pick<AgentFile, 'id' | 'name' | 'fileId'>;
-  } = keyBy(existingAgentFiles, 'name');
+  const agentFileByName: Record<
+    string,
+    Pick<AgentFile, 'id' | 'name' | 'fileId'>
+  > = keyBy(existingAgentFiles, 'name');
 
   // Create new agent files
   const newAgentFiles = inputs.filter((input) => !agentFileByName[input.name]);
@@ -101,11 +102,11 @@ export async function syncAgentFiles(
       logger.info(
         colors.green(`Successfully synced agent file "${agentFile.name}"!`),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync agent file "${agentFile.name}"! - ${err.message}`,
+          `Failed to sync agent file "${agentFile.name}"! - ${error.message}`,
         ),
       );
     }
@@ -121,11 +122,11 @@ export async function syncAgentFiles(
     logger.info(
       colors.green(`Successfully synced "${inputs.length}" agent files!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to sync "${inputs.length}" agent files! - ${err.message}`,
+        `Failed to sync "${inputs.length}" agent files! - ${error.message}`,
       ),
     );
   }

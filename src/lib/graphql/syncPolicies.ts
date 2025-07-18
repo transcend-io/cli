@@ -1,13 +1,13 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { PolicyInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_POLICIES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk, keyBy } from 'lodash-es';
+import { PolicyInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchAllPolicies } from './fetchAllPolicies';
+import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+import { UPDATE_POLICIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;
 
@@ -97,9 +97,9 @@ export async function syncPolicies(
     logger.info(
       colors.green(`Successfully synced ${policies.length} policies!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create policies! - ${err.message}`));
+    logger.info(colors.red(`Failed to create policies! - ${error.message}`));
   }
 
   return !encounteredError;
