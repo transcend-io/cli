@@ -81,7 +81,7 @@ transcend --help
 You can also run the CLI using npx:
 
 ```sh
-npx @transcend-io/cli -- transcend --help
+npx -p @transcend-io/cli -- transcend --help
 ```
 
 Note
