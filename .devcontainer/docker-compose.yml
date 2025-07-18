@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -7,7 +7,7 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       args:
-        VARIANT: 18-bullseye
+        VARIANT: 22-bullseye
 
     volumes:
       - ..:/workspaces/main:cached
@@ -17,11 +17,11 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/bash -c "sleep infinity"
 
-    network_mode: 'host'
+    network_mode: "host"
 
     environment:
       # This is set to `true` locally when using devcontainers, so we add this here for compatibility
-      REMOTE_CONTAINERS: 'true'
+      REMOTE_CONTAINERS: "true"
 
 volumes:
   pre-commit-cache:

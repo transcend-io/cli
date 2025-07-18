@@ -25,9 +25,10 @@
     "useUnknownInCatchVariables": false,
 
     "typeRoots": ["src/lib/@types", "node_modules/@types"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "checkJs": true
   },
   "include": ["**/*"],
-  "exclude": ["node_modules", "dist"],
+  "exclude": ["node_modules", "dist", "examples"],
   "references": []
 }
