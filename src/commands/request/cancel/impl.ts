@@ -2,7 +2,7 @@ import type { LocalContext } from '../../../context';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { cancelPrivacyRequests } from '../../../lib/requests';
 
-interface CancelCommandFlags {
+export interface CancelCommandFlags {
   auth: string;
   actions: RequestAction[];
   statuses?: RequestStatus[];

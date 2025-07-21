@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { skipPreflightJobs as skipPreflightJobsHelper } from '../../../lib/requests';
 
-interface SkipPreflightJobsCommandFlags {
+export interface SkipPreflightJobsCommandFlags {
   auth: string;
   enricherIds: string[];
   transcendUrl: string;

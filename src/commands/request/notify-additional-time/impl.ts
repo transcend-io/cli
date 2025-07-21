@@ -2,7 +2,7 @@ import type { LocalContext } from '../../../context';
 import { notifyPrivacyRequestsAdditionalTime } from '../../../lib/requests';
 import type { RequestAction } from '@transcend-io/privacy-types';
 
-interface NotifyAdditionalTimeCommandFlags {
+export interface NotifyAdditionalTimeCommandFlags {
   auth: string;
   createdAtBefore: Date;
   createdAtAfter?: Date;

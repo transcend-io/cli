@@ -11,7 +11,7 @@ import {
 } from '../../../../lib/cron';
 import { RequestAction } from '@transcend-io/privacy-types';
 
-interface PullIdentifiersCommandFlags {
+export interface PullIdentifiersCommandFlags {
   file: string;
   transcendUrl: string;
   auth: string;

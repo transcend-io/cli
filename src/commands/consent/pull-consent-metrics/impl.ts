@@ -13,7 +13,7 @@ import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
 import { writeCsv } from '../../../lib/cron';
 
-interface PullConsentMetricsCommandFlags {
+export interface PullConsentMetricsCommandFlags {
   auth: string;
   start: Date;
   end?: Date;

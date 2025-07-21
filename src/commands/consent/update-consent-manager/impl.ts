@@ -7,7 +7,7 @@ import { logger } from '../../../logger';
 import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 
-interface UpdateConsentManagerCommandFlags {
+export interface UpdateConsentManagerCommandFlags {
   auth: string;
   bundleTypes: ConsentBundleType[];
   deploy: boolean;

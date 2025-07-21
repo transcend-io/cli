@@ -7,7 +7,7 @@ import { pullPrivacyRequests } from '../../../lib/requests';
 import { writeCsv } from '../../../lib/cron';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
-interface ExportCommandFlags {
+export interface ExportCommandFlags {
   auth: string;
   sombraAuth?: string;
   actions?: RequestAction[];

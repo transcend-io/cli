@@ -14,7 +14,7 @@ import {
 } from '../../../lib/oneTrust/helpers';
 
 // Command flag interface
-interface SyncOtCommandFlags {
+export interface SyncOtCommandFlags {
   hostname?: string;
   oneTrustAuth?: string;
   source: OneTrustPullSource;

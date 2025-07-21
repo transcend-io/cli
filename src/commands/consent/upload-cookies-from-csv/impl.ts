@@ -2,7 +2,7 @@ import type { LocalContext } from '../../../context';
 import { uploadCookiesFromCsv as uploadCookiesFromCsvHelper } from '../../../lib/consent-manager';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 
-interface UploadCookiesFromCsvCommandFlags {
+export interface UploadCookiesFromCsvCommandFlags {
   auth: string;
   trackerStatus: ConsentTrackerStatus;
   file: string;

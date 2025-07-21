@@ -11,7 +11,7 @@ import colors from 'colors';
 import { logger } from '../../../logger';
 import { existsSync, lstatSync } from 'fs';
 
-interface ConsentManagersToBusinessEntitiesCommandFlags {
+export interface ConsentManagersToBusinessEntitiesCommandFlags {
   consentManagerYmlFolder: string;
   output: string;
 }

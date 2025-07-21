@@ -5,7 +5,7 @@ import { writeFileSync } from 'fs';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from '../../../lib/consent-manager';
 
-interface BuildXdiSyncEndpointCommandFlags {
+export interface BuildXdiSyncEndpointCommandFlags {
   auth: string;
   xdiLocation: string;
   file: string;

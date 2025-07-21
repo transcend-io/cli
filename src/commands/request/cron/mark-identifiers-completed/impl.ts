@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../../context';
 import { pushCronIdentifiersFromCsv } from '../../../../lib/cron';
 
-interface MarkIdentifiersCompletedCommandFlags {
+export interface MarkIdentifiersCompletedCommandFlags {
   file: string;
   transcendUrl: string;
   auth: string;

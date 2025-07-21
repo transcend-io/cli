@@ -7,7 +7,7 @@ import { pullUnstructuredSubDataPointRecommendations } from '../../../lib/data-i
 import { buildTranscendGraphQLClient } from '../../../lib/graphql';
 import { logger } from '../../../logger';
 
-interface PullUnstructuredDiscoveryFilesCommandFlags {
+export interface PullUnstructuredDiscoveryFilesCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;

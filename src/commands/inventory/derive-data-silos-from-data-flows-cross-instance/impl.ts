@@ -16,7 +16,7 @@ import {
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
 
-interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
+export interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
   auth: string;
   dataFlowsYmlFolder: string;
   output: string;

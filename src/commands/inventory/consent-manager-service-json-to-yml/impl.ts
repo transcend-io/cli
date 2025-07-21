@@ -15,7 +15,7 @@ import {
   DataFlowScope,
 } from '@transcend-io/privacy-types';
 
-interface ConsentManagerServiceJsonToYmlCommandFlags {
+export interface ConsentManagerServiceJsonToYmlCommandFlags {
   file: string;
   output: string;
 }

@@ -2,7 +2,7 @@ import type { LocalContext } from '../../../context';
 import { bulkRestartRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 
-interface RestartCommandFlags {
+export interface RestartCommandFlags {
   auth: string;
   actions: RequestAction[];
   statuses: RequestStatus[];

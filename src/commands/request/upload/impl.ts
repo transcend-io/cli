@@ -4,7 +4,7 @@ import {
   uploadPrivacyRequestsFromCsv,
 } from '../../../lib/requests';
 
-interface UploadCommandFlags {
+export interface UploadCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;

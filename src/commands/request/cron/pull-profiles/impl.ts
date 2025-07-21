@@ -15,7 +15,7 @@ import {
   type CsvFormattedIdentifier,
 } from '../../../../lib/cron';
 
-interface PullProfilesCommandFlags {
+export interface PullProfilesCommandFlags {
   file: string;
   fileTarget: string;
   transcendUrl: string;

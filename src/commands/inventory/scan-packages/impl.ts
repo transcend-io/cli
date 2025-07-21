@@ -14,7 +14,7 @@ const REPO_ERROR =
   'You can specify using --repositoryName=$REPO_NAME or by ensuring the ' +
   'command "git config --get remote.origin.url" returns the name of the repository';
 
-interface ScanPackagesCommandFlags {
+export interface ScanPackagesCommandFlags {
   auth: string;
   scanPath: string;
   ignoreDirs?: string[];

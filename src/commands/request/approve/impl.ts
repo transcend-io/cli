@@ -3,7 +3,7 @@ import type { LocalContext } from '../../../context';
 import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
 import { approvePrivacyRequests } from '../../../lib/requests';
 
-interface ApproveCommandFlags {
+export interface ApproveCommandFlags {
   auth: string;
   actions: RequestAction[];
   origins?: RequestOrigin[];

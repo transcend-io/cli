@@ -2,7 +2,7 @@ import type { LocalContext } from '../../../../context';
 import type { RequestStatus } from '@transcend-io/privacy-types';
 import { skipRequestDataSilos as skipRequestDataSilosHelper } from '../../../../lib/requests';
 
-interface SkipRequestDataSilosCommandFlags {
+export interface SkipRequestDataSilosCommandFlags {
   auth: string;
   dataSiloId: string;
   transcendUrl: string;

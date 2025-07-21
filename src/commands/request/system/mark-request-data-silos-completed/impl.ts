@@ -10,7 +10,7 @@ const RequestIdRow = t.type({
   'Request Id': t.string,
 });
 
-interface MarkRequestDataSilosCompletedCommandFlags {
+export interface MarkRequestDataSilosCompletedCommandFlags {
   auth: string;
   dataSiloId: string;
   file: string;

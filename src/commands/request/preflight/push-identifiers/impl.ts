@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../../context';
 import { pushManualEnrichmentIdentifiersFromCsv } from '../../../../lib/manual-enrichment';
 
-interface PushIdentifiersCommandFlags {
+export interface PushIdentifiersCommandFlags {
   auth: string;
   enricherId: string;
   sombraAuth?: string;

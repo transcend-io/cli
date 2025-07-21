@@ -9,7 +9,7 @@ import { pullAllDatapoints } from '../../../lib/data-inventory';
 import { writeCsv } from '../../../lib/cron';
 import { DataCategoryType } from '@transcend-io/privacy-types';
 
-interface PullDatapointsCommandFlags {
+export interface PullDatapointsCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;

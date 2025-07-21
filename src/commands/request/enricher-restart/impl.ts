@@ -5,7 +5,7 @@ import type {
   RequestEnricherStatus,
 } from '@transcend-io/privacy-types';
 
-interface EnricherRestartCommandFlags {
+export interface EnricherRestartCommandFlags {
   auth: string;
   enricherId: string;
   actions?: RequestAction[];
