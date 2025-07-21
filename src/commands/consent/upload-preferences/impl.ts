@@ -8,7 +8,7 @@ import { readdirSync } from 'fs';
 import { map } from '../../../lib/bluebird-replace';
 import { basename, join } from 'path';
 
-interface UploadPreferencesCommandFlags {
+export interface UploadPreferencesCommandFlags {
   auth: string;
   partition: string;
   sombraAuth?: string;
