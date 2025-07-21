@@ -3,6 +3,9 @@ import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
 export { description, version } from '../package.json';
+/**
+ * The name of the main binary for the CLI
+ */
 export const name = 'transcend';
 
 export const ADMIN_DASH = 'https://app.transcend.io';
