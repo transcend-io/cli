@@ -1,5 +1,7 @@
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '../../../enums';
+import { buildExamples } from '../../../lib/docgen/buildExamples';
+import type { PullCommandFlags } from './impl';
 
 // Additional documentation for help text
 const pullResourceTable: Record<
@@ -212,6 +214,173 @@ const pullResourceTable: Record<
   },
 };
 
+const examples = buildExamples<PullCommandFlags>(
+  ['inventory', 'pull'],
+  [
+    {
+      description: 'Write out file to ./transcend.yml',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+      },
+    },
+    {
+      description: 'Write out file to custom location',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        file: './custom/location.yml',
+      },
+    },
+    {
+      description: 'Pull specific data silo by ID',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        dataSiloIds: '710fec3c-7bcc-4c9e-baff-bf39f9bec43e',
+      },
+    },
+    {
+      description: 'Pull specific types of data silos',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        integrationNames: 'salesforce,snowflake',
+      },
+    },
+    {
+      description: 'Pull specific resource types',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'apiKeys,templates,dataSilos,enrichers',
+      },
+    },
+    {
+      description:
+        'Pull data flows and cookies with specific tracker statuses (see [this example](./examples/data-flows-cookies.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'dataFlows,cookies',
+        trackerStatuses: 'NEEDS_REVIEW,LIVE',
+      },
+    },
+    {
+      description: 'Pull data silos without datapoint information',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'dataSilos',
+        skipDatapoints: 'true',
+      },
+    },
+    {
+      description: 'Pull data silos without subdatapoint information',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'dataSilos',
+        skipSubDatapoints: 'true',
+      },
+    },
+    {
+      description: 'Pull data silos with guessed categories',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'dataSilos',
+        includeGuessedCategories: 'true',
+      },
+    },
+    {
+      description:
+        'Pull attribute definitions only (see [this example](./examples/attributes.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'attributes',
+      },
+    },
+    {
+      description:
+        'Pull business entities only (see [this example](./examples/business-entities.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'businessEntities',
+      },
+    },
+    {
+      description:
+        'Pull enrichers and identifiers (see [this example](./examples/enrichers.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'enrichers,identifiers',
+      },
+    },
+    {
+      description:
+        'Pull onboarding action items (see [this example](./examples/action-items.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'actionItems,actionItemCollections',
+      },
+    },
+    {
+      description:
+        'Pull consent manager domain list (see [this example](./examples/consent-manager-domains.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'consentManager',
+      },
+    },
+    {
+      description:
+        'Pull identifier configurations (see [this example](./examples/identifiers.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'identifiers',
+      },
+    },
+    {
+      description:
+        'Pull request actions configurations (see [this example](./examples/actions.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'actions',
+      },
+    },
+    {
+      description:
+        'Pull consent manager purposes and preference management topics (see [this example](./examples/purposes.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'purposes',
+      },
+    },
+    {
+      description:
+        'Pull data subject configurations (see [this example](./examples/data-subjects.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'dataSubjects',
+      },
+    },
+    {
+      description: 'Pull assessments and assessment templates',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'assessments,assessmentTemplates',
+      },
+    },
+    {
+      description: 'Pull everything',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: 'all',
+      },
+    },
+    {
+      description: 'Pull configuration files across multiple instances',
+      flags: {
+        auth: './transcend-api-keys.json',
+        resources: 'consentManager',
+        file: './transcend/',
+      },
+    },
+  ],
+);
+
 const table = `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
   pullResourceTable,
 )
@@ -231,133 +400,7 @@ ${table}
 
 #### Usage
 
-\`\`\`sh
-# Writes out file to ./transcend.yml
-transcend inventory pull --auth=$TRANSCEND_API_KEY
-\`\`\`
-
-An alternative file destination can be specified:
-
-\`\`\`sh
-# Writes out file to ./custom/location.yml
-transcend inventory pull --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
-\`\`\`
-
-Or a specific data silo(s) can be pulled in:
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY ---dataSiloIds=710fec3c-7bcc-4c9e-baff-bf39f9bec43e
-\`\`\`
-
-Or a specific types of data silo(s) can be pulled in:
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --integrationNames=salesforce,snowflake
-\`\`\`
-
-Specifying the resource types to pull in (the following resources are the default resources):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=apiKeys,templates,dataSilos,enrichers
-\`\`\`
-
-Pull in data flow and cookie resources, filtering for specific tracker statuses (see [this example](./examples/data-flows-cookies.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataFlows,cookies --trackerStatuses=NEEDS_REVIEW,LIVE
-\`\`\`
-
-Pull in data silos without any datapoint/table information
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipDatapoints=true
-\`\`\`
-
-Pull in data silos and datapoints without any subdatapoint/column information
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --skipSubDatapoints=true
-\`\`\`
-
-Pull in data silos and datapoints with guessed data categories instead of just approved data categories
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSilos --includeGuessedCategories=true
-\`\`\`
-
-Pull in attribute definitions only (see [this example](./examples/attributes.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=attributes
-\`\`\`
-
-Pull in business entities only (see [this example](./examples/business-entities.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=businessEntities
-\`\`\`
-
-Pull in enrichers and identifiers (see [this example](./examples/enrichers.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=enrichers,identifiers
-\`\`\`
-
-Pull in onboarding action items (see [this example](./examples/action-items.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=actionItems,actionItemCollections
-\`\`\`
-
-Pull in consent manager domain list (see [this example](./examples/consent-manager-domains.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=consentManager
-\`\`\`
-
-Pull in identifier configurations (see [this example](./examples/identifiers.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=identifiers
-\`\`\`
-
-Pull in request actions configurations (see [this example](./examples/actions.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=actions
-\`\`\`
-
-Pull in consent manager purposes and preference management topics (see [this example](./examples/purposes.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=purposes
-\`\`\`
-
-Pull in data subject configurations (see [this example](./examples/data-subjects.yml)):
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataSubjects
-\`\`\`
-
-Pull in assessments and assessment templates.
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=assessments,assessmentTemplates
-\`\`\`
-
-Pull everything:
-
-\`\`\`sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=all
-\`\`\`
-
-Pull in configuration files across multiple instances
-
-\`\`\`sh
-transcend admin generate-api-keys --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
-   --scopes="View Consent Manager" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
-transcend inventory pull --auth=./transcend-api-keys.json --resources=consentManager --file=./transcend/
-\`\`\`
+${examples}
 
 Note: This command will overwrite the existing transcend.yml file that you have locally.
 `;

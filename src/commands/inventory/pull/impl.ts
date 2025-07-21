@@ -20,7 +20,7 @@ import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 
-interface PullCommandFlags {
+export interface PullCommandFlags {
   auth: string;
   resources?: (TranscendPullResource | 'all')[];
   file: string;
