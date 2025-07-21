@@ -11,7 +11,7 @@ import {
 import { findFilesToScan } from '../../../lib/code-scanning/findFilesToScan';
 import { SILO_DISCOVERY_CONFIGS } from '../../../lib/code-scanning';
 
-interface DiscoverSilosCommandFlags {
+export interface DiscoverSilosCommandFlags {
   scanPath: string;
   dataSiloId: string;
   auth: string;
