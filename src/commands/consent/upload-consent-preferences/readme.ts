@@ -1,13 +1,39 @@
-export default `Each row in the CSV must include:
+import { buildExamples } from '../../../lib/docgen/buildExamples';
+import type { UploadConsentPreferencesCommandFlags } from './impl';
 
-| Argument  | Description                                                                                               | Type                      | Default | Required |
-| --------- | --------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | -------- |
-| userId    | Unique ID identifying the user that the preferences ar efor                                               | string                    | N/A     | true     |
-| timestamp | Timestamp for when consent was collected for that user                                                    | string - timestamp        | N/A     | true     |
-| purposes  | JSON map from consent purpose name -> boolean indicating whether user has opted in or out of that purpose | {[k in string]: boolean } | {}      | false    |
-| confirmed | Whether consent preferences have been explicitly confirmed or inferred                                    | boolean                   | true    | false    |
-| updated   | Has the consent been updated (including no-change confirmation) since default resolution                  | boolean                   | N/A     | false    |
-| prompted  | Whether or not the UI has been shown to the end-user (undefined in older versions of airgap.js)           | boolean                   | N/A     | false    |
-| gpp       | IAB GPP string                                                                                            | string - GPP              | N/A     | false    |
+const examples = buildExamples<UploadConsentPreferencesCommandFlags>(
+  ['consent', 'upload-consent-preferences'],
+  [
+    {
+      description: 'Upload consent preferences to partition key',
+      flags: {
+        base64EncryptionKey: '$TRANSCEND_CONSENT_ENCRYPTION_KEY',
+        base64SigningKey: '$TRANSCEND_CONSENT_SIGNING_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+      },
+    },
+    {
+      description: 'Upload consent preferences to partition key from file',
+      flags: {
+        base64EncryptionKey: '$TRANSCEND_CONSENT_ENCRYPTION_KEY',
+        base64SigningKey: '$TRANSCEND_CONSENT_SIGNING_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        file: './consent.csv',
+      },
+    },
+    {
+      description:
+        'Upload consent preferences to partition key and set concurrency',
+      flags: {
+        base64EncryptionKey: '$TRANSCEND_CONSENT_ENCRYPTION_KEY',
+        base64SigningKey: '$TRANSCEND_CONSENT_SIGNING_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        concurrency: '200',
+      },
+    },
+  ],
+);
 
-An sample CSV can be found [here](./examples/preference-upload.csv).`;
+export default `#### Usage
+
+${examples}`;

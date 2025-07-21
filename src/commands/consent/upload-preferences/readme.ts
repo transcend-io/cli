@@ -1,4 +1,4 @@
-import { buildExamples } from 'src/lib/docgen/buildExamples';
+import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { UploadPreferencesCommandFlags } from './impl';
 
 const examples = buildExamples<UploadPreferencesCommandFlags>(
@@ -39,5 +39,7 @@ const examples = buildExamples<UploadPreferencesCommandFlags>(
 );
 
 export default `A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv). In this example, \`Sales\` and \`Marketing\` are two custom Purposes, and \`SalesCommunications\` and \`MarketingCommunications\` are Preference Topics. During the interactive CLI prompt, you can map these columns to the slugs stored in Transcend!
+
+#### Usage
 
 ${examples}`;

@@ -141,7 +141,7 @@
     - [Authentication](#authentication-33)
     - [Arguments](#arguments-32)
     - [Usage](#usage-33)
-  - [transcend inventory pull-consent-preferences](#transcend-inventory-pull-consent-preferences)
+  - [transcend consent pull-consent-preferences](#transcend-consent-pull-consent-preferences)
     - [Authentication](#authentication-34)
     - [Arguments](#arguments-33)
     - [Usage](#usage-34)
@@ -212,7 +212,7 @@ transcend inventory derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
 transcend inventory derive-data-silos-from-data-flows-cross-instance --auth=$TRANSCEND_API_KEY
 transcend inventory pull-consent-metrics --auth=$TRANSCEND_API_KEY
 transcend consent upload-consent-preferences --auth=$TRANSCEND_API_KEY
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY
 transcend consent upload-data-flows-from-csv --auth=$TRANSCEND_API_KEY
 transcend consent upload-cookies-from-csv --auth=$TRANSCEND_API_KEY
 transcend admin generate-api-keys --auth=$TRANSCEND_API_KEY
@@ -249,7 +249,7 @@ transcend request system retry-request-data-silos --auth=$TRANSCEND_API_KEY
 transcend consent update-consent-manager --auth=$TRANSCEND_API_KEY
 transcend inventory pull-consent-metrics --auth=$TRANSCEND_API_KEY
 transcend consent upload-consent-preferences --auth=$TRANSCEND_API_KEY
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY
 transcend inventory consent-managers-to-business-entities
 transcend inventory consent-manager-service-json-to-yml
 transcend inventory derive-data-silos-from-data-flows --auth=$TRANSCEND_API_KEY
@@ -2709,7 +2709,7 @@ Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c72
 transcend consent upload-consent-preferences --base64EncryptionKey=$TRANSCEND_CONSENT_ENCRYPTION_KEY --base64SigningKey=$TRANSCEND_CONSENT_SIGNING_KEY             --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --concurrency=200
 ```
 
-### transcend inventory pull-consent-preferences
+### transcend consent pull-consent-preferences
 
 This command allows for pull of consent preferences from the [Managed Consent Database](https://docs.transcend.io/docs/api-reference/POST/v1/consent-preferences).
 
@@ -2752,37 +2752,37 @@ The API key must have the following scopes:
 Fetch all consent preferences from partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
 Fetch all consent preferences from partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726` and save to ./consent.csv
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./consent.csv
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --file=./consent.csv
 ```
 
 Filter on consent updates before a date
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --timestampBefore=04/03/2023
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --timestampBefore=04/03/2023
 ```
 
 Filter on consent updates after a date
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --timestampAfter=04/03/2023
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --timestampAfter=04/03/2023
 ```
 
 For self-hosted sombras that use an internal key:
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --sombraAuth=$SOMBRA_INTERNAL_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
 Specifying the backend URL, needed for US hosted backend infrastructure.
 
 ```sh
-transcend inventory pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://api.us.transcend.io
+transcend consent pull-consent-preferences --auth=$TRANSCEND_API_KEY --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 --transcendUrl=https://api.us.transcend.io
 ```
 
 ### transcend consent upload-data-flows-from-csv

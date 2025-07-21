@@ -4,7 +4,7 @@ import { fetchConsentPreferences } from '../../../lib/consent-manager';
 import { writeCsv } from '../../../lib/cron';
 import { createSombraGotInstance } from '../../../lib/graphql';
 
-interface PullConsentPreferencesCommandFlags {
+export interface PullConsentPreferencesCommandFlags {
   auth: string;
   partition: string;
   sombraAuth?: string;
