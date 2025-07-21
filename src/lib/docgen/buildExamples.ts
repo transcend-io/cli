@@ -1,4 +1,6 @@
 import { name } from '../../constants';
+import { logger } from '../../logger';
+import { execSync } from 'node:child_process';
 
 /**
  * The flags of the example command
@@ -43,7 +45,7 @@ export function buildExampleCommand<Flags>(
   commandPath: string[],
   flags: FlagMap<Flags>,
 ): string {
-  const command = `${name} ${commandPath.join(' ')}`;
+  const command = commandPath.join(' ');
   const flagList = Object.entries(flags).map(([flag, value]) => {
     if (value === 'true') {
       return `--${flag}`;
@@ -66,9 +68,43 @@ export function buildExampleCommand<Flags>(
 
   // Break the command into multiple lines if it's too long
   const exampleCommand =
-    `${command} ${flagList.join(' ')}`.length <= 117
+    `${name} ${command} ${flagList.join(' ')}`.length <= 117
       ? `${command} ${flagList.join(' ')}`
       : `${command} \\\n  ${flagList.join(' \\\n  ')}`;
 
-  return exampleCommand;
+  // If `DEVELOPMENT_MODE_VALIDATE_ONLY` is set, test that the example command passes validation
+  if (process.env.DEVELOPMENT_MODE_VALIDATE_ONLY) {
+    testExampleCommand(command, flagList);
+  }
+
+  // Add `transcend` before command name
+  return `${name} ${exampleCommand}`;
+}
+
+/**
+ * Tests an example command
+ *
+ * @param command - The command to run
+ * @param flagList - The flags to run the command with
+ */
+function testExampleCommand(command: string, flagList: string[]): void {
+  const flagListWithReplacedVariables = flagList.map((flag) =>
+    flag.replace(
+      // Replace bash variables with "test"
+      /\$\w+/g,
+      'TEST_VALUE',
+    ),
+  );
+
+  const commandToRun = `pnpm start ${command} ${flagListWithReplacedVariables.join(
+    ' ',
+  )}`;
+
+  try {
+    execSync(commandToRun);
+    logger.debug(`Successfully ran command: ${commandToRun}`);
+  } catch (error) {
+    logger.error(`Failed to run command: ${commandToRun}`);
+    process.exit(1);
+  }
 }

@@ -1,3 +1,5 @@
+import { logger } from '../../logger';
+
 /**
  * If the environment variable `DEVELOPMENT_MODE_VALIDATE_ONLY` is set,
  * this function will exit the process with a status code of 0.
@@ -9,6 +11,7 @@
  */
 export function doneInputValidation(): void {
   if (process.env.DEVELOPMENT_MODE_VALIDATE_ONLY) {
+    logger.log('DEVELOPMENT_MODE_VALIDATE_ONLY is set. Exiting early.');
     process.exit(0);
   }
 }
