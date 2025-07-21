@@ -24,6 +24,6 @@ const examples = buildExamples<SkipPreflightJobsCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

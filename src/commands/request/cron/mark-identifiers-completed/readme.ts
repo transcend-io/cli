@@ -39,6 +39,6 @@ const examples = buildExamples<MarkIdentifiersCompletedCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

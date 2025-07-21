@@ -56,6 +56,6 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

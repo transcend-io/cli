@@ -34,6 +34,6 @@ const examples = buildExamples<DeriveDataSilosFromDataFlowsCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

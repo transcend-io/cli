@@ -34,6 +34,6 @@ const examples = buildExamples<SyncOtCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

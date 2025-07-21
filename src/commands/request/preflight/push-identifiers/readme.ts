@@ -56,6 +56,6 @@ const examples = buildExamples<PushIdentifiersCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

@@ -31,6 +31,6 @@ const examples = buildExamples<MarkRequestDataSilosCompletedCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

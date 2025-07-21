@@ -40,6 +40,6 @@ const examples = buildExamples<UploadCookiesFromCsvCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

@@ -62,6 +62,6 @@ const examples = buildExamples<MarkSilentCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

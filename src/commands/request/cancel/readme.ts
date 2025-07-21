@@ -70,7 +70,7 @@ const examples = buildExamples<CancelCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}
 

@@ -58,6 +58,6 @@ const examples = buildExamples<ApproveCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

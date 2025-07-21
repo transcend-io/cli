@@ -49,6 +49,6 @@ const examples = buildExamples<UploadDataFlowsFromCsvCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

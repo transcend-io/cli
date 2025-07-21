@@ -121,6 +121,6 @@ const examples = buildExamples<RestartCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

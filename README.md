@@ -11,85 +11,85 @@
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
   - [`transcend request approve`](#transcend-request-approve)
-    - [Usage](#usage-1)
+    - [Examples](#examples)
   - [`transcend request upload`](#transcend-request-upload)
-    - [Usage](#usage-2)
+    - [Examples](#examples-1)
   - [`transcend request download-files`](#transcend-request-download-files)
-    - [Usage](#usage-3)
+    - [Examples](#examples-2)
   - [`transcend request cancel`](#transcend-request-cancel)
-    - [Usage](#usage-4)
+    - [Examples](#examples-3)
   - [`transcend request restart`](#transcend-request-restart)
-    - [Usage](#usage-5)
+    - [Examples](#examples-4)
   - [`transcend request notify-additional-time`](#transcend-request-notify-additional-time)
-    - [Usage](#usage-6)
+    - [Examples](#examples-5)
   - [`transcend request mark-silent`](#transcend-request-mark-silent)
-    - [Usage](#usage-7)
+    - [Examples](#examples-6)
   - [`transcend request enricher-restart`](#transcend-request-enricher-restart)
-    - [Usage](#usage-8)
+    - [Examples](#examples-7)
   - [`transcend request reject-unverified-identifiers`](#transcend-request-reject-unverified-identifiers)
-    - [Usage](#usage-9)
+    - [Examples](#examples-8)
   - [`transcend request export`](#transcend-request-export)
-    - [Usage](#usage-10)
+    - [Examples](#examples-9)
   - [`transcend request skip-preflight-jobs`](#transcend-request-skip-preflight-jobs)
-    - [Usage](#usage-11)
+    - [Examples](#examples-10)
   - [`transcend request system mark-request-data-silos-completed`](#transcend-request-system-mark-request-data-silos-completed)
-    - [Usage](#usage-12)
+    - [Examples](#examples-11)
   - [`transcend request system retry-request-data-silos`](#transcend-request-system-retry-request-data-silos)
-    - [Usage](#usage-13)
+    - [Examples](#examples-12)
   - [`transcend request system skip-request-data-silos`](#transcend-request-system-skip-request-data-silos)
-    - [Usage](#usage-14)
+    - [Examples](#examples-13)
   - [`transcend request preflight pull-identifiers`](#transcend-request-preflight-pull-identifiers)
-    - [Usage](#usage-15)
+    - [Examples](#examples-14)
   - [`transcend request preflight push-identifiers`](#transcend-request-preflight-push-identifiers)
-    - [Usage](#usage-16)
+    - [Examples](#examples-15)
   - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
-    - [Usage](#usage-17)
+    - [Examples](#examples-16)
   - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
-    - [Usage](#usage-18)
+    - [Examples](#examples-17)
   - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
-    - [Usage](#usage-19)
+    - [Examples](#examples-18)
   - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
-    - [Usage](#usage-20)
+    - [Examples](#examples-19)
   - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
-    - [Usage](#usage-21)
+    - [Examples](#examples-20)
   - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
-    - [Usage](#usage-22)
+    - [Examples](#examples-21)
   - [`transcend consent upload-consent-preferences`](#transcend-consent-upload-consent-preferences)
-    - [Usage](#usage-23)
+    - [Examples](#examples-22)
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
-    - [Usage](#usage-24)
+    - [Examples](#examples-23)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
-    - [Usage](#usage-25)
+    - [Examples](#examples-24)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
-    - [Usage](#usage-26)
+    - [Examples](#examples-25)
   - [`transcend inventory pull`](#transcend-inventory-pull)
     - [Scopes](#scopes)
-    - [Usage](#usage-27)
+    - [Examples](#examples-26)
   - [`transcend inventory push`](#transcend-inventory-push)
     - [Scopes](#scopes-1)
-    - [Usage](#usage-28)
+    - [Examples](#examples-27)
     - [CI Integration](#ci-integration)
     - [Dynamic Variables](#dynamic-variables)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
-    - [Usage](#usage-29)
+    - [Examples](#examples-28)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
-    - [Usage](#usage-30)
+    - [Examples](#examples-29)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
-    - [Usage](#usage-31)
+    - [Examples](#examples-30)
   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
-    - [Usage](#usage-32)
+    - [Examples](#examples-31)
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
-    - [Usage](#usage-33)
+    - [Examples](#examples-32)
   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
-    - [Usage](#usage-34)
+    - [Examples](#examples-33)
   - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
-    - [Usage](#usage-35)
+    - [Examples](#examples-34)
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
-    - [Usage](#usage-36)
+    - [Examples](#examples-35)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
-    - [Usage](#usage-37)
+    - [Examples](#examples-36)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
-    - [Usage](#usage-38)
+    - [Examples](#examples-37)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -246,7 +246,7 @@ FLAGS
   -h  --help               Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk approve all SALE_OPT_OUT and ERASURE requests**
 
@@ -321,7 +321,7 @@ FLAGS
   -h  --help                                  Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Upload requests from a CSV file**
 
@@ -441,7 +441,7 @@ FLAGS
   -h  --help                   Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Download all requests in status=APPROVING or status=DOWNLOADABLE**
 
@@ -516,7 +516,7 @@ FLAGS
   -h  --help                Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk cancel all open SALE_OPT_OUT and ERASURE requests**
 
@@ -603,7 +603,7 @@ FLAGS
   -h  --help                                  Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Restart requests with specific statuses and actions**
 
@@ -746,7 +746,7 @@ FLAGS
   -h  --help             Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Notify all request types that were made before 01/01/2024**
 
@@ -838,7 +838,7 @@ FLAGS
   -h  --help              Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk mark silent all open SALE_OPT_OUT and ERASURE requests**
 
@@ -912,7 +912,7 @@ FLAGS
   -h  --help                      Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Restart a particular enricher across a series of DSRs**
 
@@ -983,7 +983,7 @@ FLAGS
   -h  --help                Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk clear out any request identifiers that are unverified**
 
@@ -1033,7 +1033,7 @@ FLAGS
   -h  --help                      Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Pull all requests**
 
@@ -1099,7 +1099,7 @@ FLAGS
   -h  --help            Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk skipping preflight checks**
 
@@ -1134,7 +1134,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Mark all associated privacy request jobs as completed**
 
@@ -1179,7 +1179,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk restarting a set of data silos jobs for open privacy requests**
 
@@ -1218,7 +1218,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Bulk skipping all open privacy request jobs for a particular data silo**
 
@@ -1282,7 +1282,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Pull down the set of privacy requests that are currently pending manual enrichment**
 
@@ -1348,7 +1348,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Push up a set of identifiers for a set of requests pending manual enrichment**
 
@@ -1429,7 +1429,7 @@ FLAGS
   -h  --help               Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Pull outstanding identifiers for a data silo**
 
@@ -1517,7 +1517,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Mark identifiers as completed**
 
@@ -1574,7 +1574,7 @@ FLAGS
   -h  --help                                      Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Build XDI sync endpoint**
 
@@ -1674,7 +1674,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Pull consent manager metrics for a Transcend account**
 
@@ -1735,7 +1735,7 @@ FLAGS
   -h  --help              Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Fetch all consent preferences from partition key**
 
@@ -1807,7 +1807,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Update Consent Manager to latest version**
 
@@ -1870,7 +1870,7 @@ FLAGS
   -h  --help                 Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Upload consent preferences to partition key**
 
@@ -1924,7 +1924,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Upload the file of cookies in ./cookies.csv into the "Approved" tab**
 
@@ -1980,7 +1980,7 @@ FLAGS
   -h  --help              Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Upload the file of data flows in ./data-flows.csv into the "Approved" tab**
 
@@ -2053,7 +2053,7 @@ FLAGS
 
 A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv). In this example, `Sales` and `Marketing` are two custom Purposes, and `SalesCommunications` and `MarketingCommunications` are Preference Topics. During the interactive CLI prompt, you can map these columns to the slugs stored in Transcend!
 
-#### Usage
+#### Examples
 
 **Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`**
 
@@ -2155,7 +2155,7 @@ The API key permissions for this command vary based on the `resources` argument:
 | assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
 | purposes              | Consent purposes and related preference management topics.                                                                           | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                              |
 
-#### Usage
+#### Examples
 
 **Write out file to ./transcend.yml**
 
@@ -2319,7 +2319,7 @@ FLAGS
 
 The scopes for `transcend inventory push` are the same as the scopes for [`transcend inventory pull`](#transcend-inventory-pull).
 
-#### Usage
+#### Examples
 
 **Looks for file at ./transcend.yml**
 
@@ -2518,7 +2518,7 @@ FLAGS
   -h  --help             Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Scan the current directory**
 
@@ -2565,7 +2565,7 @@ FLAGS
   -h  --help           Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Scan a JavaScript package.json**
 
@@ -2610,7 +2610,7 @@ FLAGS
   -h  --help                       Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **All arguments**
 
@@ -2692,7 +2692,7 @@ FLAGS
   -h  --help                       Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **All arguments**
 
@@ -2763,7 +2763,7 @@ FLAGS
   -h  --help                Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Convert data flow configurations in folder to data silo configurations in folder**
 
@@ -2812,7 +2812,7 @@ FLAGS
   -h  --help                Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Convert data flow configurations in folder to data silo configurations in file**
 
@@ -2870,7 +2870,7 @@ FLAGS
   -h  --help     Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Convert data flow configurations in folder to yml in ./transcend.yml**
 
@@ -2899,7 +2899,7 @@ FLAGS
   -h  --help                     Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Combine files in folder to file ./combined-business-entities.yml**
 
@@ -2941,7 +2941,7 @@ FLAGS
   -h  --help                                            Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Generate API keys for cross-instance usage**
 
@@ -3046,7 +3046,7 @@ FLAGS
   -h  --help            Print help information and exit
 ```
 
-#### Usage
+#### Examples
 
 **Syncs all assessments from the OneTrust instance to Transcend**
 

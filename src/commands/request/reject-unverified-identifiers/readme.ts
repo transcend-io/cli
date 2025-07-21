@@ -31,6 +31,6 @@ const examples = buildExamples<RejectUnverifiedIdentifiersCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

@@ -83,6 +83,6 @@ const examples = buildExamples<NotifyAdditionalTimeCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

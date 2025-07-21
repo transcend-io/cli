@@ -394,7 +394,7 @@ The API key permissions for this command vary based on the \`resources\` argumen
 
 ${table}
 
-#### Usage
+#### Examples
 
 ${examples}
 

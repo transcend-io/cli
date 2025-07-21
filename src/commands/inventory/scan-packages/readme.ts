@@ -34,6 +34,6 @@ const examples = buildExamples<ScanPackagesCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

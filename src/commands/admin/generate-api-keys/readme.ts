@@ -75,7 +75,7 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}
 

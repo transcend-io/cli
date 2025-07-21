@@ -24,7 +24,7 @@ const examples = buildExamples<DiscoverSilosCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}
 

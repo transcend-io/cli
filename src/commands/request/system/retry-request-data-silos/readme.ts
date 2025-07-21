@@ -26,6 +26,6 @@ const examples = buildExamples<RetryRequestDataSilosCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

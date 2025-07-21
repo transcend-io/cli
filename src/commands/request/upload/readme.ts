@@ -116,6 +116,6 @@ const examples = buildExamples<UploadCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

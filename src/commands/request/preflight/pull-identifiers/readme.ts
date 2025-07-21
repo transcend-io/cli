@@ -49,6 +49,6 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

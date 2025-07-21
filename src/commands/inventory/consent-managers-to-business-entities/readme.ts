@@ -21,6 +21,6 @@ const examples = buildExamples<ConsentManagersToBusinessEntitiesCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

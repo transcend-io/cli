@@ -69,6 +69,6 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

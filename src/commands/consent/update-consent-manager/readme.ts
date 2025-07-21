@@ -47,7 +47,7 @@ const examples = buildExamples<UpdateConsentManagerCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}
 

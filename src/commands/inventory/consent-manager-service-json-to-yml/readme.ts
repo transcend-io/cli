@@ -19,6 +19,6 @@ const examples = buildExamples<ConsentManagerServiceJsonToYmlCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

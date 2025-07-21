@@ -40,6 +40,6 @@ const examples = buildExamples<SkipRequestDataSilosCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

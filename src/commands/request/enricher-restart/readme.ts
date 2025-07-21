@@ -56,6 +56,6 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

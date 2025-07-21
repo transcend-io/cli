@@ -59,6 +59,6 @@ const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
   ],
 );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;

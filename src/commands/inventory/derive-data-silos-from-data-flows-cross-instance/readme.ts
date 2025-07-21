@@ -41,6 +41,6 @@ const examples =
     ],
   );
 
-export default `#### Usage
+export default `#### Examples
 
 ${examples}`;
