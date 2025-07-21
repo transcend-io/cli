@@ -1,6 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { markSilentPrivacyRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface MarkSilentCommandFlags {
   auth: string;
@@ -26,6 +27,8 @@ export async function markSilent(
     concurrency,
   }: MarkSilentCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await markSilentPrivacyRequests({
     transcendUrl,
     requestActions: actions,

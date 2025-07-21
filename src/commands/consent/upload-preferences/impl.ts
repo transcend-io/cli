@@ -7,6 +7,7 @@ import { splitCsvToList } from '../../../lib/requests';
 import { readdirSync } from 'fs';
 import { map } from '../../../lib/bluebird-replace';
 import { basename, join } from 'path';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface UploadPreferencesCommandFlags {
   auth: string;
@@ -64,6 +65,8 @@ export async function uploadPreferences(
     );
     process.exit(1);
   }
+
+  doneInputValidation();
 
   const files: string[] = [];
 

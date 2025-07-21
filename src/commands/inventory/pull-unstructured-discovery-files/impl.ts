@@ -6,6 +6,7 @@ import { writeCsv } from '../../../lib/cron';
 import { pullUnstructuredSubDataPointRecommendations } from '../../../lib/data-inventory';
 import { buildTranscendGraphQLClient } from '../../../lib/graphql';
 import { logger } from '../../../logger';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface PullUnstructuredDiscoveryFilesCommandFlags {
   auth: string;
@@ -29,6 +30,8 @@ export async function pullUnstructuredDiscoveryFiles(
     includeEncryptedSnippets,
   }: PullUnstructuredDiscoveryFilesCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   try {
     // Create a GraphQL client
     const client = buildTranscendGraphQLClient(transcendUrl, auth);

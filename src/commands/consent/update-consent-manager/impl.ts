@@ -6,6 +6,7 @@ import { mapSeries } from '../../../lib/bluebird-replace';
 import { logger } from '../../../logger';
 import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
 import { validateTranscendAuth } from '../../../lib/api-keys';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface UpdateConsentManagerCommandFlags {
   auth: string;
@@ -23,6 +24,8 @@ export async function updateConsentManager(
     transcendUrl,
   }: UpdateConsentManagerCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 

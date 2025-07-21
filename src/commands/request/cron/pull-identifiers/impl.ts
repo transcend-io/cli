@@ -10,6 +10,7 @@ import {
   writeCsv,
 } from '../../../../lib/cron';
 import { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
 export interface PullIdentifiersCommandFlags {
   file: string;
@@ -57,6 +58,8 @@ export async function pullIdentifiers(
     );
     process.exit(1);
   }
+
+  doneInputValidation();
 
   const { baseName, extension } = parseFilePath(file);
   let fileCount = 0;

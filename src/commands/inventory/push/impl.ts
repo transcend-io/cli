@@ -16,6 +16,7 @@ import { TranscendInput } from '../../../codecs';
 import { validateTranscendAuth, listFiles } from '../../../lib/api-keys';
 import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
 import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 /**
  * Sync configuration to Transcend
@@ -96,6 +97,8 @@ export async function push(
     deleteExtraAttributeValues,
   }: PushCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 

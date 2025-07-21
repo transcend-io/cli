@@ -1,6 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { uploadDataFlowsFromCsv as uploadDataFlowsFromCsvHelper } from '../../../lib/consent-manager';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface UploadDataFlowsFromCsvCommandFlags {
   auth: string;
@@ -20,6 +21,8 @@ export async function uploadDataFlowsFromCsv(
     transcendUrl,
   }: UploadDataFlowsFromCsvCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await uploadDataFlowsFromCsvHelper({
     auth,
     trackerStatus,

@@ -1,6 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { downloadPrivacyRequestFiles } from '../../../lib/requests';
 import { RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface DownloadFilesCommandFlags {
   auth: string;
@@ -29,6 +30,8 @@ export async function downloadFiles(
     approveAfterDownload,
   }: DownloadFilesCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await downloadPrivacyRequestFiles({
     transcendUrl,
     auth,

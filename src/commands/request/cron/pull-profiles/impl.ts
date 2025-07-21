@@ -14,6 +14,7 @@ import {
   writeCsv,
   type CsvFormattedIdentifier,
 } from '../../../../lib/cron';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
 export interface PullProfilesCommandFlags {
   file: string;
@@ -65,6 +66,8 @@ export async function pullProfiles(
     );
     process.exit(1);
   }
+
+  doneInputValidation();
 
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);

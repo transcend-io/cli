@@ -1,6 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { bulkRestartRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface RestartCommandFlags {
   auth: string;
@@ -42,6 +43,8 @@ export async function restart(
     transcendUrl,
   }: RestartCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await bulkRestartRequests({
     requestReceiptFolder,
     auth,

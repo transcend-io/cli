@@ -3,6 +3,7 @@ import type { LocalContext } from '../../../context';
 import { uploadConsents } from '../../../lib/consent-manager/uploadConsents';
 import { ConsentPreferenceUpload } from '../../../lib/consent-manager/types';
 import { readCsv } from '../../../lib/requests';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface UploadConsentPreferencesCommandFlags {
   base64EncryptionKey: string;
@@ -24,6 +25,8 @@ export async function uploadConsentPreferences(
     concurrency,
   }: UploadConsentPreferencesCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Load in preferences from csv
   const preferences = readCsv(file, ConsentPreferenceUpload);
 

@@ -10,6 +10,7 @@ import { join } from 'path';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { existsSync, lstatSync } from 'fs';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface ConsentManagersToBusinessEntitiesCommandFlags {
   consentManagerYmlFolder: string;
@@ -23,6 +24,8 @@ export function consentManagersToBusinessEntities(
     output,
   }: ConsentManagersToBusinessEntitiesCommandFlags,
 ): void {
+  doneInputValidation();
+
   // Ensure folder is passed
   if (
     !existsSync(consentManagerYmlFolder) ||

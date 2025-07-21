@@ -15,6 +15,7 @@ import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
   auth: string;
@@ -34,15 +35,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     transcendUrl,
   }: DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags,
 ): Promise<void> {
-  // Ensure folder is passed to dataFlowsYmlFolder
-  if (!dataFlowsYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
-    );
-    process.exit(1);
-  }
+  doneInputValidation();
 
   // Ensure folder is passed
   if (

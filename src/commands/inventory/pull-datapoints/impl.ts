@@ -8,6 +8,7 @@ import { ADMIN_DASH_DATAPOINTS } from '../../../constants';
 import { pullAllDatapoints } from '../../../lib/data-inventory';
 import { writeCsv } from '../../../lib/cron';
 import { DataCategoryType } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface PullDatapointsCommandFlags {
   auth: string;
@@ -33,6 +34,8 @@ export async function pullDatapoints(
     subCategories = [],
   }: PullDatapointsCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   try {
     // Create a GraphQL client
     const client = buildTranscendGraphQLClient(transcendUrl, auth);

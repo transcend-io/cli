@@ -2,6 +2,7 @@ import type { LocalContext } from '../../../context';
 
 import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
 import { approvePrivacyRequests } from '../../../lib/requests';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface ApproveCommandFlags {
   auth: string;
@@ -27,6 +28,8 @@ export async function approve(
     concurrency,
   }: ApproveCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await approvePrivacyRequests({
     transcendUrl,
     requestActions: actions,

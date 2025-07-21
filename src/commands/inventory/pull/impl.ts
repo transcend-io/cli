@@ -19,6 +19,7 @@ import {
 import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { validateTranscendAuth } from '../../../lib/api-keys';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface PullCommandFlags {
   auth: string;
@@ -52,6 +53,8 @@ export async function pull(
     debug,
   }: PullCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 

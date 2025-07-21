@@ -10,6 +10,7 @@ import {
 } from '../../../lib/graphql';
 import { findFilesToScan } from '../../../lib/code-scanning/findFilesToScan';
 import { SILO_DISCOVERY_CONFIGS } from '../../../lib/code-scanning';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface DiscoverSilosCommandFlags {
   scanPath: string;
@@ -31,6 +32,8 @@ export async function discoverSilos(
     transcendUrl,
   }: DiscoverSilosCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Create a GraphQL client
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 

@@ -3,6 +3,7 @@ import type { LocalContext } from '../../../context';
 import { fetchConsentPreferences } from '../../../lib/consent-manager';
 import { writeCsv } from '../../../lib/cron';
 import { createSombraGotInstance } from '../../../lib/graphql';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;
@@ -30,6 +31,8 @@ export async function pullConsentPreferences(
     concurrency,
   }: PullConsentPreferencesCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 

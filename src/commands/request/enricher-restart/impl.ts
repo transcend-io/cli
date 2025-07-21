@@ -4,6 +4,7 @@ import type {
   RequestAction,
   RequestEnricherStatus,
 } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface EnricherRestartCommandFlags {
   auth: string;
@@ -31,6 +32,8 @@ export async function enricherRestart(
     transcendUrl,
   }: EnricherRestartCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   await bulkRetryEnrichers({
     auth,
     enricherId,

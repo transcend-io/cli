@@ -7,6 +7,7 @@ import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { logger } from '../../../logger';
 import { generateCrossAccountApiKeys } from '../../../lib/api-keys';
 import { keyBy } from 'lodash-es';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 const SCOPES_BY_TITLE = keyBy(
   Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
@@ -59,6 +60,8 @@ export async function generateApiKeys(
     );
     process.exit(1);
   }
+
+  doneInputValidation();
 
   const scopeNames = splitScopes.map(
     (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName,

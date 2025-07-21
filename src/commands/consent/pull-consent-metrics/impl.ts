@@ -12,6 +12,7 @@ import { validateTranscendAuth } from '../../../lib/api-keys';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
 import { writeCsv } from '../../../lib/cron';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface PullConsentMetricsCommandFlags {
   auth: string;
@@ -33,19 +34,6 @@ export async function pullConsentMetrics(
     transcendUrl,
   }: PullConsentMetricsCommandFlags,
 ): Promise<void> {
-  // Parse authentication as API key or path to list of API keys
-  const apiKeyOrList = await validateTranscendAuth(auth);
-
-  // Ensure folder either does not exist or is not a file
-  if (fs.existsSync(folder) && !fs.lstatSync(folder).isDirectory()) {
-    logger.error(
-      colors.red(
-        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
-      ),
-    );
-    process.exit(1);
-  }
-
   // Validate bin
   const parsedBin = bin as ConsentManagerMetricBin;
   if (!Object.values(ConsentManagerMetricBin).includes(parsedBin)) {
@@ -84,6 +72,21 @@ export async function pullConsentMetrics(
       colors.red(
         `Got a start date "${startDate.toISOString()}" that was larger than the end date "${endDate.toISOString()}". ` +
           'Start date must be before end date.',
+      ),
+    );
+    process.exit(1);
+  }
+
+  doneInputValidation();
+
+  // Parse authentication as API key or path to list of API keys
+  const apiKeyOrList = await validateTranscendAuth(auth);
+
+  // Ensure folder either does not exist or is not a file
+  if (fs.existsSync(folder) && !fs.lstatSync(folder).isDirectory()) {
+    logger.error(
+      colors.red(
+        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
       ),
     );
     process.exit(1);

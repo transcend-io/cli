@@ -8,6 +8,7 @@ import {
   syncCodePackages,
 } from '../../../lib/graphql';
 import { execSync } from 'child_process';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 const REPO_ERROR =
   'A repository name must be provided. ' +
@@ -32,6 +33,8 @@ export async function scanPackages(
     transcendUrl,
   }: ScanPackagesCommandFlags,
 ): Promise<void> {
+  doneInputValidation();
+
   // Ensure repository name is specified
   let gitRepositoryName = repositoryName;
   if (!gitRepositoryName) {
