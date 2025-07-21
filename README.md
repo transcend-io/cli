@@ -1048,6 +1048,12 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=all
 **Pull configuration files across multiple instances**
 
 ```sh
+transcend admin generate-api-keys \
+  --email=test@transcend.io \
+  --password="$TRANSCEND_PASSWORD" \
+  --scopes="View Consent Manager" \
+  --apiKeyTitle="CLI Usage Cross Instance Sync" \
+  --file=./transcend-api-keys.json
 transcend inventory pull --auth=./transcend-api-keys.json --resources=consentManager --file=./transcend/
 ```
 

@@ -1,7 +1,11 @@
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '../../../enums';
-import { buildExamples } from '../../../lib/docgen/buildExamples';
+import {
+  buildExampleCommand,
+  buildExamples,
+} from '../../../lib/docgen/buildExamples';
 import type { PullCommandFlags } from './impl';
+import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
 
 // Additional documentation for help text
 const pullResourceTable: Record<
@@ -370,14 +374,6 @@ const examples = buildExamples<PullCommandFlags>(
         resources: 'all',
       },
     },
-    {
-      description: 'Pull configuration files across multiple instances',
-      flags: {
-        auth: './transcend-api-keys.json',
-        resources: 'consentManager',
-        file: './transcend/',
-      },
-    },
   ],
 );
 
@@ -402,5 +398,24 @@ ${table}
 
 ${examples}
 
-Note: This command will overwrite the existing transcend.yml file that you have locally.
-`;
+**Pull configuration files across multiple instances**
+
+\`\`\`sh
+${buildExampleCommand<GenerateApiKeysCommandFlags>(
+  ['admin', 'generate-api-keys'],
+  {
+    email: 'test@transcend.io',
+    password: '$TRANSCEND_PASSWORD',
+    scopes: TRANSCEND_SCOPES[ScopeName.ViewConsentManager].title,
+    apiKeyTitle: 'CLI Usage Cross Instance Sync',
+    file: './transcend-api-keys.json',
+  },
+)}
+${buildExampleCommand<PullCommandFlags>(['inventory', 'pull'], {
+  auth: './transcend-api-keys.json',
+  resources: 'consentManager',
+  file: './transcend/',
+})}
+\`\`\`
+
+Note: This command will overwrite the existing transcend.yml file that you have locally.`;

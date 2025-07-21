@@ -18,7 +18,7 @@ const SCOPES_BY_TITLE = keyBy(
 const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
 
 // Command flag interface
-interface GenerateApiKeysCommandFlags {
+export interface GenerateApiKeysCommandFlags {
   email: string;
   password: string;
   apiKeyTitle: string;
