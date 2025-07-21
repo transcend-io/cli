@@ -1086,49 +1086,79 @@ The scopes for `transcend inventory push` are the same as the scopes for [`trans
 
 #### Usage
 
+**Looks for file at ./transcend.yml**
+
 ```sh
-# Looks for file at ./transcend.yml
-transcend inventory push --auth=$TRANSCEND_API_KEY
+transcend inventory push --auth="$TRANSCEND_API_KEY"
 ```
 
-An alternative file destination can be specified:
+**Looks for file at custom location ./custom/location.yml**
 
 ```sh
-# Looks for file at custom location ./custom/location.yml
-transcend inventory push --auth=$TRANSCEND_API_KEY --file=./custom/location.yml
+transcend inventory push --auth="$TRANSCEND_API_KEY" --file=./custom/location.yml
 ```
 
-Push a single .yml file configuration into multiple Transcend instances. This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
+**Apply service classifier to all data flows**
 
 ```sh
-transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
-   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
-transcend inventory pull --auth=$TRANSCEND_API_KEY
+transcend inventory push --auth="$TRANSCEND_API_KEY" --classifyService
+```
+
+**Push up attributes, deleting any attributes that are not specified in the transcend.yml file**
+
+```sh
+transcend inventory push --auth="$TRANSCEND_API_KEY" --deleteExtraAttributeValues
+```
+
+**Use dynamic variables to fill out parameters in YAML files (see [./examples/multi-instance.yml](./examples/multi-instance.yml))**
+
+```sh
+transcend inventory push --auth="$TRANSCEND_API_KEY" --variables=domain:acme.com,stage:staging
+```
+
+**Push a single .yml file configuration into multiple Transcend instances**
+
+This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
+
+```sh
+transcend admin generate-api-keys \
+  --email=test@transcend.io \
+  --password="$TRANSCEND_PASSWORD" \
+  --scopes="View Email Templates,View Data Map" \
+  --apiKeyTitle="CLI Usage Cross Instance Sync" \
+  --file=./transcend-api-keys.json
+transcend inventory pull --auth="$TRANSCEND_API_KEY"
 transcend inventory push --auth=./transcend-api-keys.json
 ```
 
-Push multiple .yml file configurations into multiple Transcend instances. This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
+**Push multiple .yml file configurations into multiple Transcend instances**
+
+This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys).
 
 ```sh
-transcend admin generate-api-keys  --email=test@transcend.io --password=$TRANSCEND_PASSWORD \
-   --scopes="View Email Templates,View Data Map" --apiKeyTitle="CLI Usage Cross Instance Sync" --file=./transcend-api-keys.json
+transcend admin generate-api-keys \
+  --email=test@transcend.io \
+  --password="$TRANSCEND_PASSWORD" \
+  --scopes="View Email Templates,View Data Map" \
+  --apiKeyTitle="CLI Usage Cross Instance Sync" \
+  --file=./transcend-api-keys.json
 transcend inventory pull --auth=./transcend-api-keys.json --file=./transcend/
 # <edit .yml files in folder in between these steps>
 transcend inventory push --auth=./transcend-api-keys.json --file=./transcend/
 ```
 
-Apply service classifier to all data flows.
+**Apply service classifier to all data flows**
 
 ```sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=dataFlows
-transcend inventory push --auth=$TRANSCEND_API_KEY --resources=dataFlows --classifyService=true
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataFlows
+transcend inventory push --auth="$TRANSCEND_API_KEY" --classifyService
 ```
 
-Push up attributes, deleting any attributes that are not specified in the transcend.yml file
+**Push up attributes, deleting any attributes that are not specified in the transcend.yml file**
 
 ```sh
-transcend inventory pull --auth=$TRANSCEND_API_KEY --resources=attributes
-transcend inventory push --auth=$TRANSCEND_API_KEY --resources=attributes --deleteExtraAttributeValues=true
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=attributes
+transcend inventory push --auth="$TRANSCEND_API_KEY" --deleteExtraAttributeValues
 ```
 
 Some things to note about this sync process:
@@ -1186,10 +1216,6 @@ jobs:
 If you are using this CLI to sync your Data Map between multiple Transcend instances, you may find the need to make minor modifications to your configurations between environments. The most notable difference would be the domain where your webhook URLs are hosted on.
 
 The `transcend inventory push` command takes in a parameter `variables`. This is a CSV of `key:value` pairs.
-
-```sh
-transcend inventory push --auth=$TRANSCEND_API_KEY --variables=domain:acme.com,stage:staging
-```
 
 This command could fill out multiple parameters in a YAML file like [./examples/multi-instance.yml](./examples/multi-instance.yml), copied below:
 

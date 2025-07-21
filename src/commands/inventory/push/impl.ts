@@ -72,7 +72,7 @@ async function syncConfiguration({
   }
 }
 
-interface PushCommandFlags {
+export interface PushCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;
