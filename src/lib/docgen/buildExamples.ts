@@ -71,10 +71,22 @@ function formatFlagValue(value: unknown, depth = 0): string {
   }
 
   if (Array.isArray(value) && depth === 0) {
-    return value.map((v) => formatFlagValue(v, depth + 1)).join(',');
+    const values = value.map((v) => formatFlagValue(v, depth + 1));
+    if (values.every((x) => x.startsWith('$') || x.includes(' '))) {
+      return `"${values.join(',')}"`;
+    }
+    return values.join(',');
   }
 
   if (typeof value === 'string') {
+    // If we're operating on list elements
+    if (depth === 1) {
+      if (value.startsWith('$')) {
+        return `$\{${value.slice(1)}}`;
+      }
+      return value;
+    }
+
     // Escape strings that start with $ or contain spaces or special characters
     return value.startsWith('$') || value.includes(' ') ? `"${value}"` : value;
   }

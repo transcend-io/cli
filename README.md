@@ -2401,7 +2401,7 @@ This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-g
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./transcend-api-keys.json
 transcend inventory pull --auth="$TRANSCEND_API_KEY"
@@ -2416,7 +2416,7 @@ This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-g
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./transcend-api-keys.json
 transcend inventory pull --auth=./transcend-api-keys.json --file=./transcend/
@@ -2991,7 +2991,7 @@ FLAGS
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json
 ```
@@ -3002,7 +3002,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --transcendUrl=https://api.us.transcend.io
@@ -3014,7 +3014,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --parentOrganizationId=7098bb38-070d-4f26-8fa4-1b61b9cdef77
@@ -3026,7 +3026,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --createNewApiKey=false
@@ -3038,7 +3038,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates","View Data Map" \
+  --scopes="View Email Templates,View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --deleteExistingApiKey=false
