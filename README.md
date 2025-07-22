@@ -1477,7 +1477,8 @@ transcend request cron pull-identifiers \
   --auth="$TRANSCEND_API_KEY" \
   --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
   --actions=ERASURE \
-  --pageLimit=300
+  --pageLimit=300 \
+  --chunkSize=6000
 ```
 
 **Specifying the chunk size for large datasets to avoid file size limits (defaults to 100,000 rows per file)**
@@ -2058,7 +2059,10 @@ A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv).
 **Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`**
 
 ```sh
-transcend consent upload-preferences --auth="$TRANSCEND_API_KEY" --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
+transcend consent upload-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./preferences.csv \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
 **Upload consent preferences with additional options**
@@ -2082,6 +2086,7 @@ transcend consent upload-preferences \
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences.csv \
   --consentUrl=https://consent.us.transcend.io
 ```
 
