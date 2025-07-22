@@ -66,6 +66,10 @@ const examples = buildExamples<DownloadFilesCommandFlags>(
   ],
 );
 
-export default `#### Examples
+export default `Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
+
+<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
+
+#### Examples
 
 ${examples}`;

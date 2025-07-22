@@ -89,6 +89,7 @@
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
     - [Examples](#examples-36)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
+    - [Authentication](#authentication)
     - [Examples](#examples-37)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
@@ -321,6 +322,10 @@ FLAGS
   -h  --help                                  Print help information and exit
 ```
 
+See a demo of the interactive mapping processbelow (_note: the command is slightly different from the one shown in the video, but the arguments are the same._)
+
+https://user-images.githubusercontent.com/10264973/205477183-d4762087-668c-43f1-a84c-0fce0ec3e132.mov
+
 #### Examples
 
 **Upload requests from a CSV file**
@@ -440,6 +445,10 @@ FLAGS
      [--transcendUrl]          URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                           [default = https://api.transcend.io]
   -h  --help                   Print help information and exit
 ```
+
+Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
+
+<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
 
 #### Examples
 
@@ -1981,6 +1990,10 @@ FLAGS
   -h  --help              Print help information and exit
 ```
 
+To get a CSV of data flows, you can download the data flows from the Admin Dashboard under [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows). You can download data flows from both the "Triage" and "Approved" tabs.
+
+<img width="4320" height="3071" alt="export-data-flows" src="https://github.com/user-attachments/assets/cfd9ea75-dd4a-42a6-98b7-2a54f565d783" />
+
 #### Examples
 
 **Upload the file of data flows in ./data-flows.csv into the "Approved" tab**
@@ -3050,6 +3063,17 @@ FLAGS
      [--debug]          Whether to print detailed logs in case of error                                     [default = false]
   -h  --help            Print help information and exit
 ```
+
+#### Authentication
+
+In order to use this command, you will need to generate a OneTrust OAuth Token with scope for accessing the following endpoints:
+
+- [GET /v2/assessments](https://developer.onetrust.com/onetrust/reference/getallassessmentbasicdetailsusingget)
+- [GET /v2/assessments/{assessmentId}/export](https://developer.onetrust.com/onetrust/reference/exportassessmentusingget)
+- [GET /risks/{riskId}](https://developer.onetrust.com/onetrust/reference/getriskusingget)
+- [GET /v2/Users/{userId}](https://developer.onetrust.com/onetrust/reference/getuserusingget)
+
+To learn how to generate the token, see the [OAuth 2.0 Scopes](https://developer.onetrust.com/onetrust/reference/oauth-20-scopes) and [Generate Access Token](https://developer.onetrust.com/onetrust/reference/getoauthtoken) pages.
 
 #### Examples
 
