@@ -1,29 +1,28 @@
-/* eslint-disable max-lines */
+import { join } from 'node:path';
+import { PersistedState } from '@transcend-io/persisted-state';
+import cliProgress from 'cli-progress';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
-import cliProgress from 'cli-progress';
-import { join } from 'path';
-import { PersistedState } from '@transcend-io/persisted-state';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  createSombraGotInstance,
   buildTranscendGraphQLClient,
+  createSombraGotInstance,
   fetchAllRequestAttributeKeys,
 } from '../graphql';
-import { mapRequestEnumValues } from './mapRequestEnumValues';
-import { CachedRequestState, CachedFileState } from './constants';
+import { CachedFileState, CachedRequestState } from './constants';
+import { extractClientError } from './extractClientError';
+import { filterRows } from './filterRows';
+import { mapColumnsToAttributes } from './mapColumnsToAttributes';
+import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
 import { mapCsvColumnsToApi } from './mapCsvColumnsToApi';
+import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
+import { mapRequestEnumValues } from './mapRequestEnumValues';
 import { parseAttributesFromString } from './parseAttributesFromString';
 import { readCsv } from './readCsv';
 import { submitPrivacyRequest } from './submitPrivacyRequest';
-import { mapColumnsToAttributes } from './mapColumnsToAttributes';
-import { mapColumnsToIdentifiers } from './mapColumnsToIdentifiers';
-import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
-import { filterRows } from './filterRows';
-import { extractClientError } from './extractClientError';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 
 /**
  * Upload a set of privacy requests from CSV
@@ -82,7 +81,7 @@ export async function uploadPrivacyRequestsFromCsv({
   dryRun?: boolean;
 }): Promise<void> {
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -128,7 +127,7 @@ export async function uploadPrivacyRequestsFromCsv({
 
   // Read in the list of integration requests
   const requestsList = readCsv(file, t.record(t.string, t.string));
-  const columnNames = uniq(requestsList.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(requestsList.flatMap((x) => Object.keys(x)));
 
   // Log out an example request
   if (requestsList.length === 0) {
@@ -260,13 +259,13 @@ export async function uploadPrivacyRequestsFromCsv({
           attemptedAt: new Date().toISOString(),
         });
         await requestState.setValue(successfulRequests, 'successfulRequests');
-      } catch (err) {
-        const msg = `${err.message} - ${JSON.stringify(
-          err.response?.body,
+      } catch (error) {
+        const message = `${error.message} - ${JSON.stringify(
+          error.response?.body,
           null,
           2,
         )}`;
-        const clientError = extractClientError(msg);
+        const clientError = extractClientError(message);
 
         if (
           clientError === 'Client error: You have already made this request.'
@@ -292,12 +291,12 @@ export async function uploadPrivacyRequestsFromCsv({
           failingRequests.push({
             ...requestInput,
             rowIndex: ind,
-            error: clientError || msg,
+            error: clientError || message,
             attemptedAt: new Date().toISOString(),
           });
           await requestState.setValue(failingRequests, 'failingRequests');
           if (debug) {
-            logger.error(colors.red(clientError || msg));
+            logger.error(colors.red(clientError || message));
             logger.error(
               colors.red(
                 `[${ind + 1}/${
@@ -320,7 +319,7 @@ export async function uploadPrivacyRequestsFromCsv({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time
@@ -353,4 +352,3 @@ export async function uploadPrivacyRequestsFromCsv({
     process.exit(1);
   }
 }
-/* eslint-enable max-lines */

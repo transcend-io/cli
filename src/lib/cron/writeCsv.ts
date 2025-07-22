@@ -1,7 +1,6 @@
-import * as fastcsv from 'fast-csv';
-import { createWriteStream, writeFileSync, appendFileSync } from 'fs';
-
+import { appendFileSync, createWriteStream, writeFileSync } from 'node:fs';
 import { ObjByString } from '@transcend-io/type-utils';
+import * as fastcsv from 'fast-csv';
 
 /**
  * Escape a CSV value
@@ -11,7 +10,7 @@ import { ObjByString } from '@transcend-io/type-utils';
  */
 function escapeCsvValue(value: string): string {
   if (value.includes('"') || value.includes(',') || value.includes('\n')) {
-    return `"${value.replace(/"/g, '""')}"`;
+    return `"${value.replaceAll('"', '""')}"`;
   }
   return value;
 }
@@ -80,9 +79,11 @@ export async function writeCsv(
         .write(data, { headers, objectMode: true })
         .pipe(ws)
         .on('error', reject)
-        .on('end', () => resolve(true));
-    } catch (err) {
-      reject(err);
+        .on('end', () => {
+          resolve(true);
+        });
+    } catch (error) {
+      reject(error);
     }
   });
 }
@@ -102,8 +103,11 @@ export function parseFilePath(filePath: string): {
   const lastDotIndex = filePath.lastIndexOf('.');
   return {
     baseName:
-      lastDotIndex !== -1 ? filePath.substring(0, lastDotIndex) : filePath,
-    extension: lastDotIndex !== -1 ? filePath.substring(lastDotIndex) : '.csv',
+      lastDotIndex === -1
+        ? filePath
+        : filePath.slice(0, Math.max(0, lastDotIndex)),
+    extension:
+      lastDotIndex === -1 ? '.csv' : filePath.slice(Math.max(0, lastDotIndex)),
   };
 }
 
@@ -120,7 +124,7 @@ export async function writeLargeCsv(
   filePath: string,
   data: ObjByString[],
   headers: boolean | string[] = true,
-  chunkSize = 100000,
+  chunkSize = 100_000,
 ): Promise<string[]> {
   if (data.length <= chunkSize) {
     // If data is small enough, write to single file
@@ -133,13 +137,16 @@ export async function writeLargeCsv(
   const totalChunks = Math.ceil(data.length / chunkSize);
   const { baseName, extension } = parseFilePath(filePath);
 
-  for (let i = 0; i < totalChunks; i += 1) {
-    const start = i * chunkSize;
+  for (let index = 0; index < totalChunks; index += 1) {
+    const start = index * chunkSize;
     const end = Math.min(start + chunkSize, data.length);
     const chunk = data.slice(start, end);
 
     // Create filename with chunk number and zero-padding
-    const chunkNumber = String(i + 1).padStart(String(totalChunks).length, '0');
+    const chunkNumber = String(index + 1).padStart(
+      String(totalChunks).length,
+      '0',
+    );
     const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
 
     await writeCsv(chunkFilePath, chunk, headers);

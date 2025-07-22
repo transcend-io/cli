@@ -1,7 +1,10 @@
-import { AttributeInput } from '../../codecs';
 import colors from 'colors';
-import { keyBy, difference, groupBy } from 'lodash-es';
 import { GraphQLClient } from 'graphql-request';
+import { difference, groupBy, keyBy } from 'lodash-es';
+import { AttributeInput } from '../../codecs';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { Attribute } from './fetchAllAttributes';
 import {
   CREATE_ATTRIBUTE,
   CREATE_ATTRIBUTE_VALUES,
@@ -10,9 +13,6 @@ import {
   UPDATE_ATTRIBUTE_VALUES,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { Attribute } from './fetchAllAttributes';
-import { map } from '../bluebird-replace';
-import { logger } from '../../logger';
 
 /**
  * Sync attribute
@@ -42,7 +42,16 @@ export async function syncAttribute(
 
   // create or update attribute key
   let attributeKeyId: string;
-  if (!existingAttribute) {
+  if (existingAttribute) {
+    await makeGraphQLRequest(client, UPDATE_ATTRIBUTE, {
+      attributeKeyId: existingAttribute.id,
+      description: existingAttribute.isCustom
+        ? attribute.description
+        : undefined,
+      ...input,
+    });
+    attributeKeyId = existingAttribute.id;
+  } else {
     const {
       createAttributeKey: { attributeKey },
     } = await makeGraphQLRequest<{
@@ -60,15 +69,6 @@ export async function syncAttribute(
       ...input,
     });
     attributeKeyId = attributeKey.id;
-  } else {
-    await makeGraphQLRequest(client, UPDATE_ATTRIBUTE, {
-      attributeKeyId: existingAttribute.id,
-      description: existingAttribute.isCustom
-        ? attribute.description
-        : undefined,
-      ...input,
-    });
-    attributeKeyId = existingAttribute.id;
   }
 
   // upsert attribute values

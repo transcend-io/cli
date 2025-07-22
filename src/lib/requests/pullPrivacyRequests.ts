@@ -1,18 +1,17 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
 import colors from 'colors';
 import { groupBy } from 'lodash-es';
-
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  PrivacyRequest,
-  RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  PrivacyRequest,
+  RequestIdentifier,
 } from '../graphql';
-import { logger } from '../../logger';
 
 export interface ExportedPrivacyRequest extends PrivacyRequest {
   /** Request identifiers */
@@ -61,9 +60,7 @@ export async function pullPrivacyRequests({
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
   /** Requests that are formatted for CSV */
-  requestsFormattedForCsv: {
-    [k in string]: string | null | number | boolean;
-  }[];
+  requestsFormattedForCsv: Record<string, string | null | number | boolean>[];
 }> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -162,19 +159,18 @@ export async function pullPrivacyRequests({
       'Is Test Request': isTest,
       Language: locale,
       ...request,
-      ...Object.entries(groupBy(attributeValues, 'attributeKey.name')).reduce(
-        (acc, [name, values]) =>
-          Object.assign(acc, {
-            [name]: values.map(({ name }) => name).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(attributeValues, 'attributeKey.name')).map(
+          ([name, values]) => [name, values.map(({ name }) => name).join(',')],
+        ),
       ),
-      ...Object.entries(groupBy(requestIdentifiers, 'name')).reduce(
-        (acc, [name, values]) =>
-          Object.assign(acc, {
-            [name]: values.map(({ value }) => value).join(','),
-          }),
-        {},
+      ...Object.fromEntries(
+        Object.entries(groupBy(requestIdentifiers, 'name')).map(
+          ([name, values]) => [
+            name,
+            values.map(({ value }) => value).join(','),
+          ],
+        ),
       ),
     }),
   );

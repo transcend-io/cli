@@ -1,21 +1,19 @@
-import { getValues, getEntries } from '@transcend-io/type-utils';
 import type { PersistedState } from '@transcend-io/persisted-state';
+import { getEntries, getValues } from '@transcend-io/type-utils';
 import inquirer from 'inquirer';
 import { startCase } from 'lodash-es';
 import {
-  ColumnName,
   CachedFileState,
-  IS_REQUIRED,
   CAN_APPLY_IN_BULK,
+  ColumnName,
+  IS_REQUIRED,
 } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
 
 /**
  * Mapping from column name to request input parameter
  */
-export type ColumnNameMap = {
-  [k in ColumnName]?: string;
-};
+export type ColumnNameMap = Partial<Record<ColumnName, string>>;
 
 /**
  * Determine the mapping between columns in CSV
@@ -38,9 +36,7 @@ export async function mapCsvColumnsToApi(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<{
-          [k in ColumnName]?: string;
-        }>(
+        await inquirer.prompt<Partial<Record<ColumnName, string>>>(
           columnQuestions.map((name) => {
             const field = startCase(name.replace('ColumnName', ''));
             const matches = fuzzyMatchColumns(

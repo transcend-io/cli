@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { IntlMessageInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_INTL_MESSAGES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk } from 'lodash-es';
+import { IntlMessageInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import { UPDATE_INTL_MESSAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const MAX_PAGE_SIZE = 100;
@@ -26,12 +26,12 @@ export async function updateIntlMessages(
         ...(message.id.includes('.') ? {} : { id: message.id }),
         defaultMessage: message.defaultMessage,
         targetReactIntlId: message.targetReactIntlId,
-        translations: !message.translations
-          ? undefined
-          : Object.entries(message.translations).map(([locale, value]) => ({
+        translations: message.translations
+          ? Object.entries(message.translations).map(([locale, value]) => ({
               locale,
               value,
-            })),
+            }))
+          : undefined,
       })),
     });
   });
@@ -71,9 +71,9 @@ export async function syncIntlMessages(
     logger.info(
       colors.green(`Successfully synced ${messages.length} messages!`),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create messages! - ${err.message}`));
+    logger.info(colors.red(`Failed to create messages! - ${error.message}`));
   }
 
   return !encounteredError;

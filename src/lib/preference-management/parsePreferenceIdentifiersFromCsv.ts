@@ -1,11 +1,9 @@
-import { uniq, groupBy, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, groupBy, uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
-
-/* eslint-disable no-param-reassign */
+import { FileMetadataState } from './codecs';
 
 /**
  * Parse identifiers from a CSV list of preferences
@@ -27,7 +25,7 @@ export async function parsePreferenceIdentifiersFromCsv(
   preferences: Record<string, string>[];
 }> {
   // Determine columns to map
-  const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
 
   // Determine the columns that could potentially be used for identifier
   const remainingColumnsForIdentifier = difference(columnNames, [
@@ -67,19 +65,19 @@ export async function parsePreferenceIdentifiersFromCsv(
     .filter((x): x is number[] => !!x)
     .flat();
   if (identifierColumnsMissing.length > 0) {
-    const msg = `The identifier column "${
+    const message = `The identifier column "${
       currentState.identifierColumn
     }" is missing a value for the following rows: ${identifierColumnsMissing.join(
       ', ',
     )}`;
-    logger.warn(colors.yellow(msg));
+    logger.warn(colors.yellow(message));
 
     // Ask user if they would like to skip rows missing an identifier
     const skip = await inquirerConfirmBoolean({
       message: 'Would you like to skip rows missing an identifier?',
     });
     if (!skip) {
-      throw new Error(msg);
+      throw new Error(message);
     }
 
     // Filter out rows missing an identifier
@@ -105,13 +103,13 @@ export async function parsePreferenceIdentifiersFromCsv(
     ([, rows]) => rows.length > 1,
   );
   if (duplicateIdentifiers.length > 0) {
-    const msg = `The identifier column "${
+    const message = `The identifier column "${
       currentState.identifierColumn
     }" has duplicate values for the following rows: ${duplicateIdentifiers
       .slice(0, 10)
       .map(([userId, rows]) => `${userId} (${rows.length})`)
       .join('\n')}`;
-    logger.warn(colors.yellow(msg));
+    logger.warn(colors.yellow(message));
 
     // Ask user if they would like to take the most recent update
     // for each duplicate identifier
@@ -119,7 +117,7 @@ export async function parsePreferenceIdentifiersFromCsv(
       message: 'Would you like to automatically take the latest update?',
     });
     if (!skip) {
-      throw new Error(msg);
+      throw new Error(message);
     }
     preferences = Object.entries(rowsByUserId)
       .map(([, rows]) => {
@@ -130,9 +128,8 @@ export async function parsePreferenceIdentifiersFromCsv(
         );
         return sorted[0];
       })
-      .filter((x) => x);
+      .filter(Boolean);
   }
 
   return { currentState, preferences };
 }
-/* eslint-enable no-param-reassign */

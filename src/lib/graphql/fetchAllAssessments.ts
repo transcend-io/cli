@@ -1,7 +1,3 @@
-/* eslint-disable max-lines */
-import { GraphQLClient } from 'graphql-request';
-import { ASSESSMENTS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   AssessmentFormStatus,
   AssessmentQuestionSubType,
@@ -14,6 +10,9 @@ import {
   RetentionScheduleOperation,
   RetentionScheduleType,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { ASSESSMENTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Represents an assessment with various properties and metadata.
@@ -367,4 +366,3 @@ export async function fetchAllAssessments(
 
   return assessments.sort((a, b) => a.title.localeCompare(b.title));
 }
-/* eslint-enable max-lines */

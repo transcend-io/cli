@@ -1,17 +1,17 @@
-import { mapSeries } from '../bluebird-replace';
-import {
-  buildTranscendGraphQLClientGeneric,
-  loginUser,
-  createApiKey,
-  fetchAllApiKeys,
-  deleteApiKey,
-  assumeRole,
-} from '../graphql';
 import { ScopeName } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { StoredApiKey } from '../../codecs';
-import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
+import {
+  assumeRole,
+  buildTranscendGraphQLClientGeneric,
+  createApiKey,
+  deleteApiKey,
+  fetchAllApiKeys,
+  loginUser,
+} from '../graphql';
 
 export interface ApiKeyGenerateError {
   /** Name of instance */
@@ -162,16 +162,16 @@ export async function generateCrossAccountApiKeys({
           apiKey: '',
         });
       }
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
-          `Failed to create API key in organization "${role.organization.name}"! - ${err.message}`,
+          `Failed to create API key in organization "${role.organization.name}"! - ${error.message}`,
         ),
       );
       errors.push({
         organizationName: role.organization.name,
         organizationId: role.organization.id,
-        error: err.message,
+        error: error.message,
       });
     }
   });

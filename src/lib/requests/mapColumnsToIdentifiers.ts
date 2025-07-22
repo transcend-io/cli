@@ -1,16 +1,14 @@
+import type { PersistedState } from '@transcend-io/persisted-state';
 import type { GraphQLClient } from 'graphql-request';
 import inquirer from 'inquirer';
-import { INITIALIZER, makeGraphQLRequest, Initializer } from '../graphql';
+import { INITIALIZER, Initializer, makeGraphQLRequest } from '../graphql';
 import { CachedFileState, IDENTIFIER_BLOCK_LIST } from './constants';
 import { fuzzyMatchColumns } from './fuzzyMatchColumns';
-import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Mapping from identifier name to request input parameter
  */
-export type IdentifierNameMap = {
-  [k in string]: string;
-};
+export type IdentifierNameMap = Record<string, string>;
 
 /**
  * Create a mapping from the identifier names that can be included
@@ -45,9 +43,7 @@ export async function mapColumnsToIdentifiers(
     columnQuestions.length === 0
       ? {}
       : // prompt questions to map columns
-        await inquirer.prompt<{
-          [k in string]: string;
-        }>(
+        await inquirer.prompt<Record<string, string>>(
           columnQuestions.map(({ name }) => {
             const matches = fuzzyMatchColumns(columnNames, name, false);
             return {

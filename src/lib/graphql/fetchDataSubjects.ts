@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { CREATE_DATA_SUBJECT, DATA_SUBJECTS } from './gqls';
-import { keyBy, flatten, uniq, difference } from 'lodash-es';
 import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, flatten, keyBy, uniq } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
-import colors from 'colors';
 import { mapSeries } from '../bluebird-replace';
+import { CREATE_DATA_SUBJECT, DATA_SUBJECTS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataSubject {
@@ -62,7 +62,7 @@ export async function ensureAllDataSubjectsExist(
   }: TranscendInput,
   client: GraphQLClient,
   fetchAll = false,
-): Promise<{ [type in string]: DataSubject }> {
+): Promise<Record<string, DataSubject>> {
   // Only need to fetch data subjects if specified in config
   const expectedDataSubjects = uniq([
     ...flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
@@ -122,13 +122,13 @@ export async function ensureAllDataSubjectsExist(
  */
 export function convertToDataSubjectBlockList(
   dataSubjectTypes: string[],
-  allDataSubjects: { [type in string]: DataSubject },
+  allDataSubjects: Record<string, DataSubject>,
 ): string[] {
-  dataSubjectTypes.forEach((type) => {
+  for (const type of dataSubjectTypes) {
     if (!allDataSubjects[type]) {
       throw new Error(`Expected to find data subject definition: ${type}`);
     }
-  });
+  }
 
   return Object.values(allDataSubjects)
     .filter((silo) => !dataSubjectTypes.includes(silo.type))
@@ -144,13 +144,13 @@ export function convertToDataSubjectBlockList(
  */
 export function convertToDataSubjectAllowlist(
   dataSubjectTypes: string[],
-  allDataSubjects: { [type in string]: DataSubject },
+  allDataSubjects: Record<string, DataSubject>,
 ): string[] {
-  dataSubjectTypes.forEach((type) => {
+  for (const type of dataSubjectTypes) {
     if (!allDataSubjects[type]) {
       throw new Error(`Expected to find data subject definition: ${type}`);
     }
-  });
+  }
 
   return Object.values(allDataSubjects)
     .filter((silo) => !dataSubjectTypes.includes(silo.type))

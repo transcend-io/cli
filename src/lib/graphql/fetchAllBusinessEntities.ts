@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { BUSINESS_ENTITIES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { BUSINESS_ENTITIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface BusinessEntity {
   /** ID of business entity */

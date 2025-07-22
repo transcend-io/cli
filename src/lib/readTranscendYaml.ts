@@ -1,6 +1,6 @@
+import { readFileSync, writeFileSync } from 'node:fs';
 import { decodeCodec, ObjByString } from '@transcend-io/type-utils';
 import yaml from 'js-yaml';
-import { readFileSync, writeFileSync } from 'fs';
 import { TranscendInput } from '../codecs';
 
 export const VARIABLE_PARAMETERS_REGEXP = /<<parameters\.(.+?)>>/;
@@ -22,11 +22,11 @@ export function replaceVariablesInYaml(
 ): string {
   let contents = input;
   // Replace variables
-  Object.entries(variables).forEach(([name, value]) => {
+  for (const [name, value] of Object.entries(variables)) {
     contents = contents
       .split(`<<${VARIABLE_PARAMETERS_NAME}.${name}>>`)
       .join(value);
-  });
+  }
 
   // Throw error if unfilled variables
   if (VARIABLE_PARAMETERS_REGEXP.test(contents)) {

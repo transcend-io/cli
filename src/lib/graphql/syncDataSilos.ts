@@ -1,41 +1,40 @@
-/* eslint-disable max-lines */
+import {
+  ConfidenceLabel,
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+  PromptAVendorEmailCompletionLinkType,
+  PromptAVendorEmailSendType,
+  RequestActionObjectResolver,
+  SubDataPointDataSubCategoryGuessStatus,
+} from '@transcend-io/privacy-types';
+import { apply } from '@transcend-io/type-utils';
 import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy, sortBy } from 'lodash-es';
 import {
   DataCategoryInput,
   DataSiloInput,
   ProcessingPurposeInput,
 } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
-import colors from 'colors';
-import { mapSeries, map } from '../bluebird-replace';
-import {
-  DATA_SILOS,
-  CREATE_DATA_SILOS,
-  UPDATE_OR_CREATE_DATA_POINT,
-  DATA_POINTS,
-  SUB_DATA_POINTS,
-  UPDATE_DATA_SILOS,
-  DATA_SILOS_ENRICHED,
-  SUB_DATA_POINTS_WITH_GUESSES,
-} from './gqls';
+import { map, mapSeries } from '../bluebird-replace';
+import { ApiKey } from './fetchApiKeys';
 import {
   convertToDataSubjectBlockList,
   DataSubject,
 } from './fetchDataSubjects';
-import { ApiKey } from './fetchApiKeys';
 import {
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
-  PromptAVendorEmailCompletionLinkType,
-  PromptAVendorEmailSendType,
-  ConfidenceLabel,
-  RequestActionObjectResolver,
-  SubDataPointDataSubCategoryGuessStatus,
-} from '@transcend-io/privacy-types';
-import { sortBy, chunk, keyBy } from 'lodash-es';
+  CREATE_DATA_SILOS,
+  DATA_POINTS,
+  DATA_SILOS,
+  DATA_SILOS_ENRICHED,
+  SUB_DATA_POINTS,
+  SUB_DATA_POINTS_WITH_GUESSES,
+  UPDATE_DATA_SILOS,
+  UPDATE_OR_CREATE_DATA_POINT,
+} from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { apply } from '@transcend-io/type-utils';
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */
@@ -314,13 +313,13 @@ export async function fetchAllSubDataPoints(
           ),
         );
       }
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching subdatapoints for offset ${offset} for dataPointId=${dataPointId}`,
         ),
       );
-      throw err;
+      throw error;
     }
   } while (shouldContinue);
   return sortBy(subDataPoints, 'name');
@@ -392,7 +391,7 @@ export async function fetchAllDataPoints(
     if (!skipSubDatapoints) {
       await map(
         nodes,
-        /* eslint-disable no-loop-func */
+
         async (node) => {
           try {
             if (debug) {
@@ -422,16 +421,16 @@ export async function fetchAllDataPoints(
                 ),
               );
             }
-          } catch (err) {
+          } catch (error) {
             logger.error(
               colors.red(
                 `An error fetching subdatapoints for ${node.name} datapoint offset ${offset}`,
               ),
             );
-            throw err;
+            throw error;
           }
         },
-        /* eslint-enable no-loop-func */
+
         {
           concurrency: 5,
         },
@@ -659,20 +658,20 @@ export async function syncDataSilos(
     /** Page size */
     pageSize: number;
     /** The data subjects in the organization */
-    dataSubjectsByName: { [type in string]: DataSubject };
+    dataSubjectsByName: Record<string, DataSubject>;
     /** API key title to API key */
-    apiKeysByTitle: { [title in string]: ApiKey };
+    apiKeysByTitle: Record<string, ApiKey>;
   },
 ): Promise<{
   /** Whether successfully updated */
   success: boolean;
   /** A mapping between data silo title to data silo ID */
-  dataSiloTitleToId: { [k in string]: string };
+  dataSiloTitleToId: Record<string, string>;
 }> {
   let encounteredError = false;
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   logger.info(colors.magenta(`Syncing "${dataSilos.length}" data silos...`));
 
   // Determine the set of data silos that already exist
@@ -719,9 +718,9 @@ export async function syncDataSilos(
       });
 
       // save mapping of title and id
-      dataSilos.forEach((silo) => {
+      for (const silo of dataSilos) {
         existingDataSiloByTitle[silo.title] = silo;
-      });
+      }
     });
 
     logger.info(
@@ -811,7 +810,7 @@ export async function syncDataSilos(
   );
   const totalDataPoints = dataSilos
     .map(({ datapoints = [] }) => datapoints.length)
-    .reduce((acc, count) => acc + count, 0);
+    .reduce((accumulator, count) => accumulator + count, 0);
   logger.info(
     colors.magenta(
       `Syncing "${totalDataPoints}" datapoints from "${dataSilosWithDataPoints.length}" data silos...`,
@@ -839,18 +838,18 @@ export async function syncDataSilos(
                   ({
                     name: key,
                     description,
-                    categories: !categories
-                      ? undefined
-                      : categories.map((category) => ({
+                    categories: categories
+                      ? categories.map((category) => ({
                           ...category,
                           name: category.name || 'Other',
-                        })),
-                    purposes: !purposes
-                      ? undefined
-                      : purposes.map((purpose) => ({
+                        }))
+                      : undefined,
+                    purposes: purposes
+                      ? purposes.map((purpose) => ({
                           ...purpose,
                           name: purpose.name || 'Other',
-                        })),
+                        }))
+                      : undefined,
                     attributes,
                     accessRequestVisibilityEnabled:
                       rest['access-request-visibility-enabled'],
@@ -879,14 +878,14 @@ export async function syncDataSilos(
             ...(datapoint['data-collection-tag']
               ? { dataCollectionTag: datapoint['data-collection-tag'] }
               : {}),
-            querySuggestions: !datapoint['privacy-action-queries']
-              ? undefined
-              : Object.entries(datapoint['privacy-action-queries']).map(
+            querySuggestions: datapoint['privacy-action-queries']
+              ? Object.entries(datapoint['privacy-action-queries']).map(
                   ([key, value]) => ({
                     requestType: key,
                     suggestedQuery: value,
                   }),
-                ),
+                )
+              : undefined,
             enabledActions: datapoint['privacy-actions'] || [], // clear out when not specified
             subDataPoints: fields,
           };
@@ -916,10 +915,10 @@ export async function syncDataSilos(
                 UPDATE_OR_CREATE_DATA_POINT,
                 payload,
               );
-            } catch (err) {
+            } catch (error) {
               logger.info(
                 colors.red(
-                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${err.message}`,
+                  `\nFailed to update datapoint "${datapoint.key}" for data silo "${title}"! - \n${error.message}`,
                 ),
               );
               encounteredError = true;
@@ -936,7 +935,7 @@ export async function syncDataSilos(
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(
@@ -1003,16 +1002,15 @@ export async function syncDataSiloDependencies(
             `Synced "${dependencyUpdateChunk.length}" data silos!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
           `[Batch ${ind + 1}/${dependencyUpdateChunk.length}] ` +
-            `Failed to update "${dependencyUpdateChunk.length}" silos! - ${err.message}`,
+            `Failed to update "${dependencyUpdateChunk.length}" silos! - ${error.message}`,
         ),
       );
     }
   });
   return !encounteredError;
 }
-/* eslint-enable max-lines */

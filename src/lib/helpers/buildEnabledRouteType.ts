@@ -1,6 +1,6 @@
+import { valuesOf } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
 import { EnabledRouteC } from '../../codecs';
-import { valuesOf } from '@transcend-io/type-utils';
 import { PathfinderPolicyName } from '../../enums';
 
 /**

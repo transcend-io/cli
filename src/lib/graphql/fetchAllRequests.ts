@@ -1,19 +1,19 @@
-import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
-import { REQUESTS } from './gqls';
-import * as t from 'io-ts';
-import cliProgress from 'cli-progress';
-import { valuesOf } from '@transcend-io/type-utils';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { LanguageKey } from '@transcend-io/internationalization';
 import {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
   RequestAction,
   RequestOrigin,
   RequestStatus,
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
+import { valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import * as t from 'io-ts';
 import { logger } from '../../logger';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { REQUESTS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export const PrivacyRequest = t.intersection([
   t.type({
@@ -116,7 +116,7 @@ export async function fetchAllRequests(
   logger.info(colors.magenta('Fetching requests...'));
 
   // create a new progress bar instance and use shades_classic theme
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   const progressBar = new cliProgress.SingleBar(
     {},
     cliProgress.Presets.shades_classic,
@@ -170,7 +170,7 @@ export async function fetchAllRequests(
   } while (shouldContinue);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time

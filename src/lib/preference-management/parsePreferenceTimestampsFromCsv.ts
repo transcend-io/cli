@@ -1,12 +1,10 @@
-import { uniq, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, uniq } from 'lodash-es';
 import { logger } from '../../logger';
+import { FileMetadataState } from './codecs';
 
 export const NONE_PREFERENCE_MAP = '[NONE]';
-
-/* eslint-disable no-param-reassign */
 
 /**
  * Parse timestamps from a CSV list of preferences
@@ -25,7 +23,7 @@ export async function parsePreferenceTimestampsFromCsv(
   currentState: FileMetadataState,
 ): Promise<FileMetadataState> {
   // Determine columns to map
-  const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
 
   // Determine the columns that could potentially be used for timestamp
   const remainingColumnsForTimestamp = difference(columnNames, [
@@ -84,4 +82,3 @@ export async function parsePreferenceTimestampsFromCsv(
   }
   return currentState;
 }
-/* eslint-enable no-param-reassign */

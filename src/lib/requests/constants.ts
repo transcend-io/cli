@@ -1,11 +1,11 @@
-import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import { LanguageKey } from '@transcend-io/internationalization';
 import {
   CompletedRequestStatus,
-  RequestAction,
   IsoCountryCode,
   IsoCountrySubdivisionCode,
+  RequestAction,
 } from '@transcend-io/privacy-types';
+import { applyEnum, valuesOf } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
 
 export const NONE = '[NONE]' as const;
@@ -42,7 +42,7 @@ export enum ColumnName {
 }
 
 /** These parameters are required in the Transcend DSR API */
-export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
+export const IS_REQUIRED: Record<ColumnName, boolean> = {
   [ColumnName.Email]: false,
   [ColumnName.CoreIdentifier]: true,
   [ColumnName.RequestType]: true,
@@ -56,7 +56,7 @@ export const IS_REQUIRED: { [k in ColumnName]: boolean } = {
 };
 
 /** These parameters can be specified for the entire CSV set if needed */
-export const CAN_APPLY_IN_BULK: { [k in ColumnName]?: boolean } = {
+export const CAN_APPLY_IN_BULK: Partial<Record<ColumnName, boolean>> = {
   [ColumnName.RequestType]: true,
   [ColumnName.SubjectType]: true,
 };

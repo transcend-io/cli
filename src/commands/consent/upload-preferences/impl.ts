@@ -1,12 +1,11 @@
-import type { LocalContext } from '../../../context';
+import { readdirSync } from 'node:fs';
+import { basename, join } from 'node:path';
 import colors from 'colors';
-
-import { logger } from '../../../logger';
+import type { LocalContext } from '../../../context';
+import { map } from '../../../lib/bluebird-replace';
 import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { splitCsvToList } from '../../../lib/requests';
-import { readdirSync } from 'fs';
-import { map } from '../../../lib/bluebird-replace';
-import { basename, join } from 'path';
+import { logger } from '../../../logger';
 
 interface UploadPreferencesCommandFlags {
   auth: string;
@@ -81,9 +80,9 @@ export async function uploadPreferences(
 
       // Add full paths for each CSV file
       files.push(...csvFiles.map((file) => join(directory, file)));
-    } catch (err) {
+    } catch (error) {
       logger.error(colors.red(`Failed to read directory: ${directory}`));
-      logger.error(colors.red((err as Error).message));
+      logger.error(colors.red((error as Error).message));
       process.exit(1);
     }
   } else {
@@ -94,9 +93,9 @@ export async function uploadPreferences(
         process.exit(1);
       }
       files.push(file);
-    } catch (err) {
+    } catch (error) {
       logger.error(colors.red(`Failed to access file: ${file}`));
-      logger.error(colors.red((err as Error).message));
+      logger.error(colors.red((error as Error).message));
       process.exit(1);
     }
   }

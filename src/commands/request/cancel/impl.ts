@@ -1,5 +1,5 @@
-import type { LocalContext } from '../../../context';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../context';
 import { cancelPrivacyRequests } from '../../../lib/requests';
 
 interface CancelCommandFlags {

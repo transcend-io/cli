@@ -39,13 +39,15 @@ export async function markCronIdentifierCompleted(
       },
     });
     return true;
-  } catch (err) {
+  } catch (error) {
     // handle gracefully
-    if (err.response?.statusCode === 409) {
+    if (error.response?.statusCode === 409) {
       return false;
     }
     throw new Error(
-      `Received an error from server: ${err?.response?.body || err?.message}`,
+      `Received an error from server: ${
+        error?.response?.body || error?.message
+      }`,
     );
   }
 }

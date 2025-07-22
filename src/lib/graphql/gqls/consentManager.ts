@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { gql } from 'graphql-request';
 
 // TODO: https://transcend.height.app/T-27909 - order by createdAt
@@ -409,4 +408,3 @@ export const CREATE_CONSENT_PARTITION = gql`
     }
   }
 `;
-/* eslint-enable max-lines */

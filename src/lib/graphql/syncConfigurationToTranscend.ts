@@ -1,47 +1,46 @@
-/* eslint-disable max-lines */
-import { TranscendInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { TranscendInput } from '../../codecs';
+import { logger } from '../../logger';
 import { map } from '../bluebird-replace';
+import { fetchAllActions } from './fetchAllActions';
+import { fetchAllAttributes } from './fetchAllAttributes';
+import { fetchApiKeys } from './fetchApiKeys';
+import {
+  ensureAllDataSubjectsExist,
+  fetchAllDataSubjects,
+} from './fetchDataSubjects';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
 } from './fetchIdentifiers';
-import { syncIdentifier } from './syncIdentifier';
-import { syncEnricher } from './syncEnrichers';
-import { syncAttribute } from './syncAttribute';
-import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
-import { syncCookies } from './syncCookies';
-import {
-  fetchAllDataSubjects,
-  ensureAllDataSubjectsExist,
-} from './fetchDataSubjects';
-import { syncTeams } from './syncTeams';
-import { syncDataSubject } from './syncDataSubject';
-import { fetchApiKeys } from './fetchApiKeys';
-import { syncPrompts } from './syncPrompts';
-import { syncPolicies } from './syncPolicies';
-import { syncIntlMessages } from './syncIntlMessages';
-import { syncPrivacyCenter } from './syncPrivacyCenter';
-import { syncConsentManager } from './syncConsentManager';
-import { fetchAllAttributes } from './fetchAllAttributes';
-import { syncBusinessEntities } from './syncBusinessEntities';
-import { syncDataFlows } from './syncDataFlows';
 import { syncAction } from './syncAction';
-import { syncTemplate } from './syncTemplates';
-import { fetchAllActions } from './fetchAllActions';
-import { syncPromptPartials } from './syncPromptPartials';
-import { syncPromptGroups } from './syncPromptGroups';
-import { syncAgents } from './syncAgents';
 import { syncActionItemCollections } from './syncActionItemCollections';
 import { syncActionItems } from './syncActionItems';
-import { syncAgentFunctions } from './syncAgentFunctions';
 import { syncAgentFiles } from './syncAgentFiles';
-import { syncVendors } from './syncVendors';
+import { syncAgentFunctions } from './syncAgentFunctions';
+import { syncAgents } from './syncAgents';
+import { syncAttribute } from './syncAttribute';
+import { syncBusinessEntities } from './syncBusinessEntities';
+import { syncConsentManager } from './syncConsentManager';
+import { syncCookies } from './syncCookies';
 import { syncDataCategories } from './syncDataCategories';
-import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncDataFlows } from './syncDataFlows';
+import { syncDataSiloDependencies, syncDataSilos } from './syncDataSilos';
+import { syncDataSubject } from './syncDataSubject';
+import { syncEnricher } from './syncEnrichers';
+import { syncIdentifier } from './syncIdentifier';
+import { syncIntlMessages } from './syncIntlMessages';
 import { syncPartitions } from './syncPartitions';
+import { syncPolicies } from './syncPolicies';
+import { syncPrivacyCenter } from './syncPrivacyCenter';
+import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncPromptGroups } from './syncPromptGroups';
+import { syncPromptPartials } from './syncPromptPartials';
+import { syncPrompts } from './syncPrompts';
+import { syncTeams } from './syncTeams';
+import { syncTemplate } from './syncTemplates';
+import { syncVendors } from './syncVendors';
 
 const CONCURRENCY = 10;
 
@@ -116,7 +115,7 @@ export async function syncConfigurationToTranscend(
             client,
             !publishToPrivacyCenter,
           )
-        : ({} as { [k in string]: Identifier }),
+        : ({} as Record<string, Identifier>),
       // Grab all data subjects in the organization
       dataSilos || dataSubjects || enrichers
         ? ensureAllDataSubjectsExist(input, client)
@@ -125,7 +124,7 @@ export async function syncConfigurationToTranscend(
       dataSilos &&
       dataSilos
         .map((dataSilo) => dataSilo['api-key-title'] || [])
-        .reduce((acc, lst) => acc + lst.length, 0) > 0
+        .reduce((accumulator, lst) => accumulator + lst.length, 0) > 0
         ? fetchApiKeys(input, client)
         : {},
     ]);
@@ -136,10 +135,10 @@ export async function syncConfigurationToTranscend(
     try {
       await syncConsentManager(client, consentManager);
       logger.info(colors.green('Successfully synced consent manager!'));
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to sync consent manager! - ${err.message}`),
+        colors.red(`Failed to sync consent manager! - ${error.message}`),
       );
     }
   }
@@ -177,11 +176,11 @@ export async function syncConfigurationToTranscend(
           logger.info(
             colors.green(`Successfully synced template "${template.title}"!`),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync template "${template.title}"! - ${err.message}`,
+              `Failed to sync template "${template.title}"! - ${error.message}`,
             ),
           );
         }
@@ -277,7 +276,7 @@ export async function syncConfigurationToTranscend(
       attributes,
       async (attribute) => {
         const existing = existingAttributes.find(
-          (attr) => attr.name === attribute.name,
+          (attribute_) => attribute_.name === attribute.name,
         );
 
         logger.info(colors.magenta(`Syncing attribute "${attribute.name}"...`));
@@ -289,11 +288,11 @@ export async function syncConfigurationToTranscend(
           logger.info(
             colors.green(`Successfully synced attribute "${attribute.name}"!`),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync attribute "${attribute.name}"! - ${err.message}`,
+              `Failed to sync attribute "${attribute.name}"! - ${error.message}`,
             ),
           );
         }
@@ -327,11 +326,11 @@ export async function syncConfigurationToTranscend(
           logger.info(
             colors.green(`Successfully synced enricher "${enricher.title}"!`),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync enricher "${enricher.title}"! - ${err.message}`,
+              `Failed to sync enricher "${enricher.title}"! - ${error.message}`,
             ),
           );
         }
@@ -374,11 +373,11 @@ export async function syncConfigurationToTranscend(
               `Successfully synced identifier "${identifier.type}"!`,
             ),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync identifier "${identifier.type}"! - ${err.message}`,
+              `Failed to sync identifier "${identifier.type}"! - ${error.message}`,
             ),
           );
         }
@@ -417,11 +416,11 @@ export async function syncConfigurationToTranscend(
           logger.info(
             colors.green(`Successfully synced action "${action.type}"!`),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync action "${action.type}"! - ${err.message}`,
+              `Failed to sync action "${action.type}"! - ${error.message}`,
             ),
           );
         }
@@ -466,11 +465,11 @@ export async function syncConfigurationToTranscend(
               `Successfully synced data subject "${dataSubject.type}"!`,
             ),
           );
-        } catch (err) {
+        } catch (error) {
           encounteredError = true;
           logger.info(
             colors.red(
-              `Failed to sync data subject "${dataSubject.type}"! - ${err.message}`,
+              `Failed to sync data subject "${dataSubject.type}"! - ${error.message}`,
             ),
           );
         }
@@ -523,15 +522,16 @@ export async function syncConfigurationToTranscend(
         pageSize,
       },
     );
-    dataSilos?.forEach((dataSilo) => {
-      // Queue up dependency update
-      if (dataSilo['deletion-dependencies']) {
-        dependencyUpdates.push([
-          dataSiloTitleToId[dataSilo.title],
-          dataSilo['deletion-dependencies'],
-        ]);
+    if (dataSilos)
+      for (const dataSilo of dataSilos) {
+        // Queue up dependency update
+        if (dataSilo['deletion-dependencies']) {
+          dependencyUpdates.push([
+            dataSiloTitleToId[dataSilo.title],
+            dataSilo['deletion-dependencies'],
+          ]);
+        }
       }
-    });
     encounteredError = encounteredError || !success;
   }
 
@@ -546,4 +546,3 @@ export async function syncConfigurationToTranscend(
 
   return encounteredError;
 }
-/* eslint-enable max-lines */

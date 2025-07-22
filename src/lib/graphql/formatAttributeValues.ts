@@ -18,17 +18,19 @@ export function formatAttributeValues(
 ): FormattedAttribute[] {
   const attributes: FormattedAttribute[] = [];
 
-  vals.map((val) => {
-    let foundKey = attributes.find((att) => att.key === val.attributeKey.name);
+  vals.map((value) => {
+    let foundKey = attributes.find(
+      (att) => att.key === value.attributeKey.name,
+    );
 
     if (foundKey === undefined) {
       foundKey = {
-        key: val.attributeKey.name,
-        values: [val.name],
+        key: value.attributeKey.name,
+        values: [value.name],
       };
       attributes.push(foundKey);
     } else {
-      foundKey.values.push(val.name);
+      foundKey.values.push(value.name);
     }
     return attributes;
   });

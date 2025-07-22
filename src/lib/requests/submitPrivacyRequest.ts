@@ -1,13 +1,13 @@
-import * as t from 'io-ts';
-import { uniq } from 'lodash-es';
-import { valuesOf, decodeCodec } from '@transcend-io/type-utils';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
   RequestAction,
   RequestStatus,
 } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import type { Got } from 'got';
+import * as t from 'io-ts';
+import { uniq } from 'lodash-es';
 import { PrivacyRequestInput } from './mapCsvRowsToRequestInputs';
 import { ParsedAttributeInput } from './parseAttributesFromString';
 
@@ -70,9 +70,9 @@ export async function submitPrivacyRequest(
   // Merge the per-request attributes with the
   // global attributes
   const mergedAttributes = [...additionalAttributes];
-  (input.attributes || []).forEach((attribute) => {
+  for (const attribute of input.attributes || []) {
     const existing = mergedAttributes.find(
-      (attr) => attr.key === attribute.key,
+      (attribute_) => attribute_.key === attribute.key,
     );
     if (existing) {
       existing.values.push(...attribute.values);
@@ -80,7 +80,7 @@ export async function submitPrivacyRequest(
     } else {
       mergedAttributes.push(attribute);
     }
-  });
+  }
 
   // Make the GraphQL request
   let response: unknown;
@@ -110,8 +110,8 @@ export async function submitPrivacyRequest(
                         country: input.country,
                       }
                     : input.countrySubDivision
-                    ? { country: input.countrySubDivision.split('-')[0] }
-                    : {}),
+                      ? { country: input.countrySubDivision.split('-')[0] }
+                      : {}),
                   ...(input.countrySubDivision
                     ? { countrySubDivision: input.countrySubDivision }
                     : {}),
@@ -124,9 +124,11 @@ export async function submitPrivacyRequest(
         },
       })
       .json();
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Received an error from server: ${err?.response?.body || err?.message}`,
+      `Received an error from server: ${
+        error?.response?.body || error?.message
+      }`,
     );
   }
 

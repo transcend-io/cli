@@ -1,8 +1,6 @@
-/* eslint-disable max-lines */
-import { expect, describe, it } from 'vitest';
-
-import { getPreferenceUpdatesFromRow } from '../index';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
+import { describe, expect, it } from 'vitest';
+import { getPreferenceUpdatesFromRow } from '../index';
 
 describe('getPreferenceUpdatesFromRow', () => {
   it('should parse boolean updates', () => {
@@ -527,8 +525,8 @@ describe('getPreferenceUpdatesFromRow', () => {
         },
       });
       expect.fail('Should have thrown');
-    } catch (err) {
-      expect(err.message).to.include('No mapping provided');
+    } catch (error) {
+      expect(error.message).to.include('No mapping provided');
     }
   });
 
@@ -591,8 +589,8 @@ describe('getPreferenceUpdatesFromRow', () => {
         },
       });
       expect.fail('Should have thrown');
-    } catch (err) {
-      expect(err.message).to.equal(
+    } catch (error) {
+      expect(error.message).to.equal(
         'Invalid purpose slug: InvalidPurpose, expected: Marketing, Advertising',
       );
     }
@@ -653,8 +651,8 @@ describe('getPreferenceUpdatesFromRow', () => {
         },
       });
       expect.fail('Should have thrown');
-    } catch (err) {
-      expect(err.message).to.equal(
+    } catch (error) {
+      expect(error.message).to.equal(
         'Invalid value for select preference: SingleSelectPreference, expected string or null, got: true',
       );
     }
@@ -715,11 +713,10 @@ describe('getPreferenceUpdatesFromRow', () => {
         },
       });
       expect.fail('Should have thrown');
-    } catch (err) {
-      expect(err.message).to.equal(
+    } catch (error) {
+      expect(error.message).to.equal(
         'Invalid value for multi select preference: MultiSelectPreference, expected one of: Value1, Value2, got: true',
       );
     }
   });
 });
-/* eslint-enable max-lines */

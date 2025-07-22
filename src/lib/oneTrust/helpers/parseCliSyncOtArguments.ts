@@ -1,4 +1,3 @@
-import { logger } from '../../../logger';
 import colors from 'colors';
 import yargs from 'yargs-parser';
 import {
@@ -6,6 +5,7 @@ import {
   OneTrustPullResource,
   OneTrustPullSource,
 } from '../../../enums';
+import { logger } from '../../../logger';
 
 const VALID_RESOURCES = Object.values(OneTrustPullResource);
 
@@ -71,7 +71,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   if (!dryRun && !transcendAuth) {
     logger.error(
       colors.red(
-        // eslint-disable-next-line no-template-curly-in-string
         'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
       ),
     );
@@ -80,7 +79,6 @@ export const parseCliSyncOtArguments = (): OneTrustCliArguments => {
   if (!dryRun && !transcendUrl) {
     logger.error(
       colors.red(
-        // eslint-disable-next-line max-len
         'Must specify a "transcendUrl" parameter to sync resources to Transcend. e.g. --transcendUrl=https://api.transcend.io',
       ),
     );

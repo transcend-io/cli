@@ -1,12 +1,11 @@
+import { createReadStream } from 'node:fs';
+import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import { decodeCodec } from '@transcend-io/type-utils';
 import colors from 'colors';
-import { logger } from '../../../logger';
-import JSONStream from 'JSONStream';
-
-import { createReadStream } from 'fs';
-import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
-import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 import { GraphQLClient } from 'graphql-request';
+import JSONStream from 'JSONStream';
+import { logger } from '../../../logger';
+import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 
 /**
  * Reads assessments from a file and syncs them to Transcend.
@@ -62,11 +61,11 @@ export const syncOneTrustAssessmentsFromFile = ({
 
         // Resume the stream after processing
         parser.resume();
-      } catch (e) {
+      } catch (error) {
         // if failed to parse a line, report error and continue
         logger.error(
           colors.red(
-            `Failed to parse the assessment ${index} from file '${file}': ${e.message}.`,
+            `Failed to parse the assessment ${index} from file '${file}': ${error.message}.`,
           ),
         );
       }

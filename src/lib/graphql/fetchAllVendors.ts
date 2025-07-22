@@ -1,10 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { VENDORS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { VENDORS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Vendor {
   /** ID of vendor */

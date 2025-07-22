@@ -1,13 +1,12 @@
-import { map } from '../bluebird-replace';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
-
-import { PrivacyRequest } from '../graphql';
-import * as t from 'io-ts';
-import type { Got } from 'got';
-import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
-import { logger } from '../../logger';
 import { TableEncryptionType } from '@transcend-io/privacy-types';
+import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { PrivacyRequest } from '../graphql';
 
 export const IntlMessage = t.type({
   /** The message key */
@@ -113,7 +112,7 @@ export async function getFileMetadataForPrivacyRequests(
   );
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -159,12 +158,11 @@ export async function getFileMetadataForPrivacyRequests(
           // Increase offset and break if no more pages
           offset += limit;
           shouldContinue =
-            // eslint-disable-next-line no-underscore-dangle
             !!response._links.next && response.nodes.length === limit;
-        } catch (err) {
+        } catch (error) {
           throw new Error(
             `Received an error from server: ${
-              err?.response?.body || err?.message
+              error?.response?.body || error?.message
             }`,
           );
         }
@@ -178,7 +176,7 @@ export async function getFileMetadataForPrivacyRequests(
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   logger.info(

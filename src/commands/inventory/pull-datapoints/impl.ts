@@ -1,13 +1,12 @@
-import type { LocalContext } from '../../../context';
-import { uniq, groupBy } from 'lodash-es';
-
-import { logger } from '../../../logger';
-import colors from 'colors';
-import { buildTranscendGraphQLClient } from '../../../lib/graphql';
-import { ADMIN_DASH_DATAPOINTS } from '../../../constants';
-import { pullAllDatapoints } from '../../../lib/data-inventory';
-import { writeCsv } from '../../../lib/cron';
 import { DataCategoryType } from '@transcend-io/privacy-types';
+import colors from 'colors';
+import { groupBy, uniq } from 'lodash-es';
+import { ADMIN_DASH_DATAPOINTS } from '../../../constants';
+import type { LocalContext } from '../../../context';
+import { writeCsv } from '../../../lib/cron';
+import { pullAllDatapoints } from '../../../lib/data-inventory';
+import { buildTranscendGraphQLClient } from '../../../lib/graphql';
+import { logger } from '../../../logger';
 
 interface PullDatapointsCommandFlags {
   auth: string;
@@ -59,9 +58,7 @@ export async function pullDatapoints(
           .map((category) => `${category.category}:${category.name}`)
           .join(', '),
         'Guessed Category': point.pendingCategoryGuesses?.[0]
-          ? `${point.pendingCategoryGuesses![0]!.category.category}:${
-              point.pendingCategoryGuesses![0]!.category.name
-            }`
+          ? `${point.pendingCategoryGuesses[0].category.category}:${point.pendingCategoryGuesses[0].category.name}`
           : '',
         'Processing Purposes': point.purposes
           .map((purpose) => `${purpose.purpose}:${purpose.name}`)
@@ -71,18 +68,18 @@ export async function pullDatapoints(
             point.attributeValues || [],
             ({ attributeKey }) => attributeKey.name,
           ),
-        ).reduce((acc, [key, values]) => {
-          acc[key] = values.map((value) => value.name).join(',');
-          return acc;
-        }, {} as Record<string, string>),
+        ).reduce<Record<string, string>>((accumulator, [key, values]) => {
+          accumulator[key] = values.map((value) => value.name).join(',');
+          return accumulator;
+        }, {}),
       };
       headers = uniq([...headers, ...Object.keys(result)]);
       return result;
     });
     writeCsv(file, inputs, headers);
-  } catch (err) {
+  } catch (error) {
     logger.error(
-      colors.red(`An error occurred syncing the datapoints: ${err.message}`),
+      colors.red(`An error occurred syncing the datapoints: ${error.message}`),
     );
     process.exit(1);
   }

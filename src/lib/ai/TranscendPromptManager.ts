@@ -1,58 +1,57 @@
-/* eslint-disable max-lines */
+import type { Handlebars } from '@transcend-io/handlebars-utils';
 import {
-  Optionalize,
-  Requirize,
+  createHandlebarsWithHelpers,
+  HandlebarsInput,
+} from '@transcend-io/handlebars-utils';
+import {
+  ChatCompletionRole,
+  LargeLanguageModelClient,
+  PromptRunProductArea,
+  PromptStatus,
+  QueueStatus,
+} from '@transcend-io/privacy-types';
+import { Secret } from '@transcend-io/secret-value';
+import {
   apply,
   decodeCodec,
   getValues,
+  Optionalize,
+  Requirize,
 } from '@transcend-io/type-utils';
-import type { Handlebars } from '@transcend-io/handlebars-utils';
-import { Secret } from '@transcend-io/secret-value';
+import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
+import { chunk, groupBy, keyBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { mapSeries } from '../bluebird-replace';
 import {
   Agent,
   AgentFile,
   AgentFileFilterBy,
-  ReportPromptRunInput,
   buildTranscendGraphQLClient,
   fetchAllAgentFiles,
   fetchAllAgents,
   reportPromptRun,
+  ReportPromptRunInput,
 } from '../graphql';
 import {
-  HandlebarsInput,
-  createHandlebarsWithHelpers,
-} from '@transcend-io/handlebars-utils';
-import {
-  TranscendPromptTemplated,
-  TranscendPromptsAndVariables,
-  fetchPromptsWithVariables,
-} from '../graphql/fetchPrompts';
-import { GraphQLClient } from 'graphql-request';
-import {
-  PromptStatus,
-  ChatCompletionRole,
-  PromptRunProductArea,
-  QueueStatus,
-  LargeLanguageModelClient,
-} from '@transcend-io/privacy-types';
-import {
-  LargeLanguageModel,
   fetchAllLargeLanguageModels,
+  LargeLanguageModel,
 } from '../graphql/fetchLargeLanguageModels';
-import { groupBy, keyBy, uniq, chunk } from 'lodash-es';
-import { mapSeries } from '../bluebird-replace';
 import {
-  PromptThread,
+  fetchPromptsWithVariables,
+  TranscendPromptsAndVariables,
+  TranscendPromptTemplated,
+} from '../graphql/fetchPrompts';
+import {
   fetchAllPromptThreads,
+  PromptThread,
 } from '../graphql/fetchPromptThreads';
 
 /**
  * An LLM Prompt definition
  */
 export type TranscendPrompt<
-  TInputParams extends t.Any,
+  TInputParameters extends t.Any,
   TOutputCodec extends t.Any,
 > = (
   | {
@@ -71,7 +70,7 @@ export type TranscendPrompt<
   /** The names of the agents that should be loaded along with the prompt */
   agentNames?: string[];
   /** Codec to validate runtime input shape */
-  paramCodec: TInputParams;
+  paramCodec: TInputParameters;
   /** Codec to validate output response */
   outputCodec: TOutputCodec;
   /**
@@ -109,7 +108,7 @@ export function createRegexForTag(tagName: string): RegExp {
  */
 export function defineTranscendPrompts<
   TPromptNames extends string,
-  TPrompts extends { [k in TPromptNames]: TranscendPrompt<t.Any, t.Any> },
+  TPrompts extends Record<TPromptNames, TranscendPrompt<t.Any, t.Any>>,
 >(prompts: TPrompts): TPrompts {
   return prompts;
 }
@@ -119,7 +118,7 @@ export function defineTranscendPrompts<
  */
 export type GetPromptParamType<
   TPromptName extends keyof TPrompts,
-  TPrompts extends { [k in TPromptName]: TranscendPrompt<t.Any, t.Any> },
+  TPrompts extends Record<TPromptName, TranscendPrompt<t.Any, t.Any>>,
 > = t.TypeOf<TPrompts[TPromptName]['paramCodec']>;
 
 /**
@@ -127,7 +126,7 @@ export type GetPromptParamType<
  */
 export type GetPromptResponseType<
   TPromptName extends keyof TPrompts,
-  TPrompts extends { [k in TPromptName]: TranscendPrompt<t.Any, t.Any> },
+  TPrompts extends Record<TPromptName, TranscendPrompt<t.Any, t.Any>>,
 > = t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
 
 /**
@@ -149,11 +148,11 @@ export interface ReportPromptRunOptions
       };
 }
 
-const jsonParseSafe = (obj: string): unknown => {
+const jsonParseSafe = (object: string): unknown => {
   try {
-    return JSON.parse(obj);
-  } catch (e) {
-    return obj;
+    return JSON.parse(object);
+  } catch {
+    return object;
   }
 };
 
@@ -163,7 +162,7 @@ const jsonParseSafe = (obj: string): unknown => {
  */
 export class TranscendPromptManager<
   TPromptNames extends string,
-  TPrompts extends { [k in TPromptNames]: TranscendPrompt<t.Any, t.Any> },
+  TPrompts extends Record<TPromptNames, TranscendPrompt<t.Any, t.Any>>,
 > {
   /** Prompt definitions */
   public prompts: TPrompts;
@@ -172,28 +171,28 @@ export class TranscendPromptManager<
   public handlebarsOptions!: HandlebarsInput;
 
   /** Prompt name -> content map, populated by call to Transcend API */
-  public promptContentMap?: { [k in TPromptNames]: TranscendPromptTemplated };
+  public promptContentMap?: Record<TPromptNames, TranscendPromptTemplated>;
 
   /** The large language models that are registered to this organization for reporting */
   public largeLanguageModels: LargeLanguageModel[] = [];
 
   /** The agent definitions registered to this organization */
-  private agentsByName: { [name in string]: Agent } = {};
+  private agentsByName: Record<string, Agent> = {};
 
   /** The agent definitions registered to this organization */
-  private agentsByAgentId: { [id in string]: Agent } = {};
+  private agentsByAgentId: Record<string, Agent> = {};
 
   /** The GraphQL client that can be used to call Transcend */
   public graphQLClient: GraphQLClient;
 
   /** The set of variables to expose in handlebars context specified at class initiation */
-  public defaultVariables: { [k in string]: unknown };
+  public defaultVariables: Record<string, unknown>;
 
   /**
    * The set of variables to expose in handlebars context,
    * merges defaults with calculated variables from the inventory
    */
-  public variables: { [k in string]: unknown };
+  public variables: Record<string, unknown>;
 
   /** Handlebars compiler */
   public handlebars: typeof Handlebars;
@@ -245,7 +244,7 @@ export class TranscendPromptManager<
     /** When true, throw an error if the prompt is not approved */
     requireApproval?: boolean;
     /** The set of variables to expose in handlebars context specified at class initiation */
-    defaultVariables?: { [k in string]: unknown };
+    defaultVariables?: Record<string, unknown>;
     /**
      * The cache duration in ms for how long prompts and associated metadata should be cached
      * When undefined - prompts are cached indefinitely unless explicitly re-requested
@@ -278,10 +277,7 @@ export class TranscendPromptManager<
    */
   async fetchPromptsAndMetadata(): Promise<TranscendPromptsAndVariables> {
     // Determine what to fetch
-    const promptDefinitions = getValues(this.prompts) as TranscendPrompt<
-      t.Any,
-      t.Any
-    >[];
+    const promptDefinitions = getValues(this.prompts);
     const promptIds = promptDefinitions
       .map(({ id }) => id)
       .filter((x): x is string => !!x);
@@ -289,7 +285,7 @@ export class TranscendPromptManager<
       .map(({ title }) => title)
       .filter((x): x is string => !!x);
     const agentNames = uniq(
-      promptDefinitions.map(({ agentNames }) => agentNames || []).flat(),
+      promptDefinitions.flatMap(({ agentNames }) => agentNames || []),
     );
 
     // Fetch prompts and data
@@ -304,7 +300,7 @@ export class TranscendPromptManager<
     this.agentsByName = keyBy(agents, 'name');
     this.agentsByAgentId = keyBy(agents, 'agentId');
     this.largeLanguageModels = largeLanguageModels.filter(
-      (model) => model.isTranscendHosted === false,
+      (model) => !model.isTranscendHosted,
     );
 
     // Lookup prompts by id/title
@@ -313,12 +309,11 @@ export class TranscendPromptManager<
 
     // Update variables
     this.variables = {
-      ...response.calculatedVariables.reduce(
-        (acc, v) =>
-          Object.assign(acc, {
-            [v.name]: v.data ? JSON.parse(v.data) : v.data,
-          }),
-        {},
+      ...Object.fromEntries(
+        response.calculatedVariables.map((v) => [
+          v.name,
+          v.data ? JSON.parse(v.data) : v.data,
+        ]),
       ),
       ...this.defaultVariables,
     };
@@ -340,8 +335,8 @@ export class TranscendPromptManager<
       const result = id
         ? promptById[id]
         : title
-        ? promptByTitle[title]
-        : undefined;
+          ? promptByTitle[title]
+          : undefined;
       if (!result) {
         throw new Error(
           `Failed to find prompt with title: "${title}" and id: "${id}"`,
@@ -402,7 +397,7 @@ export class TranscendPromptManager<
    * @returns The agents that were found matching the names
    */
   async getAgentsByName(names: string[]): Promise<Agent[]> {
-    if (names.length < 1) {
+    if (names.length === 0) {
       throw new Error('Expected at least one name to be provided');
     }
     const { hasCache = [], missingCache = [] } = groupBy(names, (name) =>
@@ -418,10 +413,10 @@ export class TranscendPromptManager<
       const pageOfAgents = await fetchAllAgents(this.graphQLClient, {
         names: chunkedName,
       });
-      pageOfAgents.forEach((agent) => {
+      for (const agent of pageOfAgents) {
         this.agentsByName[agent.name] = agent;
         this.agentsByAgentId[agent.agentId] = agent;
-      });
+      }
       remoteAgents.push(...pageOfAgents);
     });
     return [...cachedAgents, ...remoteAgents];
@@ -509,7 +504,7 @@ export class TranscendPromptManager<
    */
   async compilePrompt<TPromptName extends TPromptNames>(
     promptName: TPromptName,
-    params: t.TypeOf<TPrompts[TPromptName]['paramCodec']>,
+    parameters: t.TypeOf<TPrompts[TPromptName]['paramCodec']>,
   ): Promise<string> {
     // Grab the prompt
     const promptTemplate = await this.getPromptDefinition(promptName);
@@ -536,14 +531,14 @@ export class TranscendPromptManager<
     }
 
     // Validate params
-    decodeCodec(promptInput.paramCodec, params);
+    decodeCodec(promptInput.paramCodec, parameters);
 
     // Compile prompt and template
     return this.handlebars.compile(promptTemplate.content)({
       // template in currentDate by default
       currentDate: new Date().toISOString(),
       ...this.variables,
-      ...params,
+      ...parameters,
     });
   }
 
@@ -630,8 +625,7 @@ export class TranscendPromptManager<
       );
     }
     if (
-      options.promptRunMessages[options.promptRunMessages.length - 1].role !==
-      ChatCompletionRole.Assistant
+      options.promptRunMessages.at(-1).role !== ChatCompletionRole.Assistant
     ) {
       throw new Error(
         `promptRunMessages[${
@@ -639,19 +633,18 @@ export class TranscendPromptManager<
         }].role is expected to be = ${ChatCompletionRole.Assistant}`,
       );
     }
-    const response =
-      options.promptRunMessages[options.promptRunMessages.length - 1].content;
+    const response = options.promptRunMessages.at(-1).content;
 
     let parsed: t.TypeOf<TPrompts[TPromptName]['outputCodec']>;
     try {
       // Parse the response
       parsed = this.parseAiResponse(promptName, response);
-    } catch (err) {
+    } catch (error) {
       await reportPromptRun(this.graphQLClient, {
         productArea: PromptRunProductArea.PromptManager,
         ...options,
         name,
-        error: err.message,
+        error: error.message,
         status: QueueStatus.Error,
         ...(typeof largeLanguageModel === 'string'
           ? { largeLanguageModelId: largeLanguageModel }
@@ -665,7 +658,7 @@ export class TranscendPromptManager<
           ...(ind === 0 ? { template: promptInput.content } : {}),
         })),
       });
-      throw err;
+      throw error;
     }
 
     // report successful run
@@ -768,4 +761,3 @@ export class TranscendPromptManager<
     };
   }
 }
-/* eslint-enable max-lines */

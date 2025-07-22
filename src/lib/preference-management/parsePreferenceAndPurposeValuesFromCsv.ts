@@ -1,14 +1,12 @@
-import { uniq, difference } from 'lodash-es';
+import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { difference, uniq } from 'lodash-es';
 import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
-import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';
-
-/* eslint-disable no-param-reassign */
+import { FileMetadataState } from './codecs';
 
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
@@ -35,7 +33,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
   },
 ): Promise<FileMetadataState> {
   // Determine columns to map
-  const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
+  const columnNames = uniq(preferences.flatMap((x) => Object.keys(x)));
 
   // Determine the columns that could potentially be used for identifier
   const otherColumns = difference(columnNames, [
@@ -139,9 +137,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           }>([
             {
               name: 'preferenceValue',
-              message:
-                // eslint-disable-next-line max-len
-                `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
+              message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
               type: 'confirm',
               default: value !== 'false',
             },
@@ -157,7 +153,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
           }>([
             {
               name: 'preferenceValue',
-              // eslint-disable-next-line max-len
+
               message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
               type: 'list',
               choices: preferenceOptions,
@@ -182,7 +178,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
             }>([
               {
                 name: 'preferenceValue',
-                // eslint-disable-next-line max-len
+
                 message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
                 type: 'list',
                 choices: preferenceOptions,
@@ -205,4 +201,3 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
 
   return currentState;
 }
-/* eslint-enable no-param-reassign */

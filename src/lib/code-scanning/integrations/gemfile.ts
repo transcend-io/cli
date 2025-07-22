@@ -1,9 +1,9 @@
-import { readFileSync } from 'fs';
-import { CodeScanningConfig } from '../types';
+import { readFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { CodePackageType } from '@transcend-io/privacy-types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { listFiles } from '../../api-keys';
-import { dirname } from 'path';
-import { CodePackageType } from '@transcend-io/privacy-types';
+import { CodeScanningConfig } from '../types';
 
 const GEM_PACKAGE_REGEX = /gem *('|")(.+?)('|")(, *('|")(.+?)('|")|)/;
 const GEMFILE_PACKAGE_NAME_REGEX = /spec\.name *= *('|")(.+?)('|")/;
@@ -54,9 +54,9 @@ export const gemfile: CodeScanningConfig = {
         name: gemfileName || directory.split('/').pop()!,
         description: gemfileDescription || undefined,
         type: CodePackageType.RequirementsTxt,
-        softwareDevelopmentKits: targets.map((pkg) => ({
-          name: pkg.name,
-          version: pkg.version,
+        softwareDevelopmentKits: targets.map((package_) => ({
+          name: package_.name,
+          version: package_.version,
         })),
       },
     ];

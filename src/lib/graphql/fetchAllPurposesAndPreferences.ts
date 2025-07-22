@@ -1,9 +1,9 @@
 import { GraphQLClient } from 'graphql-request';
-import { Purpose, fetchAllPurposes } from './fetchAllPurposes';
 import {
-  PreferenceTopic,
   fetchAllPreferenceTopics,
+  PreferenceTopic,
 } from './fetchAllPreferenceTopics';
+import { fetchAllPurposes, Purpose } from './fetchAllPurposes';
 
 export interface PurposeWithPreferences extends Purpose {
   /** Topics */

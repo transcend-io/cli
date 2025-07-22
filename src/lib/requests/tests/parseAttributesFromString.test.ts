@@ -1,5 +1,4 @@
-import { expect, describe, it } from 'vitest';
-
+import { describe, expect, it } from 'vitest';
 import { parseAttributesFromString } from '../index';
 
 describe('parseAttributesFromString', () => {

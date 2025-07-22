@@ -4,8 +4,8 @@ import colors from 'colors';
 import { gql, type GraphQLClient } from 'graphql-request';
 import { sortBy } from 'lodash-es';
 import type { DataCategoryInput } from '../../codecs';
-import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 import { logger } from '../../logger';
+import { ENTRY_COUNT, makeGraphQLRequest } from '../graphql';
 
 interface UnstructuredSubDataPointRecommendationCsvPreview {
   /** ID of subDatapoint */
@@ -74,7 +74,7 @@ export async function pullUnstructuredSubDataPointRecommendations(
     [];
 
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
@@ -161,24 +161,24 @@ export async function pullUnstructuredSubDataPointRecommendations(
         },
       );
 
-      cursor = nodes[nodes.length - 1]?.id as string;
+      cursor = nodes.at(-1)?.id;
       unstructuredSubDataPointRecommendations.push(...nodes);
       shouldContinue = nodes.length === pageSize;
       total += nodes.length;
       offset += nodes.length;
       progressBar.update(total);
-    } catch (err) {
+    } catch (error) {
       logger.error(
         colors.red(
           `An error fetching subdatapoints for cursor ${cursor} and offset ${offset}`,
         ),
       );
-      throw err;
+      throw error;
     }
   } while (shouldContinue);
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   const sorted = sortBy(unstructuredSubDataPointRecommendations, 'name');

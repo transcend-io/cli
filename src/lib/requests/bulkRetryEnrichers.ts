@@ -3,18 +3,18 @@ import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import { difference } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
   buildTranscendGraphQLClient,
   fetchAllRequestEnrichers,
   fetchAllRequests,
   retryRequestEnricher,
 } from '../graphql';
-import { logger } from '../../logger';
 
 /**
  * Restart a bunch of request enrichers
@@ -52,7 +52,7 @@ export async function bulkRetryEnrichers({
   concurrency?: number;
 }): Promise<void> {
   // Time duration
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
   // create a new progress bar instance and use shades_classic theme
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -120,7 +120,7 @@ export async function bulkRetryEnrichers({
   );
 
   progressBar.stop();
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   const totalTime = t1 - t0;
 
   // Log completion time

@@ -1,38 +1,38 @@
 import {
-  ConsentManageExperienceInput,
-  ConsentManagerInput,
-} from '../../codecs';
-import colors from 'colors';
-import { GraphQLClient } from 'graphql-request';
-import {
-  UPDATE_CONSENT_MANAGER_DOMAINS,
-  CREATE_CONSENT_MANAGER,
-  UPDATE_TOGGLE_USP_API,
-  UPDATE_CONSENT_MANAGER_PARTITION,
-  UPDATE_CONSENT_MANAGER_VERSION,
-  TOGGLE_TELEMETRY_PARTITION_STRATEGY,
-  TOGGLE_UNKNOWN_COOKIE_POLICY,
-  TOGGLE_CONSENT_PRECEDENCE,
-  TOGGLE_UNKNOWN_REQUEST_POLICY,
-  UPDATE_CONSENT_EXPERIENCE,
-  CREATE_CONSENT_EXPERIENCE,
-  UPDATE_CONSENT_MANAGER_THEME,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import {
-  fetchConsentManagerId,
-  fetchConsentManagerExperiences,
-} from './fetchConsentManagerId';
-import { keyBy } from 'lodash-es';
-import { map } from '../bluebird-replace';
-import {
   InitialViewState,
   OnConsentExpiry,
 } from '@transcend-io/airgap.js-types';
+import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { keyBy } from 'lodash-es';
+import {
+  ConsentManageExperienceInput,
+  ConsentManagerInput,
+} from '../../codecs';
 import { logger } from '../../logger';
-import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
-import { fetchPartitions } from './syncPartitions';
+import { map } from '../bluebird-replace';
 import { fetchAllPurposes } from './fetchAllPurposes';
+import {
+  fetchConsentManagerExperiences,
+  fetchConsentManagerId,
+} from './fetchConsentManagerId';
+import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
+import {
+  CREATE_CONSENT_EXPERIENCE,
+  CREATE_CONSENT_MANAGER,
+  TOGGLE_CONSENT_PRECEDENCE,
+  TOGGLE_TELEMETRY_PARTITION_STRATEGY,
+  TOGGLE_UNKNOWN_COOKIE_POLICY,
+  TOGGLE_UNKNOWN_REQUEST_POLICY,
+  UPDATE_CONSENT_EXPERIENCE,
+  UPDATE_CONSENT_MANAGER_DOMAINS,
+  UPDATE_CONSENT_MANAGER_PARTITION,
+  UPDATE_CONSENT_MANAGER_THEME,
+  UPDATE_CONSENT_MANAGER_VERSION,
+  UPDATE_TOGGLE_USP_API,
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
+import { fetchPartitions } from './syncPartitions';
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';
@@ -93,9 +93,9 @@ export async function syncConsentManagerExperiences(
             onConsentExpiry: exp.onConsentExpiry,
             consentExpiry: exp.consentExpiry,
             displayPriority:
-              exp.displayPriority !== existingExperience.displayPriority
-                ? exp.displayPriority
-                : undefined,
+              exp.displayPriority === existingExperience.displayPriority
+                ? undefined
+                : exp.displayPriority,
             viewState: exp.viewState,
             purposes: purposeIds,
             optedOutPurposes: optedOutPurposeIds,
@@ -152,9 +152,9 @@ export async function syncConsentManager(
   // ensure the consent manager is created and deployed
   try {
     airgapBundleId = await fetchConsentManagerId(client, 1);
-  } catch (err) {
+  } catch (error) {
     // TODO: https://transcend.height.app/T-23778
-    if (err.message.includes('AirgapBundle not found')) {
+    if (error.message.includes('AirgapBundle not found')) {
       const privacyCenterId = await fetchPrivacyCenterId(client);
 
       const { createConsentManager } = await makeGraphQLRequest<{
@@ -172,7 +172,7 @@ export async function syncConsentManager(
       });
       airgapBundleId = createConsentManager.consentManager.id;
     } else {
-      throw err;
+      throw error;
     }
   }
 

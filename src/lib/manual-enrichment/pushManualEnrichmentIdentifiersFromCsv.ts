@@ -1,18 +1,18 @@
 import colors from 'colors';
-import { map } from '../bluebird-replace';
+import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
 import {
-  UPDATE_PRIVACY_REQUEST,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   makeGraphQLRequest,
+  UPDATE_PRIVACY_REQUEST,
 } from '../graphql';
+import { readCsv } from '../requests';
 import {
   enrichPrivacyRequest,
   EnrichPrivacyRequest,
 } from './enrichPrivacyRequest';
-import { readCsv } from '../requests';
-import { DEFAULT_TRANSCEND_API } from '../../constants';
 
 /**
  * Push a CSV of enriched requests back into Transcend
@@ -90,7 +90,7 @@ export async function pushManualEnrichmentIdentifiersFromCsv({
         } else {
           skippedCount += 1;
         }
-      } catch (err) {
+      } catch {
         errorCount += 1;
       }
     },

@@ -1,19 +1,19 @@
 import { PersistedState } from '@transcend-io/persisted-state';
-import type { Got } from 'got';
-import { keyBy } from 'lodash-es';
-import * as t from 'io-ts';
 import colors from 'colors';
-import { FileMetadataState, PreferenceState } from './codecs';
+import type { Got } from 'got';
+import * as t from 'io-ts';
+import { keyBy } from 'lodash-es';
 import { logger } from '../../logger';
-import { readCsv } from '../requests';
-import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic } from '../graphql';
-import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
-import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
-import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
-import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
+import { readCsv } from '../requests';
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
+import { FileMetadataState, PreferenceState } from './codecs';
+import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
+import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
+import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
+import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
+import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
 
 /**
  * Parse a file into the cache
@@ -51,7 +51,7 @@ export async function parsePreferenceManagementCsvWithCache(
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
   // Start the timer
-  const t0 = new Date().getTime();
+  const t0 = Date.now();
 
   // Get the current metadata
   const fileMetadata = cache.getValue('fileMetadata');
@@ -121,7 +121,7 @@ export async function parsePreferenceManagementCsvWithCache(
   currentState.skippedUpdates = {};
 
   // Process each row
-  preferences.forEach((pref) => {
+  for (const pref of preferences) {
     // Grab unique Id for the user
     const userId = pref[currentState.identifierColumn!];
 
@@ -154,7 +154,7 @@ export async function parsePreferenceManagementCsvWithCache(
       !forceTriggerWorkflows
     ) {
       currentState.skippedUpdates[userId] = pref;
-      return;
+      continue;
     }
 
     // Determine if there are any conflicts
@@ -170,17 +170,17 @@ export async function parsePreferenceManagementCsvWithCache(
         row: pref,
         record: currentConsentRecord,
       };
-      return;
+      continue;
     }
 
     // Add to pending updates
     currentState.pendingSafeUpdates[userId] = pref;
-  });
+  }
 
   // Read in the file
   fileMetadata[file] = currentState;
   await cache.setValue(fileMetadata, 'fileMetadata');
-  const t1 = new Date().getTime();
+  const t1 = Date.now();
   logger.info(
     colors.green(
       `Successfully pre-processed file: "${file}" in ${(t1 - t0) / 1000}s`,

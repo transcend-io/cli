@@ -1,6 +1,5 @@
-import type { LocalContext } from '../../../context';
-
 import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
+import type { LocalContext } from '../../../context';
 import { approvePrivacyRequests } from '../../../lib/requests';
 
 interface ApproveCommandFlags {

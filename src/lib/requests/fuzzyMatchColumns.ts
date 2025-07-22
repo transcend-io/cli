@@ -1,7 +1,6 @@
-import inquirer from 'inquirer';
-import { NONE, BULK_APPLY } from './constants';
-
 import fuzzysearch from 'fuzzysearch';
+import inquirer from 'inquirer';
+import { BULK_APPLY, NONE } from './constants';
 
 /**
  * Check if word1 and word2 are a fuzzy match of each other.

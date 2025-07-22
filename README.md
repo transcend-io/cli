@@ -10,52 +10,52 @@
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
-  - [`transcend request approve`](#transcend-request-approve)
-  - [`transcend request upload`](#transcend-request-upload)
-  - [`transcend request download-files`](#transcend-request-download-files)
-  - [`transcend request cancel`](#transcend-request-cancel)
-  - [`transcend request restart`](#transcend-request-restart)
-  - [`transcend request notify-additional-time`](#transcend-request-notify-additional-time)
-  - [`transcend request mark-silent`](#transcend-request-mark-silent)
-  - [`transcend request enricher-restart`](#transcend-request-enricher-restart)
-  - [`transcend request reject-unverified-identifiers`](#transcend-request-reject-unverified-identifiers)
-  - [`transcend request export`](#transcend-request-export)
-  - [`transcend request skip-preflight-jobs`](#transcend-request-skip-preflight-jobs)
-  - [`transcend request system mark-request-data-silos-completed`](#transcend-request-system-mark-request-data-silos-completed)
-  - [`transcend request system retry-request-data-silos`](#transcend-request-system-retry-request-data-silos)
-  - [`transcend request system skip-request-data-silos`](#transcend-request-system-skip-request-data-silos)
-  - [`transcend request preflight pull-identifiers`](#transcend-request-preflight-pull-identifiers)
-  - [`transcend request preflight push-identifiers`](#transcend-request-preflight-push-identifiers)
-  - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
-  - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
-  - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
-  - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
-  - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
-  - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
-  - [`transcend consent upload-consent-preferences`](#transcend-consent-upload-consent-preferences)
-  - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
-  - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
-  - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
-  - [`transcend inventory pull`](#transcend-inventory-pull)
-    - [Scopes](#scopes)
-    - [Usage](#usage-1)
-  - [`transcend inventory push`](#transcend-inventory-push)
-    - [Scopes](#scopes-1)
-    - [Usage](#usage-2)
-    - [CI Integration](#ci-integration)
-    - [Dynamic Variables](#dynamic-variables)
-  - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
-  - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
-    - [Usage](#usage-3)
-  - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
-  - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
-  - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
-  - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
-  - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
-  - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
-  - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
-    - [Usage](#usage-4)
-  - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
+   - [`transcend request approve`](#transcend-request-approve)
+   - [`transcend request upload`](#transcend-request-upload)
+   - [`transcend request download-files`](#transcend-request-download-files)
+   - [`transcend request cancel`](#transcend-request-cancel)
+   - [`transcend request restart`](#transcend-request-restart)
+   - [`transcend request notify-additional-time`](#transcend-request-notify-additional-time)
+   - [`transcend request mark-silent`](#transcend-request-mark-silent)
+   - [`transcend request enricher-restart`](#transcend-request-enricher-restart)
+   - [`transcend request reject-unverified-identifiers`](#transcend-request-reject-unverified-identifiers)
+   - [`transcend request export`](#transcend-request-export)
+   - [`transcend request skip-preflight-jobs`](#transcend-request-skip-preflight-jobs)
+   - [`transcend request system mark-request-data-silos-completed`](#transcend-request-system-mark-request-data-silos-completed)
+   - [`transcend request system retry-request-data-silos`](#transcend-request-system-retry-request-data-silos)
+   - [`transcend request system skip-request-data-silos`](#transcend-request-system-skip-request-data-silos)
+   - [`transcend request preflight pull-identifiers`](#transcend-request-preflight-pull-identifiers)
+   - [`transcend request preflight push-identifiers`](#transcend-request-preflight-push-identifiers)
+   - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
+   - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
+   - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
+   - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
+   - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
+   - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
+   - [`transcend consent upload-consent-preferences`](#transcend-consent-upload-consent-preferences)
+   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
+   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
+   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
+   - [`transcend inventory pull`](#transcend-inventory-pull)
+      - [Scopes](#scopes)
+      - [Usage](#usage-1)
+   - [`transcend inventory push`](#transcend-inventory-push)
+      - [Scopes](#scopes-1)
+      - [Usage](#usage-2)
+      - [CI Integration](#ci-integration)
+      - [Dynamic Variables](#dynamic-variables)
+   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
+   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
+      - [Usage](#usage-3)
+   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
+   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
+   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
+   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
+   - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
+   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
+   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
+      - [Usage](#usage-4)
+   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -114,8 +114,8 @@ The structure of `transcend.yml` looks something like the following:
 # CLI, it is possible to specify which API key should be associated
 # with the newly created data silo.
 api-keys:
-  - title: Webhook Key
-  - title: Analytics Key
+   - title: Webhook Key
+   - title: Analytics Key
 
 # Manage at: https://app.transcend.io/privacy-requests/identifiers
 # See https://docs.transcend.io/docs/identity-enrichment
@@ -126,65 +126,65 @@ api-keys:
 #   - fraud check: auto-cancel requests if the user is flagged for fraudulent behavior
 #   - customer check: auto-cancel request for some custom business criteria
 enrichers:
-  - title: Basic Identity Enrichment
-    description: Enrich an email address to the userId and phone number
-    url: https://example.acme.com/transcend-enrichment-webhook
-    input-identifier: email
-    output-identifiers:
-      - userId
-      - phone
-      - myUniqueIdentifier
-  - title: Fraud Check
-    description: Ensure the email address is not marked as fraudulent
-    url: https://example.acme.com/transcend-fraud-check
-    input-identifier: email
-    output-identifiers:
-      - email
-    privacy-actions:
-      - ERASURE
+   - title: Basic Identity Enrichment
+     description: Enrich an email address to the userId and phone number
+     url: https://example.acme.com/transcend-enrichment-webhook
+     input-identifier: email
+     output-identifiers:
+        - userId
+        - phone
+        - myUniqueIdentifier
+   - title: Fraud Check
+     description: Ensure the email address is not marked as fraudulent
+     url: https://example.acme.com/transcend-fraud-check
+     input-identifier: email
+     output-identifiers:
+        - email
+     privacy-actions:
+        - ERASURE
 
 # Manage at: https://app.transcend.io/privacy-requests/connected-services
 # See https://docs.transcend.io/docs/the-data-map#data-silos
 # Define the data silos in your data map. A data silo can be a database,
 # or a web service that may use a collection of different data stores under the hood.
 data-silos:
-  # Note: title is the only required top-level field for a data silo
-  - title: Redshift Data Warehouse
-    description: The mega-warehouse that contains a copy over all SQL backed databases
-    integrationName: server
-    url: https://example.acme.com/transcend-webhook
-    api-key-title: Webhook Key
-    data-subjects:
-      - customer
-      - employee
-      - newsletter-subscriber
-      - b2b-contact
-    identity-keys:
-      - email
-      - userId
-    deletion-dependencies:
-      - Identity Service
-    owners:
-      - alice@transcend.io
-    datapoints:
-      - title: Webhook Notification
-        key: _global
-        privacy-actions:
-          - ACCESS
-          - ERASURE
-          - SALE_OPT_OUT
-      - title: User Model
-        description: The centralized user model user
-        key: users
-        privacy-actions:
-          - ACCESS
-        fields:
-          - key: firstName
-            title: First Name
-            description: The first name of the user, inputted during onboarding
-          - key: email
-            title: Email
-            description: The email address of the user
+   # Note: title is the only required top-level field for a data silo
+   - title: Redshift Data Warehouse
+     description: The mega-warehouse that contains a copy over all SQL backed databases
+     integrationName: server
+     url: https://example.acme.com/transcend-webhook
+     api-key-title: Webhook Key
+     data-subjects:
+        - customer
+        - employee
+        - newsletter-subscriber
+        - b2b-contact
+     identity-keys:
+        - email
+        - userId
+     deletion-dependencies:
+        - Identity Service
+     owners:
+        - alice@transcend.io
+     datapoints:
+        - title: Webhook Notification
+          key: _global
+          privacy-actions:
+             - ACCESS
+             - ERASURE
+             - SALE_OPT_OUT
+        - title: User Model
+          description: The centralized user model user
+          key: users
+          privacy-actions:
+             - ACCESS
+          fields:
+             - key: firstName
+               title: First Name
+               description: The first name of the user, inputted during onboarding
+             - key: email
+               title: Email
+               description: The email address of the user
 ```
 
 ## Usage
@@ -1133,32 +1133,32 @@ name: Transcend Data Map Syncing
 # See https://app.transcend.io/privacy-requests/connected-services
 
 on:
-  push:
-    branches:
-      - 'main'
+   push:
+      branches:
+         - 'main'
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+   deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+         - name: Setup Node.js
+           uses: actions/setup-node@v2
+           with:
+              node-version: '16'
 
-      - name: Install Transcend CLI
-        run: npm install --global @transcend-io/cli
+         - name: Install Transcend CLI
+           run: npm install --global @transcend-io/cli
 
-      # If you have a script that generates your transcend.yml file from
-      # an ORM or infrastructure configuration, add that step here
-      # Leave this step commented out if you want to manage your transcend.yml manually
-      # - name: Generate transcend.yml
-      #   run: ./scripts/generate_transcend_yml.py
+         # If you have a script that generates your transcend.yml file from
+         # an ORM or infrastructure configuration, add that step here
+         # Leave this step commented out if you want to manage your transcend.yml manually
+         # - name: Generate transcend.yml
+         #   run: ./scripts/generate_transcend_yml.py
 
-      - name: Push Transcend config
-        run: transcend inventory push --auth=${{ secrets.TRANSCEND_API_KEY }}
+         - name: Push Transcend config
+           run: transcend inventory push --auth=${{ secrets.TRANSCEND_API_KEY }}
 ```
 
 #### Dynamic Variables
@@ -1175,32 +1175,32 @@ This command could fill out multiple parameters in a YAML file like [./examples/
 
 ```yml
 api-keys:
-  - title: Webhook Key
+   - title: Webhook Key
 enrichers:
-  - title: Basic Identity Enrichment
-    description: Enrich an email address to the userId and phone number
-    # The data silo webhook URL is the same in each environment,
-    # except for the base domain in the webhook URL.
-    url: https://example.<<parameters.domain>>/transcend-enrichment-webhook
-    input-identifier: email
-    output-identifiers:
-      - userId
-      - phone
-      - myUniqueIdentifier
-  - title: Fraud Check
-    description: Ensure the email address is not marked as fraudulent
-    url: https://example.<<parameters.domain>>/transcend-fraud-check
-    input-identifier: email
-    output-identifiers:
-      - email
-    privacy-actions:
-      - ERASURE
+   - title: Basic Identity Enrichment
+     description: Enrich an email address to the userId and phone number
+     # The data silo webhook URL is the same in each environment,
+     # except for the base domain in the webhook URL.
+     url: https://example.<<parameters.domain>>/transcend-enrichment-webhook
+     input-identifier: email
+     output-identifiers:
+        - userId
+        - phone
+        - myUniqueIdentifier
+   - title: Fraud Check
+     description: Ensure the email address is not marked as fraudulent
+     url: https://example.<<parameters.domain>>/transcend-fraud-check
+     input-identifier: email
+     output-identifiers:
+        - email
+     privacy-actions:
+        - ERASURE
 data-silos:
-  - title: Redshift Data Warehouse
-    integrationName: server
-    description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
-    url: https://example.<<parameters.domain>>/transcend-webhook
-    api-key-title: Webhook Key
+   - title: Redshift Data Warehouse
+     integrationName: server
+     description: The mega-warehouse that contains a copy over all SQL backed databases - <<parameters.stage>>
+     url: https://example.<<parameters.domain>>/transcend-webhook
+     api-key-title: Webhook Key
 ```
 
 ### `transcend inventory scan-packages`
@@ -1432,12 +1432,12 @@ Filter for only a specific organization by ID, returning all child accounts asso
 
 ```gql
 query {
-  user {
-    organization {
-      id
-      parentOrganizationId
-    }
-  }
+   user {
+      organization {
+         id
+         parentOrganizationId
+      }
+   }
 }
 ```
 
@@ -1499,142 +1499,145 @@ FLAGS
 If you are integrating Transcend's Prompt Manager into your code, it may look like:
 
 ```ts
-import * as t from 'io-ts';
 import { TranscendPromptManager } from '@transcend-io/cli';
 import {
-  ChatCompletionMessage,
-  PromptRunProductArea,
+   ChatCompletionMessage,
+   PromptRunProductArea,
 } from '@transcend-io/privacy-types';
+import * as t from 'io-ts';
 
 /**
  * Example prompt integration
  */
 export async function main(): Promise<void> {
-  // Instantiate the Transcend Prompt Manager instance
-  const promptManager = new TranscendPromptManager({
-    // API key
-    transcendApiKey: process.env.TRANSCEND_API_KEY,
-    // Define the prompts that are stored in Transcend
-    prompts: {
-      test: {
-        // identify by ID
-        id: '30bcaa79-889a-4af3-842d-2e8ba443d36d',
-        // no runtime variables
-        paramCodec: t.type({}),
-        // response is list of strings
-        outputCodec: t.array(t.string),
+   // Instantiate the Transcend Prompt Manager instance
+   const promptManager = new TranscendPromptManager({
+      // API key
+      transcendApiKey: process.env.TRANSCEND_API_KEY,
+      // Define the prompts that are stored in Transcend
+      prompts: {
+         test: {
+            // identify by ID
+            id: '30bcaa79-889a-4af3-842d-2e8ba443d36d',
+            // no runtime variables
+            paramCodec: t.type({}),
+            // response is list of strings
+            outputCodec: t.array(t.string),
+         },
+         json: {
+            // identify by title
+            title: 'test',
+            // one runtime variable "test"
+            paramCodec: t.type({ test: t.string }),
+            // runtime is json object
+            outputCodec: t.record(t.string, t.string),
+            // response is stored in <json></json> atg
+            extractFromTag: 'json',
+         },
+         predictProductLine: {
+            // identify by title
+            title: 'Predict Product Line',
+            // runtime parameter for slack channel name
+            paramCodec: t.type({
+               slackChannelName: t.string,
+            }),
+            // response is specific JSON shape
+            outputCodec: t.type({
+               product: t.union([t.string, t.null]),
+               clarification: t.union([t.string, t.null]),
+            }),
+            // response is stored in <json></json> atg
+            extractFromTag: 'json',
+         },
       },
-      json: {
-        // identify by title
-        title: 'test',
-        // one runtime variable "test"
-        paramCodec: t.type({ test: t.string }),
-        // runtime is json object
-        outputCodec: t.record(t.string, t.string),
-        // response is stored in <json></json> atg
-        extractFromTag: 'json',
+      // Optional arguments
+      //  transcendUrl: 'https://api.us.transcend.io', // defaults to 'https://api.transcend.io'
+      //  requireApproval: false, // defaults to true
+      //  cacheDuration: 1000 * 60 * 60, // defaults to undefined, no cache
+      //  defaultVariables: { myVariable: 'this is custom', other: [{ name: 'custom' }] }, // defaults to {}
+      //  handlebarsOptions: { helpers, templates }, // defaults to {}
+   });
+
+   // Fetch the prompt from Transcend and template any variables
+   // in this case, we template the slack channel name in the LLM prompt
+   const systemPrompt = await promptManager.compilePrompt(
+      'predictProductLine',
+      {
+         slackChannelName: channelName,
       },
-      predictProductLine: {
-        // identify by title
-        title: 'Predict Product Line',
-        // runtime parameter for slack channel name
-        paramCodec: t.type({
-          slackChannelName: t.string,
-        }),
-        // response is specific JSON shape
-        outputCodec: t.type({
-          product: t.union([t.string, t.null]),
-          clarification: t.union([t.string, t.null]),
-        }),
-        // response is stored in <json></json> atg
-        extractFromTag: 'json',
+   );
+
+   // Parameters to pass to the LLM
+   const input: ChatCompletionMessage[] = [
+      {
+         role: 'system',
+         content: systemPrompt,
       },
-    },
-    // Optional arguments
-    //  transcendUrl: 'https://api.us.transcend.io', // defaults to 'https://api.transcend.io'
-    //  requireApproval: false, // defaults to true
-    //  cacheDuration: 1000 * 60 * 60, // defaults to undefined, no cache
-    //  defaultVariables: { myVariable: 'this is custom', other: [{ name: 'custom' }] }, // defaults to {}
-    //  handlebarsOptions: { helpers, templates }, // defaults to {}
-  });
+      {
+         role: 'user',
+         content: input,
+      },
+   ];
+   const largeLanguageModel = {
+      name: 'gpt-4',
+      client: 'openai' as const,
+   };
+   const temperature = 1;
+   const topP = 1;
+   const maxTokensToSample = 1000;
 
-  // Fetch the prompt from Transcend and template any variables
-  // in this case, we template the slack channel name in the LLM prompt
-  const systemPrompt = await promptManager.compilePrompt('predictProductLine', {
-    slackChannelName: channelName,
-  });
+   // Run prompt against LLM
+   let response: string;
+   const t0 = new Date().getTime();
+   try {
+      response = await openai.createCompletion(input, {
+         temperature,
+         top_p: topP,
+         max_tokens: maxTokensToSample,
+      });
+   } catch (err) {
+      // report error upon failure
+      await promptManager.reportPromptRunError('predictProductLine', {
+         promptRunMessages: input,
+         duration: new Date().getTime() - t0,
+         temperature,
+         topP,
+         error: err.message,
+         maxTokensToSample,
+         largeLanguageModel,
+      });
+   }
+   const t1 = new Date().getTime();
 
-  // Parameters to pass to the LLM
-  const input: ChatCompletionMessage[] = [
-    {
-      role: 'system',
-      content: systemPrompt,
-    },
-    {
-      role: 'user',
-      content: input,
-    },
-  ];
-  const largeLanguageModel = {
-    name: 'gpt-4',
-    client: 'openai' as const,
-  };
-  const temperature = 1;
-  const topP = 1;
-  const maxTokensToSample = 1000;
+   // Parsed response as JSON and do not report to Transcend
+   //   const parsedResponse = promptManager.parseAiResponse(
+   //     'predictProductLine',
+   //     response,
+   //   );
 
-  // Run prompt against LLM
-  let response: string;
-  const t0 = new Date().getTime();
-  try {
-    response = await openai.createCompletion(input, {
-      temperature,
-      top_p: topP,
-      max_tokens: maxTokensToSample,
-    });
-  } catch (err) {
-    // report error upon failure
-    await promptManager.reportPromptRunError('predictProductLine', {
-      promptRunMessages: input,
-      duration: new Date().getTime() - t0,
-      temperature,
-      topP,
-      error: err.message,
-      maxTokensToSample,
-      largeLanguageModel,
-    });
-  }
-  const t1 = new Date().getTime();
-
-  // Parsed response as JSON and do not report to Transcend
-  //   const parsedResponse = promptManager.parseAiResponse(
-  //     'predictProductLine',
-  //     response,
-  //   );
-
-  // Parsed response as JSON and report output to Transcend
-  const parsedResponse = await promptManager.reportAndParsePromptRun(
-    'predictProductLine',
-    {
-      promptRunMessages: [
-        ...input,
-        {
-          role: 'assistant',
-          content: response,
-        },
-      ],
-      duration: t1 - t0,
-      temperature,
-      topP,
-      maxTokensToSample,
-      largeLanguageModel,
-      // Optional parameters
-      // name, // unique identifier for this run
-      // productArea, // Transcend product area that the prompt relates to
-      // runByEmployeeEmail, // Employee email that is executing the request
-      // promptGroupId, // The prompt group being reported
-    },
-  );
+   // Parsed response as JSON and report output to Transcend
+   const parsedResponse = await promptManager.reportAndParsePromptRun(
+      'predictProductLine',
+      {
+         promptRunMessages: [
+            ...input,
+            {
+               role: 'assistant',
+               content: response,
+            },
+         ],
+         duration: t1 - t0,
+         temperature,
+         topP,
+         maxTokensToSample,
+         largeLanguageModel,
+         // Optional parameters
+         // name, // unique identifier for this run
+         // productArea, // Transcend product area that the prompt relates to
+         // runByEmployeeEmail, // Employee email that is executing the request
+         // promptGroupId, // The prompt group being reported
+      },
+   );
 }
 ```
 

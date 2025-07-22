@@ -1,8 +1,8 @@
-import { map } from '../bluebird-replace';
 import colors from 'colors';
-import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 import type { Got } from 'got';
 import { logger } from '../../logger';
+import { map } from '../bluebird-replace';
+import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 
 /**
  * This function will take in a set of file metadata for privacy requests
@@ -43,9 +43,11 @@ export async function streamPrivacyRequestFiles(
             },
           })
           .buffer()
-          .then((fileResponse) => onFileDownloaded(metadata, fileResponse));
-      } catch (err) {
-        if (err?.response?.body?.includes('fileMetadata#verify')) {
+          .then((fileResponse) => {
+            onFileDownloaded(metadata, fileResponse);
+          });
+      } catch (error) {
+        if (error?.response?.body?.includes('fileMetadata#verify')) {
           logger.error(
             colors.red(
               `Failed to pull file for: ${metadata.fileName} (request:${requestId}) - JWT expired. ` +
@@ -58,7 +60,7 @@ export async function streamPrivacyRequestFiles(
         }
         throw new Error(
           `Received an error from server: ${
-            err?.response?.body || err?.message
+            error?.response?.body || error?.message
           }`,
         );
       }

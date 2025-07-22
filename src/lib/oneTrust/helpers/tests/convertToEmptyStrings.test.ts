@@ -1,5 +1,4 @@
-import { expect, describe, it } from 'vitest';
-
+import { describe, expect, it } from 'vitest';
 import { convertToEmptyStrings } from '../convertToEmptyStrings';
 
 describe('buildDefaultCodecWrapper', () => {
@@ -19,7 +18,7 @@ describe('buildDefaultCodecWrapper', () => {
   });
 
   it('should correctly build a default codec for undefined', () => {
-    const result = convertToEmptyStrings(undefined);
+    const result = convertToEmptyStrings();
     expect(result).to.equal('');
   });
 

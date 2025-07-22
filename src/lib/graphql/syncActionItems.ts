@@ -1,17 +1,17 @@
-import { ActionItemInput } from '../../codecs';
-import { uniq, keyBy, chunk } from 'lodash-es';
-import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
-import { UPDATE_ACTION_ITEMS, CREATE_ACTION_ITEMS } from './gqls';
-import { logger } from '../../logger';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
-import { fetchAllActionItems, ActionItem } from './fetchAllActionItems';
+import { GraphQLClient } from 'graphql-request';
+import { chunk, keyBy, uniq } from 'lodash-es';
+import { ActionItemInput } from '../../codecs';
+import { logger } from '../../logger';
+import { mapSeries } from '../bluebird-replace';
 import {
   ActionItemCollection,
   fetchAllActionItemCollections,
 } from './fetchAllActionItemCollections';
+import { ActionItem, fetchAllActionItems } from './fetchAllActionItems';
 import { Attribute, fetchAllAttributes } from './fetchAllAttributes';
+import { CREATE_ACTION_ITEMS, UPDATE_ACTION_ITEMS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Input to create a new actionItem
@@ -24,10 +24,10 @@ import { Attribute, fetchAllAttributes } from './fetchAllAttributes';
 export async function createActionItems(
   client: GraphQLClient,
   actionItems: ActionItemInput[],
-  actionItemCollectionByTitle: { [k in string]: ActionItemCollection },
+  actionItemCollectionByTitle: Record<string, ActionItemCollection>,
   // TODO: https://transcend.height.app/T-38961 - insert attributes
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  attributeKeysByName: { [k in string]: Attribute } = {},
+  attributeKeysByName: Record<string, Attribute> = {},
 ): Promise<void> {
   // TODO: https://transcend.height.app/T-38961 - insert attributes
   // const getAttribute = (key: string): string => {
@@ -81,9 +81,7 @@ export async function updateActionItem(
   client: GraphQLClient,
   input: ActionItemInput,
   actionItemId: string,
-  attributeKeysByName: {
-    [k in string]: Attribute;
-  } = {},
+  attributeKeysByName: Record<string, Attribute> = {},
 ): Promise<void> {
   const getAttribute = (key: string): string => {
     const existing = attributeKeysByName[key];
@@ -174,21 +172,21 @@ export async function syncActionItems(
     ]);
 
   // Look up by title
-  const actionItemCollectionByTitle: { [k in string]: ActionItemCollection } =
+  const actionItemCollectionByTitle: Record<string, ActionItemCollection> =
     keyBy(existingActionItemCollections, 'title');
-  const actionItemByTitle: { [k in string]: ActionItem } = keyBy(
+  const actionItemByTitle: Record<string, ActionItem> = keyBy(
     existingActionItems,
     actionItemToUniqueCode,
   );
   const attributeKeysByName = keyBy(attributeKeys, 'name');
-  const actionItemByCxId: { [k in string]: ActionItem } = keyBy(
+  const actionItemByCxId: Record<string, ActionItem> = keyBy(
     existingActionItems.filter((x) => !!x.customerExperienceActionItemIds),
     ({ customerExperienceActionItemIds }) => customerExperienceActionItemIds[0],
   );
 
   // Ensure all collections exist
   const missingCollections = uniq(
-    inputs.map((input) => input.collections).flat(),
+    inputs.flatMap((input) => input.collections),
   ).filter((collectionTitle) => !actionItemCollectionByTitle[collectionTitle]);
   if (missingCollections.length > 0) {
     logger.info(
@@ -225,10 +223,10 @@ export async function syncActionItems(
           `Successfully created "${newActionItems.length}" actionItems!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
-        colors.red(`Failed to create action items! - ${err.message}`),
+        colors.red(`Failed to create action items! - ${error.message}`),
       );
     }
   }
@@ -247,11 +245,11 @@ export async function syncActionItems(
       logger.info(
         colors.green(`Successfully synced action item "${input.title}"!`),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to sync action item "${input.title}"! - ${err.message}`,
+          `Failed to sync action item "${input.title}"! - ${error.message}`,
         ),
       );
     }

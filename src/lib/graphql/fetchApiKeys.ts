@@ -1,9 +1,9 @@
-import { GraphQLClient } from 'graphql-request';
-import { API_KEYS } from './gqls';
-import { keyBy, uniq, difference } from 'lodash-es';
-import { logger } from '../../logger';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
+import { difference, keyBy, uniq } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
+import { logger } from '../../logger';
+import { API_KEYS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface ApiKey {
@@ -70,7 +70,7 @@ export async function fetchApiKeys(
   }: TranscendInput,
   client: GraphQLClient,
   fetchAll = false,
-): Promise<{ [k in string]: ApiKey }> {
+): Promise<Record<string, ApiKey>> {
   logger.info(
     colors.magenta(
       `Fetching ${fetchAll ? 'all' : apiKeyInputs.length} API keys...`,

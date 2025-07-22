@@ -1,13 +1,13 @@
-import colors from 'colors';
-import { logger } from '../../logger';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
-import { buildTranscendGraphQLClient, syncCookies } from '../graphql';
-import { readCsv } from '../requests/readCsv';
-import { CookieInput, CookieCsvInput } from '../../codecs';
-import { splitCsvToList } from '../requests';
+import colors from 'colors';
+import { CookieCsvInput, CookieInput } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+import { logger } from '../../logger';
+import { buildTranscendGraphQLClient, syncCookies } from '../graphql';
+import { splitCsvToList } from '../requests';
+import { readCsv } from '../requests/readCsv';
 
-const OMIT_COLUMNS = [
+const OMIT_COLUMNS = new Set([
   'ID',
   'Activity',
   'Encounters',
@@ -17,7 +17,7 @@ const OMIT_COLUMNS = [
   'Service Description',
   'Website URL',
   'Categories of Recipients',
-];
+]);
 
 /**
  * Upload a set of cookies from CSV
@@ -78,7 +78,7 @@ export async function uploadCookiesFromCsv({
       attributes: Object.entries(rest)
         // filter out native columns that are exported from the admin dashboard
         // but not custom attributes
-        .filter(([key]) => !OMIT_COLUMNS.includes(key))
+        .filter(([key]) => !OMIT_COLUMNS.has(key))
         .map(([key, value]) => ({
           key,
           values: splitCsvToList(value),

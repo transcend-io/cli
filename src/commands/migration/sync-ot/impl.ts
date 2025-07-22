@@ -1,17 +1,17 @@
-import type { LocalContext } from '../../../context';
-import { logger } from '../../../logger';
 import colors from 'colors';
-import { createOneTrustGotInstance } from '../../../lib/oneTrust';
+import type { LocalContext } from '../../../context';
 import {
   OneTrustFileFormat,
   OneTrustPullResource,
   OneTrustPullSource,
 } from '../../../enums';
 import { buildTranscendGraphQLClient } from '../../../lib/graphql';
+import { createOneTrustGotInstance } from '../../../lib/oneTrust';
 import {
   syncOneTrustAssessmentsFromFile,
   syncOneTrustAssessmentsFromOneTrust,
 } from '../../../lib/oneTrust/helpers';
+import { logger } from '../../../logger';
 
 // Command flag interface
 interface SyncOtCommandFlags {
@@ -44,7 +44,6 @@ export async function syncOt(
   // Must be able to authenticate to transcend to sync resources to it
   if (!dryRun && !transcendAuth) {
     throw new Error(
-      // eslint-disable-next-line no-template-curly-in-string
       'Must specify a "transcendAuth" parameter to sync resources to Transcend. e.g. --transcendAuth=${TRANSCEND_API_KEY}',
     );
   }
@@ -131,10 +130,10 @@ export async function syncOt(
         await syncOneTrustAssessmentsFromFile({ file, transcend });
       }
     }
-  } catch (err) {
+  } catch (error) {
     throw new Error(
       `An error occurred syncing the resource ${resource} from OneTrust: ${
-        debug ? err.stack : err.message
+        debug ? error.stack : error.message
       }`,
     );
   }

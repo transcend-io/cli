@@ -1,5 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
 import { RequestEnricherStatus } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
 import { REQUEST_ENRICHERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 

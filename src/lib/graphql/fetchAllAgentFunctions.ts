@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
+import type { JSONSchema7 } from 'json-schema';
 import { AGENT_FUNCTIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import type { JSONSchema7 } from 'json-schema';
 
 export interface AgentFunction {
   /** ID of agentFunction */

@@ -1,15 +1,15 @@
+import {
+  AssessmentFormTemplateSource,
+  AssessmentFormTemplateStatus,
+} from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
-import { ASSESSMENT_TEMPLATES } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
 import type {
   AssessmentSection,
   RetentionSchedule,
   UserPreview,
 } from './fetchAllAssessments';
-import {
-  AssessmentFormTemplateSource,
-  AssessmentFormTemplateStatus,
-} from '@transcend-io/privacy-types';
+import { ASSESSMENT_TEMPLATES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 /**
  * Represents an assessment template with various properties and metadata.

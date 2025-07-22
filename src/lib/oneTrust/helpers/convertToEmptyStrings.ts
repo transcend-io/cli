@@ -46,12 +46,11 @@ export function convertToEmptyStrings<T>(input: T): any {
 
   // Handle objects
   if (typeof input === 'object') {
-    return Object.entries(input).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: convertToEmptyStrings(value),
-      }),
-      {} as Record<string, any>,
+    return Object.fromEntries(
+      Object.entries(input).map<Record<string, any>>(([key, value]) => [
+        key,
+        convertToEmptyStrings(value),
+      ]),
     );
   }
 

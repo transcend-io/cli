@@ -1,5 +1,5 @@
-import { DataFlowInput, DataSiloInput } from '../../codecs';
 import { union } from 'lodash-es';
+import { DataFlowInput, DataSiloInput } from '../../codecs';
 import { IndexedCatalogs } from '../graphql';
 
 /**
@@ -32,19 +32,19 @@ export function dataFlowsToDataSilos(
   const adTechIntegrations: string[] = [];
 
   // Mapping from service name to list of
-  const serviceToFoundOnDomain: { [k in string]: string[] } = {};
+  const serviceToFoundOnDomain: Record<string, string[]> = {};
 
   // iterate over each flow
-  inputs.forEach((flow) => {
+  for (const flow of inputs) {
     // process data flows with services
     const { service, attributes = [] } = flow;
     if (!service || service === 'internalService') {
-      return;
+      continue;
     }
 
     // create mapping to found on domain
     const foundOnDomain = attributes.find(
-      (attr) => attr.key === 'Found on Domain',
+      (attribute) => attribute.key === 'Found on Domain',
     );
 
     // Create a list of all domains where the data flow was found
@@ -52,7 +52,7 @@ export function dataFlowsToDataSilos(
       if (!serviceToFoundOnDomain[service]) {
         serviceToFoundOnDomain[service] = [];
       }
-      serviceToFoundOnDomain[service]!.push(
+      serviceToFoundOnDomain[service].push(
         ...foundOnDomain.values.map((v) =>
           v.replace('https://', '').replace('http://', ''),
         ),
@@ -77,7 +77,7 @@ export function dataFlowsToDataSilos(
       // add to site tech list
       siteTechIntegrations.push(service);
     }
-  });
+  }
 
   // create the list of ad tech integrations
   const adTechDataSilos = [...new Set(adTechIntegrations)].map((service) => ({

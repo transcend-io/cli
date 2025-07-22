@@ -1,12 +1,12 @@
-import { GraphQLClient } from 'graphql-request';
-import { DATA_FLOWS } from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
 import {
-  DataFlowScope,
   ConsentTrackerSource,
   ConsentTrackerStatus,
+  DataFlowScope,
 } from '@transcend-io/privacy-types';
+import { GraphQLClient } from 'graphql-request';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { DATA_FLOWS } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataFlow {
   /** ID of data flow */

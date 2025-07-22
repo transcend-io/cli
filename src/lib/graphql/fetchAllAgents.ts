@@ -1,7 +1,7 @@
+import { LargeLanguageModelClient } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { AGENTS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LargeLanguageModelClient } from '@transcend-io/privacy-types';
 
 export interface Agent {
   /** ID of agent */

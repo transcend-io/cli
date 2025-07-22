@@ -19,9 +19,10 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
   /** The current consent record */
   currentConsentRecord: PreferenceQueryResponseItem;
   /** The pending updates */
-  pendingUpdates: {
-    [purposeName in string]: Omit<PreferenceStorePurposeResponse, 'purpose'>;
-  };
+  pendingUpdates: Record<
+    string,
+    Omit<PreferenceStorePurposeResponse, 'purpose'>
+  >;
   /** The preference topic configurations */
   preferenceTopics: PreferenceTopic[];
 }): boolean {
@@ -42,51 +43,54 @@ export function checkIfPendingPreferenceUpdatesAreNoOp({
       }
 
       // Compare the preferences are in sync
-      return preferences.every(
-        ({ topic, choice }) =>
-          // ensure preferences exist on record
-          currentPurpose.preferences &&
-          currentPurpose.preferences.find((existingPreference) => {
-            // find matching topic
-            if (existingPreference.topic !== topic) {
-              return false;
-            }
+      return preferences.every(({ topic, choice }) =>
+        // ensure preferences exist on record
+        currentPurpose.preferences?.find((existingPreference) => {
+          // find matching topic
+          if (existingPreference.topic !== topic) {
+            return false;
+          }
 
-            // Determine type of preference topic
-            const preferenceTopic = preferenceTopics.find(
-              (x) => x.slug === topic && x.purpose.trackingType === purposeName,
-            );
-            if (!preferenceTopic) {
-              throw new Error(`Could not find preference topic for ${topic}`);
-            }
+          // Determine type of preference topic
+          const preferenceTopic = preferenceTopics.find(
+            (x) => x.slug === topic && x.purpose.trackingType === purposeName,
+          );
+          if (!preferenceTopic) {
+            throw new Error(`Could not find preference topic for ${topic}`);
+          }
 
-            // Handle comparison based on type
-            switch (preferenceTopic.type) {
-              case PreferenceTopicType.Boolean:
-                return (
-                  existingPreference.choice.booleanValue === choice.booleanValue
-                );
-              case PreferenceTopicType.Select:
-                return (
-                  existingPreference.choice.selectValue === choice.selectValue
-                );
-              case PreferenceTopicType.MultiSelect:
-                // eslint-disable-next-line no-case-declarations
-                const sortedCurrentValues = (
-                  existingPreference.choice.selectValues || []
-                ).sort();
-                // eslint-disable-next-line no-case-declarations
-                const sortedNewValues = (choice.selectValues || []).sort();
-                return (
-                  sortedCurrentValues.length === sortedNewValues.length &&
-                  sortedCurrentValues.every((x, i) => x === sortedNewValues[i])
-                );
-              default:
-                throw new Error(
-                  `Unknown preference topic type: ${preferenceTopic.type}`,
-                );
+          // Handle comparison based on type
+          switch (preferenceTopic.type) {
+            case PreferenceTopicType.Boolean: {
+              return (
+                existingPreference.choice.booleanValue === choice.booleanValue
+              );
             }
-          }),
+            case PreferenceTopicType.Select: {
+              return (
+                existingPreference.choice.selectValue === choice.selectValue
+              );
+            }
+            case PreferenceTopicType.MultiSelect: {
+              const sortedCurrentValues = (
+                existingPreference.choice.selectValues || []
+              ).sort();
+
+              const sortedNewValues = (choice.selectValues || []).sort();
+              return (
+                sortedCurrentValues.length === sortedNewValues.length &&
+                sortedCurrentValues.every(
+                  (x, index) => x === sortedNewValues[index],
+                )
+              );
+            }
+            default: {
+              throw new Error(
+                `Unknown preference topic type: ${preferenceTopic.type}`,
+              );
+            }
+          }
+        }),
       );
     },
   );

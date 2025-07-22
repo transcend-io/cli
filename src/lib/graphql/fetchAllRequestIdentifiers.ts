@@ -4,7 +4,6 @@ import type { Got } from 'got';
 import { GraphQLClient } from 'graphql-request';
 import * as t from 'io-ts';
 import semver from 'semver';
-
 import { SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -66,7 +65,7 @@ export async function fetchAllRequestIdentifiers(
         version: string;
       };
     };
-  }>(client!, SOMBRA_VERSION);
+  }>(client, SOMBRA_VERSION);
 
   if (version && semver.lt(version, MIN_SOMBRA_VERSION_TO_DECRYPT)) {
     throw new Error(
@@ -77,7 +76,7 @@ export async function fetchAllRequestIdentifiers(
   do {
     let response: unknown;
     try {
-      response = await sombra!
+      response = await sombra
         .post<{
           /** Decrypted identifiers */
           identifiers: RequestIdentifier[];
@@ -89,10 +88,10 @@ export async function fetchAllRequestIdentifiers(
           },
         })
         .json();
-    } catch (err) {
+    } catch (error) {
       throw new Error(
         `Failed to fetch request identifiers: ${
-          err?.response?.body || err?.message
+          error?.response?.body || error?.message
         }`,
       );
     }

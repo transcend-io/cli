@@ -1,7 +1,7 @@
+import { DataCategoryType } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { DATA_SUB_CATEGORIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { DataCategoryType } from '@transcend-io/privacy-types';
 
 export interface DataSubCategory {
   /** ID of data category */

@@ -1,19 +1,19 @@
+import { CodePackageType } from '@transcend-io/privacy-types';
 import colors from 'colors';
+import { GraphQLClient } from 'graphql-request';
 import { chunk, keyBy } from 'lodash-es';
 import { SoftwareDevelopmentKitInput } from '../../codecs';
-import { GraphQLClient } from 'graphql-request';
-import {
-  UPDATE_SOFTWARE_DEVELOPMENT_KITS,
-  CREATE_SOFTWARE_DEVELOPMENT_KIT,
-} from './gqls';
-import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries, map } from '../bluebird-replace';
+import { logger } from '../../logger';
+import { map, mapSeries } from '../bluebird-replace';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,
 } from './fetchAllSoftwareDevelopmentKits';
-import { logger } from '../../logger';
-import { CodePackageType } from '@transcend-io/privacy-types';
+import {
+  CREATE_SOFTWARE_DEVELOPMENT_KIT,
+  UPDATE_SOFTWARE_DEVELOPMENT_KITS,
+} from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 const CHUNK_SIZE = 100;
 
@@ -196,11 +196,11 @@ export async function syncSoftwareDevelopmentKits(
         `Successfully synced ${newSoftwareDevelopmentKits.length} software development kits!`,
       ),
     );
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
     logger.info(
       colors.red(
-        `Failed to create software development kits! - ${err.message}`,
+        `Failed to create software development kits! - ${error.message}`,
       ),
     );
   }
@@ -233,11 +233,11 @@ export async function syncSoftwareDevelopmentKits(
           `Successfully updated "${existingSoftwareDevelopmentKits.length}" software development kits!`,
         ),
       );
-    } catch (err) {
+    } catch (error) {
       encounteredError = true;
       logger.info(
         colors.red(
-          `Failed to update software development kits! - ${err.message}`,
+          `Failed to update software development kits! - ${error.message}`,
         ),
       );
     }

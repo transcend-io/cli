@@ -1,5 +1,5 @@
-import { name } from '../../../constants';
 import { buildCommand } from '@stricli/core';
+import { name } from '../../../constants';
 
 export const consentManagerServiceJsonToYmlCommand = buildCommand({
   loader: async () => {

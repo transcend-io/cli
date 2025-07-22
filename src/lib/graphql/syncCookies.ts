@@ -1,11 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { logger } from '../../logger';
-import { CookieInput } from '../../codecs';
 import colors from 'colors';
-import { UPDATE_OR_CREATE_COOKIES } from './gqls';
+import { GraphQLClient } from 'graphql-request';
 import { chunk } from 'lodash-es';
-import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { CookieInput } from '../../codecs';
+import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
+import { fetchConsentManagerId } from './fetchConsentManagerId';
+import { UPDATE_OR_CREATE_COOKIES } from './gqls';
 // import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
@@ -88,9 +88,9 @@ export async function syncCookies(
     logger.info(colors.magenta(`Upserting "${cookies.length}" new cookies...`));
     await updateOrCreateCookies(client, cookies);
     logger.info(colors.green(`Successfully synced ${cookies.length} cookies!`));
-  } catch (err) {
+  } catch (error) {
     encounteredError = true;
-    logger.info(colors.red(`Failed to create cookies! - ${err.message}`));
+    logger.info(colors.red(`Failed to create cookies! - ${error.message}`));
   }
 
   return !encounteredError;
