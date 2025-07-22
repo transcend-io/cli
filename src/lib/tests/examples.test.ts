@@ -11,88 +11,102 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 /**
- * Test setup. Intercept `buildExampleCommand` from readme.ts files and track the commands examples.
+ * Gets the example commands. Uses a mock to intercept `buildExampleCommand` from readme.ts files to populate the command lists.
+ *
+ * @returns The commands to perform test runs with, and the original commands.
  */
-vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
-  const actual = await importOriginal();
-  const mockBuildExampleCommand = vi
-    .fn()
-    .mockImplementation(
-      (commandPath: string[], flags: Record<string, string>) => {
-        const command = commandPath.join(' ');
-        const flagList = actual.getFlagList(flags);
+async function getExampleCommands(): Promise<{
+  /** Commands to run via stricli `run` */
+  commandsToTest: string[];
+  /** The original commands as they appear in README.md for shellcheck */
+  unalteredCommands: string[];
+}> {
+  const { commandsToTest, unalteredCommands } = vi.hoisted(() => {
+    const commandsToTest: string[] = [];
+    const unalteredCommands: string[] = [];
 
-        // Replace bash variables
-        const flagListWithReplacedVariables = flagList.map((flag) =>
-          flag.replace(
-            // Replace bash variables with "TEST_VALUE"
-            /\$\{?\w+}?/g,
-            'TEST_VALUE',
-          ),
-        );
+    return {
+      commandsToTest,
+      unalteredCommands,
+    };
+  });
 
-        // Add the command to `commandsToTest` list
-        const commandWithoutName = `${command} ${flagListWithReplacedVariables.join(
-          ' ',
-        )}`;
-        commandsToTest.push(commandWithoutName);
-
-        const unalteredCommand = actual.buildExampleCommand<
-          Record<string, string>
-        >(commandPath, flags);
-        unalteredCommands.push(unalteredCommand);
-        return unalteredCommand;
-      },
-    );
-
-  return {
-    ...actual,
-    buildExamples: vi
+  vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
+    const actual = await importOriginal();
+    const mockBuildExampleCommand = vi
       .fn()
       .mockImplementation(
-        (commandPath: string[], examples: Example<unknown>[]) =>
-          examples
-            .map((example) => {
-              const exampleCommand = mockBuildExampleCommand(
-                commandPath,
-                example.flags,
-              );
-              return `**${example.description}**\n\n\`\`\`sh\n${exampleCommand}\n\`\`\``;
-            })
-            .join('\n\n'),
-      ),
-    buildExampleCommand: mockBuildExampleCommand,
-  };
-});
+        (commandPath: string[], flags: Record<string, string>) => {
+          const command = commandPath.join(' ');
+          const flagList = actual.getFlagList(flags);
 
-// commandsToTest and unalteredCommands are populated by the mock
-const { commandsToTest, unalteredCommands } = vi.hoisted(() => {
-  // Altered commands to run via stricli `run`
-  const commandsToTest: string[] = [];
-  // Unaltered commands as they appear in README.md for shellcheck
-  const unalteredCommands: string[] = [];
+          // Replace bash variables
+          const flagListWithReplacedVariables = flagList.map((flag) =>
+            flag.replace(
+              // Replace bash variables with "TEST_VALUE"
+              /\$\{?\w+}?/g,
+              'TEST_VALUE',
+            ),
+          );
+
+          // Add the command to `commandsToTest` list
+          const commandWithoutName = `${command} ${flagListWithReplacedVariables.join(
+            ' ',
+          )}`;
+          commandsToTest.push(commandWithoutName);
+
+          const unalteredCommand = actual.buildExampleCommand<
+            Record<string, string>
+          >(commandPath, flags);
+          unalteredCommands.push(unalteredCommand);
+          return unalteredCommand;
+        },
+      );
+
+    return {
+      ...actual,
+      buildExamples: vi
+        .fn()
+        .mockImplementation(
+          (commandPath: string[], examples: Example<unknown>[]) =>
+            examples
+              .map((example) => {
+                const exampleCommand = mockBuildExampleCommand(
+                  commandPath,
+                  example.flags,
+                );
+                return `**${example.description}**\n\n\`\`\`sh\n${exampleCommand}\n\`\`\``;
+              })
+              .join('\n\n'),
+        ),
+      buildExampleCommand: mockBuildExampleCommand,
+    };
+  });
+
+  // eslint-disable-next-line new-cap
+  const docFiles = new fdir()
+    .withRelativePaths()
+    .glob('**/readme.ts')
+    .crawl('./src/commands')
+    .sync();
+
+  // Import each readme.ts. The mock will spy on the `buildExampleCommand` function and populate commandsToTest and unalteredCommands.
+  await Promise.all(
+    docFiles.map(
+      async (file) => (await import(`../../commands/${file}`)).default,
+    ),
+  );
 
   return {
     commandsToTest,
     unalteredCommands,
   };
-});
+}
 
-// eslint-disable-next-line new-cap
-const docFiles = new fdir()
-  .withRelativePaths()
-  .glob('**/readme.ts')
-  .crawl('./src/commands')
-  .sync();
+describe('Example commands', async () => {
+  const { commandsToTest, unalteredCommands } = await getExampleCommands();
 
-// Import each readme.ts. The mock will spy on the `buildExampleCommand` function and populate commandsToTest and unalteredCommands.
-await Promise.all(
-  docFiles.map(
-    async (file) => (await import(`../../commands/${file}`)).default,
-  ),
-);
-
-describe('Example commands', () => {
+  // Enable validation only mode, so that commands exit early after input validation.
   vi.stubEnv('DEVELOPMENT_MODE_VALIDATE_ONLY', 'true');
 
   test.each(commandsToTest)(
