@@ -140,7 +140,7 @@ describe('Example commands', () => {
   );
 });
 
-describe.only('getFlagList', () => {
+describe('getFlagList', () => {
   test('should format flag values', () => {
     expect(getFlagList({ enabled: true })[0]).toBe('--enabled');
     expect(getFlagList({ enabled: false })[0]).toBe('--enabled=false');
