@@ -1,6 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { MarkSilentCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<MarkSilentCommandFlags>(
   ['request', 'mark-silent'],
@@ -41,7 +42,16 @@ const examples = buildExamples<MarkSilentCommandFlags>(
           RequestAction.SaleOptOut,
           RequestAction.ContactOptOut,
         ],
-        statuses: [RequestStatus.Enriching],
+        statuses: [
+          RequestStatus.Enriching,
+          RequestStatus.Compiling,
+          RequestStatus.Approving,
+          RequestStatus.Waiting,
+          RequestStatus.RequestMade,
+          RequestStatus.OnHold,
+          RequestStatus.Delayed,
+          RequestStatus.Secondary,
+        ],
         requestIds: [
           'c3ae78c9-2768-4666-991a-d2f729503337',
           '342e4bd1-64ea-4af0-a4ad-704b5a07cfe4',
@@ -54,8 +64,8 @@ const examples = buildExamples<MarkSilentCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         actions: [RequestAction.SaleOptOut],
-        createdAtBefore: new Date('05/03/2023'),
-        createdAtAfter: new Date('04/03/2023'),
+        createdAtBefore: getExampleDate('05/03/2023'),
+        createdAtAfter: getExampleDate('04/03/2023'),
       },
     },
     {

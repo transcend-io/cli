@@ -1,6 +1,7 @@
 import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { ApproveCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<ApproveCommandFlags>(
   ['request', 'approve'],
@@ -35,7 +36,7 @@ const examples = buildExamples<ApproveCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         actions: [RequestAction.SaleOptOut],
-        silentModeBefore: new Date('05/03/2023'),
+        silentModeBefore: getExampleDate('05/03/2023'),
       },
     },
     {
@@ -52,8 +53,8 @@ const examples = buildExamples<ApproveCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         actions: [RequestAction.SaleOptOut],
-        createdAtBefore: new Date('05/03/2023'),
-        createdAtAfter: new Date('04/03/2023'),
+        createdAtBefore: getExampleDate('05/03/2023'),
+        createdAtAfter: getExampleDate('04/03/2023'),
       },
     },
   ],

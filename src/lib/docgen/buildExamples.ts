@@ -1,16 +1,10 @@
 import { name } from '../../constants';
 
-/**
- * The flags of the example command
- * key is the flag name, value is the flag value
- */
-type FlagMap<Flags> = Partial<Flags>;
-
 export interface Example<Flags> {
   /** A description of the example */
   description: string;
   /** The command to run */
-  flags: FlagMap<Flags>;
+  flags: Partial<Flags>;
 }
 
 /**
@@ -41,7 +35,7 @@ export function buildExamples<Flags>(
  */
 export function buildExampleCommand<Flags>(
   commandPath: string[],
-  flags: FlagMap<Flags>,
+  flags: Partial<Flags>,
 ): string {
   const command = commandPath.join(' ');
   const flagList = getFlagList(flags);
@@ -57,28 +51,52 @@ export function buildExampleCommand<Flags>(
 }
 
 /**
+ * Formats a flag value to the bash string for an example command
+ *
+ * @param value - The value to format
+ * @param depth - The depth of the recursion
+ * @returns The formatted value
+ */
+function formatFlagValue(value: unknown, depth = 0): string {
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+
+  if (typeof value === 'number') {
+    return value.toString();
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  if (Array.isArray(value) && depth === 0) {
+    return value.map((v) => formatFlagValue(v, depth + 1)).join(',');
+  }
+
+  if (typeof value === 'string') {
+    // Escape strings that start with $ or contain spaces or special characters
+    return value.startsWith('$') || value.includes(' ') ? `"${value}"` : value;
+  }
+
+  throw new Error(`Unsupported value type: ${typeof value}`);
+}
+
+/**
  * Builds a list of flags formatted for an example command
  *
  * @param flags - The flags to build the command with
+ * @param depth - The depth of the recursion
  * @returns A list of flags for the example command
  */
-export function getFlagList<Flags>(flags: FlagMap<Flags>): string[] {
+export function getFlagList<Flags>(flags: Partial<Flags>, depth = 0): string[] {
   return Object.entries(flags).map(([flag, value]) => {
-    if (value === 'true') {
+    if (typeof value === 'boolean' && value) {
+      // For true booleans, just pass the flag alone
       return `--${flag}`;
     }
 
-    if (typeof value !== 'string') {
-      throw new Error(
-        `Flag value must be a string for flag ${flag}. Got ${typeof value}`,
-      );
-    }
-
-    const formattedValue =
-      typeof value === 'string' &&
-      (value.startsWith('$') || value.includes(' '))
-        ? `"${value}"`
-        : value;
+    const formattedValue = formatFlagValue(value, depth);
 
     return `--${flag}=${formattedValue}`;
   });

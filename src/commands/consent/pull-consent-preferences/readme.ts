@@ -1,4 +1,5 @@
 import { buildExamples } from '../../../lib/docgen/buildExamples';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 import type { PullConsentPreferencesCommandFlags } from './impl';
 
 const examples = buildExamples<PullConsentPreferencesCommandFlags>(
@@ -25,7 +26,7 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        timestampBefore: new Date('04/03/2023'),
+        timestampBefore: getExampleDate('04/03/2023'),
       },
     },
     {
@@ -33,7 +34,7 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        timestampAfter: new Date('04/03/2023'),
+        timestampAfter: getExampleDate('04/03/2023'),
       },
     },
     {

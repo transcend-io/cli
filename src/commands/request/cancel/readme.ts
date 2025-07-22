@@ -4,6 +4,7 @@ import {
   buildExampleCommand,
 } from '../../../lib/docgen/buildExamples';
 import type { CancelCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<CancelCommandFlags>(
   ['request', 'cancel'],
@@ -48,7 +49,7 @@ const examples = buildExamples<CancelCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         actions: [RequestAction.SaleOptOut],
-        silentModeBefore: new Date('05/03/2023'),
+        silentModeBefore: getExampleDate('05/03/2023'),
       },
     },
     {
@@ -56,8 +57,8 @@ const examples = buildExamples<CancelCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         actions: [RequestAction.SaleOptOut],
-        createdAtBefore: new Date('05/03/2023'),
-        createdAtAfter: new Date('04/03/2023'),
+        createdAtBefore: getExampleDate('05/03/2023'),
+        createdAtAfter: getExampleDate('04/03/2023'),
       },
     },
     {

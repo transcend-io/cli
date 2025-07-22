@@ -4,6 +4,7 @@ import {
 } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { EnricherRestartCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<EnricherRestartCommandFlags>(
   ['request', 'enricher-restart'],
@@ -45,8 +46,8 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '3be5e898-fea9-4614-84de-88cd5265c557',
-        createdAtBefore: new Date('04/05/2023'),
-        createdAtAfter: new Date('02/21/2023'),
+        createdAtBefore: getExampleDate('04/05/2023'),
+        createdAtAfter: getExampleDate('02/21/2023'),
       },
     },
     {

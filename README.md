@@ -270,7 +270,10 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --origin
 **Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests**
 
 ```sh
-transcend request approve --auth="$TRANSCEND_API_KEY" --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+transcend request approve \
+  --auth="$TRANSCEND_API_KEY" \
+  --actions=SALE_OPT_OUT \
+  --silentModeBefore=2024-05-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -285,8 +288,8 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --concur
 transcend request approve \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=05/03/2023 \
-  --createdAtAfter=04/03/2023
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 ### `transcend request upload`
@@ -448,7 +451,7 @@ FLAGS
 
 Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
 
-<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
+<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
 
 #### Examples
 
@@ -491,7 +494,10 @@ transcend request download-files --auth="$TRANSCEND_API_KEY" --concurrency=100
 **Download requests in a timeframe**
 
 ```sh
-transcend request download-files --auth="$TRANSCEND_API_KEY" --createdAtBefore=05/03/2023 --createdAtAfter=04/03/2023
+transcend request download-files \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Download specific requests**
@@ -554,7 +560,10 @@ transcend request cancel --auth="$TRANSCEND_API_KEY" --actions=ERASURE --cancell
 **Cancel all open SALE_OPT_OUT, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests**
 
 ```sh
-transcend request cancel --auth="$TRANSCEND_API_KEY" --actions=SALE_OPT_OUT --silentModeBefore=05/03/2023
+transcend request cancel \
+  --auth="$TRANSCEND_API_KEY" \
+  --actions=SALE_OPT_OUT \
+  --silentModeBefore=2024-05-03T00:00:00.000Z
 ```
 
 **Cancel all open SALE_OPT_OUT, within a specific time frame**
@@ -563,8 +572,8 @@ transcend request cancel --auth="$TRANSCEND_API_KEY" --actions=SALE_OPT_OUT --si
 transcend request cancel \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=05/03/2023 \
-  --createdAtAfter=04/03/2023
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -678,7 +687,7 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --createdAt=2022-05-11T00:46
+  --createdAt=2024-05-11T00:00:00.000Z
 ```
 
 **Restart requests and place everything in silent mode submitted before a certain date**
@@ -688,7 +697,7 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --silentModeBefore=2022-12-05T00:46
+  --silentModeBefore=2024-12-05T00:00:00.000Z
 ```
 
 **Restart requests within a specific timeframe**
@@ -698,8 +707,8 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --createdAtBefore=04/05/2023 \
-  --createdAtAfter=02/21/2023
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Send email receipts to the restarted requests**
@@ -760,7 +769,7 @@ FLAGS
 **Notify all request types that were made before 01/01/2024**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=01/01/2024
+transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=2024-01-01T00:00:00.000Z
 ```
 
 **Notify all request types that were made during a date range**
@@ -768,8 +777,8 @@ transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAt
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=01/01/2024 \
-  --createdAtAfter=12/15/2023
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtAfter=2024-12-15T00:00:00.000Z
 ```
 
 **Notify certain request types**
@@ -777,7 +786,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=01/01/2024 \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --actions=SALE_OPT_OUT,ERASURE
 ```
 
@@ -786,7 +795,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=01/01/2024 \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -795,20 +804,26 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=01/01/2024 \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
 **Only notify requests that are expiring in the next 3 days or less**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=01/01/2024 --daysLeft=3
+transcend request notify-additional-time \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --daysLeft=3
 ```
 
 **Change number of days to extend request by**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=01/01/2024 --days=30
+transcend request notify-additional-time \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --days=30
 ```
 
 **Send a specific email template to the request that instead of the default**
@@ -816,14 +831,17 @@ transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAt
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=01/01/2024 \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --emailTemplate="Custom Email Template"
 ```
 
 **Increase the concurrency (defaults to 50)**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=01/01/2024 --concurrency=500
+transcend request notify-additional-time \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --concurrency=500
 ```
 
 ### `transcend request mark-silent`
@@ -886,8 +904,8 @@ transcend request mark-silent \
 transcend request mark-silent \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=05/03/2023 \
-  --createdAtAfter=04/03/2023
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -962,8 +980,8 @@ transcend request enricher-restart \
 transcend request enricher-restart \
   --auth="$TRANSCEND_API_KEY" \
   --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 \
-  --createdAtBefore=04/05/2023 \
-  --createdAtAfter=02/21/2023
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Restart requests that are in an error state**
@@ -1083,7 +1101,10 @@ transcend request export --auth="$TRANSCEND_API_KEY" --showTests=false
 **Filter for requests within a date range**
 
 ```sh
-transcend request export --auth="$TRANSCEND_API_KEY" --createdAtBefore=04/05/2023 --createdAtAfter=02/21/2023
+transcend request export \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Write to a specific file location**
@@ -1689,7 +1710,7 @@ FLAGS
 **Pull consent manager metrics for a Transcend account**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=01/01/2023
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z
 ```
 
 **Specifying the backend URL, needed for US hosted backend infrastructure**
@@ -1697,14 +1718,17 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=01/01
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=01/01/2023 \
+  --start=2024-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
 **Pull start and end date explicitly**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=01/01/2023 --end=03/01/2023
+transcend consent pull-consent-metrics \
+  --auth="$TRANSCEND_API_KEY" \
+  --start=2024-01-01T00:00:00.000Z \
+  --end=2024-03-01T00:00:00.000Z
 ```
 
 **Save to an explicit folder**
@@ -1712,15 +1736,15 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=01/01
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=01/01/2023 \
-  --end=03/01/2023 \
+  --start=2024-01-01T00:00:00.000Z \
+  --end=2024-03-01T00:00:00.000Z \
   --folder=./my-folder/
 ```
 
 **Bin data hourly vs daily**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=01/01/2023 --bin=1h
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z --bin=1h
 ```
 
 ### `transcend consent pull-consent-preferences`
@@ -1770,7 +1794,7 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampBefore=04/03/2023
+  --timestampBefore=2024-04-03T00:00:00.000Z
 ```
 
 **Filter on consent updates after a date**
@@ -1779,7 +1803,7 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampAfter=04/03/2023
+  --timestampAfter=2024-04-03T00:00:00.000Z
 ```
 
 **For self-hosted sombras that use an internal key**
@@ -2235,7 +2259,7 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSilos --inc
 **Pull attribute definitions only (see [this example](./examples/attributes.yml))**
 
 ```sh
-transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=attributes
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=customFields
 ```
 
 **Pull business entities only (see [this example](./examples/business-entities.yml))**
@@ -2377,7 +2401,7 @@ This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-g
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./transcend-api-keys.json
 transcend inventory pull --auth="$TRANSCEND_API_KEY"
@@ -2392,7 +2416,7 @@ This uses the output of [`transcend admin generate-api-keys`](#transcend-admin-g
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./transcend-api-keys.json
 transcend inventory pull --auth=./transcend-api-keys.json --file=./transcend/
@@ -2410,7 +2434,7 @@ transcend inventory push --auth="$TRANSCEND_API_KEY" --classifyService
 **Push up attributes, deleting any attributes that are not specified in the transcend.yml file**
 
 ```sh
-transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=attributes
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=customFields
 transcend inventory push --auth="$TRANSCEND_API_KEY" --deleteExtraAttributeValues
 ```
 
@@ -2967,7 +2991,7 @@ FLAGS
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json
 ```
@@ -2978,7 +3002,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --transcendUrl=https://api.us.transcend.io
@@ -2990,7 +3014,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --parentOrganizationId=7098bb38-070d-4f26-8fa4-1b61b9cdef77
@@ -3002,7 +3026,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --createNewApiKey=false
@@ -3014,7 +3038,7 @@ transcend admin generate-api-keys \
 transcend admin generate-api-keys \
   --email=test@transcend.io \
   --password="$TRANSCEND_PASSWORD" \
-  --scopes="View Email Templates,View Data Map" \
+  --scopes="View Email Templates","View Data Map" \
   --apiKeyTitle="CLI Usage Cross Instance Sync" \
   --file=./working/auth.json \
   --deleteExistingApiKey=false

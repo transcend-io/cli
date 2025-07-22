@@ -1,6 +1,7 @@
 import { RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { DownloadFilesCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<DownloadFilesCommandFlags>(
   ['request', 'download-files'],
@@ -52,8 +53,8 @@ const examples = buildExamples<DownloadFilesCommandFlags>(
       description: 'Download requests in a timeframe',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        createdAtBefore: new Date('05/03/2023'),
-        createdAtAfter: new Date('04/03/2023'),
+        createdAtBefore: getExampleDate('05/03/2023'),
+        createdAtAfter: getExampleDate('04/03/2023'),
       },
     },
     {

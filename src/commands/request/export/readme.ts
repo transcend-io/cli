@@ -1,6 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { ExportCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<ExportCommandFlags>(
   ['request', 'export'],
@@ -52,8 +53,8 @@ const examples = buildExamples<ExportCommandFlags>(
       description: 'Filter for requests within a date range',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        createdAtBefore: new Date('04/05/2023'),
-        createdAtAfter: new Date('02/21/2023'),
+        createdAtBefore: getExampleDate('04/05/2023'),
+        createdAtAfter: getExampleDate('02/21/2023'),
       },
     },
     {

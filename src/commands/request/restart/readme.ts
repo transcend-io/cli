@@ -1,6 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { RestartCommandFlags } from './impl';
+import { getExampleDate } from '../../../lib/docgen/getExampleDate';
 
 const examples = buildExamples<RestartCommandFlags>(
   ['request', 'restart'],
@@ -70,7 +71,7 @@ const examples = buildExamples<RestartCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
         actions: [RequestAction.Access, RequestAction.Erasure],
-        createdAt: new Date('2022-05-11T00:46'),
+        createdAt: getExampleDate('2022-05-11'),
       },
     },
     {
@@ -80,7 +81,7 @@ const examples = buildExamples<RestartCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
         actions: [RequestAction.Access, RequestAction.Erasure],
-        silentModeBefore: new Date('2022-12-05T00:46'),
+        silentModeBefore: getExampleDate('2022-12-05'),
       },
     },
     {
@@ -89,8 +90,8 @@ const examples = buildExamples<RestartCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
         actions: [RequestAction.Access, RequestAction.Erasure],
-        createdAtBefore: new Date('04/05/2023'),
-        createdAtAfter: new Date('02/21/2023'),
+        createdAtBefore: getExampleDate('04/05/2023'),
+        createdAtAfter: getExampleDate('02/21/2023'),
       },
     },
     {
