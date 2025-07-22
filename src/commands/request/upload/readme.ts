@@ -116,6 +116,10 @@ const examples = buildExamples<UploadCommandFlags>(
   ],
 );
 
-export default `#### Examples
+export default `See a demo of the interactive mapping processbelow (_note: the command is slightly different from the one shown in the video, but the arguments are the same._)
+
+https://user-images.githubusercontent.com/10264973/205477183-d4762087-668c-43f1-a84c-0fce0ec3e132.mov
+
+#### Examples
 
 ${examples}`;
