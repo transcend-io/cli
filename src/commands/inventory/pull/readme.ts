@@ -305,7 +305,7 @@ const examples = buildExamples<PullCommandFlags>(
     },
     {
       description:
-        'Pull attribute definitions only (see [this example](./examples/attributes.yml))',
+        'Pull custom field definitions only (see [this example](./examples/attributes.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
         resources: [TranscendPullResource.Attributes],

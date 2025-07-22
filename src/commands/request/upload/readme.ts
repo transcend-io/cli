@@ -106,7 +106,8 @@ const examples = buildExamples<UploadCommandFlags>(
       },
     },
     {
-      description: 'Tag all uploaded requests with an attribute',
+      description:
+        'Tag all uploaded requests with custom fields (formerly known as "attributes")',
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
