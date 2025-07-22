@@ -2,11 +2,28 @@ import { GraphQLClient } from 'graphql-request';
 import { REQUEST_FILES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
+export interface RequestFileCursor {
+  /** The ID of the request file */
+  id: string;
+  /** The created at timestamp */
+  createdAt: string;
+}
+
 export interface RequestFile {
   /** The remote ID */
   remoteId: string;
   /** The file name */
   fileName: string;
+}
+
+export interface RequestFileResponse {
+  /** RequestFiles */
+  bulkRequestFiles: {
+    /** List */
+    nodes: RequestFile[];
+    /** The cursor */
+    cursor: RequestFileCursor;
+  };
 }
 
 const PAGE_SIZE = 20;
@@ -28,27 +45,27 @@ export async function fetchRequestFilesForRequest(
   },
 ): Promise<RequestFile[]> {
   const requestFiles: RequestFile[] = [];
-  let offset = 0;
+  let cursor: RequestFileCursor | null = null;
 
   // Whether to continue looping
   let shouldContinue = false;
   do {
+    const response: RequestFileResponse = await makeGraphQLRequest<RequestFileResponse>(
+      client,
+      REQUEST_FILES,
+      {
+        first: PAGE_SIZE,
+        filterBy: {
+          ...filterBy,
+          cursor: cursor ?? undefined,
+        },
+      });
     const {
-      requestFiles: { nodes },
-    } = await makeGraphQLRequest<{
-      /** RequestFiles */
-      requestFiles: {
-        /** List */
-        nodes: RequestFile[];
-      };
-    }>(client, REQUEST_FILES, {
-      first: PAGE_SIZE,
-      offset,
-      filterBy,
-    });
+      bulkRequestFiles: { nodes, cursor: cursorFromResponse },
+    } = response;
     requestFiles.push(...nodes);
-    offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
+    cursor = cursorFromResponse;
   } while (shouldContinue);
 
   return requestFiles.sort((a, b) => a.remoteId.localeCompare(b.remoteId));
