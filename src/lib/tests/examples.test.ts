@@ -13,10 +13,6 @@ import { join } from 'path';
 /**
  * Test setup. Intercept `buildExampleCommand` from readme.ts files and track the commands examples.
  */
-// Altered commands to run via stricli `run`
-const commandsToTest: string[] = [];
-// Unaltered commands as they appear in README.md for shellcheck
-const unalteredCommands: string[] = [];
 vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
   const actual = await importOriginal();
   const mockBuildExampleCommand = vi
@@ -68,13 +64,28 @@ vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
     buildExampleCommand: mockBuildExampleCommand,
   };
 });
+
+// commandsToTest and unalteredCommands are populated by the mock
+const { commandsToTest, unalteredCommands } = vi.hoisted(() => {
+  // Altered commands to run via stricli `run`
+  const commandsToTest: string[] = [];
+  // Unaltered commands as they appear in README.md for shellcheck
+  const unalteredCommands: string[] = [];
+
+  return {
+    commandsToTest,
+    unalteredCommands,
+  };
+});
+
 // eslint-disable-next-line new-cap
 const docFiles = new fdir()
   .withRelativePaths()
   .glob('**/readme.ts')
   .crawl('./src/commands')
   .sync();
-// For each src/commands/**/readme.ts file, create a key-value pair of the command and the exported Markdown documentation
+
+// Import each readme.ts. The mock will spy on the `buildExampleCommand` function and populate commandsToTest and unalteredCommands.
 await Promise.all(
   docFiles.map(
     async (file) => (await import(`../../commands/${file}`)).default,
