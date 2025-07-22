@@ -69,7 +69,7 @@ For more information on the commands and routings, see [the Stricli documentatio
 pnpm docgen
 ```
 
-This will generate the README.md file from the command documentation.
+This will generate the README.md file from the command documentation and the `src/commands/**/readme.ts` files.
 
 ### transcend.yml and pathfinder.yml JSON schemas
 
