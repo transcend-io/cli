@@ -5,6 +5,8 @@ import {
 import type { PushCommandFlags } from './impl';
 import type { PullCommandFlags } from '../pull/impl';
 import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
+import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+import { TranscendPullResource } from '../../../enums';
 
 const examples = buildExamples<PushCommandFlags>(
   ['inventory', 'push'],
@@ -26,7 +28,7 @@ const examples = buildExamples<PushCommandFlags>(
       description: 'Apply service classifier to all data flows',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        classifyService: 'true',
+        classifyService: true,
       },
     },
     {
@@ -34,7 +36,7 @@ const examples = buildExamples<PushCommandFlags>(
         'Push up attributes, deleting any attributes that are not specified in the transcend.yml file',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        deleteExtraAttributeValues: 'true',
+        deleteExtraAttributeValues: true,
       },
     },
     {
@@ -66,7 +68,10 @@ ${buildExampleCommand<GenerateApiKeysCommandFlags>(
   {
     email: 'test@transcend.io',
     password: '$TRANSCEND_PASSWORD',
-    scopes: 'View Email Templates,View Data Map',
+    scopes: [
+      TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+      TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+    ],
     apiKeyTitle: 'CLI Usage Cross Instance Sync',
     file: './transcend-api-keys.json',
   },
@@ -89,7 +94,10 @@ ${buildExampleCommand<GenerateApiKeysCommandFlags>(
   {
     email: 'test@transcend.io',
     password: '$TRANSCEND_PASSWORD',
-    scopes: 'View Email Templates,View Data Map',
+    scopes: [
+      TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+      TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+    ],
     apiKeyTitle: 'CLI Usage Cross Instance Sync',
     file: './transcend-api-keys.json',
   },
@@ -110,11 +118,11 @@ ${buildExampleCommand<PushCommandFlags>(['inventory', 'push'], {
 \`\`\`sh
 ${buildExampleCommand<PullCommandFlags>(['inventory', 'pull'], {
   auth: '$TRANSCEND_API_KEY',
-  resources: 'dataFlows',
+  resources: [TranscendPullResource.DataFlows],
 })}
 ${buildExampleCommand<PushCommandFlags>(['inventory', 'push'], {
   auth: '$TRANSCEND_API_KEY',
-  classifyService: 'true',
+  classifyService: true,
 })}
 \`\`\`
 
@@ -123,11 +131,11 @@ ${buildExampleCommand<PushCommandFlags>(['inventory', 'push'], {
 \`\`\`sh
 ${buildExampleCommand<PullCommandFlags>(['inventory', 'pull'], {
   auth: '$TRANSCEND_API_KEY',
-  resources: 'attributes',
+  resources: [TranscendPullResource.Attributes],
 })}
 ${buildExampleCommand<PushCommandFlags>(['inventory', 'push'], {
   auth: '$TRANSCEND_API_KEY',
-  deleteExtraAttributeValues: 'true',
+  deleteExtraAttributeValues: true,
 })}
 \`\`\`
 

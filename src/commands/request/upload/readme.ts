@@ -24,7 +24,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        skipFilterStep: 'true',
+        skipFilterStep: true,
       },
     },
     {
@@ -33,7 +33,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        dryRun: 'true',
+        dryRun: true,
       },
     },
     {
@@ -41,7 +41,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        isTest: 'true',
+        isTest: true,
       },
     },
     {
@@ -50,7 +50,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        isSilent: 'false',
+        isSilent: false,
       },
     },
     {
@@ -59,7 +59,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        skipSendingReceipt: 'true',
+        skipSendingReceipt: true,
       },
     },
     {
@@ -67,7 +67,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        concurrency: '100',
+        concurrency: 100,
       },
     },
     {
@@ -83,7 +83,7 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        debug: 'true',
+        debug: true,
       },
     },
     {
@@ -101,8 +101,8 @@ const examples = buildExamples<UploadCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: '/Users/transcend/Desktop/test.csv',
-        isSilent: 'false',
-        emailIsVerified: 'false',
+        isSilent: false,
+        emailIsVerified: false,
       },
     },
     {

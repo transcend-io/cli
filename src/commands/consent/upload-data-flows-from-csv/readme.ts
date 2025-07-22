@@ -1,3 +1,4 @@
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { UploadDataFlowsFromCsvCommandFlags } from './impl';
 
@@ -9,7 +10,7 @@ const examples = buildExamples<UploadDataFlowsFromCsvCommandFlags>(
         'Upload the file of data flows in ./data-flows.csv into the "Approved" tab',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
       },
     },
     {
@@ -17,14 +18,14 @@ const examples = buildExamples<UploadDataFlowsFromCsvCommandFlags>(
         'Upload the file of data flows in ./data-flows.csv into the "Triage" tab',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'NEEDS_REVIEW',
+        trackerStatus: ConsentTrackerStatus.NeedsReview,
       },
     },
     {
       description: 'Specifying the CSV file to read from',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
         file: './custom/my-data-flows.csv',
       },
     },
@@ -33,8 +34,8 @@ const examples = buildExamples<UploadDataFlowsFromCsvCommandFlags>(
         "Have Transcend automatically fill in the service names by looking up the data flow host in Transcend's database",
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
-        classifyService: 'true',
+        trackerStatus: ConsentTrackerStatus.Live,
+        classifyService: true,
       },
     },
     {
@@ -42,7 +43,7 @@ const examples = buildExamples<UploadDataFlowsFromCsvCommandFlags>(
         'Specifying the backend URL, needed for US hosted backend infrastructure',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
         transcendUrl: 'https://api.us.transcend.io',
       },
     },

@@ -1,4 +1,8 @@
-import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+import {
+  ConsentTrackerStatus,
+  ScopeName,
+  TRANSCEND_SCOPES,
+} from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '../../../enums';
 import {
   buildExampleCommand,
@@ -238,21 +242,26 @@ const examples = buildExamples<PullCommandFlags>(
       description: 'Pull specific data silo by ID',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        dataSiloIds: '710fec3c-7bcc-4c9e-baff-bf39f9bec43e',
+        dataSiloIds: ['710fec3c-7bcc-4c9e-baff-bf39f9bec43e'],
       },
     },
     {
       description: 'Pull specific types of data silos',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        integrationNames: 'salesforce,snowflake',
+        integrationNames: ['salesforce', 'snowflake'],
       },
     },
     {
       description: 'Pull specific resource types',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'apiKeys,templates,dataSilos,enrichers',
+        resources: [
+          TranscendPullResource.ApiKeys,
+          TranscendPullResource.Templates,
+          TranscendPullResource.DataSilos,
+          TranscendPullResource.Enrichers,
+        ],
       },
     },
     {
@@ -260,32 +269,38 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull data flows and cookies with specific tracker statuses (see [this example](./examples/data-flows-cookies.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'dataFlows,cookies',
-        trackerStatuses: 'NEEDS_REVIEW,LIVE',
+        resources: [
+          TranscendPullResource.DataFlows,
+          TranscendPullResource.Cookies,
+        ],
+        trackerStatuses: [
+          ConsentTrackerStatus.NeedsReview,
+          ConsentTrackerStatus.Live,
+        ],
       },
     },
     {
       description: 'Pull data silos without datapoint information',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'dataSilos',
-        skipDatapoints: 'true',
+        resources: [TranscendPullResource.DataSilos],
+        skipDatapoints: true,
       },
     },
     {
       description: 'Pull data silos without subdatapoint information',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'dataSilos',
-        skipSubDatapoints: 'true',
+        resources: [TranscendPullResource.DataSilos],
+        skipSubDatapoints: true,
       },
     },
     {
       description: 'Pull data silos with guessed categories',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'dataSilos',
-        includeGuessedCategories: 'true',
+        resources: [TranscendPullResource.DataSilos],
+        includeGuessedCategories: true,
       },
     },
     {
@@ -293,7 +308,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull attribute definitions only (see [this example](./examples/attributes.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'attributes',
+        resources: [TranscendPullResource.Attributes],
       },
     },
     {
@@ -301,7 +316,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull business entities only (see [this example](./examples/business-entities.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'businessEntities',
+        resources: [TranscendPullResource.BusinessEntities],
       },
     },
     {
@@ -309,7 +324,10 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull enrichers and identifiers (see [this example](./examples/enrichers.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'enrichers,identifiers',
+        resources: [
+          TranscendPullResource.Enrichers,
+          TranscendPullResource.Identifiers,
+        ],
       },
     },
     {
@@ -317,7 +335,10 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull onboarding action items (see [this example](./examples/action-items.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'actionItems,actionItemCollections',
+        resources: [
+          TranscendPullResource.ActionItems,
+          TranscendPullResource.ActionItemCollections,
+        ],
       },
     },
     {
@@ -325,7 +346,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull consent manager domain list (see [this example](./examples/consent-manager-domains.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'consentManager',
+        resources: [TranscendPullResource.ConsentManager],
       },
     },
     {
@@ -333,7 +354,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull identifier configurations (see [this example](./examples/identifiers.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'identifiers',
+        resources: [TranscendPullResource.Identifiers],
       },
     },
     {
@@ -341,7 +362,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull request actions configurations (see [this example](./examples/actions.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'actions',
+        resources: [TranscendPullResource.Actions],
       },
     },
     {
@@ -349,7 +370,7 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull consent manager purposes and preference management topics (see [this example](./examples/purposes.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'purposes',
+        resources: [TranscendPullResource.Purposes],
       },
     },
     {
@@ -357,21 +378,24 @@ const examples = buildExamples<PullCommandFlags>(
         'Pull data subject configurations (see [this example](./examples/data-subjects.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'dataSubjects',
+        resources: [TranscendPullResource.DataSubjects],
       },
     },
     {
       description: 'Pull assessments and assessment templates',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'assessments,assessmentTemplates',
+        resources: [
+          TranscendPullResource.Assessments,
+          TranscendPullResource.AssessmentTemplates,
+        ],
       },
     },
     {
       description: 'Pull everything',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        resources: 'all',
+        resources: ['all'],
       },
     },
   ],
@@ -406,14 +430,14 @@ ${buildExampleCommand<GenerateApiKeysCommandFlags>(
   {
     email: 'test@transcend.io',
     password: '$TRANSCEND_PASSWORD',
-    scopes: TRANSCEND_SCOPES[ScopeName.ViewConsentManager].title,
+    scopes: [TRANSCEND_SCOPES[ScopeName.ViewConsentManager].title],
     apiKeyTitle: 'CLI Usage Cross Instance Sync',
     file: './transcend-api-keys.json',
   },
 )}
 ${buildExampleCommand<PullCommandFlags>(['inventory', 'pull'], {
   auth: './transcend-api-keys.json',
-  resources: 'consentManager',
+  resources: [TranscendPullResource.ConsentManager],
   file: './transcend/',
 })}
 \`\`\`

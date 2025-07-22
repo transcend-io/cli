@@ -1,3 +1,4 @@
+import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { UploadCookiesFromCsvCommandFlags } from './impl';
 
@@ -9,7 +10,7 @@ const examples = buildExamples<UploadCookiesFromCsvCommandFlags>(
         'Upload the file of cookies in ./cookies.csv into the "Approved" tab',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
       },
     },
     {
@@ -17,14 +18,14 @@ const examples = buildExamples<UploadCookiesFromCsvCommandFlags>(
         'Upload the file of cookies in ./cookies.csv into the "Triage" tab',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'NEEDS_REVIEW',
+        trackerStatus: ConsentTrackerStatus.NeedsReview,
       },
     },
     {
       description: 'Specifying the CSV file to read from',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
         file: './custom/my-cookies.csv',
       },
     },
@@ -33,7 +34,7 @@ const examples = buildExamples<UploadCookiesFromCsvCommandFlags>(
         'Specifying the backend URL, needed for US hosted backend infrastructure',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        trackerStatus: 'LIVE',
+        trackerStatus: ConsentTrackerStatus.Live,
         transcendUrl: 'https://api.us.transcend.io',
       },
     },

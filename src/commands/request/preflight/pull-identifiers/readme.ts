@@ -1,3 +1,4 @@
+import { RequestAction } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../../lib/docgen/buildExamples';
 import type { PullIdentifiersCommandFlags } from './impl';
 
@@ -22,7 +23,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       description: 'For specific types of requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ACCESS,ERASURE',
+        actions: [RequestAction.Access, RequestAction.Erasure],
       },
     },
     {
@@ -43,7 +44,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       description: 'With specific concurrency',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        concurrency: '200',
+        concurrency: 200,
       },
     },
   ],

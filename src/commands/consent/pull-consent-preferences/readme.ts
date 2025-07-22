@@ -25,7 +25,7 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        timestampBefore: '04/03/2023',
+        timestampBefore: new Date('04/03/2023'),
       },
     },
     {
@@ -33,7 +33,7 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        timestampAfter: '04/03/2023',
+        timestampAfter: new Date('04/03/2023'),
       },
     },
     {

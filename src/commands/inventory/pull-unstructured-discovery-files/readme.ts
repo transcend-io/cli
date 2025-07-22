@@ -1,4 +1,5 @@
 import { buildExamples } from '../../../lib/docgen/buildExamples';
+import { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import type { PullUnstructuredDiscoveryFilesCommandFlags } from './impl';
 
 const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
@@ -10,11 +11,17 @@ const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         file: './unstructured-discovery-files.csv',
         transcendUrl: 'https://api.us.transcend.io',
-        dataSiloIds: 'f956ccce-5534-4328-a78d-3a924b1fe429',
-        subCategories:
-          '79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1',
-        status: 'VALIDATED,MANUALLY_ADDED,CORRECTED',
-        includeEncryptedSnippets: 'true',
+        dataSiloIds: ['f956ccce-5534-4328-a78d-3a924b1fe429'],
+        subCategories: [
+          '79d998b7-45dd-481c-ae3a-856fd93458b2',
+          '9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        ],
+        status: [
+          UnstructuredSubDataPointRecommendationStatus.Validated,
+          UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
+          UnstructuredSubDataPointRecommendationStatus.Corrected,
+        ],
+        includeEncryptedSnippets: true,
       },
     },
     {
@@ -29,15 +36,17 @@ const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
       description: 'Pull entries for specific data silos',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        dataSiloIds: 'f956ccce-5534-4328-a78d-3a924b1fe429',
+        dataSiloIds: ['f956ccce-5534-4328-a78d-3a924b1fe429'],
       },
     },
     {
       description: 'Filter by data categories',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        subCategories:
-          '79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        subCategories: [
+          '79d998b7-45dd-481c-ae3a-856fd93458b2',
+          '9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        ],
       },
     },
     {
@@ -45,7 +54,11 @@ const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
         'Filter by classification status (exclude unconfirmed recommendations)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        status: 'VALIDATED,MANUALLY_ADDED,CORRECTED',
+        status: [
+          UnstructuredSubDataPointRecommendationStatus.Validated,
+          UnstructuredSubDataPointRecommendationStatus.ManuallyAdded,
+          UnstructuredSubDataPointRecommendationStatus.Corrected,
+        ],
       },
     },
     {
@@ -53,7 +66,7 @@ const examples = buildExamples<PullUnstructuredDiscoveryFilesCommandFlags>(
         'Filter by classification status (include rejected recommendations)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        status: 'REJECTED',
+        status: [UnstructuredSubDataPointRecommendationStatus.Rejected],
       },
     },
   ],

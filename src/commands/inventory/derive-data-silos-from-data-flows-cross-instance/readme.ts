@@ -26,7 +26,7 @@ const examples =
         flags: {
           auth: '$TRANSCEND_API_KEY',
           dataFlowsYmlFolder: './working/data-flows/',
-          ignoreYmls: 'Skip.yml,Other.yml',
+          ignoreYmls: ['Skip.yml', 'Other.yml'],
         },
       },
       {

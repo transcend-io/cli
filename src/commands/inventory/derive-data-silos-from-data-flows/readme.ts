@@ -28,7 +28,7 @@ const examples = buildExamples<DeriveDataSilosFromDataFlowsCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         dataFlowsYmlFolder: './working/data-flows/',
         dataSilosYmlFolder: './working/data-silos/',
-        ignoreYmls: 'Skip.yml,Other.yml',
+        ignoreYmls: ['Skip.yml', 'Other.yml'],
       },
     },
   ],

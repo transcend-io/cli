@@ -1,3 +1,4 @@
+import { RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { DownloadFilesCommandFlags } from './impl';
 
@@ -30,37 +31,39 @@ const examples = buildExamples<DownloadFilesCommandFlags>(
       description: 'Auto approve after download',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        approveAfterDownload: 'true',
+        approveAfterDownload: true,
       },
     },
     {
       description: 'Download requests in APPROVING state only',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'APPROVING',
+        statuses: [RequestStatus.Approving],
       },
     },
     {
       description: 'Increase the concurrency (defaults to 10)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        concurrency: '100',
+        concurrency: 100,
       },
     },
     {
       description: 'Download requests in a timeframe',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        createdAtBefore: '05/03/2023',
-        createdAtAfter: '04/03/2023',
+        createdAtBefore: new Date('05/03/2023'),
+        createdAtAfter: new Date('04/03/2023'),
       },
     },
     {
       description: 'Download specific requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        requestIds:
-          'b8c2ce13-9e40-4104-af79-23c68f2a87ba,d5eedc52-0f85-4034-bc01-14951acad5aa',
+        requestIds: [
+          'b8c2ce13-9e40-4104-af79-23c68f2a87ba',
+          'd5eedc52-0f85-4034-bc01-14951acad5aa',
+        ],
       },
     },
   ],
@@ -68,7 +71,7 @@ const examples = buildExamples<DownloadFilesCommandFlags>(
 
 export default `Download the files associated with a Data Subject Access Request (DSAR) from [DSR Automation -> Incoming Requests](https://app.transcend.io/privacy-requests/incoming-requests) tab.
 
-<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
+<img width="213" alt="Screenshot 2025-06-03 at 3 32 00 PM" src="https://github.com/user-attachments/assets/9e5c3047-5092-454e-9d05-c68509ea3f77" />
 
 #### Examples
 

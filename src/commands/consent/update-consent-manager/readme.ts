@@ -2,7 +2,11 @@ import {
   buildExamples,
   buildExampleCommand,
 } from '../../../lib/docgen/buildExamples';
-import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+import {
+  ConsentBundleType,
+  ScopeName,
+  TRANSCEND_SCOPES,
+} from '@transcend-io/privacy-types';
 import type { UpdateConsentManagerCommandFlags } from './impl';
 import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
 
@@ -27,21 +31,21 @@ const examples = buildExamples<UpdateConsentManagerCommandFlags>(
       description: 'Update version and deploy bundles',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        deploy: 'true',
+        deploy: true,
       },
     },
     {
       description: 'Update just the TEST bundle',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        bundleTypes: 'TEST',
+        bundleTypes: [ConsentBundleType.Test],
       },
     },
     {
       description: 'Update just the PRODUCTION bundle',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        bundleTypes: 'PRODUCTION',
+        bundleTypes: [ConsentBundleType.Production],
       },
     },
   ],
@@ -59,7 +63,7 @@ ${buildExampleCommand<GenerateApiKeysCommandFlags>(
   {
     email: 'test@transcend.io',
     password: '$TRANSCEND_PASSWORD',
-    scopes: `${TRANSCEND_SCOPES[ScopeName.ManageConsentManager].title}`,
+    scopes: [TRANSCEND_SCOPES[ScopeName.ManageConsentManager].title],
     apiKeyTitle: 'CLI Usage Cross Instance Sync',
     file: './transcend-api-keys.json',
   },
@@ -68,7 +72,7 @@ ${buildExampleCommand<UpdateConsentManagerCommandFlags>(
   ['consent', 'update-consent-manager'],
   {
     auth: './transcend-api-keys.json',
-    deploy: 'true',
+    deploy: true,
   },
 )}
 \`\`\``;

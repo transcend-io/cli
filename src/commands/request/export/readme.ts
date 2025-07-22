@@ -1,3 +1,4 @@
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { ExportCommandFlags } from './impl';
 
@@ -14,8 +15,8 @@ const examples = buildExamples<ExportCommandFlags>(
       description: 'Filter for specific actions and statuses',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
       },
     },
     {
@@ -37,22 +38,22 @@ const examples = buildExamples<ExportCommandFlags>(
       description: 'Increase the concurrency (defaults to 100)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        concurrency: '500',
+        concurrency: 500,
       },
     },
     {
       description: 'Filter for production requests only',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        showTests: 'false',
+        showTests: false,
       },
     },
     {
       description: 'Filter for requests within a date range',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        createdAtBefore: '04/05/2023',
-        createdAtAfter: '02/21/2023',
+        createdAtBefore: new Date('04/05/2023'),
+        createdAtAfter: new Date('02/21/2023'),
       },
     },
     {

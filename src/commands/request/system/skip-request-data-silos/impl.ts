@@ -1,5 +1,8 @@
 import type { LocalContext } from '../../../../context';
-import type { RequestStatus } from '@transcend-io/privacy-types';
+import type {
+  RequestDataSiloStatus,
+  RequestStatus,
+} from '@transcend-io/privacy-types';
 import { skipRequestDataSilos as skipRequestDataSilosHelper } from '../../../../lib/requests';
 import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
@@ -8,7 +11,9 @@ export interface SkipRequestDataSilosCommandFlags {
   dataSiloId: string;
   transcendUrl: string;
   statuses: RequestStatus[];
-  status: 'SKIPPED' | 'RESOLVED';
+  status:
+    | (typeof RequestDataSiloStatus)['Skipped']
+    | (typeof RequestDataSiloStatus)['Resolved'];
 }
 
 export async function skipRequestDataSilos(

@@ -28,7 +28,7 @@ const examples = buildExamples<UploadConsentPreferencesCommandFlags>(
         base64EncryptionKey: '$TRANSCEND_CONSENT_ENCRYPTION_KEY',
         base64SigningKey: '$TRANSCEND_CONSENT_SIGNING_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        concurrency: '200',
+        concurrency: 200,
       },
     },
   ],

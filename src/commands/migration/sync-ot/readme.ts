@@ -1,3 +1,4 @@
+import { OneTrustPullSource } from '../../../enums';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { SyncOtCommandFlags } from './impl';
 
@@ -19,14 +20,14 @@ const examples = buildExamples<SyncOtCommandFlags>(
       flags: {
         hostname: 'trial.onetrust.com',
         oneTrustAuth: '$ONE_TRUST_OAUTH_TOKEN',
-        dryRun: 'true',
+        dryRun: true,
         file: './oneTrustAssessments.json',
       },
     },
     {
       description: 'Sync to Transcend by reading from file instead of OneTrust',
       flags: {
-        source: 'file',
+        source: OneTrustPullSource.File,
         file: './oneTrustAssessments.json',
         transcendAuth: '$TRANSCEND_API_KEY',
       },

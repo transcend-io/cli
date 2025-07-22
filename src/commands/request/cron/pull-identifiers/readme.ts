@@ -1,3 +1,4 @@
+import { RequestAction } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../../lib/docgen/buildExamples';
 import type { PullIdentifiersCommandFlags } from './impl';
 
@@ -9,7 +10,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
       },
     },
     {
@@ -17,7 +18,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         file: '/Users/transcend/Desktop/test.csv',
       },
     },
@@ -26,7 +27,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         sombraAuth: '$SOMBRA_INTERNAL_KEY',
       },
     },
@@ -36,7 +37,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
@@ -45,9 +46,9 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
-        pageLimit: '300',
-        chunkSize: '6000',
+        actions: [RequestAction.Erasure],
+        pageLimit: 300,
+        chunkSize: 6000,
       },
     },
     {
@@ -56,8 +57,8 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ERASURE',
-        chunkSize: '50000',
+        actions: [RequestAction.Erasure],
+        chunkSize: 50000,
       },
     },
   ],

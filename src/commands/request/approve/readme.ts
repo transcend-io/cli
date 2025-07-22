@@ -1,3 +1,4 @@
+import { RequestAction, RequestOrigin } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { ApproveCommandFlags } from './impl';
 
@@ -8,7 +9,7 @@ const examples = buildExamples<ApproveCommandFlags>(
       description: 'Bulk approve all SALE_OPT_OUT and ERASURE requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT,ERASURE',
+        actions: [RequestAction.SaleOptOut, RequestAction.Erasure],
       },
     },
     {
@@ -16,7 +17,7 @@ const examples = buildExamples<ApproveCommandFlags>(
         'Specifying the backend URL, needed for US hosted backend infrastructure',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
@@ -24,8 +25,8 @@ const examples = buildExamples<ApproveCommandFlags>(
       description: 'Approve all Erasure requests that came through the API',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
-        origins: 'API',
+        actions: [RequestAction.Erasure],
+        origins: [RequestOrigin.Api],
       },
     },
     {
@@ -33,16 +34,16 @@ const examples = buildExamples<ApproveCommandFlags>(
         'Approve all requests, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT',
-        silentModeBefore: '05/03/2023',
+        actions: [RequestAction.SaleOptOut],
+        silentModeBefore: new Date('05/03/2023'),
       },
     },
     {
       description: 'Increase the concurrency (defaults to 50)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
-        concurrency: '100',
+        actions: [RequestAction.Erasure],
+        concurrency: 100,
       },
     },
     {
@@ -50,9 +51,9 @@ const examples = buildExamples<ApproveCommandFlags>(
         'Approve ERASURE requests created within a specific time frame',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT',
-        createdAtBefore: '05/03/2023',
-        createdAtAfter: '04/03/2023',
+        actions: [RequestAction.SaleOptOut],
+        createdAtBefore: new Date('05/03/2023'),
+        createdAtAfter: new Date('04/03/2023'),
       },
     },
   ],

@@ -1,3 +1,4 @@
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { RestartCommandFlags } from './impl';
 
@@ -8,8 +9,8 @@ const examples = buildExamples<RestartCommandFlags>(
       description: 'Restart requests with specific statuses and actions',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
       },
     },
     {
@@ -17,8 +18,8 @@ const examples = buildExamples<RestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         sombraAuth: '$SOMBRA_INTERNAL_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
       },
     },
     {
@@ -27,8 +28,8 @@ const examples = buildExamples<RestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         sombraAuth: '$SOMBRA_INTERNAL_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
@@ -36,28 +37,30 @@ const examples = buildExamples<RestartCommandFlags>(
       description: 'Increase the concurrency (defaults to 15)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        concurrency: '100',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        concurrency: 100,
       },
     },
     {
       description: 'Re-verify emails',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        emailIsVerified: 'false',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        emailIsVerified: false,
       },
     },
     {
       description: 'Restart specific requests by ID',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        requestIds:
-          'c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        requestIds: [
+          'c3ae78c9-2768-4666-991a-d2f729503337',
+          '342e4bd1-64ea-4af0-a4ad-704b5a07cfe4',
+        ],
       },
     },
     {
@@ -65,9 +68,9 @@ const examples = buildExamples<RestartCommandFlags>(
         'Restart requests that were submitted before a specific date',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        createdAt: '2022-05-11T00:46',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        createdAt: new Date('2022-05-11T00:46'),
       },
     },
     {
@@ -75,28 +78,28 @@ const examples = buildExamples<RestartCommandFlags>(
         'Restart requests and place everything in silent mode submitted before a certain date',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        silentModeBefore: '2022-12-05T00:46',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        silentModeBefore: new Date('2022-12-05T00:46'),
       },
     },
     {
       description: 'Restart requests within a specific timeframe',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        createdAtBefore: '04/05/2023',
-        createdAtAfter: '02/21/2023',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        createdAtBefore: new Date('04/05/2023'),
+        createdAtAfter: new Date('02/21/2023'),
       },
     },
     {
       description: 'Send email receipts to the restarted requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        sendEmailReceipt: 'true',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        sendEmailReceipt: true,
       },
     },
     {
@@ -104,18 +107,18 @@ const examples = buildExamples<RestartCommandFlags>(
         'Copy over all enriched identifiers from the initial request',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        copyIdentifiers: 'true',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        copyIdentifiers: true,
       },
     },
     {
       description: 'Skip queued state of request and go straight to compiling',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        statuses: 'COMPILING,ENRICHING',
-        actions: 'ACCESS,ERASURE',
-        skipWaitingPeriod: 'true',
+        statuses: [RequestStatus.Compiling, RequestStatus.Enriching],
+        actions: [RequestAction.Access, RequestAction.Erasure],
+        skipWaitingPeriod: true,
       },
     },
   ],

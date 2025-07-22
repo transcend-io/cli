@@ -1,3 +1,4 @@
+import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import {
   buildExamples,
   buildExampleCommand,
@@ -11,7 +12,7 @@ const examples = buildExamples<CancelCommandFlags>(
       description: 'Bulk cancel all open SALE_OPT_OUT and ERASURE requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT,ERASURE',
+        actions: [RequestAction.SaleOptOut, RequestAction.Erasure],
       },
     },
     {
@@ -19,7 +20,7 @@ const examples = buildExamples<CancelCommandFlags>(
         'Specifying the backend URL, needed for US hosted backend infrastructure',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
@@ -28,8 +29,8 @@ const examples = buildExamples<CancelCommandFlags>(
         'Bulk cancel all Erasure (request.type=ERASURE) requests that are in an enriching state (request.status=ENRICHING)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
-        statuses: 'ENRICHING',
+        actions: [RequestAction.Erasure],
+        statuses: [RequestStatus.Enriching],
       },
     },
     {
@@ -37,7 +38,7 @@ const examples = buildExamples<CancelCommandFlags>(
         'Send a specific email template to the request that are being canceled',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
+        actions: [RequestAction.Erasure],
         cancellationTitle: 'Custom Email Template',
       },
     },
@@ -46,25 +47,25 @@ const examples = buildExamples<CancelCommandFlags>(
         'Cancel all open SALE_OPT_OUT, but mark any request made before 05/03/2023 as silent mode to prevent emailing those requests',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT',
-        silentModeBefore: '05/03/2023',
+        actions: [RequestAction.SaleOptOut],
+        silentModeBefore: new Date('05/03/2023'),
       },
     },
     {
       description: 'Cancel all open SALE_OPT_OUT, within a specific time frame',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'SALE_OPT_OUT',
-        createdAtBefore: '05/03/2023',
-        createdAtAfter: '04/03/2023',
+        actions: [RequestAction.SaleOptOut],
+        createdAtBefore: new Date('05/03/2023'),
+        createdAtAfter: new Date('04/03/2023'),
       },
     },
     {
       description: 'Increase the concurrency (defaults to 50)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        actions: 'ERASURE',
-        concurrency: '500',
+        actions: [RequestAction.Erasure],
+        concurrency: 500,
       },
     },
   ],
@@ -79,10 +80,25 @@ ${examples}
 \`\`\`sh
 ${buildExampleCommand<CancelCommandFlags>(['request', 'cancel'], {
   auth: '$TRANSCEND_API_KEY',
-  actions: 'ACCESS,ERASURE,SALE_OPT_OUT,CONTACT_OPT_OUT',
-  statuses:
-    'ENRICHING,COMPILING,APPROVING,WAITING,REQUEST_MADE,ON_HOLD,DELAYED,SECONDARY',
-  requestIds:
-    'c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4',
+  actions: [
+    RequestAction.Access,
+    RequestAction.Erasure,
+    RequestAction.SaleOptOut,
+    RequestAction.ContactOptOut,
+  ],
+  statuses: [
+    RequestStatus.Enriching,
+    RequestStatus.Compiling,
+    RequestStatus.Approving,
+    RequestStatus.Waiting,
+    RequestStatus.RequestMade,
+    RequestStatus.OnHold,
+    RequestStatus.Delayed,
+    RequestStatus.Secondary,
+  ],
+  requestIds: [
+    'c3ae78c9-2768-4666-991a-d2f729503337',
+    '342e4bd1-64ea-4af0-a4ad-704b5a07cfe4',
+  ],
 })}
 \`\`\``;

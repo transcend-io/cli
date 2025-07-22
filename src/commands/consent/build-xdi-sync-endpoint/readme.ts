@@ -38,7 +38,7 @@ const examples = buildExamples<BuildXdiSyncEndpointCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         xdiLocation: 'https://cdn.your-site.com/xdi.js',
-        removeIpAddresses: 'false',
+        removeIpAddresses: false,
       },
     },
     {
@@ -47,7 +47,7 @@ const examples = buildExamples<BuildXdiSyncEndpointCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         xdiLocation: 'https://cdn.your-site.com/xdi.js',
-        domainBlockList: 'ignored.com,localhost',
+        domainBlockList: ['ignored.com', 'localhost'],
       },
     },
     {
@@ -75,7 +75,7 @@ ${buildExampleCommand<GenerateApiKeysCommandFlags>(
     email: '$TRANSCEND_EMAIL',
     password: '$TRANSCEND_PASSWORD',
     transcendUrl: 'https://api.us.transcend.io',
-    scopes: TRANSCEND_SCOPES[ScopeName.ViewConsentManager].title,
+    scopes: [TRANSCEND_SCOPES[ScopeName.ViewConsentManager].title],
     apiKeyTitle: '[cli][$TRANSCEND_EMAIL] XDI Endpoint Construction',
     file: './api-keys.json',
     parentOrganizationId: '1821d872-6114-406e-90c3-73b4d5e246cf',

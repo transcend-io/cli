@@ -10,9 +10,10 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
       flags: {
         email: 'test@transcend.io',
         password: '$TRANSCEND_PASSWORD',
-        scopes: `${TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title},${
-          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title
-        }`,
+        scopes: [
+          TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+        ],
         apiKeyTitle: 'CLI Usage Cross Instance Sync',
         file: './working/auth.json',
       },
@@ -23,9 +24,10 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
       flags: {
         email: 'test@transcend.io',
         password: '$TRANSCEND_PASSWORD',
-        scopes: `${TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title},${
-          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title
-        }`,
+        scopes: [
+          TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+        ],
         apiKeyTitle: 'CLI Usage Cross Instance Sync',
         file: './working/auth.json',
         transcendUrl: 'https://api.us.transcend.io',
@@ -37,9 +39,10 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
       flags: {
         email: 'test@transcend.io',
         password: '$TRANSCEND_PASSWORD',
-        scopes: `${TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title},${
-          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title
-        }`,
+        scopes: [
+          TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+        ],
         apiKeyTitle: 'CLI Usage Cross Instance Sync',
         file: './working/auth.json',
         parentOrganizationId: '7098bb38-070d-4f26-8fa4-1b61b9cdef77',
@@ -50,12 +53,13 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
       flags: {
         email: 'test@transcend.io',
         password: '$TRANSCEND_PASSWORD',
-        scopes: `${TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title},${
-          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title
-        }`,
+        scopes: [
+          TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+        ],
         apiKeyTitle: 'CLI Usage Cross Instance Sync',
         file: './working/auth.json',
-        createNewApiKey: 'false',
+        createNewApiKey: false,
       },
     },
     {
@@ -64,12 +68,13 @@ const examples = buildExamples<GenerateApiKeysCommandFlags>(
       flags: {
         email: 'test@transcend.io',
         password: '$TRANSCEND_PASSWORD',
-        scopes: `${TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title},${
-          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title
-        }`,
+        scopes: [
+          TRANSCEND_SCOPES[ScopeName.ViewEmailTemplates].title,
+          TRANSCEND_SCOPES[ScopeName.ViewDataMap].title,
+        ],
         apiKeyTitle: 'CLI Usage Cross Instance Sync',
         file: './working/auth.json',
-        deleteExistingApiKey: 'false',
+        deleteExistingApiKey: false,
       },
     },
   ],

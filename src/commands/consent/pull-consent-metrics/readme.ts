@@ -8,7 +8,7 @@ const examples = buildExamples<PullConsentMetricsCommandFlags>(
       description: 'Pull consent manager metrics for a Transcend account',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        start: '01/01/2023',
+        start: new Date('01/01/2023'),
       },
     },
     {
@@ -16,7 +16,7 @@ const examples = buildExamples<PullConsentMetricsCommandFlags>(
         'Specifying the backend URL, needed for US hosted backend infrastructure',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        start: '01/01/2023',
+        start: new Date('01/01/2023'),
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
@@ -24,16 +24,16 @@ const examples = buildExamples<PullConsentMetricsCommandFlags>(
       description: 'Pull start and end date explicitly',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        start: '01/01/2023',
-        end: '03/01/2023',
+        start: new Date('01/01/2023'),
+        end: new Date('03/01/2023'),
       },
     },
     {
       description: 'Save to an explicit folder',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        start: '01/01/2023',
-        end: '03/01/2023',
+        start: new Date('01/01/2023'),
+        end: new Date('03/01/2023'),
         folder: './my-folder/',
       },
     },
@@ -41,7 +41,7 @@ const examples = buildExamples<PullConsentMetricsCommandFlags>(
       description: 'Bin data hourly vs daily',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        start: '01/01/2023',
+        start: new Date('01/01/2023'),
         bin: '1h',
       },
     },

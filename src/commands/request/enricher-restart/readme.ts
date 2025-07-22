@@ -1,3 +1,7 @@
+import {
+  RequestAction,
+  RequestEnricherStatus,
+} from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../lib/docgen/buildExamples';
 import type { EnricherRestartCommandFlags } from './impl';
 
@@ -16,7 +20,7 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '3be5e898-fea9-4614-84de-88cd5265c557',
-        actions: 'ACCESS,ERASURE',
+        actions: [RequestAction.Access, RequestAction.Erasure],
       },
     },
     {
@@ -33,7 +37,7 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '3be5e898-fea9-4614-84de-88cd5265c557',
-        concurrency: '100',
+        concurrency: 100,
       },
     },
     {
@@ -41,8 +45,8 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '3be5e898-fea9-4614-84de-88cd5265c557',
-        createdAtBefore: '04/05/2023',
-        createdAtAfter: '02/21/2023',
+        createdAtBefore: new Date('04/05/2023'),
+        createdAtAfter: new Date('02/21/2023'),
       },
     },
     {
@@ -50,7 +54,7 @@ const examples = buildExamples<EnricherRestartCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '3be5e898-fea9-4614-84de-88cd5265c557',
-        requestEnricherStatuses: 'ERROR',
+        requestEnricherStatuses: [RequestEnricherStatus.Error],
       },
     },
   ],

@@ -4,7 +4,7 @@ import { name } from '../../constants';
  * The flags of the example command
  * key is the flag name, value is the flag value
  */
-type FlagMap<Flags> = Partial<Record<keyof Flags, string>>;
+type FlagMap<Flags> = Partial<Flags>;
 
 export interface Example<Flags> {
   /** A description of the example */

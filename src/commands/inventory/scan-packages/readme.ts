@@ -21,7 +21,7 @@ const examples = buildExamples<ScanPackagesCommandFlags>(
       description: 'Ignore certain folders',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        ignoreDirs: './test,./build',
+        ignoreDirs: ['./test', './build'],
       },
     },
     {

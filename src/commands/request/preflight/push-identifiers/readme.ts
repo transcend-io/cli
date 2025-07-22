@@ -41,7 +41,7 @@ const examples = buildExamples<PushIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '27d45a0d-7d03-47fa-9b30-6d697005cfcf',
-        concurrency: '200',
+        concurrency: 200,
       },
     },
     {
@@ -50,7 +50,7 @@ const examples = buildExamples<PushIdentifiersCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         enricherId: '27d45a0d-7d03-47fa-9b30-6d697005cfcf',
-        markSilent: 'true',
+        markSilent: true,
       },
     },
   ],

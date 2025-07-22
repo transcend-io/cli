@@ -9,11 +9,13 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        includeGuessedCategories: 'true',
-        parentCategories: 'CONTACT,ID,LOCATION',
-        subCategories:
-          '79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1',
-        dataSiloIds: 'f956ccce-5534-4328-a78d-3a924b1fe429',
+        includeGuessedCategories: true,
+        parentCategories: ['CONTACT', 'ID', 'LOCATION'],
+        subCategories: [
+          '79d998b7-45dd-481c-ae3a-856fd93458b2',
+          '9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        ],
+        dataSiloIds: ['f956ccce-5534-4328-a78d-3a924b1fe429'],
       },
     },
     {
@@ -21,7 +23,7 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        dataSiloIds: 'f956ccce-5534-4328-a78d-3a924b1fe429',
+        dataSiloIds: ['f956ccce-5534-4328-a78d-3a924b1fe429'],
       },
     },
     {
@@ -29,7 +31,7 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        includeAttributes: 'true',
+        includeAttributes: true,
       },
     },
     {
@@ -37,7 +39,7 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        includeGuessedCategories: 'true',
+        includeGuessedCategories: true,
       },
     },
     {
@@ -45,7 +47,7 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        parentCategories: 'ID,LOCATION',
+        parentCategories: ['ID', 'LOCATION'],
       },
     },
     {
@@ -53,8 +55,10 @@ const examples = buildExamples<PullDatapointsCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './datapoints.csv',
-        subCategories:
-          '79d998b7-45dd-481c-ae3a-856fd93458b2,9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        subCategories: [
+          '79d998b7-45dd-481c-ae3a-856fd93458b2',
+          '9ecc213a-cd46-46d6-afd9-46cea713f5d1',
+        ],
       },
     },
     {

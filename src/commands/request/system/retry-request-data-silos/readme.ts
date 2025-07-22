@@ -1,3 +1,4 @@
+import { RequestAction } from '@transcend-io/privacy-types';
 import { buildExamples } from '../../../../lib/docgen/buildExamples';
 import type { RetryRequestDataSilosCommandFlags } from './impl';
 
@@ -10,7 +11,7 @@ const examples = buildExamples<RetryRequestDataSilosCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ACCESS',
+        actions: [RequestAction.Access],
       },
     },
     {
@@ -19,7 +20,7 @@ const examples = buildExamples<RetryRequestDataSilosCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
-        actions: 'ACCESS',
+        actions: [RequestAction.Access],
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
