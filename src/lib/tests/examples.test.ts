@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest';
+import { describe, test, vi } from 'vitest';
 import { fdir } from 'fdir';
 import { run } from '@stricli/core';
 import { app } from '../../app';
