@@ -34,7 +34,7 @@ export async function deriveDataSilosFromDataFlows(
     transcendUrl,
   }: DeriveDataSilosFromDataFlowsCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Ensure folder is passed
   if (
@@ -42,7 +42,7 @@ export async function deriveDataSilosFromDataFlows(
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Ensure folder is passed
@@ -51,7 +51,7 @@ export async function deriveDataSilosFromDataFlows(
     !lstatSync(dataSilosYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataSilosYmlFolder}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Fetch all integrations in the catalog

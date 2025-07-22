@@ -39,7 +39,7 @@ export async function _export(
     showTests,
   }: ExportCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   const { requestsFormattedForCsv } = await pullPrivacyRequests({
     transcendUrl,

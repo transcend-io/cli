@@ -104,7 +104,7 @@ export async function syncOt(
     }
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // instantiate a client to talk to OneTrust
   const oneTrust =

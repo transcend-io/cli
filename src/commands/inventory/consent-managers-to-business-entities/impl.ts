@@ -24,7 +24,7 @@ export function consentManagersToBusinessEntities(
     output,
   }: ConsentManagersToBusinessEntitiesCommandFlags,
 ): void {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Ensure folder is passed
   if (
@@ -34,7 +34,7 @@ export function consentManagersToBusinessEntities(
     logger.error(
       colors.red(`Folder does not exist: "${consentManagerYmlFolder}"`),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Read in each consent manager configuration

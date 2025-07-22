@@ -25,12 +25,12 @@ export function consentManagerServiceJsonToYml(
   this: LocalContext,
   { file, output }: ConsentManagerServiceJsonToYmlCommandFlags,
 ): void {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Ensure files exist
   if (!existsSync(file)) {
     logger.error(colors.red(`File does not exist: --file="${file}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Read in each consent manager configuration

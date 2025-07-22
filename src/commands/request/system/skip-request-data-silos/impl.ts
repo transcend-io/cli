@@ -21,7 +21,7 @@ export async function skipRequestDataSilos(
     transcendUrl,
   }: SkipRequestDataSilosCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await skipRequestDataSilosHelper({
     transcendUrl,

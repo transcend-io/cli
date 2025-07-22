@@ -27,7 +27,7 @@ export async function markSilent(
     concurrency,
   }: MarkSilentCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await markSilentPrivacyRequests({
     transcendUrl,

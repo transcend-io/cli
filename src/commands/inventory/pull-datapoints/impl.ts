@@ -34,7 +34,7 @@ export async function pullDatapoints(
     subCategories = [],
   }: PullDatapointsCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   try {
     // Create a GraphQL client
@@ -87,7 +87,7 @@ export async function pullDatapoints(
     logger.error(
       colors.red(`An error occurred syncing the datapoints: ${err.message}`),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Indicate success

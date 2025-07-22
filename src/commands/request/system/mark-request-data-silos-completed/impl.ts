@@ -27,7 +27,7 @@ export async function markRequestDataSilosCompleted(
     transcendUrl,
   }: MarkRequestDataSilosCompletedCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   logger.info(colors.magenta(`Reading "${file}" from disk`));
   const activeResults = readCsv(file, RequestIdRow);

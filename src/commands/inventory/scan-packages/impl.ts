@@ -33,7 +33,7 @@ export async function scanPackages(
     transcendUrl,
   }: ScanPackagesCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Ensure repository name is specified
   let gitRepositoryName = repositoryName;
@@ -49,11 +49,11 @@ export async function scanPackages(
         : url.split('/').slice(3).join('/').split('.');
       if (!gitRepositoryName) {
         logger.error(colors.red(REPO_ERROR));
-        process.exit(1);
+        this.process.exit(1);
       }
     } catch (err) {
       logger.error(colors.red(`${REPO_ERROR} - Got error: ${err.message}`));
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 

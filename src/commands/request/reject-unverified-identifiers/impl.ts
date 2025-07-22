@@ -19,7 +19,7 @@ export async function rejectUnverifiedIdentifiers(
     actions = [],
   }: RejectUnverifiedIdentifiersCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await removeUnverifiedRequestIdentifiers({
     requestActions: actions,

@@ -21,7 +21,7 @@ export async function uploadDataFlowsFromCsv(
     transcendUrl,
   }: UploadDataFlowsFromCsvCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await uploadDataFlowsFromCsvHelper({
     auth,

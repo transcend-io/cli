@@ -19,7 +19,7 @@ export async function retryRequestDataSilos(
     transcendUrl,
   }: RetryRequestDataSilosCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await retryRequestDataSilosHelper({
     requestActions: actions,

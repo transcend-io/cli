@@ -64,10 +64,10 @@ export async function pullProfiles(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);

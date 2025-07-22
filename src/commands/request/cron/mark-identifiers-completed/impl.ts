@@ -20,7 +20,7 @@ export async function markIdentifiersCompleted(
     dataSiloId,
   }: MarkIdentifiersCompletedCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await pushCronIdentifiersFromCsv({
     file,

@@ -35,7 +35,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     transcendUrl,
   }: DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Ensure folder is passed
   if (
@@ -43,7 +43,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Ignore the data flows in these yml files

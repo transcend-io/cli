@@ -30,7 +30,7 @@ export async function pullUnstructuredDiscoveryFiles(
     includeEncryptedSnippets,
   }: PullUnstructuredDiscoveryFilesCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   try {
     // Create a GraphQL client
@@ -74,7 +74,7 @@ export async function pullUnstructuredDiscoveryFiles(
         `An error occurred syncing the unstructured discovery files: ${err.message}`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Indicate success

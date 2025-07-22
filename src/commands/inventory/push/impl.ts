@@ -97,7 +97,7 @@ export async function push(
     deleteExtraAttributeValues,
   }: PushCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -127,7 +127,7 @@ export async function push(
           `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     } else {
       logger.info(colors.magenta(`Reading file "${filePath}"...`));
     }
@@ -146,7 +146,7 @@ export async function push(
           `The shape of your yaml file is invalid with the following errors: ${err.message}`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
   });
 
@@ -175,7 +175,7 @@ export async function push(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   } else {
     // if passed multiple inputs, expect them to be one per instance
@@ -252,7 +252,7 @@ export async function push(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 

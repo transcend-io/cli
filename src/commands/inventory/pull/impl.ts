@@ -53,7 +53,7 @@ export async function pull(
     debug,
   }: PullCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -90,7 +90,7 @@ export async function pull(
           }`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
 
     // Indicate success
@@ -159,7 +159,7 @@ export async function pull(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 }

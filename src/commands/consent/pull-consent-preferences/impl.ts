@@ -31,7 +31,7 @@ export async function pullConsentPreferences(
     concurrency,
   }: PullConsentPreferencesCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);

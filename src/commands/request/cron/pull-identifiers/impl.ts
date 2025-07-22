@@ -56,10 +56,10 @@ export async function pullIdentifiers(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   const { baseName, extension } = parseFilePath(file);
   let fileCount = 0;

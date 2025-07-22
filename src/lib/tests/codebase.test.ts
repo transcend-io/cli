@@ -238,7 +238,9 @@ describe('CLI Command Structure', () => {
       // For each command, ensure only command.ts, impl.ts, and optionally readme.ts exist
       for (const command of allCommands) {
         const commandPath = path.join('src', 'commands', ...command);
-        const files = fs.readdirSync(commandPath);
+        const files = fs
+          .readdirSync(commandPath)
+          .filter((file) => file !== '.DS_Store');
 
         // Allow command.ts, impl.ts, and optionally readme.ts
         const allowedFiles = ['command.ts', 'impl.ts'];
@@ -255,7 +257,9 @@ describe('CLI Command Structure', () => {
 
       for (const nodePath of nonLeafNodes) {
         const directoryPath = path.join('src', 'commands', nodePath);
-        const items = fs.readdirSync(directoryPath);
+        const items = fs
+          .readdirSync(directoryPath)
+          .filter((item) => item !== '.DS_Store');
 
         // Should contain routes.ts and subdirectories, no other files
         for (const item of items) {

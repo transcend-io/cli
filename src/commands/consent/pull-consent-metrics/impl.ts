@@ -45,7 +45,7 @@ export async function pullConsentMetrics(
           )}`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Parse the dates
@@ -57,7 +57,7 @@ export async function pullConsentMetrics(
         `Start date provided is invalid date. Got --start="${start}" expected --start="01/01/2023"`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
   if (Number.isNaN(endDate.getTime())) {
     logger.error(
@@ -65,7 +65,7 @@ export async function pullConsentMetrics(
         `End date provided is invalid date. Got --end="${end}" expected --end="01/01/2023"`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
   if (startDate > endDate) {
     logger.error(
@@ -74,10 +74,10 @@ export async function pullConsentMetrics(
           'Start date must be before end date.',
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
@@ -89,7 +89,7 @@ export async function pullConsentMetrics(
         'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Create the folder if it does not exist
@@ -136,7 +136,7 @@ export async function pullConsentMetrics(
       logger.error(
         colors.red(`An error occurred syncing the schema: ${err.message}`),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
 
     // Indicate success
@@ -208,7 +208,7 @@ export async function pullConsentMetrics(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 }

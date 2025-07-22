@@ -23,7 +23,7 @@ export async function pullIdentifiers(
     sombraAuth,
   }: PullIdentifiersCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await pullManualEnrichmentIdentifiersToCsv({
     file,

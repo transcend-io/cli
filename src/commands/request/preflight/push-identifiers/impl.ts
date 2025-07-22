@@ -24,7 +24,7 @@ export async function pushIdentifiers(
     sombraAuth,
   }: PushIdentifiersCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await pushManualEnrichmentIdentifiersFromCsv({
     file,

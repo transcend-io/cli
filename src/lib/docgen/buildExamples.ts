@@ -1,6 +1,4 @@
 import { name } from '../../constants';
-import { logger } from '../../logger';
-import { execSync } from 'node:child_process';
 
 /**
  * The flags of the example command
@@ -8,7 +6,7 @@ import { execSync } from 'node:child_process';
  */
 type FlagMap<Flags> = Partial<Record<keyof Flags, string>>;
 
-interface Example<Flags> {
+export interface Example<Flags> {
   /** A description of the example */
   description: string;
   /** The command to run */
@@ -46,7 +44,26 @@ export function buildExampleCommand<Flags>(
   flags: FlagMap<Flags>,
 ): string {
   const command = commandPath.join(' ');
-  const flagList = Object.entries(flags).map(([flag, value]) => {
+  const flagList = getFlagList(flags);
+
+  // Break the command into multiple lines if it's too long
+  const exampleCommand =
+    `${name} ${command} ${flagList.join(' ')}`.length <= 117
+      ? `${command} ${flagList.join(' ')}`
+      : `${command} \\\n  ${flagList.join(' \\\n  ')}`;
+
+  // Add `transcend` before command name
+  return `${name} ${exampleCommand}`;
+}
+
+/**
+ * Builds a list of flags formatted for an example command
+ *
+ * @param flags - The flags to build the command with
+ * @returns A list of flags for the example command
+ */
+export function getFlagList<Flags>(flags: FlagMap<Flags>): string[] {
+  return Object.entries(flags).map(([flag, value]) => {
     if (value === 'true') {
       return `--${flag}`;
     }
@@ -65,46 +82,4 @@ export function buildExampleCommand<Flags>(
 
     return `--${flag}=${formattedValue}`;
   });
-
-  // Break the command into multiple lines if it's too long
-  const exampleCommand =
-    `${name} ${command} ${flagList.join(' ')}`.length <= 117
-      ? `${command} ${flagList.join(' ')}`
-      : `${command} \\\n  ${flagList.join(' \\\n  ')}`;
-
-  // If `DEVELOPMENT_MODE_VALIDATE_ONLY` is set, test that the example command passes validation
-  if (process.env.DEVELOPMENT_MODE_VALIDATE_ONLY) {
-    testExampleCommand(command, flagList);
-  }
-
-  // Add `transcend` before command name
-  return `${name} ${exampleCommand}`;
-}
-
-/**
- * Tests an example command
- *
- * @param command - The command to run
- * @param flagList - The flags to run the command with
- */
-function testExampleCommand(command: string, flagList: string[]): void {
-  const flagListWithReplacedVariables = flagList.map((flag) =>
-    flag.replace(
-      // Replace bash variables with "test"
-      /\$\w+/g,
-      'TEST_VALUE',
-    ),
-  );
-
-  const commandToRun = `pnpm start ${command} ${flagListWithReplacedVariables.join(
-    ' ',
-  )}`;
-
-  try {
-    execSync(commandToRun);
-    logger.debug(`Successfully ran command: ${commandToRun}`);
-  } catch (error) {
-    logger.error(`Failed to run command: ${commandToRun}`);
-    process.exit(1);
-  }
 }

@@ -14,7 +14,7 @@ export async function uploadCookiesFromCsv(
   this: LocalContext,
   { auth, trackerStatus, file, transcendUrl }: UploadCookiesFromCsvCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Upload cookies
   await uploadCookiesFromCsvHelper({

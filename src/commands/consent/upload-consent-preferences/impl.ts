@@ -25,7 +25,7 @@ export async function uploadConsentPreferences(
     concurrency,
   }: UploadConsentPreferencesCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Load in preferences from csv
   const preferences = readCsv(file, ConsentPreferenceUpload);

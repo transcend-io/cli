@@ -54,7 +54,7 @@ export async function uploadPreferences(
         'Cannot provide both a directory and a file. Please provide only one.',
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   if (!file && !directory) {
@@ -63,10 +63,10 @@ export async function uploadPreferences(
         'A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences',
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   const files: string[] = [];
 
@@ -79,7 +79,7 @@ export async function uploadPreferences(
         logger.error(
           colors.red(`No CSV files found in directory: ${directory}`),
         );
-        process.exit(1);
+        this.process.exit(1);
       }
 
       // Add full paths for each CSV file
@@ -87,20 +87,20 @@ export async function uploadPreferences(
     } catch (err) {
       logger.error(colors.red(`Failed to read directory: ${directory}`));
       logger.error(colors.red((err as Error).message));
-      process.exit(1);
+      this.process.exit(1);
     }
   } else {
     try {
       // Verify file exists and is a CSV
       if (!file.endsWith('.csv')) {
         logger.error(colors.red('File must be a CSV file'));
-        process.exit(1);
+        this.process.exit(1);
       }
       files.push(file);
     } catch (err) {
       logger.error(colors.red(`Failed to access file: ${file}`));
       logger.error(colors.red((err as Error).message));
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 

@@ -28,7 +28,7 @@ export async function approve(
     concurrency,
   }: ApproveCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await approvePrivacyRequests({
     transcendUrl,

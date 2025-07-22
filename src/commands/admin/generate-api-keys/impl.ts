@@ -58,10 +58,10 @@ export async function generateApiKeys(
           `Expected one of: \n${SCOPE_TITLES.join('\n')}`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   const scopeNames = splitScopes.map(
     (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName,
@@ -82,6 +82,6 @@ export async function generateApiKeys(
   // Write to disk
   writeFileSync(file, `${JSON.stringify(apiKeys, null, 2)}\n`);
   if (errors.length > 0) {
-    process.exit(1);
+    this.process.exit(1);
   }
 }

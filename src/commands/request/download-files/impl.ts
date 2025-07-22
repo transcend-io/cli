@@ -30,7 +30,7 @@ export async function downloadFiles(
     approveAfterDownload,
   }: DownloadFilesCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   await downloadPrivacyRequestFiles({
     transcendUrl,

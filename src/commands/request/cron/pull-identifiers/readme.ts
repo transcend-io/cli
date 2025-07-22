@@ -47,6 +47,7 @@ const examples = buildExamples<PullIdentifiersCommandFlags>(
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
         actions: 'ERASURE',
         pageLimit: '300',
+        chunkSize: '6000',
       },
     },
     {

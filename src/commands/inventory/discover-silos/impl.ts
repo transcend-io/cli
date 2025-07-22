@@ -32,7 +32,7 @@ export async function discoverSilos(
     transcendUrl,
   }: DiscoverSilosCommandFlags,
 ): Promise<void> {
-  doneInputValidation();
+  doneInputValidation(this.process.exit);
 
   // Create a GraphQL client
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -46,7 +46,7 @@ export async function discoverSilos(
         `This plugin "${plugin.dataSilo.type}" is not supported for offline silo discovery.`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   const results = await findFilesToScan({
