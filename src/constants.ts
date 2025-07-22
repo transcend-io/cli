@@ -1,5 +1,9 @@
 import { keyBy } from 'lodash-es';
-import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+import {
+  ScopeName,
+  TRANSCEND_SCOPES,
+  type ScopeDefinition,
+} from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
@@ -174,6 +178,12 @@ export const SCOPES_BY_TITLE = keyBy(
     name,
   })),
   'title',
-);
+) as Record<
+  string,
+  ScopeDefinition & {
+    /** The camelCased name which identifies the scope */
+    name: ScopeName;
+  }
+>;
 
 export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
