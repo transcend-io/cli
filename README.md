@@ -1297,9 +1297,13 @@ This command pulls down the set of privacy requests that are currently pending m
 This is useful for the following workflow:
 
 1. Pull identifiers to CSV:
+
    transcend request preflight pull-identifiers --file=./enrichment-requests.csv
+
 2. Fill out the CSV with additional identifiers
-3. Push updated back to Transcend
+
+3. Push updated back to Transcend:
+
    transcend request preflight push-identifiers --file=./enrichment-requests.csv
 
 FLAGS
@@ -1362,9 +1366,13 @@ This command push up a set of identifiers for a set of requests pending manual e
 This is useful for the following workflow:
 
 1. Pull identifiers to CSV:
+
    transcend request preflight pull-identifiers --file=./enrichment-requests.csv
+
 2. Fill out the CSV with additional identifiers
-3. Push updated back to Transcend
+
+3. Push updated back to Transcend:
+
    transcend request preflight push-identifiers --file=./enrichment-requests.csv
 
 FLAGS
@@ -1532,10 +1540,21 @@ This command takes the output of "transcend request cron pull-identifiers" and n
 This is used in the workflow like:
 
 1. Pull identifiers to CSV:
-   transcend request cron pull-identifiers --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --actions=ERASURE --file=./outstanding-requests.csv
+
+   transcend request cron pull-identifiers \
+     --auth="$TRANSCEND_API_KEY" \
+     --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+     --actions=ERASURE \
+     --file=./outstanding-requests.csv
+
 2. Run your process to operate on that CSV of requests.
+
 3. Notify Transcend of completion
-   transcend request cron mark-identifiers-completed --auth=$TRANSCEND_API_KEY --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f --file=./outstanding-requests.csv
+
+   transcend request cron mark-identifiers-completed \
+     --auth="$TRANSCEND_API_KEY" \
+     --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+     --file=./outstanding-requests.csv
 
 Read more at https://docs.transcend.io/docs/integrations/cron-job-integration.
 
@@ -2900,11 +2919,16 @@ USAGE
 
 Import the services from an airgap.js file into a Transcend instance.
 
-Step 1) Run `await airgap.getMetadata()` on a site with airgap
-Step 2) Right click on the printed object, and click `Copy object`
-Step 3) Place output of file in a file named `services.json`
-Step 4) Run `transcend consent consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml`
-Step 5) Run `transcend inventory push --auth=$TRANSCEND_API_KEY --file=./transcend.yml --classifyService=true`
+1. Run `await airgap.getMetadata()` on a site with airgap
+2. Right click on the printed object, and click `Copy object`
+3. Place output of file in a file named `services.json`
+4. Run:
+
+   transcend inventory consent-manager-service-json-to-yml --file=./services.json --output=./transcend.yml
+
+5. Run:
+
+   transcend inventory push --auth="$TRANSCEND_API_KEY" --file=./transcend.yml --classifyService
 
 FLAGS
      [--file]    Path to the services.json file, output of await airgap.getMetadata() [default = ./services.json]

@@ -40,9 +40,12 @@ vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
           ' ',
         )}`;
         commandsToTest.push(commandWithoutName);
-        unalteredCommands.push(actual.buildExampleCommand(commandPath, flags));
 
-        return actual.buildExampleCommand(commandPath, flags);
+        const unalteredCommand = actual.buildExampleCommand<
+          Record<string, string>
+        >(commandPath, flags);
+        unalteredCommands.push(unalteredCommand);
+        return unalteredCommand;
       },
     );
 

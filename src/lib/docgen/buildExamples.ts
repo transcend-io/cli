@@ -3,7 +3,7 @@ import { name } from '../../constants';
 export interface Example<Flags> {
   /** A description of the example */
   description: string;
-  /** The command to run */
+  /** The flag arguments to the command */
   flags: Partial<Flags>;
 }
 
@@ -14,13 +14,16 @@ export interface Example<Flags> {
  * @param examples - The examples to build
  * @returns A string of examples for the CLI
  */
-export function buildExamples<Flags>(
+export function buildExamples<Flags = never>(
   commandPath: string[],
-  examples: Example<Flags>[],
+  examples: NoInfer<Example<Flags>>[],
 ): string {
   return examples
     .map((example) => {
-      const exampleCommand = buildExampleCommand(commandPath, example.flags);
+      const exampleCommand = buildExampleCommand<Flags>(
+        commandPath,
+        example.flags,
+      );
       return `**${example.description}**\n\n\`\`\`sh\n${exampleCommand}\n\`\`\``;
     })
     .join('\n\n');
@@ -31,20 +34,34 @@ export function buildExamples<Flags>(
  *
  * @param commandPath - The path to the command to run, omitting the `transcend` command name, e.g., `['consent', 'upload-preferences']`
  * @param flags - The flags to build the command with
+ * @param options - The options for the command
  * @returns A command string for the example
  */
-export function buildExampleCommand<Flags>(
+export function buildExampleCommand<Flags = never>(
   commandPath: string[],
-  flags: Partial<Flags>,
+  flags: NoInfer<Partial<Flags>>,
+  options?: {
+    /** If true, the command will be forced to a single line */
+    forceSingleLine?: boolean;
+    /** If true, the command will be indented */
+    argsIndent?: number;
+  },
 ): string {
   const command = commandPath.join(' ');
   const flagList = getFlagList(flags);
+  const { forceSingleLine = false, argsIndent = 2 } = options ?? {};
+
+  if (flagList.length === 0) {
+    return `${name} ${command}`;
+  }
 
   // Break the command into multiple lines if it's too long
   const exampleCommand =
-    `${name} ${command} ${flagList.join(' ')}`.length <= 117
+    `${name} ${command} ${flagList.join(' ')}`.length <= 117 && !forceSingleLine
       ? `${command} ${flagList.join(' ')}`
-      : `${command} \\\n  ${flagList.join(' \\\n  ')}`;
+      : `${command} \\\n${' '.repeat(argsIndent)}${flagList.join(
+          ` \\\n${' '.repeat(argsIndent)}`,
+        )}`;
 
   // Add `transcend` before command name
   return `${name} ${exampleCommand}`;
@@ -101,7 +118,10 @@ function formatFlagValue(value: unknown, depth = 0): string {
  * @param depth - The depth of the recursion
  * @returns A list of flags for the example command
  */
-export function getFlagList<Flags>(flags: Partial<Flags>, depth = 0): string[] {
+export function getFlagList<Flags = never>(
+  flags: Partial<Flags>,
+  depth = 0,
+): string[] {
   return Object.entries(flags).map(([flag, value]) => {
     if (typeof value === 'boolean' && value) {
       // For true booleans, just pass the flag alone
