@@ -69,7 +69,7 @@ For more information on the commands and routings, see [the Stricli documentatio
 pnpm docgen
 ```
 
-This will generate the README.md file from the command documentation and the `src/commands/**/readme.ts` files.
+This will generate the README.md file from the command documentation and the `src/commands/**/readme.ts` files. To add examples, use the `buildExamples` command to generate type-safe examples. For complex or multi-line bash scripts, use `buildExampleCommand` directly (search for examples in the codebase).
 
 ### transcend.yml and pathfinder.yml JSON schemas
 
