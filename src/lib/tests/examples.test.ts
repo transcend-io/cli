@@ -31,6 +31,7 @@ async function getExampleCommands(): Promise<{
     };
   });
 
+  // Mock the `buildExampleCommand` function so that it populates the command lists.
   vi.mock(import('../docgen/buildExamples'), async (importOriginal) => {
     const actual = await importOriginal();
     const mockBuildExampleCommand = vi
@@ -83,8 +84,8 @@ async function getExampleCommands(): Promise<{
     };
   });
 
-  // eslint-disable-next-line new-cap
-  const docFiles = new fdir()
+  // Get the readme.ts files.
+  const docFiles = new fdir() // eslint-disable-line new-cap
     .withRelativePaths()
     .glob('**/readme.ts')
     .crawl('./src/commands')
@@ -101,6 +102,19 @@ async function getExampleCommands(): Promise<{
     commandsToTest,
     unalteredCommands,
   };
+}
+
+/**
+ * Creates a temp file with contents.
+ *
+ * @param contents - The contents of the temp file.
+ * @returns The path to the temp file.
+ */
+async function createTempFile(contents: string): Promise<string> {
+  const tempDir = await mkdtemp(join(tmpdir(), 'cli-example-script-'));
+  const filePath = join(tempDir, 'tempfile.txt');
+  await writeFile(filePath, contents);
+  return filePath;
 }
 
 describe('Example commands', async () => {
@@ -140,19 +154,6 @@ describe('Example commands', async () => {
       }
     },
   );
-
-  /**
-   * Creates a temp file with optional contents.
-   *
-   * @param contents - The contents of the temp file.
-   * @returns The path to the temp file.
-   */
-  async function createTempFile(contents = ''): Promise<string> {
-    const tempDir = await mkdtemp(join(tmpdir(), 'cli-example-script-'));
-    const filePath = join(tempDir, 'tempfile.txt');
-    await writeFile(filePath, contents);
-    return filePath;
-  }
 
   test.each(unalteredCommands)(
     'Command %j passes shellcheck',

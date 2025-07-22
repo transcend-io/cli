@@ -417,7 +417,7 @@ transcend request upload \
   --emailIsVerified=false
 ```
 
-**Tag all uploaded requests with an attribute**
+**Tag all uploaded requests with custom fields (formerly known as "attributes")**
 
 ```sh
 transcend request upload \
@@ -2275,7 +2275,7 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSilos --ski
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSilos --includeGuessedCategories
 ```
 
-**Pull attribute definitions only (see [this example](./examples/attributes.yml))**
+**Pull custom field definitions only (see [this example](./examples/attributes.yml))**
 
 ```sh
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=customFields
