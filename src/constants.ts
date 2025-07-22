@@ -1,4 +1,5 @@
-import { ScopeName } from '@transcend-io/privacy-types';
+import { keyBy } from 'lodash-es';
+import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
@@ -166,3 +167,13 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
   [TranscendPullResource.Purposes]: 'purposes',
 };
+
+export const SCOPES_BY_TITLE = keyBy(
+  Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
+    ...value,
+    name,
+  })),
+  'title',
+);
+
+export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
