@@ -226,7 +226,6 @@ export const FETCH_CONSENT_MANAGER = gql`
           syncEndpoint
           telemetryPartitioning
           signedIabAgreement
-          uspapi
           syncGroups
           partition
         }

@@ -13,7 +13,6 @@ import {
   AssessmentSyncColumn,
   RetentionScheduleType,
   AssessmentQuestionType,
-  UspapiOption,
   DataFlowScope,
   PromptAVendorEmailSendType,
   RetentionScheduleOperation,
@@ -1203,8 +1202,6 @@ export const ConsentManagerInput = t.partial({
   telemetryPartitioning: valuesOf(TelemetryPartitionStrategy),
   /** Whether the site owner has signed the IAB agreement */
   signedIabAgreement: valuesOf(SignedIabAgreementOption),
-  /** Whether or not to use the US Privacy API */
-  uspapi: valuesOf(UspapiOption),
   /** Regional experience configurations */
   experiences: t.array(ConsentManageExperienceInput),
   /** Theme config */

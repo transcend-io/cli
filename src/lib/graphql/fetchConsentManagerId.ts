@@ -2,7 +2,6 @@ import { GraphQLClient } from 'graphql-request';
 import {
   ConsentPrecedenceOption,
   UnknownRequestPolicy,
-  UspapiOption,
   TelemetryPartitionStrategy,
   RegionsOperator,
   IsoCountrySubdivisionCode,
@@ -47,8 +46,6 @@ export interface ConsentManager {
     telemetryPartitioning: TelemetryPartitionStrategy;
     /** Signed IAB agreement */
     signedIabAgreement: SignedIabAgreementOption;
-    /** USP API support */
-    uspapi: UspapiOption;
     /** Sync groups */
     syncGroups: string;
     /** Partition parameter */
