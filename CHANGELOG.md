@@ -1,6 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+## Table of Contents
+
 - [Changelog](#changelog)
   - [[7.0.2] - 2025-07-23](#702---2025-07-23)
     - [Fixed](#fixed)
