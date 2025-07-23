@@ -326,9 +326,9 @@ export const UPDATE_CONSENT_MANAGER_PARTITION = gql`
   }
 `;
 
-export const UPDATE_TOGGLE_USP_API = gql`
-  mutation TranscendCliToggleUspAPI($input: ToggleUspapiInput!) {
-    toggleUspapi(input: $input) {
+export const UPDATE_LOAD_OPTIONS = gql`
+  mutation TranscendCliUpdateLoadOptions($input: UpdateLoadOptionsInput!) {
+    updateLoadOptions(input: $input) {
       clientMutationId
     }
   }
