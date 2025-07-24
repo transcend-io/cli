@@ -677,7 +677,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["msgpack-lite", "npm:0.1.26"],\
             ["node-abort-controller", "npm:3.1.1"],\
             ["opentracing", "npm:0.14.7"],\
-            ["path-to-regexp", "npm:0.1.8"],\
+            ["path-to-regexp", "npm:0.1.12"],\
             ["protobufjs", "npm:7.2.6"],\
             ["retry", "npm:0.13.1"],\
             ["semver", "npm:7.6.0"]\
@@ -1528,10 +1528,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["path-to-regexp", [\
-        ["npm:0.1.8", {\
-          "packageLocation": "./.yarn/cache/path-to-regexp-npm-0.1.8-b95826a2f4-b2f0fc08dc.zip/node_modules/path-to-regexp/",\
+        ["npm:0.1.12", {\
+          "packageLocation": "./.yarn/cache/path-to-regexp-npm-0.1.12-a9bf1de212-ab237858be.zip/node_modules/path-to-regexp/",\
           "packageDependencies": [\
-            ["path-to-regexp", "npm:0.1.8"]\
+            ["path-to-regexp", "npm:0.1.12"]\
           ],\
           "linkType": "HARD"\
         }]\
