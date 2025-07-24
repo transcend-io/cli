@@ -34217,13 +34217,6 @@
             "unknown"
           ]
         },
-        "uspapi": {
-          "type": "string",
-          "enum": [
-            "on",
-            "off"
-          ]
-        },
         "experiences": {
           "type": "array",
           "items": {
