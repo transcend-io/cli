@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { removeUnverifiedRequestIdentifiers } from '../../../lib/requests';
 import type { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface RejectUnverifiedIdentifiersCommandFlags {
+export interface RejectUnverifiedIdentifiersCommandFlags {
   auth: string;
   identifierNames: string[];
   actions?: RequestAction[];
@@ -18,6 +19,8 @@ export async function rejectUnverifiedIdentifiers(
     actions = [],
   }: RejectUnverifiedIdentifiersCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await removeUnverifiedRequestIdentifiers({
     requestActions: actions,
     transcendUrl,

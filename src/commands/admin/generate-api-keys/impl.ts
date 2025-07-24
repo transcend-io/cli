@@ -1,24 +1,14 @@
 import type { LocalContext } from '../../../context';
-import colors from 'colors';
 import { writeFileSync } from 'fs';
 
-import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
+import { ScopeName } from '@transcend-io/privacy-types';
 
-import { logger } from '../../../logger';
 import { generateCrossAccountApiKeys } from '../../../lib/api-keys';
-import { keyBy } from 'lodash-es';
-
-const SCOPES_BY_TITLE = keyBy(
-  Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
-    ...value,
-    name,
-  })),
-  'title',
-);
-const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { SCOPES_BY_TITLE } from '../../../constants';
 
 // Command flag interface
-interface GenerateApiKeysCommandFlags {
+export interface GenerateApiKeysCommandFlags {
   email: string;
   password: string;
   apiKeyTitle: string;
@@ -45,22 +35,9 @@ export async function generateApiKeys(
     transcendUrl,
   }: GenerateApiKeysCommandFlags,
 ): Promise<void> {
-  // Validate scopes
-  const splitScopes = scopes.map((x) => x.trim());
-  const invalidScopes = splitScopes.filter(
-    (scopeTitle) => !SCOPES_BY_TITLE[scopeTitle],
-  );
-  if (invalidScopes.length > 0) {
-    logger.error(
-      colors.red(
-        `Failed to parse scopes:"${invalidScopes.join(',')}".\n` +
-          `Expected one of: \n${SCOPE_TITLES.join('\n')}`,
-      ),
-    );
-    process.exit(1);
-  }
+  doneInputValidation(this.process.exit);
 
-  const scopeNames = splitScopes.map(
+  const scopeNames = scopes.map(
     (scopeTitle) => SCOPES_BY_TITLE[scopeTitle].name as ScopeName,
   );
 
@@ -79,6 +56,6 @@ export async function generateApiKeys(
   // Write to disk
   writeFileSync(file, `${JSON.stringify(apiKeys, null, 2)}\n`);
   if (errors.length > 0) {
-    process.exit(1);
+    this.process.exit(1);
   }
 }

@@ -1,5 +1,9 @@
 import { buildCommand } from '@stricli/core';
-import { RequestStatus, ScopeName } from '@transcend-io/privacy-types';
+import {
+  RequestDataSiloStatus,
+  RequestStatus,
+  ScopeName,
+} from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
   createTranscendUrlParameter,
@@ -30,9 +34,9 @@ export const skipRequestDataSilosCommand = buildCommand({
       },
       status: {
         kind: 'enum',
-        values: ['SKIPPED', 'RESOLVED'],
+        values: [RequestDataSiloStatus.Skipped, RequestDataSiloStatus.Resolved],
         brief: 'The status to set the request data silo job to',
-        default: 'SKIPPED',
+        default: RequestDataSiloStatus.Skipped,
       },
     },
   },

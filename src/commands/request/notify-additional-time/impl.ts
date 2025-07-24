@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { notifyPrivacyRequestsAdditionalTime } from '../../../lib/requests';
 import type { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface NotifyAdditionalTimeCommandFlags {
+export interface NotifyAdditionalTimeCommandFlags {
   auth: string;
   createdAtBefore: Date;
   createdAtAfter?: Date;
@@ -30,6 +31,8 @@ export async function notifyAdditionalTime(
     concurrency,
   }: NotifyAdditionalTimeCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await notifyPrivacyRequestsAdditionalTime({
     transcendUrl,
     requestActions: actions,

@@ -1,7 +1,8 @@
 import type { LocalContext } from '../../../../context';
 import { pushManualEnrichmentIdentifiersFromCsv } from '../../../../lib/manual-enrichment';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
-interface PushIdentifiersCommandFlags {
+export interface PushIdentifiersCommandFlags {
   auth: string;
   enricherId: string;
   sombraAuth?: string;
@@ -23,6 +24,8 @@ export async function pushIdentifiers(
     sombraAuth,
   }: PushIdentifiersCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await pushManualEnrichmentIdentifiersFromCsv({
     file,
     transcendUrl,

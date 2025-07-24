@@ -6,8 +6,9 @@ import { uniq } from 'lodash-es';
 import { pullPrivacyRequests } from '../../../lib/requests';
 import { writeCsv } from '../../../lib/cron';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface ExportCommandFlags {
+export interface ExportCommandFlags {
   auth: string;
   sombraAuth?: string;
   actions?: RequestAction[];
@@ -38,6 +39,8 @@ export async function _export(
     showTests,
   }: ExportCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   const { requestsFormattedForCsv } = await pullPrivacyRequests({
     transcendUrl,
     pageLimit,

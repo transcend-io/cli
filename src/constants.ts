@@ -1,8 +1,16 @@
-import { ScopeName } from '@transcend-io/privacy-types';
+import { keyBy } from 'lodash-es';
+import {
+  ScopeName,
+  TRANSCEND_SCOPES,
+  type ScopeDefinition,
+} from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
 export { description, version } from '../package.json';
+/**
+ * The name of the main binary for the CLI
+ */
 export const name = 'transcend';
 
 export const ADMIN_DASH = 'https://app.transcend.io';
@@ -163,3 +171,19 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
   [TranscendPullResource.Purposes]: 'purposes',
 };
+
+export const SCOPES_BY_TITLE = keyBy(
+  Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
+    ...value,
+    name,
+  })),
+  'title',
+) as Record<
+  string,
+  ScopeDefinition & {
+    /** The camelCased name which identifies the scope */
+    name: ScopeName;
+  }
+>;
+
+export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);

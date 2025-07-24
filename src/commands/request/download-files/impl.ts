@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { downloadPrivacyRequestFiles } from '../../../lib/requests';
 import { RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface DownloadFilesCommandFlags {
+export interface DownloadFilesCommandFlags {
   auth: string;
   sombraAuth?: string;
   concurrency: number;
@@ -29,6 +30,8 @@ export async function downloadFiles(
     approveAfterDownload,
   }: DownloadFilesCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await downloadPrivacyRequestFiles({
     transcendUrl,
     auth,
