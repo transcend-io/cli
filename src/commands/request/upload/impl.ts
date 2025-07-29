@@ -3,8 +3,9 @@ import {
   splitCsvToList,
   uploadPrivacyRequestsFromCsv,
 } from '../../../lib/requests';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface UploadCommandFlags {
+export interface UploadCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;
@@ -44,6 +45,8 @@ export async function upload(
     defaultPhoneCountryCode,
   }: UploadCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await uploadPrivacyRequestsFromCsv({
     cacheFilepath,
     requestReceiptFolder,

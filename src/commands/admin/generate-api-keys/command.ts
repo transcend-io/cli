@@ -1,6 +1,7 @@
 import { buildCommand } from '@stricli/core';
 import { createTranscendUrlParameter } from '../../../lib/cli/common-parameters';
 import { uuidParser } from '../../../lib/cli/parsers';
+import { SCOPE_TITLES } from '../../../constants';
 
 export const generateApiKeysCommand = buildCommand({
   loader: async () => {
@@ -30,8 +31,8 @@ export const generateApiKeysCommand = buildCommand({
         brief: 'The file where API keys should be written to',
       },
       scopes: {
-        kind: 'parsed',
-        parse: String,
+        kind: 'enum',
+        values: SCOPE_TITLES,
         variadic: ',',
         brief: 'The list of scopes that should be given to the API key',
       },

@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../../context';
 import { pullManualEnrichmentIdentifiersToCsv } from '../../../../lib/manual-enrichment';
 import type { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
-interface PullIdentifiersCommandFlags {
+export interface PullIdentifiersCommandFlags {
   auth: string;
   sombraAuth?: string;
   transcendUrl: string;
@@ -22,6 +23,8 @@ export async function pullIdentifiers(
     sombraAuth,
   }: PullIdentifiersCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await pullManualEnrichmentIdentifiersToCsv({
     file,
     transcendUrl,

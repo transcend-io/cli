@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../../context';
 import type { RequestAction } from '@transcend-io/privacy-types';
 import { retryRequestDataSilos as retryRequestDataSilosHelper } from '../../../../lib/requests';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
-interface RetryRequestDataSilosCommandFlags {
+export interface RetryRequestDataSilosCommandFlags {
   auth: string;
   dataSiloId: string;
   actions: RequestAction[];
@@ -18,6 +19,8 @@ export async function retryRequestDataSilos(
     transcendUrl,
   }: RetryRequestDataSilosCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await retryRequestDataSilosHelper({
     requestActions: actions,
     transcendUrl,
