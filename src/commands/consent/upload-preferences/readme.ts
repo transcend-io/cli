@@ -34,7 +34,7 @@ const examples = buildExamples<UploadPreferencesCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
         file: './preferences.csv',
-        consentUrl: 'https://consent.us.transcend.io',
+        transcendUrl: 'https://api.us.transcend.io',
       },
     },
   ],

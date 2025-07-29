@@ -2079,7 +2079,7 @@ transcend consent upload-data-flows-from-csv \
 
 ```txt
 USAGE
-  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--consentUrl value] [--file value] [--directory value] [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value]
+  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] [--file value] [--directory value] [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value]
   transcend consent upload-preferences --help
 
 Upload preference management data to your Preference Store.
@@ -2092,7 +2092,7 @@ FLAGS
       --auth                      The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
       --partition                 The partition key to download consent preferences to
      [--sombraAuth]               The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--consentUrl]               URL of the Transcend consent backend. Use https://consent.us.transcend.io for US hosting                                                              [default = https://consent.transcend.io]
+     [--transcendUrl]             URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                          [default = https://api.transcend.io]
      [--file]                     Path to the CSV file to load preferences from
      [--directory]                Path to the directory of CSV files to load preferences from
      [--dryRun]                   Whether to do a dry run only - will write results to receiptFilepath without updating Transcend                                                       [default = false]
@@ -2143,7 +2143,7 @@ transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --file=./preferences.csv \
-  --consentUrl=https://consent.us.transcend.io
+  --transcendUrl=https://api.us.transcend.io
 ```
 
 ### `transcend inventory pull`
