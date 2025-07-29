@@ -25,3 +25,22 @@ export const REQUEST_FILES = gql`
     }
   }
 `;
+
+export const BULK_REQUEST_FILES = gql`
+  query TranscendCliBulkRequestFiles(
+    $filterBy: BulkRequestFileFiltersInput!
+    $first: Int!
+    $after: String
+  ) {
+    bulkRequestFiles(filterBy: $filterBy, first: $first, after: $after) {
+      nodes {
+        remoteId
+        fileName
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;

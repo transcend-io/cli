@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { REQUEST_FILES } from './gqls';
+import { BULK_REQUEST_FILES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface RequestFileCursor {
@@ -21,51 +21,57 @@ export interface RequestFileResponse {
   bulkRequestFiles: {
     /** List */
     nodes: RequestFile[];
-    /** The cursor */
-    cursor: RequestFileCursor;
+    /** The page info */
+    pageInfo: {
+      /** Whether there is a next page */
+      hasNextPage: boolean;
+      /** The end cursor */
+      endCursor: string;
+    };
   };
 }
-
-const PAGE_SIZE = 20;
 
 /**
  * Fetch all RequestFiles for a single request
  *
  * @param client - GraphQL client
+ * @param pageSize - How many request files to fetch per API call
  * @param filterBy - Filter by
  * @returns All RequestFiles in the organization
  */
 export async function fetchRequestFilesForRequest(
   client: GraphQLClient,
+  /** How many request files to fetch per API call */
+  pageSize: number,
   filterBy: {
-    /** Filter by request ID */
-    requestId: string;
+    /** Filter by request IDs */
+    requestIds: string[];
     /** Filter by data silo ID */
     dataSiloId?: string;
   },
 ): Promise<RequestFile[]> {
   const requestFiles: RequestFile[] = [];
-  let cursor: RequestFileCursor | null = null;
+  let cursor: string | null = null;
 
   // Whether to continue looping
   let shouldContinue = false;
   do {
     const response: RequestFileResponse = await makeGraphQLRequest<RequestFileResponse>(
       client,
-      REQUEST_FILES,
+      BULK_REQUEST_FILES,
       {
-        first: PAGE_SIZE,
         filterBy: {
           ...filterBy,
-          cursor: cursor ?? undefined,
         },
+        first: pageSize,
+        after: cursor ?? undefined,
       });
     const {
-      bulkRequestFiles: { nodes, cursor: cursorFromResponse },
+      bulkRequestFiles: { nodes, pageInfo },
     } = response;
     requestFiles.push(...nodes);
-    shouldContinue = nodes.length === PAGE_SIZE;
-    cursor = cursorFromResponse;
+    shouldContinue = pageInfo.hasNextPage;
+    cursor = pageInfo.endCursor;
   } while (shouldContinue);
 
   return requestFiles.sort((a, b) => a.remoteId.localeCompare(b.remoteId));

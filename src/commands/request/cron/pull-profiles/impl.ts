@@ -1,7 +1,7 @@
 import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
-import { uniq } from 'lodash-es';
+import { uniq, chunk } from 'lodash-es';
 import { map } from '../../../../lib/bluebird-replace';
 import {
   buildTranscendGraphQLClient,
@@ -76,26 +76,32 @@ export async function pullProfiles(
   let allTargetIdentifiersCount = 0;
   let fileCount = 0;
   // Create onSave callback to handle chunked processing
-  const onSave = async (chunk: CsvFormattedIdentifier[]): Promise<void> => {
+  const onSave = async (chunkToSave: CsvFormattedIdentifier[]): Promise<void> => {
     // Add to all identifiers
-    allIdentifiersCount += chunk.length;
+    allIdentifiersCount += chunkToSave.length;
 
     // Get unique request IDs from this chunk
-    const requestIds = chunk.map((d) => d.requestId as string);
+    const requestIds = chunkToSave.map((d) => d.requestId as string);
     const uniqueRequestIds = uniq(requestIds);
 
     // Pull down target identifiers for this chunk
+    const chunkedRequestIds = chunk(uniqueRequestIds, pageLimit);
     const results = await map(
-      uniqueRequestIds,
-      async (requestId) => {
-        const results = await fetchRequestFilesForRequest(client, {
-          requestId,
+      chunkedRequestIds,
+      async (requestIds) => {
+        logger.info(
+          colors.magenta(
+            `Fetching target identifiers for ${requestIds.length} requests`,
+          ),
+        );
+        const results = await fetchRequestFilesForRequest(client, pageLimit, {
+          requestIds,
           dataSiloId: targetDataSiloId,
         });
         return results.map(({ fileName, remoteId }) => {
           if (!remoteId) {
             throw new Error(
-              `Failed to find remoteId for ${fileName} request: ${requestId}`,
+              `Failed to find remoteId for ${fileName}`,
             );
           }
           return {
@@ -110,21 +116,22 @@ export async function pullProfiles(
           };
         });
       },
+      // Process 5 chunks of requests at a time?
       {
-        concurrency: 10,
+        concurrency: 5,
       },
     );
 
     allTargetIdentifiersCount += results.flat().length;
 
     // Write the identifiers and target identifiers to CSV
-    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
+    const headers = uniq(chunkToSave.map((d) => Object.keys(d)).flat());
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     const numberedFileNameTarget = `${baseNameTarget}-${fileCount}${extensionTarget}`;
-    writeCsv(numberedFileName, chunk, headers);
+    writeCsv(numberedFileName, chunkToSave, headers);
     logger.info(
       colors.green(
-        `Successfully wrote ${chunk.length} identifiers to file "${file}"`,
+        `Successfully wrote ${chunkToSave.length} identifiers to file "${file}"`,
       ),
     );
 
