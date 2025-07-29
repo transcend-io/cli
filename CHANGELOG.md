@@ -23,6 +23,12 @@ All notable changes to the Transcend CLI tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.0.3] - 2025-07-29
+
+### Fixed
+
+- Resolved an issue where `transcend consent upload-preferences` was incorrectly passing `consentUrl` (with default value `consent.transcend.io`) instead of `transcendUrl` (with default value `api.transcend.io`). The argument was renamed to `transcendUrl`, reverting the change to the argument name introduced in 7.0.0.
+
 ## [7.0.2] - 2025-07-23
 
 ### Fixed
@@ -102,7 +108,7 @@ All commands have been re-mapped to new commands under the `transcend` namespace
 | `tr-upload-data-flows-from-csv`                       | `transcend consent upload-data-flows-from-csv`                         |
 | `tr-upload-preferences`                               | `transcend consent upload-preferences`                                 |
 
-The previous arguments are the same, with one exception: for the `tr-upload-consent-preferences` and `tr-upload-preferences` commands, the `transcendUrl` argument has been renamed to `consentUrl`. The default value is the same—`https://consent.transcend.io` (for EU hosting)—and you can use `https://consent.us.transcend.io` for US hosting.
+The previous arguments are the same, with one exception: for the `tr-upload-consent-preferences` ~~and `tr-upload-preferences`~~ commands ([the change to `tr-upload-preferences` was reverted in 7.0.3](#703---2025-07-29)), the `transcendUrl` argument has been renamed to `consentUrl`. The default value is the same—`https://consent.transcend.io` (for EU hosting)—and you can use `https://consent.us.transcend.io` for US hosting.
 
 ## [6.0.0] - 2024-09-03
 

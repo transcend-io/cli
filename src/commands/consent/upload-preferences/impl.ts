@@ -13,7 +13,7 @@ export interface UploadPreferencesCommandFlags {
   auth: string;
   partition: string;
   sombraAuth?: string;
-  consentUrl: string;
+  transcendUrl: string;
   file?: string;
   directory?: string;
   dryRun: boolean;
@@ -34,7 +34,7 @@ export async function uploadPreferences(
     auth,
     partition,
     sombraAuth,
-    consentUrl,
+    transcendUrl,
     file = '',
     directory,
     dryRun,
@@ -129,7 +129,7 @@ export async function uploadPreferences(
         sombraAuth,
         file: filePath,
         partition,
-        transcendUrl: consentUrl,
+        transcendUrl,
         skipConflictUpdates,
         skipWorkflowTriggers,
         skipExistingRecordCheck,
