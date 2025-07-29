@@ -94,7 +94,7 @@ export async function pullProfiles(
             `Fetching target identifiers for ${requestIds.length} requests`,
           ),
         );
-        const results = await fetchRequestFilesForRequest(client, pageLimit, {
+        const results = await fetchRequestFilesForRequest(client, pageLimit * 2, {
           requestIds,
           dataSiloId: targetDataSiloId,
         });
@@ -116,9 +116,9 @@ export async function pullProfiles(
           };
         });
       },
-      // Process 5 chunks of requests at a time?
+      // We are grabbing all the request files for the 'pageLimit' # of requests at a time
       {
-        concurrency: 5,
+        concurrency: 1,
       },
     );
 
