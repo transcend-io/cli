@@ -96,7 +96,7 @@ export async function pullProfiles(
         );
         const results = await fetchRequestFilesForRequest(client, pageLimit * 2, {
           requestIds,
-          dataSiloId: targetDataSiloId,
+          dataSiloIds: [targetDataSiloId],
         });
         return results.map(({ fileName, remoteId }) => {
           if (!remoteId) {

@@ -47,7 +47,7 @@ export async function fetchRequestFilesForRequest(
     /** Filter by request IDs */
     requestIds: string[];
     /** Filter by data silo ID */
-    dataSiloId?: string;
+    dataSiloIds: string[];
   },
 ): Promise<RequestFile[]> {
   const requestFiles: RequestFile[] = [];

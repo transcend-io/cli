@@ -28,7 +28,7 @@ export const REQUEST_FILES = gql`
 
 export const BULK_REQUEST_FILES = gql`
   query TranscendCliBulkRequestFiles(
-    $filterBy: BulkRequestFileFiltersInput!
+    $filterBy: BulkRequestFilesFiltersInput!
     $first: Int!
     $after: String
   ) {
