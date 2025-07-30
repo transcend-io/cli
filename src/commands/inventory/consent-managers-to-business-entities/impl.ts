@@ -10,8 +10,9 @@ import { join } from 'path';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { existsSync, lstatSync } from 'fs';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface ConsentManagersToBusinessEntitiesCommandFlags {
+export interface ConsentManagersToBusinessEntitiesCommandFlags {
   consentManagerYmlFolder: string;
   output: string;
 }
@@ -23,6 +24,8 @@ export function consentManagersToBusinessEntities(
     output,
   }: ConsentManagersToBusinessEntitiesCommandFlags,
 ): void {
+  doneInputValidation(this.process.exit);
+
   // Ensure folder is passed
   if (
     !existsSync(consentManagerYmlFolder) ||
@@ -31,7 +34,7 @@ export function consentManagersToBusinessEntities(
     logger.error(
       colors.red(`Folder does not exist: "${consentManagerYmlFolder}"`),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Read in each consent manager configuration

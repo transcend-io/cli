@@ -21,7 +21,6 @@ consent-manager:
     https://sync.transcend.io/consent-manager/6efb0409-a0f6-4d3c-90dd-0a03f909dd68
   telemetryPartitioning: origin
   signedIabAgreement: 'yes'
-  uspapi: 'on'
   experiences:
     - name: GDPR
       displayName: GDPR

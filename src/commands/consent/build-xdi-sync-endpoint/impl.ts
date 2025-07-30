@@ -4,8 +4,9 @@ import colors from 'colors';
 import { writeFileSync } from 'fs';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from '../../../lib/consent-manager';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface BuildXdiSyncEndpointCommandFlags {
+export interface BuildXdiSyncEndpointCommandFlags {
   auth: string;
   xdiLocation: string;
   file: string;
@@ -27,6 +28,8 @@ export async function buildXdiSyncEndpoint(
     transcendUrl,
   }: BuildXdiSyncEndpointCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 

@@ -7,7 +7,7 @@ import { GraphQLClient } from 'graphql-request';
 import {
   UPDATE_CONSENT_MANAGER_DOMAINS,
   CREATE_CONSENT_MANAGER,
-  UPDATE_TOGGLE_USP_API,
+  UPDATE_LOAD_OPTIONS,
   UPDATE_CONSENT_MANAGER_PARTITION,
   UPDATE_CONSENT_MANAGER_VERSION,
   TOGGLE_TELEMETRY_PARTITION_STRATEGY,
@@ -208,12 +208,11 @@ export async function syncConsentManager(
     });
   }
 
-  // sync uspapi
-  if (consentManager.uspapi || consentManager.signedIabAgreement) {
-    await makeGraphQLRequest(client, UPDATE_TOGGLE_USP_API, {
+  // sync signed IAB agreement
+  if (consentManager.signedIabAgreement) {
+    await makeGraphQLRequest(client, UPDATE_LOAD_OPTIONS, {
       input: {
         id: airgapBundleId,
-        ...(consentManager.uspapi ? { uspapi: consentManager.uspapi } : {}),
         ...(consentManager.signedIabAgreement
           ? { signedIabAgreement: consentManager.signedIabAgreement }
           : {}),

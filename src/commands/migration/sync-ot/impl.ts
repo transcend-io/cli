@@ -12,9 +12,10 @@ import {
   syncOneTrustAssessmentsFromFile,
   syncOneTrustAssessmentsFromOneTrust,
 } from '../../../lib/oneTrust/helpers';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 // Command flag interface
-interface SyncOtCommandFlags {
+export interface SyncOtCommandFlags {
   hostname?: string;
   oneTrustAuth?: string;
   source: OneTrustPullSource;
@@ -102,6 +103,8 @@ export async function syncOt(
       );
     }
   }
+
+  doneInputValidation(this.process.exit);
 
   // instantiate a client to talk to OneTrust
   const oneTrust =

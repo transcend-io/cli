@@ -1,7 +1,8 @@
 import type { LocalContext } from '../../../../context';
 import { pushCronIdentifiersFromCsv } from '../../../../lib/cron';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
-interface MarkIdentifiersCompletedCommandFlags {
+export interface MarkIdentifiersCompletedCommandFlags {
   file: string;
   transcendUrl: string;
   auth: string;
@@ -19,6 +20,8 @@ export async function markIdentifiersCompleted(
     dataSiloId,
   }: MarkIdentifiersCompletedCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await pushCronIdentifiersFromCsv({
     file,
     transcendUrl,

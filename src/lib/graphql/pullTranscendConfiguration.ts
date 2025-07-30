@@ -396,7 +396,6 @@ export async function pullTranscendConfiguration(
         consentManager.configuration.telemetryPartitioning || undefined,
       signedIabAgreement:
         consentManager.configuration.signedIabAgreement || undefined,
-      uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
       theme: !consentManagerTheme

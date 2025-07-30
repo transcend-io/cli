@@ -10,8 +10,9 @@ import {
 } from '../../../lib/graphql';
 import { findFilesToScan } from '../../../lib/code-scanning/findFilesToScan';
 import { SILO_DISCOVERY_CONFIGS } from '../../../lib/code-scanning';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface DiscoverSilosCommandFlags {
+export interface DiscoverSilosCommandFlags {
   scanPath: string;
   dataSiloId: string;
   auth: string;
@@ -31,6 +32,8 @@ export async function discoverSilos(
     transcendUrl,
   }: DiscoverSilosCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Create a GraphQL client
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
@@ -43,7 +46,7 @@ export async function discoverSilos(
         `This plugin "${plugin.dataSilo.type}" is not supported for offline silo discovery.`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   const results = await findFilesToScan({
