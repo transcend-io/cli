@@ -117,6 +117,7 @@ export class RateLimitClient {
       maxWaitTimeMs?: number;
     } = {},
   ): Promise<Response<TBody>> {
+    console.log(this.reset, this.reset > new Date());
     if (
       this.reset &&
       this.reset > new Date() &&

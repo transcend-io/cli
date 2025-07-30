@@ -43,7 +43,7 @@ describe('rateLimit', () => {
       reset: new Date(Date.now() + timeToWait),
     });
     const before = Date.now();
-    const response = await rateLimiter.withRateLimit(() =>
+    await rateLimiter.withRateLimit(() =>
       got.get('https://api.transcend.io/info', {
         throwHttpErrors: false,
       }),
