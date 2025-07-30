@@ -1,35 +1,13 @@
-import type { IncomingHttpHeaders } from 'node:http';
 import { RequestError, type CancelableRequest, type Response } from 'got';
 import { logger } from '../logger';
 
-/**
- * Get the rate limit from the headers
- *
- * @param headers - The headers to get the rate limit from
- * @returns The rate limit
- */
-export function getRateLimit(headers: IncomingHttpHeaders): {
-  /** Limit of requests at the time window */
+interface RateLimitInfo {
+  /** Total number of requests available per reset */
   limit: number | undefined;
-  /** Remaining requests */
+  /** Remaining number of requests until reset */
   remaining: number | undefined;
-  /** Reset time */
+  /** Time at which the limit will next reset */
   reset: Date | undefined;
-} {
-  return {
-    limit:
-      typeof headers['x-ratelimit-limit'] === 'string'
-        ? Number.parseInt(headers['x-ratelimit-limit'], 10)
-        : undefined,
-    remaining:
-      typeof headers['x-ratelimit-remaining'] === 'string'
-        ? Number.parseInt(headers['x-ratelimit-remaining'], 10)
-        : undefined,
-    reset:
-      typeof headers['x-ratelimit-reset'] === 'string'
-        ? new Date(Number.parseInt(headers['x-ratelimit-reset'], 10) * 1000)
-        : undefined,
-  };
 }
 
 /**
@@ -38,26 +16,49 @@ export function getRateLimit(headers: IncomingHttpHeaders): {
 export class RateLimitClient {
   private static readonly MAX_WAIT_TIME_MS = 3 * 60 * 1000;
 
-  /** Limit of requests at the time window */
+  /** Total number of requests available per reset */
   private limit: number | undefined;
 
-  /** Remaining requests */
+  /** Remaining number of requests until reset */
   private remaining: number | undefined;
 
-  /** Reset time */
+  /** Time at which the limit will next reset */
   private reset: Date | undefined;
 
   /** Last response */
   private lastResponse: Response<unknown> | undefined;
 
   /**
-   * Create a new rate limit client
+   * Create a new rate limit client. Best to create a new instance for each batch of calls to an endpoint.
    */
   constructor() {
     this.limit = undefined;
     this.remaining = undefined;
     this.reset = undefined;
     this.lastResponse = undefined;
+  }
+
+  /**
+   * Get the rate limit information from the headers
+   *
+   * @param headers - The headers from the got Response
+   * @returns The rate limit information
+   */
+  static getRateLimitInfo(headers: Response['headers']): RateLimitInfo {
+    return {
+      limit:
+        typeof headers['x-ratelimit-limit'] === 'string'
+          ? Number.parseInt(headers['x-ratelimit-limit'], 10)
+          : undefined,
+      remaining:
+        typeof headers['x-ratelimit-remaining'] === 'string'
+          ? Number.parseInt(headers['x-ratelimit-remaining'], 10)
+          : undefined,
+      reset:
+        typeof headers['x-ratelimit-reset'] === 'string'
+          ? new Date(Number.parseInt(headers['x-ratelimit-reset'], 10) * 1000)
+          : undefined,
+    };
   }
 
   /**
@@ -70,6 +71,22 @@ export class RateLimitClient {
     return `${(ms / 1000).toLocaleString(undefined, {
       maximumFractionDigits: 2,
     })}s`;
+  }
+
+  /**
+   * Update the rate limit information and last response
+   *
+   * @param rateLimit - The rate limit information
+   * @param lastResponse - The last response
+   */
+  protected updateRateLimitInfo(
+    rateLimit: RateLimitInfo,
+    lastResponse?: Response<unknown>,
+  ): void {
+    this.limit = rateLimit.limit;
+    this.remaining = rateLimit.remaining;
+    this.reset = rateLimit.reset;
+    this.lastResponse = lastResponse;
   }
 
   /**
@@ -122,15 +139,12 @@ export class RateLimitClient {
       response = await callback();
     } catch (error) {
       if (error instanceof RequestError && error.response?.statusCode === 429) {
-        const rateLimit = getRateLimit(error.response.headers);
-        this.limit = rateLimit.limit;
-        this.remaining = rateLimit.remaining;
-        this.reset = rateLimit.reset;
-        this.lastResponse = error.response;
+        const rateLimit = RateLimitClient.getRateLimitInfo(
+          error.response.headers,
+        );
+        this.updateRateLimitInfo(rateLimit, error.response);
 
-        logger.warn('A rate limit was exceeded on this request. Retrying...', {
-          cause: error,
-        });
+        logger.warn('A rate limit was exceeded on this request. Retrying...');
 
         // If the error is a 429, we can retry the request
         return this.withRateLimit(callback);
@@ -138,11 +152,8 @@ export class RateLimitClient {
       throw error;
     }
 
-    const rateLimit = getRateLimit(response.headers);
-    this.limit = rateLimit.limit;
-    this.remaining = rateLimit.remaining;
-    this.reset = rateLimit.reset;
-    this.lastResponse = response;
+    const rateLimit = RateLimitClient.getRateLimitInfo(response.headers);
+    this.updateRateLimitInfo(rateLimit, response);
 
     return response;
   }
