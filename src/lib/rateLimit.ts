@@ -17,16 +17,16 @@ export class RateLimitClient {
   private static readonly MAX_WAIT_TIME_MS = 3 * 60 * 1000;
 
   /** Total number of requests available per reset */
-  private limit: number | undefined;
+  public limit: number | undefined;
 
   /** Remaining number of requests until reset */
-  private remaining: number | undefined;
+  public remaining: number | undefined;
 
   /** Time at which the limit will next reset */
-  private reset: Date | undefined;
+  public reset: Date | undefined;
 
   /** Last response */
-  private lastResponse: Response<unknown> | undefined;
+  protected lastResponse: Response<unknown> | undefined;
 
   /**
    * Create a new rate limit client. Best to create a new instance for each batch of calls to an endpoint.
@@ -117,12 +117,11 @@ export class RateLimitClient {
       maxWaitTimeMs?: number;
     } = {},
   ): Promise<Response<TBody>> {
-    console.log(this.reset, this.reset > new Date());
     if (
-      this.reset &&
+      this.reset !== undefined &&
       this.reset > new Date() &&
       (this.lastResponse?.statusCode === 429 ||
-        (this.remaining && this.remaining <= 0))
+        (this.remaining !== undefined && this.remaining <= 0))
     ) {
       const timeUntilResetMs = this.reset.getTime() - new Date().getTime();
 
