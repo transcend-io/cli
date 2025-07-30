@@ -92,11 +92,30 @@ export class RateLimitClient {
   /**
    * Wrap a `got` call with a rate limit
    *
-   * @param callback - The got call
-   * @returns The response
+   * @param callback - The call to `got`. It should return a Response, so do NOT chain `.json()` or `.text()`—use responseType instead.
+   * @param options - Options for rate limit handling
+   * @returns The `got` Response object
+   * @example
+   * ```ts
+   * for (const page of [1, 2, 3]) {
+   *   const response = await rateLimiter.withRateLimit(() =>
+   *     got.get<{ id: number; title: string }>(`https://example.com/posts?page=${page}`, { responseType: 'json' }),
+   *   );
+   *   console.log(response.body.title);
+   * }
+   * ```
    */
   async withRateLimit<TBody = unknown>(
     callback: () => CancelableRequest<Response<TBody>>,
+    {
+      maxWaitTimeMs = RateLimitClient.MAX_WAIT_TIME_MS,
+    }: {
+      /**
+       * The number of milliseconds to wait until the rate limit resets.
+       * If not provided, the default maximum wait time will be used.
+       */
+      maxWaitTimeMs?: number;
+    } = {},
   ): Promise<Response<TBody>> {
     if (
       this.reset &&
@@ -107,13 +126,13 @@ export class RateLimitClient {
       const timeUntilResetMs = this.reset.getTime() - new Date().getTime();
 
       // Throw if it's beyond the maximum wait time
-      if (timeUntilResetMs > RateLimitClient.MAX_WAIT_TIME_MS) {
+      if (timeUntilResetMs > maxWaitTimeMs) {
         throw new Error(
           `The time until the rate limit resets (${RateLimitClient.formatMs(
             timeUntilResetMs,
           )})` +
             ` is beyond the maximum wait time (${RateLimitClient.formatMs(
-              RateLimitClient.MAX_WAIT_TIME_MS,
+              maxWaitTimeMs,
             )}). Try again in ${this.reset.toLocaleString()}${
               this.limit
                 ? `, when the rate limit resets to ${this.limit.toLocaleString()}.`

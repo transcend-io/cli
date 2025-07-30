@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import got from 'got';
 import { RateLimitClient } from '../rateLimit';
 
@@ -21,18 +22,34 @@ class RateLimitClientMock extends RateLimitClient {
 const rateLimiter = new RateLimitClientMock();
 rateLimiter.updateRateLimitInfo({
   limit: 10,
-  remaining: 10,
+  remaining: 0,
   reset: new Date(Date.now() + 1000),
 });
 
-for (const r of ['my', 'array']) {
-  const response = await rateLimiter.withRateLimit(() =>
-    got.get(`https://example.com.com/${r}`, {
-      isStream: false,
-      resolveBodyOnly: false,
-      responseType: 'buffer',
-    }),
-  );
+describe('rateLimit', () => {
+  beforeEach(() => {
+    rateLimiter.updateRateLimitInfo({
+      limit: 10,
+      remaining: 0,
+      reset: new Date(Date.now() + 1000),
+    });
+  });
 
-  console.log(response);
-}
+  it('should wait until the rate limit resets', async () => {
+    const timeToWait = 10000;
+    rateLimiter.updateRateLimitInfo({
+      limit: 10,
+      remaining: 0,
+      reset: new Date(Date.now() + timeToWait),
+    });
+    const before = Date.now();
+    const response = await rateLimiter.withRateLimit(() =>
+      got.get('https://api.transcend.io/info', {
+        throwHttpErrors: false,
+      }),
+    );
+    const after = Date.now();
+
+    expect(after - before).toBeGreaterThan(timeToWait);
+  });
+});
