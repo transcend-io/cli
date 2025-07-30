@@ -56,16 +56,18 @@ export async function fetchRequestFilesForRequest(
   // Whether to continue looping
   let shouldContinue = false;
   do {
-    const response: RequestFileResponse = await makeGraphQLRequest<RequestFileResponse>(
-      client,
-      BULK_REQUEST_FILES,
-      {
-        filterBy: {
-          ...filterBy,
+    const response: RequestFileResponse =
+      await makeGraphQLRequest<RequestFileResponse>(
+        client,
+        BULK_REQUEST_FILES,
+        {
+          filterBy: {
+            ...filterBy,
+          },
+          first: pageSize,
+          after: cursor ?? undefined,
         },
-        first: pageSize,
-        after: cursor ?? undefined,
-      });
+      );
     const {
       bulkRequestFiles: { nodes, pageInfo },
     } = response;

@@ -79,7 +79,9 @@ export async function pullProfiles(
   let allTargetIdentifiersCount = 0;
   let fileCount = 0;
   // Create onSave callback to handle chunked processing
-  const onSave = async (chunkToSave: CsvFormattedIdentifier[]): Promise<void> => {
+  const onSave = async (
+    chunkToSave: CsvFormattedIdentifier[],
+  ): Promise<void> => {
     // Add to all identifiers
     allIdentifiersCount += chunkToSave.length;
 
@@ -97,15 +99,17 @@ export async function pullProfiles(
             `Fetching target identifiers for ${requestIds.length} requests`,
           ),
         );
-        const results = await fetchRequestFilesForRequest(client, pageLimit * 2, {
-          requestIds,
-          dataSiloIds: [targetDataSiloId],
-        });
+        const results = await fetchRequestFilesForRequest(
+          client,
+          pageLimit * 2,
+          {
+            requestIds,
+            dataSiloIds: [targetDataSiloId],
+          },
+        );
         return results.map(({ fileName, remoteId }) => {
           if (!remoteId) {
-            throw new Error(
-              `Failed to find remoteId for ${fileName}`,
-            );
+            throw new Error(`Failed to find remoteId for ${fileName}`);
           }
           return {
             RecordId: remoteId,
