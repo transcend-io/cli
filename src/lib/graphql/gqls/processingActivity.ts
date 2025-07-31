@@ -60,4 +60,4 @@ export const PROCESSING_ACTIVITIES = gql`
   }
 `;
 
-// TODO: https://linear.app/transcend/issue/ZEL-6419/cli-command-for-processing-activities-table - support CREATE_PROCESSING_ACTIVITY and UPDATE_PROCESSING_ACTIVITIES
+// TODO: https://linear.app/transcend/issue/ZEL-6419 - support create and update mutations
