@@ -30,9 +30,18 @@ export async function createSombraGotInstance(
       };
     };
   }>(client, ORGANIZATION);
+  // Check if the sombra customerUrl is the default reverse tunnel URL
+  const { customerUrl } = organization.sombra;
+  if (customerUrl === 'https://sombra-reverse-tunnel.transcend.io') {
+    throw new Error(
+      'It looks like your Sombra customer ingress URL has not been set up. ' +
+        'Please follow the instructions here to configure networking for Sombra: ' +
+        'https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking',
+    );
+  }
   // Create got instance with default values
   return got.extend({
-    prefixUrl: organization.sombra.customerUrl,
+    prefixUrl: customerUrl,
     headers: {
       Authorization: `Bearer ${transcendApiKey}`,
       ...(sombraApiKey
