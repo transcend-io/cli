@@ -1,0 +1,125 @@
+import { GraphQLClient } from 'graphql-request';
+import { PROCESSING_ACTIVITIES } from './gqls';
+import { makeGraphQLRequest } from './makeGraphQLRequest';
+import type { IsoCountryCode } from '@transcend-io/privacy-types';
+
+export interface ProcessingActivity {
+  /** ID of processing activity */
+  id: string;
+  /** Title of processing activity */
+  title: string;
+  /** Description of processing activity */
+  description?: string;
+  /** Security measure details */
+  securityMeasureDetails?: string;
+  /** Controllerships */
+  controllerships: string[];
+  /** Storage regions */
+  storageRegions:IsoCountryCode[];
+  /** Transfer regions */
+  transferRegions:IsoCountryCode[];
+  /** Retention type */
+  retentionType: string;
+  /** Retention period in days */
+  retentionPeriod?: number;
+  /** Data protection impact assessment link */
+  dataProtectionImpactAssessmentLink?: string;
+  /** Data protection impact assessment status */
+  dataProtectionImpactAssessmentStatus: string;
+  /** Attribute values */
+  attributeValues: {
+    /** Name of attribute value */
+    name: string;
+    /** Attribute key */
+    attributeKey: {
+      /** Name of attribute key */
+      name: string;
+    };
+  }[];
+  /** Data silos */
+  dataSilos: {
+    /** Data silo ID */
+    id: string;
+    /** Data silo title */
+    title: string;
+  }[];
+  /** Data subjects */
+  dataSubjects: {
+    /** Data subject type */
+    type: string;
+  }[];
+  /** Teams */
+  teams: {
+    /** Team ID */
+    id: string;
+    /** Team name */
+    name: string;
+  }[];
+  /** Owners */
+  owners: {
+    /** Owner ID */
+    id: string;
+    /** Owner email */
+    email: string;
+  }[];
+  /** Processing purpose sub categories */
+  processingPurposeSubCategories: {
+    /** Processing purpose sub category ID */
+    id: string;
+    /** Processing purpose sub category name */
+    name: string;
+    /** Processing purpose */
+    purpose: string;
+  }[];
+  /** Data sub categories */
+  dataSubCategories: {
+    /** Data sub category ID */
+    id: string;
+    /** Data sub category name */
+    name: string;
+  }[];
+  /** SaaS categories */
+  saaSCategories: {
+    /** SaaS category ID */
+    id: string;
+    /** SaaS category name */
+    name: string;
+  }[];
+}
+
+const PAGE_SIZE = 20;
+
+/**
+ * Fetch all processingActivities in the organization
+ *
+ * @param client - GraphQL client
+ * @returns All processingActivities in the organization
+ */
+export async function fetchAllProcessingActivities(
+  client: GraphQLClient,
+): Promise<ProcessingActivity[]> {
+  const processingActivities: ProcessingActivity[] = [];
+  let offset = 0;
+
+  // Whether to continue looping
+  let shouldContinue = false;
+  do {
+    const {
+      processingActivities: { nodes },
+    } = await makeGraphQLRequest<{
+      /** Processing activities */
+      processingActivities: {
+        /** List */
+        nodes: ProcessingActivity[];
+      };
+    }>(client, PROCESSING_ACTIVITIES, {
+      first: PAGE_SIZE,
+      offset,
+    });
+    processingActivities.push(...nodes);
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
+  } while (shouldContinue);
+
+  return processingActivities.sort((a, b) => a.title.localeCompare(b.title));
+}

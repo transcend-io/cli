@@ -17,6 +17,7 @@ import {
   DatapointInput,
   FieldInput,
   ProcessingPurposeInput,
+  ProcessingActivityInput,
   DataCategoryInput,
   VendorInput,
   AgentFileInput,
@@ -55,6 +56,7 @@ import {
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
+import { fetchAllProcessingActivities } from './fetchAllProcessingActivities';
 import { fetchAllActions } from './fetchAllActions';
 import { fetchAllAgents } from './fetchAllAgents';
 import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
@@ -160,6 +162,7 @@ export async function pullTranscendConfiguration(
     identifiers,
     actions,
     businessEntities,
+    processingActivities,
     consentManager,
     consentManagerExperiences,
     prompts,
@@ -248,6 +251,10 @@ export async function pullTranscendConfiguration(
     // Fetch business entities
     resources.includes(TranscendPullResource.BusinessEntities)
       ? fetchAllBusinessEntities(client)
+      : [],
+    // Fetch processing activities
+    resources.includes(TranscendPullResource.ProcessingActivities)
+      ? fetchAllProcessingActivities(client)
       : [],
     // Fetch consent manager
     resources.includes(TranscendPullResource.ConsentManager)
@@ -935,6 +942,57 @@ export async function pullTranscendConfiguration(
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
+      }),
+    );
+  }
+
+  // Save processing activities
+  if (
+    processingActivities.length > 0 &&
+    resources.includes(TranscendPullResource.ProcessingActivities)
+  ) {
+    result['processing-activities'] = processingActivities.map(
+      ({
+        title,
+        description,
+        securityMeasureDetails,
+        controllerships,
+        storageRegions,
+        transferRegions,
+        retentionType,
+        retentionPeriod,
+        dataProtectionImpactAssessmentLink,
+        dataProtectionImpactAssessmentStatus,
+        attributeValues,
+        dataSilos,
+        dataSubjects,
+        teams,
+        owners,
+        processingPurposeSubCategories,
+        dataSubCategories,
+        saaSCategories,
+      }): ProcessingActivityInput => ({
+        title,
+        description: description || undefined,
+        securityMeasureDetails: securityMeasureDetails || undefined,
+        controllerships: controllerships.length > 0 ? controllerships : undefined,
+        storageRegions: storageRegions.length > 0 ? storageRegions : undefined,
+        transferRegions: transferRegions.length > 0 ? transferRegions : undefined,
+        retentionType,
+        retentionPeriod: retentionPeriod || undefined,
+        dataProtectionImpactAssessmentLink: dataProtectionImpactAssessmentLink || undefined,
+        dataProtectionImpactAssessmentStatus,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+        dataSiloIds: dataSilos.length > 0 ? dataSilos.map(({ id }) => id) : undefined,
+        dataSubjects: dataSubjects.length > 0 ? dataSubjects.map(({ type }) => type) : undefined,
+        teams: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        owners: owners.length > 0 ? owners.map(({ email }) => email) : undefined,
+        processingPurposeSubCategoryIds: processingPurposeSubCategories.length > 0 ? processingPurposeSubCategories.map(({ id }) => id) : undefined,
+        dataSubCategoryIds: dataSubCategories.length > 0 ? dataSubCategories.map(({ id }) => id) : undefined,
+        saaSCategoryIds: saaSCategories.length > 0 ? saaSCategories.map(({ name }) => name) : undefined,
       }),
     );
   }

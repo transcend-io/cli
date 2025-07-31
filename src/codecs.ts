@@ -819,6 +819,57 @@ export const BusinessEntityInput = t.intersection([
 export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
 
 /**
+ * Input to define a processing activity
+ */
+export const ProcessingActivityInput = t.intersection([
+  t.type({
+    /** The title of the processing activity */
+    title: t.string,
+  }),
+  t.partial({
+    /** Description of the processing activity */
+    description: t.string,
+    /** Security measure details */
+    securityMeasureDetails: t.string,
+    /** Controllerships */
+    controllerships: t.array(t.string),
+    /** Storage regions */
+    storageRegions: t.array(valuesOf(IsoCountryCode)),
+    /** Transfer regions */
+    transferRegions: t.array(valuesOf(IsoCountryCode)),
+    /** Retention type */
+    retentionType: t.string,
+    /** Retention period in days */
+    retentionPeriod: t.number,
+    /** Data protection impact assessment link */
+    dataProtectionImpactAssessmentLink: t.string,
+    /** Data protection impact assessment status */
+    dataProtectionImpactAssessmentStatus: t.string,
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+    /** Data silo IDs */
+    dataSiloIds: t.array(t.string),
+    /** Data subjects */
+    dataSubjects: t.array(t.string),
+    /** Teams */
+    teams: t.array(t.string),
+    /** Owners */
+    owners: t.array(t.string),
+    /** Processing purpose sub category IDs */
+    processingPurposeSubCategoryIds: t.array(t.string),
+    /** Data sub category IDs */
+    dataSubCategoryIds: t.array(t.string),
+    /** SaaS category IDs */
+    saaSCategoryIds: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type ProcessingActivityInput = t.TypeOf<typeof ProcessingActivityInput>;
+
+/**
  * Software development kit inputs
  *
  * @see https://app.transcend.io/code-scanning/sdks
@@ -1959,6 +2010,10 @@ export const TranscendInput = t.partial({
    * The full list of assessment results
    */
   assessments: t.array(AssessmentInput),
+  /**
+   * Processing activity definitions
+   */
+  'processing-activities': t.array(ProcessingActivityInput),
   /**
    * Consent and preference management purposes
    */
