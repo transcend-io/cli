@@ -1,7 +1,18 @@
 import { GraphQLClient } from 'graphql-request';
 import { PROCESSING_ACTIVITIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import type { IsoCountryCode } from '@transcend-io/privacy-types';
+import type {
+  IsoCountryCode,
+  IsoCountrySubdivisionCode,
+  ProcessingPurpose,
+} from '@transcend-io/privacy-types';
+
+export interface Region {
+  /** Sub division */
+  countrySubDivision?: IsoCountrySubdivisionCode;
+  /** Country */
+  country?: IsoCountryCode;
+}
 
 export interface ProcessingActivity {
   /** ID of processing activity */
@@ -15,9 +26,9 @@ export interface ProcessingActivity {
   /** Controllerships */
   controllerships: string[];
   /** Storage regions */
-  storageRegions:IsoCountryCode[];
+  storageRegions: Region[];
   /** Transfer regions */
-  transferRegions:IsoCountryCode[];
+  transferRegions: Region[];
   /** Retention type */
   retentionType: string;
   /** Retention period in days */
@@ -50,15 +61,11 @@ export interface ProcessingActivity {
   }[];
   /** Teams */
   teams: {
-    /** Team ID */
-    id: string;
     /** Team name */
     name: string;
   }[];
   /** Owners */
   owners: {
-    /** Owner ID */
-    id: string;
     /** Owner email */
     email: string;
   }[];
@@ -69,7 +76,7 @@ export interface ProcessingActivity {
     /** Processing purpose sub category name */
     name: string;
     /** Processing purpose */
-    purpose: string;
+    purpose: ProcessingPurpose;
   }[];
   /** Data sub categories */
   dataSubCategories: {
@@ -82,8 +89,8 @@ export interface ProcessingActivity {
   saaSCategories: {
     /** SaaS category ID */
     id: string;
-    /** SaaS category name */
-    name: string;
+    /** SaaS category title */
+    title: string;
   }[];
 }
 

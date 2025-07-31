@@ -975,24 +975,41 @@ export async function pullTranscendConfiguration(
         title,
         description: description || undefined,
         securityMeasureDetails: securityMeasureDetails || undefined,
-        controllerships: controllerships.length > 0 ? controllerships : undefined,
+        controllerships:
+          controllerships.length > 0 ? controllerships : undefined,
         storageRegions: storageRegions.length > 0 ? storageRegions : undefined,
-        transferRegions: transferRegions.length > 0 ? transferRegions : undefined,
+        transferRegions:
+          transferRegions.length > 0 ? transferRegions : undefined,
         retentionType,
         retentionPeriod: retentionPeriod || undefined,
-        dataProtectionImpactAssessmentLink: dataProtectionImpactAssessmentLink || undefined,
+        dataProtectionImpactAssessmentLink:
+          dataProtectionImpactAssessmentLink || undefined,
         dataProtectionImpactAssessmentStatus,
         attributes:
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-        dataSiloIds: dataSilos.length > 0 ? dataSilos.map(({ id }) => id) : undefined,
-        dataSubjects: dataSubjects.length > 0 ? dataSubjects.map(({ type }) => type) : undefined,
+        dataSiloIds:
+          dataSilos.length > 0 ? dataSilos.map(({ id }) => id) : undefined,
+        dataSubjects:
+          dataSubjects.length > 0
+            ? dataSubjects.map(({ type }) => type)
+            : undefined,
         teams: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
-        owners: owners.length > 0 ? owners.map(({ email }) => email) : undefined,
-        processingPurposeSubCategoryIds: processingPurposeSubCategories.length > 0 ? processingPurposeSubCategories.map(({ id }) => id) : undefined,
-        dataSubCategoryIds: dataSubCategories.length > 0 ? dataSubCategories.map(({ id }) => id) : undefined,
-        saaSCategoryIds: saaSCategories.length > 0 ? saaSCategories.map(({ name }) => name) : undefined,
+        owners:
+          owners.length > 0 ? owners.map(({ email }) => email) : undefined,
+        processingPurposeSubCategoryIds:
+          processingPurposeSubCategories.length > 0
+            ? processingPurposeSubCategories.map(({ id }) => id)
+            : undefined,
+        dataSubCategoryIds:
+          dataSubCategories.length > 0
+            ? dataSubCategories.map(({ id }) => id)
+            : undefined,
+        saaSCategoryIds:
+          saaSCategories.length > 0
+            ? saaSCategories.map(({ title }) => title)
+            : undefined,
       }),
     );
   }

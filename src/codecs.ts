@@ -834,9 +834,25 @@ export const ProcessingActivityInput = t.intersection([
     /** Controllerships */
     controllerships: t.array(t.string),
     /** Storage regions */
-    storageRegions: t.array(valuesOf(IsoCountryCode)),
+    storageRegions: t.array(
+      t.partial({
+        countrySubDivision: t.union([
+          valuesOf(IsoCountrySubdivisionCode),
+          t.null,
+        ]),
+        country: t.union([valuesOf(IsoCountryCode), t.null]),
+      }),
+    ),
     /** Transfer regions */
-    transferRegions: t.array(valuesOf(IsoCountryCode)),
+    transferRegions: t.array(
+      t.partial({
+        countrySubDivision: t.union([
+          valuesOf(IsoCountrySubdivisionCode),
+          t.null,
+        ]),
+        country: t.union([valuesOf(IsoCountryCode), t.null]),
+      }),
+    ),
     /** Retention type */
     retentionType: t.string,
     /** Retention period in days */

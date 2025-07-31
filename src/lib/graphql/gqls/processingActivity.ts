@@ -10,12 +10,12 @@ export const PROCESSING_ACTIVITIES = gql`
         securityMeasureDetails
         controllerships
         storageRegions {
-          id
-          name
+          countrySubDivision
+          country
         }
         transferRegions {
-          id
-          name
+          countrySubDivision
+          country
         }
         retentionType
         retentionPeriod
@@ -32,10 +32,7 @@ export const PROCESSING_ACTIVITIES = gql`
           title
         }
         dataSubjects {
-          id
-          title {
-            defaultMessage
-          }
+          type
         }
         teams {
           id
@@ -56,9 +53,11 @@ export const PROCESSING_ACTIVITIES = gql`
         }
         saaSCategories {
           id
-          name
+          title
         }
       }
     }
   }
 `;
+
+// TODO: https://linear.app/transcend/issue/ZEL-6419/cli-command-for-processing-activities-table - support CREATE_PROCESSING_ACTIVITY and UPDATE_PROCESSING_ACTIVITIES
