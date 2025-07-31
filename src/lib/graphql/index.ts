@@ -77,6 +77,7 @@ export * from './fetchAllAgentFunctions';
 export * from './fetchAllAgentFiles';
 export * from './fetchAllVendors';
 export * from './fetchAllDataCategories';
+export * from './fetchAllProcessingActivities';
 export * from './fetchAllProcessingPurposes';
 export * from './syncAgents';
 export * from './syncAgentFunctions';

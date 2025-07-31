@@ -97,6 +97,7 @@ export async function syncConfigurationToTranscend(
     'agent-files': agentFiles,
     vendors,
     'data-categories': dataCategories,
+    // TODO: https://linear.app/transcend/issue/ZEL-6419/cli-command-for-processing-activities-table - support processing activities
     'processing-purposes': processingPurposes,
     'action-items': actionItems,
     'action-item-collections': actionItemCollections,
