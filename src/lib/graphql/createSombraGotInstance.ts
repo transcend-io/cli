@@ -32,7 +32,12 @@ export async function createSombraGotInstance(
   }>(client, ORGANIZATION);
   // Check if the sombra customerUrl is the default reverse tunnel URL
   const { customerUrl } = organization.sombra;
-  if (['https://sombra-reverse-tunnel.transcend.io', 'https://sombra-reverse-tunnel.us.transcend.io'].includes(customerUrl)) {
+  if (
+    [
+      'https://sombra-reverse-tunnel.transcend.io',
+      'https://sombra-reverse-tunnel.us.transcend.io',
+    ].includes(customerUrl)
+  ) {
     throw new Error(
       'It looks like your Sombra customer ingress URL has not been set up. ' +
         'Please follow the instructions here to configure networking for Sombra: ' +
