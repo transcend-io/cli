@@ -2,17 +2,10 @@ import { GraphQLClient } from 'graphql-request';
 import { PROCESSING_ACTIVITIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import type {
-  IsoCountryCode,
-  IsoCountrySubdivisionCode,
   ProcessingPurpose,
+  DataCategoryType,
 } from '@transcend-io/privacy-types';
-
-export interface Region {
-  /** Sub division */
-  countrySubDivision?: IsoCountrySubdivisionCode;
-  /** Country */
-  country?: IsoCountryCode;
-}
+import type { Region } from './formatRegions';
 
 export interface ProcessingActivity {
   /** ID of processing activity */
@@ -20,7 +13,7 @@ export interface ProcessingActivity {
   /** Title of processing activity */
   title: string;
   /** Description of processing activity */
-  description?: string;
+  description: string;
   /** Security measure details */
   securityMeasureDetails?: string;
   /** Controllerships */
@@ -56,16 +49,22 @@ export interface ProcessingActivity {
   }[];
   /** Data subjects */
   dataSubjects: {
+    /** Data subject ID */
+    id: string;
     /** Data subject type */
     type: string;
   }[];
   /** Teams */
   teams: {
+    /** Team ID */
+    id: string;
     /** Team name */
     name: string;
   }[];
   /** Owners */
   owners: {
+    /** Owner ID */
+    id: string;
     /** Owner email */
     email: string;
   }[];
@@ -84,6 +83,8 @@ export interface ProcessingActivity {
     id: string;
     /** Data sub category name */
     name: string;
+    /** Data category */
+    category: DataCategoryType;
   }[];
   /** SaaS categories */
   saaSCategories: {

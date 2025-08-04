@@ -32,6 +32,7 @@ export const PROCESSING_ACTIVITIES = gql`
           title
         }
         dataSubjects {
+          id
           type
         }
         teams {
@@ -50,6 +51,7 @@ export const PROCESSING_ACTIVITIES = gql`
         dataSubCategories {
           id
           name
+          category
         }
         saaSCategories {
           id

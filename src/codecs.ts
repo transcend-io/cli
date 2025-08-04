@@ -818,8 +818,20 @@ export const BusinessEntityInput = t.intersection([
 /** Type override */
 export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
 
+export const RegionInput = t.partial({
+  /** The country */
+  country: valuesOf(IsoCountryCode),
+  /** The country subdivision */
+  countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+});
+
+/** Type override */
+export type RegionInput = t.TypeOf<typeof RegionInput>;
+
 /**
  * Input to define a processing activity
+ *
+ * @see https://app.transcend.io/data-map/data-inventory/processing-activities
  */
 export const ProcessingActivityInput = t.intersection([
   t.type({
@@ -834,25 +846,9 @@ export const ProcessingActivityInput = t.intersection([
     /** Controllerships */
     controllerships: t.array(t.string),
     /** Storage regions */
-    storageRegions: t.array(
-      t.partial({
-        countrySubDivision: t.union([
-          valuesOf(IsoCountrySubdivisionCode),
-          t.null,
-        ]),
-        country: t.union([valuesOf(IsoCountryCode), t.null]),
-      }),
-    ),
+    storageRegions: t.array(RegionInput),
     /** Transfer regions */
-    transferRegions: t.array(
-      t.partial({
-        countrySubDivision: t.union([
-          valuesOf(IsoCountrySubdivisionCode),
-          t.null,
-        ]),
-        country: t.union([valuesOf(IsoCountryCode), t.null]),
-      }),
-    ),
+    transferRegions: t.array(RegionInput),
     /** Retention type */
     retentionType: t.string,
     /** Retention period in days */
@@ -865,18 +861,26 @@ export const ProcessingActivityInput = t.intersection([
      * Attribute value and its corresponding attribute key
      */
     attributes: t.array(AttributePreview),
-    /** Data silo IDs */
-    dataSiloIds: t.array(t.string),
-    /** Data subjects */
-    dataSubjects: t.array(t.string),
-    /** Teams */
-    teams: t.array(t.string),
-    /** Owners */
-    owners: t.array(t.string),
-    /** Processing purpose sub category IDs */
-    processingPurposeSubCategoryIds: t.array(t.string),
-    /** Data sub category IDs */
-    dataSubCategoryIds: t.array(t.string),
+    /** Data silo titles */
+    dataSiloTitles: t.array(t.string),
+    /** Data subject types */
+    dataSubjectTypes: t.array(t.string),
+    /** Team names */
+    teamNames: t.array(t.string),
+    /** Owner emails */
+    ownerEmails: t.array(t.string),
+    /**
+     * The purposes of processing for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    processingSubPurposes: t.array(ProcessingPurposePreviewInput),
+    /**
+     * The categories of personal data for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    dataSubCategories: t.array(DataCategoryPreviewInput),
     /** SaaS category IDs */
     saaSCategoryIds: t.array(t.string),
   }),
@@ -1190,12 +1194,7 @@ export const ConsentManageExperienceInput = t.intersection([
     /** Name of experience */
     displayName: t.string,
     /** Region that define this regional experience */
-    regions: t.array(
-      t.partial({
-        countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
-        country: valuesOf(IsoCountryCode),
-      }),
-    ),
+    regions: t.array(RegionInput),
     /** How to handle consent expiry */
     onConsentExpiry: valuesOf(OnConsentExpiry),
     /** Consent expiration lever */

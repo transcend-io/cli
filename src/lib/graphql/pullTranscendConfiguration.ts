@@ -39,6 +39,8 @@ import {
   RequestAction,
   ConsentTrackerStatus,
   ActionItemCode,
+  IsoCountrySubdivisionCode,
+  IsoCountryCode,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { flatten, keyBy, mapValues } from 'lodash-es';
@@ -75,6 +77,7 @@ import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { formatAttributeValues } from './formatAttributeValues';
+import { formatRegions } from './formatRegions';
 import { logger } from '../../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../../enums';
@@ -973,42 +976,53 @@ export async function pullTranscendConfiguration(
         saaSCategories,
       }): ProcessingActivityInput => ({
         title,
-        description: description || undefined,
+        description: description,
         securityMeasureDetails: securityMeasureDetails || undefined,
         controllerships:
           controllerships.length > 0 ? controllerships : undefined,
-        storageRegions: storageRegions.length > 0 ? storageRegions : undefined,
+        storageRegions:
+          storageRegions.length > 0 ? formatRegions(storageRegions) : undefined,
         transferRegions:
-          transferRegions.length > 0 ? transferRegions : undefined,
+          transferRegions.length > 0
+            ? formatRegions(transferRegions)
+            : undefined,
         retentionType,
-        retentionPeriod: retentionPeriod || undefined,
+        retentionPeriod: retentionPeriod ?? undefined,
         dataProtectionImpactAssessmentLink:
-          dataProtectionImpactAssessmentLink || undefined,
+          dataProtectionImpactAssessmentLink ?? undefined,
         dataProtectionImpactAssessmentStatus,
         attributes:
           attributeValues !== undefined && attributeValues.length > 0
             ? formatAttributeValues(attributeValues)
             : undefined,
-        dataSiloIds:
-          dataSilos.length > 0 ? dataSilos.map(({ id }) => id) : undefined,
-        dataSubjects:
+        dataSiloTitles:
+          dataSilos.length > 0
+            ? dataSilos.map(({ title }) => title)
+            : undefined,
+        dataSubjectTypes:
           dataSubjects.length > 0
             ? dataSubjects.map(({ type }) => type)
             : undefined,
-        teams: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
-        owners:
+        teamNames: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        ownerEmails:
           owners.length > 0 ? owners.map(({ email }) => email) : undefined,
-        processingPurposeSubCategoryIds:
+        processingSubPurposes:
           processingPurposeSubCategories.length > 0
-            ? processingPurposeSubCategories.map(({ id }) => id)
+            ? processingPurposeSubCategories.map(({ name, purpose }) => ({
+                name,
+                purpose,
+              }))
             : undefined,
-        dataSubCategoryIds:
+        dataSubCategories:
           dataSubCategories.length > 0
-            ? dataSubCategories.map(({ id }) => id)
+            ? dataSubCategories.map(({ category, name }) => ({
+                category,
+                name,
+              }))
             : undefined,
         saaSCategoryIds:
           saaSCategories.length > 0
-            ? saaSCategories.map(({ title }) => title)
+            ? saaSCategories.map(({ id }) => id)
             : undefined,
       }),
     );
