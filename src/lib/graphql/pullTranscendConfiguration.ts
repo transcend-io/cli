@@ -39,8 +39,6 @@ import {
   RequestAction,
   ConsentTrackerStatus,
   ActionItemCode,
-  IsoCountrySubdivisionCode,
-  IsoCountryCode,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { flatten, keyBy, mapValues } from 'lodash-es';
@@ -976,8 +974,8 @@ export async function pullTranscendConfiguration(
         saaSCategories,
       }): ProcessingActivityInput => ({
         title,
-        description: description,
-        securityMeasureDetails: securityMeasureDetails || undefined,
+        description,
+        securityMeasureDetails: securityMeasureDetails ?? undefined,
         controllerships:
           controllerships.length > 0 ? controllerships : undefined,
         storageRegions:
