@@ -1,8 +1,9 @@
 processing-activities:
-  - title: 'Chatbot AI'
+  - title: Chatbot AI
     description: >-
       A product that allows employees to chat with an informational AI Chatbot
       that provides information
+    securityMeasureDetails: Data is transmitted with end-to-end encryption
     controllerships:
       - CONTROLLER
     retentionType: UNSPECIFIED
@@ -17,19 +18,24 @@ processing-activities:
     ownerEmails:
       - alice@acme.com
     processingSubPurposes:
-      - name: ''
-        purpose: ESSENTIAL
+      - purpose: ESSENTIAL
     dataSubCategories:
-      - name: Email
-        category: CONTACT
-      - name: Interaction Events
-        category: ONLINE_ACTIVITY
-  - title: 'Marketing Analytics'
+      - category: CONTACT
+        name: Email
+      - category: ONLINE_ACTIVITY
+        name: Interaction Events
+    saaSCategories:
+      - Artificial Intelligence
+  - title: Marketing Analytics
     description: Data around how our website is used
     controllerships:
       - PROCESSOR
     retentionType: UNSPECIFIED
     dataProtectionImpactAssessmentStatus: MISSING
+    attributes:
+      - key: Source of Data
+        values:
+          - Online Tracking Technologies
     dataSiloTitles:
       - Adobe Experience Platform
       - AdRoll
@@ -38,29 +44,33 @@ processing-activities:
     ownerEmails:
       - bill@acme.com
     processingSubPurposes:
-      - name: ''
-        purpose: ANALYTICS
-      - name: ''
-        purpose: MARKETING
+      - purpose: ANALYTICS
+      - purpose: MARKETING
   - title: Onboarding
     description: >-
       The process of onboarding new hires through a number of interactive
       lessons, both sync and async
     retentionType: UNSPECIFIED
-    dataProtectionImpactAssessmentStatus: MISSING
+    dataProtectionImpactAssessmentLink: https://example.com
+    dataProtectionImpactAssessmentStatus: LINK
     dataSiloTitles:
       - Adobe Analytics
       - ADP
     ownerEmails:
       - charlie@acme.com
     processingSubPurposes:
-      - name: ''
-        purpose: HR
+      - purpose: HR
   - title: Recruiting
     description: >-
       Our recruitment pipeline includes the use of several different tools and
       processes to find, vet, and hire candidates
-    retentionType: UNSPECIFIED
+    storageRegions:
+      - country: US
+    transferRegions:
+      - country: US
+        countrySubDivision: US-NJ
+    retentionType: STATED_PERIOD
+    retentionPeriod: 90
     dataProtectionImpactAssessmentStatus: MISSING
     dataSiloTitles:
       - Adobe
@@ -68,5 +78,6 @@ processing-activities:
       - delilah@acme.com
       - eric@acme.com
     processingSubPurposes:
-      - name: ''
-        purpose: HR
+      - purpose: HR
+        name: Recruiting
+      - purpose: HR

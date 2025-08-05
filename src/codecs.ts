@@ -217,12 +217,16 @@ export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 /**
  * The processing purpose for a field
  */
-export const ProcessingPurposePreviewInput = t.type({
-  /** The parent purpose */
-  purpose: valuesOf(ProcessingPurpose),
-  /** User-defined name for this processing purpose sub category */
-  name: t.string,
-});
+export const ProcessingPurposePreviewInput = t.intersection([
+  t.type({
+    /** The parent purpose */
+    purpose: valuesOf(ProcessingPurpose),
+  }),
+  t.partial({
+    /** User-defined name for this processing purpose sub category */
+    name: t.string,
+  }),
+]);
 
 /** Type override */
 export type ProcessingPurposePreviewInput = t.TypeOf<

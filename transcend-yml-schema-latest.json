@@ -28331,34 +28331,42 @@
                                   "purposes": {
                                     "type": "array",
                                     "items": {
-                                      "type": "object",
-                                      "required": [
-                                        "purpose",
-                                        "name"
-                                      ],
-                                      "properties": {
-                                        "purpose": {
-                                          "type": "string",
-                                          "enum": [
-                                            "ESSENTIAL",
-                                            "ADDITIONAL_FUNCTIONALITY",
-                                            "ADVERTISING",
-                                            "MARKETING",
-                                            "ANALYTICS",
-                                            "PERSONALIZATION",
-                                            "OPERATION_SECURITY",
-                                            "LEGAL",
-                                            "TRANSFER",
-                                            "SALE",
-                                            "HR",
-                                            "OTHER",
-                                            "UNSPECIFIED"
-                                          ]
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "required": [
+                                            "purpose"
+                                          ],
+                                          "properties": {
+                                            "purpose": {
+                                              "type": "string",
+                                              "enum": [
+                                                "ESSENTIAL",
+                                                "ADDITIONAL_FUNCTIONALITY",
+                                                "ADVERTISING",
+                                                "MARKETING",
+                                                "ANALYTICS",
+                                                "PERSONALIZATION",
+                                                "OPERATION_SECURITY",
+                                                "LEGAL",
+                                                "TRANSFER",
+                                                "SALE",
+                                                "HR",
+                                                "OTHER",
+                                                "UNSPECIFIED"
+                                              ]
+                                            }
+                                          }
                                         },
-                                        "name": {
-                                          "type": "string"
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string"
+                                            }
+                                          }
                                         }
-                                      }
+                                      ]
                                     }
                                   },
                                   "categories": {
@@ -53376,34 +53384,42 @@
               "processingSubPurposes": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "required": [
-                    "purpose",
-                    "name"
-                  ],
-                  "properties": {
-                    "purpose": {
-                      "type": "string",
-                      "enum": [
-                        "ESSENTIAL",
-                        "ADDITIONAL_FUNCTIONALITY",
-                        "ADVERTISING",
-                        "MARKETING",
-                        "ANALYTICS",
-                        "PERSONALIZATION",
-                        "OPERATION_SECURITY",
-                        "LEGAL",
-                        "TRANSFER",
-                        "SALE",
-                        "HR",
-                        "OTHER",
-                        "UNSPECIFIED"
-                      ]
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "purpose"
+                      ],
+                      "properties": {
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "ESSENTIAL",
+                            "ADDITIONAL_FUNCTIONALITY",
+                            "ADVERTISING",
+                            "MARKETING",
+                            "ANALYTICS",
+                            "PERSONALIZATION",
+                            "OPERATION_SECURITY",
+                            "LEGAL",
+                            "TRANSFER",
+                            "SALE",
+                            "HR",
+                            "OTHER",
+                            "UNSPECIFIED"
+                          ]
+                        }
+                      }
                     },
-                    "name": {
-                      "type": "string"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               },
               "dataSubCategories": {

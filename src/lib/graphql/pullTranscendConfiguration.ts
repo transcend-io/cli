@@ -1007,10 +1007,18 @@ export async function pullTranscendConfiguration(
           owners.length > 0 ? owners.map(({ email }) => email) : undefined,
         processingSubPurposes:
           processingPurposeSubCategories.length > 0
-            ? processingPurposeSubCategories
+            ? processingPurposeSubCategories.map(({ name, purpose }) => ({
+                purpose,
+                ...(name ? { name } : {}),
+              }))
             : undefined,
         dataSubCategories:
-          dataSubCategories.length > 0 ? dataSubCategories : undefined,
+          dataSubCategories.length > 0
+            ? dataSubCategories.map(({ name, category }) => ({
+                category,
+                ...(name ? { name } : {}),
+              }))
+            : undefined,
         saaSCategories:
           saaSCategories.length > 0
             ? saaSCategories.map(({ title }) => title)
