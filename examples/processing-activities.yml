@@ -1,0 +1,72 @@
+processing-activities:
+  - title: 'Chatbot AI'
+    description: >-
+      A product that allows employees to chat with an informational AI Chatbot
+      that provides information
+    controllerships:
+      - CONTROLLER
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Algolia
+      - Aircall
+    dataSubjectTypes:
+      - employee
+    teamNames:
+      - Product
+    ownerEmails:
+      - alice@acme.com
+    processingSubPurposes:
+      - name: ''
+        purpose: ESSENTIAL
+    dataSubCategories:
+      - name: Email
+        category: CONTACT
+      - name: Interaction Events
+        category: ONLINE_ACTIVITY
+  - title: 'Marketing Analytics'
+    description: Data around how our website is used
+    controllerships:
+      - PROCESSOR
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Adobe Experience Platform
+      - AdRoll
+    teamNames:
+      - Marketing
+    ownerEmails:
+      - bill@acme.com
+    processingSubPurposes:
+      - name: ''
+        purpose: ANALYTICS
+      - name: ''
+        purpose: MARKETING
+  - title: Onboarding
+    description: >-
+      The process of onboarding new hires through a number of interactive
+      lessons, both sync and async
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Adobe Analytics
+      - ADP
+    ownerEmails:
+      - charlie@acme.com
+    processingSubPurposes:
+      - name: ''
+        purpose: HR
+  - title: Recruiting
+    description: >-
+      Our recruitment pipeline includes the use of several different tools and
+      processes to find, vet, and hire candidates
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Adobe
+    ownerEmails:
+      - delilah@acme.com
+      - eric@acme.com
+    processingSubPurposes:
+      - name: ''
+        purpose: HR
