@@ -76,8 +76,8 @@ export interface ProcessingActivity {
   }[];
   /** SaaS categories */
   saaSCategories: {
-    /** Contentful Id */
-    contentfulId: string;
+    /** id */
+    id: string;
   }[];
 }
 

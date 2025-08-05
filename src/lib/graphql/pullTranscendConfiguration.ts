@@ -985,7 +985,8 @@ export async function pullTranscendConfiguration(
             ? formatRegions(transferRegions)
             : undefined,
         retentionType,
-        retentionPeriod: retentionPeriod ?? undefined,
+        retentionPeriod:
+          retentionType === 'STATED_PERIOD' ? retentionPeriod : undefined,
         dataProtectionImpactAssessmentLink:
           dataProtectionImpactAssessmentLink ?? undefined,
         dataProtectionImpactAssessmentStatus,
@@ -1012,7 +1013,7 @@ export async function pullTranscendConfiguration(
           dataSubCategories.length > 0 ? dataSubCategories : undefined,
         saaSCategoryIds:
           saaSCategories.length > 0
-            ? saaSCategories.map(({ contentfulId }) => contentfulId)
+            ? saaSCategories.map(({ id }) => id)
             : undefined,
       }),
     );

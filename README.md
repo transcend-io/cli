@@ -2288,6 +2288,12 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=customFields
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=businessEntities
 ```
 
+**Pull processing activities only (see [this example](./examples/processing-activities.yml))**
+
+```sh
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=processingActivities
+```
+
 **Pull enrichers and identifiers (see [this example](./examples/enrichers.yml))**
 
 ```sh

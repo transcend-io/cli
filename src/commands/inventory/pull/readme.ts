@@ -327,6 +327,14 @@ const examples = buildExamples<PullCommandFlags>(
     },
     {
       description:
+        'Pull processing activities only (see [this example](./examples/processing-activities.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: [TranscendPullResource.ProcessingActivities],
+      },
+    },
+    {
+      description:
         'Pull enrichers and identifiers (see [this example](./examples/enrichers.yml))',
       flags: {
         auth: '$TRANSCEND_API_KEY',

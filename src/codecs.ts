@@ -881,7 +881,7 @@ export const ProcessingActivityInput = t.intersection([
      * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
      */
     dataSubCategories: t.array(DataCategoryPreviewInput),
-    /** SaaS category contentful IDs */
+    /** SaaS category IDs */
     saaSCategoryIds: t.array(t.string),
   }),
 ]);
