@@ -36,6 +36,7 @@ processing-activities:
       - key: Source of Data
         values:
           - Online Tracking Technologies
+          - Social Media Integrations
     dataSiloTitles:
       - Adobe Experience Platform
       - AdRoll
