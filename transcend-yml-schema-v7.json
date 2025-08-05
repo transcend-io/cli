@@ -53451,7 +53451,7 @@
                   ]
                 }
               },
-              "saaSCategoryIds": {
+              "saaSCategories": {
                 "type": "array",
                 "items": {
                   "type": "string"

@@ -1011,9 +1011,9 @@ export async function pullTranscendConfiguration(
             : undefined,
         dataSubCategories:
           dataSubCategories.length > 0 ? dataSubCategories : undefined,
-        saaSCategoryIds:
+        saaSCategories:
           saaSCategories.length > 0
-            ? saaSCategories.map(({ id }) => id)
+            ? saaSCategories.map(({ title }) => title)
             : undefined,
       }),
     );

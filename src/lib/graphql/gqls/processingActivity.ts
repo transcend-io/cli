@@ -48,7 +48,7 @@ export const PROCESSING_ACTIVITIES = gql`
           category
         }
         saaSCategories {
-          id
+          title
         }
       }
     }
