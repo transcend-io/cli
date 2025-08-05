@@ -28,34 +28,27 @@ export const PROCESSING_ACTIVITIES = gql`
           }
         }
         dataSilos {
-          id
           title
         }
         dataSubjects {
-          id
           type
         }
         teams {
-          id
           name
         }
         owners {
-          id
           email
         }
         processingPurposeSubCategories {
-          id
           name
           purpose
         }
         dataSubCategories {
-          id
           name
           category
         }
         saaSCategories {
-          id
-          title
+          contentfulId
         }
       }
     }

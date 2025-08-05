@@ -42,36 +42,26 @@ export interface ProcessingActivity {
   }[];
   /** Data silos */
   dataSilos: {
-    /** Data silo ID */
-    id: string;
     /** Data silo title */
     title: string;
   }[];
   /** Data subjects */
   dataSubjects: {
-    /** Data subject ID */
-    id: string;
     /** Data subject type */
     type: string;
   }[];
   /** Teams */
   teams: {
-    /** Team ID */
-    id: string;
     /** Team name */
     name: string;
   }[];
   /** Owners */
   owners: {
-    /** Owner ID */
-    id: string;
     /** Owner email */
     email: string;
   }[];
   /** Processing purpose sub categories */
   processingPurposeSubCategories: {
-    /** Processing purpose sub category ID */
-    id: string;
     /** Processing purpose sub category name */
     name: string;
     /** Processing purpose */
@@ -79,8 +69,6 @@ export interface ProcessingActivity {
   }[];
   /** Data sub categories */
   dataSubCategories: {
-    /** Data sub category ID */
-    id: string;
     /** Data sub category name */
     name: string;
     /** Data category */
@@ -88,10 +76,8 @@ export interface ProcessingActivity {
   }[];
   /** SaaS categories */
   saaSCategories: {
-    /** SaaS category ID */
-    id: string;
-    /** SaaS category title */
-    title: string;
+    /** Contentful Id */
+    contentfulId: string;
   }[];
 }
 
