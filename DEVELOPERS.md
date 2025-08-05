@@ -63,6 +63,12 @@ For more information on the commands and routings, see [the Stricli documentatio
 
 ## Generated files
 
+To just regenerate them all:
+
+```bash
+pnpm genfiles
+```
+
 ### README.md
 
 ```bash
