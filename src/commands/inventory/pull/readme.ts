@@ -70,6 +70,12 @@ const pullResourceTable: Record<
     markdownLink:
       '[Data Inventory -> Business Entities](https://app.transcend.io/data-map/data-inventory/business-entities)',
   },
+  [TranscendPullResource.ProcessingActivities]: {
+    description: 'The processing activities in the data inventory.',
+    scopes: [ScopeName.ViewDataInventory],
+    markdownLink:
+      '[Data Inventory -> Processing Activities](https://app.transcend.io/data-map/data-inventory/processing-activities)',
+  },
   [TranscendPullResource.Actions]: {
     description: 'The Privacy Request action settings.',
     scopes: [ScopeName.ViewDataSubjectRequestSettings],
@@ -317,6 +323,14 @@ const examples = buildExamples<PullCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         resources: [TranscendPullResource.BusinessEntities],
+      },
+    },
+    {
+      description:
+        'Pull processing activities only (see [this example](./examples/processing-activities.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: [TranscendPullResource.ProcessingActivities],
       },
     },
     {

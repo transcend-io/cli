@@ -1,0 +1,84 @@
+processing-activities:
+  - title: Chatbot AI
+    description: >-
+      A product that allows employees to chat with an informational AI Chatbot
+      that provides information
+    securityMeasureDetails: Data is transmitted with end-to-end encryption
+    controllerships:
+      - CONTROLLER
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Algolia
+      - Aircall
+    dataSubjectTypes:
+      - employee
+    teamNames:
+      - Product
+    ownerEmails:
+      - alice@acme.com
+    processingSubPurposes:
+      - purpose: ESSENTIAL
+    dataSubCategories:
+      - category: CONTACT
+        name: Email
+      - category: ONLINE_ACTIVITY
+        name: Interaction Events
+    saaSCategories:
+      - Artificial Intelligence
+  - title: Marketing Analytics
+    description: Data around how our website is used
+    controllerships:
+      - PROCESSOR
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentStatus: MISSING
+    attributes:
+      - key: Source of Data
+        values:
+          - Online Tracking Technologies
+          - Social Media Integrations
+    dataSiloTitles:
+      - Adobe Experience Platform
+      - AdRoll
+    teamNames:
+      - Marketing
+    ownerEmails:
+      - bill@acme.com
+    processingSubPurposes:
+      - purpose: ANALYTICS
+      - purpose: MARKETING
+  - title: Onboarding
+    description: >-
+      The process of onboarding new hires through a number of interactive
+      lessons, both sync and async
+    retentionType: UNSPECIFIED
+    dataProtectionImpactAssessmentLink: https://example.com
+    dataProtectionImpactAssessmentStatus: LINK
+    dataSiloTitles:
+      - Adobe Analytics
+      - ADP
+    ownerEmails:
+      - charlie@acme.com
+    processingSubPurposes:
+      - purpose: HR
+  - title: Recruiting
+    description: >-
+      Our recruitment pipeline includes the use of several different tools and
+      processes to find, vet, and hire candidates
+    storageRegions:
+      - country: US
+    transferRegions:
+      - country: US
+        countrySubDivision: US-NJ
+    retentionType: STATED_PERIOD
+    retentionPeriod: 90
+    dataProtectionImpactAssessmentStatus: MISSING
+    dataSiloTitles:
+      - Adobe
+    ownerEmails:
+      - delilah@acme.com
+      - eric@acme.com
+    processingSubPurposes:
+      - purpose: HR
+        name: Recruiting
+      - purpose: HR
