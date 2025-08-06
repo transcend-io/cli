@@ -39,6 +39,7 @@ import {
   RequestAction,
   ConsentTrackerStatus,
   ActionItemCode,
+  RetentionType,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { flatten, keyBy, mapValues } from 'lodash-es';
@@ -986,7 +987,9 @@ export async function pullTranscendConfiguration(
             : undefined,
         retentionType,
         retentionPeriod:
-          retentionType === 'STATED_PERIOD' ? retentionPeriod : undefined,
+          retentionType === RetentionType.StatedPeriod
+            ? retentionPeriod
+            : undefined,
         dataProtectionImpactAssessmentLink:
           dataProtectionImpactAssessmentLink ?? undefined,
         dataProtectionImpactAssessmentStatus,
