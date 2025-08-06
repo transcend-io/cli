@@ -52,6 +52,9 @@ import {
   AssessmentFormTemplateSource,
   UnstructuredSubDataPointRecommendationStatus,
   PreferenceTopicType,
+  Controllership,
+  RetentionType,
+  DataProtectionImpactAssessmentStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -848,19 +851,21 @@ export const ProcessingActivityInput = t.intersection([
     /** Security measure details */
     securityMeasureDetails: t.string,
     /** Controllerships */
-    controllerships: t.array(t.string),
+    controllerships: t.array(valuesOf(Controllership)),
     /** Storage regions */
     storageRegions: t.array(RegionInput),
     /** Transfer regions */
     transferRegions: t.array(RegionInput),
     /** Retention type */
-    retentionType: t.string,
+    retentionType: valuesOf(RetentionType),
     /** Retention period in days */
     retentionPeriod: t.number,
     /** Data protection impact assessment link */
     dataProtectionImpactAssessmentLink: t.string,
     /** Data protection impact assessment status */
-    dataProtectionImpactAssessmentStatus: t.string,
+    dataProtectionImpactAssessmentStatus: valuesOf(
+      DataProtectionImpactAssessmentStatus,
+    ),
     /**
      * Attribute value and its corresponding attribute key
      */

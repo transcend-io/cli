@@ -4,6 +4,9 @@ import { makeGraphQLRequest } from './makeGraphQLRequest';
 import type {
   ProcessingPurpose,
   DataCategoryType,
+  DataProtectionImpactAssessmentStatus,
+  Controllership,
+  RetentionType,
 } from '@transcend-io/privacy-types';
 import type { Region } from './formatRegions';
 
@@ -17,19 +20,19 @@ export interface ProcessingActivity {
   /** Security measure details */
   securityMeasureDetails?: string;
   /** Controllerships */
-  controllerships: string[];
+  controllerships: Controllership[];
   /** Storage regions */
   storageRegions: Region[];
   /** Transfer regions */
   transferRegions: Region[];
   /** Retention type */
-  retentionType: string;
+  retentionType: RetentionType;
   /** Retention period in days */
   retentionPeriod?: number;
   /** Data protection impact assessment link */
   dataProtectionImpactAssessmentLink?: string;
   /** Data protection impact assessment status */
-  dataProtectionImpactAssessmentStatus: string;
+  dataProtectionImpactAssessmentStatus: DataProtectionImpactAssessmentStatus;
   /** Attribute values */
   attributeValues: {
     /** Name of attribute value */

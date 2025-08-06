@@ -27,8 +27,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       '@transcend-io/privacy-types':
-        specifier: ^4.124.1
-        version: 4.125.0
+        specifier: ^4.128.0
+        version: 4.128.0
       '@transcend-io/secret-value':
         specifier: ^1.2.0
         version: 1.2.1
@@ -642,8 +642,8 @@ packages:
   '@transcend-io/persisted-state@1.0.4':
     resolution: {integrity: sha512-jEDN64pr5Q1fniHMERa2+DKhuHbwdB1zzGdHoWgq4EIEx/ZJQxraiNfYoCpf5hpuiKxtXcIN41SC2/MI6MraoQ==}
 
-  '@transcend-io/privacy-types@4.125.0':
-    resolution: {integrity: sha512-aSOgeBDFgGZHsMlu3rRsvNOWua+aYey88O0heyTtuaxEFydl/rnoef61aV25ltQJ8pH7TunuJA/KJG7+YcFnZQ==}
+  '@transcend-io/privacy-types@4.128.0':
+    resolution: {integrity: sha512-iOFVTpdM+ZFX+YxmqtK5mDJNYAlwVa7JhPg4Yg0pUSFcck7LvZlxFVNwpHVoGGdguy6Ejsh8hfPYKHhBOgBqMQ==}
 
   '@transcend-io/secret-value@1.2.1':
     resolution: {integrity: sha512-pb2thX9znGJ9GOm6A2kgIzwEchB3E6Zn1KTLIBJx+T+K7XkqRwQJsQL0vKGiJVmZZ0iB3bLSAABHoWwNAZcFxA==}
@@ -3737,7 +3737,7 @@ snapshots:
       io-ts: 2.2.22(fp-ts@2.16.10)
       mkdirp: 1.0.4
 
-  '@transcend-io/privacy-types@4.125.0':
+  '@transcend-io/privacy-types@4.128.0':
     dependencies:
       '@transcend-io/type-utils': 1.8.4
       fp-ts: 2.16.10
