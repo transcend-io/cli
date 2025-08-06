@@ -850,19 +850,31 @@ export const ProcessingActivityInput = t.intersection([
     description: t.string,
     /** Security measure details */
     securityMeasureDetails: t.string,
-    /** Controllerships */
+    /**
+     * Controllerships
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
     controllerships: t.array(valuesOf(Controllership)),
     /** Storage regions */
     storageRegions: t.array(RegionInput),
     /** Transfer regions */
     transferRegions: t.array(RegionInput),
-    /** Retention type */
+    /**
+     * Retention type
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
     retentionType: valuesOf(RetentionType),
     /** Retention period in days */
     retentionPeriod: t.number,
     /** Data protection impact assessment link */
     dataProtectionImpactAssessmentLink: t.string,
-    /** Data protection impact assessment status */
+    /**
+     * Data protection impact assessment status
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/processingActivity.ts.ts
+     */
     dataProtectionImpactAssessmentStatus: valuesOf(
       DataProtectionImpactAssessmentStatus,
     ),
