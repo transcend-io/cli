@@ -308,7 +308,6 @@
                     "manageAssessments",
                     "viewAssignedAssessments",
                     "manageAssignedAssessments",
-                    "approveAssessments",
                     "managePrompts",
                     "managePromptRuns",
                     "executePrompt",
@@ -335,7 +334,9 @@
                     "manageIntlMessages",
                     "viewIntlMessages",
                     "llmLogTransfer",
-                    "manageWorkflows"
+                    "manageWorkflows",
+                    "viewDataSubCategories",
+                    "manageDataSubCategories"
                   ]
                 }
               }
@@ -42519,7 +42520,12 @@
               "controllerships": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "enum": [
+                    "CONTROLLER",
+                    "PROCESSOR",
+                    "JOINT_CONTROLLER"
+                  ]
                 }
               },
               "storageRegions": {
@@ -53325,7 +53331,14 @@
                 }
               },
               "retentionType": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "STATED_PERIOD",
+                  "LIMITED",
+                  "INDEFINITE",
+                  "OTHER",
+                  "UNSPECIFIED"
+                ]
               },
               "retentionPeriod": {
                 "type": "number"
@@ -53334,7 +53347,12 @@
                 "type": "string"
               },
               "dataProtectionImpactAssessmentStatus": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "LINK",
+                  "NOT_REQUIRED",
+                  "MISSING"
+                ]
               },
               "attributes": {
                 "type": "array",
