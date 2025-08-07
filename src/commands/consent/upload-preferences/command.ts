@@ -97,7 +97,7 @@ export const uploadPreferencesCommand = buildCommand({
         kind: 'parsed',
         parse: numberParser,
         brief: 'The concurrency to use when uploading in parallel',
-        default: '1',
+        default: '10',
       },
       allowedIdentifierNames: {
         kind: 'parsed',

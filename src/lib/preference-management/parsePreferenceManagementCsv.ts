@@ -10,7 +10,10 @@ import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic, type Identifier } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
-import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
+import {
+  getUniquePreferenceIdentifierNamesFromRow,
+  parsePreferenceIdentifiersFromCsv,
+} from './parsePreferenceIdentifiersFromCsv';
 import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
@@ -140,17 +143,13 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Grab existing preference store records
   const identifiers = preferences.flatMap((pref) =>
-    Object.keys(currentState.columnToIdentifier)
-      .filter(
-        (col) =>
-          pref[col] &&
-          currentState.columnToIdentifier[col] &&
-          currentState.columnToIdentifier[col].isUniqueOnPreferenceStore,
-      )
-      .map((col) => ({
-        name: currentState.columnToIdentifier[col].name,
-        value: pref[col],
-      })),
+    getUniquePreferenceIdentifierNamesFromRow({
+      row: pref,
+      columnToIdentifier: currentState.columnToIdentifier,
+    }).map((col) => ({
+      name: currentState.columnToIdentifier[col].name,
+      value: pref[col],
+    })),
   );
 
   const existingConsentRecords = skipExistingRecordCheck
@@ -169,14 +168,10 @@ export async function parsePreferenceManagementCsvWithCache(
   // Process each row
   preferences.forEach((pref) => {
     // Get the userIds that could be the primary key of the consent record
-    const possiblePrimaryKeys = Object.keys(currentState.columnToIdentifier)
-      .filter(
-        (col) =>
-          pref[col] &&
-          currentState.columnToIdentifier[col] &&
-          currentState.columnToIdentifier[col].isUniqueOnPreferenceStore,
-      )
-      .map((col) => pref[col]);
+    const possiblePrimaryKeys = getUniquePreferenceIdentifierNamesFromRow({
+      row: pref,
+      columnToIdentifier: currentState.columnToIdentifier,
+    }).map((col) => pref[col]);
 
     // determine updates for user
     const pendingUpdates = getPreferenceUpdatesFromRow({

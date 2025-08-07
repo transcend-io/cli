@@ -170,7 +170,7 @@ export async function parsePreferenceIdentifiersFromCsv(
  *
  * @param options - Options
  * @param options.row - The current row from CSV file
- * @param options.currentState - The current file metadata state
+ * @param options.columnToIdentifier - The column to identifier mapping metadata
  * @returns The updated preferences with identifiers payload
  */
 export function getPreferenceIdentifiersFromRow({
@@ -188,4 +188,26 @@ export function getPreferenceIdentifiersFromRow({
       name: identifierMapping.name,
       value: row[col],
     }));
+}
+
+/**
+ * Helper function to get unique identifier name present in a row
+ *
+ * @param options - Options
+ * @param options.row - The current row from CSV file
+ * @param options.columnToIdentifier - The column to identifier mapping metadata
+ * @returns The unique identifier names present in the row
+ */
+export function getUniquePreferenceIdentifierNamesFromRow({
+  row,
+  columnToIdentifier,
+}: {
+  /** The current row from CSV file */
+  row: Record<string, string>;
+  /** The current file metadata state */
+  columnToIdentifier: FileMetadataState['columnToIdentifier'];
+}): string[] {
+  return Object.keys(columnToIdentifier).filter(
+    (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
+  );
 }
