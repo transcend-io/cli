@@ -1,0 +1,5 @@
+email_id,person_id,member_id,timestamp,Sales
+test-acme1@gmail.com,p1,m1,2025-08-07T05:09:40.317Z,true
+test-acme2@gmail.com,p2,m2,2025-08-07T17:49:21.192Z,true
+test-acme3@gmail.com,p3,m3,2025-08-07T18:49:21.192Z,false
+test-acme4@gmail.com,p4,m4,2025-08-07T17:49:21.192Z,false
