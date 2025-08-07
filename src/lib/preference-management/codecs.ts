@@ -72,12 +72,20 @@ export const FileMetadataState = t.intersection([
      * their preferences are already in the store
      */
     skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
+    /** The column name that maps to the identifier */
+    columnToIdentifier: t.record(
+      t.string,
+      t.type({
+        /** The identifier name */
+        name: t.string,
+        /** Is unique on preference store */
+        isUniqueOnPreferenceStore: t.boolean,
+      }),
+    ),
   }),
   t.partial({
-    /** Determine which column name in file maps to consent record identifier to upload on  */
-    identifierColumn: t.string,
     /** Determine which column name in file maps to the timestamp  */
-    timestampColum: t.string,
+    timestampColumn: t.string,
   }),
 ]);
 

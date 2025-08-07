@@ -99,6 +99,18 @@ export const uploadPreferencesCommand = buildCommand({
         brief: 'The concurrency to use when uploading in parallel',
         default: '10',
       },
+      allowedIdentifierNames: {
+        kind: 'parsed',
+        parse: (value: string) => value.split(',').map((s) => s.trim()),
+        brief:
+          'Identifiers configured for the run. Comma-separated list of identifier names.',
+      },
+      identifierColumns: {
+        kind: 'parsed',
+        parse: (value: string) => value.split(',').map((s) => s.trim()),
+        brief:
+          'Columns in the CSV that should be used as identifiers. Comma-separated list of column names.',
+      },
     },
   },
   docs: {

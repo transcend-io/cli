@@ -29,12 +29,12 @@ export async function parsePreferenceTimestampsFromCsv(
 
   // Determine the columns that could potentially be used for timestamp
   const remainingColumnsForTimestamp = difference(columnNames, [
-    ...(currentState.identifierColumn ? [currentState.identifierColumn] : []),
+    ...Object.keys(currentState.columnToIdentifier),
     ...Object.keys(currentState.columnToPurposeName),
   ]);
 
   // Determine the timestamp column to work off of
-  if (!currentState.timestampColum) {
+  if (!currentState.timestampColumn) {
     const { timestampName } = await inquirer.prompt<{
       /** timestamp name */
       timestampName: string;
@@ -55,22 +55,22 @@ export async function parsePreferenceTimestampsFromCsv(
         choices: [...remainingColumnsForTimestamp, NONE_PREFERENCE_MAP],
       },
     ]);
-    currentState.timestampColum = timestampName;
+    currentState.timestampColumn = timestampName;
   }
   logger.info(
-    colors.magenta(`Using timestamp column "${currentState.timestampColum}"`),
+    colors.magenta(`Using timestamp column "${currentState.timestampColumn}"`),
   );
 
   // Validate that all rows have valid timestamp
-  if (currentState.timestampColum !== NONE_PREFERENCE_MAP) {
+  if (currentState.timestampColumn !== NONE_PREFERENCE_MAP) {
     const timestampColumnsMissing = preferences
-      .map((pref, ind) => (pref[currentState.timestampColum!] ? null : [ind]))
+      .map((pref, ind) => (pref[currentState.timestampColumn!] ? null : [ind]))
       .filter((x): x is number[] => !!x)
       .flat();
     if (timestampColumnsMissing.length > 0) {
       throw new Error(
         `The timestamp column "${
-          currentState.timestampColum
+          currentState.timestampColumn
         }" is missing a value for the following rows: ${timestampColumnsMissing.join(
           '\n',
         )}`,
@@ -78,7 +78,7 @@ export async function parsePreferenceTimestampsFromCsv(
     }
     logger.info(
       colors.magenta(
-        `The timestamp column "${currentState.timestampColum}" is present for all row`,
+        `The timestamp column "${currentState.timestampColumn}" is present for all row`,
       ),
     );
   }
