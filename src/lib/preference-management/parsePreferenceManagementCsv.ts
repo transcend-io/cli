@@ -7,7 +7,7 @@ import { FileMetadataState, PreferenceState } from './codecs';
 import { logger } from '../../logger';
 import { readCsv } from '../requests';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
-import { PreferenceTopic } from '../graphql';
+import { PreferenceTopic, type Identifier } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
 import { parsePreferenceIdentifiersFromCsv } from './parsePreferenceIdentifiersFromCsv';
@@ -32,6 +32,10 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey,
     skipExistingRecordCheck,
     forceTriggerWorkflows,
+    orgIdentifiers,
+    allowedIdentifierNames,
+    oldReceiptFilepath,
+    identifierColumns,
   }: {
     /** File to parse */
     file: string;
@@ -45,11 +49,35 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey: string;
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
     skipExistingRecordCheck: boolean;
-    /** Wheather to force workflow triggers */
+    /** Whether to force workflow triggers */
     forceTriggerWorkflows: boolean;
+    /** Identifiers configured for the org */
+    orgIdentifiers: Identifier[];
+    /** allowed identifiers names */
+    allowedIdentifierNames: string[];
+    /** Old receipt file path to restore from */
+    oldReceiptFilepath?: string;
+    /** Identifier columns on the CSV file */
+    identifierColumns: string[];
   },
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
+  // Restore the old file metadata if it exists
+  let oldFileMetadata: FileMetadataState | undefined;
+  if (oldReceiptFilepath) {
+    const oldPreferenceState = new PersistedState(
+      oldReceiptFilepath,
+      PreferenceState,
+      {
+        fileMetadata: {},
+        failingUpdates: {},
+        pendingUpdates: {},
+      },
+    );
+    const oldGlobalMetadata = await oldPreferenceState.getValue('fileMetadata');
+    const startFileKey = Object.keys(oldGlobalMetadata)[0];
+    oldFileMetadata = oldGlobalMetadata[startFileKey];
+  }
   // Start the timer
   const t0 = new Date().getTime();
 
@@ -62,10 +90,14 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // start building the cache, can use previous cache as well
   let currentState: FileMetadataState = {
-    columnToPurposeName: {},
+    columnToPurposeName: oldFileMetadata?.columnToPurposeName || {},
     pendingSafeUpdates: {},
     pendingConflictUpdates: {},
     skippedUpdates: {},
+    columnToIdentifier: oldFileMetadata?.columnToIdentifier || {},
+    ...(oldFileMetadata?.timestampColumn && {
+      timestampColumn: oldFileMetadata.timestampColumn,
+    }),
     // Load in the last fetched time
     ...((fileMetadata[file] || {}) as Partial<FileMetadataState>),
     lastFetchedAt: new Date().toISOString(),
@@ -83,6 +115,9 @@ export async function parsePreferenceManagementCsvWithCache(
   const result = await parsePreferenceIdentifiersFromCsv(
     preferences,
     currentState,
+    orgIdentifiers,
+    allowedIdentifierNames,
+    identifierColumns,
   );
   currentState = result.currentState;
   preferences = result.preferences;
@@ -104,13 +139,24 @@ export async function parsePreferenceManagementCsvWithCache(
   await cache.setValue(fileMetadata, 'fileMetadata');
 
   // Grab existing preference store records
-  const identifiers = preferences.map(
-    (pref) => pref[currentState.identifierColumn!],
+  const identifiers = preferences.flatMap((pref) =>
+    Object.keys(currentState.columnToIdentifier)
+      .filter(
+        (col) =>
+          pref[col] &&
+          currentState.columnToIdentifier[col] &&
+          currentState.columnToIdentifier[col].isUniqueOnPreferenceStore,
+      )
+      .map((col) => ({
+        name: currentState.columnToIdentifier[col].name,
+        value: pref[col],
+      })),
   );
+
   const existingConsentRecords = skipExistingRecordCheck
     ? []
     : await getPreferencesForIdentifiers(sombra, {
-        identifiers: identifiers.map((x) => ({ value: x })),
+        identifiers,
         partitionKey,
       });
   const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
@@ -122,8 +168,15 @@ export async function parsePreferenceManagementCsvWithCache(
 
   // Process each row
   preferences.forEach((pref) => {
-    // Grab unique Id for the user
-    const userId = pref[currentState.identifierColumn!];
+    // Get the userIds that could be the primary key of the consent record
+    const possiblePrimaryKeys = Object.keys(currentState.columnToIdentifier)
+      .filter(
+        (col) =>
+          pref[col] &&
+          currentState.columnToIdentifier[col] &&
+          currentState.columnToIdentifier[col].isUniqueOnPreferenceStore,
+      )
+      .map((col) => pref[col]);
 
     // determine updates for user
     const pendingUpdates = getPreferenceUpdatesFromRow({
@@ -134,10 +187,17 @@ export async function parsePreferenceManagementCsvWithCache(
     });
 
     // Grab current state of the update
-    const currentConsentRecord = consentRecordByIdentifier[userId];
+    const currentConsentRecord = possiblePrimaryKeys
+      .map((primaryKey) => consentRecordByIdentifier[primaryKey])
+      .find((record) => record);
+
+    // If consent record is found use it, otherwise use the first unique identifier
+    const primaryKey = currentConsentRecord?.userId || possiblePrimaryKeys[0];
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
-        `No existing consent record found for user with id: ${userId}. 
+        `No existing consent record found for user with ids: ${possiblePrimaryKeys.join(
+          ', ',
+        )}.
         When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
       );
     }
@@ -153,7 +213,7 @@ export async function parsePreferenceManagementCsvWithCache(
       }) &&
       !forceTriggerWorkflows
     ) {
-      currentState.skippedUpdates[userId] = pref;
+      currentState.skippedUpdates[primaryKey] = pref;
       return;
     }
 
@@ -166,7 +226,7 @@ export async function parsePreferenceManagementCsvWithCache(
         preferenceTopics,
       })
     ) {
-      currentState.pendingConflictUpdates[userId] = {
+      currentState.pendingConflictUpdates[primaryKey] = {
         row: pref,
         record: currentConsentRecord,
       };
@@ -174,7 +234,7 @@ export async function parsePreferenceManagementCsvWithCache(
     }
 
     // Add to pending updates
-    currentState.pendingSafeUpdates[userId] = pref;
+    currentState.pendingSafeUpdates[primaryKey] = pref;
   });
 
   // Read in the file

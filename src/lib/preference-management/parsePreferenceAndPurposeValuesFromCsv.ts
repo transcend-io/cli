@@ -39,8 +39,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
 
   // Determine the columns that could potentially be used for identifier
   const otherColumns = difference(columnNames, [
-    ...(currentState.identifierColumn ? [currentState.identifierColumn] : []),
-    ...(currentState.timestampColum ? [currentState.timestampColum] : []),
+    ...Object.keys(currentState.columnToIdentifier),
+    ...(currentState.timestampColumn ? [currentState.timestampColumn] : []),
   ]);
   if (otherColumns.length === 0) {
     if (forceTriggerWorkflows) {
