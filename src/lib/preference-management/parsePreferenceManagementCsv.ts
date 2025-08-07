@@ -11,6 +11,7 @@ import { PreferenceTopic, type Identifier } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
 import {
+  addTranscendIdToPreferences,
   getUniquePreferenceIdentifierNamesFromRow,
   parsePreferenceIdentifiersFromCsv,
 } from './parsePreferenceIdentifiersFromCsv';
@@ -91,6 +92,9 @@ export async function parsePreferenceManagementCsvWithCache(
   logger.info(colors.magenta(`Reading in file: "${file}"`));
   let preferences = readCsv(file, t.record(t.string, t.string));
 
+  // TODO: Remove this COSTCO specific logic
+  const updatedPreferences = await addTranscendIdToPreferences(preferences);
+  preferences = updatedPreferences;
   // start building the cache, can use previous cache as well
   let currentState: FileMetadataState = {
     columnToPurposeName: oldFileMetadata?.columnToPurposeName || {},

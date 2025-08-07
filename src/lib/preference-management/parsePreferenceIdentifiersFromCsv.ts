@@ -182,12 +182,25 @@ export function getPreferenceIdentifiersFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileMetadataState['columnToIdentifier'];
 }): PreferenceStoreIdentifier[] {
-  return Object.entries(columnToIdentifier)
-    .filter(([col]) => !!row[col])
-    .map(([col, identifierMapping]) => ({
-      name: identifierMapping.name,
-      value: row[col],
-    }));
+  // TODO: Remove this COSTCO specific logic
+  const emailColumn = Object.keys(columnToIdentifier).find((x) =>
+    x.includes('email'),
+  );
+  if (!emailColumn) {
+    throw new Error('Email column not found in csv file.');
+  }
+  return (
+    Object.entries(columnToIdentifier)
+      .filter(([col]) => !!row[col])
+      // TODO: Remove this COSTCO specific logic
+      .filter(
+        ([col]) => !(col === 'transcendID' && row[col] && row[emailColumn]),
+      )
+      .map(([col, identifierMapping]) => ({
+        name: identifierMapping.name,
+        value: row[col],
+      }))
+  );
 }
 
 /**
@@ -210,4 +223,31 @@ export function getUniquePreferenceIdentifierNamesFromRow({
   return Object.keys(columnToIdentifier).filter(
     (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
   );
+}
+
+/**
+ * Add Transcend ID to preferences if email_id is present
+ *
+ * @param preferences - List of preferences
+ * @returns The updated preferences with Transcend ID added
+ *   // TODO: Remove this COSTCO specific logic
+ */
+export async function addTranscendIdToPreferences(
+  preferences: Record<string, string>[],
+): Promise<Record<string, string>[]> {
+  const haveTranscendId = await inquirerConfirmBoolean({
+    message: 'Would you like transcendID for costco upload?',
+  });
+  if (!haveTranscendId) {
+    logger.info(colors.yellow('Skipping adding Transcend ID to preferences.'));
+    return preferences;
+  }
+
+  // Add a transcendent ID to each preference if it doesn't already exist
+  return preferences.map((pref) => {
+    if (!pref.person_id) {
+      throw new Error('person_id is required for this upload.');
+    }
+    return { ...pref, transcendID: pref.person_id };
+  });
 }
