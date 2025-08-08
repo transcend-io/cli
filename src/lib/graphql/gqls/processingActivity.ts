@@ -55,4 +55,25 @@ export const PROCESSING_ACTIVITIES = gql`
   }
 `;
 
-// TODO: https://linear.app/transcend/issue/ZEL-6419 - support create and update mutations
+export const CREATE_PROCESSING_ACTIVITY = gql`
+  mutation TranscendCliCreateProcessingActivity(
+    $input: CreateProcessingActivityInput!
+  ) {
+    createProcessingActivity(input: $input) {
+      processingActivity {
+        id
+        title
+      }
+    }
+  }
+`;
+
+export const UPDATE_PROCESSING_ACTIVITIES = gql`
+  mutation TranscendCliUpdateProcessingActivities(
+    $input: UpdateProcessingActivitiesInput!
+  ) {
+    updateProcessingActivities(input: $input) {
+      clientMutationId
+    }
+  }
+`;
