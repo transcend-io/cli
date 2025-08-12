@@ -53,7 +53,7 @@ export async function updateProcessingActivities(
   processingActivityIdPairs: [ProcessingActivityInput, string][],
 ): Promise<void> {
   const invalidProcessingActivityTitles = processingActivityIdPairs
-    .filter(([_, id]) => id === undefined)
+    .filter(([, id]) => id === undefined)
     .map(([{ title }]) => title);
   if (invalidProcessingActivityTitles.length > 0) {
     throw new Error(
