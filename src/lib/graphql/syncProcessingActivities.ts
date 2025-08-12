@@ -28,7 +28,6 @@ export async function createProcessingActivity(
   const input = {
     title: processingActivity.title,
     description: processingActivity.description,
-    // TODO: https://transcend.height.app/T-31994 - add attributes, teams, owners
   };
 
   const { createProcessingActivity } = await makeGraphQLRequest<{
@@ -53,6 +52,18 @@ export async function updateProcessingActivities(
   client: GraphQLClient,
   processingActivityIdPairs: [ProcessingActivityInput, string][],
 ): Promise<void> {
+  const invalidProcessingActivityTitles = processingActivityIdPairs
+    .filter(([_, id]) => id === undefined)
+    .map(([{ title }]) => title);
+  if (invalidProcessingActivityTitles.length > 0) {
+    throw new Error(
+      `The following ${
+        invalidProcessingActivityTitles.length
+      } processing activities do not exist and thus can't be updated: "${invalidProcessingActivityTitles.join(
+        '", "',
+      )}"`,
+    );
+  }
   await makeGraphQLRequest(client, UPDATE_PROCESSING_ACTIVITIES, {
     input: {
       processingActivities: processingActivityIdPairs.map(
@@ -65,8 +76,12 @@ export async function updateProcessingActivities(
           },
           id,
         ]) => ({
-          dataSubCategoryInputs: dataSubCategories,
-          processingSubPurposeInputs: processingSubPurposes,
+          dataSubCategoryInputs: dataSubCategories?.map(
+            ({ category, name }) => ({ category, name: name ?? '' }),
+          ),
+          processingPurposeSubCategoryInputs: processingSubPurposes?.map(
+            ({ purpose, name }) => ({ purpose, name: name ?? 'Other' }),
+          ),
           saaSCategoryTitles: saaSCategories,
           ...processingActivity,
           id,
@@ -109,8 +124,13 @@ export async function syncProcessingActivities(
   const newProcessingActivities = inputs.filter(
     (input) => !processingActivityByTitle[input.title],
   );
-
-  // Create new processingActivities
+  if (newProcessingActivities.length > 0) {
+    logger.info(
+      colors.magenta(
+        `Creating "${newProcessingActivities.length}" new processing activities...`,
+      ),
+    );
+  }
   await mapSeries(newProcessingActivities, async (processingActivity) => {
     try {
       const newProcessingActivity = await createProcessingActivity(
@@ -141,7 +161,10 @@ export async function syncProcessingActivities(
     );
     await updateProcessingActivities(
       client,
-      inputs.map((input) => [input, processingActivityByTitle[input.title].id]),
+      inputs.map((input) => [
+        input,
+        processingActivityByTitle[input.title]?.id,
+      ]),
     );
     logger.info(
       colors.green(

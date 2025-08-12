@@ -48,6 +48,8 @@ pnpm start --help
 pnpm start inventory pull --auth=my-api-key
 ```
 
+If you have the appropriate permissions, you can generate your own API key at https://app.transcend.io/infrastructure/api-keys (or the equivalent page in whichever backend you're testing against) with the necessary scopes.
+
 ## Repo Structure
 
 The `src/commands/` directory contains the CLI commands and has a strict structure which is tested.
