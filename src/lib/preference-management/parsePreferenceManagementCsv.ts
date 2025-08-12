@@ -40,6 +40,7 @@ export async function parsePreferenceManagementCsvWithCache(
     allowedIdentifierNames,
     oldReceiptFilepath,
     identifierColumns,
+    columnsToIgnore,
   }: {
     /** File to parse */
     file: string;
@@ -63,6 +64,8 @@ export async function parsePreferenceManagementCsvWithCache(
     oldReceiptFilepath?: string;
     /** Identifier columns on the CSV file */
     identifierColumns: string[];
+    /** Columns to ignore in the CSV file */
+    columnsToIgnore: string[];
   },
   cache: PersistedState<typeof PreferenceState>,
 ): Promise<void> {
@@ -140,6 +143,7 @@ export async function parsePreferenceManagementCsvWithCache(
       preferenceTopics,
       purposeSlugs,
       forceTriggerWorkflows,
+      columnsToIgnore,
     },
   );
   fileMetadata[file] = currentState;

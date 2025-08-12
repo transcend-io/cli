@@ -28,6 +28,7 @@ export interface UploadPreferencesCommandFlags {
   concurrency: number;
   allowedIdentifierNames: string[];
   identifierColumns: string[];
+  columnsToIgnore?: string[];
 }
 
 export async function uploadPreferences(
@@ -50,6 +51,7 @@ export async function uploadPreferences(
     concurrency,
     allowedIdentifierNames,
     identifierColumns,
+    columnsToIgnore = [],
   }: UploadPreferencesCommandFlags,
 ): Promise<void> {
   if (!!directory && !!file) {
@@ -151,6 +153,7 @@ export async function uploadPreferences(
         allowedIdentifierNames,
         identifierColumns,
         oldReceiptFilepath,
+        columnsToIgnore,
       });
     },
     { concurrency },

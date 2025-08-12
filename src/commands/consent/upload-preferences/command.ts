@@ -111,6 +111,13 @@ export const uploadPreferencesCommand = buildCommand({
         brief:
           'Columns in the CSV that should be used as identifiers. Comma-separated list of column names.',
       },
+      columnsToIgnore: {
+        kind: 'parsed',
+        parse: (value: string) => value.split(',').map((s) => s.trim()),
+        brief:
+          'Columns in the CSV that should be ignored. Comma-separated list of column names.',
+        optional: true,
+      },
     },
   },
   docs: {

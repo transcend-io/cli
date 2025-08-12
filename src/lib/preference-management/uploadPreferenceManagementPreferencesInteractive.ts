@@ -44,6 +44,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   forceTriggerWorkflows = false,
   allowedIdentifierNames,
   identifierColumns,
+  columnsToIgnore = [],
 }: {
   /** The Transcend API key */
   auth: string;
@@ -80,6 +81,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   allowedIdentifierNames: string[];
   /** identifier columns on the CSV file */
   identifierColumns: string[];
+  /** Columns to ignore in the CSV file */
+  columnsToIgnore: string[];
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
@@ -142,6 +145,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       allowedIdentifierNames,
       oldReceiptFilepath,
       identifierColumns,
+      columnsToIgnore,
     },
     preferenceState,
   );

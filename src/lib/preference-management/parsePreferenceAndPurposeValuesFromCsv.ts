@@ -25,6 +25,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     purposeSlugs,
     preferenceTopics,
     forceTriggerWorkflows,
+    columnsToIgnore,
   }: {
     /** The purpose slugs that are allowed to be updated */
     purposeSlugs: string[];
@@ -32,6 +33,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     preferenceTopics: PreferenceTopic[];
     /** Force workflow triggers */
     forceTriggerWorkflows: boolean;
+    /** Columns to ignore in the CSV file */
+    columnsToIgnore: string[];
   },
 ): Promise<FileMetadataState> {
   // Determine columns to map
@@ -41,6 +44,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
   const otherColumns = difference(columnNames, [
     ...Object.keys(currentState.columnToIdentifier),
     ...(currentState.timestampColumn ? [currentState.timestampColumn] : []),
+    ...columnsToIgnore,
   ]);
   if (otherColumns.length === 0) {
     if (forceTriggerWorkflows) {
