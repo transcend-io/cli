@@ -235,14 +235,13 @@ export function getUniquePreferenceIdentifierNamesFromRow({
 export async function addTranscendIdToPreferences(
   preferences: Record<string, string>[],
 ): Promise<Record<string, string>[]> {
-  const haveTranscendId = await inquirerConfirmBoolean({
-    message: 'Would you like transcendID for costco upload?',
-  });
-  if (!haveTranscendId) {
-    logger.info(colors.yellow('Skipping adding Transcend ID to preferences.'));
-    return preferences;
-  }
-
+  // const haveTranscendId = await inquirerConfirmBoolean({
+  //   message: 'Would you like transcendID for costco upload?',
+  // });
+  // if (!haveTranscendId) {
+  //   logger.info(colors.yellow('Skipping adding Transcend ID to preferences.'));
+  //   return preferences;
+  // }
   // Add a transcendent ID to each preference if it doesn't already exist
   return preferences.map((pref) => {
     if (!pref.person_id) {
