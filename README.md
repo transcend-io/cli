@@ -2385,7 +2385,8 @@ FLAGS
 
 #### Scopes
 
-The scopes for `transcend inventory push` are the same as the scopes for [`transcend inventory pull`](#transcend-inventory-pull).
+The scopes for `transcend inventory push` are similar to the scopes for [`transcend inventory pull`](#transcend-inventory-pull). If a
+resource requires scope 'View X' in order to pull, 'Manage X' will let you push the resource.
 
 #### Examples
 
