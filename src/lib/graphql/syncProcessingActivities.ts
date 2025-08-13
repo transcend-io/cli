@@ -15,13 +15,13 @@ import {
 } from './fetchAllProcessingActivities';
 
 /**
- * Input to create a new processing activity
+ * Create a new processing activity, setting only title and description
  *
  * @param client - GraphQL client
  * @param processingActivity - Input
  * @returns Created processingActivity
  */
-export async function createProcessingActivity(
+async function createProcessingActivity(
   client: GraphQLClient,
   processingActivity: ProcessingActivityInput,
 ): Promise<Pick<ProcessingActivity, 'id' | 'title'>> {
@@ -43,12 +43,12 @@ export async function createProcessingActivity(
 }
 
 /**
- * Input to update processingActivities
+ * Update a list of processing activities.
  *
  * @param client - GraphQL client
  * @param processingActivityIdPairs - [ProcessingActivityInput, processingActivityId] list
  */
-export async function updateProcessingActivities(
+async function updateProcessingActivities(
   client: GraphQLClient,
   processingActivityIdPairs: [ProcessingActivityInput, string][],
 ): Promise<void> {
@@ -56,6 +56,8 @@ export async function updateProcessingActivities(
     .filter(([, id]) => id === undefined)
     .map(([{ title }]) => title);
   if (invalidProcessingActivityTitles.length > 0) {
+    // We always attempt to create processing activities before updating them, but if creation failed
+    // (for example, due to insufficient scope), this provides a better error message
     throw new Error(
       `The following ${
         invalidProcessingActivityTitles.length
@@ -102,14 +104,12 @@ export async function syncProcessingActivities(
   client: GraphQLClient,
   inputs: ProcessingActivityInput[],
 ): Promise<boolean> {
+  let encounteredError = false;
+
   // Fetch existing
   logger.info(
     colors.magenta(`Syncing "${inputs.length}" processing activities...`),
   );
-
-  let encounteredError = false;
-
-  // Fetch existing
   const existingProcessingActivities = await fetchAllProcessingActivities(
     client,
   );
@@ -137,6 +137,7 @@ export async function syncProcessingActivities(
         client,
         processingActivity,
       );
+      // Augment processingActivityByTitle with newly-created processing activity
       processingActivityByTitle[newProcessingActivity.title] =
         newProcessingActivity;
       logger.info(
@@ -163,6 +164,7 @@ export async function syncProcessingActivities(
       client,
       inputs.map((input) => [
         input,
+        // This processing activity might not exist if the `create` step failed
         processingActivityByTitle[input.title]?.id,
       ]),
     );
