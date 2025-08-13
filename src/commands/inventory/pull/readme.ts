@@ -11,7 +11,7 @@ import {
 import type { PullCommandFlags } from './impl';
 import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
 import {
-  RESOURCE_DOCUMENTATION,
+  SCOPE_DESCRIPTIONS,
   TR_PULL_RESOURCE_SCOPE_MAP,
 } from '../../../constants';
 
@@ -202,24 +202,11 @@ const examples = buildExamples<PullCommandFlags>(
   ],
 );
 
-const table = `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
-  RESOURCE_DOCUMENTATION,
-)
-  .map(
-    ([resource, { description, markdownLink }]) =>
-      `| ${resource} | ${description} | ${TR_PULL_RESOURCE_SCOPE_MAP[
-        resource as TranscendPullResource
-      ]
-        .map((scopeName) => TRANSCEND_SCOPES[scopeName].title)
-        .join(', ')} | ${markdownLink} |`,
-  )
-  .join('\n')}`;
-
 export default `#### Scopes
 
 The API key permissions for this command vary based on the \`resources\` argument:
 
-${table}
+${SCOPE_DESCRIPTIONS(TR_PULL_RESOURCE_SCOPE_MAP)}
 
 #### Examples
 

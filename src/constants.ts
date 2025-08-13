@@ -369,3 +369,19 @@ export const RESOURCE_DOCUMENTATION: Record<
       '(https://app.transcend.io/consent-manager/regional-experiences/purposes)',
   },
 };
+
+export const SCOPE_DESCRIPTIONS = (scopeMap: {
+  [k in TranscendPullResource]: ScopeName[];
+}) =>
+  `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
+    RESOURCE_DOCUMENTATION,
+  )
+    .map(
+      ([resource, { description, markdownLink }]) =>
+        `| ${resource} | ${description} | ${scopeMap[
+          resource as TranscendPullResource
+        ]
+          .map((scopeName) => TRANSCEND_SCOPES[scopeName].title)
+          .join(', ')} | ${markdownLink} |`,
+    )
+    .join('\n')}`;
