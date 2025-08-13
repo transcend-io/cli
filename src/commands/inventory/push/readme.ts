@@ -7,6 +7,10 @@ import type { PullCommandFlags } from '../pull/impl';
 import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
 import { ScopeName, TRANSCEND_SCOPES } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '../../../enums';
+import {
+  SCOPE_DESCRIPTIONS,
+  TR_PUSH_RESOURCE_SCOPE_MAP,
+} from '../../../constants';
 
 const examples = buildExamples<PushCommandFlags>(
   ['inventory', 'push'],
@@ -52,7 +56,9 @@ const examples = buildExamples<PushCommandFlags>(
 
 export default `#### Scopes
 
-The scopes for \`transcend inventory push\` are the same as the scopes for [\`transcend inventory pull\`](#transcend-inventory-pull).
+The API key permissions for this command vary based on the \`resources\` argument:
+
+${SCOPE_DESCRIPTIONS(TR_PUSH_RESOURCE_SCOPE_MAP)}
 
 #### Examples
 
