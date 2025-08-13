@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { keyBy } from 'lodash-es';
 import {
   ScopeName,
@@ -350,7 +351,8 @@ export const RESOURCE_DOCUMENTATION: Record<
       'Message definitions used across consent, privacy center, email templates and more.',
     markdownLink:
       '[Privacy Center -> Messages](https://app.transcend.io/privacy-center/messages-internationalization), ' +
-      '[Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages)',
+      '[Consent Management -> Display Settings -> Messages]' +
+      '(https://app.transcend.io/consent-manager/display-settings/messages)',
   },
   [TranscendPullResource.Assessments]: {
     description: 'Assessment responses.',
@@ -372,7 +374,7 @@ export const RESOURCE_DOCUMENTATION: Record<
 
 export const SCOPE_DESCRIPTIONS = (scopeMap: {
   [k in TranscendPullResource]: ScopeName[];
-}) =>
+}): string =>
   `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
     RESOURCE_DOCUMENTATION,
   )
@@ -385,3 +387,4 @@ export const SCOPE_DESCRIPTIONS = (scopeMap: {
           .join(', ')} | ${markdownLink} |`,
     )
     .join('\n')}`;
+/* eslint-enable max-lines */
