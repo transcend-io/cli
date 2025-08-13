@@ -46,7 +46,7 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Enrichers]: [ScopeName.ManageRequestIdentities],
   [TranscendPullResource.BusinessEntities]: [ScopeName.ManageDataInventory],
-  [TranscendPullResource.ProcessingActivities]: [ScopeName.ManageDataInventory],
+  [TranscendPullResource.ProcessingActivities]: [ScopeName.ManageDataMap],
   [TranscendPullResource.Identifiers]: [ScopeName.ManageRequestIdentities],
   [TranscendPullResource.Attributes]: [ScopeName.ManageGlobalAttributes],
   [TranscendPullResource.DataFlows]: [ScopeName.ManageDataFlow],
