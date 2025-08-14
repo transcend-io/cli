@@ -251,7 +251,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   // Build a GraphQL client
   let total = 0;
   const updatesToRun = Object.entries(pendingUpdates);
-  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 100 : 10);
+  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 50 : 10);
   progressBar.start(updatesToRun.length, 0);
   await map(
     chunkedUpdates,
@@ -300,7 +300,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       progressBar.update(total);
     },
     {
-      concurrency: 40,
+      concurrency: 80,
     },
   );
 
