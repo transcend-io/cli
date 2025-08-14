@@ -8,7 +8,7 @@ import semver from 'semver';
 import { SOMBRA_VERSION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.180';
+const MIN_SOMBRA_VERSION_TO_DECRYPT = '7.18.0';
 
 const RequestIdentifier = t.type({
   /** ID of request */
