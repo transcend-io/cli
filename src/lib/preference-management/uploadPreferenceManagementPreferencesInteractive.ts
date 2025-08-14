@@ -5,9 +5,10 @@ import {
   fetchAllPreferenceTopics,
   PreferenceTopic,
   Purpose,
+  fetchAllIdentifiers,
 } from '../graphql';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import { chunk } from 'lodash-es';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';
@@ -19,6 +20,7 @@ import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
 import { apply } from '@transcend-io/type-utils';
 import { NONE_PREFERENCE_MAP } from './parsePreferenceTimestampsFromCsv';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
+import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
 
 /**
  * Upload a set of consent preferences
@@ -29,6 +31,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   auth,
   sombraAuth,
   receiptFilepath,
+  oldReceiptFilepath,
   file,
   partition,
   isSilent = true,
@@ -39,6 +42,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   attributes = [],
   transcendUrl,
   forceTriggerWorkflows = false,
+  allowedIdentifierNames,
+  identifierColumns,
+  columnsToIgnore = [],
 }: {
   /** The Transcend API key */
   auth: string;
@@ -48,6 +54,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   partition: string;
   /** File where to store receipt and continue from where left off */
   receiptFilepath: string;
+  /** Old receipt file path to restore from */
+  oldReceiptFilepath?: string;
   /** The file to process */
   file: string;
   /** API URL for Transcend backend */
@@ -69,6 +77,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   skipExistingRecordCheck?: boolean;
   /** Whether to force trigger workflows */
   forceTriggerWorkflows?: boolean;
+  /** identifiers configured for the run */
+  allowedIdentifierNames: string[];
+  /** identifier columns on the CSV file */
+  identifierColumns: string[];
+  /** Columns to ignore in the CSV file */
+  columnsToIgnore: string[];
 }): Promise<void> {
   // Parse out the extra attributes to apply to all requests uploaded
   const parsedAttributes = parseAttributesFromString(attributes);
@@ -104,7 +118,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
 
-  const [sombra, purposes, preferenceTopics] = await Promise.all([
+  const [sombra, purposes, preferenceTopics, identifiers] = await Promise.all([
     // Create sombra instance to communicate with
     createSombraGotInstance(transcendUrl, auth, sombraAuth),
     // get all purposes and topics
@@ -114,6 +128,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     forceTriggerWorkflows
       ? Promise.resolve([] as PreferenceTopic[])
       : fetchAllPreferenceTopics(client),
+    fetchAllIdentifiers(client),
   ]);
 
   // Process the file
@@ -126,6 +141,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       partitionKey: partition,
       skipExistingRecordCheck,
       forceTriggerWorkflows,
+      orgIdentifiers: identifiers,
+      allowedIdentifierNames,
+      oldReceiptFilepath,
+      identifierColumns,
+      columnsToIgnore,
     },
     preferenceState,
   );
@@ -166,9 +186,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   }).forEach(([userId, update]) => {
     // Determine timestamp
     const timestamp =
-      metadata.timestampColum === NONE_PREFERENCE_MAP
+      metadata.timestampColumn === NONE_PREFERENCE_MAP
         ? new Date()
-        : new Date(update[metadata.timestampColum!]);
+        : new Date(update[metadata.timestampColumn!]);
 
     // Determine updates
     const updates = getPreferenceUpdatesFromRow({
@@ -177,8 +197,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       preferenceTopics,
       purposeSlugs: purposes.map((x) => x.trackingType),
     });
+    const identifiers = getPreferenceIdentifiersFromRow({
+      row: update,
+      columnToIdentifier: metadata.columnToIdentifier,
+    });
     pendingUpdates[userId] = {
-      userId,
+      identifiers,
       partition,
       timestamp: timestamp.toISOString(),
       purposes: Object.entries(updates).map(([purpose, value]) => ({
@@ -227,7 +251,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   // Build a GraphQL client
   let total = 0;
   const updatesToRun = Object.entries(pendingUpdates);
-  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 100 : 10);
+  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 50 : 10);
   progressBar.start(updatesToRun.length, 0);
   await map(
     chunkedUpdates,
@@ -276,7 +300,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       progressBar.update(total);
     },
     {
-      concurrency: 40,
+      concurrency: 80,
     },
   );
 

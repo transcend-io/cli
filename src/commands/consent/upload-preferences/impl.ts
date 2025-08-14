@@ -26,6 +26,9 @@ export interface UploadPreferencesCommandFlags {
   attributes: string;
   receiptFilepath: string;
   concurrency: number;
+  allowedIdentifierNames: string[];
+  identifierColumns: string[];
+  columnsToIgnore?: string[];
 }
 
 export async function uploadPreferences(
@@ -46,6 +49,9 @@ export async function uploadPreferences(
     isSilent,
     attributes,
     concurrency,
+    allowedIdentifierNames,
+    identifierColumns,
+    columnsToIgnore = [],
   }: UploadPreferencesCommandFlags,
 ): Promise<void> {
   if (!!directory && !!file) {
@@ -121,8 +127,15 @@ export async function uploadPreferences(
 
   await map(
     files,
-    async (filePath) => {
+    async (filePath, index) => {
       const fileName = basename(filePath).replace('.csv', '');
+      const oldReceiptFilepath =
+        index > 0
+          ? join(
+              receiptFileDir,
+              `${basename(files[0]).replace('.csv', '')}-receipts.json`,
+            )
+          : undefined;
       await uploadPreferenceManagementPreferencesInteractive({
         receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
         auth,
@@ -137,6 +150,10 @@ export async function uploadPreferences(
         dryRun,
         attributes: splitCsvToList(attributes),
         forceTriggerWorkflows,
+        allowedIdentifierNames,
+        identifierColumns,
+        oldReceiptFilepath,
+        columnsToIgnore,
       });
     },
     { concurrency },
