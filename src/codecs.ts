@@ -1109,6 +1109,8 @@ export const IdentifierInput = t.intersection([
     displayDescription: t.string,
     /** The display order for the identifier */
     displayOrder: t.number,
+    /** Whether or not the identifier is unique on the preference store */
+    isUniqueOnPreferenceStore: t.boolean,
   }),
 ]);
 

@@ -1075,6 +1075,7 @@ export async function pullTranscendConfiguration(
         dataSubjects,
         displayDescription,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }): IdentifierInput => ({
         name,
         type,
@@ -1093,6 +1094,7 @@ export async function pullTranscendConfiguration(
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }),
     );
   }
