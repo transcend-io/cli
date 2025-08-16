@@ -76,14 +76,12 @@ export function attachWorkerHandlers<T>(
 
     if (msg.type === 'ready') {
       // First work assignment
-      assignWorkToWorker(
-        id,
-        filesPending,
+      assignWorkToWorker(id, common, {
+        pending: filesPending,
         workers,
         workerState,
-        common,
         repaint,
-      );
+      });
     } else if (msg.type === 'result') {
       // Update success/failure counters
       const { ok, filePath, error } = msg.payload;
@@ -105,14 +103,12 @@ export function attachWorkerHandlers<T>(
       }
 
       // Keep the worker busy until the queue is empty
-      assignWorkToWorker(
-        id,
-        filesPending,
+      assignWorkToWorker(id, common, {
+        pending: filesPending,
         workers,
         workerState,
-        common,
         repaint,
-      );
+      });
     }
   });
 

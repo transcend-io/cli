@@ -287,7 +287,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         acc[userId] = true;
       }
       return acc;
-    }, {} as Record<string, boolean>),
+    }, {} as Record<string, boolean | any>),
     'pendingUpdates',
   );
   await uploadState.setValue({}, 'failingUpdates');
