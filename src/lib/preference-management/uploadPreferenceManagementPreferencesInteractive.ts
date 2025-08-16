@@ -253,16 +253,16 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   const t0 = new Date().getTime();
 
   // create a new progress bar instance and use shades_classic theme
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic,
-  );
+  // const progressBar = new cliProgress.SingleBar(
+  //   {},
+  //   cliProgress.Presets.shades_classic,
+  // );
 
   // Build a GraphQL client
   let total = 0;
   const updatesToRun = Object.entries(pendingUpdates);
   const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 50 : 10);
-  progressBar.start(updatesToRun.length, 0);
+  // progressBar.start(updatesToRun.length, 0);
   await map(
     chunkedUpdates,
     async (currentChunk) => {
@@ -307,14 +307,22 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       }
 
       total += currentChunk.length;
-      progressBar.update(total);
+      // progressBar.update(total);
+      // log every 1000
+      if (total % 1000 === 0) {
+        logger.info(
+          colors.green(
+            `Uploaded ${total}/${updatesToRun.length} user preferences to partition ${partition}`,
+          ),
+        );
+      }
     },
     {
       concurrency: 80,
     },
   );
 
-  progressBar.stop();
+  // progressBar.stop();
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
   logger.info(

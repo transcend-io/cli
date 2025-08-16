@@ -1,14 +1,28 @@
+// main.ts
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
-
 import { logger } from '../../../logger';
-import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
-import { splitCsvToList } from '../../../lib/requests';
-import { readdirSync } from 'fs';
-import { map } from '../../../lib/bluebird-replace';
-import { basename, join } from 'path';
-import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { join } from 'node:path';
+import { mkdirSync } from 'node:fs';
 
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
+import { collectCsvFilesOrExit } from './collectCsvFilesOrExit';
+
+import { availableParallelism } from 'node:os';
+import type { ChildProcess } from 'node:child_process';
+
+import { runChild } from './runChild';
+import {
+  getWorkerLogPaths,
+  renderDashboard,
+  spawnWorkerProcess,
+  type WorkerState,
+} from '../../../lib/pooling';
+import { installInteractiveSwitcher } from '../../../lib/pooling/installInteractiveSwitcher';
+import { resetWorkerLogs } from '../../../lib/pooling/logRotation';
+
+/** CLI flags */
 export interface UploadPreferencesCommandFlags {
   auth: string;
   partition: string;
@@ -26,20 +40,58 @@ export interface UploadPreferencesCommandFlags {
   isSilent: boolean;
   attributes: string;
   receiptFilepath: string;
-  concurrency: number;
+  concurrency?: number;
   allowedIdentifierNames: string[];
   identifierColumns: string[];
   columnsToIgnore?: string[];
 }
 
+/** Common options shared by upload tasks */
+export type TaskCommonOpts = Pick<
+  UploadPreferencesCommandFlags,
+  | 'auth'
+  | 'partition'
+  | 'sombraAuth'
+  | 'transcendUrl'
+  | 'skipConflictUpdates'
+  | 'skipWorkflowTriggers'
+  | 'skipExistingRecordCheck'
+  | 'isSilent'
+  | 'dryRun'
+  | 'attributes'
+  | 'forceTriggerWorkflows'
+  | 'allowedIdentifierNames'
+  | 'identifierColumns'
+  | 'columnsToIgnore'
+> & {
+  /** Path to the schema file */
+  schemaFile: string;
+  /** Directory to store receipt files */
+  receiptsFolder: string;
+};
+
 /**
- * Get the file prefix from the file name
- *
- * @param file - The file name
- * @returns The file prefix
+ * In CJS, __filename is available; use it as the path to fork.
  */
-function getFilePrefix(file: string): string {
-  return basename(file).replace('.csv', '');
+function getCurrentModulePath(): string {
+  // @ts-ignore - __filename is present in CJS/ts-node
+  if (typeof __filename !== 'undefined') return __filename as unknown as string;
+  return process.argv[1];
+}
+
+/**
+ * Compute pool size from flags or CPU count
+ *
+ * @param concurrency
+ * @param filesCount
+ */
+function computePoolSize(concurrency: number | undefined, filesCount: number) {
+  const cpuCount = Math.max(1, availableParallelism?.() ?? 1);
+  const desired =
+    typeof concurrency === 'number' && concurrency > 0
+      ? Math.min(concurrency, filesCount)
+      : Math.min(cpuCount, filesCount);
+  return { poolSize: desired, cpuCount };
 }
 
 export async function uploadPreferences(
@@ -66,68 +118,16 @@ export async function uploadPreferences(
     columnsToIgnore = [],
   }: UploadPreferencesCommandFlags,
 ): Promise<void> {
-  if (!!directory && !!file) {
-    logger.error(
-      colors.red(
-        'Cannot provide both a directory and a file. Please provide only one.',
-      ),
-    );
-    this.process.exit(1);
-  }
-
-  if (!file && !directory) {
-    logger.error(
-      colors.red(
-        'A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences',
-      ),
-    );
-    this.process.exit(1);
-  }
-
+  // Build the set of CSV files we need to process
+  const files = collectCsvFilesOrExit(directory, file, this);
   doneInputValidation(this.process.exit);
-
-  const files: string[] = [];
-
-  if (directory) {
-    try {
-      const filesInDirectory = readdirSync(directory);
-      const csvFiles = filesInDirectory.filter((file) => file.endsWith('.csv'));
-
-      if (csvFiles.length === 0) {
-        logger.error(
-          colors.red(`No CSV files found in directory: ${directory}`),
-        );
-        this.process.exit(1);
-      }
-
-      // Add full paths for each CSV file
-      files.push(...csvFiles.map((file) => join(directory, file)));
-    } catch (err) {
-      logger.error(colors.red(`Failed to read directory: ${directory}`));
-      logger.error(colors.red((err as Error).message));
-      this.process.exit(1);
-    }
-  } else {
-    try {
-      // Verify file exists and is a CSV
-      if (!file.endsWith('.csv')) {
-        logger.error(colors.red('File must be a CSV file'));
-        this.process.exit(1);
-      }
-      files.push(file);
-    } catch (err) {
-      logger.error(colors.red(`Failed to access file: ${file}`));
-      logger.error(colors.red((err as Error).message));
-      this.process.exit(1);
-    }
-  }
 
   logger.info(
     colors.green(
       `Processing ${files.length} consent preferences files for partition: ${partition}`,
     ),
   );
-  logger.debug(`Files to process: ${files.join(', ')}`);
+  logger.debug(`Files to process:\n${files.join('\n')}`);
 
   if (skipExistingRecordCheck) {
     logger.info(
@@ -137,55 +137,178 @@ export async function uploadPreferences(
     );
   }
 
-  // Determine receipts folder
-  const receiptsFolder =
-    receiptFileDir ||
-    (directory ? join(directory, '../receipts') : './receipts');
+  // Resolve I/O targets (receipts + schema)
+  const receiptsFolder = computeReceiptsFolder(receiptFileDir, directory);
+  const schemaFile = computeSchemaFile(schemaFilePath, directory, files[0]);
 
-  // Determine the schema file
-  const schemaFile =
-    schemaFilePath ||
-    (directory
-      ? join(directory, '../preference-upload-schema.json')
-      : `${getFilePrefix(files[0])}-preference-upload-schema.json`);
+  // Size the worker pool
+  const { poolSize, cpuCount } = computePoolSize(concurrency, files.length);
+  const common: TaskCommonOpts = {
+    /* same as before */ schemaFile,
+    receiptsFolder,
+    auth,
+    sombraAuth,
+    partition,
+    transcendUrl,
+    skipConflictUpdates,
+    skipWorkflowTriggers,
+    skipExistingRecordCheck,
+    isSilent,
+    dryRun,
+    attributes,
+    forceTriggerWorkflows,
+    allowedIdentifierNames,
+    identifierColumns,
+    columnsToIgnore,
+  };
 
-  // yarn ts-node ./src/cli-chunk-csv.ts --inputFile=$file
-  // Create folder of 1200 chunks in ./working/costco/udp/all-chunks
-  // Copy over 100 files from all-chunks -> pending-chunks
-  // Run pnpm start consent upload-preferences --auth=$API_KEY --partition=448b3320-9d7c-499a-bc56-f0dae33c8f5c --directory=./working/costco/udp/pending-chunks --dryRun=false --skipWorkflowTriggers=true --skipExistingRecordCheck=true --isSilent=true --attributes="Tags:transcend-cli,Source:transcend-cli" --transcendUrl=https://api.us.transcend.io/ --allowedIdentifierNames="email,personID,memberID,transcendID,birthDate" --identifierColumns="email_address,person_id,member_id,transcendID,birth_dt" --columnsToIgnore="source_system,mktg_consent_ts" --sombraAuth=$SOMBRA_AUTH --concurrency=1
-  // Writes each of 1200 files to ./receipts/<chunk-name>-receipts.json -> currently there are 300
+  const LOG_DIR = join(receiptsFolder, 'logs');
+  mkdirSync(LOG_DIR, { recursive: true });
 
-  // FIXME auto splitting
-  // FIXME: use single tenant sombra
-  // FIXME add overview of status
-  // FIXME handle re-processing of same file, and error handling
+  const RESET_MODE =
+    (process.env.RESET_LOGS as 'truncate' | 'delete') ?? 'delete'; // FIXME
+  resetWorkerLogs(LOG_DIR, RESET_MODE);
 
-  await map(
-    files,
-    async (filePath) => {
-      await uploadPreferenceManagementPreferencesInteractive({
-        receiptFilepath: join(
-          receiptsFolder,
-          `${getFilePrefix(filePath)}-receipts.json`,
-        ),
-        schemaFilePath: schemaFile,
-        auth,
-        sombraAuth,
-        file: filePath,
-        partition,
-        transcendUrl,
-        skipConflictUpdates,
-        skipWorkflowTriggers,
-        skipExistingRecordCheck,
-        isSilent,
-        dryRun,
-        attributes: splitCsvToList(attributes),
-        forceTriggerWorkflows,
-        allowedIdentifierNames,
-        identifierColumns,
-        columnsToIgnore,
-      });
+  const modulePath = getCurrentModulePath();
+  const workers = new Map<number, ChildProcess>();
+  const workerState = new Map<number, WorkerState>();
+  const pending = [...files];
+  const totals = { completed: 0, failed: 0 };
+
+  let dashboardPaused = false;
+  const repaint = () => {
+    if (!dashboardPaused) {
+      renderDashboard(
+        poolSize,
+        cpuCount,
+        files.length,
+        totals.completed,
+        totals.failed,
+        workerState,
+      );
+    }
+  };
+
+  const assignWorkToWorker = (id: number) => {
+    const w = workers.get(id);
+    if (!w) return;
+    const filePath = pending.shift();
+    if (!filePath) {
+      workerState.set(id, { busy: false, file: null, startedAt: null });
+      return;
+    }
+    workerState.set(id, { busy: true, file: filePath, startedAt: Date.now() });
+    w.send?.({ type: 'task', payload: { filePath, options: common } });
+  };
+
+  // spawn pool
+  for (let i = 0; i < poolSize; i += 1) {
+    const child = spawnWorkerProcess(i, modulePath, LOG_DIR, true, isSilent);
+    workers.set(i, child);
+    workerState.set(i, { busy: false, file: null, startedAt: null });
+
+    child.on('message', (msg: any) => {
+      if (!msg || typeof msg !== 'object') return;
+      if (msg.type === 'ready') {
+        assignWorkToWorker(i);
+        repaint();
+      } else if (msg.type === 'result') {
+        const { ok } = msg.payload || {};
+        if (ok) totals.completed += 1;
+        else totals.failed += 1;
+        workerState.set(i, { busy: false, file: null, startedAt: null });
+        assignWorkToWorker(i);
+        repaint();
+      }
+    });
+    child.on('exit', () => {
+      workers.delete(i);
+      workerState.set(i, { busy: false, file: null, startedAt: null });
+      repaint();
+    });
+  }
+
+  const renderInterval = setInterval(repaint, 350);
+
+  // graceful Ctrl+C
+  const onSigint = () => {
+    clearInterval(renderInterval);
+    cleanupSwitcher();
+    process.stdout.write('\nStopping workers...\n');
+    for (const [, w] of workers) {
+      try {
+        w.send?.({ type: 'shutdown' });
+      } catch {}
+      try {
+        w.kill('SIGTERM');
+      } catch {}
+    }
+    this.process.exit(130);
+  };
+  process.once('SIGINT', onSigint);
+
+  // attach/switch UI with replay
+  const detachScreen = () => {
+    dashboardPaused = false;
+    repaint();
+  };
+  const attachScreen = (id: number) => {
+    dashboardPaused = true;
+    process.stdout.write('\x1b[2J\x1b[H'); // clear
+    process.stdout.write(
+      `Attached to worker ${id}. (Esc/Ctrl+] detach • Ctrl+C SIGINT • Ctrl+D EOF)\n`,
+    );
+  };
+  const cleanupSwitcher = installInteractiveSwitcher({
+    workers,
+    onAttach: attachScreen,
+    onDetach: detachScreen,
+    onCtrlC: onSigint,
+    getLogPaths: (id) => {
+      const w = workers.get(id);
+      return w ? getWorkerLogPaths(w) : undefined;
     },
-    { concurrency },
+    replayBytes: 200 * 1024, // last ~200KB
+    replayWhich: ['out', 'err'], // also add 'structured' if you want
+    onEnterAttachScreen: attachScreen,
+  });
+
+  // hint
+  const maxDigit = Math.min(poolSize - 1, 9);
+  const digitRange = poolSize <= 1 ? '0' : `0-${maxDigit}`;
+  const extra = poolSize > 10 ? ' (Tab/Shift+Tab for ≥10)' : '';
+  process.stdout.write(
+    colors.dim(
+      `\nHotkeys: [${digitRange}] attach${extra} • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit\n\n`,
+    ),
   );
+
+  // wait for completion
+  await new Promise<void>((resolve) => {
+    const check = setInterval(() => {
+      if (pending.length === 0 && workers.size === 0) {
+        clearInterval(check);
+        clearInterval(renderInterval);
+        detachScreen();
+        cleanupSwitcher();
+        process.stdout.write('\nAll done.\n');
+        resolve();
+      } else if (pending.length === 0) {
+        for (const [, w] of workers) w.send?.({ type: 'shutdown' });
+      }
+    }, 300);
+  });
+
+  process.removeListener('SIGINT', onSigint);
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * If invoked directly as a child process, enter worker loop
+ * ------------------------------------------------------------------------------------------------- */
+const CHILD_FLAG = '--child-upload-preferences';
+if (process.argv.includes(CHILD_FLAG)) {
+  runChild().catch((err) => {
+    logger.error(err);
+    process.exit(1);
+  });
 }

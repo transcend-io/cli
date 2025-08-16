@@ -105,8 +105,9 @@ export const uploadPreferencesCommand = buildCommand({
       concurrency: {
         kind: 'parsed',
         parse: numberParser,
-        brief: 'The concurrency to use when uploading in parallel',
-        default: '1',
+        brief:
+          'The concurrency to use when uploading in parallel - otherwise uses the number of CPU cores available',
+        optional: true,
       },
       allowedIdentifierNames: {
         kind: 'parsed',
@@ -135,6 +136,14 @@ export const uploadPreferencesCommand = buildCommand({
 
 This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
 
-The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.`,
+The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.
+
+Parallel preference uploader (Node 22+ ESM/TS)
+-----------------------------------------------------------------------------
+- Spawns a pool of child *processes* (not threads) to run uploads in parallel.
+- Shows a live dashboard in the parent terminal with progress per worker.
+- Creates per-worker log files and (optionally) opens OS terminals to tail them.
+- Uses the same module as both parent and child; the child mode is toggled
+  by the presence of a CLI flag ('--child-upload-preferences').`,
   },
 });

@@ -54,7 +54,7 @@
     "__tr-upload-preferences": "dist/bin/deprecated-command.cjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "files": [
     "dist"

@@ -110,7 +110,7 @@ export async function parsePreferenceManagementCsvWithCache(
       row: pref,
       columnToIdentifier: currentColumnToIdentifierMap,
     }).map((col) => ({
-      name: currentColumnToIdentifierMap.name,
+      name: currentColumnToIdentifierMap[col].name,
       value: pref[col],
     })),
   );
