@@ -2,8 +2,8 @@ import type { LocalContext } from '../../../context';
 
 import { logger } from '../../../logger';
 import { mapSeries } from '../../../lib/bluebird-replace';
-import { existsSync, lstatSync } from 'fs';
-import { join } from 'path';
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
 import { readTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
 import {

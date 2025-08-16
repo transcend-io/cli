@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import yaml from 'js-yaml';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 /**
  * Remove YAML comments from a string

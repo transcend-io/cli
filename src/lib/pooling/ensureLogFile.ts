@@ -1,4 +1,4 @@
-import { closeSync, existsSync, openSync } from 'fs';
+import { closeSync, existsSync, openSync } from 'node:fs';
 
 /**
  * Ensure a log file exists (touch).

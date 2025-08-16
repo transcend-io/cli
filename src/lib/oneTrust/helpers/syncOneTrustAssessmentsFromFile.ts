@@ -3,7 +3,7 @@ import colors from 'colors';
 import { logger } from '../../../logger';
 import JSONStream from 'JSONStream';
 
-import { createReadStream } from 'fs';
+import { createReadStream } from 'node:fs';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
 import { GraphQLClient } from 'graphql-request';

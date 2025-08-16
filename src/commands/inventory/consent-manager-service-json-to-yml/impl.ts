@@ -3,7 +3,7 @@ import * as t from 'io-ts';
 import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
 import { logger } from '../../../logger';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { decodeCodec } from '@transcend-io/type-utils';
 import {
   ConsentManagerServiceMetadata,

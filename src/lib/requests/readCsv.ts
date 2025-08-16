@@ -1,6 +1,6 @@
 import type { Options } from 'csv-parse';
 import { parse } from 'csv-parse/sync';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import * as t from 'io-ts';
 
 import { decodeCodec } from '@transcend-io/type-utils';

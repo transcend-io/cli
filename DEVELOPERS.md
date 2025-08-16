@@ -18,7 +18,14 @@
 
 ## Getting started
 
-1. Use the `pnpm` package manager.
+1. Make sure you are on node v22 or above
+
+```bash
+node --version
+nvm install 22 && nvm use 22 && nvm alias default 22
+```
+
+2. Use the `pnpm` package manager.
 
 ```bash
 npm i -g corepack@latest
@@ -26,19 +33,19 @@ corepack enable
 corepack install
 ```
 
-2. Install dependencies
+3. Install dependencies
 
 ```bash
 pnpm install
 ```
 
-3. Build the project in watch mode in a separate terminal
+4. Build the project in watch mode in a separate terminal
 
 ```bash
 pnpm build:watch
 ```
 
-4. To run a CLI command in dev mode:
+5. To run a CLI command in dev mode:
 
 ```bash
 # This is the dev environment equivalent to `transcend --help`
@@ -47,6 +54,8 @@ pnpm start --help
 # This is the dev environment equivalent to `transcend inventory pull --auth=my-api-key`
 pnpm start inventory pull --auth=my-api-key
 ```
+
+If you have the appropriate permissions, you can generate your own API key at https://app.transcend.io/infrastructure/api-keys (or the equivalent page in whichever backend you're testing against) with the necessary scopes.
 
 ## Repo Structure
 

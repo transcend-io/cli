@@ -1,9 +1,9 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { decodeCodec } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 const SwiftPackage = t.type({
   pins: t.array(

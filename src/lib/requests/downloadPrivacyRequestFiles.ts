@@ -1,6 +1,6 @@
 import { map } from '../bluebird-replace';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import colors from 'colors';
 import { logger } from '../../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';

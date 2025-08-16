@@ -5,11 +5,11 @@ import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
-import { join } from 'path';
+import { join } from 'node:path';
 
 import colors from 'colors';
 import { logger } from '../../../logger';
-import { existsSync, lstatSync } from 'fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface ConsentManagersToBusinessEntitiesCommandFlags {
