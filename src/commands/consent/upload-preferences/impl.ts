@@ -97,6 +97,34 @@ function computePoolSize(
   return { poolSize: desired, cpuCount };
 }
 
+/** IPC helpers ------------------------------------------------------------ */
+
+function isIpcOpen(w: ChildProcess | undefined | null): boolean {
+  // @ts-ignore - channel is internal but exists for forked children
+  const ch = w && (w as any).channel;
+  // @ts-ignore
+  return !!(w && w.connected && ch && !ch.destroyed);
+}
+
+function safeSend(w: ChildProcess, msg: unknown): boolean {
+  if (!isIpcOpen(w)) return false;
+  try {
+    w.send?.(msg as any);
+    return true;
+  } catch (err: any) {
+    if (
+      err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
+      err?.code === 'EPIPE' ||
+      err?.errno === -32
+    ) {
+      return false;
+    }
+    throw err;
+  }
+}
+
+/** Receipt helpers -------------------------------------------------------- */
+
 /**
  * Find the receipt JSON for a given input file (supports suffixes like __1).
  *
@@ -166,13 +194,9 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
       const success = Object.values(json?.successfulUpdates ?? {}).length;
       const failed = Object.values(json?.failingUpdates ?? {}).length;
       const errors: Record<string, number> = {};
-      Object.values(json?.failingUpdates ?? {}).forEach((value) => {
-        const errorMsg = (value as any).error;
-        if (!errors[errorMsg]) {
-          errors[errorMsg] = 1;
-        } else {
-          errors[errorMsg] += 1;
-        }
+      Object.values(json?.failingUpdates ?? {}).forEach((v) => {
+        const msg = (v as any)?.error ?? 'Unknown error';
+        errors[msg] = (errors[msg] ?? 0) + 1;
       });
       return {
         mode: 'upload',
@@ -208,6 +232,44 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
         };
   }
 }
+
+/** stderr → ERROR/WARN indicator helpers ---------------------------------- */
+
+// --- helpers to parse stderr lines and classify warn/error ---
+function makeLineSplitter(onLine: (line: string) => void) {
+  let buf = '';
+  return (chunk: Buffer | string) => {
+    buf += chunk.toString('utf8');
+    let nl: number;
+    // eslint-disable-next-line no-cond-assign
+    while ((nl = buf.indexOf('\n')) !== -1) {
+      const line = buf.slice(0, nl);
+      onLine(line);
+      buf = buf.slice(nl + 1);
+    }
+  };
+}
+
+/**
+ * Return 'warn' | 'error' when the line is an *explicit* tagged message we care about.
+ * Otherwise return null so the dashboard ignores it.
+ *
+ * @param line
+ */
+function classifyLevel(line: string): 'warn' | 'error' | null {
+  // strip ANSI (very light pass; good enough for our tags)
+  const noAnsi = line.replace(/\x1B\[[0-9;]*m/g, '');
+  // look for our child prefixes: "[wN] ERROR ..." or "[wN] WARN ..."
+  const m =
+    /^\s*\[w\d+\]\s+(ERROR|WARN|uncaughtException|unhandledRejection)\b/i.exec(
+      noAnsi,
+    );
+  if (!m) return null;
+  const tag = m[1].toLowerCase();
+  if (tag === 'warn') return 'warn';
+  return 'error'; // ERROR, uncaughtException, unhandledRejection → error
+}
+/** Main ------------------------------------------------------------------- */
 
 export async function uploadPreferences(
   this: LocalContext,
@@ -293,7 +355,7 @@ export async function uploadPreferences(
   >();
   const pending = [...files];
   const totals = { completed: 0, failed: 0 };
-  let activeWorkers = 0; // track only live workers
+  let activeWorkers = 0;
 
   const agg: AnyTotals = !common.dryRun
     ? { mode: 'upload', success: 0, skipped: 0, error: 0, errors: {} }
@@ -322,7 +384,15 @@ export async function uploadPreferences(
 
   const assignWorkToWorker = (id: number) => {
     const w = workers.get(id);
-    if (!w) return;
+    if (!isIpcOpen(w)) {
+      workerState.set(id, {
+        busy: false,
+        file: null,
+        startedAt: null,
+        lastLevel: 'ok' as any,
+      });
+      return;
+    }
     const filePath = pending.shift();
     if (!filePath) {
       const prev = workerState.get(id) || ({} as WorkerState);
@@ -331,11 +401,28 @@ export async function uploadPreferences(
         busy: false,
         file: null,
         startedAt: null,
+        lastLevel: 'ok' as any,
       });
       return;
     }
-    workerState.set(id, { busy: true, file: filePath, startedAt: Date.now() });
-    w.send?.({ type: 'task', payload: { filePath, options: common } });
+    workerState.set(id, {
+      busy: true,
+      file: filePath,
+      startedAt: Date.now(),
+      lastLevel: 'ok' as any,
+    });
+    if (
+      !safeSend(w!, { type: 'task', payload: { filePath, options: common } })
+    ) {
+      // IPC closed between check and send; requeue and mark idle
+      pending.unshift(filePath);
+      workerState.set(id, {
+        busy: false,
+        file: null,
+        startedAt: null,
+        lastLevel: 'ok' as any,
+      });
+    }
   };
 
   const refillIdleWorkers = () => {
@@ -352,9 +439,37 @@ export async function uploadPreferences(
   for (let i = 0; i < poolSize; i += 1) {
     const child = spawnWorkerProcess(i, modulePath, LOG_DIR, true, isSilent);
     workers.set(i, child);
-    workerState.set(i, { busy: false, file: null, startedAt: null });
+    workerState.set(i, {
+      busy: false,
+      file: null,
+      startedAt: null,
+      lastLevel: 'ok' as any,
+    });
     slotLogPaths.set(i, getWorkerLogPaths(child));
     activeWorkers += 1;
+
+    // Surface WARN/ERROR status live from stderr
+    const errLine = makeLineSplitter((line) => {
+      const lvl = classifyLevel(line);
+      if (!lvl) return; // ignore untagged stderr noise
+      const prev = workerState.get(i) || ({} as WorkerState);
+      if (prev.lastLevel !== lvl) {
+        workerState.set(i, { ...prev, lastLevel: lvl });
+        repaint();
+      }
+    });
+    child.stderr?.on('data', errLine);
+
+    child.on('error', (err: any) => {
+      if (
+        err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
+        err?.code === 'EPIPE' ||
+        err?.errno === -32
+      ) {
+        return; // benign during shutdown/restarts
+      }
+      logger.error(colors.red(`Worker ${i} error: ${err?.stack || err}`));
+    });
 
     child.on('message', (msg: any) => {
       if (!msg || typeof msg !== 'object') return;
@@ -379,12 +494,9 @@ export async function uploadPreferences(
             agg.success += summary.success;
             agg.skipped += summary.skipped;
             agg.error += summary.error;
-            Object.entries(summary.errors).forEach(([key, value]) => {
-              if (!agg.errors[key]) {
-                agg.errors[key] = value;
-              } else {
-                agg.errors[key] += value;
-              }
+            Object.entries(summary.errors).forEach(([k, v]) => {
+              (agg.errors as Record<string, number>)[k] =
+                (agg.errors[k] ?? 0) + (v as number);
             });
           } else if (summary.mode === 'check' && agg.mode === 'check') {
             agg.totalPending += summary.totalPending;
@@ -394,17 +506,25 @@ export async function uploadPreferences(
           }
         }
 
-        workerState.set(i, { busy: false, file: null, startedAt: null });
+        workerState.set(i, {
+          busy: false,
+          file: null,
+          startedAt: null,
+          lastLevel: 'ok' as any,
+        });
         refillIdleWorkers();
         repaint();
       }
     });
 
     child.on('exit', () => {
-      // keep the slot so digits still map to a worker index
       activeWorkers -= 1;
-      // (leave the ChildProcess object in the map; switcher will read logs via slotLogPaths)
-      workerState.set(i, { busy: false, file: null, startedAt: null });
+      workerState.set(i, {
+        busy: false,
+        file: null,
+        startedAt: null,
+        lastLevel: 'ok' as any,
+      });
       repaint();
     });
   }
@@ -417,15 +537,10 @@ export async function uploadPreferences(
     clearInterval(renderInterval);
     cleanupSwitcher();
     process.stdout.write('\nStopping workers...\n');
-    // attempt graceful shutdown for any idles; busy ones will have exited already
     for (const [, w] of workers) {
-      if (w && w.connected && (w as any).channel) {
-        try {
-          w.send({ type: 'shutdown' });
-        } catch {}
-      }
+      if (isIpcOpen(w)) safeSend(w!, { type: 'shutdown' });
       try {
-        w.kill('SIGTERM');
+        w?.kill('SIGTERM');
       } catch {}
     }
     this.process.exit(130);
@@ -445,19 +560,16 @@ export async function uploadPreferences(
     );
   };
 
-  // NEW: make a helper that avoids ?? and only uses explicit guards
   function safeGetLogPathsForSlot(id: number) {
     const live = workers.get(id);
-    // Prefer live worker paths if the IPC channel is still open
-    if (live && live.connected && (live as any).channel) {
+    if (isIpcOpen(live)) {
       try {
-        const p = getWorkerLogPaths(live);
+        const p = getWorkerLogPaths(live!);
         if (p !== undefined && p !== null) return p;
       } catch {
-        // fall through to snapshot
+        /* fall back */
       }
     }
-    // Fall back to the snapshot we saved at spawn time
     return slotLogPaths.get(id);
   }
 
@@ -466,11 +578,12 @@ export async function uploadPreferences(
     onAttach: attachScreen,
     onDetach: detachScreen,
     onCtrlC: onSigint,
-    getLogPaths: (id) => safeGetLogPathsForSlot(id), // <— no ?? here
+    getLogPaths: (id) => safeGetLogPathsForSlot(id),
     replayBytes: 200 * 1024,
     replayWhich: ['out', 'err'],
     onEnterAttachScreen: attachScreen,
   });
+
   // hint
   const maxDigit = Math.min(poolSize - 1, 9);
   const digitRange = poolSize <= 1 ? '0' : `0-${maxDigit}`;
@@ -484,29 +597,20 @@ export async function uploadPreferences(
   // wait for completion of work (not viewer)
   await new Promise<void>((resolveWork) => {
     const check = setInterval(() => {
-      // If the queue is empty, request shutdown for **idle** workers only.
       if (pending.length === 0) {
         for (const [id, w] of workers) {
           const st = workerState.get(id);
-          // Only try to signal live children; exited ones keep their slot for log viewing
-          if (st && !st.busy && w && w.connected && (w as any).channel) {
-            try {
-              w.send({ type: 'shutdown' });
-            } catch {
-              /* ignore */
-            }
+          if (st && !st.busy && isIpcOpen(w)) {
+            safeSend(w!, { type: 'shutdown' });
           }
         }
       }
-      // Done when queue is empty and all live workers have exited.
       if (pending.length === 0 && activeWorkers === 0) {
         clearInterval(check);
         clearInterval(renderInterval);
 
-        // Persist the final snapshot; keep switcher OPEN for viewer mode
         repaint(true);
 
-        // Print summary line (don’t exit yet)
         if ((agg as AnyTotals).mode === 'upload') {
           const a = agg as UploadModeTotals;
           process.stdout.write(
@@ -523,7 +627,6 @@ export async function uploadPreferences(
           );
         }
 
-        // Tell the user they can browse logs and press 'q' to quit
         process.stdout.write(
           colors.dim(
             '\nViewer mode — digits to view logs • Tab/Shift+Tab • Esc detach • press q to quit\n',
@@ -551,7 +654,6 @@ export async function uploadPreferences(
     process.stdin.on('data', onKeypress);
   });
 
-  // Cleanup switcher now that the user quit viewer mode
   cleanupSwitcher();
   process.removeListener('SIGINT', onSigint);
 }

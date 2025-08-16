@@ -9,6 +9,8 @@ export interface WorkerState {
   file?: string | null;
   /** */
   startedAt?: number | null;
+  /** last severity seen from worker stderr */
+  lastLevel?: 'ok' | 'warn' | 'error';
 }
 
 let lastFrame = '';
@@ -25,8 +27,8 @@ type UploadModeTotals = {
   skipped: number;
   /** */
   error: number;
-  /** */
-  totals: Record<string, number>;
+  /** aggregated error message -> count */
+  errors: Record<string, number>;
 };
 /**
  *
@@ -53,6 +55,10 @@ type AnyTotals = UploadModeTotals | CheckModeTotals;
 type RenderOpts = {
   /** */ final?: boolean;
 };
+
+// minimal color helpers (avoid extra deps)
+const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
+const yellow = (s: string) => `\x1b[33m${s}\x1b[0m`;
 
 /**
  *
@@ -85,7 +91,10 @@ export function renderDashboard(
   const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
 
   const lines = [...workerState.entries()].map(([id, s]) => {
-    const label = s.busy ? 'WORKING' : 'IDLE   ';
+    let label = s.busy ? 'WORKING' : 'IDLE   ';
+    if (s.lastLevel === 'error') label = red('ERROR ');
+    else if (s.lastLevel === 'warn') label = yellow('WARN  ');
+
     const fname = s.file ? basename(s.file) : '-';
     const elapsed = s.startedAt
       ? `${Math.floor((Date.now() - s.startedAt) / 1000)}s`
@@ -99,18 +108,19 @@ export function renderDashboard(
   let totalsLine = '';
   if (totals) {
     if (totals.mode === 'upload') {
-      const formatNumber = (n: number) => n.toLocaleString();
-      totalsLine = `Receipts totals — Success: ${formatNumber(
-        totals.success,
-      )}  Skipped: ${formatNumber(totals.skipped)}  Error: ${formatNumber(
-        totals.error,
-      )}\n\nThe individual error breakdown is:\n\n${Object.entries(
-        (totals as any).errors || {},
+      const fmt = (n: number) => n.toLocaleString();
+      const errorBreakdown = Object.entries(
+        (totals as UploadModeTotals).errors || {},
       )
-        .map(
-          ([key, value]) => ` Count[${formatNumber(value as number)}] ${key}`,
-        )
-        .join('\n')}`;
+        .map(([k, v]) => ` Count[${fmt(v as number)}] ${k}`)
+        .join('\n');
+      totalsLine = `${
+        errorBreakdown
+          ? `\n\nThe individual error breakdown is:\n\n${errorBreakdown}\n\n`
+          : ''
+      }Receipts totals — Success: ${fmt(totals.success)}  Skipped: ${fmt(
+        totals.skipped,
+      )}  Error: ${fmt(totals.error)}`;
     } else {
       totalsLine =
         `Receipts totals — Pending: ${totals.totalPending}  PendingConflicts: ${totals.pendingConflicts}  ` +
@@ -125,8 +135,8 @@ export function renderDashboard(
 
   const frame = [
     `Parallel uploader — ${poolSize} workers (CPU avail: ${cpuCount})`,
-    `Files: ${total}  Completed: ${completed}  Failed: ${failed}  In-flight: ${inProgress}`,
     totalsLine,
+    `Files: ${total}  Completed: ${completed}  Failed: ${failed}  In-flight: ${inProgress}`,
     `[${bar}] ${pct}%`,
     '',
     ...lines,
