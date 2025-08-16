@@ -23,7 +23,7 @@ import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
 
 const LOG_RATE = 1000; // FIXMe set to 10k
-const CONCURRENCY = 50; // FIXME
+const CONCURRENCY = 30; // FIXME
 const MAX_CHUNK_SIZE = 50; // FIXME
 
 // Treat these as "retry in place" errors (do NOT split on these).
@@ -407,7 +407,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   ) => {
     let errorMsg = extractErrorMessage(err);
     if (errorMsg.includes('Too many identifiers')) {
-      errorMsg += `____${userId.split('___')[0]}`;
+      errorMsg += `\n     ----> ${userId.split('___')[0]}`;
     }
     logger.error(
       colors.red(
@@ -539,7 +539,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
         colors.yellow(
           `Failed to upload batch of ${
             entries.length
-          } records with status: ${getStatus(
+          } records with status: ${getStatus(err)} - ${extractErrorMessage(
             err,
           )}. Splitting into two batches: ${left.length} and ${right.length}.`,
         ),
