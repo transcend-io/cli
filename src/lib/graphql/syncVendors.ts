@@ -1,6 +1,6 @@
 import { VendorInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
+import { mapSeries } from 'bluebird';
 import { UPDATE_VENDORS, CREATE_VENDOR } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';

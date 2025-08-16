@@ -2,7 +2,7 @@ import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
 import { uniq, chunk } from 'lodash-es';
-import { map } from '../../../../lib/bluebird-replace';
+import { map } from 'bluebird';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,

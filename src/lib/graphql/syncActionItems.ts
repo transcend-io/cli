@@ -1,7 +1,7 @@
 import { ActionItemInput } from '../../codecs';
 import { uniq, keyBy, chunk } from 'lodash-es';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from '../bluebird-replace';
+import { mapSeries } from 'bluebird';
 import { UPDATE_ACTION_ITEMS, CREATE_ACTION_ITEMS } from './gqls';
 import { logger } from '../../logger';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
