@@ -32,6 +32,7 @@ export const IDENTIFIERS = gql`
           defaultMessage
         }
         displayOrder
+        isUniqueOnPreferenceStore
       }
     }
   }
