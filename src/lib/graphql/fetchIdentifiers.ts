@@ -42,6 +42,8 @@ export interface Identifier {
   };
   /** Display order */
   displayOrder: number;
+  /** does this identifier uniquely identify a consent record */
+  isUniqueOnPreferenceStore: boolean;
 }
 
 const PAGE_SIZE = 20;
