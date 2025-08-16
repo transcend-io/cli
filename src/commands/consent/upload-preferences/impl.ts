@@ -186,9 +186,7 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
     const raw = readFileSync(receiptPath, 'utf8');
     const json = JSON.parse(raw) as any;
 
-    const skippedCount = Object.values(
-      json?.skippedUpdated ?? json?.skippedUpdates ?? {},
-    ).length;
+    const skippedCount = Object.values(json?.skippedUpdates ?? {}).length;
 
     if (!dryRun) {
       const success = Object.values(json?.successfulUpdates ?? {}).length;
