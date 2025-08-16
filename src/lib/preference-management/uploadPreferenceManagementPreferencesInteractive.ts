@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
@@ -16,10 +17,14 @@ import { PersistedState } from '@transcend-io/persisted-state';
 import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
 import { FileFormatState, RequestUploadReceipts } from './codecs';
 import { PreferenceUpdateItem } from '@transcend-io/privacy-types';
-import { apply } from '@transcend-io/type-utils';
+import { apply, getEntries } from '@transcend-io/type-utils';
 import { NONE_PREFERENCE_MAP } from './parsePreferenceFileFormatFromCsv';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
+
+const LOG_RATE = 1000; // FIXMe set to 10k
+const CONCURRENCY = 25; // FIXME
+const MAX_CHUNK_SIZE = 50; // FIXME
 
 /**
  * Upload a set of consent preferences
@@ -138,7 +143,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   ]);
 
   // Process the file
-  await parsePreferenceManagementCsvWithCache(
+  const result = await parsePreferenceManagementCsvWithCache(
     {
       file,
       purposeSlugs: purposes.map((x) => x.trackingType),
@@ -153,14 +158,28 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       columnsToIgnore,
     },
     schemaState,
-    uploadState,
   );
+
+  // Read in the file
+  uploadState.setValue(
+    getEntries(result.pendingSafeUpdates).reduce(
+      (acc, [userId, value], ind) => {
+        if (ind < 10) {
+          acc[userId] = value;
+        } else {
+          acc[userId] = true;
+        }
+        return acc;
+      },
+      {} as Record<string, boolean | any>,
+    ),
+    'pendingSafeUpdates',
+  );
+  uploadState.setValue(result.pendingConflictUpdates, 'pendingConflictUpdates');
+  uploadState.setValue(result.skippedUpdates, 'skippedUpdates');
 
   // Construct the pending updates
   const pendingUpdates: Record<string, PreferenceUpdateItem> = {};
-  const safeUpdatesInCache = uploadState.getValue('pendingSafeUpdates');
-  const conflictUpdatesInCache = uploadState.getValue('pendingConflictUpdates');
-  const skippedUpdatesInCache = uploadState.getValue('skippedUpdates');
   const timestampColumn = schemaState.getValue('timestampColumn');
   const columnToPurposeName = schemaState.getValue('columnToPurposeName');
   const columnToIdentifier = schemaState.getValue('columnToIdentifier');
@@ -168,31 +187,28 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   logger.info(
     colors.magenta(
       `Found ${
-        Object.entries(safeUpdatesInCache).length
+        Object.entries(result.pendingSafeUpdates).length
       } safe updates in ${file}`,
     ),
   );
-  logger.info(
-    colors.magenta(
-      `Found ${
-        Object.entries(conflictUpdatesInCache).length
-      } conflict updates in ${file}`,
-    ),
-  );
-  logger.info(
-    colors.magenta(
-      `Found ${
-        Object.entries(skippedUpdatesInCache).length
-      } skipped updates in ${file}`,
-    ),
-  );
-
+  const conflictCount = Object.entries(result.pendingConflictUpdates).length;
+  if (conflictCount) {
+    logger.warn(
+      colors.magenta(`Found ${conflictCount} conflict updates in ${file}`),
+    );
+  }
+  const skippedCount = Object.entries(result.skippedUpdates).length;
+  if (skippedCount > 0) {
+    logger.warn(
+      colors.magenta(`Found ${skippedCount} skipped updates in ${file}`),
+    );
+  }
   // Update either safe updates only or safe + conflict
   Object.entries({
-    ...safeUpdatesInCache,
+    ...result.pendingSafeUpdates,
     ...(skipConflictUpdates
       ? {}
-      : apply(conflictUpdatesInCache, ({ row }) => row)),
+      : apply(result.pendingConflictUpdates, ({ row }) => row)),
   }).forEach(([userId, update]) => {
     // Determine timestamp
     const timestamp =
@@ -227,9 +243,19 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     };
   });
   // FIXME restart better
-  await uploadState.setValue(pendingUpdates, 'pendingUpdates');
+  await uploadState.setValue(
+    Object.entries(pendingUpdates).reduce((acc, [userId, value], ind) => {
+      if (ind < 10) {
+        acc[userId] = value;
+      } else {
+        acc[userId] = true;
+      }
+      return acc;
+    }, {} as Record<string, boolean>),
+    'pendingUpdates',
+  );
   await uploadState.setValue({}, 'failingUpdates');
-  await uploadState.setValue({}, 'successfulUpdates');
+  // await uploadState.setValue({}, 'successfulUpdates'); dont reset
 
   // Exist early if dry run
   if (dryRun) {
@@ -256,10 +282,40 @@ export async function uploadPreferenceManagementPreferencesInteractive({
 
   // Build a GraphQL client
   let total = 0;
-  const updatesToRun = Object.entries(pendingUpdates);
-  const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 50 : 10);
-  const successfulUpdates: Record<string, PreferenceUpdateItem> = {};
-  // progressBar.start(updatesToRun.length, 0);
+  const allUpdatesPending = Object.entries(pendingUpdates);
+  const successfulUpdates = uploadState.getValue('successfulUpdates');
+  const filteredUpdates = allUpdatesPending.filter(
+    ([userId]) => !successfulUpdates[userId],
+  );
+  if (filteredUpdates.length === 0) {
+    logger.warn(
+      colors.yellow(
+        `No pending updates to upload to partition: ${partition}, ` +
+          `${allUpdatesPending.length} total already successfully uploaded.`,
+      ),
+    );
+    await uploadState.setValue({}, 'pendingUpdates');
+    await uploadState.setValue({}, 'pendingSafeUpdates');
+    await uploadState.setValue({}, 'pendingConflictUpdates');
+    return;
+  }
+  if (filteredUpdates.length < allUpdatesPending.length) {
+    logger.warn(
+      colors.yellow(
+        `Found ${allUpdatesPending.length} total updates, but only ` +
+          `${filteredUpdates.length} updates to upload to partition: ${partition}, ` +
+          `as ${
+            allUpdatesPending.length - filteredUpdates.length
+          } were already successfully uploaded.`,
+      ),
+    );
+  }
+
+  const chunkedUpdates = chunk(
+    filteredUpdates,
+    // skipWorkflowTriggers ? 50 : 10 // FIXME
+    MAX_CHUNK_SIZE,
+  );
   await map(
     chunkedUpdates,
     async (currentChunk) => {
@@ -274,51 +330,117 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             },
           })
           .json();
-        currentChunk.forEach(([userId, update]) => {
-          successfulUpdates[userId] = update;
+        currentChunk.forEach(([userId]) => {
+          successfulUpdates[userId] = true;
+          delete pendingUpdates[userId];
+          delete result.pendingSafeUpdates[userId];
+          delete result.pendingConflictUpdates[userId];
         });
       } catch (err) {
-        try {
-          const parsed = JSON.parse(err?.response?.body || '{}');
-          if (parsed.error) {
-            logger.error(colors.red(`Error: ${parsed.error}`));
+        // On batch error, try each update individually
+        for (const [userId, update] of currentChunk) {
+          try {
+            await sombra
+              .put('v1/preferences', {
+                json: {
+                  records: [update],
+                  skipWorkflowTriggers,
+                  forceTriggerWorkflows,
+                },
+              })
+              .json();
+            successfulUpdates[userId] = true;
+            delete pendingUpdates[userId];
+            delete result.pendingSafeUpdates[userId];
+            delete result.pendingConflictUpdates[userId];
+          } catch (singleErr) {
+            let errorMsg =
+              singleErr?.response?.body ||
+              singleErr?.message ||
+              'Unknown error';
+            try {
+              const parsed = JSON.parse(errorMsg);
+              if (parsed.error) {
+                logger.error(
+                  colors.red(
+                    `Error for ${userId}: ${parsed.error}\n${JSON.stringify(
+                      parsed,
+                      null,
+                      2,
+                    )}`,
+                  ),
+                );
+                errorMsg = (
+                  parsed.errors ||
+                  parsed.error.errors || [parsed.error]
+                ).join(',');
+              }
+            } catch (e) {
+              // continue
+            }
+            if (errorMsg.includes('Too many identifiers')) {
+              errorMsg += `____${userId.split('___')[0]}`;
+            }
+            logger.error(
+              colors.red(
+                `Failed to upload user preferences for ${userId} to partition ${partition}: ${errorMsg}`,
+              ),
+            );
+            const failingUpdates = uploadState.getValue('failingUpdates');
+            failingUpdates[userId] = {
+              uploadedAt: new Date().toISOString(),
+              update,
+              error: errorMsg,
+            };
+            delete pendingUpdates[userId];
+            delete result.pendingSafeUpdates[userId];
+            delete result.pendingConflictUpdates[userId];
+            await uploadState.setValue(failingUpdates, 'failingUpdates');
           }
-        } catch (e) {
-          // continue
         }
-        logger.error(
-          colors.red(
-            `Failed to upload ${
-              currentChunk.length
-            } user preferences to partition ${partition}: ${
-              err?.response?.body || err?.message
-            }`,
-          ),
-        );
-        const failingUpdates = uploadState.getValue('failingUpdates');
-        currentChunk.forEach(([userId, update]) => {
-          failingUpdates[userId] = {
-            uploadedAt: new Date().toISOString(),
-            update,
-            error: err?.response?.body || err?.message || 'Unknown error',
-          };
-        });
-        await uploadState.setValue(failingUpdates, 'failingUpdates');
       }
 
       total += currentChunk.length;
-      // progressBar.update(total);
-      // log every 1000
-      if (total % 1000 === 0) {
+      if (total % LOG_RATE === 0) {
         logger.info(
           colors.green(
-            `Uploaded ${total}/${updatesToRun.length} user preferences to partition ${partition}`,
+            `Uploaded ${total}/${filteredUpdates.length} user preferences to partition ${partition}`,
           ),
+        );
+        await uploadState.setValue(successfulUpdates, 'successfulUpdates');
+        await uploadState.setValue(
+          Object.entries(pendingUpdates).reduce((acc, [userId, value], ind) => {
+            if (ind < 10) {
+              acc[userId] = value;
+            } else {
+              acc[userId] = true;
+            }
+            return acc;
+          }, {} as Record<string, any>),
+          'pendingUpdates',
+        );
+        await uploadState.setValue(
+          Object.entries(result.pendingSafeUpdates).reduce(
+            (acc, [userId, value], ind) => {
+              if (ind < 10) {
+                acc[userId] = value;
+              } else {
+                acc[userId] = true;
+              }
+              return acc;
+            },
+            {} as Record<string, any>,
+          ),
+          'pendingSafeUpdates',
+        );
+        await uploadState.setValue(
+          result.pendingConflictUpdates,
+          'pendingConflictUpdates',
         );
       }
     },
     {
-      concurrency: 80,
+      concurrency: CONCURRENCY,
     },
   );
 
@@ -334,10 +456,19 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   logger.info(
     colors.green(
       `Successfully uploaded ${
-        updatesToRun.length
+        filteredUpdates.length
       } user preferences to partition ${partition} in "${
         totalTime / 1000
       }" seconds!`,
     ),
   );
+  if (Object.values(failingRequests).length > 0) {
+    logger.error(
+      colors.red(
+        `There are ${
+          Object.values(failingRequests).length
+        } requests that failed to upload. Please check the receipt file: ${receiptFilepath}`,
+      ),
+    );
+  }
 }

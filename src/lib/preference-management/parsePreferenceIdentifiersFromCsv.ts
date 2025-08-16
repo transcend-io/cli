@@ -259,14 +259,64 @@ export async function addTranscendIdToPreferences(
   //   return preferences;
   // }
   // Add a transcendent ID to each preference if it doesn't already exist
-  return preferences.map((pref) => ({
-    ...pref,
-    person_id: pref.person_id !== '-2' ? pref.person_id : '',
-    email_address:
-      pref.email_address === 'NOEMAIL@COSTCO.COM' ? '' : pref.email_address,
-    transcendID:
-      pref.person_id && pref.person_id !== '-2'
-        ? pref.person_id
-        : pref.member_id,
-  }));
+  const disallowedEmails = [
+    'noemail@costco.com',
+    'NOEMAILYET@GMAIL.COM',
+    'noemail@gmail.com',
+    'noemail@aol.com',
+    'none@none.com',
+    'noemail@mail.com',
+    'no@email.com',
+    'noemail@no.com',
+    '123@gmail.com',
+    'no.no@gmail.com',
+    'BC@GMAIL.COM',
+    'NO@YAHOO.COM',
+    'noemail@email.com',
+    'NONAME@GMAIL.COM',
+    'notoemail@gmail.com',
+    'NOEMAILATM@YAHOO.COM',
+    'NO@MAIL.COM',
+    'NOGMAIL@GMAIL.COM',
+    'NA@NA.COM',
+    'NOPE@COSTCO.COM',
+    'Noemail@outlook.com',
+    'none@gmail.com',
+    'GETEMAIL@GMAIL.COM',
+    'EMAIL@EMAIL.COM',
+    'NAME@AOL.COM',
+    'NOTHING@GMAIL.COM',
+    'NOMAIL@NOMAIL.COM',
+    'NO@NE.COM',
+    'donthave@hotmail.com',
+    'NOEMAIL@COSTO.COM',
+    'noemail@yahoo.com',
+    'no@gmail.com',
+    'na@gmail.com',
+    'NOMAIL@GMAIL.COM',
+    'costco@costco.com',
+    'noemail@noemail.com',
+    'replace@gmail.com',
+    'NONE@YAHOO.COM',
+    'a@gmail.com',
+    'NEEDEMAIL@GMAIL.COM',
+    'NONE1@YAHOO.COM',
+    'no@no.com',
+    'none@outlook.com',
+    'none@yahoo.com',
+  ].map((email) => email.toLowerCase());
+
+  return preferences.map((pref) => {
+    const email = (pref.email_address || '').toLowerCase();
+    return {
+      ...pref,
+      person_id: pref.person_id !== '-2' ? pref.person_id : '',
+      email_address:
+        !email || disallowedEmails.includes(email) ? '' : pref.email_address,
+      transcendID:
+        pref.person_id && pref.person_id !== '-2'
+          ? pref.person_id
+          : pref.member_id,
+    };
+  });
 }

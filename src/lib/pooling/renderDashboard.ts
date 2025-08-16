@@ -25,6 +25,8 @@ type UploadModeTotals = {
   skipped: number;
   /** */
   error: number;
+  /** */
+  totals: Record<string, number>;
 };
 /**
  *
@@ -97,7 +99,15 @@ export function renderDashboard(
   let totalsLine = '';
   if (totals) {
     if (totals.mode === 'upload') {
-      totalsLine = `Receipts totals — Success: ${totals.success}  Skipped: ${totals.skipped}  Error: ${totals.error}`;
+      totalsLine = `Receipts totals — Success: ${totals.success}  Skipped: ${
+        totals.skipped
+      }  Error: ${
+        totals.error
+      }\n\nThe individual error breakdown is:\n\n${Object.entries(
+        (totals as any).errors || {},
+      )
+        .map(([key, value]) => ` Count[${value}] ${key}`)
+        .join('\n')}`;
     } else {
       totalsLine =
         `Receipts totals — Pending: ${totals.totalPending}  PendingConflicts: ${totals.pendingConflicts}  ` +

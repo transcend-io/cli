@@ -78,7 +78,10 @@ export const RequestUploadReceipts = t.type({
    * Mapping of userId to the rows in the file that need to be uploaded
    * These uploads are overwriting non-existent preferences and are safe
    */
-  pendingSafeUpdates: t.record(t.string, t.record(t.string, t.string)),
+  pendingSafeUpdates: t.record(
+    t.string,
+    t.union([t.boolean, t.record(t.string, t.string)]),
+  ),
   /**
    * Mapping of userId to the rows in the file that need to be uploaded
    * these records have conflicts with existing consent preferences
@@ -114,11 +117,17 @@ export const RequestUploadReceipts = t.type({
    * The set of pending uploads to Transcend
    * Mapping from userId to the upload metadata
    */
-  pendingUpdates: t.record(t.string, PreferenceUpdateItem),
+  pendingUpdates: t.record(
+    t.string,
+    t.union([t.boolean, PreferenceUpdateItem]),
+  ),
   /**
    * The successful updates
    */
-  successfulUpdates: t.record(t.string, PreferenceUpdateItem),
+  successfulUpdates: t.record(
+    t.string,
+    t.union([t.boolean, PreferenceUpdateItem]),
+  ),
 });
 
 /** Override type */

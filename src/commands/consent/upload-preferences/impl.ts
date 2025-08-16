@@ -62,6 +62,7 @@ export type TaskCommonOpts = Pick<
   | 'auth'
   | 'partition'
   | 'sombraAuth'
+  | 'directory'
   | 'transcendUrl'
   | 'skipConflictUpdates'
   | 'skipWorkflowTriggers'
@@ -135,6 +136,7 @@ type UploadModeTotals = {
   success: number;
   skipped: number;
   error: number;
+  errors: Record<string, number>;
 };
 type CheckModeTotals = {
   mode: 'check';
@@ -163,7 +165,22 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
     if (!dryRun) {
       const success = Object.values(json?.successfulUpdates ?? {}).length;
       const failed = Object.values(json?.failingUpdates ?? {}).length;
-      return { mode: 'upload', success, skipped: skippedCount, error: failed };
+      const errors: Record<string, number> = {};
+      Object.values(json?.failingUpdates ?? {}).forEach((value) => {
+        const errorMsg = (value as any).error;
+        if (!errors[errorMsg]) {
+          errors[errorMsg] = 1;
+        } else {
+          errors[errorMsg] += 1;
+        }
+      });
+      return {
+        mode: 'upload',
+        success,
+        skipped: skippedCount,
+        error: failed,
+        errors,
+      };
     }
 
     const totalPending = Object.values(json?.pendingUpdates ?? {}).length;
@@ -181,7 +198,7 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
     };
   } catch {
     return !dryRun
-      ? { mode: 'upload', success: 0, skipped: 0, error: 0 }
+      ? { mode: 'upload', success: 0, skipped: 0, error: 0, errors: {} }
       : {
           mode: 'check',
           totalPending: 0,
@@ -242,6 +259,7 @@ export async function uploadPreferences(
     schemaFile,
     receiptsFolder,
     auth,
+    directory,
     sombraAuth,
     partition,
     transcendUrl,
@@ -258,7 +276,7 @@ export async function uploadPreferences(
   };
 
   // ---- Worker pool lifecycle ----
-  const LOG_DIR = join(receiptsFolder, 'logs');
+  const LOG_DIR = join(directory || receiptsFolder, 'logs');
   mkdirSync(LOG_DIR, { recursive: true });
 
   const RESET_MODE =
@@ -278,7 +296,7 @@ export async function uploadPreferences(
   let activeWorkers = 0; // track only live workers
 
   const agg: AnyTotals = !common.dryRun
-    ? { mode: 'upload', success: 0, skipped: 0, error: 0 }
+    ? { mode: 'upload', success: 0, skipped: 0, error: 0, errors: {} }
     : {
         mode: 'check',
         totalPending: 0,
@@ -361,6 +379,13 @@ export async function uploadPreferences(
             agg.success += summary.success;
             agg.skipped += summary.skipped;
             agg.error += summary.error;
+            Object.entries(summary.errors).forEach(([key, value]) => {
+              if (!agg.errors[key]) {
+                agg.errors[key] = value;
+              } else {
+                agg.errors[key] += value;
+              }
+            });
           } else if (summary.mode === 'check' && agg.mode === 'check') {
             agg.totalPending += summary.totalPending;
             agg.pendingConflicts += summary.pendingConflicts;

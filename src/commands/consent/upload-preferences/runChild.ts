@@ -71,13 +71,14 @@ export async function runChild(): Promise<void> {
       } catch (err: any) {
         const e = err?.stack || err?.message || String(err);
         console.error(
-          `[w${workerId}] ERROR ${filePath}: ${err?.message || err}`,
+          `[w${workerId}] ERROR ${filePath}: ${err?.message || err}\n\n${e}`,
         );
         log(`FAIL ${filePath}\n${e}`);
         process.send?.({
           type: 'result',
           payload: { ok: false, filePath, error: e, receiptFilepath },
         });
+        process.exit(1);
       }
     } else if (msg.type === 'shutdown') {
       console.log(`[w${workerId}] shutdown`);

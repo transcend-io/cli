@@ -26,7 +26,6 @@ import type { ObjByString } from '@transcend-io/type-utils';
  *
  * @param options - Options
  * @param schemaState - The schema state to use for parsing the file
- * @param uploadState - The upload state to use for parsing the file
  * @returns The cache with the parsed file
  */
 export async function parsePreferenceManagementCsvWithCache(
@@ -67,14 +66,21 @@ export async function parsePreferenceManagementCsvWithCache(
     columnsToIgnore: string[];
   },
   schemaState: PersistedState<typeof FileFormatState>,
-  uploadState: PersistedState<typeof RequestUploadReceipts>,
-): Promise<void> {
+): Promise<{
+  /** Pending saf updates */
+  pendingSafeUpdates: Record<string, Record<string, string>>;
+  /** Pending conflict updates */
+  pendingConflictUpdates: RequestUploadReceipts['pendingConflictUpdates'];
+  /** SKipped updates */
+  skippedUpdates: RequestUploadReceipts['skippedUpdates'];
+}> {
   // Start the timer
   const t0 = new Date().getTime();
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
   let preferences = readCsv(file, t.record(t.string, t.string));
+  logger.info(colors.magenta(`Read in ${preferences.length} rows`));
 
   // TODO: Remove this COSTCO specific logic
   const updatedPreferences = await addTranscendIdToPreferences(preferences);
@@ -127,12 +133,21 @@ export async function parsePreferenceManagementCsvWithCache(
   // Clear out previous updates
   const pendingConflictUpdates: RequestUploadReceipts['pendingConflictUpdates'] =
     {};
-  const pendingSafeUpdates: RequestUploadReceipts['pendingSafeUpdates'] = {};
+  const pendingSafeUpdates: Record<string, Record<string, string>> = {};
   const skippedUpdates: RequestUploadReceipts['skippedUpdates'] = {};
 
   // Process each row
   const seenAlready: Record<string, ObjByString> = {};
-  preferences.forEach((pref) => {
+  logger.log(
+    colors.green(
+      `Processing ${preferences.length} preferences with ${
+        Object.keys(currentColumnToIdentifierMap).length
+      } identifiers and ${
+        Object.keys(currentColumnToPurposeName).length
+      } purposes`,
+    ),
+  );
+  preferences.forEach((pref, ind) => {
     // Get the userIds that could be the primary key of the consent record
     const possiblePrimaryKeys = getUniquePreferenceIdentifierNamesFromRow({
       row: pref,
@@ -153,7 +168,7 @@ export async function parsePreferenceManagementCsvWithCache(
       .find((record) => record);
 
     // If consent record is found use it, otherwise use the first unique identifier
-    const primaryKey = currentConsentRecord?.userId || possiblePrimaryKeys[0];
+    let primaryKey = currentConsentRecord?.userId || possiblePrimaryKeys[0];
     // Ensure this is unique
     if (seenAlready[primaryKey]) {
       if (
@@ -174,14 +189,17 @@ export async function parsePreferenceManagementCsvWithCache(
           .filter(([key, value]) => previous[key] === value)
           .map(([key, value]) => `  "${key}": value="${value}"`)
           .join('\n');
-        throw new Error(
-          `Duplicate primary key found: "${primaryKey}"\nDiff:\n${diffs}\nSame Values:\n${sameValues}`,
-        );
-      } else {
-        skippedUpdates[primaryKey] = pref;
         logger.warn(
           colors.yellow(
-            `Duplicate primary key found: "${primaryKey}" but rows are identical.`,
+            `Duplicate primary key found, merging: "${primaryKey}"\nDiff:\n${diffs}\nSame Values:\n${sameValues}`,
+          ),
+        );
+        primaryKey = `${primaryKey}___${ind}`;
+      } else {
+        skippedUpdates[`${primaryKey}___${ind}`] = pref;
+        logger.warn(
+          colors.yellow(
+            `Duplicate primary key found: "${primaryKey}" at index: "${ind}" but rows are identical.`,
           ),
         );
         return;
@@ -220,7 +238,7 @@ export async function parsePreferenceManagementCsvWithCache(
         currentConsentRecord,
         pendingUpdates,
         preferenceTopics,
-        log: false,
+        log: false, // FIXME
       })
     ) {
       pendingConflictUpdates[primaryKey] = {
@@ -234,15 +252,16 @@ export async function parsePreferenceManagementCsvWithCache(
     pendingSafeUpdates[primaryKey] = pref;
   });
 
-  // Read in the file
-  uploadState.setValue(pendingSafeUpdates, 'pendingSafeUpdates');
-  uploadState.setValue(pendingConflictUpdates, 'pendingConflictUpdates');
-  uploadState.setValue(skippedUpdates, 'skippedUpdates');
-
   const t1 = new Date().getTime();
   logger.info(
     colors.green(
       `Successfully pre-processed file: "${file}" in ${(t1 - t0) / 1000}s`,
     ),
   );
+
+  return {
+    pendingSafeUpdates,
+    pendingConflictUpdates,
+    skippedUpdates,
+  };
 }

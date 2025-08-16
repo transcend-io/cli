@@ -62,7 +62,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
   // Ensure all columns are accounted for
   await mapSeries(otherColumns, async (col) => {
     // Determine the unique values to map in this column
-    const uniqueValues = uniq(preferences.map((x) => x[col]));
+    const uniqueValues = uniq(
+      preferences.filter((x) => (x[col] || '').trim()).map((x) => x[col]),
+    );
 
     // Map the column to a purpose
     const currentPurposeMapping = schemaState.getValue('columnToPurposeName');
