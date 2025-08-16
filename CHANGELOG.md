@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.0.0] - 2025-08-13
 
-- Drop Node <22 support.
+- Drop Node <22 support. Make sure you are on at least node 22 before calling CLI commands. `node --version; nvm install 22 && nvm use 22 && nvm alias default 22`
 
 ## [7.3.0] - 2025-08-13
 

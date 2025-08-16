@@ -28073,6 +28073,9 @@
               },
               "displayOrder": {
                 "type": "number"
+              },
+              "isUniqueOnPreferenceStore": {
+                "type": "boolean"
               }
             }
           }
