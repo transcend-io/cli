@@ -5,7 +5,7 @@ import { logger } from '../../../logger';
 import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { splitCsvToList } from '../../../lib/requests';
 import { readdirSync } from 'node:fs';
-import { map } from '../../../lib/bluebird-replace';
+import { map } from 'bluebird';
 import { basename, join } from 'node:path';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 

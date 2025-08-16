@@ -3,7 +3,7 @@ import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_PROMPTS, CREATE_PROMPT } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import { fetchAllPrompts } from './fetchPrompts';
 import { keyBy } from 'lodash-es';
 import { logger } from '../../logger';
