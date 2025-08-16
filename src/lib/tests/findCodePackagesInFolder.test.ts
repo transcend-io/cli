@@ -2,7 +2,7 @@
 import { expect, describe, it } from 'vitest';
 
 import { findCodePackagesInFolder } from '../code-scanning/findCodePackagesInFolder';
-import { join } from 'path';
+import { join } from 'node:path';
 import type { CodePackageInput } from '../../codecs';
 
 const expected: CodePackageInput[] = [

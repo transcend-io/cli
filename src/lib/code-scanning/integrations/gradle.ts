@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 const GRADLE_IMPLEMENTATION_REGEX =
   /implementation( *)('|")(.+?):(.+?):(.+?|)('|")/;
@@ -34,7 +34,7 @@ export const gradle: CodeScanningConfig = {
     const targets = findAllWithRegex(
       {
         value: new RegExp(GRADLE_IMPLEMENTATION_REGEX, 'g'),
-        matches: ['space', 'quote1', 'name', 'path', 'version', 'quote2'],
+        matches: ['space', 'quote1', 'name', 'node:path', 'version', 'quote2'],
       },
       fileContents,
     );

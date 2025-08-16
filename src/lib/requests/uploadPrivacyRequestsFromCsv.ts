@@ -4,7 +4,7 @@ import { map } from '../bluebird-replace';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
 import cliProgress from 'cli-progress';
-import { join } from 'path';
+import { join } from 'node:path';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { logger } from '../../logger';
 import {

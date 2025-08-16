@@ -2,7 +2,7 @@ import { decodeCodec } from '@transcend-io/type-utils';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { logger } from '../../logger';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { StoredApiKey } from '../../codecs';
 
 /**

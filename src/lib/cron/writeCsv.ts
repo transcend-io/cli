@@ -1,5 +1,5 @@
 import * as fastcsv from 'fast-csv';
-import { createWriteStream, writeFileSync, appendFileSync } from 'fs';
+import { createWriteStream, writeFileSync, appendFileSync } from 'node:fs';
 
 import { ObjByString } from '@transcend-io/type-utils';
 
