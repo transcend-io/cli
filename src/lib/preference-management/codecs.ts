@@ -42,7 +42,7 @@ export const PurposeRowMapping = t.type({
 /** Override type */
 export type PurposeRowMapping = t.TypeOf<typeof PurposeRowMapping>;
 
-export const FileMetadataState = t.intersection([
+export const FileFormatState = t.intersection([
   t.type({
     /**
      * Definition of how to map each column in the CSV to
@@ -51,27 +51,6 @@ export const FileMetadataState = t.intersection([
     columnToPurposeName: t.record(t.string, PurposeRowMapping),
     /** Last time the file was last parsed at */
     lastFetchedAt: t.string,
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * These uploads are overwriting non-existent preferences and are safe
-     */
-    pendingSafeUpdates: t.record(t.string, t.record(t.string, t.string)),
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * these records have conflicts with existing consent preferences
-     */
-    pendingConflictUpdates: t.record(
-      t.string,
-      t.type({
-        record: PreferenceQueryResponseItem,
-        row: t.record(t.string, t.string),
-      }),
-    ),
-    /**
-     * Mapping of userId to the rows in the file that can be skipped because
-     * their preferences are already in the store
-     */
-    skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
     /** The column name that maps to the identifier */
     columnToIdentifier: t.record(
       t.string,
@@ -90,14 +69,32 @@ export const FileMetadataState = t.intersection([
 ]);
 
 /** Override type */
-export type FileMetadataState = t.TypeOf<typeof FileMetadataState>;
+export type FileFormatState = t.TypeOf<typeof FileFormatState>;
 
-/** Persist this data between runs of the script */
-export const PreferenceState = t.type({
+export const RequestUploadReceipts = t.type({
+  /** Last time the file was last parsed at */
+  lastFetchedAt: t.string,
   /**
-   * Store a cache of previous files read in
+   * Mapping of userId to the rows in the file that need to be uploaded
+   * These uploads are overwriting non-existent preferences and are safe
    */
-  fileMetadata: t.record(t.string, FileMetadataState),
+  pendingSafeUpdates: t.record(t.string, t.record(t.string, t.string)),
+  /**
+   * Mapping of userId to the rows in the file that need to be uploaded
+   * these records have conflicts with existing consent preferences
+   */
+  pendingConflictUpdates: t.record(
+    t.string,
+    t.type({
+      record: PreferenceQueryResponseItem,
+      row: t.record(t.string, t.string),
+    }),
+  ),
+  /**
+   * Mapping of userId to the rows in the file that can be skipped because
+   * their preferences are already in the store
+   */
+  skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
   /**
    * The set of successful uploads to Transcend
    * Mapping from userId to the upload metadata
@@ -121,4 +118,4 @@ export const PreferenceState = t.type({
 });
 
 /** Override type */
-export type PreferenceState = t.TypeOf<typeof PreferenceState>;
+export type RequestUploadReceipts = t.TypeOf<typeof RequestUploadReceipts>;

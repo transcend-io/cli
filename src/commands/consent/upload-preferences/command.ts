@@ -54,8 +54,17 @@ export const uploadPreferencesCommand = buildCommand({
       receiptFileDir: {
         kind: 'parsed',
         parse: String,
-        brief: 'Directory path where the response receipts should be saved',
-        default: './receipts',
+        brief:
+          'Directory path where the response receipts should be saved. Defaults to ./receipts if a "file" is provided, or <directory>/../receipts if a "directory" is provided.',
+        optional: true,
+      },
+      schemaFilePath: {
+        kind: 'parsed',
+        parse: String,
+        brief:
+          'The path to where the schema for the file should be saved. If file is provided, it will default to ./<filePrefix>-preference-upload-schema.json ' +
+          'If directory is provided, it will default to <directory>/../preference-upload-schema.json',
+        optional: true,
       },
       skipWorkflowTriggers: {
         kind: 'boolean',

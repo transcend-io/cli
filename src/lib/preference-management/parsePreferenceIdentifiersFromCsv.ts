@@ -2,12 +2,13 @@
 import { uniq, keyBy } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import type { FileFormatState } from './codecs';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
 import { mapSeries } from '../bluebird-replace';
 import type { Identifier } from '../graphql';
 import type { PreferenceStoreIdentifier } from '@transcend-io/privacy-types';
+import type { PersistedState } from '@transcend-io/persisted-state';
 
 /* eslint-disable no-param-reassign */
 
@@ -18,21 +19,29 @@ import type { PreferenceStoreIdentifier } from '@transcend-io/privacy-types';
  * and that all identifiers are unique.
  *
  * @param preferences - List of preferences
- * @param currentState - The current file metadata state for parsing this list
- * @param orgIdentifiers - The list of identifiers configured for the org
- * @param allowedIdentifierNames - The list of identifier names that are allowed for this upload
- * @param identifierColumns - The columns in the CSV that should be used as identifiers
+ * @param options - Options
  * @returns The updated file metadata state
  */
 export async function parsePreferenceIdentifiersFromCsv(
   preferences: Record<string, string>[],
-  currentState: FileMetadataState,
-  orgIdentifiers: Identifier[],
-  allowedIdentifierNames: string[],
-  identifierColumns: string[],
+  {
+    schemaState,
+    orgIdentifiers,
+    allowedIdentifierNames,
+    identifierColumns,
+  }: {
+    /** The current state of the schema metadata */
+    schemaState: PersistedState<typeof FileFormatState>;
+    /** The list of identifiers configured for the org */
+    orgIdentifiers: Identifier[];
+    /** The list of identifier names that are allowed for this upload */
+    allowedIdentifierNames: string[];
+    /** The columns in the CSV that should be used as identifiers */
+    identifierColumns: string[];
+  },
 ): Promise<{
   /** The updated state */
-  currentState: FileMetadataState;
+  schemaState: PersistedState<typeof FileFormatState>;
   /** The updated preferences */
   preferences: Record<string, string>[];
 }> {
@@ -77,9 +86,10 @@ export async function parsePreferenceIdentifiersFromCsv(
   }
 
   // Determine the columns that could potentially be used for identifiers
+  const currentColumnToIdentifier = schemaState.getValue('columnToIdentifier');
   await mapSeries(identifierColumns, async (col) => {
     // Map the column to an identifier
-    const identifierMapping = currentState.columnToIdentifier[col];
+    const identifierMapping = currentColumnToIdentifier[col];
     if (identifierMapping) {
       logger.info(
         colors.magenta(
@@ -102,16 +112,15 @@ export async function parsePreferenceIdentifiersFromCsv(
         choices: allowedIdentifierNames,
       },
     ]);
-    currentState.columnToIdentifier[col] = {
+    currentColumnToIdentifier[col] = {
       name: identifierName,
       isUniqueOnPreferenceStore:
         orgIdentifiersByName[identifierName].isUniqueOnPreferenceStore,
     };
   });
+  schemaState.setValue(currentColumnToIdentifier, 'columnToIdentifier');
 
-  const uniqueIdentifierColumns = Object.entries(
-    currentState.columnToIdentifier,
-  )
+  const uniqueIdentifierColumns = Object.entries(currentColumnToIdentifier)
     .filter(
       ([, identifierMapping]) => identifierMapping.isUniqueOnPreferenceStore,
     )
@@ -161,7 +170,7 @@ export async function parsePreferenceIdentifiersFromCsv(
     ),
   );
 
-  return { currentState, preferences };
+  return { schemaState, preferences };
 }
 /* eslint-enable no-param-reassign */
 
@@ -180,7 +189,7 @@ export function getPreferenceIdentifiersFromRow({
   /** The current row from CSV file */
   row: Record<string, string>;
   /** The current file metadata state */
-  columnToIdentifier: FileMetadataState['columnToIdentifier'];
+  columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): PreferenceStoreIdentifier[] {
   // TODO: Remove this COSTCO specific logic
   const emailColumn = Object.keys(columnToIdentifier).find((x) =>
@@ -218,7 +227,7 @@ export function getUniquePreferenceIdentifierNamesFromRow({
   /** The current row from CSV file */
   row: Record<string, string>;
   /** The current file metadata state */
-  columnToIdentifier: FileMetadataState['columnToIdentifier'];
+  columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): string[] {
   return Object.keys(columnToIdentifier).filter(
     (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,

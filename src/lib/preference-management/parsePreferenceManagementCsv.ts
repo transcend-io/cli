@@ -3,13 +3,13 @@ import type { Got } from 'got';
 import { keyBy } from 'lodash-es';
 import * as t from 'io-ts';
 import colors from 'colors';
-import { FileMetadataState, PreferenceState } from './codecs';
+import { type FileFormatState, type RequestUploadReceipts } from './codecs';
 import { logger } from '../../logger';
 import { readCsv } from '../requests';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic, type Identifier } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
-import { parsePreferenceTimestampsFromCsv } from './parsePreferenceTimestampsFromCsv';
+import { parsePreferenceFileFormatFromCsv } from './parsePreferenceFileFormatFromCsv';
 import {
   addTranscendIdToPreferences,
   getUniquePreferenceIdentifierNamesFromRow,
@@ -24,7 +24,8 @@ import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPr
  *
  *
  * @param options - Options
- * @param cache - The cache to store the parsed file in
+ * @param schemaState - The schema state to use for parsing the file
+ * @param uploadState - The upload state to use for parsing the file
  * @returns The cache with the parsed file
  */
 export async function parsePreferenceManagementCsvWithCache(
@@ -38,7 +39,6 @@ export async function parsePreferenceManagementCsvWithCache(
     forceTriggerWorkflows,
     orgIdentifiers,
     allowedIdentifierNames,
-    oldReceiptFilepath,
     identifierColumns,
     columnsToIgnore,
   }: {
@@ -60,36 +60,16 @@ export async function parsePreferenceManagementCsvWithCache(
     orgIdentifiers: Identifier[];
     /** allowed identifiers names */
     allowedIdentifierNames: string[];
-    /** Old receipt file path to restore from */
-    oldReceiptFilepath?: string;
     /** Identifier columns on the CSV file */
     identifierColumns: string[];
     /** Columns to ignore in the CSV file */
     columnsToIgnore: string[];
   },
-  cache: PersistedState<typeof PreferenceState>,
+  schemaState: PersistedState<typeof FileFormatState>,
+  uploadState: PersistedState<typeof RequestUploadReceipts>,
 ): Promise<void> {
-  // Restore the old file metadata if it exists
-  let oldFileMetadata: FileMetadataState | undefined;
-  if (oldReceiptFilepath) {
-    const oldPreferenceState = new PersistedState(
-      oldReceiptFilepath,
-      PreferenceState,
-      {
-        fileMetadata: {},
-        failingUpdates: {},
-        pendingUpdates: {},
-      },
-    );
-    const oldGlobalMetadata = await oldPreferenceState.getValue('fileMetadata');
-    const startFileKey = Object.keys(oldGlobalMetadata)[0];
-    oldFileMetadata = oldGlobalMetadata[startFileKey];
-  }
   // Start the timer
   const t0 = new Date().getTime();
-
-  // Get the current metadata
-  const fileMetadata = cache.getValue('fileMetadata');
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
@@ -98,64 +78,39 @@ export async function parsePreferenceManagementCsvWithCache(
   // TODO: Remove this COSTCO specific logic
   const updatedPreferences = await addTranscendIdToPreferences(preferences);
   preferences = updatedPreferences;
-  // start building the cache, can use previous cache as well
-  let currentState: FileMetadataState = {
-    columnToPurposeName: oldFileMetadata?.columnToPurposeName || {},
-    pendingSafeUpdates: {},
-    pendingConflictUpdates: {},
-    skippedUpdates: {},
-    columnToIdentifier: oldFileMetadata?.columnToIdentifier || {},
-    ...(oldFileMetadata?.timestampColumn && {
-      timestampColumn: oldFileMetadata.timestampColumn,
-    }),
-    // Load in the last fetched time
-    ...((fileMetadata[file] || {}) as Partial<FileMetadataState>),
-    lastFetchedAt: new Date().toISOString(),
-  };
 
   // Validate that all timestamps are present in the file
-  currentState = await parsePreferenceTimestampsFromCsv(
-    preferences,
-    currentState,
-  );
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
+  await parsePreferenceFileFormatFromCsv(preferences, schemaState);
 
   // Validate that all identifiers are present and unique
-  const result = await parsePreferenceIdentifiersFromCsv(
-    preferences,
-    currentState,
+  const result = await parsePreferenceIdentifiersFromCsv(preferences, {
+    schemaState,
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
-  );
-  currentState = result.currentState;
+  });
   preferences = result.preferences;
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
 
-  // Ensure all other columns are mapped to purpose and preference
-  // slug values
-  currentState = await parsePreferenceAndPurposeValuesFromCsv(
-    preferences,
-    currentState,
-    {
-      preferenceTopics,
-      purposeSlugs,
-      forceTriggerWorkflows,
-      columnsToIgnore,
-    },
-  );
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
+  // Ensure all other columns are mapped to purpose and preference slug values
+  await parsePreferenceAndPurposeValuesFromCsv(preferences, schemaState, {
+    preferenceTopics,
+    purposeSlugs,
+    forceTriggerWorkflows,
+    columnsToIgnore,
+  });
 
   // Grab existing preference store records
+  const currentColumnToIdentifierMap =
+    schemaState.getValue('columnToIdentifier');
+  const currentColumnToPurposeName = schemaState.getValue(
+    'columnToPurposeName',
+  );
   const identifiers = preferences.flatMap((pref) =>
     getUniquePreferenceIdentifierNamesFromRow({
       row: pref,
-      columnToIdentifier: currentState.columnToIdentifier,
+      columnToIdentifier: currentColumnToIdentifierMap,
     }).map((col) => ({
-      name: currentState.columnToIdentifier[col].name,
+      name: currentColumnToIdentifierMap.name,
       value: pref[col],
     })),
   );
@@ -169,22 +124,23 @@ export async function parsePreferenceManagementCsvWithCache(
   const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
 
   // Clear out previous updates
-  currentState.pendingConflictUpdates = {};
-  currentState.pendingSafeUpdates = {};
-  currentState.skippedUpdates = {};
+  const pendingConflictUpdates: RequestUploadReceipts['pendingConflictUpdates'] =
+    {};
+  const pendingSafeUpdates: RequestUploadReceipts['pendingSafeUpdates'] = {};
+  const skippedUpdates: RequestUploadReceipts['skippedUpdates'] = {};
 
   // Process each row
   preferences.forEach((pref) => {
     // Get the userIds that could be the primary key of the consent record
     const possiblePrimaryKeys = getUniquePreferenceIdentifierNamesFromRow({
       row: pref,
-      columnToIdentifier: currentState.columnToIdentifier,
+      columnToIdentifier: currentColumnToIdentifierMap,
     }).map((col) => pref[col]);
 
     // determine updates for user
     const pendingUpdates = getPreferenceUpdatesFromRow({
       row: pref,
-      columnToPurposeName: currentState.columnToPurposeName,
+      columnToPurposeName: currentColumnToPurposeName,
       preferenceTopics,
       purposeSlugs,
     });
@@ -216,7 +172,7 @@ export async function parsePreferenceManagementCsvWithCache(
       }) &&
       !forceTriggerWorkflows
     ) {
-      currentState.skippedUpdates[primaryKey] = pref;
+      skippedUpdates[primaryKey] = pref;
       return;
     }
 
@@ -229,7 +185,7 @@ export async function parsePreferenceManagementCsvWithCache(
         preferenceTopics,
       })
     ) {
-      currentState.pendingConflictUpdates[primaryKey] = {
+      pendingConflictUpdates[primaryKey] = {
         row: pref,
         record: currentConsentRecord,
       };
@@ -237,12 +193,14 @@ export async function parsePreferenceManagementCsvWithCache(
     }
 
     // Add to pending updates
-    currentState.pendingSafeUpdates[primaryKey] = pref;
+    pendingSafeUpdates[primaryKey] = pref;
   });
 
   // Read in the file
-  fileMetadata[file] = currentState;
-  await cache.setValue(fileMetadata, 'fileMetadata');
+  uploadState.setValue(pendingSafeUpdates, 'pendingSafeUpdates');
+  uploadState.setValue(pendingConflictUpdates, 'pendingConflictUpdates');
+  uploadState.setValue(skippedUpdates, 'skippedUpdates');
+
   const t1 = new Date().getTime();
   logger.info(
     colors.green(

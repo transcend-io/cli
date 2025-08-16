@@ -1,26 +1,25 @@
 import { uniq, difference } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import { FileFormatState } from './codecs';
 import { logger } from '../../logger';
 import { mapSeries } from '../bluebird-replace';
 import { PreferenceTopic } from '../graphql';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';
-
-/* eslint-disable no-param-reassign */
+import type { PersistedState } from '@transcend-io/persisted-state';
 
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
  *
  * @param preferences - List of preferences
- * @param currentState - The current file metadata state for parsing this list
+ * @param schemaState - The schema state to use for parsing the file
  * @param options - Options
  * @returns The updated file metadata state
  */
 export async function parsePreferenceAndPurposeValuesFromCsv(
   preferences: Record<string, string>[],
-  currentState: FileMetadataState,
+  schemaState: PersistedState<typeof FileFormatState>,
   {
     purposeSlugs,
     preferenceTopics,
@@ -36,19 +35,20 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     /** Columns to ignore in the CSV file */
     columnsToIgnore: string[];
   },
-): Promise<FileMetadataState> {
+): Promise<PersistedState<typeof FileFormatState>> {
   // Determine columns to map
   const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
 
   // Determine the columns that could potentially be used for identifier
+  const timestampCol = schemaState.getValue('timestampColumn');
   const otherColumns = difference(columnNames, [
-    ...Object.keys(currentState.columnToIdentifier),
-    ...(currentState.timestampColumn ? [currentState.timestampColumn] : []),
+    ...Object.keys(schemaState.getValue('columnToIdentifier')),
+    ...(timestampCol ? [timestampCol] : []),
     ...columnsToIgnore,
   ]);
   if (otherColumns.length === 0) {
     if (forceTriggerWorkflows) {
-      return currentState;
+      return schemaState;
     }
     throw new Error('No other columns to process');
   }
@@ -65,7 +65,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     const uniqueValues = uniq(preferences.map((x) => x[col]));
 
     // Map the column to a purpose
-    let purposeMapping = currentState.columnToPurposeName[col];
+    const currentPurposeMapping = schemaState.getValue('columnToPurposeName');
+    let purposeMapping = currentPurposeMapping[col];
     if (purposeMapping) {
       logger.info(
         colors.magenta(
@@ -203,10 +204,9 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         );
       }
     });
-
-    currentState.columnToPurposeName[col] = purposeMapping;
+    currentPurposeMapping[col] = purposeMapping;
+    schemaState.setValue(currentPurposeMapping, 'columnToPurposeName');
   });
 
-  return currentState;
+  return schemaState;
 }
-/* eslint-enable no-param-reassign */

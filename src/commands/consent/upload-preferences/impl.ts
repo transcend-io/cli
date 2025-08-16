@@ -18,7 +18,8 @@ export interface UploadPreferencesCommandFlags {
   directory?: string;
   dryRun: boolean;
   skipExistingRecordCheck: boolean;
-  receiptFileDir: string;
+  receiptFileDir?: string;
+  schemaFilePath?: string;
   skipWorkflowTriggers: boolean;
   forceTriggerWorkflows: boolean;
   skipConflictUpdates: boolean;
@@ -29,6 +30,16 @@ export interface UploadPreferencesCommandFlags {
   allowedIdentifierNames: string[];
   identifierColumns: string[];
   columnsToIgnore?: string[];
+}
+
+/**
+ * Get the file prefix from the file name
+ *
+ * @param file - The file name
+ * @returns The file prefix
+ */
+function getFilePrefix(file: string): string {
+  return basename(file).replace('.csv', '');
 }
 
 export async function uploadPreferences(
@@ -43,6 +54,7 @@ export async function uploadPreferences(
     dryRun,
     skipExistingRecordCheck,
     receiptFileDir,
+    schemaFilePath,
     skipWorkflowTriggers,
     forceTriggerWorkflows,
     skipConflictUpdates,
@@ -125,19 +137,38 @@ export async function uploadPreferences(
     );
   }
 
+  // Determine receipts folder
+  const receiptsFolder =
+    receiptFileDir ||
+    (directory ? join(directory, '../receipts') : './receipts');
+
+  // Determine the schema file
+  const schemaFile =
+    schemaFilePath ||
+    (directory
+      ? join(directory, '../preference-upload-schema.json')
+      : `${getFilePrefix(files[0])}-preference-upload-schema.json`);
+
+  // yarn ts-node ./src/cli-chunk-csv.ts --inputFile=$file
+  // Create folder of 1200 chunks in ./working/costco/udp/all-chunks
+  // Copy over 100 files from all-chunks -> pending-chunks
+  // Run pnpm start consent upload-preferences --auth=$API_KEY --partition=448b3320-9d7c-499a-bc56-f0dae33c8f5c --directory=./working/costco/udp/pending-chunks --dryRun=false --skipWorkflowTriggers=true --skipExistingRecordCheck=true --isSilent=true --attributes="Tags:transcend-cli,Source:transcend-cli" --transcendUrl=https://api.us.transcend.io/ --allowedIdentifierNames="email,personID,memberID,transcendID,birthDate" --identifierColumns="email_address,person_id,member_id,transcendID,birth_dt" --columnsToIgnore="source_system,mktg_consent_ts" --sombraAuth=$SOMBRA_AUTH --concurrency=1
+  // Writes each of 1200 files to ./receipts/<chunk-name>-receipts.json -> currently there are 300
+
+  // FIXME auto splitting
+  // FIXME: use single tenant sombra
+  // FIXME add overview of status
+  // FIXME handle re-processing of same file, and error handling
+
   await map(
     files,
-    async (filePath, index) => {
-      const fileName = basename(filePath).replace('.csv', '');
-      const oldReceiptFilepath =
-        index > 0
-          ? join(
-              receiptFileDir,
-              `${basename(files[0]).replace('.csv', '')}-receipts.json`,
-            )
-          : undefined;
+    async (filePath) => {
       await uploadPreferenceManagementPreferencesInteractive({
-        receiptFilepath: join(receiptFileDir, `${fileName}-receipts.json`),
+        receiptFilepath: join(
+          receiptsFolder,
+          `${getFilePrefix(filePath)}-receipts.json`,
+        ),
+        schemaFilePath: schemaFile,
         auth,
         sombraAuth,
         file: filePath,
@@ -152,7 +183,6 @@ export async function uploadPreferences(
         forceTriggerWorkflows,
         allowedIdentifierNames,
         identifierColumns,
-        oldReceiptFilepath,
         columnsToIgnore,
       });
     },

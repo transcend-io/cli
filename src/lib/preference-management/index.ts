@@ -5,7 +5,7 @@ export * from './parsePreferenceManagementCsv';
 export * from './getPreferenceUpdatesFromRow';
 export * from './parsePreferenceManagementCsv';
 export * from './parsePreferenceIdentifiersFromCsv';
-export * from './parsePreferenceTimestampsFromCsv';
+export * from './parsePreferenceFileFormatFromCsv';
 export * from './parsePreferenceAndPurposeValuesFromCsv';
 export * from './checkIfPendingPreferenceUpdatesAreNoOp';
 export * from './checkIfPendingPreferenceUpdatesCauseConflict';
