@@ -23,8 +23,44 @@ import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
 
 const LOG_RATE = 1000; // FIXMe set to 10k
-const CONCURRENCY = 25; // FIXME
+const CONCURRENCY = 50; // FIXME
 const MAX_CHUNK_SIZE = 50; // FIXME
+
+// Treat these as "retry in place" errors (do NOT split on these).
+// Note: 329 included defensively in case of custom upstream code; primarily handle 429 & 502.
+const RETRYABLE_BATCH_STATUSES = new Set([429, 502, 329] as const);
+
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+/**
+ * Extract HTTP status code from an error thrown by got
+ *
+ * @param err
+ */
+function getStatus(err: any): number | undefined {
+  return err?.response?.statusCode ?? err?.response?.status;
+}
+
+/**
+ * Extract a readable error message from an error thrown by got / server
+ *
+ * @param err
+ */
+function extractErrorMessage(err: any): string {
+  let errorMsg = err?.response?.body || err?.message || 'Unknown error';
+  try {
+    const parsed = JSON.parse(errorMsg);
+    if (parsed.error) {
+      // common GraphQL/REST patterns
+      const msgs = parsed.errors ||
+        parsed.error?.errors || [parsed.error?.message || parsed.error];
+      errorMsg = (Array.isArray(msgs) ? msgs : [msgs]).join(', ');
+    }
+  } catch {
+    // leave as-is
+  }
+  return errorMsg;
+}
 
 /**
  * Upload a set of consent preferences
@@ -223,12 +259,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       preferenceTopics,
       purposeSlugs: purposes.map((x) => x.trackingType),
     });
-    const identifiers = getPreferenceIdentifiersFromRow({
+    const identifiersForRow = getPreferenceIdentifiersFromRow({
       row: update,
       columnToIdentifier,
     });
     pendingUpdates[userId] = {
-      identifiers,
+      identifiers: identifiersForRow,
       partition,
       timestamp: timestamp.toISOString(),
       purposes: Object.entries(updates).map(([purpose, value]) => ({
@@ -281,7 +317,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   const t0 = new Date().getTime();
 
   // Build a GraphQL client
-  let total = 0;
+  let uploadedCount = 0;
   const allUpdatesPending = Object.entries(pendingUpdates);
   const successfulUpdates = uploadState.getValue('successfulUpdates');
   const filteredUpdates = allUpdatesPending.filter(
@@ -311,152 +347,230 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     );
   }
 
-  const chunkedUpdates = chunk(
-    filteredUpdates,
-    // skipWorkflowTriggers ? 50 : 10 // FIXME
-    MAX_CHUNK_SIZE,
-  );
-  await map(
-    chunkedUpdates,
-    async (currentChunk) => {
-      // Make the request
-      try {
-        await sombra
-          .put('v1/preferences', {
-            json: {
-              records: currentChunk.map(([, update]) => update),
-              skipWorkflowTriggers,
-              forceTriggerWorkflows,
-            },
-          })
-          .json();
-        currentChunk.forEach(([userId]) => {
-          successfulUpdates[userId] = true;
-          delete pendingUpdates[userId];
-          delete result.pendingSafeUpdates[userId];
-          delete result.pendingConflictUpdates[userId];
-        });
-      } catch (err) {
-        // On batch error, try each update individually
-        for (const [userId, update] of currentChunk) {
-          try {
-            await sombra
-              .put('v1/preferences', {
-                json: {
-                  records: [update],
-                  skipWorkflowTriggers,
-                  forceTriggerWorkflows,
-                },
-              })
-              .json();
-            successfulUpdates[userId] = true;
-            delete pendingUpdates[userId];
-            delete result.pendingSafeUpdates[userId];
-            delete result.pendingConflictUpdates[userId];
-          } catch (singleErr) {
-            let errorMsg =
-              singleErr?.response?.body ||
-              singleErr?.message ||
-              'Unknown error';
-            try {
-              const parsed = JSON.parse(errorMsg);
-              if (parsed.error) {
-                logger.error(
-                  colors.red(
-                    `Error for ${userId}: ${parsed.error}\n${JSON.stringify(
-                      parsed,
-                      null,
-                      2,
-                    )}`,
-                  ),
-                );
-                errorMsg = (
-                  parsed.errors ||
-                  parsed.error.errors || [parsed.error]
-                ).join(',');
-              }
-            } catch (e) {
-              // continue
-            }
-            if (errorMsg.includes('Too many identifiers')) {
-              errorMsg += `____${userId.split('___')[0]}`;
-            }
-            logger.error(
-              colors.red(
-                `Failed to upload user preferences for ${userId} to partition ${partition}: ${errorMsg}`,
-              ),
-            );
-            const failingUpdates = uploadState.getValue('failingUpdates');
-            failingUpdates[userId] = {
-              uploadedAt: new Date().toISOString(),
-              update,
-              error: errorMsg,
-            };
-            delete pendingUpdates[userId];
-            delete result.pendingSafeUpdates[userId];
-            delete result.pendingConflictUpdates[userId];
-            await uploadState.setValue(failingUpdates, 'failingUpdates');
-          }
-        }
-      }
+  // --- Helpers bound to closure state ---
 
-      total += currentChunk.length;
-      if (total % LOG_RATE === 0) {
-        logger.info(
-          colors.green(
-            `Uploaded ${total}/${filteredUpdates.length} user preferences to partition ${partition}`,
-          ),
-        );
-        await uploadState.setValue(successfulUpdates, 'successfulUpdates');
-        await uploadState.setValue(
-          Object.entries(pendingUpdates).reduce((acc, [userId, value], ind) => {
+  const markSuccessFor = async (
+    entries: Array<[string, PreferenceUpdateItem]>,
+  ) => {
+    for (const [userId] of entries) {
+      successfulUpdates[userId] = true;
+      delete pendingUpdates[userId];
+      delete result.pendingSafeUpdates[userId];
+      delete result.pendingConflictUpdates[userId];
+    }
+    uploadedCount += entries.length;
+
+    // Periodic persistence + logging
+    if (uploadedCount % LOG_RATE === 0) {
+      logger.info(
+        colors.green(
+          `Uploaded ${uploadedCount}/${filteredUpdates.length} user preferences to partition ${partition}`,
+        ),
+      );
+      await uploadState.setValue(successfulUpdates, 'successfulUpdates');
+      await uploadState.setValue(
+        Object.entries(pendingUpdates).reduce((acc, [userId, value], ind) => {
+          if (ind < 10) {
+            acc[userId] = value;
+          } else {
+            acc[userId] = true;
+          }
+          return acc;
+        }, {} as Record<string, any>),
+        'pendingUpdates',
+      );
+      await uploadState.setValue(
+        Object.entries(result.pendingSafeUpdates).reduce(
+          (acc, [userId, value], ind) => {
             if (ind < 10) {
               acc[userId] = value;
             } else {
               acc[userId] = true;
             }
             return acc;
-          }, {} as Record<string, any>),
-          'pendingUpdates',
-        );
-        await uploadState.setValue(
-          Object.entries(result.pendingSafeUpdates).reduce(
-            (acc, [userId, value], ind) => {
-              if (ind < 10) {
-                acc[userId] = value;
-              } else {
-                acc[userId] = true;
-              }
-              return acc;
-            },
-            {} as Record<string, any>,
-          ),
-          'pendingSafeUpdates',
-        );
-        await uploadState.setValue(
-          result.pendingConflictUpdates,
-          'pendingConflictUpdates',
-        );
+          },
+          {} as Record<string, any>,
+        ),
+        'pendingSafeUpdates',
+      );
+      await uploadState.setValue(
+        result.pendingConflictUpdates,
+        'pendingConflictUpdates',
+      );
+    }
+  };
+
+  const markFailureForSingle = async (
+    userId: string,
+    update: PreferenceUpdateItem,
+    err: any,
+  ) => {
+    let errorMsg = extractErrorMessage(err);
+    if (errorMsg.includes('Too many identifiers')) {
+      errorMsg += `____${userId.split('___')[0]}`;
+    }
+    logger.error(
+      colors.red(
+        `Failed to upload user preferences for ${userId} to partition ${partition}: ${errorMsg}`,
+      ),
+    );
+    const failing = uploadState.getValue('failingUpdates');
+    failing[userId] = {
+      uploadedAt: new Date().toISOString(),
+      update,
+      error: errorMsg,
+    };
+    delete pendingUpdates[userId];
+    delete result.pendingSafeUpdates[userId];
+    delete result.pendingConflictUpdates[userId];
+    await uploadState.setValue(failing, 'failingUpdates');
+  };
+
+  const markFailureForBatch = async (
+    entries: Array<[string, PreferenceUpdateItem]>,
+    err: any,
+  ) => {
+    for (const [userId, update] of entries) {
+      await markFailureForSingle(userId, update, err);
+    }
+  };
+
+  const putBatch = async (entries: Array<[string, PreferenceUpdateItem]>) =>
+    sombra
+      .put('v1/preferences', {
+        json: {
+          records: entries.map(([, update]) => update),
+          skipWorkflowTriggers,
+          forceTriggerWorkflows,
+        },
+      })
+      .json();
+
+  /**
+   * Try a batch, and if it fails:
+   *  - On 429/502/329: retry same batch up to 3 times with 10s sleep (no splitting).
+   *  - Otherwise: split batch in half and recurse, down to single-record requests.
+   *
+   * @param entries
+   */
+  const uploadChunkWithSplit = async (
+    entries: Array<[string, PreferenceUpdateItem]>,
+  ): Promise<void> => {
+    // Fast path: attempt the whole batch
+    try {
+      await putBatch(entries);
+      await markSuccessFor(entries);
+    } catch (err) {
+      const status = getStatus(err);
+      if (status && RETRYABLE_BATCH_STATUSES.has(status as any)) {
+        // Retry this SAME batch up to 3 times with backoff 10s
+        let attemptsLeft = 3;
+        while (attemptsLeft > 0) {
+          attemptsLeft -= 1;
+          logger.warn(
+            colors.yellow(
+              `Received ${status} for a batch of ${
+                entries.length
+              }. Retrying in 10s... (${3 - attemptsLeft}/3)`,
+            ),
+          );
+          await sleep(10_000);
+          try {
+            await putBatch(entries);
+            await markSuccessFor(entries);
+            return;
+          } catch (retryErr) {
+            if (
+              getStatus(retryErr) &&
+              RETRYABLE_BATCH_STATUSES.has(getStatus(retryErr) as any) &&
+              attemptsLeft > 0
+            ) {
+              logger.warn(
+                colors.yellow(
+                  `Retry attempt failed with ${getStatus(
+                    retryErr,
+                  )}, retrying again...`,
+                ),
+              );
+              continue; // loop to retry again
+            }
+            // If status changed to non-retryable, fall through to split behavior
+            err = retryErr;
+            break;
+          }
+        }
+
+        // Exhausted retries (still 429/502/329): mark the WHOLE batch as failed (do NOT split)
+        if (
+          getStatus(err) &&
+          RETRYABLE_BATCH_STATUSES.has(getStatus(err) as any)
+        ) {
+          logger.error(
+            colors.red(
+              `Exhausted retries for ${
+                entries.length
+              } records due to ${getStatus(
+                err,
+              )}. Marking entire batch as failed.`,
+            ),
+          );
+          await markFailureForBatch(entries, err);
+          return;
+        }
+        // Otherwise continue to split below (e.g., status changed to non-retryable).
       }
+
+      // Non-retryable error path -> split in half recursively (down to singles)
+      if (entries.length === 1) {
+        // Single request: try once and mark failure if it errors
+        try {
+          await putBatch(entries);
+          await markSuccessFor(entries);
+        } catch (singleErr) {
+          await markFailureForSingle(entries[0][0], entries[0][1], singleErr);
+        }
+        return;
+      }
+
+      const mid = Math.floor(entries.length / 2);
+      const left = entries.slice(0, mid);
+      const right = entries.slice(mid);
+      logger.warn(
+        colors.yellow(
+          `Failed to upload batch of ${
+            entries.length
+          } records with status: ${getStatus(
+            err,
+          )}. Splitting into two batches: ${left.length} and ${right.length}.`,
+        ),
+      );
+      await uploadChunkWithSplit(left);
+      await uploadChunkWithSplit(right);
+    }
+  };
+
+  // --- Kick off uploads in chunks (top-level), but each chunk may be recursively split if needed ---
+  const topLevelChunks = chunk(filteredUpdates, MAX_CHUNK_SIZE);
+  await map(
+    topLevelChunks,
+    async (currentChunk) => {
+      await uploadChunkWithSplit(currentChunk);
     },
-    {
-      concurrency: CONCURRENCY,
-    },
+    { concurrency: CONCURRENCY },
   );
 
-  // FIXME do this on ctrl+c
+  // Final persistence of state
   await uploadState.setValue(successfulUpdates, 'successfulUpdates');
   await uploadState.setValue({}, 'pendingUpdates');
   await uploadState.setValue({}, 'pendingSafeUpdates');
   await uploadState.setValue({}, 'pendingConflictUpdates');
 
-  // progressBar.stop();
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
   logger.info(
     colors.green(
       `Successfully uploaded ${
-        filteredUpdates.length
+        Object.keys(successfulUpdates).length
       } user preferences to partition ${partition} in "${
         totalTime / 1000
       }" seconds!`,
