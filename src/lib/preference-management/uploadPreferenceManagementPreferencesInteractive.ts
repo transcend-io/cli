@@ -23,7 +23,7 @@ import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
 
 const LOG_RATE = 1000; // FIXMe set to 10k
-const CONCURRENCY = 25; // FIXME
+const CONCURRENCY = 20; // FIXME
 const MAX_CHUNK_SIZE = 50; // FIXME
 
 // Treat these as "retry in place" errors (do NOT split on these).
@@ -478,7 +478,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
               -> ${extractErrorMessage(err)}`,
             ),
           );
-          await sleep(10_000);
+          await sleep(5_000);
           try {
             await putBatch(entries);
             await markSuccessFor(entries);
