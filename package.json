@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "7.3.1",
+  "version": "8.0.1",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -54,7 +54,7 @@
     "__tr-upload-preferences": "dist/bin/deprecated-command.cjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "files": [
     "dist"
