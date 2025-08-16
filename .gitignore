@@ -1,5 +1,6 @@
 transcend.yml
 notes.txt
+tsconfig.tsbuildinfo
 transcend-privacy-requests-cache.json
 cron-identifiers.csv
 manual-enrichment-identifiers.csv
