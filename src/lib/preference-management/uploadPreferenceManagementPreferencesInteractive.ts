@@ -23,7 +23,7 @@ import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { getPreferenceIdentifiersFromRow } from './parsePreferenceIdentifiersFromCsv';
 
 const LOG_RATE = 1000; // FIXMe set to 10k
-const CONCURRENCY = 30; // FIXME
+const CONCURRENCY = 25; // FIXME
 const MAX_CHUNK_SIZE = 50; // FIXME
 
 // Treat these as "retry in place" errors (do NOT split on these).
@@ -462,7 +462,10 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       await markSuccessFor(entries);
     } catch (err) {
       const status = getStatus(err);
-      if (status && RETRYABLE_BATCH_STATUSES.has(status as any)) {
+      if (
+        (status && RETRYABLE_BATCH_STATUSES.has(status as any)) ||
+        (status === 400 && extractErrorMessage(err).includes('Slow down'))
+      ) {
         // Retry this SAME batch up to 3 times with backoff 10s
         let attemptsLeft = 3;
         while (attemptsLeft > 0) {
@@ -471,7 +474,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             colors.yellow(
               `Received ${status} for a batch of ${
                 entries.length
-              }. Retrying in 10s... (${3 - attemptsLeft}/3)`,
+              }. Retrying in 10s... (${3 - attemptsLeft}/3)\n
+              -> ${extractErrorMessage(err)}`,
             ),
           );
           await sleep(10_000);

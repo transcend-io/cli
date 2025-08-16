@@ -264,6 +264,7 @@ export async function addTranscendIdToPreferences(
     'NOEMAILYET@GMAIL.COM',
     'noemail@gmail.com',
     'noemail@aol.com',
+    'IDONTCARE@YAHOO.COM',
     'none@none.com',
     'noemail@mail.com',
     'no@email.com',
@@ -313,9 +314,15 @@ export async function addTranscendIdToPreferences(
     'NEEDEMAIL@GMAIL.COM',
     '_NONE@EMAIL.COM',
     'NONE1@YAHOO.COM',
+    'NOMEMBEREMAIL@COSTCO.COM',
+    'MAILDUMP@MAIL.COM',
+    'NONE@EMAIL.COM',
     'no@no.com',
     'none@outlook.com',
     'none@yahoo.com',
+    '123@LIVE.COM',
+    // FIXME
+    ...(process.env.EMAIL_LIST || '').split(',').map((email) => email.trim()),
   ].map((email) => email.toLowerCase());
 
   return preferences.map((pref) => {

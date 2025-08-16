@@ -99,14 +99,17 @@ export function renderDashboard(
   let totalsLine = '';
   if (totals) {
     if (totals.mode === 'upload') {
-      totalsLine = `Receipts totals — Success: ${totals.success}  Skipped: ${
-        totals.skipped
-      }  Error: ${
-        totals.error
-      }\n\nThe individual error breakdown is:\n\n${Object.entries(
+      const formatNumber = (n: number) => n.toLocaleString();
+      totalsLine = `Receipts totals — Success: ${formatNumber(
+        totals.success,
+      )}  Skipped: ${formatNumber(totals.skipped)}  Error: ${formatNumber(
+        totals.error,
+      )}\n\nThe individual error breakdown is:\n\n${Object.entries(
         (totals as any).errors || {},
       )
-        .map(([key, value]) => ` Count[${value}] ${key}`)
+        .map(
+          ([key, value]) => ` Count[${formatNumber(value as number)}] ${key}`,
+        )
         .join('\n')}`;
     } else {
       totalsLine =
