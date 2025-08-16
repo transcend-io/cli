@@ -229,9 +229,16 @@ export function getUniquePreferenceIdentifierNamesFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): string[] {
-  return Object.keys(columnToIdentifier).filter(
+  // FIXME remove email logic
+  const columns = Object.keys(columnToIdentifier).filter(
     (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
   );
+  // if email is present move it to front of list
+  if (columns.includes('email')) {
+    columns.splice(columns.indexOf('email'), 1);
+    columns.unshift('email');
+  }
+  return columns;
 }
 
 /**
@@ -239,7 +246,7 @@ export function getUniquePreferenceIdentifierNamesFromRow({
  *
  * @param preferences - List of preferences
  * @returns The updated preferences with Transcend ID added
- *   // TODO: Remove this COSTCO specific logic
+ *   // FIXME: Remove this COSTCO specific logic
  */
 export async function addTranscendIdToPreferences(
   preferences: Record<string, string>[],
@@ -252,10 +259,12 @@ export async function addTranscendIdToPreferences(
   //   return preferences;
   // }
   // Add a transcendent ID to each preference if it doesn't already exist
-  return preferences.map((pref) => {
-    if (!pref.person_id) {
-      throw new Error('person_id is required for this upload.');
-    }
-    return { ...pref, transcendID: pref.person_id };
-  });
+  return preferences.map((pref) => ({
+    ...pref,
+    person_id: pref.person_id !== '-2' ? pref.person_id : '',
+    transcendID:
+      pref.person_id && pref.person_id !== '-2'
+        ? pref.person_id
+        : pref.member_id,
+  }));
 }

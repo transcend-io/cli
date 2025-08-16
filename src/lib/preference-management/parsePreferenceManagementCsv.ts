@@ -18,6 +18,7 @@ import {
 import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurposeValuesFromCsv';
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
+import type { ObjByString } from '@transcend-io/type-utils';
 
 /**
  * Parse a file into the cache
@@ -74,10 +75,12 @@ export async function parsePreferenceManagementCsvWithCache(
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
   let preferences = readCsv(file, t.record(t.string, t.string));
+  console.log(`${preferences.length}, '1'`);
 
   // TODO: Remove this COSTCO specific logic
   const updatedPreferences = await addTranscendIdToPreferences(preferences);
   preferences = updatedPreferences;
+  console.log(`${preferences.length}, '2'`);
 
   // Validate that all timestamps are present in the file
   await parsePreferenceFileFormatFromCsv(preferences, schemaState);
@@ -90,6 +93,7 @@ export async function parsePreferenceManagementCsvWithCache(
     identifierColumns,
   });
   preferences = result.preferences;
+  console.log(`${preferences.length}, '3'`);
 
   // Ensure all other columns are mapped to purpose and preference slug values
   await parsePreferenceAndPurposeValuesFromCsv(preferences, schemaState, {
@@ -130,6 +134,9 @@ export async function parsePreferenceManagementCsvWithCache(
   const skippedUpdates: RequestUploadReceipts['skippedUpdates'] = {};
 
   // Process each row
+  console.log(`${preferences.length}, '4'`);
+
+  const seenAlready: Record<string, ObjByString> = {};
   preferences.forEach((pref) => {
     // Get the userIds that could be the primary key of the consent record
     const possiblePrimaryKeys = getUniquePreferenceIdentifierNamesFromRow({
@@ -152,6 +159,35 @@ export async function parsePreferenceManagementCsvWithCache(
 
     // If consent record is found use it, otherwise use the first unique identifier
     const primaryKey = currentConsentRecord?.userId || possiblePrimaryKeys[0];
+    // Ensure this is unique
+    if (seenAlready[primaryKey]) {
+      if (
+        !Object.entries(pref).every(
+          ([key, value]) => seenAlready[primaryKey][key] === value,
+        )
+      ) {
+        throw new Error(
+          `Duplicate primary key found: "${primaryKey}" in row: ${JSON.stringify(
+            pref,
+          )}, previously seen in row: ${seenAlready[primaryKey]}`,
+        );
+      } else {
+        console.log('SKIPPINNNG');
+        skippedUpdates[primaryKey] = pref;
+        logger.warn(
+          colors.yellow(
+            `Duplicate primary key found: "${primaryKey}" in row: ${JSON.stringify(
+              pref,
+            )}, previously seen in row: ${
+              seenAlready[primaryKey]
+            }. Skipping duplicate.`,
+          ),
+        );
+        return;
+      }
+    }
+    seenAlready[primaryKey] = pref;
+
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
         `No existing consent record found for user with ids: ${possiblePrimaryKeys.join(
@@ -172,6 +208,7 @@ export async function parsePreferenceManagementCsvWithCache(
       }) &&
       !forceTriggerWorkflows
     ) {
+      console.log(`HERERERE${primaryKey}`);
       skippedUpdates[primaryKey] = pref;
       return;
     }
@@ -183,6 +220,7 @@ export async function parsePreferenceManagementCsvWithCache(
         currentConsentRecord,
         pendingUpdates,
         preferenceTopics,
+        log: false, // FIXME
       })
     ) {
       pendingConflictUpdates[primaryKey] = {

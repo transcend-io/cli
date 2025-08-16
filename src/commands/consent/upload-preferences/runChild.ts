@@ -4,6 +4,7 @@ import { join, dirname } from 'node:path';
 import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { getFilePrefix } from './computeFiles';
 import { splitCsvToList } from '../../../lib/requests';
+import type { TaskCommonOpts } from './impl';
 
 export async function runChild(): Promise<void> {
   const workerId = Number(process.env.WORKER_ID || '0');
@@ -25,6 +26,7 @@ export async function runChild(): Promise<void> {
 
   process.on('message', async (msg: any) => {
     if (!msg || typeof msg !== 'object') return;
+
     if (msg.type === 'task') {
       const { filePath, options } = msg.payload as {
         filePath: string;
@@ -61,7 +63,11 @@ export async function runChild(): Promise<void> {
 
         console.log(`[w${workerId}] DONE  ${filePath}`);
         log(`SUCCESS ${filePath}`);
-        process.send?.({ type: 'result', payload: { ok: true, filePath } });
+
+        process.send?.({
+          type: 'result',
+          payload: { ok: true, filePath, receiptFilepath },
+        });
       } catch (err: any) {
         const e = err?.stack || err?.message || String(err);
         console.error(
@@ -70,7 +76,7 @@ export async function runChild(): Promise<void> {
         log(`FAIL ${filePath}\n${e}`);
         process.send?.({
           type: 'result',
-          payload: { ok: false, filePath, error: e },
+          payload: { ok: false, filePath, error: e, receiptFilepath },
         });
       }
     } else if (msg.type === 'shutdown') {

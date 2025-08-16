@@ -11,7 +11,6 @@ import colors from 'colors';
 import { map } from 'bluebird';
 import { chunk } from 'lodash-es';
 import { logger } from '../../logger';
-import cliProgress from 'cli-progress';
 import { parseAttributesFromString } from '../requests';
 import { PersistedState } from '@transcend-io/persisted-state';
 import { parsePreferenceManagementCsvWithCache } from './parsePreferenceManagementCsv';
@@ -92,10 +91,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     receiptFilepath,
     RequestUploadReceipts,
     {
-      pendingSafeUpdates: {},
+      failingUpdates: {},
       pendingConflictUpdates: {},
       skippedUpdates: {},
-      failingUpdates: {},
+      pendingSafeUpdates: {},
+      successfulUpdates: {},
       pendingUpdates: {},
       lastFetchedAt: new Date().toISOString(),
     },
@@ -226,8 +226,10 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       })),
     };
   });
+  // FIXME restart better
   await uploadState.setValue(pendingUpdates, 'pendingUpdates');
   await uploadState.setValue({}, 'failingUpdates');
+  await uploadState.setValue({}, 'successfulUpdates');
 
   // Exist early if dry run
   if (dryRun) {
@@ -252,16 +254,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   // Time duration
   const t0 = new Date().getTime();
 
-  // create a new progress bar instance and use shades_classic theme
-  // const progressBar = new cliProgress.SingleBar(
-  //   {},
-  //   cliProgress.Presets.shades_classic,
-  // );
-
   // Build a GraphQL client
   let total = 0;
   const updatesToRun = Object.entries(pendingUpdates);
   const chunkedUpdates = chunk(updatesToRun, skipWorkflowTriggers ? 50 : 10);
+  const successfulUpdates: Record<string, PreferenceUpdateItem> = {};
   // progressBar.start(updatesToRun.length, 0);
   await map(
     chunkedUpdates,
@@ -277,6 +274,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             },
           })
           .json();
+        currentChunk.forEach(([userId, update]) => {
+          successfulUpdates[userId] = update;
+        });
       } catch (err) {
         try {
           const parsed = JSON.parse(err?.response?.body || '{}');
@@ -321,6 +321,12 @@ export async function uploadPreferenceManagementPreferencesInteractive({
       concurrency: 80,
     },
   );
+
+  // FIXME do this on ctrl+c
+  await uploadState.setValue(successfulUpdates, 'successfulUpdates');
+  await uploadState.setValue({}, 'pendingUpdates');
+  await uploadState.setValue({}, 'pendingSafeUpdates');
+  await uploadState.setValue({}, 'pendingConflictUpdates');
 
   // progressBar.stop();
   const t1 = new Date().getTime();

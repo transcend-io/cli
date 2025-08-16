@@ -115,6 +115,10 @@ export const RequestUploadReceipts = t.type({
    * Mapping from userId to the upload metadata
    */
   pendingUpdates: t.record(t.string, PreferenceUpdateItem),
+  /**
+   * The successful updates
+   */
+  successfulUpdates: t.record(t.string, PreferenceUpdateItem),
 });
 
 /** Override type */
