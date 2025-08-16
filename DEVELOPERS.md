@@ -18,7 +18,14 @@
 
 ## Getting started
 
-1. Use the `pnpm` package manager.
+1. Make sure you are on node v22 or above
+
+```bash
+node --version
+nvm install 22 && nvm use 22 && nvm alias default 22
+```
+
+2. Use the `pnpm` package manager.
 
 ```bash
 npm i -g corepack@latest
@@ -26,19 +33,19 @@ corepack enable
 corepack install
 ```
 
-2. Install dependencies
+3. Install dependencies
 
 ```bash
 pnpm install
 ```
 
-3. Build the project in watch mode in a separate terminal
+4. Build the project in watch mode in a separate terminal
 
 ```bash
 pnpm build:watch
 ```
 
-4. To run a CLI command in dev mode:
+5. To run a CLI command in dev mode:
 
 ```bash
 # This is the dev environment equivalent to `transcend --help`

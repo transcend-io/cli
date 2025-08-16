@@ -4,6 +4,7 @@
 ## Table of Contents
 
 - [Changelog](#changelog)
+  - [[8.0.0] - 2025-08-13](#800---2025-08-13)
   - [[7.3.0] - 2025-08-13](#730---2025-08-13)
     - [Added](#added)
   - [[7.2.0] - 2025-08-13](#720---2025-08-13)
@@ -30,6 +31,10 @@ All notable changes to the Transcend CLI tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [8.0.0] - 2025-08-13
+
+- Drop Node <22 support. Make sure you are on at least node 22 before calling CLI commands. `node --version; nvm install 22 && nvm use 22 && nvm alias default 22`
 
 ## [7.3.0] - 2025-08-13
 

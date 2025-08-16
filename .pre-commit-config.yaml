@@ -1,5 +1,7 @@
 # See http://pre-commit.com for more information
 # See http://pre-commit.com/hooks.html for more hooks
+default_language_version:
+  node: 22.18.0
 repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
     # Use the sha / tag you want to point at, this needs
