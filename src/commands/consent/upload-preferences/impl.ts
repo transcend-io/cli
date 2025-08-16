@@ -74,25 +74,16 @@ export type TaskCommonOpts = Pick<
   | 'identifierColumns'
   | 'columnsToIgnore'
 > & {
-  /** Path to the schema file */
   schemaFile: string;
-  /** Directory to store receipt files */
   receiptsFolder: string;
 };
 
-/** In CJS, __filename is available; use it as the path to fork. */
 function getCurrentModulePath(): string {
-  // @ts-ignore - __filename is present in CJS/ts-node
+  // @ts-ignore - __filename exists in CJS/ts-node
   if (typeof __filename !== 'undefined') return __filename as unknown as string;
   return process.argv[1];
 }
 
-/**
- * Compute pool size from flags or CPU count
- *
- * @param concurrency
- * @param filesCount
- */
 function computePoolSize(
   concurrency: number | undefined,
   filesCount: number,
@@ -155,7 +146,7 @@ type CheckModeTotals = {
 type AnyTotals = UploadModeTotals | CheckModeTotals;
 
 /**
- * Summarize receipt based on skipExistingRecordCheck flag (skipped counted in both modes).
+ * Summarize receipt (skipped counted in both modes).
  *
  * @param receiptPath
  * @param dryRun
@@ -170,13 +161,11 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
     ).length;
 
     if (!dryRun) {
-      // Post-upload view: show final results
       const success = Object.values(json?.successfulUpdates ?? {}).length;
       const failed = Object.values(json?.failingUpdates ?? {}).length;
       return { mode: 'upload', success, skipped: skippedCount, error: failed };
     }
 
-    // Pre-upload check view: show pending breakdown
     const totalPending = Object.values(json?.pendingUpdates ?? {}).length;
     const pendingConflicts = Object.values(
       json?.pendingConflictUpdates ?? {},
@@ -245,11 +234,9 @@ export async function uploadPreferences(
     );
   }
 
-  // Resolve I/O targets (receipts + schema)
   const receiptsFolder = computeReceiptsFolder(receiptFileDir, directory);
   const schemaFile = computeSchemaFile(schemaFilePath, directory, files[0]);
 
-  // Size the worker pool
   const { poolSize, cpuCount } = computePoolSize(concurrency, files.length);
   const common: TaskCommonOpts = {
     schemaFile,
@@ -274,7 +261,6 @@ export async function uploadPreferences(
   const LOG_DIR = join(receiptsFolder, 'logs');
   mkdirSync(LOG_DIR, { recursive: true });
 
-  // Reset logs ONCE at start; then always append
   const RESET_MODE =
     (process.env.RESET_LOGS as 'truncate' | 'delete') ?? 'truncate';
   resetWorkerLogs(LOG_DIR, RESET_MODE);
@@ -283,11 +269,15 @@ export async function uploadPreferences(
 
   const workers = new Map<number, ChildProcess>();
   const workerState = new Map<number, WorkerState>();
+  const slotLogPaths = new Map<
+    number,
+    ReturnType<typeof getWorkerLogPaths> | undefined
+  >();
   const pending = [...files];
   const totals = { completed: 0, failed: 0 };
+  let activeWorkers = 0; // track only live workers
 
-  // Initialize totals in correct mode
-  const agg: AnyTotals = !dryRun
+  const agg: AnyTotals = !common.dryRun
     ? { mode: 'upload', success: 0, skipped: 0, error: 0 }
     : {
         mode: 'check',
@@ -312,11 +302,6 @@ export async function uploadPreferences(
     );
   };
 
-  /**
-   * Assign one task to a specific worker id if available
-   *
-   * @param id
-   */
   const assignWorkToWorker = (id: number) => {
     const w = workers.get(id);
     if (!w) return;
@@ -335,7 +320,6 @@ export async function uploadPreferences(
     w.send?.({ type: 'task', payload: { filePath, options: common } });
   };
 
-  /** Fill all idle workers while there is pending work */
   const refillIdleWorkers = () => {
     for (const [id] of workers) {
       const st = workerState.get(id);
@@ -346,17 +330,19 @@ export async function uploadPreferences(
     }
   };
 
-  // Spawn the initial pool
+  // Spawn the pool
   for (let i = 0; i < poolSize; i += 1) {
     const child = spawnWorkerProcess(i, modulePath, LOG_DIR, true, isSilent);
     workers.set(i, child);
     workerState.set(i, { busy: false, file: null, startedAt: null });
+    slotLogPaths.set(i, getWorkerLogPaths(child));
+    activeWorkers += 1;
 
     child.on('message', (msg: any) => {
       if (!msg || typeof msg !== 'object') return;
 
       if (msg.type === 'ready') {
-        refillIdleWorkers(); // fill as many as possible when workers come up
+        refillIdleWorkers();
         repaint();
         return;
       }
@@ -366,7 +352,6 @@ export async function uploadPreferences(
         if (ok) totals.completed += 1;
         else totals.failed += 1;
 
-        // Update global receipt totals
         const resolved =
           (typeof receiptFilepath === 'string' && receiptFilepath) ||
           resolveReceiptPath(common.receiptsFolder, filePath);
@@ -384,7 +369,6 @@ export async function uploadPreferences(
           }
         }
 
-        // Mark idle and refill
         workerState.set(i, { busy: false, file: null, startedAt: null });
         refillIdleWorkers();
         repaint();
@@ -392,7 +376,9 @@ export async function uploadPreferences(
     });
 
     child.on('exit', () => {
-      workers.delete(i);
+      // keep the slot so digits still map to a worker index
+      activeWorkers -= 1;
+      // (leave the ChildProcess object in the map; switcher will read logs via slotLogPaths)
       workerState.set(i, { busy: false, file: null, startedAt: null });
       repaint();
     });
@@ -400,17 +386,17 @@ export async function uploadPreferences(
 
   const renderInterval = setInterval(() => repaint(false), 350);
 
-  // graceful Ctrl+C (declare cleanup first so we can reference it)
+  // graceful Ctrl+C
   let cleanupSwitcher: () => void = () => {};
   const onSigint = () => {
     clearInterval(renderInterval);
     cleanupSwitcher();
     process.stdout.write('\nStopping workers...\n');
-    for (const [id, w] of workers) {
-      const st = workerState.get(id);
-      if (st && !st.busy) {
+    // attempt graceful shutdown for any idles; busy ones will have exited already
+    for (const [, w] of workers) {
+      if (w && w.connected && (w as any).channel) {
         try {
-          w.send?.({ type: 'shutdown' });
+          w.send({ type: 'shutdown' });
         } catch {}
       }
       try {
@@ -428,25 +414,38 @@ export async function uploadPreferences(
   };
   const attachScreen = (id: number) => {
     dashboardPaused = true;
-    process.stdout.write('\x1b[2J\x1b[H'); // clear
+    process.stdout.write('\x1b[2J\x1b[H');
     process.stdout.write(
-      `Attached to worker ${id}. (Esc/Ctrl+] detach • Ctrl+C SIGINT • Ctrl+D EOF)\n`,
+      `Attached to worker ${id}. (Esc/Ctrl+] detach • Ctrl+C SIGINT)\n`,
     );
   };
+
+  // NEW: make a helper that avoids ?? and only uses explicit guards
+  function safeGetLogPathsForSlot(id: number) {
+    const live = workers.get(id);
+    // Prefer live worker paths if the IPC channel is still open
+    if (live && live.connected && (live as any).channel) {
+      try {
+        const p = getWorkerLogPaths(live);
+        if (p !== undefined && p !== null) return p;
+      } catch {
+        // fall through to snapshot
+      }
+    }
+    // Fall back to the snapshot we saved at spawn time
+    return slotLogPaths.get(id);
+  }
+
   cleanupSwitcher = installInteractiveSwitcher({
     workers,
     onAttach: attachScreen,
     onDetach: detachScreen,
     onCtrlC: onSigint,
-    getLogPaths: (id) => {
-      const w = workers.get(id);
-      return w ? getWorkerLogPaths(w) : undefined;
-    },
-    replayBytes: 200 * 1024, // last ~200KB
-    replayWhich: ['out', 'err'], // also add 'structured' if you want
+    getLogPaths: (id) => safeGetLogPathsForSlot(id), // <— no ?? here
+    replayBytes: 200 * 1024,
+    replayWhich: ['out', 'err'],
     onEnterAttachScreen: attachScreen,
   });
-
   // hint
   const maxDigit = Math.min(poolSize - 1, 9);
   const digitRange = poolSize <= 1 ? '0' : `0-${maxDigit}`;
@@ -457,29 +456,32 @@ export async function uploadPreferences(
     ),
   );
 
-  // wait for completion
-  await new Promise<void>((resolve) => {
+  // wait for completion of work (not viewer)
+  await new Promise<void>((resolveWork) => {
     const check = setInterval(() => {
       // If the queue is empty, request shutdown for **idle** workers only.
       if (pending.length === 0) {
         for (const [id, w] of workers) {
           const st = workerState.get(id);
-          if (st && !st.busy) {
+          // Only try to signal live children; exited ones keep their slot for log viewing
+          if (st && !st.busy && w && w.connected && (w as any).channel) {
             try {
-              w.send?.({ type: 'shutdown' });
-            } catch {}
+              w.send({ type: 'shutdown' });
+            } catch {
+              /* ignore */
+            }
           }
         }
       }
-      // Done when all workers have exited
-      if (pending.length === 0 && workers.size === 0) {
+      // Done when queue is empty and all live workers have exited.
+      if (pending.length === 0 && activeWorkers === 0) {
         clearInterval(check);
         clearInterval(renderInterval);
-        cleanupSwitcher();
 
-        // Persist the final snapshot (don’t clear)
+        // Persist the final snapshot; keep switcher OPEN for viewer mode
         repaint(true);
 
+        // Print summary line (don’t exit yet)
         if ((agg as AnyTotals).mode === 'upload') {
           const a = agg as UploadModeTotals;
           process.stdout.write(
@@ -495,11 +497,37 @@ export async function uploadPreferences(
             ),
           );
         }
-        resolve();
+
+        // Tell the user they can browse logs and press 'q' to quit
+        process.stdout.write(
+          colors.dim(
+            '\nViewer mode — digits to view logs • Tab/Shift+Tab • Esc detach • press q to quit\n',
+          ),
+        );
+
+        resolveWork();
       }
     }, 300);
   });
 
+  // --- Viewer mode: leave switcher active until user presses 'q' ---
+  await new Promise<void>((resolveViewer) => {
+    const onKeypress = (buf: Buffer) => {
+      const s = buf.toString('utf8');
+      if (s === 'q' || s === 'Q') {
+        process.stdin.off('data', onKeypress);
+        resolveViewer();
+      }
+    };
+    try {
+      process.stdin.setRawMode?.(true);
+    } catch {}
+    process.stdin.resume();
+    process.stdin.on('data', onKeypress);
+  });
+
+  // Cleanup switcher now that the user quit viewer mode
+  cleanupSwitcher();
   process.removeListener('SIGINT', onSigint);
 }
 

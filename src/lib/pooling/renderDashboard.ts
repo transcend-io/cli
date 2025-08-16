@@ -17,19 +17,28 @@ let lastFrame = '';
  *
  */
 type UploadModeTotals = {
-  /** */ mode: 'upload' /** */;
-  success: number /** */;
-  skipped: number /** */;
+  /** */
+  mode: 'upload';
+  /** */
+  success: number;
+  /** */
+  skipped: number;
+  /** */
   error: number;
 };
 /**
  *
  */
 type CheckModeTotals = {
-  /** */ mode: 'check' /** */;
-  pendingConflicts: number /** */;
-  pendingSafe: number /** */;
-  totalPending: number /** */;
+  /** */
+  mode: 'check';
+  /** */
+  pendingConflicts: number;
+  /** */
+  pendingSafe: number;
+  /** */
+  totalPending: number;
+  /** */
   skipped: number;
 };
 /**
@@ -96,6 +105,11 @@ export function renderDashboard(
     }
   }
 
+  const isFinal = !!opts?.final;
+  const hotkeysLine = isFinal
+    ? 'Run complete — digits to view logs • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • q to quit'
+    : `Hotkeys: [${digitRange}] attach • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit`;
+
   const frame = [
     `Parallel uploader — ${poolSize} workers (CPU avail: ${cpuCount})`,
     `Files: ${total}  Completed: ${completed}  Failed: ${failed}  In-flight: ${inProgress}`,
@@ -104,12 +118,10 @@ export function renderDashboard(
     '',
     ...lines,
     '',
-    `Hotkeys: [${digitRange}] attach • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit`,
+    hotkeysLine,
   ]
     .filter(Boolean)
     .join('\n');
-
-  const isFinal = !!opts?.final;
 
   if (!isFinal && frame === lastFrame) return;
   lastFrame = frame;

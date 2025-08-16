@@ -21,7 +21,11 @@ export function assignWorkToWorker<T>(
   repaint: () => void,
 ): void {
   const w = workers.get(id);
-  if (!w) return;
+  if (!w || !w.connected || !(w as any).channel) {
+    // mark slot idle and skip (slot is kept for post-run log viewing)
+    workerState.set(id, { busy: false, file: null, startedAt: null });
+    return;
+  }
 
   const filePath = pending.shift();
   if (!filePath) {
