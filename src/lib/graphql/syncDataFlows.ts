@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
 import { chunk } from 'lodash-es';
-import { mapSeries } from '../bluebird-replace';
+import { mapSeries } from 'bluebird';
 import { DataFlowInput } from '../../codecs';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
