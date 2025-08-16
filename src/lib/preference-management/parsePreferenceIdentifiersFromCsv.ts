@@ -262,6 +262,8 @@ export async function addTranscendIdToPreferences(
   return preferences.map((pref) => ({
     ...pref,
     person_id: pref.person_id !== '-2' ? pref.person_id : '',
+    email_address:
+      pref.email_address === 'NOEMAIL@COSTCO.COM' ? '' : pref.email_address,
     transcendID:
       pref.person_id && pref.person_id !== '-2'
         ? pref.person_id
