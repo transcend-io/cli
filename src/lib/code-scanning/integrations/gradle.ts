@@ -34,7 +34,7 @@ export const gradle: CodeScanningConfig = {
     const targets = findAllWithRegex(
       {
         value: new RegExp(GRADLE_IMPLEMENTATION_REGEX, 'g'),
-        matches: ['space', 'quote1', 'name', 'node:path', 'version', 'quote2'],
+        matches: ['space', 'quote1', 'name', 'path', 'version', 'quote2'],
       },
       fileContents,
     );
