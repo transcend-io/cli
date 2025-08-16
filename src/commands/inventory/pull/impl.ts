@@ -9,8 +9,8 @@ import {
 import { logger } from '../../../logger';
 import colors from 'colors';
 import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs from 'fs';
+import { join } from 'node:path';
+import fs from 'node:fs';
 import {
   buildTranscendGraphQLClient,
   pullTranscendConfiguration,

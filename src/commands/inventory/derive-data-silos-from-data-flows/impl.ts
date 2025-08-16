@@ -3,12 +3,12 @@ import {
   fetchAndIndexCatalogs,
   buildTranscendGraphQLClient,
 } from '../../../lib/graphql';
-import { join } from 'path';
+import { join } from 'node:path';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { listFiles } from '../../../lib/api-keys';
 import {
   readTranscendYaml,

@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { CodePackageSdk } from '../../../codecs';
 import { findAllWithRegex } from '@transcend-io/type-utils';
