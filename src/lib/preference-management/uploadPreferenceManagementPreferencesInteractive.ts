@@ -361,7 +361,11 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     uploadedCount += entries.length;
 
     // Periodic persistence + logging
-    if (uploadedCount % LOG_RATE === 0) {
+    if (
+      uploadedCount % LOG_RATE === 0 ||
+      Math.floor((uploadedCount - entries.length) / LOG_RATE) <
+        Math.floor(uploadedCount / LOG_RATE)
+    ) {
       logger.info(
         colors.green(
           `Uploaded ${uploadedCount}/${filteredUpdates.length} user preferences to partition ${partition}`,
