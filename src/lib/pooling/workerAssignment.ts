@@ -1,4 +1,3 @@
-// pool/workerAssignment.ts
 import type { ChildProcess } from 'node:child_process';
 import { isIpcOpen, safeSend, type WorkerLogPaths } from './spawnWorkerProcess';
 import type { WorkerState } from './assignWorkToWorker';

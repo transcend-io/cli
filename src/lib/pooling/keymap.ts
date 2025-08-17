@@ -47,7 +47,7 @@ export type Action =
  * @param mode - The current mode of the dashboard, either 'dashboard' or 'attached'.
  * @returns An Action object representing the mapped action, or null if no action is mapped.
  */
-export function mapKey(
+export function keymap(
   str: string,
   key: readline.Key,
   mode: 'dashboard' | 'attached',

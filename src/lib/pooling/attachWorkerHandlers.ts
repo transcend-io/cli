@@ -1,4 +1,3 @@
-// attachWorkerHandlers.ts
 import type { ChildProcess } from 'node:child_process';
 import { spawnWorkerProcess } from './spawnWorkerProcess';
 import { assignWorkToWorker, type WorkerState } from './assignWorkToWorker';

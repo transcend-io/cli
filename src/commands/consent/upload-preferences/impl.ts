@@ -30,7 +30,6 @@ import {
   WorkerLogPaths,
   WorkerMaps,
   WorkerState,
-  makeOnKeypressExtra,
   installInteractiveSwitcher,
 } from '../../../lib/pooling';
 import { RateCounter } from '../../../lib/helpers';
@@ -44,6 +43,7 @@ import { writeFailingUpdatesCsv, ExportManager } from './artifacts';
 
 import { applyReceiptSummary, FailingUpdateRow } from './receipts';
 import { buildCommonOpts } from './buildTaskOptions';
+import { makeOnKeypressExtra } from './ui/keypressExtra';
 
 function getCurrentModulePath(): string {
   if (typeof __filename !== 'undefined') return __filename as unknown as string;

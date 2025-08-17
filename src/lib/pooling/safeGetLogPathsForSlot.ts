@@ -1,4 +1,3 @@
-// pool/safeGetLogPathsForSlot.ts
 import type { ChildProcess } from 'node:child_process';
 import {
   getWorkerLogPaths,

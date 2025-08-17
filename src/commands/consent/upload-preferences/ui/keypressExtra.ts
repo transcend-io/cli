@@ -1,12 +1,11 @@
 import { join } from 'node:path';
+import type { FailingUpdateRow } from '../receipts';
 import {
-  writeFailingUpdatesCsv,
-  type ExportManager,
-} from '../../commands/consent/upload-preferences/artifacts';
-import type { ExportStatusMap } from './logRotation';
-import { showCombinedLogs } from './showCombinedLogs';
-import type { SlotPaths } from './spawnWorkerProcess';
-import type { FailingUpdateRow } from '../../commands/consent/upload-preferences/receipts';
+  showCombinedLogs,
+  type ExportStatusMap,
+  type SlotPaths,
+} from '../../../../lib/pooling';
+import { writeFailingUpdatesCsv, type ExportManager } from '../artifacts';
 
 /**
  * Handles keypress events for extra functionalities in the CLI.

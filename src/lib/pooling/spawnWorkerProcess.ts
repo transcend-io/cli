@@ -1,4 +1,3 @@
-// spawnWorkerProcess.ts
 import { fork, type ChildProcess } from 'node:child_process';
 import { join } from 'node:path';
 import { createWriteStream } from 'node:fs';
