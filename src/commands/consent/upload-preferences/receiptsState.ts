@@ -57,40 +57,48 @@ export type PreferenceReceiptsInterface = {
 export function makeReceiptsState(
   filepath: string,
 ): PreferenceReceiptsInterface {
-  const s = new PersistedState(filepath, RequestUploadReceipts, {
-    failingUpdates: {},
-    pendingConflictUpdates: {},
-    skippedUpdates: {},
-    pendingSafeUpdates: {},
-    successfulUpdates: {},
-    pendingUpdates: {},
-    lastFetchedAt: new Date().toISOString(),
-  });
+  try {
+    const s = new PersistedState(filepath, RequestUploadReceipts, {
+      failingUpdates: {},
+      pendingConflictUpdates: {},
+      skippedUpdates: {},
+      pendingSafeUpdates: {},
+      successfulUpdates: {},
+      pendingUpdates: {},
+      lastFetchedAt: new Date().toISOString(),
+    });
 
-  return {
-    receiptsFilepath: filepath,
-    getSuccessful: () => s.getValue('successfulUpdates'),
-    getPending: () => s.getValue('pendingUpdates'),
-    getFailing: () => s.getValue('failingUpdates'),
-    async setSuccessful(v: PreferenceUpdateMap) {
-      await s.setValue(v, 'successfulUpdates');
-    },
-    async setPending(v: PreferenceUpdateMap) {
-      await s.setValue(v, 'pendingUpdates');
-    },
-    async setPendingSafe(v: PendingSafePreferenceUpdates) {
-      await s.setValue(v, 'pendingSafeUpdates');
-    },
-    async setPendingConflict(v: PendingWithConflictPreferenceUpdates) {
-      await s.setValue(v, 'pendingConflictUpdates');
-    },
-    async setFailing(v: FailingPreferenceUpdates) {
-      await s.setValue(v, 'failingUpdates');
-    },
-    async resetPending() {
-      await s.setValue({}, 'pendingUpdates');
-      await s.setValue({}, 'pendingSafeUpdates');
-      await s.setValue({}, 'pendingConflictUpdates');
-    },
-  };
+    return {
+      receiptsFilepath: filepath,
+      getSuccessful: () => s.getValue('successfulUpdates'),
+      getPending: () => s.getValue('pendingUpdates'),
+      getFailing: () => s.getValue('failingUpdates'),
+      async setSuccessful(v: PreferenceUpdateMap) {
+        await s.setValue(v, 'successfulUpdates');
+      },
+      async setPending(v: PreferenceUpdateMap) {
+        await s.setValue(v, 'pendingUpdates');
+      },
+      async setPendingSafe(v: PendingSafePreferenceUpdates) {
+        await s.setValue(v, 'pendingSafeUpdates');
+      },
+      async setPendingConflict(v: PendingWithConflictPreferenceUpdates) {
+        await s.setValue(v, 'pendingConflictUpdates');
+      },
+      async setFailing(v: FailingPreferenceUpdates) {
+        await s.setValue(v, 'failingUpdates');
+      },
+      async resetPending() {
+        await s.setValue({}, 'pendingUpdates');
+        await s.setValue({}, 'pendingSafeUpdates');
+        await s.setValue({}, 'pendingConflictUpdates');
+      },
+    };
+  } catch (error) {
+    throw new Error(
+      `Failed to create receipts state for ${filepath}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
 }

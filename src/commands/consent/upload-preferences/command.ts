@@ -154,7 +154,7 @@ export const uploadPreferencesCommand = buildCommand({
         brief:
           'When writing out successful and pending records to the receipt file - this is the maximum number of records to write out. ' +
           'This is to avoid the receipt file getting too large for JSON.parse/stringify.',
-        default: '50',
+        default: '10',
       },
       allowedIdentifierNames: {
         kind: 'parsed',

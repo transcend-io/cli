@@ -3,34 +3,39 @@ import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { join } from 'node:path';
-import {
-  mkdirSync,
-  existsSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-} from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
-import {
-  computeReceiptsFolder,
-  computeSchemaFile,
-  getFilePrefix,
-} from './computeFiles';
+import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
 import { collectCsvFilesOrExit } from './collectCsvFilesOrExit';
 
-import { availableParallelism } from 'node:os';
 import type { ChildProcess } from 'node:child_process';
 
 import { runChild } from './runChild';
 import {
+  computePoolSize,
   getWorkerLogPaths,
+  isIpcOpen,
   renderDashboard,
+  safeSend,
+  showCombinedLogs,
   spawnWorkerProcess,
 } from '../../../lib/pooling';
 import { installInteractiveSwitcher } from '../../../lib/pooling/installInteractiveSwitcher';
-import { resetWorkerLogs } from '../../../lib/pooling/logRotation';
+import {
+  classifyLogLevel,
+  makeLineSplitter,
+  resetWorkerLogs,
+} from '../../../lib/pooling/logRotation';
 import type { WorkerState } from '../../../lib/pooling/assignWorkToWorker';
+import { RateCounter } from '../../../lib/helpers';
+import { resolveReceiptPath } from './resolveReceiptPath';
+import {
+  exportCombinedLogs,
+  readFailingUpdatesFromReceipt,
+  writeFailingUpdatesCsv,
+  type FailingUpdateRow,
+} from '../../../lib/pooling/downloadArtifact';
 
 /** CLI flags */
 export interface UploadPreferencesCommandFlags {
@@ -89,85 +94,6 @@ export type TaskCommonOpts = Pick<
   receiptsFolder: string;
 };
 
-function getCurrentModulePath(): string {
-  // @ts-ignore - __filename exists in CJS/ts-node
-  if (typeof __filename !== 'undefined') return __filename as unknown as string;
-  return process.argv[1];
-}
-
-function computePoolSize(
-  concurrency: number | undefined,
-  filesCount: number,
-): { poolSize: number; cpuCount: number } {
-  const cpuCount = Math.max(1, availableParallelism?.() ?? 1);
-  const desired =
-    typeof concurrency === 'number' && concurrency > 0
-      ? Math.min(concurrency, filesCount)
-      : Math.min(cpuCount, filesCount);
-  return { poolSize: desired, cpuCount };
-}
-
-/** IPC helpers ------------------------------------------------------------ */
-
-function isIpcOpen(w: ChildProcess | undefined | null): boolean {
-  // @ts-ignore - channel is internal but exists for forked children
-  const ch = w && (w as any).channel;
-  // @ts-ignore
-  return !!(w && w.connected && ch && !ch.destroyed);
-}
-
-function safeSend(w: ChildProcess, msg: unknown): boolean {
-  if (!isIpcOpen(w)) return false;
-  try {
-    w.send?.(msg as any);
-    return true;
-  } catch (err: any) {
-    if (
-      err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
-      err?.code === 'EPIPE' ||
-      err?.errno === -32
-    ) {
-      return false;
-    }
-    throw err;
-  }
-}
-
-/** Receipt helpers -------------------------------------------------------- */
-
-/**
- * Find the receipt JSON for a given input file (supports suffixes like __1).
- *
- * @param receiptsFolder
- * @param filePath
- */
-function resolveReceiptPath(
-  receiptsFolder: string,
-  filePath: string,
-): string | null {
-  const base = `${getFilePrefix(filePath)}-receipts.json`;
-  const exact = join(receiptsFolder, base);
-  if (existsSync(exact)) return exact;
-
-  const prefix = `${getFilePrefix(filePath)}-receipts`;
-  try {
-    const entries = readdirSync(receiptsFolder)
-      .filter((n) => n.startsWith(prefix) && n.endsWith('.json'))
-      .map((name) => {
-        const full = join(receiptsFolder, name);
-        let mtime = 0;
-        try {
-          mtime = statSync(full).mtimeMs;
-        } catch {}
-        return { full, mtime };
-      })
-      .sort((a, b) => b.mtime - a.mtime);
-    return entries[0]?.full ?? null;
-  } catch {
-    return null;
-  }
-}
-
 /** Totals union types for renderer */
 type UploadModeTotals = {
   mode: 'upload';
@@ -186,7 +112,7 @@ type CheckModeTotals = {
 type AnyTotals = UploadModeTotals | CheckModeTotals;
 
 /**
- * Summarize receipt (skipped counted in both modes).
+ * Summarize a receipts JSON into dashboard counters.
  *
  * @param receiptPath
  * @param dryRun
@@ -241,43 +167,11 @@ function summarizeReceipt(receiptPath: string, dryRun: boolean): AnyTotals {
   }
 }
 
-/** stderr → ERROR/WARN indicator helpers ---------------------------------- */
-
-// --- helpers to parse stderr lines and classify warn/error ---
-function makeLineSplitter(onLine: (line: string) => void) {
-  let buf = '';
-  return (chunk: Buffer | string) => {
-    buf += chunk.toString('utf8');
-    let nl: number;
-    // eslint-disable-next-line no-cond-assign
-    while ((nl = buf.indexOf('\n')) !== -1) {
-      const line = buf.slice(0, nl);
-      onLine(line);
-      buf = buf.slice(nl + 1);
-    }
-  };
+function getCurrentModulePath(): string {
+  // @ts-ignore - __filename exists in CJS/ts-node
+  if (typeof __filename !== 'undefined') return __filename as unknown as string;
+  return process.argv[1];
 }
-
-/**
- * Return 'warn' | 'error' when the line is an *explicit* tagged message we care about.
- * Otherwise return null so the dashboard ignores it.
- *
- * @param line
- */
-function classifyLevel(line: string): 'warn' | 'error' | null {
-  // strip ANSI (very light pass; good enough for our tags)
-  const noAnsi = line.replace(/\x1B\[[0-9;]*m/g, '');
-  // look for our child prefixes: "[wN] ERROR ..." or "[wN] WARN ..."
-  const m =
-    /^\s*\[w\d+\]\s+(ERROR|WARN|uncaughtException|unhandledRejection)\b/i.exec(
-      noAnsi,
-    );
-  if (!m) return null;
-  const tag = m[1].toLowerCase();
-  if (tag === 'warn') return 'warn';
-  return 'error'; // ERROR, uncaughtException, unhandledRejection → error
-}
-/** Main ------------------------------------------------------------------- */
 
 export async function uploadPreferences(
   this: LocalContext,
@@ -326,6 +220,10 @@ export async function uploadPreferences(
     );
   }
 
+  // Throughput metering (records/s and /m)
+  const meter = new RateCounter();
+  let liveSuccessTotal = 0;
+
   const receiptsFolder = computeReceiptsFolder(receiptFileDir, directory);
   const schemaFile = computeSchemaFile(schemaFilePath, directory, files[0]);
 
@@ -371,6 +269,8 @@ export async function uploadPreferences(
     number,
     ReturnType<typeof getWorkerLogPaths> | undefined
   >();
+  const failingUpdatesMem: FailingUpdateRow[] = [];
+
   const pending = [...files];
   const totals = { completed: 0, failed: 0 };
   let activeWorkers = 0;
@@ -388,57 +288,70 @@ export async function uploadPreferences(
   let dashboardPaused = false;
   const repaint = (final = false) => {
     if (dashboardPaused && !final) return;
-    renderDashboard(
+    renderDashboard({
       poolSize,
       cpuCount,
-      files.length,
-      totals.completed,
-      totals.failed,
+      filesTotal: files.length,
+      filesCompleted: totals.completed,
+      filesFailed: totals.failed,
       workerState,
-      agg,
-      { final },
-    );
+      totals: agg,
+      final,
+      throughput: {
+        successSoFar: liveSuccessTotal,
+        r10s: meter.rate(10_000),
+        r60s: meter.rate(60_000),
+      },
+    });
   };
 
-  const assignWorkToWorker = (id: number) => {
+  const assignWorkToSlot = (id: number) => {
     const w = workers.get(id);
     if (!isIpcOpen(w)) {
+      const prev = workerState.get(id);
       workerState.set(id, {
         busy: false,
         file: null,
         startedAt: null,
-        lastLevel: 'ok' as any,
+        lastLevel: prev?.lastLevel ?? 'ok', // preserve badge (e.g., ERROR after crash)
+        progress: undefined,
       });
       return;
     }
+
     const filePath = pending.shift();
     if (!filePath) {
-      const prev = workerState.get(id) || ({} as WorkerState);
+      const prev = workerState.get(id);
       workerState.set(id, {
-        ...prev,
         busy: false,
         file: null,
         startedAt: null,
-        lastLevel: 'ok' as any,
+        lastLevel: prev?.lastLevel ?? 'ok',
+        progress: undefined,
       });
       return;
     }
+
     workerState.set(id, {
       busy: true,
       file: filePath,
       startedAt: Date.now(),
-      lastLevel: 'ok' as any,
+      lastLevel: 'ok', // new task starts clean
+      progress: undefined,
     });
+
     if (
       !safeSend(w!, { type: 'task', payload: { filePath, options: common } })
     ) {
       // IPC closed between check and send; requeue and mark idle
       pending.unshift(filePath);
+      const prev = workerState.get(id);
       workerState.set(id, {
         busy: false,
         file: null,
         startedAt: null,
-        lastLevel: 'ok' as any,
+        lastLevel: prev?.lastLevel ?? 'ok',
+        progress: undefined,
       });
     }
   };
@@ -448,29 +361,37 @@ export async function uploadPreferences(
       const st = workerState.get(id);
       if (!st || !st.busy) {
         if (pending.length === 0) break;
-        assignWorkToWorker(id);
+        assignWorkToSlot(id);
       }
     }
   };
 
   // Spawn the pool
   for (let i = 0; i < poolSize; i += 1) {
-    const child = spawnWorkerProcess(i, modulePath, LOG_DIR, true, isSilent);
+    const child = spawnWorkerProcess({
+      id: i,
+      modulePath,
+      logDir: LOG_DIR,
+      openLogWindows: true,
+      isSilent,
+      childFlag: CHILD_FLAG,
+    });
     workers.set(i, child);
     workerState.set(i, {
       busy: false,
       file: null,
       startedAt: null,
-      lastLevel: 'ok' as any,
+      lastLevel: 'ok',
+      progress: undefined,
     });
     slotLogPaths.set(i, getWorkerLogPaths(child));
     activeWorkers += 1;
 
-    // Surface WARN/ERROR status live from stderr
+    // Live WARN/ERROR status from stderr
     const errLine = makeLineSplitter((line) => {
-      const lvl = classifyLevel(line);
-      if (!lvl) return; // ignore untagged stderr noise
-      const prev = workerState.get(i) || ({} as WorkerState);
+      const lvl = classifyLogLevel(line);
+      if (!lvl) return;
+      const prev = workerState.get(i)!;
       if (prev.lastLevel !== lvl) {
         workerState.set(i, { ...prev, lastLevel: lvl });
         repaint();
@@ -498,6 +419,26 @@ export async function uploadPreferences(
         return;
       }
 
+      if (msg.type === 'progress') {
+        const { successDelta, successTotal, fileTotal, filePath } =
+          msg.payload || {};
+        liveSuccessTotal += successDelta || 0;
+
+        // Update that worker’s live progress bar
+        const prev = workerState.get(i)!;
+        const processed = successTotal ?? prev.progress?.processed ?? 0;
+        const total = fileTotal ?? prev.progress?.total ?? 0;
+        workerState.set(i, {
+          ...prev,
+          file: prev.file ?? filePath ?? prev.file,
+          progress: { processed, total },
+        });
+
+        if (successDelta) meter.add(successDelta);
+        repaint();
+        return;
+      }
+
       if (msg.type === 'result') {
         const { ok, filePath, receiptFilepath } = msg.payload || {};
         if (ok) totals.completed += 1;
@@ -508,6 +449,10 @@ export async function uploadPreferences(
           resolveReceiptPath(common.receiptsFolder, filePath);
         if (resolved) {
           const summary = summarizeReceipt(resolved, common.dryRun);
+
+          failingUpdatesMem.push(
+            ...readFailingUpdatesFromReceipt(resolved, filePath),
+          );
           if (summary.mode === 'upload' && agg.mode === 'upload') {
             agg.success += summary.success;
             agg.skipped += summary.skipped;
@@ -524,25 +469,37 @@ export async function uploadPreferences(
           }
         }
 
+        // Mark idle; keep ERROR badge for failed task until next assignment
+        const prev = workerState.get(i)!;
         workerState.set(i, {
+          ...prev,
           busy: false,
           file: null,
           startedAt: null,
-          lastLevel: 'ok' as any,
+          lastLevel: ok ? 'ok' : 'error',
+          progress: undefined,
         });
+
         refillIdleWorkers();
         repaint();
       }
     });
 
-    child.on('exit', () => {
+    child.on('exit', (code, signal) => {
       activeWorkers -= 1;
+
+      const prev = workerState.get(i)!;
+      const abnormal = (typeof code === 'number' && code !== 0) || !!signal;
+
       workerState.set(i, {
+        ...prev,
         busy: false,
         file: null,
         startedAt: null,
-        lastLevel: 'ok' as any,
+        lastLevel: abnormal ? 'error' : prev.lastLevel ?? 'ok',
+        progress: undefined,
       });
+
       repaint();
     });
   }
@@ -602,10 +559,102 @@ export async function uploadPreferences(
     onEnterAttachScreen: attachScreen,
   });
 
+  // extra hotkeys for combined views
+  // inside onKeypressExtra in impl.ts
+  const onKeypressExtra = (buf: Buffer): void => {
+    const s = buf.toString('utf8');
+
+    // existing viewers (now with array-based sources)
+    if (s === 'e' || s === 'E') {
+      // Errors: read raw stderr and let the function filter only ERROR lines.
+      // (If you later add 'errorPath' to WhichLogs, you can include ['error'] too.)
+      dashboardPaused = true;
+      showCombinedLogs(slotLogPaths, ['err'], 'error');
+      return;
+    }
+    if (s === 'w' || s === 'W') {
+      // Warnings: include the dedicated WARN file (if present) AND stderr
+      // (lots of libs print WARN on stderr without "ERROR" tags)
+      dashboardPaused = true;
+      showCombinedLogs(slotLogPaths, ['warn', 'err'], 'warn');
+      return;
+    }
+    if (s === 'i' || s === 'I') {
+      // Info-only: use the classified INFO file
+      dashboardPaused = true;
+      showCombinedLogs(slotLogPaths, ['info'], 'all');
+      return;
+    }
+    if (s === 'l' || s === 'L') {
+      // All logs: combine stdout, stderr, and your structured app log
+      dashboardPaused = true;
+      showCombinedLogs(slotLogPaths, ['out', 'err', 'structured'], 'all');
+      return;
+    }
+
+    // NEW: Shift+E / Shift+W / Shift+I to write combined artifact files
+    if (s === 'E') {
+      exportCombinedLogs(slotLogPaths, 'error', LOG_DIR)
+        .then((p) =>
+          process.stdout.write(`\nWrote combined error logs to: ${p}\n`),
+        )
+        .catch(() =>
+          process.stdout.write('\nFailed to write combined error logs\n'),
+        );
+      return;
+    }
+    if (s === 'W') {
+      exportCombinedLogs(slotLogPaths, 'warn', LOG_DIR)
+        .then((p) =>
+          process.stdout.write(`\nWrote combined warn logs to: ${p}\n`),
+        )
+        .catch(() =>
+          process.stdout.write('\nFailed to write combined warn logs\n'),
+        );
+      return;
+    }
+    if (s === 'I') {
+      exportCombinedLogs(slotLogPaths, 'info', LOG_DIR)
+        .then((p) =>
+          process.stdout.write(`\nWrote combined info logs to: ${p}\n`),
+        )
+        .catch(() =>
+          process.stdout.write('\nFailed to write combined info logs\n'),
+        );
+      return;
+    }
+
+    // NEW: Shift+F to dump failing-updates CSV (from memory)
+    if (s === 'F') {
+      const dest = join(LOG_DIR, 'failing-updates.csv');
+      writeFailingUpdatesCsv(failingUpdatesMem, dest)
+        .then((p) =>
+          process.stdout.write(`\nWrote failing updates CSV to: ${p}\n`),
+        )
+        .catch(() =>
+          process.stdout.write('\nFailed to write failing updates CSV\n'),
+        );
+      return;
+    }
+
+    // Esc / Ctrl+] back to dashboard
+    if (s === '\x1b' || s === '\x1d') {
+      dashboardPaused = false;
+      repaint();
+    }
+  };
+
+  try {
+    process.stdin.setRawMode?.(true);
+  } catch {}
+  process.stdin.resume();
+  process.stdin.on('data', onKeypressExtra);
+
   // hint
-  const maxDigit = Math.min(poolSize - 1, 9);
-  const digitRange = poolSize <= 1 ? '0' : `0-${maxDigit}`;
-  const extra = poolSize > 10 ? ' (Tab/Shift+Tab for ≥10)' : '';
+  const { poolSize: shownPool } = computePoolSize(concurrency, files.length);
+  const maxDigit = Math.min(shownPool - 1, 9);
+  const digitRange = shownPool <= 1 ? '0' : `0-${maxDigit}`;
+  const extra = shownPool > 10 ? ' (Tab/Shift+Tab for ≥10)' : '';
   process.stdout.write(
     colors.dim(
       `\nHotkeys: [${digitRange}] attach${extra} • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit\n\n`,
@@ -614,7 +663,7 @@ export async function uploadPreferences(
 
   // wait for completion of work (not viewer)
   await new Promise<void>((resolveWork) => {
-    const check = setInterval(() => {
+    const check = setInterval(async () => {
       if (pending.length === 0) {
         for (const [id, w] of workers) {
           const st = workerState.get(id);
@@ -629,18 +678,31 @@ export async function uploadPreferences(
 
         repaint(true);
 
+        // right after repaint(true) in the "work complete" block
+        try {
+          const e = await exportCombinedLogs(slotLogPaths, 'error', LOG_DIR);
+          const w = await exportCombinedLogs(slotLogPaths, 'warn', LOG_DIR);
+          const i = await exportCombinedLogs(slotLogPaths, 'info', LOG_DIR);
+          const fPath = join(LOG_DIR, 'failing-updates.csv');
+          await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
+          process.stdout.write(
+            `\nArtifacts:\n  ${e}\n  ${w}\n  ${i}\n  ${fPath}\n\n`,
+          );
+        } catch {}
+
         if ((agg as AnyTotals).mode === 'upload') {
           const a = agg as UploadModeTotals;
           process.stdout.write(
             colors.green(
-              `\nAll done. Success:${a.success}  Skipped:${a.skipped}  Error:${a.error}\n`,
+              `\nAll done. Success:${a.success.toLocaleString()}  Skipped:${a.skipped.toLocaleString()}  Error:${a.error.toLocaleString()}\n`,
             ),
           );
         } else {
           const a = agg as CheckModeTotals;
           process.stdout.write(
             colors.green(
-              `\nAll done. Pending:${a.totalPending}  PendingConflicts:${a.pendingConflicts}  PendingSafe:${a.pendingSafe}  Skipped:${a.skipped}\n`,
+              `\nAll done. Pending:${a.totalPending.toLocaleString()}  PendingConflicts:${a.pendingConflicts.toLocaleString()}  ` +
+                `PendingSafe:${a.pendingSafe.toLocaleString()}  Skipped:${a.skipped.toLocaleString()}\n`,
             ),
           );
         }

@@ -51,7 +51,7 @@ export async function runChild(): Promise<void> {
 
         // Construct common options
         const receipts = makeReceiptsState(receiptFilepath);
-        const schema = makeSchemaState(options.schemaFile);
+        const schema = await makeSchemaState(options.schemaFile);
         const client = buildTranscendGraphQLClient(
           options.transcendUrl,
           options.auth,
@@ -92,6 +92,18 @@ export async function runChild(): Promise<void> {
           maxChunkSize: options.maxChunkSize,
           uploadConcurrency: options.uploadConcurrency,
           maxRecordsToReceipt: options.maxRecordsToReceipt,
+          onProgress: ({ successDelta, successTotal, fileTotal }) => {
+            // Emit progress messages up to the parent
+            process.send?.({
+              type: 'progress',
+              payload: {
+                filePath,
+                successDelta,
+                successTotal,
+                fileTotal,
+              },
+            });
+          },
         });
 
         logger.info(`[w${workerId}] DONE  ${filePath}`);

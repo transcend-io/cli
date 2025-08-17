@@ -3,104 +3,213 @@ import { fork, type ChildProcess } from 'node:child_process';
 import { join } from 'node:path';
 import { createWriteStream } from 'node:fs';
 import { openLogTailWindowMulti } from './openTerminal';
+import { ensureLogFile } from './ensureLogFile';
+import { classifyLogLevel, makeLineSplitter } from './logRotation';
 
 export const CHILD_FLAG = '--child-upload-preferences';
-
-export interface WorkerLogPaths {
-  /** */
-  structuredPath: string;
-  /** */
-  outPath: string;
-  /** */
-  errPath: string;
-}
 
 // Symbol key so we can stash/retrieve paths on the child proc safely
 const LOG_PATHS_SYM: unique symbol = Symbol('workerLogPaths');
 
+export interface WorkerLogPaths {
+  /** Structured (app-controlled) log file path written via WORKER_LOG */
+  structuredPath: string;
+  /** Raw stdout capture */
+  outPath: string;
+  /** Raw stderr capture */
+  errPath: string;
+  /** Lines classified as INFO (primarily stdout) */
+  infoPath: string;
+  /** Lines classified as WARN (from stderr without error tokens) */
+  warnPath: string;
+  /** Lines classified as ERROR (from stderr, including uncaught) */
+  errorPath: string;
+}
+
 /**
+ * Retrieve the paths we stashed on the child.
  *
- * @param pathStr
+ * @param child - The worker ChildProcess instance.
+ * @returns The log paths or undefined if not set.
  */
-function ensureLogFile(pathStr: string) {
+export function getWorkerLogPaths(
+  child: ChildProcess,
+): WorkerLogPaths | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (child as any)[LOG_PATHS_SYM] as WorkerLogPaths | undefined;
+}
+
+/**
+ * Is IPC channel still open? (Node doesn't type `.channel`)
+ *
+ * @param w - The worker ChildProcess instance.
+ * @returns True if the IPC channel is open, false otherwise.
+ */
+export function isIpcOpen(w: ChildProcess | undefined | null): boolean {
+  const ch = w && (w as any).channel;
+  return !!(w && w.connected && ch && !(ch as any).destroyed);
+}
+
+/**
+ * Safely send a message to the worker process.
+ *
+ * @param w - The worker ChildProcess instance.
+ * @param msg - The message to send.
+ * @returns True if the message was sent successfully, false otherwise.
+ */
+export function safeSend(w: ChildProcess, msg: unknown): boolean {
+  if (!isIpcOpen(w)) return false;
   try {
-    const w = createWriteStream(pathStr, { flags: 'a' });
-    w.end();
-  } catch {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    w.send?.(msg as any);
+    return true;
+  } catch (err: any) {
+    if (
+      err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
+      err?.code === 'EPIPE' ||
+      err?.errno === -32
+    ) {
+      return false;
+    }
+    throw err;
+  }
+}
+
+export interface SpawnWorkerOptions {
+  /** Worker slot/index */
+  id: number;
+  /** Absolute path to the module to fork (should handle CHILD_FLAG) */
+  modulePath: string;
+  /** Directory where log files will be written */
+  logDir: string;
+  /** If true, open tail windows for the log files */
+  openLogWindows: boolean;
+  /** If true, spawn with silent stdio (respect your existing setting) */
+  isSilent: boolean;
+  /** Optional override for the child flag (defaults to CHILD_FLAG) */
+  childFlag?: string;
 }
 
 /**
  * Spawn a worker process with piped stdio and persisted logs.
- * - stdin/stdout/stderr = 'pipe' so we can attach interactively
- * - stdout/stderr also go to per-worker files (.out/.err)
- * - worker writes structured logs to WORKER_LOG (structuredPath)
  *
- * @param id
- * @param modulePath
- * @param logDir
- * @param openLogWindows
- * @param isSilent
+ * Files produced per worker:
+ *  - worker-{id}.log       (structured WORKER_LOG written by the child)
+ *  - worker-{id}.out.log   (raw stdout)
+ *  - worker-{id}.err.log   (raw stderr)
+ *  - worker-{id}.info.log  (classified INFO lines from stdout)
+ *  - worker-{id}.warn.log  (classified WARN lines from stderr)
+ *  - worker-{id}.error.log (classified ERROR lines from stderr)
+ *
+ * @param opts
  */
-export function spawnWorkerProcess(
-  id: number,
-  modulePath: string,
-  logDir: string,
-  openLogWindows: boolean,
-  isSilent: boolean,
-): ChildProcess {
+export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
+  const {
+    id,
+    modulePath,
+    logDir,
+    openLogWindows,
+    isSilent,
+    childFlag = CHILD_FLAG,
+  } = opts;
+
   const structuredPath = join(logDir, `worker-${id}.log`);
   const outPath = join(logDir, `worker-${id}.out.log`);
   const errPath = join(logDir, `worker-${id}.err.log`);
-  [structuredPath, outPath, errPath].forEach(ensureLogFile);
+  const infoPath = join(logDir, `worker-${id}.info.log`);
+  const warnPath = join(logDir, `worker-${id}.warn.log`);
+  const errorPath = join(logDir, `worker-${id}.error.log`);
 
-  const child = fork(modulePath, ['--child-upload-preferences'], {
+  [structuredPath, outPath, errPath, infoPath, warnPath, errorPath].forEach(
+    ensureLogFile,
+  );
+
+  const child = fork(modulePath, [childFlag], {
     stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
     env: { ...process.env, WORKER_ID: String(id), WORKER_LOG: structuredPath },
     execArgv: process.execArgv,
+    silent: isSilent,
   });
 
-  // Persist stdout/stderr to files
+  // Raw capture streams
   const outStream = createWriteStream(outPath, { flags: 'a' });
   const errStream = createWriteStream(errPath, { flags: 'a' });
+
+  // Classified streams
+  const infoStream = createWriteStream(infoPath, { flags: 'a' });
+  const warnStream = createWriteStream(warnPath, { flags: 'a' });
+  const errorStream = createWriteStream(errorPath, { flags: 'a' });
+
+  // Pipe raw streams
   child.stdout?.pipe(outStream);
   child.stderr?.pipe(errStream);
 
   // Headers so tail windows show something immediately
-  outStream.write(
-    `[parent] stdout capture active for w${id} (pid ${child.pid})\n`,
-  );
-  errStream.write(
-    `[parent] stderr capture active for w${id} (pid ${child.pid})\n`,
-  );
+  const hdr = (name: string) =>
+    `[parent] ${name} capture active for w${id} (pid ${child.pid})\n`;
+  outStream.write(hdr('stdout'));
+  errStream.write(hdr('stderr'));
+  infoStream.write(hdr('info'));
+  warnStream.write(hdr('warn'));
+  errorStream.write(hdr('error'));
+
+  // Classified INFO from stdout (line-buffered)
+  if (child.stdout) {
+    const onOutLine = makeLineSplitter((line) => {
+      if (!line) return;
+      try {
+        // Treat all stdout lines as INFO for the classified stream
+        infoStream.write(`${line}\n`);
+      } catch {
+        /* ignore */
+      }
+    });
+    child.stdout.on('data', onOutLine);
+  }
+
+  // Classified WARN/ERROR from stderr (line-buffered)
+  if (child.stderr) {
+    const onErrLine = makeLineSplitter((line) => {
+      if (!line) return;
+      const lvl = classifyLogLevel(line); // 'warn' | 'error' | null
+      try {
+        if (lvl === 'error') {
+          errorStream.write(`${line}\n`);
+        } else if (lvl === 'warn' || lvl == null) {
+          // Treat untagged stderr as WARN by default (common in libs)
+          warnStream.write(`${line}\n`);
+        }
+      } catch {
+        /* ignore */
+      }
+    });
+    child.stderr.on('data', onErrLine);
+  }
 
   // Stash log path metadata on the child
   (child as any)[LOG_PATHS_SYM] = {
     structuredPath,
     outPath,
     errPath,
+    infoPath,
+    warnPath,
+    errorPath,
   } as WorkerLogPaths;
 
   if (openLogWindows) {
     openLogTailWindowMulti(
-      [structuredPath, outPath, errPath],
+      [structuredPath, outPath, errPath, infoPath, warnPath, errorPath],
       `worker-${id}`,
       isSilent,
     );
   }
 
+  // Best-effort error suppression on file streams
   outStream.on('error', () => {});
   errStream.on('error', () => {});
+  infoStream.on('error', () => {});
+  warnStream.on('error', () => {});
+  errorStream.on('error', () => {});
 
   return child;
-}
-
-/**
- * Retrieve the paths we stashed on the child.
- *
- * @param child
- */
-export function getWorkerLogPaths(
-  child: ChildProcess,
-): WorkerLogPaths | undefined {
-  return (child as any)[LOG_PATHS_SYM] as WorkerLogPaths | undefined;
 }

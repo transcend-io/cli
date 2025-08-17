@@ -42,6 +42,7 @@ export async function interactivePreferenceUploaderFromPlan(
     maxChunkSize = 50,
     uploadConcurrency = 20,
     maxRecordsToReceipt = 50,
+    onProgress,
   }: {
     /** Receipts interface */
     receipts: PreferenceReceiptsInterface;
@@ -65,6 +66,15 @@ export async function interactivePreferenceUploaderFromPlan(
     uploadConcurrency?: number;
     /** Maximum records to write out to the receipt file */
     maxRecordsToReceipt?: number;
+    /* existing options ... */
+    onProgress?: (info: {
+      /** how many records just succeeded */
+      successDelta: number;
+      /** cumulative successes in this file */
+      successTotal: number;
+      /** total records that will be uploaded in this file */
+      fileTotal: number;
+    }) => void;
   },
 ): Promise<void> {
   // Build final payloads (pure transform; no network)
@@ -116,6 +126,12 @@ export async function interactivePreferenceUploaderFromPlan(
     [string, PreferenceUpdateItem]
   >;
   const filtered = allEntries.filter(([userId]) => !successful[userId]);
+  const fileTotal = filtered.length;
+  onProgress?.({
+    successDelta: 0,
+    successTotal: uploadedCount,
+    fileTotal,
+  });
 
   if (filtered.length === 0) {
     logger.warn(
@@ -126,6 +142,7 @@ export async function interactivePreferenceUploaderFromPlan(
     await receipts.resetPending();
     return;
   }
+
   if (filtered.length < allEntries.length) {
     logger.warn(
       colors.yellow(
@@ -164,6 +181,11 @@ export async function interactivePreferenceUploaderFromPlan(
       delete (pendingConflictUpdates as any)[userId];
     }
     uploadedCount += entries.length;
+    onProgress?.({
+      successDelta: entries.length,
+      successTotal: uploadedCount,
+      fileTotal,
+    });
 
     const shouldLog =
       uploadedCount % uploadLogInterval === 0 ||
@@ -201,11 +223,12 @@ export async function interactivePreferenceUploaderFromPlan(
     update: PreferenceUpdateItem,
     err: unknown,
   ): Promise<void> => {
-    let msg = extractErrorMessage(err);
-    if (msg.includes('Too many identifiers')) {
-      // Add first identifier clue to speed up triage
-      msg += `\n     ----> ${userId.split('___')[0]}`;
-    }
+    const msg = extractErrorMessage(err);
+    // FIXME
+    // if (msg.includes('Too many identifiers')) {
+    //   // Add first identifier clue to speed up triage
+    //   msg += `\n     ----> ${userId.split('___')[0]}`;
+    // }
     logger.error(
       colors.red(
         `Failed to upload preferences for ${userId} (partition=${partition}): ${msg}`,
