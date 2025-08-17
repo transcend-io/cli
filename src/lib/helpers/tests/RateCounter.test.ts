@@ -1,4 +1,3 @@
-// src/lib/pooling/tests/RateCounter.test.ts
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RateCounter } from '../RateCounter';
 

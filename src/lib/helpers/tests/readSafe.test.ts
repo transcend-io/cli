@@ -1,4 +1,3 @@
-// src/lib/pooling/tests/readSafe.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { readFileSync } from 'node:fs';

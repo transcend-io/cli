@@ -1,4 +1,3 @@
-// ui/lines.ts
 import colors from 'colors';
 import { basename, resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
