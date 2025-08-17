@@ -1,26 +1,40 @@
 // interactiveSwitcher.ts
 import * as readline from 'node:readline';
-import { createReadStream, statSync } from 'node:fs';
 import type { ChildProcess } from 'node:child_process';
 import type { WorkerLogPaths } from './spawnWorkerProcess';
+import { replayFileTailToStdout } from './replayTail';
+import { mapKey } from './keymap';
+import { cycleWorkers, getWorkerIds } from './workerIds';
+import type { WhichLogs } from './showCombinedLogs';
 
 /**
- *
+ * Key action types for the interactive switcher
  */
-export type WhichLogs = Array<'out' | 'err' | 'structured'>;
+export type InteractiveDashboardMode = 'dashboard' | 'attached';
+
+export interface SwitcherPorts {
+  /** Standard input stream */
+  stdin: NodeJS.ReadStream;
+  /** Standard output stream */
+  stdout: NodeJS.WriteStream;
+  /** Standard error stream */
+  stderr: NodeJS.WriteStream;
+}
 
 /**
+ * Install an interactive switcher for managing worker processes.
  *
- * @param opts
+ * @param opts - Options for the switcher
+ * @returns A cleanup function to remove the switcher
  */
 export function installInteractiveSwitcher(opts: {
-  /** */
+  /** Registry of live workers by id */
   workers: Map<number, ChildProcess>;
-  /** */
+  /** Hooks */
   onAttach?: (id: number) => void;
-  /** */
+  /** Optional detach handler */
   onDetach?: () => void;
-  /** */
+  /** Optional Ctrl+C handler for parent graceful shutdown in dashboard */
   onCtrlC?: () => void; // parent graceful shutdown in dashboard
   /** Provide log paths so we can replay the tail on attach */
   getLogPaths?: (id: number) => WorkerLogPaths | undefined;
@@ -30,7 +44,9 @@ export function installInteractiveSwitcher(opts: {
   replayWhich?: WhichLogs;
   /** Print a small banner/clear screen before replaying (optional) */
   onEnterAttachScreen?: (id: number) => void;
-}) {
+  /** Optional stdio ports for testing; defaults to process stdio */
+  ports?: SwitcherPorts;
+}): () => void {
   const {
     workers,
     onAttach,
@@ -40,52 +56,39 @@ export function installInteractiveSwitcher(opts: {
     replayBytes = 200 * 1024,
     replayWhich = ['out', 'err'],
     onEnterAttachScreen,
+    ports,
   } = opts;
 
-  const { stdin } = process;
-  if (!stdin.isTTY) return () => {};
+  const stdin = ports?.stdin ?? process.stdin;
+  const stdout = ports?.stdout ?? process.stdout;
+  const stderr = ports?.stderr ?? process.stderr;
+
+  if (!stdin.isTTY) {
+    // Not a TTY; return a no-op cleanup
+    return () => {
+      // noop
+    };
+  }
 
   readline.emitKeypressEvents(stdin);
   stdin.setRawMode?.(true);
 
-  let mode: 'dashboard' | 'attached' = 'dashboard';
+  let mode: InteractiveDashboardMode = 'dashboard';
   let focus: number | null = null;
 
   // live mirroring handlers while attached
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let outHandler: ((chunk: any) => void) | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let errHandler: ((chunk: any) => void) | null = null;
 
-  const workerIds = () => [...workers.keys()].sort((a, b) => a - b);
-  const idxOf = (id: number) => workerIds().indexOf(id);
-
   /**
+   * Cycle through worker IDs, wrapping around.
    *
-   * @param path
-   * @param maxBytes
+   * @param id - The current worker ID to start cycling from.
+   * @returns The next worker ID after cycling, or null if no workers are available.
    */
-  function replayFileTailToStdout(
-    path: string,
-    maxBytes: number,
-  ): Promise<void> {
-    return new Promise((resolve) => {
-      try {
-        const st = statSync(path);
-        const start = Math.max(0, st.size - maxBytes);
-        const stream = createReadStream(path, { start, encoding: 'utf8' });
-        stream.on('data', (chunk) => process.stdout.write(chunk));
-        stream.on('end', () => resolve());
-        stream.on('error', () => resolve());
-      } catch {
-        resolve();
-      }
-    });
-  }
-
-  /**
-   *
-   * @param id
-   */
-  async function replayLogs(id: number) {
+  async function replayLogs(id: number): Promise<void> {
     if (!getLogPaths) return;
     const paths = getLogPaths(id);
     if (!paths) return;
@@ -98,20 +101,18 @@ export function installInteractiveSwitcher(opts: {
     }
 
     if (toReplay.length) {
-      process.stdout.write(`\n${'-'.repeat(12)} replay ${'-'.repeat(12)}\n`);
+      stdout.write('\n------------ replay ------------\n');
       for (const p of toReplay) {
-        // small header for context
-        process.stdout.write(
+        stdout.write(
           `\n--- ${p} (last ~${Math.floor(replayBytes / 1024)}KB) ---\n`,
         );
-
-        await replayFileTailToStdout(p, replayBytes);
+        await replayFileTailToStdout(p, replayBytes, (s) => stdout.write(s));
       }
-      process.stdout.write(`\n${'-'.repeat(32)}\n\n`);
+      stdout.write('\n--------------------------------\n\n');
     }
   }
 
-  const attach = async (id: number) => {
+  const attach = async (id: number): Promise<void> => {
     const w = workers.get(id);
     if (!w) return;
 
@@ -129,19 +130,21 @@ export function installInteractiveSwitcher(opts: {
 
     // 2) now mirror live child output to our terminal
     onAttach?.(id);
-    outHandler = (chunk: any) => process.stdout.write(chunk);
-    errHandler = (chunk: any) => process.stderr.write(chunk);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    outHandler = (chunk: any) => stdout.write(chunk);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errHandler = (chunk: any) => stderr.write(chunk);
     w.stdout?.on('data', outHandler);
     w.stderr?.on('data', errHandler);
 
     // auto-detach if child exits
-    const onExit = () => {
+    const onExit = (): void => {
       if (focus === id) detach();
     };
     w.once('exit', onExit);
   };
 
-  const detach = () => {
+  const detach = (): void => {
     if (focus == null) return;
     const id = focus;
     const w = workers.get(id);
@@ -156,94 +159,96 @@ export function installInteractiveSwitcher(opts: {
     onDetach?.();
   };
 
-  const cycle = (delta: number) => {
-    const ids = workerIds();
-    if (ids.length === 0) return;
-    const current = focus == null ? ids[0] : focus;
-    let i = idxOf(current);
-    if (i === -1) i = 0;
-    i = (i + delta + ids.length) % ids.length;
-    void attach(ids[i]);
-  };
+  const onKey = (str: string, key: readline.Key): void => {
+    const act = mapKey(str, key, mode);
+    if (!act) return;
 
-  const onKey = (str: string, key: readline.Key) => {
-    if (!key) return;
-
-    // Ctrl+C behavior
-    if (key.ctrl && key.name === 'c') {
-      if (mode === 'attached' && focus != null) {
-        const w = workers.get(focus);
-        try {
-          w?.kill('SIGINT');
-        } catch {}
-        // optional: auto-detach so second Ctrl+C exits parent
-        detach();
-        return;
-      }
-      onCtrlC?.();
-      return;
-    }
-
-    if (mode === 'dashboard') {
-      if (key.name && /^[0-9]$/.test(key.name)) {
-        const n = Number(key.name);
-        if (workers.has(n)) void attach(n);
-        return;
-      }
-      if (key.name === 'tab' && !key.shift) {
-        cycle(+1);
-        return;
-      }
-      if (key.name === 'tab' && key.shift) {
-        cycle(-1);
-        return;
-      }
-      if (key.name === 'q') {
+    // eslint-disable-next-line default-case
+    switch (act.type) {
+      case 'CTRL_C': {
+        if (mode === 'attached' && focus != null) {
+          const w = workers.get(focus);
+          try {
+            w?.kill('SIGINT');
+          } catch {
+            // noop
+          }
+          // optional: auto-detach so second Ctrl+C exits parent
+          detach();
+          return;
+        }
         onCtrlC?.();
         return;
       }
-      return;
-    }
 
-    // attached mode
-    if (key.name === 'escape' || (key.ctrl && key.name === ']')) {
-      detach();
-      return;
-    }
-    if (key.ctrl && key.name === 'd') {
-      const w = focus != null ? workers.get(focus) : null;
-      try {
-        w?.stdin?.end();
-      } catch {}
-      return;
-    }
+      case 'ATTACH': {
+        if (mode !== 'dashboard') return;
+        // eslint-disable-next-line no-void
+        if (workers.has(act.id)) void attach(act.id);
+        return;
+      }
 
-    // forward keystrokes to child
-    const w = focus != null ? workers.get(focus) : null;
-    if (!w || !w.stdin) return;
-    const seq = (key as any).sequence ?? str ?? '';
-    if (seq) {
-      try {
-        w.stdin.write(seq);
-      } catch {}
+      case 'CYCLE': {
+        if (mode !== 'dashboard') return;
+        const next = cycleWorkers(getWorkerIds(workers), focus, act.delta);
+        // eslint-disable-next-line no-void
+        if (next != null) void attach(next);
+        return;
+      }
+
+      case 'QUIT': {
+        if (mode !== 'dashboard') return;
+        onCtrlC?.();
+        return;
+      }
+
+      case 'DETACH': {
+        if (mode === 'attached') detach();
+        return;
+      }
+
+      case 'CTRL_D': {
+        if (mode === 'attached' && focus != null) {
+          const w = workers.get(focus);
+          try {
+            w?.stdin?.end();
+          } catch {
+            // noop
+          }
+        }
+        return;
+      }
+
+      case 'FORWARD': {
+        if (mode === 'attached' && focus != null) {
+          const w = workers.get(focus);
+          try {
+            w?.stdin?.write(act.sequence);
+          } catch {
+            // noop
+          }
+        }
+      }
     }
   };
 
   // Raw bytes fallback (usually not hit because keypress handles it)
-  const onData = (chunk: Buffer) => {
+  const onData = (chunk: Buffer): void => {
     if (mode === 'attached' && focus != null) {
       const w = workers.get(focus);
       try {
         w?.stdin?.write(chunk);
-      } catch {}
+      } catch {
+        // noop
+      }
     }
   };
 
-  const cleanup = () => {
+  const cleanup = (): void => {
     stdin.off('keypress', onKey);
     stdin.off('data', onData);
     stdin.setRawMode?.(false);
-    process.stdout.write('\x1b[?25h');
+    stdout.write('\x1b[?25h');
   };
 
   stdin.on('keypress', onKey);

@@ -8,7 +8,7 @@ import type { PreferenceUpdateItem } from '@transcend-io/privacy-types';
 import { RETRYABLE_BATCH_STATUSES } from '../../../../constants';
 import { extractErrorMessage, limitRecords } from '../../../../lib/helpers';
 import type { InteractiveUploadPreferencePlan } from './buildInteractiveUploadPlan';
-import type { PreferenceReceiptsInterface } from '../receiptsState';
+import type { PreferenceReceiptsInterface } from '../receipts';
 import type { Got } from 'got';
 
 /**
@@ -114,7 +114,8 @@ export async function interactivePreferenceUploaderFromPlan(
     colors.magenta(
       `Uploading ${
         Object.values(pendingUpdates).length
-      } preferences to partition: ${partition}`,
+      } preferences to partition: ${partition}. Concurrency: ${uploadConcurrency}, Max Chunk Size: ${maxChunkSize}` +
+        `, Max Records to Receipt: ${maxRecordsToReceipt}`,
     ),
   );
 

@@ -1,11 +1,17 @@
 /* eslint-disable no-continue, no-control-regex */
 import { readFileSync } from 'node:fs';
-import type { getWorkerLogPaths } from './spawnWorkerProcess';
+import type { WorkerLogPaths } from './spawnWorkerProcess';
 
 /**
- *
+ * Log locations
  */
-export type WhichLogs = Array<'out' | 'err' | 'structured' | 'warn' | 'info'>;
+export type LogLocation = 'out' | 'err' | 'structured' | 'warn' | 'info';
+
+/**
+ * Which logs to show in the combined output.
+ * Can include 'out' (stdout), 'err' (stderr), 'structured' (
+ */
+export type WhichLogs = Array<LogLocation>;
 
 /**
  * Show combined logs from all worker processes.
@@ -15,15 +21,15 @@ export type WhichLogs = Array<'out' | 'err' | 'structured' | 'warn' | 'info'>;
  * @param filterLevel - 'error', 'warn', or 'all' to filter log levels.
  */
 export function showCombinedLogs(
-  slotLogPaths: Map<number, ReturnType<typeof getWorkerLogPaths> | undefined>,
+  slotLogPaths: Map<number, WorkerLogPaths | undefined>,
   whichList: WhichLogs,
   filterLevel: 'error' | 'warn' | 'all',
 ): void {
   process.stdout.write('\x1b[2J\x1b[H');
 
-  const isError = (t: string) =>
+  const isError = (t: string): boolean =>
     /\b(ERROR|uncaughtException|unhandledRejection)\b/i.test(t);
-  const isWarnTag = (t: string) => /\b(WARN|WARNING)\b/i.test(t);
+  const isWarnTag = (t: string): boolean => /\b(WARN|WARNING)\b/i.test(t);
 
   const lines: string[] = [];
 
@@ -31,16 +37,27 @@ export function showCombinedLogs(
     if (!paths) continue;
 
     const files: Array<{
-      /** */ path: string /** */;
-      /** */
-      src: 'out' | 'err' | 'structured' | 'warn' | 'info';
+      /** Absolute file path to read from */
+      path: string;
+      /**   Source type for this file, used for classification */
+      src: LogLocation;
     }> = [];
     for (const which of whichList) {
-      if (which === 'out' && paths.outPath) files.push({ path: paths.outPath, src: 'out' });
-      if (which === 'err' && paths.errPath) files.push({ path: paths.errPath, src: 'err' });
-      if (which === 'structured' && (paths as any).structuredPath) files.push({ path: (paths as any).structuredPath, src: 'structured' });
-      if ((paths as any).warnPath && which === 'warn') files.push({ path: (paths as any).warnPath, src: 'warn' });
-      if ((paths as any).infoPath && which === 'info') files.push({ path: (paths as any).infoPath, src: 'info' });
+      if (which === 'out' && paths.outPath) {
+        files.push({ path: paths.outPath, src: 'out' });
+      }
+      if (which === 'err' && paths.errPath) {
+        files.push({ path: paths.errPath, src: 'err' });
+      }
+      if (which === 'structured' && paths.structuredPath) {
+        files.push({ path: paths.structuredPath, src: 'structured' });
+      }
+      if (paths.warnPath && which === 'warn') {
+        files.push({ path: paths.warnPath, src: 'warn' });
+      }
+      if (paths.infoPath && which === 'info') {
+        files.push({ path: paths.infoPath, src: 'info' });
+      }
     }
 
     for (const { path, src } of files) {

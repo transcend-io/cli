@@ -106,6 +106,7 @@ export function assignWorkToWorker<T>(
         options: payload,
       },
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     // If the pipe closed between the check and send: requeue + idle
     if (

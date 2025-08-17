@@ -261,7 +261,7 @@ export async function addTranscendIdToPreferences(
   // Add a transcendent ID to each preference if it doesn't already exist
   const emailList = (process.env.EMAIL_LIST || '')
     .split(',')
-    .map((email) => email.trim());
+    .map((email) => email.trim().split('"').join('').split('"').join(''));
   const disallowedEmails = [
     'noemail@costco.com',
     'NOEMAILYET@GMAIL.COM',
@@ -372,7 +372,7 @@ export async function addTranscendIdToPreferences(
       ...pref,
       person_id: pref.person_id !== '-2' ? pref.person_id : '',
       email_address:
-        !email || disallowedEmails.includes(email) ? '' : pref.email_address,
+        !email || disallowedEmails.includes(email) ? '' : pref.email_address, // FIXME
       transcendID:
         pref.person_id && pref.person_id !== '-2'
           ? pref.person_id

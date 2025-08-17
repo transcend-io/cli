@@ -1,5 +1,11 @@
 // logRotation.ts
-import { readdirSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
+import {
+  readdirSync,
+  writeFileSync,
+  existsSync,
+  unlinkSync,
+  mkdirSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import colors from 'colors';
 
@@ -12,10 +18,7 @@ import colors from 'colors';
  * @param dir - Directory to reset logs in
  * @param mode - 'truncate' or 'delete'
  */
-export function resetWorkerLogs(
-  dir: string,
-  mode: 'truncate' | 'delete',
-): void {
+function resetWorkerLogs(dir: string, mode: 'truncate' | 'delete'): void {
   const patterns = [
     /worker-\d+\.log$/,
     /worker-\d+\.out\.log$/,
@@ -115,5 +118,152 @@ export function makeLineSplitter(
       onLine(line);
       buf = buf.slice(nl + 1);
     }
+  };
+}
+/**
+ * Checks if a log line contains an error indicator.
+ *
+ * @param t - The log line to check
+ * @returns True if the line contains an error keyword, false otherwise
+ */
+export function isLogError(t: string): boolean {
+  return /\b(ERROR|uncaughtException|unhandledRejection)\b/i.test(t);
+}
+
+/**
+ * Checks if a log line contains a warning indicator.
+ *
+ * @param t - The log line to check
+ * @returns True if the line contains a warning keyword, false otherwise
+ */
+export function isLogWarn(t: string): boolean {
+  return /\b(WARN|WARNING)\b/i.test(t);
+}
+
+/**
+ * Determines if a log line is a new header (error, warning, worker tag, or ISO timestamp).
+ *
+ * @param t - The log line to check
+ * @returns True if the line is a new header, false otherwise
+ */
+export function isLogNewHeader(t: string): boolean {
+  return (
+    isLogError(t) ||
+    isLogWarn(t) ||
+    /^\s*\[w\d+\]/.test(t) ||
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(t)
+  );
+}
+
+// eslint-disable-next-line no-control-regex
+const stripAnsi = (s: string): string => s.replace(/\x1B\[[0-9;]*m/g, '');
+
+/**
+ * Extracts blocks of text from a larger body of text.
+ *
+ * @param text - The text to extract blocks from
+ * @param starts - A function that determines if a line starts a new block
+ * @returns An array of extracted blocks
+ */
+export function extractBlocks(
+  text: string,
+  starts: (cleanLine: string) => boolean,
+): string[] {
+  if (!text) return [];
+  const out: string[] = [];
+  const lines = text.split('\n');
+  let buf: string[] = [];
+  let inBlock = false;
+
+  const flush = (): void => {
+    if (buf.length) out.push(buf.join('\n'));
+    buf = [];
+    inBlock = false;
+  };
+
+  for (const raw of lines) {
+    const clean = stripAnsi(raw || '');
+    const headery = isLogNewHeader(clean);
+    if (!inBlock) {
+      if (starts(clean)) {
+        inBlock = true;
+        buf.push(raw);
+      }
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (!raw || headery) {
+      flush();
+      if (starts(clean)) {
+        inBlock = true;
+        buf.push(raw);
+      }
+    } else {
+      buf.push(raw);
+    }
+  }
+  flush();
+  return out.filter(Boolean);
+}
+
+/**
+ * The kind of export artifact to retrieve the path for.
+ */
+export type LogExportKind = 'error' | 'warn' | 'info' | 'all';
+
+/**
+ * Ensure log directory exists
+ *
+ * @param rootDir - Root directory
+ * @returns log dir
+ */
+export function initLogDir(rootDir: string): string {
+  const logDir = join(rootDir, 'logs');
+  mkdirSync(logDir, { recursive: true });
+
+  const RESET_MODE =
+    (process.env.RESET_LOGS as 'truncate' | 'delete') ?? 'truncate';
+  resetWorkerLogs(logDir, RESET_MODE);
+
+  return logDir;
+}
+
+export interface ExportArtifactResult {
+  /** Whether the artifact was opened successfully */
+  ok?: boolean;
+  /** The absolute path to the export artifact */
+  path: string;
+  /** Time saved */
+  savedAt?: number;
+  /** If exported */
+  exported?: boolean;
+}
+
+export interface ExportStatusMap {
+  /** The absolute paths to the error log artifacts */
+  error?: ExportArtifactResult;
+  /** The absolute paths to the warn log artifacts */
+  warn?: ExportArtifactResult;
+  /** The absolute paths to the info log artifacts */
+  info?: ExportArtifactResult;
+  /** The absolute paths to all log artifacts */
+  all?: ExportArtifactResult;
+  /** The absolute paths to the failures CSV artifacts */
+  failuresCsv?: ExportArtifactResult;
+}
+
+/**
+ * Return export statuses
+ *
+ * @param logDir - Log directory
+ * @returns Export map
+ */
+export function buildExportStatus(logDir: string): ExportStatusMap {
+  return {
+    error: { path: join(logDir, 'combined-errors.log') },
+    warn: { path: join(logDir, 'combined-warns.log') },
+    info: { path: join(logDir, 'combined-info.log') },
+    all: { path: join(logDir, 'combined-all.log') },
+    failuresCsv: { path: join(logDir, 'failing-updates.csv') },
   };
 }

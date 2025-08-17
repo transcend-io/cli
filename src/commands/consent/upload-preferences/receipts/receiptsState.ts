@@ -5,7 +5,7 @@ import {
   type PendingSafePreferenceUpdates,
   type PendingWithConflictPreferenceUpdates,
   type PreferenceUpdateMap,
-} from '../../../lib/preference-management';
+} from '../../../../lib/preference-management';
 
 export type PreferenceReceiptsInterface = {
   /** Path to file */

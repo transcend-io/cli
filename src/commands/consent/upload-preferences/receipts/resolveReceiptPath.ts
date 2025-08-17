@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { getFilePrefix } from './computeFiles';
+import { getFilePrefix } from '../computeFiles';
 import { existsSync, readdirSync, statSync } from 'node:fs';
 
 /**

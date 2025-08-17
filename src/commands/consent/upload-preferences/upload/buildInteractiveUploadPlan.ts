@@ -6,7 +6,7 @@ import {
   loadReferenceData,
   type PreferenceUploadReferenceData,
 } from './loadReferenceData';
-import { type PreferenceReceiptsInterface } from '../receiptsState';
+import { type PreferenceReceiptsInterface } from '../receipts/receiptsState';
 import { type PreferenceSchemaInterface } from '../schemaState';
 import { parsePreferenceManagementCsvWithCache } from '../../../../lib/preference-management';
 import type {

@@ -1,55 +1,14 @@
-import type { ChildProcess } from 'child_process';
-import { assignWorkToWorker, type WorkerState } from './assignWorkToWorker';
-import { appendFileSync } from 'fs';
-import { join } from 'path';
+// attachWorkerHandlers.ts
+import type { ChildProcess } from 'node:child_process';
 import { spawnWorkerProcess } from './spawnWorkerProcess';
-import { classifyLogLevel, makeLineSplitter } from './logRotation';
-
-/** Result message from child → parent */
-export interface WorkerResultMessage {
-  /** */
-  type: 'result';
-  /** */
-  payload: {
-    /** */
-    ok: boolean;
-    /** */
-    filePath: string;
-    /** */
-    error?: string;
-    /** Optional receipts path, if child provided it */
-    receiptFilepath?: string;
-  };
-}
-
-/** Ready sentinel from child → parent */
-export interface WorkerReadyMessage {
-  /** */
-  type: 'ready';
-}
-
-/** Live progress from child → parent (for per-worker bars & throughput) */
-export interface WorkerProgressMessage {
-  /** */
-  type: 'progress';
-  /** */
-  payload: {
-    /** */
-    filePath: string;
-    /** how many just succeeded in this tick */
-    successDelta: number;
-    /** cumulative successes for the current file */
-    successTotal: number;
-    /** total planned records for the current file */
-    fileTotal: number;
-  };
-}
-
-/** Union of all worker IPC messages */
-export type WorkerMessage =
-  | WorkerResultMessage
-  | WorkerReadyMessage
-  | WorkerProgressMessage;
+import { assignWorkToWorker, type WorkerState } from './assignWorkToWorker';
+import {
+  isWorkerReadyMessage,
+  isWorkerProgressMessage,
+  isWorkerResultMessage,
+  type ProgressInfo,
+} from './ipc';
+import { wireStderrBadges, appendFailureLog } from './diagnostics';
 
 /**
  * Wire up a worker's lifecycle:
@@ -58,51 +17,64 @@ export type WorkerMessage =
  *  - on "result": update counters, clear progress, queue next work
  *  - on "exit": optionally respawn if there is still work pending
  *
- * @param id - the worker ID
- * @param child - the child process
- * @param workers - map of all worker processes
- * @param workerState - map of worker visual state
- * @param state - global counters (completed/failed files)
- * @param filesPending - FIFO of files yet to process
- * @param repaint - re-render the dashboard
- * @param common - common task options to send with each assignment
- * @param onAllWorkersExited - callback when pool is fully drained/exited
- * @param logDir - directory to write shared failure logs
- * @param modulePath - module path for spawning worker processes
- * @param spawnSilent - whether to spawn workers with silent stdio
- * @param onProgress - optional aggregator for throughput metrics
+ * Keep this file focused on orchestration; protocol lived in ipc.ts and
+ * diagnostics (stderr badges, failure logs) live in diagnostics.ts.
+ *
+ * @param params - Options
  */
-export function attachWorkerHandlers<T>(
-  id: number,
-  child: ChildProcess,
-  workers: Map<number, ChildProcess>,
-  workerState: Map<number, WorkerState>,
+export function attachWorkerHandlers<T>(params: {
+  /** Worker slot ID (used as key in `workers` and `workerState` maps) */
+  id: number;
+  /** Child process instance representing this worker */
+  child: ChildProcess;
+  /** Map of all active worker processes, keyed by worker ID */
+  workers: Map<number, ChildProcess>;
+  /** Map of UI/visual state per worker (progress, file, last log level, etc.) */
+  workerState: Map<number, WorkerState>;
+  /** Global counters for processed files */
   state: {
-    /** */
+    /** Number of successfully completed files */
     completed: number;
-    /** */
+    /** Number of failed files */
     failed: number;
-  },
-  filesPending: string[],
-  repaint: () => void,
-  common: T,
-  onAllWorkersExited: () => void,
-  logDir: string,
-  modulePath: string,
-  spawnSilent = false,
-  onProgress?: (info: {
-    /** */
-    workerId: number;
-    /** */
-    filePath: string;
-    /** */
-    successDelta: number;
-    /** */
-    successTotal: number;
-    /** */
-    fileTotal: number;
-  }) => void,
-): void {
+  };
+  /** Queue of pending file paths still to be processed */
+  filesPending: string[];
+  /** Function to trigger a dashboard re-render (reflects latest worker state) */
+  repaint: () => void;
+  /** Common task options to send with each work assignment */
+  common: T;
+  /** Callback fired once all workers have exited and the pool is drained */
+  onAllWorkersExited: () => void;
+  /** Directory path where logs and failure reports are written */
+  logDir: string;
+  /** Absolute path to the worker module script (used when respawning workers) */
+  modulePath: string;
+  /** If true, respawned workers are created with silent stdio (no inherited stdout/stderr) */
+  spawnSilent?: boolean;
+  /**
+   * Optional aggregator callback for live throughput metrics.
+   * Invoked on every progress tick from workers.
+   */
+  onProgress?: (info: ProgressInfo) => void;
+}): void {
+  const {
+    id,
+    child,
+    workers,
+    workerState,
+    state,
+    filesPending,
+    repaint,
+    common,
+    onAllWorkersExited,
+    logDir,
+    modulePath,
+    spawnSilent = false,
+    onProgress,
+  } = params;
+
+  // Register worker & initialize visual state
   workers.set(id, child);
   const prev = workerState.get(id);
   workerState.set(id, {
@@ -113,26 +85,12 @@ export function attachWorkerHandlers<T>(
     progress: undefined,
   });
 
-  // LIVE: watch stderr to flip WARN/ERROR badges
-  if (child.stderr) {
-    const onErrLine = makeLineSplitter((line) => {
-      // If there is an explicit tag, use it; otherwise since it came from stderr, treat as WARN.
-      const explicit = classifyLogLevel(line); // returns 'warn' | 'error' | null
-      const lvl = explicit ?? 'warn';
-      const prev = workerState.get(id)!;
-      if (prev.lastLevel !== lvl) {
-        workerState.set(id, { ...prev, lastLevel: lvl });
-        repaint();
-      }
-    });
-    child.stderr.on('data', onErrLine);
-  }
+  // Live badge updates from stderr
+  wireStderrBadges(id, child, workerState, repaint);
 
   // IPC messages from child
-  child.on('message', (msg: WorkerMessage) => {
-    if (!msg || typeof msg !== 'object') return;
-
-    if (msg.type === 'ready') {
+  child.on('message', (msg: unknown) => {
+    if (isWorkerReadyMessage(msg)) {
       assignWorkToWorker(id, common, {
         pending: filesPending,
         workers,
@@ -142,7 +100,7 @@ export function attachWorkerHandlers<T>(
       return;
     }
 
-    if (msg.type === 'progress') {
+    if (isWorkerProgressMessage(msg)) {
       const { filePath, successDelta, successTotal, fileTotal } = msg.payload;
 
       // Update per-worker progress bar
@@ -156,7 +114,7 @@ export function attachWorkerHandlers<T>(
         },
       });
 
-      // Bubble to an optional global aggregator (for throughput)
+      // Bubble to optional global aggregator (for throughput)
       if (onProgress && successDelta) {
         onProgress({
           workerId: id,
@@ -171,7 +129,7 @@ export function attachWorkerHandlers<T>(
       return;
     }
 
-    if (msg.type === 'result') {
+    if (isWorkerResultMessage(msg)) {
       const { ok, filePath, error } = msg.payload;
 
       // Update file-level counters
@@ -192,10 +150,7 @@ export function attachWorkerHandlers<T>(
 
       // If failure, append to a shared log for triage
       if (!ok && error) {
-        appendFileSync(
-          join(logDir, 'failures.log'),
-          `[${new Date().toISOString()}] worker ${id} file=${filePath}\n${error}\n\n`,
-        );
+        appendFailureLog(logDir, id, filePath, error);
       }
 
       // Keep the worker busy until the queue is empty
@@ -206,8 +161,11 @@ export function attachWorkerHandlers<T>(
         repaint,
       });
     }
+
+    // Ignore unknown messages to keep parent resilient to future protocol changes
   });
 
+  // Process exit/crash handling
   child.on('exit', (code, signal) => {
     workers.delete(id);
 
@@ -222,32 +180,32 @@ export function attachWorkerHandlers<T>(
     repaint();
 
     // If it crashed and there's still work to do, respawn a replacement
-    if ((code && code !== 0) || signal) {
-      if (filesPending.length > 0) {
-        const replacement = spawnWorkerProcess({
-          id,
-          modulePath,
-          logDir,
-          openLogWindows: true, // attempt to open tail windows for respawns too
-          isSilent: spawnSilent,
-        });
-        attachWorkerHandlers(
-          id,
-          replacement,
-          workers,
-          workerState,
-          state,
-          filesPending,
-          repaint,
-          common,
-          onAllWorkersExited,
-          logDir,
-          modulePath,
-          spawnSilent,
-          onProgress,
-        );
-        return;
-      }
+    const abnormal = (typeof code === 'number' && code !== 0) || !!signal;
+    if (abnormal && filesPending.length > 0) {
+      const replacement = spawnWorkerProcess({
+        id,
+        modulePath,
+        logDir,
+        openLogWindows: true, // attempt to open tail windows for respawns too
+        isSilent: spawnSilent,
+      });
+
+      attachWorkerHandlers({
+        id,
+        child: replacement,
+        workers,
+        workerState,
+        state,
+        filesPending,
+        repaint,
+        common,
+        onAllWorkersExited,
+        logDir,
+        modulePath,
+        spawnSilent,
+        onProgress,
+      });
+      return;
     }
 
     // If all workers have exited, let the parent clean up

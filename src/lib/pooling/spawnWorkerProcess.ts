@@ -26,6 +26,9 @@ export interface WorkerLogPaths {
   errorPath: string;
 }
 
+/** Convenience alias for the optional return from getWorkerLogPaths */
+export type SlotPaths = Map<number, WorkerLogPaths | undefined>;
+
 /**
  * Retrieve the paths we stashed on the child.
  *
@@ -46,7 +49,8 @@ export function getWorkerLogPaths(
  * @returns True if the IPC channel is open, false otherwise.
  */
 export function isIpcOpen(w: ChildProcess | undefined | null): boolean {
-  const ch = w && (w as any).channel;
+  const ch = w && w.channel;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return !!(w && w.connected && ch && !(ch as any).destroyed);
 }
 
@@ -63,6 +67,7 @@ export function safeSend(w: ChildProcess, msg: unknown): boolean {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     w.send?.(msg as any);
     return true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (
       err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
@@ -101,7 +106,8 @@ export interface SpawnWorkerOptions {
  *  - worker-{id}.warn.log  (classified WARN lines from stderr)
  *  - worker-{id}.error.log (classified ERROR lines from stderr)
  *
- * @param opts
+ * @param opts - Options for spawning the worker process.
+ * @returns The spawned ChildProcess instance.
  */
 export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
   const {
@@ -145,7 +151,7 @@ export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
   child.stderr?.pipe(errStream);
 
   // Headers so tail windows show something immediately
-  const hdr = (name: string) =>
+  const hdr = (name: string): string =>
     `[parent] ${name} capture active for w${id} (pid ${child.pid})\n`;
   outStream.write(hdr('stdout'));
   errStream.write(hdr('stderr'));
@@ -187,6 +193,7 @@ export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
   }
 
   // Stash log path metadata on the child
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (child as any)[LOG_PATHS_SYM] = {
     structuredPath,
     outPath,
@@ -205,11 +212,21 @@ export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
   }
 
   // Best-effort error suppression on file streams
-  outStream.on('error', () => {});
-  errStream.on('error', () => {});
-  infoStream.on('error', () => {});
-  warnStream.on('error', () => {});
-  errorStream.on('error', () => {});
+  outStream.on('error', () => {
+    /* ignore */
+  });
+  errStream.on('error', () => {
+    /* ignore */
+  });
+  infoStream.on('error', () => {
+    /* ignore */
+  });
+  warnStream.on('error', () => {
+    /* ignore */
+  });
+  errorStream.on('error', () => {
+    /* ignore */
+  });
 
   return child;
 }
