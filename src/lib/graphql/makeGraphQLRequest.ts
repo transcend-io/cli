@@ -5,20 +5,9 @@ import type {
 } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
+import { sleepPromise } from '../helpers';
 
 const MAX_RETRIES = 4;
-
-/**
- * Sleep in a promise
- *
- * @param sleepTime - The time to sleep in milliseconds.
- * @returns Resolves promise
- */
-function sleepPromise(sleepTime: number): Promise<number> {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(sleepTime), sleepTime);
-  });
-}
 
 const KNOWN_ERRORS = [
   'syntax error',
