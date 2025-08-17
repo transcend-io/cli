@@ -89,7 +89,7 @@ export async function parsePreferenceManagementCsvWithCache(
   let preferences = readCsv(file, t.record(t.string, t.string));
   logger.info(colors.magenta(`Read in ${preferences.length} rows`));
 
-  // TODO: Remove this COSTCO specific logic
+  // FIXME: Remove this COSTCO specific logic
   const updatedPreferences = await addTranscendIdToPreferences(preferences);
   preferences = updatedPreferences;
 

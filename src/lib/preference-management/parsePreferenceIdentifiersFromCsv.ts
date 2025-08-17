@@ -191,7 +191,7 @@ export function getPreferenceIdentifiersFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): PreferenceStoreIdentifier[] {
-  // TODO: Remove this COSTCO specific logic
+  // FIXME: Remove this COSTCO specific logic
   const emailColumn = Object.keys(columnToIdentifier).find((x) =>
     x.includes('email'),
   );
@@ -201,7 +201,7 @@ export function getPreferenceIdentifiersFromRow({
   return (
     Object.entries(columnToIdentifier)
       .filter(([col]) => !!row[col])
-      // TODO: Remove this COSTCO specific logic
+      // FIXME: Remove this COSTCO specific logic
       .filter(
         ([col]) => !(col === 'transcendID' && row[col] && row[emailColumn]),
       )
