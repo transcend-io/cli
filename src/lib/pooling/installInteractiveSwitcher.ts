@@ -1,8 +1,7 @@
-// interactiveSwitcher.ts
 import * as readline from 'node:readline';
 import type { ChildProcess } from 'node:child_process';
 import type { WorkerLogPaths } from './spawnWorkerProcess';
-import { replayFileTailToStdout } from './replayTail';
+import { replayFileTailToStdout } from './replayFileTailToStdout';
 import { mapKey } from './keymap';
 import { cycleWorkers, getWorkerIds } from './workerIds';
 import type { WhichLogs } from './showCombinedLogs';

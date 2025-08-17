@@ -13,7 +13,7 @@ export * from './ipc';
 export * from './logRotation';
 export * from './osc8Link';
 export * from './keymap';
-export * from './replayTail';
+export * from './replayFileTailToStdout';
 export * from './workerIds';
 export * from './os';
 export * from './spawnWorkerProcess';
