@@ -2,7 +2,7 @@ import * as readline from 'node:readline';
 import type { ChildProcess } from 'node:child_process';
 import type { WorkerLogPaths } from './spawnWorkerProcess';
 import { replayFileTailToStdout } from './replayFileTailToStdout';
-import { mapKey } from './keymap';
+import { keymap } from './keymap';
 import { cycleWorkers, getWorkerIds } from './workerIds';
 import type { WhichLogs } from './showCombinedLogs';
 
@@ -159,7 +159,7 @@ export function installInteractiveSwitcher(opts: {
   };
 
   const onKey = (str: string, key: readline.Key): void => {
-    const act = mapKey(str, key, mode);
+    const act = keymap(str, key, mode);
     if (!act) return;
 
     // eslint-disable-next-line default-case
