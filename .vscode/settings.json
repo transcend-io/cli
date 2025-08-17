@@ -41,6 +41,7 @@
     "Airgap",
     "Blocklist",
     "camelcase",
+    "chunker",
     "cli",
     "codomain",
     "compat",

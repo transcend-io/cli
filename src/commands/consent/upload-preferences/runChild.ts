@@ -78,7 +78,7 @@ export async function runChild(): Promise<void> {
         log(`START ${filePath}`);
 
         // Construct common state objects for the task
-        const receipts = makeReceiptsState(receiptFilepath);
+        const receipts = await makeReceiptsState(receiptFilepath);
         const schema = await makeSchemaState(options.schemaFile);
         const client = buildTranscendGraphQLClient(
           options.transcendUrl,

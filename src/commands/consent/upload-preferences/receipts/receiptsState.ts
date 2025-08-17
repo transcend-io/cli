@@ -6,6 +6,10 @@ import {
   type PendingWithConflictPreferenceUpdates,
   type PreferenceUpdateMap,
 } from '../../../../lib/preference-management';
+import {
+  retrySamePromise,
+  type RetryPolicy,
+} from '../../../../lib/helpers/retrySamePromise';
 
 export type PreferenceReceiptsInterface = {
   /** Path to file */
@@ -51,22 +55,58 @@ export type PreferenceReceiptsInterface = {
 /**
  * Build a receipts state adapter for the given file path.
  *
+ * Retries creation of the underlying PersistedState with **exponential backoff**
+ * when the receipts file cannot be parsed due to a transient write (e.g., empty
+ * or partially written file) indicated by "Unexpected end of JSON input".
+ *
  * @param filepath - Where to persist/read upload receipts
  * @returns Receipt state port with strongly-named methods
  */
-export function makeReceiptsState(
+export async function makeReceiptsState(
   filepath: string,
-): PreferenceReceiptsInterface {
+): Promise<PreferenceReceiptsInterface> {
+  // Initial shape if file does not exist or is empty.
+  const initial = {
+    failingUpdates: {},
+    pendingConflictUpdates: {},
+    skippedUpdates: {},
+    pendingSafeUpdates: {},
+    successfulUpdates: {},
+    pendingUpdates: {},
+    lastFetchedAt: new Date().toISOString(),
+  } as const;
+
+  // Retry policy: only retry on the specific JSON truncation message.
+  const policy: RetryPolicy = {
+    maxAttempts: 5,
+    delayMs: 50, // start small and backoff
+    shouldRetry: (_status, message) =>
+      typeof message === 'string' &&
+      /Unexpected end of JSON input/i.test(message ?? ''),
+  };
+
+  // Exponential backoff cap to avoid unbounded waits.
+  const MAX_DELAY_MS = 2_000;
+
   try {
-    const s = new PersistedState(filepath, RequestUploadReceipts, {
-      failingUpdates: {},
-      pendingConflictUpdates: {},
-      skippedUpdates: {},
-      pendingSafeUpdates: {},
-      successfulUpdates: {},
-      pendingUpdates: {},
-      lastFetchedAt: new Date().toISOString(),
-    });
+    const s = await retrySamePromise(
+      () =>
+        // Wrap constructor in a Promise so thrown sync errors reject properly.
+        Promise.resolve(
+          new PersistedState(filepath, RequestUploadReceipts, initial),
+        ),
+      policy,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (_note) => {
+        // Double the delay on each backoff (cap at MAX_DELAY_MS)
+        policy.delayMs = Math.min(
+          MAX_DELAY_MS,
+          Math.max(1, policy.delayMs * 2),
+        );
+        // Optional local diagnostics:
+        // process.stderr.write(`[receiptsState] ${_note}; next delay=${policy.delayMs}ms\n`);
+      },
+    );
 
     return {
       receiptsFilepath: filepath,
