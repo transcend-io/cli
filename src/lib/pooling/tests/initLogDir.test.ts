@@ -47,7 +47,10 @@ describe('initLogDir (drives resetWorkerLogs side effects)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    writeSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    writeSpy = vi
+      .spyOn(process.stdout, 'write')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .mockImplementation(() => true) as any;
 
     // Default directory contents for resetWorkerLogs
     mReaddirSync.mockReturnValue([
@@ -57,7 +60,8 @@ describe('initLogDir (drives resetWorkerLogs side effects)', () => {
       'worker-4.warn.log',
       'worker-5.info.log',
       'other.txt',
-    ] as unknown as string[]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as any);
   });
 
   afterEach(() => {
@@ -112,10 +116,10 @@ describe('initLogDir (drives resetWorkerLogs side effects)', () => {
     process.env.RESET_LOGS = 'delete';
 
     // exists only for some paths
-    mExistsSync.mockImplementation(
-      (p: string) =>
-        p.endsWith('worker-1.log') || p.endsWith('worker-2.out.log'),
-    );
+    mExistsSync.mockImplementation((pRaw) => {
+      const p = String(pRaw);
+      return p.endsWith('worker-1.log') || p.endsWith('worker-2.out.log');
+    });
 
     const dir = initLogDir('/var/data');
     expect(dir).toBe('/var/data/logs');
