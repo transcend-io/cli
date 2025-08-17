@@ -190,3 +190,11 @@ export const SCOPES_BY_TITLE = keyBy(
 >;
 
 export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
+
+/**
+ * HTTP statuses that should be retried *in place* without splitting.
+ * 429: Rate-limited
+ * 502: Upstream/edge gateway error
+ * 329: Reserved for custom infra (kept defensively)
+ */
+export const RETRYABLE_BATCH_STATUSES = new Set([429, 502, 329] as const);

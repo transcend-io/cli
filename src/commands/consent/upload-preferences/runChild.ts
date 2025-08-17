@@ -1,10 +1,18 @@
 // runChild.ts
 import { mkdirSync, createWriteStream } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { getFilePrefix } from './computeFiles';
 import { splitCsvToList } from '../../../lib/requests';
 import type { TaskCommonOpts } from './impl';
+import { interactivePreferenceUploaderFromPlan } from './upload/interactivePreferenceUploaderFromPlan';
+import { makeSchemaState } from './schemaState';
+import { makeReceiptsState } from './receiptsState';
+import {
+  buildTranscendGraphQLClient,
+  createSombraGotInstance,
+} from '../../../lib/graphql';
+import { logger } from '../../../logger';
+import { buildInteractiveUploadPreferencePlan } from './upload/buildInteractiveUploadPlan';
 
 export async function runChild(): Promise<void> {
   const workerId = Number(process.env.WORKER_ID || '0');
@@ -21,7 +29,7 @@ export async function runChild(): Promise<void> {
     logStream.write(line);
   };
 
-  console.log(`[w${workerId}] ready pid=${process.pid}`);
+  logger.info(`[w${workerId}] ready pid=${process.pid}`);
   process.send?.({ type: 'ready' });
 
   process.on('message', async (msg: any) => {
@@ -38,30 +46,55 @@ export async function runChild(): Promise<void> {
       );
       try {
         mkdirSync(dirname(receiptFilepath), { recursive: true });
-        console.log(`[w${workerId}] START ${filePath}`);
+        logger.info(`[w${workerId}] START ${filePath}`);
         log(`START ${filePath}`);
 
-        await uploadPreferenceManagementPreferencesInteractive({
-          receiptFilepath,
-          schemaFilePath: options.schemaFile,
-          auth: options.auth,
-          sombraAuth: options.sombraAuth,
+        // Construct common options
+        const receipts = makeReceiptsState(receiptFilepath);
+        const schema = makeSchemaState(options.schemaFile);
+        const client = buildTranscendGraphQLClient(
+          options.transcendUrl,
+          options.auth,
+        );
+        const sombra = await createSombraGotInstance(
+          options.transcendUrl,
+          options.auth,
+          options.sombraAuth,
+        );
+
+        // Step 1: Build the plan (validation-only)
+        const plan = await buildInteractiveUploadPreferencePlan({
+          sombra,
+          client,
           file: filePath,
           partition: options.partition,
-          transcendUrl: options.transcendUrl,
-          skipConflictUpdates: options.skipConflictUpdates,
-          skipWorkflowTriggers: options.skipWorkflowTriggers,
+          receipts,
+          schema,
           skipExistingRecordCheck: options.skipExistingRecordCheck,
-          isSilent: options.isSilent,
-          dryRun: options.dryRun,
-          attributes: splitCsvToList(options.attributes),
           forceTriggerWorkflows: options.forceTriggerWorkflows,
           allowedIdentifierNames: options.allowedIdentifierNames,
+          maxRecordsToReceipt: options.maxRecordsToReceipt,
           identifierColumns: options.identifierColumns,
-          columnsToIgnore: options.columnsToIgnore || [],
+          columnsToIgnore: options.columnsToIgnore,
+          attributes: splitCsvToList(options.attributes),
         });
 
-        console.log(`[w${workerId}] DONE  ${filePath}`);
+        // Step 2: Execute the upload (no parsing/validation here)
+        await interactivePreferenceUploaderFromPlan(plan, {
+          receipts,
+          sombra,
+          dryRun: options.dryRun,
+          isSilent: options.isSilent,
+          skipWorkflowTriggers: options.skipWorkflowTriggers,
+          skipConflictUpdates: options.skipConflictUpdates,
+          forceTriggerWorkflows: options.forceTriggerWorkflows,
+          uploadLogInterval: options.uploadLogInterval,
+          maxChunkSize: options.maxChunkSize,
+          uploadConcurrency: options.uploadConcurrency,
+          maxRecordsToReceipt: options.maxRecordsToReceipt,
+        });
+
+        logger.info(`[w${workerId}] DONE  ${filePath}`);
         log(`SUCCESS ${filePath}`);
 
         process.send?.({
@@ -70,7 +103,7 @@ export async function runChild(): Promise<void> {
         });
       } catch (err: any) {
         const e = err?.stack || err?.message || String(err);
-        console.error(
+        logger.error(
           `[w${workerId}] ERROR ${filePath}: ${err?.message || err}\n\n${e}`,
         );
         log(`FAIL ${filePath}\n${e}`);
@@ -81,19 +114,19 @@ export async function runChild(): Promise<void> {
         process.exit(1);
       }
     } else if (msg.type === 'shutdown') {
-      console.log(`[w${workerId}] shutdown`);
+      logger.info(`[w${workerId}] shutdown`);
       log('Shutting down.');
       logStream.end(() => process.exit(0));
     }
   });
 
   process.on('uncaughtException', (err) => {
-    console.error(`[w${workerId}] uncaughtException: ${err?.stack || err}`);
+    logger.error(`[w${workerId}] uncaughtException: ${err?.stack || err}`);
     log(`uncaughtException\n${err?.stack || err}`);
     logStream.end(() => process.exit(1));
   });
   process.on('unhandledRejection', (reason) => {
-    console.error(`[w${workerId}] unhandledRejection: ${String(reason)}`);
+    logger.error(`[w${workerId}] unhandledRejection: ${String(reason)}`);
     log(`unhandledRejection\n${String(reason)}`);
     logStream.end(() => process.exit(1));
   });

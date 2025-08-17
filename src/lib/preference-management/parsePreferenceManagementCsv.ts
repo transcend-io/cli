@@ -3,7 +3,13 @@ import type { Got } from 'got';
 import { keyBy } from 'lodash-es';
 import * as t from 'io-ts';
 import colors from 'colors';
-import { type FileFormatState, type RequestUploadReceipts } from './codecs';
+import {
+  type FileFormatState,
+  type PendingSafePreferenceUpdates,
+  type PendingWithConflictPreferenceUpdates,
+  type RequestUploadReceipts,
+  type SkippedPreferenceUpdates,
+} from './codecs';
 import { logger } from '../../logger';
 import { readCsv } from '../requests';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
@@ -26,6 +32,7 @@ import type { ObjByString } from '@transcend-io/type-utils';
  *
  * @param options - Options
  * @param schemaState - The schema state to use for parsing the file
+ * @param schema
  * @returns The cache with the parsed file
  */
 export async function parsePreferenceManagementCsvWithCache(
@@ -68,11 +75,11 @@ export async function parsePreferenceManagementCsvWithCache(
   schemaState: PersistedState<typeof FileFormatState>,
 ): Promise<{
   /** Pending saf updates */
-  pendingSafeUpdates: Record<string, Record<string, string>>;
+  pendingSafeUpdates: PendingSafePreferenceUpdates;
   /** Pending conflict updates */
-  pendingConflictUpdates: RequestUploadReceipts['pendingConflictUpdates'];
-  /** SKipped updates */
-  skippedUpdates: RequestUploadReceipts['skippedUpdates'];
+  pendingConflictUpdates: PendingWithConflictPreferenceUpdates;
+  /** Skipped updates */
+  skippedUpdates: SkippedPreferenceUpdates;
 }> {
   // Start the timer
   const t0 = new Date().getTime();

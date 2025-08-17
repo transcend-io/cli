@@ -1,17 +1,7 @@
 // renderer.ts
 import { basename } from 'node:path';
 import * as readline from 'node:readline';
-
-export interface WorkerState {
-  /** */
-  busy: boolean;
-  /** */
-  file?: string | null;
-  /** */
-  startedAt?: number | null;
-  /** last severity seen from worker stderr */
-  lastLevel?: 'ok' | 'warn' | 'error';
-}
+import type { WorkerState } from './assignWorkToWorker';
 
 let lastFrame = '';
 

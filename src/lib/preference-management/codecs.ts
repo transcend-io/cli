@@ -42,25 +42,44 @@ export const PurposeRowMapping = t.type({
 /** Override type */
 export type PurposeRowMapping = t.TypeOf<typeof PurposeRowMapping>;
 
+/**
+ * Mapping of column name to purpose row mapping.
+ * This is used to map each column in the CSV to the relevant purpose and preference definitions in
+ * transcend.
+ */
+export const ColumnPurposeMap = t.record(t.string, PurposeRowMapping);
+
+/** Override type */
+export type ColumnPurposeMap = t.TypeOf<typeof ColumnPurposeMap>;
+
+/**
+ * Mapping of identifier name to the column name in the CSV file.
+ * This is used to map each identifier name to the column in the CSV file.
+ */
+export const ColumnIdentifierMap = t.record(
+  t.string,
+  t.type({
+    /** The identifier name */
+    name: t.string,
+    /** Is unique on preference store */
+    isUniqueOnPreferenceStore: t.boolean,
+  }),
+);
+
+/** Override type */
+export type ColumnIdentifierMap = t.TypeOf<typeof ColumnIdentifierMap>;
+
 export const FileFormatState = t.intersection([
   t.type({
     /**
      * Definition of how to map each column in the CSV to
      * the relevant purpose and preference definitions in transcend
      */
-    columnToPurposeName: t.record(t.string, PurposeRowMapping),
+    columnToPurposeName: ColumnPurposeMap,
     /** Last time the file was last parsed at */
     lastFetchedAt: t.string,
     /** The column name that maps to the identifier */
-    columnToIdentifier: t.record(
-      t.string,
-      t.type({
-        /** The identifier name */
-        name: t.string,
-        /** Is unique on preference store */
-        isUniqueOnPreferenceStore: t.boolean,
-      }),
-    ),
+    columnToIdentifier: ColumnIdentifierMap,
   }),
   t.partial({
     /** Determine which column name in file maps to the timestamp  */
@@ -70,6 +89,105 @@ export const FileFormatState = t.intersection([
 
 /** Override type */
 export type FileFormatState = t.TypeOf<typeof FileFormatState>;
+
+/**
+ * This is the type of the receipts that are stored in the file
+ * that is used to track the state of the upload process.
+ * It is used to resume the upload process from where it left off.
+ * It is used to persist the state of the upload process across multiple runs.
+ */
+export const PreferenceUpdateMap = t.record(
+  t.string,
+  // This can either be true to indicate the record is pending
+  // or it can be an object showing the object
+  // We only return a fixed number of results to avoid
+  // making the JSON file too large
+  t.union([t.boolean, PreferenceUpdateItem]),
+);
+
+/** Override type */
+export type PreferenceUpdateMap = t.TypeOf<typeof PreferenceUpdateMap>;
+
+/**
+ * This is the type of the pending updates that are safe to run without
+ * conflicts with existing consent preferences.
+ *
+ * Key is primaryKey of the record in the file.
+ * The value is the row in the file that is safe to upload.
+ */
+export const PendingSafePreferenceUpdates = t.record(
+  t.string,
+  // This can either be true to indicate the record is safe
+  // or it can be an object showing the object
+  // We only return a fixed number of results to avoid
+  // making the JSON file too large
+  t.union([t.boolean, t.record(t.string, t.string)]),
+);
+
+/** Override type */
+export type PendingSafePreferenceUpdates = t.TypeOf<
+  typeof PendingSafePreferenceUpdates
+>;
+
+/**
+ * These are the updates that failed to be uploaded to the API.
+ */
+export const FailingPreferenceUpdates = t.record(
+  t.string,
+  t.type({
+    /** Time upload ran at */
+    uploadedAt: t.string,
+    /** Attempts to upload that resulted in an error */
+    error: t.string,
+    /** The update body */
+    update: PreferenceUpdateItem,
+  }),
+);
+
+/** Override type */
+export type FailingPreferenceUpdates = t.TypeOf<
+  typeof FailingPreferenceUpdates
+>;
+
+/**
+ * This is the type of the pending updates that are in conflict with existing consent preferences.
+ *
+ * Key is primaryKey of the record in the file.
+ * The value is the row in the file that is pending upload.
+ */
+export const PendingWithConflictPreferenceUpdates = t.record(
+  t.string,
+  // We always return the conflicts for investigation
+  t.type({
+    /** Record to be inserted to transcend v1/preferences API */
+    record: PreferenceQueryResponseItem,
+    /** The row in the file that is pending upload */
+    row: t.record(t.string, t.string),
+  }),
+);
+
+/** Override type */
+export type PendingWithConflictPreferenceUpdates = t.TypeOf<
+  typeof PendingWithConflictPreferenceUpdates
+>;
+
+/**
+ * The set of preference updates that are skipped
+ * Key is primaryKey and value is the row in the CSV
+ * that is skipped.
+ *
+ * This is usually because the preferences are already in the store
+ * or there are duplicate rows in the CSV file that are identical.
+ */
+export const SkippedPreferenceUpdates = t.record(
+  t.string,
+  t.record(t.string, t.string),
+);
+
+/** Override type */
+export type SkippedPreferenceUpdates = t.TypeOf<
+  typeof SkippedPreferenceUpdates
+>;
 
 export const RequestUploadReceipts = t.type({
   /** Last time the file was last parsed at */
@@ -85,14 +203,7 @@ export const RequestUploadReceipts = t.type({
    * So this will say the updates were safe when in fact we don't know.
    * We just let the default consent resolution logic handle it.
    */
-  pendingSafeUpdates: t.record(
-    t.string,
-    // This can either be true to indicate the record is safe
-    // or it can be an object showing the object
-    // We only return a fixed number of results to avoid
-    // making the JSON file too large
-    t.union([t.boolean, t.record(t.string, t.string)]),
-  ),
+  pendingSafeUpdates: PendingSafePreferenceUpdates,
   /**
    * Mapping of primaryKey to the rows in the file that need to be uploaded
    * these records have conflicts with existing consent preferences.
@@ -106,14 +217,7 @@ export const RequestUploadReceipts = t.type({
    *
    * Set to `--skipExistingRecordCheck=false --dryRun=true` to get the list of conflicts.
    */
-  pendingConflictUpdates: t.record(
-    t.string,
-    // We always return the conflicts for investigation
-    t.type({
-      record: PreferenceQueryResponseItem,
-      row: t.record(t.string, t.string),
-    }),
-  ),
+  pendingConflictUpdates: PendingWithConflictPreferenceUpdates,
   /**
    * Mapping of primaryKey to the rows in the file that can be skipped because
    * their preferences are already in the store. These records may be skipped
@@ -121,37 +225,20 @@ export const RequestUploadReceipts = t.type({
    *
    * If  `--skipExistingRecordCheck=false` - then no-ops will be filtered out.
    */
-  skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
+  skippedUpdates: SkippedPreferenceUpdates,
   /**
    * The set of failing updates
    * Mapping from primaryKey to the request payload, time upload happened
    * and error message.
    */
-  failingUpdates: t.record(
-    t.string,
-    t.type({
-      /** Time upload ran at */
-      uploadedAt: t.string,
-      /** Attempts to upload that resulted in an error */
-      error: t.string,
-      /** The update body */
-      update: PreferenceUpdateItem,
-    }),
-  ),
+  failingUpdates: FailingPreferenceUpdates,
   /**
    * The set of uploads that were pending at the time that the cache file
    * was last written to. When using `--dryRun=true` this list will be full.
    *
    * When running `--dryRun=false` this set will shrink as updates are processed.
    */
-  pendingUpdates: t.record(
-    t.string,
-    // This can either be true to indicate the record is pending
-    // or it can be an object showing the object
-    // We only return a fixed number of results to avoid
-    // making the JSON file too large
-    t.union([t.boolean, PreferenceUpdateItem]),
-  ),
+  pendingUpdates: PreferenceUpdateMap,
   /**
    * The updates that were successfully processed
    * Mapping from primaryKey to the request response.
@@ -160,14 +247,7 @@ export const RequestUploadReceipts = t.type({
    * If `--dryRun=false` is set, this will contain
    * the updates that were successfully processed.
    */
-  successfulUpdates: t.record(
-    t.string,
-    // This can either be true to indicate the record is successful
-    // or it can be an object showing the object
-    // We only return a fixed number of results to avoid
-    // making the JSON file too large
-    t.union([t.boolean, PreferenceUpdateItem]),
-  ),
+  successfulUpdates: PreferenceUpdateMap,
 });
 
 /** Override type */

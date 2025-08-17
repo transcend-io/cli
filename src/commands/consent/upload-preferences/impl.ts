@@ -27,10 +27,10 @@ import {
   getWorkerLogPaths,
   renderDashboard,
   spawnWorkerProcess,
-  type WorkerState,
 } from '../../../lib/pooling';
 import { installInteractiveSwitcher } from '../../../lib/pooling/installInteractiveSwitcher';
 import { resetWorkerLogs } from '../../../lib/pooling/logRotation';
+import type { WorkerState } from '../../../lib/pooling/assignWorkToWorker';
 
 /** CLI flags */
 export interface UploadPreferencesCommandFlags {
@@ -51,6 +51,11 @@ export interface UploadPreferencesCommandFlags {
   attributes: string;
   receiptFilepath: string;
   concurrency?: number;
+  uploadConcurrency: number;
+  maxChunkSize: number;
+  rateLimitRetryDelay: number;
+  uploadLogInterval: number;
+  maxRecordsToReceipt: number;
   allowedIdentifierNames: string[];
   identifierColumns: string[];
   columnsToIgnore?: string[];
@@ -65,6 +70,11 @@ export type TaskCommonOpts = Pick<
   | 'directory'
   | 'transcendUrl'
   | 'skipConflictUpdates'
+  | 'uploadConcurrency'
+  | 'uploadLogInterval'
+  | 'maxChunkSize'
+  | 'rateLimitRetryDelay'
+  | 'maxRecordsToReceipt'
   | 'skipWorkflowTriggers'
   | 'skipExistingRecordCheck'
   | 'isSilent'
@@ -289,7 +299,12 @@ export async function uploadPreferences(
     attributes,
     concurrency,
     allowedIdentifierNames,
+    maxChunkSize,
+    maxRecordsToReceipt,
+    rateLimitRetryDelay,
     identifierColumns,
+    uploadConcurrency,
+    uploadLogInterval,
     columnsToIgnore = [],
   }: UploadPreferencesCommandFlags,
 ): Promise<void> {
@@ -332,6 +347,11 @@ export async function uploadPreferences(
     forceTriggerWorkflows,
     allowedIdentifierNames,
     identifierColumns,
+    uploadConcurrency,
+    maxChunkSize,
+    rateLimitRetryDelay,
+    maxRecordsToReceipt,
+    uploadLogInterval,
     columnsToIgnore,
   };
 

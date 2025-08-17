@@ -106,8 +106,55 @@ export const uploadPreferencesCommand = buildCommand({
         kind: 'parsed',
         parse: numberParser,
         brief:
-          'The concurrency to use when uploading in parallel - otherwise uses the number of CPU cores available',
+          'The number of concurrent processes to use to upload the files. When this is not set, it defaults ' +
+          'to the number of CPU cores available on the machine. ' +
+          'e.g. if there are 5 concurrent processes for 15 files, each parallel job would get 3 files to process. ',
         optional: true,
+      },
+      uploadConcurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of concurrent requests made at any given time by a single process.' +
+          "This is NOT the batch size—it's how many batch *tasks* run in parallel. " +
+          'The number of total concurrent requests is maxed out at concurrency * uploadConcurrency.',
+        default: '75', // FIXME 25
+      },
+      maxChunkSize: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the maximum number of records to put in a single request.' +
+          'The number of total concurrent records being put in at any one time is is maxed out at maxChunkSize * concurrency * uploadConcurrency.',
+        default: '50',
+      },
+      rateLimitRetryDelay: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of milliseconds to wait before retrying a request that was rate limited. ' +
+          'This is only used if the request is rate limited by the Transcend API. ' +
+          'If the request fails for any other reason, it will not be retried. ',
+        default: '3000',
+      },
+      uploadLogInterval: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of records after which to log progress. ' +
+          'Output will be logged to console and also to the receipt file. ' +
+          'Setting this value lower will allow for you to more easily pick up where you left off. ' +
+          'Setting this value higher can avoid excessive i/o operations slowing down the upload. ' +
+          'Default is a good optimization for most cases.',
+        default: '1000',
+      },
+      maxRecordsToReceipt: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When writing out successful and pending records to the receipt file - this is the maximum number of records to write out. ' +
+          'This is to avoid the receipt file getting too large for JSON.parse/stringify.',
+        default: '50',
       },
       allowedIdentifierNames: {
         kind: 'parsed',

@@ -1,6 +1,5 @@
 import type { ChildProcess } from 'child_process';
-import type { WorkerState } from './renderDashboard';
-import { assignWorkToWorker } from './assignWorkToWorker';
+import { assignWorkToWorker, type WorkerState } from './assignWorkToWorker';
 import { appendFileSync } from 'fs';
 import { join } from 'path';
 import { spawnWorkerProcess } from './spawnWorkerProcess';
