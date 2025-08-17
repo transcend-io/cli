@@ -1,10 +1,6 @@
-/**
- * Module: upload/retry
- *
- * Generic, reusable "retry-same-batch" helper used prior to any split logic.
- */
-
 import { sleepPromise } from './sleepPromise';
+import { getErrorStatus } from './getErrorStatus';
+import { extractErrorMessage } from './extractErrorMessage';
 
 export interface RetryPolicy {
   /** Maximum retry attempts (not counting the initial try) */
@@ -42,18 +38,16 @@ export async function retrySamePromise<T>(
     try {
       // First pass and any subsequent retries run the same op.
       return await op();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (err) {
       attempt += 1;
 
-      // Extract details defensively; do not throw from the handler.
-      const status: number | undefined =
-        err?.response?.statusCode ?? err?.response?.status;
-      const msg: string =
-        err?.response?.body || err?.message || 'Unknown error';
+      // Use shared helpers for status + human-readable message extraction
+      const status = getErrorStatus(err);
+      const msg = extractErrorMessage(err);
 
       const canRetry =
         attempt <= policy.maxAttempts && policy.shouldRetry(status, msg);
+
       if (!canRetry) {
         // Surface the final error to the caller, which may then split/fail.
         throw err;
