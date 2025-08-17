@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import colors from 'colors';
 import { map as pMap } from 'bluebird';
 import { chunk } from 'lodash-es';
@@ -160,6 +161,7 @@ export async function interactivePreferenceUploaderFromPlan(
     maxAttempts: 3,
     delayMs: 10_000,
     shouldRetry: (status?: number) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !!status && RETRYABLE_BATCH_STATUSES.has(status as any),
   };
 
@@ -176,10 +178,10 @@ export async function interactivePreferenceUploaderFromPlan(
 
     for (const [userId] of entries) {
       successfulUpdates[userId] = true;
-      delete (pendingUpdates as any)[userId];
+      delete pendingUpdates[userId];
       // Also keep the safe/conflict mirrors in sync in case of resume
-      delete (pendingSafeUpdates as any)[userId];
-      delete (pendingConflictUpdates as any)[userId];
+      delete pendingSafeUpdates[userId];
+      delete pendingConflictUpdates[userId];
     }
     uploadedCount += entries.length;
     onProgress?.({
@@ -225,11 +227,6 @@ export async function interactivePreferenceUploaderFromPlan(
     err: unknown,
   ): Promise<void> => {
     const msg = extractErrorMessage(err);
-    // FIXME
-    // if (msg.includes('Too many identifiers')) {
-    //   // Add first identifier clue to speed up triage
-    //   msg += `\n     ----> ${userId.split('___')[0]}`;
-    // }
     logger.error(
       colors.red(
         `Failed to upload preferences for ${userId} (partition=${partition}): ${msg}`,
@@ -242,9 +239,9 @@ export async function interactivePreferenceUploaderFromPlan(
       error: msg,
     };
 
-    delete (pendingUpdates as any)[userId];
-    delete (pendingSafeUpdates as any)[userId];
-    delete (pendingConflictUpdates as any)[userId];
+    delete pendingUpdates[userId];
+    delete pendingSafeUpdates[userId];
+    delete pendingConflictUpdates[userId];
 
     await receipts.setFailing(failing);
   };
@@ -288,6 +285,7 @@ export async function interactivePreferenceUploaderFromPlan(
           retryPolicy,
           options: { skipWorkflowTriggers, forceTriggerWorkflows },
           isRetryableStatus: (s) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             !!s && RETRYABLE_BATCH_STATUSES.has(s as any),
         },
         {
@@ -325,3 +323,4 @@ export async function interactivePreferenceUploaderFromPlan(
     );
   }
 }
+/* eslint-enable no-param-reassign */

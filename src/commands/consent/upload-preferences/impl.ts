@@ -34,7 +34,12 @@ import {
   installInteractiveSwitcher,
 } from '../../../lib/pooling';
 import { RateCounter } from '../../../lib/helpers';
-import { renderDashboard, AnyTotals } from './ui';
+import {
+  renderDashboard,
+  AnyTotals,
+  isUploadModeTotals,
+  isCheckModeTotals,
+} from './ui';
 import { writeFailingUpdatesCsv, ExportManager } from './artifacts';
 
 import { applyReceiptSummary, FailingUpdateRow } from './receipts';
@@ -303,7 +308,9 @@ export async function uploadPreferences(
   const renderInterval = setInterval(() => repaint(false), 350);
 
   // graceful Ctrl+C
-  let cleanupSwitcher: () => void = () => {};
+  let cleanupSwitcher: () => void = () => {
+    // noop, will be replaced by installInteractiveSwitcher
+  };
   const onSigint = (): void => {
     clearInterval(renderInterval);
     cleanupSwitcher();
@@ -407,20 +414,24 @@ export async function uploadPreferences(
         // Final repaint with exportStatus visible & green
         repaint(true);
 
-        if (agg.mode === 'upload') {
-          const a = agg as any;
+        if (isUploadModeTotals(agg)) {
           process.stdout.write(
             colors.green(
-              `\nAll done. Success:${a.success.toLocaleString()}  Skipped:${a.skipped.toLocaleString()}  Error:${a.error.toLocaleString()}\n`,
+              `\nAll done. Success:${agg.success.toLocaleString()}  Skipped:${agg.skipped.toLocaleString()}  Error:${agg.error.toLocaleString()}\n`,
+            ),
+          );
+        } else if (isCheckModeTotals(agg)) {
+          process.stdout.write(
+            colors.green(
+              `\nAll done. Pending:${agg.totalPending.toLocaleString()}  PendingConflicts:${agg.pendingConflicts.toLocaleString()}  ` +
+                `PendingSafe:${agg.pendingSafe.toLocaleString()}  Skipped:${agg.skipped.toLocaleString()}\n`,
             ),
           );
         } else {
-          const a = agg as any;
-          process.stdout.write(
-            colors.green(
-              `\nAll done. Pending:${a.totalPending.toLocaleString()}  PendingConflicts:${a.pendingConflicts.toLocaleString()}  ` +
-                `PendingSafe:${a.pendingSafe.toLocaleString()}  Skipped:${a.skipped.toLocaleString()}\n`,
-            ),
+          throw new Error(
+            `Unknown totals type, expected UploadModeTotals or CheckModeTotals. ${JSON.stringify(
+              agg,
+            )}`,
           );
         }
 

@@ -28,6 +28,38 @@ export type CheckModeTotals = {
 };
 
 /**
+ * Type guard for UploadModeTotals
+ *
+ * @param totals - The totals object to check
+ * @returns True if the totals object is of type UploadModeTotals, false otherwise
+ */
+export function isUploadModeTotals(
+  totals: unknown,
+): totals is UploadModeTotals {
+  return (
+    typeof totals === 'object' &&
+    totals !== null &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (totals as any).mode === 'upload'
+  );
+}
+
+/**
+ * Type guard for CheckModeTotals
+ *
+ * @param totals - The totals object to check
+ * @returns True if the totals object is of type CheckModeTotals, false otherwise
+ */
+export function isCheckModeTotals(totals: unknown): totals is CheckModeTotals {
+  return (
+    typeof totals === 'object' &&
+    totals !== null &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (totals as any).mode === 'check'
+  );
+}
+
+/**
  * Represents the totals for either upload or check mode.
  */
 export type AnyTotals = UploadModeTotals | CheckModeTotals;
@@ -149,6 +181,7 @@ export function buildFrameModel(input: RenderDashboardInput): FrameModel {
           : minutes > 0
           ? `${minutes}m`
           : `${secondsLeft}s`;
+      // FIXME broken
       etaText = `Expected completion: ${eta.toLocaleTimeString()} (${timeLeft} left)`;
     }
   }
