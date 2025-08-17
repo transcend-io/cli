@@ -117,7 +117,7 @@ export async function uploadChunkWithSplit(
     const [left, right] = splitInHalf(entries);
     logger.warn(
       colors.yellow(
-        `Non-retryable error for batch of ${entries.length} (status=${status}): ${msg}. ` +
+        `Non-retryable failure for batch of ${entries.length} (status=${status}): ${msg}. ` +
           `Splitting into ${left.length} and ${right.length}.`,
       ),
     );

@@ -36,6 +36,10 @@ import {
   writeFailingUpdatesCsv,
   type FailingUpdateRow,
 } from '../../../lib/pooling/downloadArtifact';
+import type {
+  ExportStatusMap,
+  ExportArtifactStatus,
+} from '../../../lib/pooling/renderDashboard';
 
 /** CLI flags */
 export interface UploadPreferencesCommandFlags {
@@ -220,7 +224,7 @@ export async function uploadPreferences(
     );
   }
 
-  // Throughput metering (records/s and /m)
+  // Throughput metering (records/s)
   const meter = new RateCounter();
   let liveSuccessTotal = 0;
 
@@ -285,6 +289,15 @@ export async function uploadPreferences(
         skipped: 0,
       };
 
+  // Export status shown permanently in the dashboard
+  const exportStatus: ExportStatusMap = {
+    error: { path: join(LOG_DIR, 'combined-errors.log') },
+    warn: { path: join(LOG_DIR, 'combined-warns.log') },
+    info: { path: join(LOG_DIR, 'combined-info.log') },
+    all: { path: join(LOG_DIR, 'combined-all.log') },
+    failuresCsv: { path: join(LOG_DIR, 'failing-updates.csv') },
+  };
+
   let dashboardPaused = false;
   const repaint = (final = false) => {
     if (dashboardPaused && !final) return;
@@ -302,6 +315,8 @@ export async function uploadPreferences(
         r10s: meter.rate(10_000),
         r60s: meter.rate(60_000),
       },
+      exportsDir: LOG_DIR,
+      exportStatus,
     });
   };
 
@@ -313,7 +328,7 @@ export async function uploadPreferences(
         busy: false,
         file: null,
         startedAt: null,
-        lastLevel: prev?.lastLevel ?? 'ok', // preserve badge (e.g., ERROR after crash)
+        lastLevel: prev?.lastLevel ?? 'ok',
         progress: undefined,
       });
       return;
@@ -336,7 +351,7 @@ export async function uploadPreferences(
       busy: true,
       file: filePath,
       startedAt: Date.now(),
-      lastLevel: 'ok', // new task starts clean
+      lastLevel: 'ok',
       progress: undefined,
     });
 
@@ -374,7 +389,7 @@ export async function uploadPreferences(
       logDir: LOG_DIR,
       openLogWindows: true,
       isSilent,
-      childFlag: CHILD_FLAG,
+      // childFlag omitted: spawn uses its own default CHILD_FLAG
     });
     workers.set(i, child);
     workerState.set(i, {
@@ -553,91 +568,110 @@ export async function uploadPreferences(
     onAttach: attachScreen,
     onDetach: detachScreen,
     onCtrlC: onSigint,
-    getLogPaths: (id) => safeGetLogPathsForSlot(id),
+    getLogPaths: (id: number) => safeGetLogPathsForSlot(id),
     replayBytes: 200 * 1024,
     replayWhich: ['out', 'err'],
     onEnterAttachScreen: attachScreen,
   });
 
-  // extra hotkeys for combined views
-  // inside onKeypressExtra in impl.ts
+  // Lowercase keys open viewers; Uppercase keys write export files.
+  //   e -> errors viewer (stderr filtered to ERROR)
+  //   w -> warnings viewer (warn file + stderr non-error)
+  //   i -> info viewer (info file)
+  //   l -> all logs viewer (out + err + structured)
+  //   E -> export combined errors
+  //   W -> export combined warns
+  //   I -> export combined info
+  //   A -> export combined ALL logs
+  //   F -> export failing-updates CSV
+  //   Esc / Ctrl+] -> return to dashboard
   const onKeypressExtra = (buf: Buffer): void => {
     const s = buf.toString('utf8');
 
-    // existing viewers (now with array-based sources)
-    if (s === 'e' || s === 'E') {
-      // Errors: read raw stderr and let the function filter only ERROR lines.
-      // (If you later add 'errorPath' to WhichLogs, you can include ['error'] too.)
+    const view = (
+      sources: Array<'out' | 'err' | 'structured' | 'warn' | 'info'>,
+      level: 'error' | 'warn' | 'all',
+    ) => {
       dashboardPaused = true;
-      showCombinedLogs(slotLogPaths, ['err'], 'error');
-      return;
-    }
-    if (s === 'w' || s === 'W') {
-      // Warnings: include the dedicated WARN file (if present) AND stderr
-      // (lots of libs print WARN on stderr without "ERROR" tags)
-      dashboardPaused = true;
-      showCombinedLogs(slotLogPaths, ['warn', 'err'], 'warn');
-      return;
-    }
-    if (s === 'i' || s === 'I') {
-      // Info-only: use the classified INFO file
-      dashboardPaused = true;
-      showCombinedLogs(slotLogPaths, ['info'], 'all');
-      return;
-    }
-    if (s === 'l' || s === 'L') {
-      // All logs: combine stdout, stderr, and your structured app log
-      dashboardPaused = true;
-      showCombinedLogs(slotLogPaths, ['out', 'err', 'structured'], 'all');
-      return;
-    }
+      showCombinedLogs(slotLogPaths, sources, level);
+    };
 
-    // NEW: Shift+E / Shift+W / Shift+I to write combined artifact files
+    const noteExport = (slot: keyof ExportStatusMap, p: string) => {
+      const now = Date.now();
+      const current: ExportArtifactStatus = exportStatus[slot] || { path: p };
+      exportStatus[slot] = {
+        path: p || current.path,
+        savedAt: now,
+        exported: true,
+      };
+      repaint();
+    };
+
+    // --- viewers (lowercase) ---
+    if (s === 'e') return view(['err'], 'error');
+    if (s === 'w') return view(['warn', 'err'], 'warn');
+    if (s === 'i') return view(['info'], 'all');
+    if (s === 'l') return view(['out', 'err', 'structured'], 'all');
+
+    // --- exports (uppercase) ---
     if (s === 'E') {
-      exportCombinedLogs(slotLogPaths, 'error', LOG_DIR)
-        .then((p) =>
-          process.stdout.write(`\nWrote combined error logs to: ${p}\n`),
-        )
+      void exportCombinedLogs(slotLogPaths, 'error', LOG_DIR)
+        .then((p) => {
+          process.stdout.write(`\nWrote combined error logs to: ${p}\n`);
+          noteExport('error', p);
+        })
         .catch(() =>
           process.stdout.write('\nFailed to write combined error logs\n'),
         );
       return;
     }
     if (s === 'W') {
-      exportCombinedLogs(slotLogPaths, 'warn', LOG_DIR)
-        .then((p) =>
-          process.stdout.write(`\nWrote combined warn logs to: ${p}\n`),
-        )
+      void exportCombinedLogs(slotLogPaths, 'warn', LOG_DIR)
+        .then((p) => {
+          process.stdout.write(`\nWrote combined warn logs to: ${p}\n`);
+          noteExport('warn', p);
+        })
         .catch(() =>
           process.stdout.write('\nFailed to write combined warn logs\n'),
         );
       return;
     }
     if (s === 'I') {
-      exportCombinedLogs(slotLogPaths, 'info', LOG_DIR)
-        .then((p) =>
-          process.stdout.write(`\nWrote combined info logs to: ${p}\n`),
-        )
+      void exportCombinedLogs(slotLogPaths, 'info', LOG_DIR)
+        .then((p) => {
+          process.stdout.write(`\nWrote combined info logs to: ${p}\n`);
+          noteExport('info', p);
+        })
         .catch(() =>
           process.stdout.write('\nFailed to write combined info logs\n'),
         );
       return;
     }
-
-    // NEW: Shift+F to dump failing-updates CSV (from memory)
+    if (s === 'A') {
+      void exportCombinedLogs(slotLogPaths, 'all', LOG_DIR)
+        .then((p) => {
+          process.stdout.write(`\nWrote combined ALL logs to: ${p}\n`);
+          noteExport('all', p);
+        })
+        .catch(() =>
+          process.stdout.write('\nFailed to write combined ALL logs\n'),
+        );
+      return;
+    }
     if (s === 'F') {
       const dest = join(LOG_DIR, 'failing-updates.csv');
-      writeFailingUpdatesCsv(failingUpdatesMem, dest)
-        .then((p) =>
-          process.stdout.write(`\nWrote failing updates CSV to: ${p}\n`),
-        )
+      void writeFailingUpdatesCsv(failingUpdatesMem, dest)
+        .then((p) => {
+          process.stdout.write(`\nWrote failing updates CSV to: ${p}\n`);
+          noteExport('failuresCsv', p);
+        })
         .catch(() =>
           process.stdout.write('\nFailed to write failing updates CSV\n'),
         );
       return;
     }
 
-    // Esc / Ctrl+] back to dashboard
+    // --- back to dashboard ---
     if (s === '\x1b' || s === '\x1d') {
       dashboardPaused = false;
       repaint();
@@ -649,17 +683,6 @@ export async function uploadPreferences(
   } catch {}
   process.stdin.resume();
   process.stdin.on('data', onKeypressExtra);
-
-  // hint
-  const { poolSize: shownPool } = computePoolSize(concurrency, files.length);
-  const maxDigit = Math.min(shownPool - 1, 9);
-  const digitRange = shownPool <= 1 ? '0' : `0-${maxDigit}`;
-  const extra = shownPool > 10 ? ' (Tab/Shift+Tab for ≥10)' : '';
-  process.stdout.write(
-    colors.dim(
-      `\nHotkeys: [${digitRange}] attach${extra} • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit\n\n`,
-    ),
-  );
 
   // wait for completion of work (not viewer)
   await new Promise<void>((resolveWork) => {
@@ -676,19 +699,32 @@ export async function uploadPreferences(
         clearInterval(check);
         clearInterval(renderInterval);
 
-        repaint(true);
-
-        // right after repaint(true) in the "work complete" block
+        // Final “auto-export” of artifacts
         try {
           const e = await exportCombinedLogs(slotLogPaths, 'error', LOG_DIR);
+          exportStatus.error = { path: e, savedAt: Date.now(), exported: true };
           const w = await exportCombinedLogs(slotLogPaths, 'warn', LOG_DIR);
+          exportStatus.warn = { path: w, savedAt: Date.now(), exported: true };
           const i = await exportCombinedLogs(slotLogPaths, 'info', LOG_DIR);
+          exportStatus.info = { path: i, savedAt: Date.now(), exported: true };
+          const a = await exportCombinedLogs(slotLogPaths, 'all', LOG_DIR);
+          exportStatus.all = { path: a, savedAt: Date.now(), exported: true };
           const fPath = join(LOG_DIR, 'failing-updates.csv');
           await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
+          exportStatus.failuresCsv = {
+            path: fPath,
+            savedAt: Date.now(),
+            exported: true,
+          };
           process.stdout.write(
-            `\nArtifacts:\n  ${e}\n  ${w}\n  ${i}\n  ${fPath}\n\n`,
+            `\nArtifacts:\n  ${e}\n  ${w}\n  ${i}\n  ${a}\n  ${fPath}\n\n`,
           );
-        } catch {}
+        } catch {
+          // ignore
+        }
+
+        // Final repaint with exportStatus visible & green
+        repaint(true);
 
         if ((agg as AnyTotals).mode === 'upload') {
           const a = agg as UploadModeTotals;

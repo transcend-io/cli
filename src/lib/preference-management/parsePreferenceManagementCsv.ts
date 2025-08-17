@@ -187,18 +187,11 @@ export async function parsePreferenceManagementCsvWithCache(
         const previous = seenAlready[primaryKey];
         const diffs = Object.entries(pref)
           .filter(([key, value]) => previous[key] !== value)
-          .map(
-            ([key, value]) =>
-              `  "${key}": previous="${previous[key]}", current="${value}"`,
-          )
-          .join('\n');
-        const sameValues = Object.entries(pref)
-          .filter(([key, value]) => previous[key] === value)
-          .map(([key, value]) => `  "${key}": value="${value}"`)
-          .join('\n');
+          .map(([key]) => key)
+          .join(', ');
         logger.warn(
           colors.yellow(
-            `Duplicate primary key found, merging: "${primaryKey}"\nDiff:\n${diffs}\nSame Values:\n${sameValues}`,
+            `Duplicate primary key "${primaryKey}" at index ${ind}. Diff: ${diffs}`,
           ),
         );
         primaryKey = `${primaryKey}___${ind}`;
