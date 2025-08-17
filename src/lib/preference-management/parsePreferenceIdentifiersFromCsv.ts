@@ -216,7 +216,7 @@ export function getUniquePreferenceIdentifierNamesFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): string[] {
-  // FIXME remove email logic
+  // TODO: https://linear.app/transcend/issue/PIK-285/set-precedence-of-unique-identifiers - remove email logic
   const columns = Object.keys(columnToIdentifier).filter(
     (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
   );

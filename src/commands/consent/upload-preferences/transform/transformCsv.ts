@@ -21,10 +21,12 @@ export function transformCsv(
       person_id: pref.person_id !== '-2' ? pref.person_id : '',
       email_address:
         !email || disallowedEmails.includes(email) ? '' : pref.email_address, // FIXME
-      transcendID:
-        pref.person_id && pref.person_id !== '-2'
-          ? pref.person_id
-          : pref.member_id,
+      // preference email address over transcendID
+      transcendID: pref.email_address
+        ? ''
+        : pref.person_id && pref.person_id !== '-2'
+        ? pref.person_id
+        : pref.member_id,
     };
   });
 }
