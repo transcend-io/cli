@@ -16,13 +16,14 @@ export function transformCsv(
 
   return preferences.map((pref) => {
     const email = (pref.email_address || '').toLowerCase().trim();
+    const emailAddress =
+      !email || disallowedEmails.includes(email) ? '' : pref.email_address;
     return {
       ...pref,
       person_id: pref.person_id !== '-2' ? pref.person_id : '',
-      email_address:
-        !email || disallowedEmails.includes(email) ? '' : pref.email_address, // FIXME
+      email_address: emailAddress,
       // preference email address over transcendID
-      transcendID: pref.email_address
+      transcendID: emailAddress
         ? ''
         : pref.person_id && pref.person_id !== '-2'
         ? pref.person_id

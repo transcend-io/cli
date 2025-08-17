@@ -241,7 +241,7 @@ export async function uploadPreferences(
       if (isWorkerProgressMessage(msg)) {
         const { successDelta, successTotal, fileTotal, filePath } =
           msg.payload || {};
-        liveSuccessTotal += successDelta || 0;
+        liveSuccessTotal += successTotal || 0;
 
         const prev = workerState.get(i)!;
         const processed = successTotal ?? prev.progress?.processed ?? 0;

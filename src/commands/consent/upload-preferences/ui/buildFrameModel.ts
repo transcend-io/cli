@@ -170,19 +170,28 @@ export function buildFrameModel(input: RenderDashboardInput): FrameModel {
     const uploaded = throughput.successSoFar;
     const remainingJobs = Math.max(estTotalJobs - uploaded, 0);
     const ratePerSec = throughput.r60s > 0 ? throughput.r60s : throughput.r10s;
+
     if (ratePerSec > 0 && remainingJobs > 0) {
       const secondsLeft = Math.round(remainingJobs / ratePerSec);
       const eta = new Date(Date.now() + secondsLeft * 1000);
-      const hours = Math.floor(secondsLeft / 3600);
+
+      const days = Math.floor(secondsLeft / 86400); // 24 * 3600
+      const hours = Math.floor((secondsLeft % 86400) / 3600);
       const minutes = Math.floor((secondsLeft % 3600) / 60);
-      const timeLeft =
-        hours > 0
-          ? `${hours}h ${minutes}m`
-          : minutes > 0
-          ? `${minutes}m`
-          : `${secondsLeft}s`;
-      // FIXME broken
-      etaText = `Expected completion: ${eta.toLocaleTimeString()} (${timeLeft} left)`;
+      const seconds = secondsLeft % 60;
+
+      let timeLeft = '';
+      if (days > 0) {
+        timeLeft = `${days}d ${hours}h ${minutes}m`;
+      } else if (hours > 0) {
+        timeLeft = `${hours}h ${minutes}m`;
+      } else if (minutes > 0) {
+        timeLeft = `${minutes}m ${seconds}s`;
+      } else {
+        timeLeft = `${seconds}s`;
+      }
+
+      etaText = `Expected completion: ${eta.toLocaleString()} (${timeLeft} left)`;
     }
   }
 
