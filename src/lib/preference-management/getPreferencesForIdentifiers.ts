@@ -90,6 +90,7 @@ export async function getPreferencesForIdentifiers(
           total += group.length;
           // progressBar.update(total);
           // log every 1000
+          // FIXME
           if (total % 1000 === 0 && !skipLogging) {
             logger.info(
               colors.green(

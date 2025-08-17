@@ -1,7 +1,6 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import type { Got } from 'got';
 import { keyBy } from 'lodash-es';
-import * as t from 'io-ts';
 import colors from 'colors';
 import {
   type FileFormatState,
@@ -11,13 +10,11 @@ import {
   type SkippedPreferenceUpdates,
 } from './codecs';
 import { logger } from '../../logger';
-import { readCsv } from '../requests';
 import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
 import { PreferenceTopic, type Identifier } from '../graphql';
 import { getPreferenceUpdatesFromRow } from './getPreferenceUpdatesFromRow';
 import { parsePreferenceFileFormatFromCsv } from './parsePreferenceFileFormatFromCsv';
 import {
-  addTranscendIdToPreferences,
   getUniquePreferenceIdentifierNamesFromRow,
   parsePreferenceIdentifiersFromCsv,
 } from './parsePreferenceIdentifiersFromCsv';
@@ -30,12 +27,13 @@ import type { ObjByString } from '@transcend-io/type-utils';
  * Parse a file into the cache
  *
  *
+ * @param rawPreferences - The preferences to parse
  * @param options - Options
  * @param schemaState - The schema state to use for parsing the file
- * @param schema
  * @returns The cache with the parsed file
  */
 export async function parsePreferenceManagementCsvWithCache(
+  rawPreferences: Record<string, string>[],
   {
     file,
     sombra,
@@ -84,26 +82,17 @@ export async function parsePreferenceManagementCsvWithCache(
   // Start the timer
   const t0 = new Date().getTime();
 
-  // Read in the file
-  logger.info(colors.magenta(`Reading in file: "${file}"`));
-  let preferences = readCsv(file, t.record(t.string, t.string));
-  logger.info(colors.magenta(`Read in ${preferences.length} rows`));
-
-  // FIXME: Remove this COSTCO specific logic
-  const updatedPreferences = await addTranscendIdToPreferences(preferences);
-  preferences = updatedPreferences;
-
   // Validate that all timestamps are present in the file
-  await parsePreferenceFileFormatFromCsv(preferences, schemaState);
+  await parsePreferenceFileFormatFromCsv(rawPreferences, schemaState);
 
   // Validate that all identifiers are present and unique
-  const result = await parsePreferenceIdentifiersFromCsv(preferences, {
+  const result = await parsePreferenceIdentifiersFromCsv(rawPreferences, {
     schemaState,
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
   });
-  preferences = result.preferences;
+  const { preferences } = result;
 
   // Ensure all other columns are mapped to purpose and preference slug values
   await parsePreferenceAndPurposeValuesFromCsv(preferences, schemaState, {

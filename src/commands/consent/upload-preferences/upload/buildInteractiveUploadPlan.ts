@@ -1,7 +1,8 @@
 import colors from 'colors';
+import * as t from 'io-ts';
 import type { Got } from 'got';
 import { logger } from '../../../../logger';
-import { parseAttributesFromString } from '../../../../lib/requests';
+import { parseAttributesFromString, readCsv } from '../../../../lib/requests';
 import {
   loadReferenceData,
   type PreferenceUploadReferenceData,
@@ -18,6 +19,7 @@ import type {
 import type { FormattedAttribute } from '../../../../lib/graphql/formatAttributeValues';
 import type { GraphQLClient } from 'graphql-request';
 import { limitRecords } from '../../../../lib/helpers';
+import { transformCsv } from '../transform';
 
 export interface InteractiveUploadPreferencePlan {
   /** CSV file path to load preference records from */
@@ -116,8 +118,14 @@ export async function buildInteractiveUploadPreferencePlan({
   // Build clients + reference data (purposes/topics/identifiers)
   const references = await loadReferenceData(client, forceTriggerWorkflows);
 
+  // Read in the file
+  logger.info(colors.magenta(`Reading in file: "${file}"`));
+  const preferences = transformCsv(readCsv(file, t.record(t.string, t.string)));
+  logger.info(colors.magenta(`Read in ${preferences.length} rows`));
+
   // Parse & validate CSV → derive safe/conflict/skipped sets (no uploading)
   const parsed = await parsePreferenceManagementCsvWithCache(
+    preferences,
     {
       file,
       purposeSlugs: references.purposes.map((x) => x.trackingType),

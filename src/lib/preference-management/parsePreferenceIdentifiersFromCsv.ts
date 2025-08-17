@@ -191,25 +191,12 @@ export function getPreferenceIdentifiersFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): PreferenceStoreIdentifier[] {
-  // FIXME: Remove this COSTCO specific logic
-  const emailColumn = Object.keys(columnToIdentifier).find((x) =>
-    x.includes('email'),
-  );
-  if (!emailColumn) {
-    throw new Error('Email column not found in csv file.');
-  }
-  return (
-    Object.entries(columnToIdentifier)
-      .filter(([col]) => !!row[col])
-      // FIXME: Remove this COSTCO specific logic
-      .filter(
-        ([col]) => !(col === 'transcendID' && row[col] && row[emailColumn]),
-      )
-      .map(([col, identifierMapping]) => ({
-        name: identifierMapping.name,
-        value: row[col],
-      }))
-  );
+  return Object.entries(columnToIdentifier)
+    .filter(([col]) => !!row[col])
+    .map(([col, identifierMapping]) => ({
+      name: identifierMapping.name,
+      value: row[col],
+    }));
 }
 
 /**
@@ -239,144 +226,4 @@ export function getUniquePreferenceIdentifierNamesFromRow({
     columns.unshift('email');
   }
   return columns;
-}
-
-/**
- * Add Transcend ID to preferences if email_id is present
- *
- * @param preferences - List of preferences
- * @returns The updated preferences with Transcend ID added
- *   // FIXME: Remove this COSTCO specific logic
- */
-export async function addTranscendIdToPreferences(
-  preferences: Record<string, string>[],
-): Promise<Record<string, string>[]> {
-  // const haveTranscendId = await inquirerConfirmBoolean({
-  //   message: 'Would you like transcendID for costco upload?',
-  // });
-  // if (!haveTranscendId) {
-  //   logger.info(colors.yellow('Skipping adding Transcend ID to preferences.'));
-  //   return preferences;
-  // }
-  // Add a transcendent ID to each preference if it doesn't already exist
-  const emailList = (process.env.EMAIL_LIST || '')
-    .split(',')
-    .map((email) => email.trim().split('"').join('').split('"').join(''));
-  const disallowedEmails = [
-    'noemail@costco.com',
-    'NOEMAILYET@GMAIL.COM',
-    'noemail@gmail.com',
-    'noemail@aol.com',
-    'IDONTCARE@YAHOO.COM',
-    'none@none.com',
-    'noemail@mail.com',
-    'no@email.com',
-    'noemail@no.com',
-    '123@gmail.com',
-    'no.no@gmail.com',
-    'BC@GMAIL.COM',
-    'NA@COMCAST.NET',
-    'NO@YAHOO.COM',
-    'R@GMAIL.COM',
-    'noemail@email.com',
-    'NOEMAIL@ME.COM',
-    'NONAME@GMAIL.COM',
-    'NOEMAIL@HOTMAIL.COM',
-    'notoemail@gmail.com',
-    'NOMAIL@MAIL.COM',
-    'DONOTHAVE@YAHOO.COM',
-    'NAME1@AOL.COM',
-    'DAN@GMAIL.COM',
-    'NA@YAHOO.COM',
-    'NONE.NONE@GMAIL.COM',
-    'KC@COSTCO.COM',
-    'NONE1@GMAIL.COM',
-    'NONE@HOTMAIL.COM',
-    'COSTCO@NON.COM',
-    'NOEMAILATM@YAHOO.COM',
-    'NO@MAIL.COM',
-    'N@N.COM',
-    'NOEMAIL@COSTOC.COM',
-    'DONTHAVEEMAIL@YAHOO.COM',
-    'PAT@GMAIL.COM',
-    'NO@NOEMAIL.COM',
-    'sam@gmail.com',
-    'OPTOUT@NOEMAIL.NET',
-    'M@GMAIL.COM',
-    'ADDEMAIL@YAHOO.COM',
-    'JM@YAHOO.COM',
-    'NOEMAIL@INTERNET.COM',
-    'sam@gmail.com',
-    'NO@AOL.COM',
-    '111@GMAIL.COM',
-    'NOTHING@HOTMAIL.COM',
-    'CHEN@GMAIL.COM',
-    'JM@YAHOO.COM',
-    'M@GMAIL.COM',
-    'WII@GMAIL.COM',
-    'NOTHANKS@COSTCO.COM',
-    'NOGMAIL@GMAIL.COM',
-    'NA@NA.COM',
-    'NOPE@COSTCO.COM',
-    'USER@GMAIL.COM',
-    'Noemail@outlook.com',
-    'none@gmail.com',
-    'GETEMAIL@GMAIL.COM',
-    'EMAIL@EMAIL.COM',
-    'NAME@AOL.COM',
-    'NOTHING@GMAIL.COM',
-    'NO2@GMAIL.COM',
-    'NO@INFO.COM',
-    'NOMAIL@NOMAIL.COM',
-    'COSTCO@GMAIL.COM',
-    'NO@NE.COM',
-    'NONE@AOL.COM',
-    'donthave@hotmail.com',
-    'FIRSTNAME.LASTNAME@GMAIL.COM',
-    'NOEMAIL@COSTO.COM',
-    'update@gmail.com',
-    'NOMAIL@MAIL.COM ',
-    'JUNKMAILER@AOL.COM',
-    'noemail@yahoo.com',
-    'EMAIL@GMAIL.COM',
-    'no@gmail.com',
-    'na@gmail.com',
-    'NOMAIL@GMAIL.COM',
-    'costco@costco.com',
-    'ABC@GMAIL.COM',
-    'noemail@noemail.com',
-    'replace@gmail.com',
-    'j@gmail.com',
-    'NONE@YAHOO.COM',
-    'JESUS@GMAIL.COM',
-    'a@gmail.com',
-    'ME@ME.COM',
-    'NEEDEMAIL@GMAIL.COM',
-    '_NONE@EMAIL.COM',
-    'NONE1@YAHOO.COM',
-    'NOMEMBEREMAIL@COSTCO.COM',
-    'MAILDUMP@MAIL.COM',
-    'NONE@EMAIL.COM',
-    'no@no.com',
-    'none@outlook.com',
-    'none@yahoo.com',
-    '123@LIVE.COM',
-    // FIXME
-    ...emailList,
-  ].map((email) => email.toLowerCase());
-  console.log(emailList[0], emailList[50]);
-
-  return preferences.map((pref) => {
-    const email = (pref.email_address || '').toLowerCase().trim();
-    return {
-      ...pref,
-      person_id: pref.person_id !== '-2' ? pref.person_id : '',
-      email_address:
-        !email || disallowedEmails.includes(email) ? '' : pref.email_address, // FIXME
-      transcendID:
-        pref.person_id && pref.person_id !== '-2'
-          ? pref.person_id
-          : pref.member_id,
-    };
-  });
 }
