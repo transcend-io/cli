@@ -98,6 +98,7 @@ export async function runChild(): Promise<void> {
           partition: options.partition,
           receipts,
           schema,
+          uploadLogInterval: options.uploadLogInterval,
           skipExistingRecordCheck: options.skipExistingRecordCheck,
           forceTriggerWorkflows: options.forceTriggerWorkflows,
           allowedIdentifierNames: options.allowedIdentifierNames,

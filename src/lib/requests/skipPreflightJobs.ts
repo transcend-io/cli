@@ -70,7 +70,7 @@ export async function skipPreflightJobs({
   await map(
     requests,
     async (request) => {
-      // FIXME dont pull all in
+      // TODO dont pull all in
       const requestEnrichers = await fetchAllRequestEnrichers(client, {
         requestId: request.id,
       });
@@ -84,7 +84,7 @@ export async function skipPreflightJobs({
           ].includes(enricher.status as any),
       );
 
-      // FIXME
+      // TODO
       if (requestEnrichersFiltered.length > 0) {
         await mapSeries(requestEnrichersFiltered, async (requestEnricher) => {
           try {

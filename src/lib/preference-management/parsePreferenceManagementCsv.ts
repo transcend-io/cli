@@ -45,6 +45,7 @@ export async function parsePreferenceManagementCsvWithCache(
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
+    uploadLogInterval,
     columnsToIgnore,
   }: {
     /** File to parse */
@@ -69,6 +70,8 @@ export async function parsePreferenceManagementCsvWithCache(
     identifierColumns: string[];
     /** Columns to ignore in the CSV file */
     columnsToIgnore: string[];
+    /** The interval to log upload progress */
+    uploadLogInterval: number;
   },
   schemaState: PersistedState<typeof FileFormatState>,
 ): Promise<{
@@ -122,6 +125,7 @@ export async function parsePreferenceManagementCsvWithCache(
     ? []
     : await getPreferencesForIdentifiers(sombra, {
         identifiers,
+        uploadLogInterval,
         partitionKey,
       });
   const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
@@ -227,7 +231,7 @@ export async function parsePreferenceManagementCsvWithCache(
         currentConsentRecord,
         pendingUpdates,
         preferenceTopics,
-        log: false, // FIXME
+        log: false, // update this to log for debugging purposes
       })
     ) {
       pendingConflictUpdates[primaryKey] = {

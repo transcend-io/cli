@@ -67,7 +67,6 @@ export function getPreferenceUpdatesFromRow({
       const rawMapping = valueMapping[rawValue];
       // When mapping is undefined, it means we should omit this column
       if (rawMapping === undefined) {
-        // FIXME
         return;
       }
 

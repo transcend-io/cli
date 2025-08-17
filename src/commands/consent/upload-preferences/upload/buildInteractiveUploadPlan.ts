@@ -69,6 +69,7 @@ export async function buildInteractiveUploadPreferencePlan({
   skipExistingRecordCheck = false,
   forceTriggerWorkflows = false,
   allowedIdentifierNames,
+  uploadLogInterval = 1000,
   maxRecordsToReceipt = 50,
   identifierColumns,
   columnsToIgnore = [],
@@ -98,6 +99,8 @@ export async function buildInteractiveUploadPreferencePlan({
   columnsToIgnore?: string[];
   /** Extra workflow attributes (pre-parsed Key:Value strings) */
   attributes?: string[];
+  /** Interval to log upload progress */
+  uploadLogInterval?: number;
   /** Maximum records to write out to the receipt file */
   maxRecordsToReceipt?: number;
 }): Promise<InteractiveUploadPreferencePlan> {
@@ -137,6 +140,7 @@ export async function buildInteractiveUploadPreferencePlan({
       orgIdentifiers: references.identifiers,
       allowedIdentifierNames,
       identifierColumns,
+      uploadLogInterval,
       columnsToIgnore,
     },
     schema.state,
