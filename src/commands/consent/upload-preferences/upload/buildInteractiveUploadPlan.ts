@@ -69,7 +69,8 @@ export async function buildInteractiveUploadPreferencePlan({
   skipExistingRecordCheck = false,
   forceTriggerWorkflows = false,
   allowedIdentifierNames,
-  uploadLogInterval = 1000,
+  downloadIdentifierConcurrency = 30,
+  identifierDownloadLogInterval = 10000,
   maxRecordsToReceipt = 50,
   identifierColumns,
   columnsToIgnore = [],
@@ -91,6 +92,8 @@ export async function buildInteractiveUploadPreferencePlan({
   skipExistingRecordCheck?: boolean;
   /** Force workflow triggers; requires existing consent records for all rows */
   forceTriggerWorkflows?: boolean;
+  /** Concurrency for downloading identifiers  */
+  downloadIdentifierConcurrency?: number;
   /** Allowed identifier names configured for the org/run */
   allowedIdentifierNames: string[];
   /** CSV columns that correspond to identifiers */
@@ -99,8 +102,8 @@ export async function buildInteractiveUploadPreferencePlan({
   columnsToIgnore?: string[];
   /** Extra workflow attributes (pre-parsed Key:Value strings) */
   attributes?: string[];
-  /** Interval to log upload progress */
-  uploadLogInterval?: number;
+  /** Interval to log when downloading identifiers */
+  identifierDownloadLogInterval?: number;
   /** Maximum records to write out to the receipt file */
   maxRecordsToReceipt?: number;
 }): Promise<InteractiveUploadPreferencePlan> {
@@ -139,8 +142,9 @@ export async function buildInteractiveUploadPreferencePlan({
       forceTriggerWorkflows,
       orgIdentifiers: references.identifiers,
       allowedIdentifierNames,
+      downloadIdentifierConcurrency,
       identifierColumns,
-      uploadLogInterval,
+      identifierDownloadLogInterval,
       columnsToIgnore,
     },
     schema.state,
@@ -150,6 +154,7 @@ export async function buildInteractiveUploadPreferencePlan({
   await receipts.setPendingSafe(
     limitRecords(parsed.pendingSafeUpdates, maxRecordsToReceipt),
   );
+  await receipts.setSkipped(parsed.skippedUpdates);
   await receipts.setPendingConflict(parsed.pendingConflictUpdates);
 
   // Return a compact, self-contained plan for the upload stage.

@@ -52,18 +52,25 @@ export const ColumnPurposeMap = t.record(t.string, PurposeRowMapping);
 /** Override type */
 export type ColumnPurposeMap = t.TypeOf<typeof ColumnPurposeMap>;
 
+export const IdentifierMetadataForPreference = t.type({
+  /** The identifier name */
+  name: t.string,
+  /** Is unique on preference store */
+  isUniqueOnPreferenceStore: t.boolean,
+});
+
+/** Override type */
+export type IdentifierMetadataForPreference = t.TypeOf<
+  typeof IdentifierMetadataForPreference
+>;
+
 /**
  * Mapping of identifier name to the column name in the CSV file.
  * This is used to map each identifier name to the column in the CSV file.
  */
 export const ColumnIdentifierMap = t.record(
   t.string,
-  t.type({
-    /** The identifier name */
-    name: t.string,
-    /** Is unique on preference store */
-    isUniqueOnPreferenceStore: t.boolean,
-  }),
+  IdentifierMetadataForPreference,
 );
 
 /** Override type */

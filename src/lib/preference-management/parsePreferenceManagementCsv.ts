@@ -22,6 +22,7 @@ import { parsePreferenceAndPurposeValuesFromCsv } from './parsePreferenceAndPurp
 import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferenceUpdatesAreNoOp';
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
 import type { ObjByString } from '@transcend-io/type-utils';
+import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 
 /**
  * Parse a file into the cache
@@ -45,7 +46,8 @@ export async function parsePreferenceManagementCsvWithCache(
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
-    uploadLogInterval,
+    downloadIdentifierConcurrency,
+    identifierDownloadLogInterval,
     columnsToIgnore,
   }: {
     /** File to parse */
@@ -71,7 +73,9 @@ export async function parsePreferenceManagementCsvWithCache(
     /** Columns to ignore in the CSV file */
     columnsToIgnore: string[];
     /** The interval to log upload progress */
-    uploadLogInterval: number;
+    identifierDownloadLogInterval: number;
+    /** Concurrency for downloading identifiers */
+    downloadIdentifierConcurrency: number;
   },
   schemaState: PersistedState<typeof FileFormatState>,
 ): Promise<{
@@ -115,20 +119,39 @@ export async function parsePreferenceManagementCsvWithCache(
     getUniquePreferenceIdentifierNamesFromRow({
       row: pref,
       columnToIdentifier: currentColumnToIdentifierMap,
-    }).map((col) => ({
-      name: currentColumnToIdentifierMap[col].name,
-      value: pref[col],
-    })),
+    }),
   );
 
   const existingConsentRecords = skipExistingRecordCheck
     ? []
     : await getPreferencesForIdentifiers(sombra, {
         identifiers,
-        uploadLogInterval,
+        logInterval: identifierDownloadLogInterval,
         partitionKey,
+        concurrency: downloadIdentifierConcurrency,
       });
-  const consentRecordByIdentifier = keyBy(existingConsentRecords, 'userId');
+
+  // Create a map of all unique identifiers to consent records
+  const uniqueIdentifiers = Object.values(currentColumnToIdentifierMap)
+    .filter((x) => x.isUniqueOnPreferenceStore)
+    .map((x) => x.name);
+  const consentRecordByUniqueIdentifiers = uniqueIdentifiers.reduce(
+    (acc, identifier) => {
+      const recordsWithIdentifier = existingConsentRecords.filter((record) =>
+        (record.identifiers || []).some(
+          (id) => id.name === identifier && id.value,
+        ),
+      );
+      acc[identifier] = keyBy(
+        recordsWithIdentifier,
+        (record) =>
+          (record.identifiers || []).find((id) => id.name === identifier)
+            ?.value || '',
+      );
+      return acc;
+    },
+    {} as Record<string, Record<string, PreferenceQueryResponseItem>>,
+  );
 
   // Clear out previous updates
   const pendingConflictUpdates: RequestUploadReceipts['pendingConflictUpdates'] =
@@ -149,10 +172,10 @@ export async function parsePreferenceManagementCsvWithCache(
   );
   preferences.forEach((pref, ind) => {
     // Get the userIds that could be the primary key of the consent record
-    const possiblePrimaryKeys = getUniquePreferenceIdentifierNamesFromRow({
+    const uniqueIdentifiers = getUniquePreferenceIdentifierNamesFromRow({
       row: pref,
       columnToIdentifier: currentColumnToIdentifierMap,
-    }).map((col) => pref[col]);
+    });
 
     // determine updates for user
     const pendingUpdates = getPreferenceUpdatesFromRow({
@@ -163,12 +186,13 @@ export async function parsePreferenceManagementCsvWithCache(
     });
 
     // Grab current state of the update
-    const currentConsentRecord = possiblePrimaryKeys
-      .map((primaryKey) => consentRecordByIdentifier[primaryKey])
-      .find((record) => record);
-
+    const primaryKeyMetadata = uniqueIdentifiers[0];
+    const currentConsentRecord =
+      consentRecordByUniqueIdentifiers[primaryKeyMetadata.name][
+        primaryKeyMetadata.value
+      ];
     // If consent record is found use it, otherwise use the first unique identifier
-    let primaryKey = currentConsentRecord?.userId || possiblePrimaryKeys[0];
+    let primaryKey = primaryKeyMetadata.value;
     // Ensure this is unique
     if (seenAlready[primaryKey]) {
       if (
@@ -202,9 +226,9 @@ export async function parsePreferenceManagementCsvWithCache(
 
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
-        `No existing consent record found for user with ids: ${possiblePrimaryKeys.join(
-          ', ',
-        )}.
+        `No existing consent record found for user with ids: ${uniqueIdentifiers
+          .map((x) => x.value)
+          .join(', ')}.
         When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
       );
     }

@@ -13,6 +13,7 @@ export type TaskCommonOpts = Pick<
   | 'uploadConcurrency'
   | 'uploadLogInterval'
   | 'maxChunkSize'
+  | 'downloadIdentifierConcurrency'
   | 'rateLimitRetryDelay'
   | 'maxRecordsToReceipt'
   | 'skipWorkflowTriggers'
@@ -48,6 +49,7 @@ export function buildCommonOpts(
     sombraAuth,
     partition,
     transcendUrl,
+    downloadIdentifierConcurrency,
     skipConflictUpdates,
     skipWorkflowTriggers,
     skipExistingRecordCheck,
@@ -70,6 +72,7 @@ export function buildCommonOpts(
     receiptsFolder,
     auth,
     directory,
+    downloadIdentifierConcurrency,
     sombraAuth,
     partition,
     transcendUrl,

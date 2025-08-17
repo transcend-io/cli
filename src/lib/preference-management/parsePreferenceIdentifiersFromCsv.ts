@@ -2,7 +2,10 @@
 import { uniq, keyBy } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import type { FileFormatState } from './codecs';
+import type {
+  FileFormatState,
+  IdentifierMetadataForPreference,
+} from './codecs';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
 import { mapSeries } from 'bluebird';
@@ -191,12 +194,19 @@ export function getPreferenceIdentifiersFromRow({
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
 }): PreferenceStoreIdentifier[] {
-  return Object.entries(columnToIdentifier)
+  const identifiers = Object.entries(columnToIdentifier)
     .filter(([col]) => !!row[col])
     .map(([col, identifierMapping]) => ({
       name: identifierMapping.name,
       value: row[col],
     }));
+  // put email first if it exists
+  // TODO: https://linear.app/transcend/issue/PIK-285/set-precedence-of-unique-identifiers - remove email logic
+  return identifiers.sort(
+    (a, b) =>
+      (a.name === 'email' ? -1 : 0) - (b.name === 'email' ? -1 : 0) ||
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+  );
 }
 
 /**
@@ -215,15 +225,26 @@ export function getUniquePreferenceIdentifierNamesFromRow({
   row: Record<string, string>;
   /** The current file metadata state */
   columnToIdentifier: FileFormatState['columnToIdentifier'];
-}): string[] {
+}): (IdentifierMetadataForPreference & {
+  /** Column name */
+  columnName: string;
+  /** Value of the identifier in the row */
+  value: string;
+})[] {
   // TODO: https://linear.app/transcend/issue/PIK-285/set-precedence-of-unique-identifiers - remove email logic
-  const columns = Object.keys(columnToIdentifier).filter(
-    (col) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
-  );
-  // if email is present move it to front of list
-  if (columns.includes('email')) {
-    columns.splice(columns.indexOf('email'), 1);
-    columns.unshift('email');
-  }
-  return columns;
+  // sort email to the front
+  return Object.entries(columnToIdentifier)
+    .sort(
+      ([, a], [, b]) =>
+        (a.name === 'email' ? -1 : 0) - (b.name === 'email' ? -1 : 0) ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+    )
+    .filter(
+      ([col]) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
+    )
+    .map(([col, identifier]) => ({
+      ...identifier,
+      columnName: col,
+      value: row[col],
+    }));
 }

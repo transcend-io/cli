@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import { Parser } from 'csv-parse';
-import { createReadStream } from 'node:fs';
+import { createReadStream, mkdirSync, unlinkSync } from 'node:fs';
+import { readdir } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { Transform } from 'node:stream';
@@ -13,11 +14,9 @@ import type { LocalContext } from '../../../context';
 export interface ChunkCsvCommandFlags {
   inputFile: string;
   outputDir?: string;
-  chunkSizeMB?: number;
+  clearOutputDir: boolean;
+  chunkSizeMB: number;
 }
-
-/** Size of each chunk in bytes (need to stay WELL under JS string size limit of 512MB) */
-const DEFAULT_CHUNK_SIZE_BYTES = 10 * 1024 * 1024;
 
 /**
  * Format memory usage for logging
@@ -47,13 +46,9 @@ function formatMemoryUsage(memoryData: NodeJS.MemoryUsage): string {
  */
 export async function chunkCsvImpl(
   this: LocalContext,
-  {
-    flags,
-  }: {
-    flags: ChunkCsvCommandFlags;
-  },
+  flags: ChunkCsvCommandFlags,
 ): Promise<void> {
-  const { inputFile, outputDir, chunkSizeMB } = flags;
+  const { inputFile, outputDir, chunkSizeMB, clearOutputDir } = flags;
 
   // Ensure inputFile is provided
   if (!inputFile) {
@@ -65,13 +60,29 @@ export async function chunkCsvImpl(
     process.exit(1);
   }
 
-  const CHUNK_SIZE =
-    typeof chunkSizeMB === 'number' && Number.isFinite(chunkSizeMB)
-      ? Math.floor(chunkSizeMB * 1024 * 1024)
-      : DEFAULT_CHUNK_SIZE_BYTES;
+  const chunkSize = Math.floor((chunkSizeMB || chunkSizeMB) * 1024 * 1024);
 
   const baseFileName = basename(inputFile, '.csv');
   const outputDirectory = outputDir || dirname(inputFile);
+  mkdirSync(outputDirectory, { recursive: true });
+
+  // clear previous files
+  if (clearOutputDir) {
+    logger.info(colors.blue(`Clearing output directory: ${outputDirectory}`));
+    try {
+      const files = await readdir(outputDirectory);
+      await Promise.all(
+        files
+          .filter((file) => file.startsWith(`${baseFileName}_chunk`))
+          .map((file) => unlinkSync(join(outputDirectory, file))),
+      );
+      logger.info(colors.green('Output directory cleared.'));
+    } catch (error) {
+      logger.error(colors.red('Error clearing output directory:'), error);
+      process.exit(1);
+    }
+  }
+
   let currentChunkSize = 0;
   let currentChunkNumber = 1;
   let headerRow: string[] | null = null;
@@ -159,7 +170,7 @@ export async function chunkCsvImpl(
       }
 
       // Determine if we need to start a new chunk
-      if (currentChunkSize >= CHUNK_SIZE) {
+      if (currentChunkSize >= chunkSize) {
         currentChunkNumber += 1;
         currentChunkSize = 0;
         currentOutputFile = join(
@@ -183,7 +194,9 @@ export async function chunkCsvImpl(
   const readStream = createReadStream(inputFile);
 
   try {
-    logger.info(colors.blue(`Starting to process ${inputFile}...`));
+    logger.info(
+      colors.blue(`Starting to process ${inputFile}... for ${chunkSizeMB}MB`),
+    );
     await pipeline(readStream, parser, chunker);
     logger.info(
       colors.green(

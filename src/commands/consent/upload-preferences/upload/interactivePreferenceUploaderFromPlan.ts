@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import colors from 'colors';
 import { map as pMap } from 'bluebird';
-import { chunk } from 'lodash-es';
+import { chunk, groupBy } from 'lodash-es';
 import { logger } from '../../../../logger';
 import { buildPendingUpdates } from '../transform/buildPendingUpdates';
 import { uploadChunkWithSplit } from './batchUploader';
@@ -40,7 +40,7 @@ export async function interactivePreferenceUploaderFromPlan(
     skipConflictUpdates = false,
     forceTriggerWorkflows = false,
     uploadLogInterval = 1_000,
-    maxChunkSize = 50,
+    maxChunkSize = 25,
     uploadConcurrency = 20,
     maxRecordsToReceipt = 50,
     onProgress,
@@ -231,7 +231,9 @@ export async function interactivePreferenceUploaderFromPlan(
     failing[userId] = {
       uploadedAt: new Date().toISOString(),
       update,
-      error: msg,
+      error: msg.includes('Identifier email did not pass validation')
+        ? 'Identifier email did not pass validation'
+        : msg,
     };
 
     delete pendingUpdates[userId];
@@ -257,8 +259,45 @@ export async function interactivePreferenceUploaderFromPlan(
     }
   };
 
+  const {
+    valid = [],
+    invalidAt = [],
+    invalidSlash = [],
+  } = groupBy(filtered, ([, update]) =>
+    !update.identifiers
+      ? 'valid'
+      : update.identifiers.some(
+          (id) => id.name === 'email' && !id.value.includes('@'),
+        )
+      ? 'invalidAt'
+      : update.identifiers.some(
+          (id) => id.name === 'email' && id.value.includes('/'),
+        )
+      ? 'invalidSlash'
+      : 'valid',
+  );
+
+  if (invalidAt.length > 0) {
+    await markFailureForBatch(
+      invalidAt,
+      new Error('Invalid email format - missing @'),
+    );
+  }
+  if (invalidSlash.length > 0) {
+    await markFailureForBatch(
+      invalidSlash,
+      new Error('Invalid email format - email contains a slash (/)'),
+    );
+  }
+
+  if (valid.length === 0) {
+    logger.warn(colors.yellow('No updates to upload after validating emails.'));
+    await receipts.resetPending();
+    return;
+  }
+
   // Kick off uploads in chunks; each chunk may be recursively split on errors
-  const chunks = chunk(filtered, maxChunkSize);
+  const chunks = chunk(valid, maxChunkSize);
   await pMap(
     chunks,
     async (currentChunk) => {

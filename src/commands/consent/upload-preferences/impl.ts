@@ -73,6 +73,7 @@ export interface UploadPreferencesCommandFlags {
   maxChunkSize: number;
   rateLimitRetryDelay: number;
   uploadLogInterval: number;
+  downloadIdentifierConcurrency: number;
   maxRecordsToReceipt: number;
   allowedIdentifierNames: string[];
   identifierColumns: string[];

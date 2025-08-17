@@ -5,6 +5,7 @@ import {
   type PendingSafePreferenceUpdates,
   type PendingWithConflictPreferenceUpdates,
   type PreferenceUpdateMap,
+  type SkippedPreferenceUpdates,
 } from '../../../../lib/preference-management';
 import {
   retrySamePromise,
@@ -38,6 +39,10 @@ export type PreferenceReceiptsInterface = {
    * Set the new map of safe to upload records
    */
   setPendingSafe(next: PendingSafePreferenceUpdates): Promise<void>;
+  /**
+   * Set the skipped records
+   */
+  setSkipped(next: PendingSafePreferenceUpdates): Promise<void>;
   /**
    * Set the new map of conflict upload records
    */
@@ -78,8 +83,8 @@ export async function makeReceiptsState(
 
   // Retry policy: only retry on the specific JSON truncation message.
   const policy: RetryPolicy = {
-    maxAttempts: 5,
-    delayMs: 50, // start small and backoff
+    maxAttempts: 10,
+    delayMs: 500, // start small and backoff
     shouldRetry: (_status, message) =>
       typeof message === 'string' &&
       /Unexpected end of JSON input/i.test(message ?? ''),
@@ -90,11 +95,13 @@ export async function makeReceiptsState(
 
   try {
     const s = await retrySamePromise(
-      () =>
+      async () => {
         // Wrap constructor in a Promise so thrown sync errors reject properly.
-        Promise.resolve(
+        const result = await Promise.resolve(
           new PersistedState(filepath, RequestUploadReceipts, initial),
-        ),
+        );
+        return result;
+      },
       policy,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (_note) => {
@@ -116,6 +123,9 @@ export async function makeReceiptsState(
       async setSuccessful(v: PreferenceUpdateMap) {
         await s.setValue(v, 'successfulUpdates');
       },
+      async setSkipped(v: SkippedPreferenceUpdates) {
+        await s.setValue(v, 'skippedUpdates');
+      },
       async setPending(v: PreferenceUpdateMap) {
         await s.setValue(v, 'pendingUpdates');
       },
@@ -131,6 +141,7 @@ export async function makeReceiptsState(
       async resetPending() {
         await s.setValue({}, 'pendingUpdates');
         await s.setValue({}, 'pendingSafeUpdates');
+        await s.setValue({}, 'skippedUpdates');
         await s.setValue({}, 'pendingConflictUpdates');
       },
     };

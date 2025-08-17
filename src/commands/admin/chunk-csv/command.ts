@@ -19,6 +19,12 @@ export const chunkCsvCommand = buildCommand({
           "Directory to write chunk files (defaults to the input file's directory)",
         optional: true,
       },
+      clearOutputDir: {
+        kind: 'parsed',
+        parse: Boolean,
+        brief: 'Clear the output directory before writing chunks',
+        default: 'true',
+      },
       chunkSizeMB: {
         kind: 'parsed',
         parse: (v: string) => {
@@ -29,8 +35,8 @@ export const chunkCsvCommand = buildCommand({
           return n;
         },
         brief:
-          'Approximate chunk size in megabytes. Keep well under JS string size limits. Default 10MB.',
-        optional: true,
+          'Approximate chunk size in megabytes. Keep well under JS string size limits',
+        default: '10',
       },
     },
   },

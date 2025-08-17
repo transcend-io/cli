@@ -62,9 +62,13 @@ export async function makeSchemaState(
 
   try {
     const state = await retrySamePromise(
-      () =>
+      async () => {
         // Wrap constructor in a Promise so thrown sync errors reject properly.
-        Promise.resolve(new PersistedState(filepath, FileFormatState, initial)),
+        const result = await Promise.resolve(
+          new PersistedState(filepath, FileFormatState, initial),
+        );
+        return result;
+      },
       policy,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (note) => {

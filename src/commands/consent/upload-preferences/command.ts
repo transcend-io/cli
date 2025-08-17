@@ -126,7 +126,7 @@ export const uploadPreferencesCommand = buildCommand({
         brief:
           'When uploading preferences to v1/preferences - this is the maximum number of records to put in a single request.' +
           'The number of total concurrent records being put in at any one time is is maxed out at maxChunkSize * concurrency * uploadConcurrency.',
-        default: '50',
+        default: '25',
       },
       rateLimitRetryDelay: {
         kind: 'parsed',
@@ -147,6 +147,14 @@ export const uploadPreferencesCommand = buildCommand({
           'Setting this value higher can avoid excessive i/o operations slowing down the upload. ' +
           'Default is a good optimization for most cases.',
         default: '1000',
+      },
+      downloadIdentifierConcurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When downloading identifiers for the upload - this is the number of concurrent requests to make. ' +
+          'This is only used if the records are not already cached in the preference store. ',
+        default: '30',
       },
       maxRecordsToReceipt: {
         kind: 'parsed',
