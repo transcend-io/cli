@@ -32,19 +32,15 @@ export function showCombinedLogs(
 
     const files: Array<{
       /** */ path: string /** */;
+      /** */
       src: 'out' | 'err' | 'structured' | 'warn' | 'info';
     }> = [];
     for (const which of whichList) {
-      if (which === 'out' && paths.outPath)
-        files.push({ path: paths.outPath, src: 'out' });
-      if (which === 'err' && paths.errPath)
-        files.push({ path: paths.errPath, src: 'err' });
-      if (which === 'structured' && (paths as any).structuredPath)
-        files.push({ path: (paths as any).structuredPath, src: 'structured' });
-      if ((paths as any).warnPath && which === 'warn')
-        files.push({ path: (paths as any).warnPath, src: 'warn' });
-      if ((paths as any).infoPath && which === 'info')
-        files.push({ path: (paths as any).infoPath, src: 'info' });
+      if (which === 'out' && paths.outPath) files.push({ path: paths.outPath, src: 'out' });
+      if (which === 'err' && paths.errPath) files.push({ path: paths.errPath, src: 'err' });
+      if (which === 'structured' && (paths as any).structuredPath) files.push({ path: (paths as any).structuredPath, src: 'structured' });
+      if ((paths as any).warnPath && which === 'warn') files.push({ path: (paths as any).warnPath, src: 'warn' });
+      if ((paths as any).infoPath && which === 'info') files.push({ path: (paths as any).infoPath, src: 'info' });
     }
 
     for (const { path, src } of files) {

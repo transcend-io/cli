@@ -1,10 +1,17 @@
-// renderDashboard.ts
-import { basename, join } from 'node:path';
+// renderDashboard.ts — rewritten to make export artifacts easy to OPEN / REVEAL / COPY
+// - Keeps the existing dashboard renderer and export helpers
+// - Adds cross‑platform helpers: openExport, revealExport, copyExportPath
+// - Prints OSC‑8 hyperlinks *and* plain absolute paths *and* file:// URLs
+// - Writes a sidecar index file with the latest artifact paths for quick copy
+
+import { basename, dirname, join, resolve } from 'node:path';
 import colors from 'colors';
 import * as readline from 'node:readline';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import type { WorkerState } from './assignWorkToWorker';
 import type { getWorkerLogPaths } from './spawnWorkerProcess';
+import { pathToFileURL } from 'node:url';
+import { spawn } from 'node:child_process';
 
 /** Upload-mode totals (final-ish counters derived from receipts) */
 export type UploadModeTotals = {
@@ -39,6 +46,10 @@ export type AnyTotals = UploadModeTotals | CheckModeTotals;
 
 /** Export kinds we support in the UI */
 export type LogExportKind = 'error' | 'warn' | 'info' | 'all';
+/**
+ *
+ */
+export type ExportKindWithCsv = LogExportKind | 'failures-csv';
 
 /** Status for a single export artifact */
 export interface ExportArtifactStatus {
@@ -66,28 +77,26 @@ export interface ExportStatusMap {
 
 /** Render options for the dashboard */
 export interface RenderDashboardInput {
-  /** Number of live workers in the pool */
-  poolSize: number;
-  /** CPU count hint shown to user */
-  cpuCount: number;
+  /** */
+  poolSize: number; // Number of live workers in the pool
+  /** */
+  cpuCount: number; // CPU count hint shown to user
 
-  /** Total files discovered at start */
-  filesTotal: number;
-  /** Completed files count */
-  filesCompleted: number;
-  /** Failed files count */
-  filesFailed: number;
+  /** */
+  filesTotal: number; // Total files discovered at start
+  /** */
+  filesCompleted: number; // Completed files count
+  /** */
+  filesFailed: number; // Failed files count
 
-  /** Live map of worker state (includes per-worker progress) */
-  workerState: Map<number, WorkerState>;
+  /** */
+  workerState: Map<number, WorkerState>; // Live map of worker state
+  /** */
+  totals?: AnyTotals; // Mode-specific aggregates
+  /** */
+  final?: boolean; // Final frame? If true, show the cursor and freeze the output
 
-  /** Mode-specific aggregates to print under the title */
-  totals?: AnyTotals;
-
-  /** Final frame? If true, show the cursor and freeze the output */
-  final?: boolean;
-
-  /** Live throughput numbers (records/sec) */
+  /** */
   throughput?: {
     /** */
     successSoFar: number;
@@ -97,21 +106,15 @@ export interface RenderDashboardInput {
     r60s: number;
   };
 
-  /**
-   * Directory where export artifacts (combined logs / CSV) are written.
-   * Always shown so users know where to find files.
-   */
+  /** Directory where export artifacts (combined logs / CSV) are written. */
   exportsDir?: string;
 
-  /**
-   * Current (latest) artifact status per kind. When a kind has never been
-   * exported this session, the line renders in dim text and shows a sensible
-   * default path in exportsDir so users know where it will appear.
-   */
+  /** Current (latest) artifact status per kind. */
   exportStatus?: ExportStatusMap;
 }
 
 let lastFrame = '';
+let lastIndexFileContents = '';
 
 /* ------------------------------------------------------------
  * Small helpers
@@ -122,22 +125,42 @@ const isError = (t: string) =>
   /\b(ERROR|uncaughtException|unhandledRejection)\b/i.test(t);
 const isWarn = (t: string) => /\b(WARN|WARNING)\b/i.test(t);
 
+const fmtNum = (n: number): string => n.toLocaleString();
+const fmtTime = (ts?: number): string =>
+  ts ? new Date(ts).toLocaleTimeString() : '—';
+
 /**
- * Consider a line a “header” if it looks like the start of a new log record.
- * Helps us group multi-line WARN/ERROR blocks.
  *
  * @param t
  */
-const isNewHeader = (t: string) =>
-  isError(t) ||
-  isWarn(t) ||
-  /^\s*\[w\d+\]/.test(t) ||
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(t);
+function isNewHeader(t: string) {
+  return (
+    isError(t) ||
+    isWarn(t) ||
+    /^\s*\[w\d+\]/.test(t) ||
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(t)
+  );
+}
 
 /**
- * Given raw text of a log file, return only the multi-line "blocks"
- * whose first line satisfies `starts` (e.g., isWarn/isError). Blocks
- * continue until the next header-like line or a blank line.
+ *
+ * @param absPath
+ * @param label
+ */
+function osc8Link(absPath: string, label?: string): string {
+  if (!absPath || absPath.startsWith('(')) return label ?? absPath; // Skip placeholders
+  try {
+    const { href } = pathToFileURL(absPath); // file:///… URL
+    const OSC = '\u001B]8;;';
+    const BEL = '\u0007';
+    const text = label ?? absPath; // may contain SGR color codes
+    return `${OSC}${href}${BEL}${text}${OSC}${BEL}`;
+  } catch {
+    return label ?? absPath;
+  }
+}
+
+/**
  *
  * @param text
  * @param starts
@@ -185,21 +208,218 @@ function extractBlocks(
   return out.filter(Boolean);
 }
 
-const fmtNum = (n: number): string => n.toLocaleString();
-const fmtTime = (ts?: number): string =>
-  ts ? new Date(ts).toLocaleTimeString() : '—';
+/**
+ * Compute an absolute path for a would‑be artifact (even before it exists).
+ *
+ * @param kind
+ * @param exportsDir
+ * @param status
+ */
+function artifactAbsPath(
+  kind: ExportKindWithCsv,
+  exportsDir?: string,
+  status?: ExportArtifactStatus,
+): string {
+  const fallbackName =
+    kind === 'error'
+      ? 'combined-errors.log'
+      : kind === 'warn'
+      ? 'combined-warns.log'
+      : kind === 'info'
+      ? 'combined-info.log'
+      : kind === 'all'
+      ? 'combined-all.log'
+      : 'failing-updates.csv';
+
+  const rawPath =
+    status?.path ||
+    (exportsDir ? join(exportsDir, fallbackName) : '(set exportsDir)');
+  return rawPath.startsWith('(') ? rawPath : resolve(rawPath);
+}
+
+/**
+ * Create (if needed) an exports index file summarizing artifact paths.
+ *
+ * @param exportsDir
+ * @param exportStatus
+ */
+function writeExportsIndex(
+  exportsDir?: string,
+  exportStatus?: ExportStatusMap,
+): string | undefined {
+  if (!exportsDir) return undefined;
+  const lines: string[] = ['# Export artifacts — latest paths', ''];
+
+  const kinds: Array<
+    [ExportKindWithCsv, ExportArtifactStatus | undefined, string]
+  > = [
+    ['error', exportStatus?.error, 'Errors log'],
+    ['warn', exportStatus?.warn, 'Warnings log'],
+    ['info', exportStatus?.info, 'Info log'],
+    ['all', exportStatus?.all, 'All logs'],
+    ['failures-csv', exportStatus?.failuresCsv, 'Failing updates (CSV)'],
+  ];
+
+  for (const [k, st, label] of kinds) {
+    const abs = artifactAbsPath(k, exportsDir, st);
+    const url = abs.startsWith('(') ? abs : pathToFileURL(abs).href;
+    lines.push(`${label}:`);
+    lines.push(`  path: ${abs}`);
+    lines.push(`  url:  ${url}`);
+    lines.push('');
+  }
+
+  const content = lines.join('\n');
+  if (content === lastIndexFileContents) return join(exportsDir, 'exports.index.txt');
+
+  mkdirSync(exportsDir, { recursive: true });
+  const out = join(exportsDir, 'exports.index.txt');
+  writeFileSync(out, `${content}\n`, 'utf8');
+  lastIndexFileContents = content;
+  return out;
+}
+
+/* ------------------------------------------------------------
+ * Cross‑platform OPEN / REVEAL / COPY helpers
+ * ------------------------------------------------------------ */
+
+/**
+ *
+ * @param cmd
+ * @param args
+ */
+function spawnDetached(cmd: string, args: string[]) {
+  try {
+    const child = spawn(cmd, args, { stdio: 'ignore', detached: true });
+    child.unref();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ *
+ * @param p
+ */
+async function openPath(p: string): Promise<boolean> {
+  if (!p || p.startsWith('(')) return false;
+  if (process.platform === 'darwin') return spawnDetached('open', [p]);
+  if (process.platform === 'win32') return spawnDetached('cmd', ['/c', 'start', '', p]);
+  return spawnDetached('xdg-open', [p]);
+}
+
+/**
+ *
+ * @param p
+ */
+async function revealInFileManager(p: string): Promise<boolean> {
+  if (!p || p.startsWith('(')) return false;
+  if (process.platform === 'darwin') return spawnDetached('open', ['-R', p]);
+  if (process.platform === 'win32') return spawnDetached('explorer.exe', ['/select,', p]);
+  // Linux: best effort — open folder
+  return spawnDetached('xdg-open', [dirname(p)]);
+}
+
+/**
+ *
+ * @param text
+ */
+async function copyToClipboard(text: string): Promise<boolean> {
+  if (!text || text.startsWith('(')) return false;
+  try {
+    if (process.platform === 'darwin') {
+      const p = spawn('pbcopy');
+      p.stdin?.write(text);
+      p.stdin?.end();
+      return true;
+    }
+    if (process.platform === 'win32') {
+      const p = spawn('clip');
+      p.stdin?.write(text.replace(/\n/g, '\r\n'));
+      p.stdin?.end();
+      return true;
+    }
+    // Linux: try xclip, then xsel
+    try {
+      const p = spawn('xclip', ['-selection', 'clipboard']);
+      p.stdin?.write(text);
+      p.stdin?.end();
+      return true;
+    } catch {}
+    try {
+      const p2 = spawn('xsel', ['--clipboard', '--input']);
+      p2.stdin?.write(text);
+      p2.stdin?.end();
+      return true;
+    } catch {}
+  } catch {}
+  return false;
+}
+
+/**
+ * Action helpers you can call from your key handlers in impl.ts
+ *
+ * @param kind
+ * @param exportsDir
+ * @param exportStatus
+ */
+export async function openExport(
+  kind: ExportKindWithCsv,
+  exportsDir?: string,
+  exportStatus?: ExportStatusMap,
+): Promise<{
+  /** */ ok: boolean /** */;
+  /** */
+  path: string;
+}> {
+  const path = artifactAbsPath(kind, exportsDir, (exportStatus as any)?.[kind]);
+  return { ok: await openPath(path), path };
+}
+
+/**
+ *
+ * @param kind
+ * @param exportsDir
+ * @param exportStatus
+ */
+export async function revealExport(
+  kind: ExportKindWithCsv,
+  exportsDir?: string,
+  exportStatus?: ExportStatusMap,
+): Promise<{
+  /** */ ok: boolean /** */;
+  /** */
+  path: string;
+}> {
+  const path = artifactAbsPath(kind, exportsDir, (exportStatus as any)?.[kind]);
+  return { ok: await revealInFileManager(path), path };
+}
+
+/**
+ *
+ * @param kind
+ * @param exportsDir
+ * @param exportStatus
+ */
+export async function copyExportPath(
+  kind: ExportKindWithCsv,
+  exportsDir?: string,
+  exportStatus?: ExportStatusMap,
+): Promise<{
+  /** */ ok: boolean /** */;
+  /** */
+  path: string;
+}> {
+  const path = artifactAbsPath(kind, exportsDir, (exportStatus as any)?.[kind]);
+  return { ok: await copyToClipboard(path), path };
+}
 
 /* ------------------------------------------------------------
  * Main renderer
  * ------------------------------------------------------------ */
 
 /**
- * Render the multi-worker upload dashboard.
- *
- * Always shows:
- *  - Exports directory
- *  - One line per export hotkey with the target file path,
- *    last saved time, and green coloring after first success
  *
  * @param root0
  */
@@ -268,6 +488,33 @@ export function renderDashboard({
     }
   }
 
+  // Estimate expected completion time (ETA)
+  let etaText = '';
+  if (throughput && estTotalJobsText && avgJobsPerCompletedFile !== undefined) {
+    const est =
+      (jobsFromReceipts ?? 0) +
+      inflightJobsKnown +
+      remainingFiles * avgJobsPerCompletedFile;
+    const uploaded = throughput.successSoFar;
+    const remainingJobs = Math.max(est - uploaded, 0);
+    const ratePerSec = throughput.r60s > 0 ? throughput.r60s : throughput.r10s;
+    if (ratePerSec > 0 && remainingJobs > 0) {
+      const secondsLeft = Math.round(remainingJobs / ratePerSec);
+      const eta = new Date(Date.now() + secondsLeft * 1000);
+      const hours = Math.floor(secondsLeft / 3600);
+      const minutes = Math.floor((secondsLeft % 3600) / 60);
+      const timeLeft =
+        hours > 0
+          ? `${hours}h ${minutes}m`
+          : minutes > 0
+          ? `${minutes}m`
+          : `${secondsLeft}s`;
+      etaText = colors.magenta(
+        `Expected completion: ${eta.toLocaleTimeString()} (${timeLeft} left)`,
+      );
+    }
+  }
+
   // Header
   const header = [
     `${colors.bold('Parallel uploader')} — ${poolSize} workers ${colors.dim(
@@ -279,12 +526,10 @@ export function renderDashboard({
       filesFailed,
       fmtNum(filesFailed),
     )}  ${colors.dim('In-flight')} ${fmtNum(inProgress)}`,
-    `[${bar}] ${pct}%  ${estTotalJobsText}`,
+    `[${bar}] ${pct}%  ${estTotalJobsText} ${etaText}`,
   ];
 
-  if (exportsDir) {
-    header.push(colors.dim(`Exports dir: ${exportsDir}`));
-  }
+  if (exportsDir) header.push(colors.dim(`Exports dir: ${exportsDir}`));
 
   // Totals block
   let totalsBlock = '';
@@ -365,15 +610,28 @@ export function renderDashboard({
     return `  [w${id}] ${badge} | ${fname} | ${elapsed} | [${mini}] ${miniTxt}`;
   });
 
-  // Multi-line hotkeys + always-visible export targets
+  // Base hotkeys (viewer keys rendered like before; export keys moved below)
+  const maxDigit = Math.min(poolSize - 1, 9);
+  const digitRange = poolSize <= 1 ? '0' : `0-${maxDigit}`;
+  const extra = poolSize > 10 ? ' (Tab/Shift+Tab for ≥10)' : '';
+  const hotkeysLine = final
+    ? colors.dim(
+        'Run complete — digits to view logs • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • q to quit',
+      )
+    : colors.dim(
+        `Hotkeys: [${digitRange}] attach${extra} • e=errors • w=warnings • i=info • l=logs • Tab/Shift+Tab • Esc/Ctrl+] detach • Ctrl+C exit`,
+      );
+
+  // Pretty export block — one line per export key with path + indicator
   const makeExportLine = (
     key: 'E' | 'W' | 'I' | 'A' | 'F',
     label: string,
     status?: ExportArtifactStatus,
-    fallbackName?: string, // used if status.path is missing
+    fallbackName?: string,
   ): string => {
     const exported = !!status?.exported;
-    const path =
+
+    const rawPath =
       status?.path ||
       (exportsDir
         ? join(
@@ -381,30 +639,51 @@ export function renderDashboard({
             fallbackName ?? `${label.toLowerCase().replace(/\s+/g, '-')}.log`,
           )
         : '(set exportsDir)');
+
+    const abs = rawPath.startsWith('(') ? rawPath : resolve(rawPath);
     const time = fmtTime(status?.savedAt);
-    const prefix = exported ? colors.green('●') : colors.dim('○');
-    const text = `${prefix}: ${key}=export-${label}: ${path}  ${colors.dim(
-      `(last saved: ${time})`,
-    )}`;
-    return exported ? colors.green(text) : colors.dim(text);
+    const dot = exported ? colors.green('●') : colors.dim('○');
+    const hotkey = colors.bold(`${key}=export-${label}`);
+
+    const openText = exported ? colors.green('open') : colors.dim('open');
+    const openLink = osc8Link(abs, openText);
+    const plainPath = exported ? colors.green(abs) : colors.dim(abs);
+    const url = abs.startsWith('(') ? abs : pathToFileURL(abs).href;
+
+    return (
+      `${dot} ${hotkey}: ${openLink}  ${plainPath} ${colors.dim(
+        `(last saved: ${time})`,
+      )}\n` + `      ${colors.dim('url:')} ${url}`
+    );
   };
 
-  const hotkeysHeader = colors.dim(
-    'Hotkeys: digits attach • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+C exit',
-  );
-
-  const hotkeyExportLines = [
-    makeExportLine('E', 'errors', exportStatus.error, 'combined-errors.log'),
-    makeExportLine('W', 'warns', exportStatus.warn, 'combined-warns.log'),
-    makeExportLine('I', 'info', exportStatus.info, 'combined-info.log'),
-    makeExportLine('A', 'all', exportStatus.all, 'combined-all.log'),
-    makeExportLine(
+  const exportBlock = [
+    colors.dim('Exports (Cmd/Ctrl‑click “open” or copy the plain path):'),
+    `  ${makeExportLine(
+      'E',
+      'errors',
+      exportStatus.error,
+      'combined-errors.log',
+    )}`,
+    `  ${makeExportLine(
+      'W',
+      'warns',
+      exportStatus.warn,
+      'combined-warns.log',
+    )}`,
+    `  ${makeExportLine('I', 'info', exportStatus.info, 'combined-info.log')}`,
+    `  ${makeExportLine('A', 'all', exportStatus.all, 'combined-all.log')}`,
+    `  ${makeExportLine(
       'F',
       'failures-csv',
       exportStatus.failuresCsv,
       'failing-updates.csv',
-    ),
-  ];
+    )}`,
+    colors.dim('  (Also written to exports.index.txt for easy copying.)'),
+  ].join('\n');
+
+  // Optionally write/update the sidecar index file each frame (cheap I/O, guarded by memo)
+  writeExportsIndex(exportsDir, exportStatus);
 
   const frame = [
     ...header,
@@ -413,8 +692,8 @@ export function renderDashboard({
     '',
     ...workerLines,
     '',
-    hotkeysHeader,
-    ...hotkeyExportLines,
+    hotkeysLine,
+    exportBlock ? `\n${exportBlock}` : '',
   ]
     .filter(Boolean)
     .join('\n');
