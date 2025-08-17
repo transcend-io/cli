@@ -1,7 +1,12 @@
-import type { ExportManager } from '../../commands/consent/upload-preferences/artifacts';
+import { join } from 'node:path';
+import {
+  writeFailingUpdatesCsv,
+  type ExportManager,
+} from '../../commands/consent/upload-preferences/artifacts';
 import type { ExportStatusMap } from './logRotation';
 import { showCombinedLogs } from './showCombinedLogs';
 import type { SlotPaths } from './spawnWorkerProcess';
+import type { FailingUpdateRow } from '../../commands/consent/upload-preferences/receipts';
 
 /**
  * Handles keypress events for extra functionalities in the CLI.
@@ -12,10 +17,13 @@ import type { SlotPaths } from './spawnWorkerProcess';
 export function makeOnKeypressExtra({
   slotLogPaths,
   exportMgr,
+  failingUpdates,
   exportStatus,
   onRepaint,
   onPause,
 }: {
+  /** Rows that failed to update */
+  failingUpdates: FailingUpdateRow[];
   /** Map of worker IDs to their log paths */
   slotLogPaths: SlotPaths;
   /** Export manager for handling export operations */
@@ -107,6 +115,19 @@ export function makeOnKeypressExtra({
         noteExport('all', p);
       } catch {
         process.stdout.write('\nFailed to write combined ALL logs\n');
+      }
+      return;
+    }
+    if (s === 'F') {
+      try {
+        const fPath = join(exportMgr.exportsDir, 'failing-updates.csv');
+        writeFailingUpdatesCsv(failingUpdates, fPath);
+        process.stdout.write(`\nWrote failing updates CSV to: ${fPath}\n`);
+        noteExport('failuresCsv', fPath);
+      } catch (err) {
+        process.stdout.write(
+          `\nFailed to write failing updates CSV - ${err.stack}\n`,
+        );
       }
       return;
     }

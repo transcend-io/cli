@@ -1,20 +1,19 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import type { FailingUpdateRow } from '../receipts';
+import { dirname } from 'node:path';
 
 /**
  * Write a CSV file for failing updates.
  *
- * @param folderName - The folder where the CSV file will be written
  * @param rows - The rows to write to the CSV file
  * @param outPath - The output path for the CSV file
  * @returns The absolute path to the written CSV file
  */
 export function writeFailingUpdatesCsv(
-  folderName: string,
   rows: FailingUpdateRow[],
   outPath: string,
 ): string {
-  mkdirSync(folderName, { recursive: true });
+  mkdirSync(dirname(outPath), { recursive: true });
   const headers = Array.from(
     rows.reduce<Set<string>>((acc, row) => {
       Object.keys(row || {}).forEach((k) => acc.add(k));

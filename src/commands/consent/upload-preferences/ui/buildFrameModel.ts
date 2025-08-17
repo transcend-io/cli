@@ -167,12 +167,22 @@ export function buildFrameModel(input: RenderDashboardInput): FrameModel {
   // ETA
   let etaText = '';
   if (throughput && estTotalJobs !== undefined) {
-    const uploaded = throughput.successSoFar;
-    const remainingJobs = Math.max(estTotalJobs - uploaded, 0);
-    const ratePerSec = throughput.r60s > 0 ? throughput.r60s : throughput.r10s;
+    // Prefer receipts totals; fall back to throughput.successSoFar if not available
+    const processedSoFar =
+      jobsFromReceipts !== undefined
+        ? jobsFromReceipts
+        : throughput.successSoFar;
 
-    if (ratePerSec > 0 && remainingJobs > 0) {
-      const secondsLeft = Math.round(remainingJobs / ratePerSec);
+    const remainingJobs = Math.max(estTotalJobs - processedSoFar, 0);
+
+    // Pick stable per-second rate
+    const ratePerSec = throughput.r60s > 0 ? throughput.r60s : throughput.r10s;
+    const ratePerHour = ratePerSec * 3600;
+
+    if (ratePerHour > 0 && remainingJobs > 0) {
+      // Formula: (estTotalJobs - (success + skipped + error)) / throughput per hour
+      const hoursLeft = remainingJobs / ratePerHour;
+      const secondsLeft = Math.max(1, Math.round(hoursLeft * 3600));
       const eta = new Date(Date.now() + secondsLeft * 1000);
 
       const days = Math.floor(secondsLeft / 86400); // 24 * 3600

@@ -129,11 +129,6 @@ export async function interactivePreferenceUploaderFromPlan(
   >;
   const filtered = allEntries.filter(([userId]) => !successful[userId]);
   const fileTotal = filtered.length;
-  onProgress?.({
-    successDelta: 0,
-    successTotal: uploadedCount,
-    fileTotal,
-  });
 
   if (filtered.length === 0) {
     logger.warn(

@@ -19,7 +19,7 @@ import { readSafe } from '../../../../lib/helpers';
  * Write the exports index file with the latest paths for each export kind.
  */
 export class ExportManager {
-  constructor(private exportsDir?: string) {}
+  constructor(public exportsDir: string) {}
 
   /**
    * Get the absolute path for an export artifact based on its kind.

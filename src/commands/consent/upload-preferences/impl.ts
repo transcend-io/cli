@@ -2,7 +2,7 @@
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { logger } from '../../../logger';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
@@ -241,7 +241,7 @@ export async function uploadPreferences(
       if (isWorkerProgressMessage(msg)) {
         const { successDelta, successTotal, fileTotal, filePath } =
           msg.payload || {};
-        liveSuccessTotal += successTotal || 0;
+        liveSuccessTotal += successDelta || 0;
 
         const prev = workerState.get(i)!;
         const processed = successTotal ?? prev.progress?.processed ?? 0;
@@ -357,6 +357,7 @@ export async function uploadPreferences(
     slotLogPaths,
     exportMgr,
     exportStatus,
+    failingUpdates: failingUpdatesMem,
     onRepaint: () => repaint(),
     onPause: (p) => {
       dashboardPaused = p;
@@ -397,8 +398,7 @@ export async function uploadPreferences(
           const a = exportMgr.exportCombinedLogs(slotLogPaths, 'all');
           exportStatus.all = { path: a, savedAt: Date.now(), exported: true };
           const fPath = join(logDir, 'failing-updates.csv');
-          const folderName = resolve(logDir, '../');
-          await writeFailingUpdatesCsv(folderName, failingUpdatesMem, fPath);
+          await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
           exportStatus.failuresCsv = {
             path: fPath,
             savedAt: Date.now(),
@@ -407,8 +407,10 @@ export async function uploadPreferences(
           process.stdout.write(
             `\nArtifacts:\n  ${e}\n  ${w}\n  ${i}\n  ${a}\n  ${fPath}\n\n`,
           );
-        } catch {
-          // noop
+        } catch (err) {
+          process.stdout.write(
+            colors.red(`Failed to download CSV:${err.stack}`),
+          );
         }
 
         // Final repaint with exportStatus visible & green
