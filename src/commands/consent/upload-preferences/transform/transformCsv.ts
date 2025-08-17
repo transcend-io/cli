@@ -12,6 +12,11 @@ import { logger } from '../../../../logger';
 export function transformCsv(
   preferences: Record<string, string>[],
 ): Record<string, string>[] {
+  // Add a transcendent ID to each preference if it doesn't already exist
+  const disallowedEmails = (process.env.EMAIL_LIST || '')
+    .split(',')
+    .map((email) => email.trim().toLowerCase());
+
   const keys = Object.keys(preferences[0]);
   const isUdp =
     keys.includes('email_address') &&
@@ -23,10 +28,6 @@ export function transformCsv(
         'Detected UDP format. Transforming preferences to include Transcend ID.',
       ),
     );
-    // Add a transcendent ID to each preference if it doesn't already exist
-    const disallowedEmails = (process.env.EMAIL_LIST || '')
-      .split(',')
-      .map((email) => email.trim().toLowerCase());
 
     return preferences.map((pref) => {
       const email = (pref.email_address || '').toLowerCase().trim();
@@ -45,5 +46,7 @@ export function transformCsv(
       };
     });
   }
+
+  // FIXME skip the emails
   return preferences;
 }
