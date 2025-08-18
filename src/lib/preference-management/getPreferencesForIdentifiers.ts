@@ -1,7 +1,6 @@
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 import type { Got } from 'got';
 import colors from 'colors';
-// import cliProgress from 'cli-progress';
 import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
 import * as t from 'io-ts';

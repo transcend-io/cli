@@ -38,12 +38,16 @@ import {
   AnyTotals,
   isUploadModeTotals,
   isCheckModeTotals,
+  makeOnKeypressExtra,
 } from './ui';
-import { writeFailingUpdatesCsv, ExportManager } from './artifacts';
+import {
+  writeFailingUpdatesCsv,
+  ExportManager,
+  type FailingUpdateRow,
+} from './artifacts';
 
-import { applyReceiptSummary, FailingUpdateRow } from './receipts';
+import { applyReceiptSummary } from './receipts';
 import { buildCommonOpts } from './buildTaskOptions';
-import { makeOnKeypressExtra } from './ui/keypressExtra';
 
 function getCurrentModulePath(): string {
   if (typeof __filename !== 'undefined') return __filename as unknown as string;
