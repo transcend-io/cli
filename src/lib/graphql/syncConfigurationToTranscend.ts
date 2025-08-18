@@ -3,7 +3,7 @@ import { TranscendInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,

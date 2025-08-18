@@ -1,9 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs, { existsSync, mkdirSync } from 'fs';
+import { mapSeries } from 'bluebird';
+import { join } from 'node:path';
+import fs, { existsSync, mkdirSync } from 'node:fs';
 import {
   buildTranscendGraphQLClient,
   ConsentManagerMetricBin,

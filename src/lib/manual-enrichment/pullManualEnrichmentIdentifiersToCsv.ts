@@ -1,5 +1,5 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import colors from 'colors';
 import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';

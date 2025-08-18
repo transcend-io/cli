@@ -2,7 +2,7 @@ import colors from 'colors';
 
 import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { difference } from 'lodash-es';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import { StoredApiKey } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';

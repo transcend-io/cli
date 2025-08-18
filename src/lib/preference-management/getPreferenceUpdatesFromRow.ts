@@ -11,19 +11,30 @@ import { splitCsvToList } from '../requests';
  * Parse an arbitrary object to the Transcend PUT /v1/preference update shape
  * by using a mapping of column names to purpose/preference slugs.
  *
- * columnToPurposeName looks like:
+ * `columnToPurposeName` looks like:
  * {
- *   'my_purpose': 'Marketing',
- *   'has_topic_1': 'Marketing->BooleanPreference1',
- *   'has_topic_2': 'Marketing->BooleanPreference2'
+ *   'my_purpose': { purpose: 'Marketing', preference: null, valueMapping: { 'true': true, 'false': false } },
+ *   'has_topic_1': { purpose: 'Marketing', preference: 'BooleanPreference1', valueMapping: { 'true': true, 'false': false } },
+ *   'has_topic_2': { purpose: 'Marketing', preference: 'SingleSelectPreference', valueMapping: { 'Option 1': 'Value1', 'Option 2': 'Value2' } }
  * }
  *
- * row looks like:
+ * `row` looks like:
  * {
  *  'my_purpose': 'true',
  *  'has_topic_1': 'true',
- *  'has_topic_2': 'false'
+ *  'has_topic_2': 'Option 1'
  * }
+ *
+ * OMISSION RULE:
+ * - If `valueMapping[row[columnName]]`
+ *   returns `undefined` or `null`, we **omit** that column entirely (do not set purpose enabled, do not push a preference).
+ *   - For MultiSelect, **each token** is treated independently: tokens that map to `undefined|null` are skipped;
+ *       if all tokens are skipped, nothing is pushed.
+ * - We still validate **types** for mapped values (e.g., boolean must map to boolean, select must map to string, etc.).
+ *
+ * NOTE:
+ * - Final shape must have `enabled` for every purpose touched (enforced by `apply` below). If you omit all top-level purpose mappings,
+ *   but emit preferences, this will throw at the end. This preserves the existing “enabled required” contract.
  *
  * @param options - Options
  * @returns The parsed row
@@ -36,7 +47,7 @@ export function getPreferenceUpdatesFromRow({
 }: {
   /** Row to parse */
   row: Record<string, string>;
-  /** Mapping from column name ot row */
+  /** Mapping from column name to parser config */
   columnToPurposeName: Record<string, PurposeRowMapping>;
   /** The set of allowed purpose slugs */
   purposeSlugs: string[];
@@ -62,7 +73,10 @@ export function getPreferenceUpdatesFromRow({
         );
       }
 
-      // CHeck if parsing a preference or just the top level purpose
+      // The raw value from the CSV row for this column
+      const rawValue = row[columnName];
+
+      // Check if parsing a preference or just the top level purpose
       if (preference) {
         const preferenceTopic = preferenceTopics.find(
           (x) => x.slug === preference && x.purpose.trackingType === purpose,
@@ -79,7 +93,7 @@ export function getPreferenceUpdatesFromRow({
           );
         }
 
-        // If parsing preferences, default to an empty array
+        // Ensure destination array
         if (!result[purpose]) {
           result[purpose] = {
             preferences: [],
@@ -89,39 +103,64 @@ export function getPreferenceUpdatesFromRow({
           result[purpose].preferences = [];
         }
 
-        // The value to parse
-        const rawValue = row[columnName];
-        const rawMapping = valueMapping[rawValue];
-        const trimmedMapping =
-          typeof rawMapping === 'string' ? rawMapping.trim() || null : null;
-
         // handle each type of preference
         switch (preferenceTopic.type) {
-          case PreferenceTopicType.Boolean:
-            if (typeof rawMapping !== 'boolean') {
+          case PreferenceTopicType.Boolean: {
+            const mappedValue = valueMapping[rawValue];
+            // Throw error on missing mapping
+            if (mappedValue === undefined && rawValue !== '') {
+              throw new Error(
+                `No preference mapping found for value "${rawValue}" in column ` +
+                  `"${columnName}" (purpose=${purpose}, preference=${preference})`,
+              );
+            }
+
+            // Purposefully missing mapping
+            if (mappedValue === null || mappedValue === undefined) {
+              return;
+            }
+
+            // Ensure boolean
+            if (typeof mappedValue !== 'boolean') {
               throw new Error(
                 `Invalid value for boolean preference: ${preference}, expected boolean, got: ${rawValue}`,
               );
             }
             result[purpose].preferences!.push({
               topic: preference,
-              choice: {
-                booleanValue: rawMapping,
-              },
+              choice: { booleanValue: mappedValue },
             });
             break;
-          case PreferenceTopicType.Select:
-            if (typeof rawMapping !== 'string' && rawMapping !== null) {
+          }
+
+          case PreferenceTopicType.Select: {
+            const mappedValue = valueMapping[rawValue];
+            // Throw error on missing mapping
+            if (mappedValue === undefined && rawValue !== '') {
               throw new Error(
-                `Invalid value for select preference: ${preference}, expected string or null, got: ${rawValue}`,
+                `No preference mapping found for value "${rawValue}" in column ` +
+                  `"${columnName}" (purpose=${purpose}, preference=${preference})`,
               );
             }
 
+            // Omit if null
+            if (mappedValue === null || mappedValue === undefined) {
+              return;
+            }
+
+            // Ensure string
+            if (typeof mappedValue !== 'string') {
+              throw new Error(
+                `Invalid value for select preference: ${preference}, expected string, got: ${rawValue}`,
+              );
+            }
+            const trimmed = mappedValue.trim() || null;
+
             if (
-              trimmedMapping &&
+              trimmed &&
               !preferenceTopic.preferenceOptionValues
                 .map(({ slug }) => slug)
-                .includes(trimmedMapping)
+                .includes(trimmed)
             ) {
               throw new Error(
                 `Invalid value for select preference: ${preference}, expected one of: ` +
@@ -131,57 +170,91 @@ export function getPreferenceUpdatesFromRow({
               );
             }
 
-            // Update preferences
             result[purpose].preferences!.push({
               topic: preference,
-              choice: {
-                selectValue: trimmedMapping,
-              },
+              choice: { selectValue: trimmed },
             });
             break;
-          case PreferenceTopicType.MultiSelect:
+          }
+
+          case PreferenceTopicType.MultiSelect: {
             if (typeof rawValue !== 'string') {
               throw new Error(
                 `Invalid value for multi select preference: ${preference}, expected string, got: ${rawValue}`,
               );
             }
-            // Update preferences
-            result[purpose].preferences!.push({
-              topic: preference,
-              choice: {
-                selectValues: splitCsvToList(rawValue)
-                  .map((val) => {
-                    const result = valueMapping[val];
-                    if (typeof result !== 'string') {
-                      throw new Error(
-                        `Invalid value for multi select preference: ${preference}, ` +
-                          `expected one of: ${preferenceTopic.preferenceOptionValues
-                            .map(({ slug }) => slug)
-                            .join(', ')}, got: ${val}`,
-                      );
-                    }
-                    return result;
-                  })
-                  .sort((a, b) => a.localeCompare(b)),
-              },
-            });
+
+            // IMPORTANT: Do NOT rely on valueMapping[rawValue] for CSV.
+            // Split and map per token with the new rule.
+            const selectValues = splitCsvToList(rawValue)
+              .map((token) => {
+                const tokenMapped = valueMapping[token];
+                // Throw error on missing mapping
+                if (tokenMapped === undefined && rawValue !== '') {
+                  throw new Error(
+                    `No preference mapping found for multi select token "${rawValue}" in column ` +
+                      `"${columnName}" (purpose=${purpose}, preference=${preference})`,
+                  );
+                }
+
+                // Omit if null
+                if (tokenMapped === null || tokenMapped === undefined) {
+                  return null;
+                }
+
+                // Ensure string
+                if (typeof tokenMapped !== 'string') {
+                  throw new Error(
+                    `Invalid value for multi select preference: ${preference}, ` +
+                      `expected one of: ${preferenceTopic.preferenceOptionValues
+                        .map(({ slug }) => slug)
+                        .join(', ')}, got: ${token}`,
+                  );
+                }
+                return tokenMapped;
+              })
+              .filter((x): x is string => x !== null)
+              .sort((a, b) => a.localeCompare(b));
+
+            // Only push if at least one mapped token survived
+            if (selectValues.length > 0) {
+              result[purpose].preferences!.push({
+                topic: preference,
+                choice: { selectValues },
+              });
+            }
             break;
+          }
+
           default:
             throw new Error(`Unknown preference type: ${preferenceTopic.type}`);
         }
-      } else if (!result[purpose]) {
-        // Handle updating top level purpose for the first time
-        result[purpose] = {
-          enabled: valueMapping[row[columnName]] === true,
-        };
       } else {
-        // Handle updating top level purpose but preserve preference updates
-        result[purpose].enabled = valueMapping[row[columnName]] === true;
+        // Top-level purpose (no preference)
+        const mappedValue = valueMapping[rawValue];
+        if (mappedValue === undefined && rawValue !== '') {
+          throw new Error(
+            `No preference mapping found for value "${rawValue}" in column ` +
+              `"${columnName}" (purpose=${purpose}, preference=∅)`,
+          );
+        }
+        if (mappedValue === null) {
+          return; // Omit if null
+        }
+
+        if (!result[purpose]) {
+          // Top-level purpose: set enabled strictly from mapped boolean
+          result[purpose] = { enabled: mappedValue === true };
+        } else {
+          // Preserve preferences; update enabled
+          result[purpose].enabled = mappedValue === true;
+        }
       }
     },
   );
 
-  // Ensure that enabled is provided
+  // Ensure that enabled is provided for any purpose that appears.
+  // (This preserves the prior contract and existing tests.)
   return apply(result, (x, purposeName) => {
     if (typeof x.enabled !== 'boolean') {
       throw new Error(
