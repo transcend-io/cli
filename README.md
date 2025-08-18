@@ -1,12 +1,13 @@
 # Transcend CLI
 
+A command line interface that allows you to programatically interact with the Transcend.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 ## Table of Contents
 
 - [Changelog](#changelog)
-- [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
@@ -57,10 +58,6 @@
 ## Changelog
 
 To stay up to date on breaking changes to the CLI between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
-
-## Overview
-
-A command line interface that allows you to programatically interact with the Transcend.
 
 ## Installation
 
