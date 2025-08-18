@@ -1,6 +1,19 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import type { FailingUpdateRow } from '../receipts';
 import { dirname } from 'node:path';
+
+/** A single failing update row we will output to CSV */
+export interface FailingUpdateRow {
+  /** The primary key / userId from receipts map key */
+  primaryKey: string;
+  /** When the upload attempt happened (ISO string) */
+  uploadedAt: string;
+  /** Error message */
+  error: string;
+  /** JSON-encoded "update" body (compact) */
+  updateJson: string;
+  /** Optional source file the row came from (helps triage) */
+  sourceFile?: string;
+}
 
 /**
  * Write a CSV file for failing updates.

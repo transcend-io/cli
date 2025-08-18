@@ -1,4 +1,3 @@
-// src/lib/pooling/tests/diagnostics.wireStderrBadges.test.ts
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { ChildProcess } from 'node:child_process';
 import { EventEmitter } from 'node:events';

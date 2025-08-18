@@ -1,18 +1,5 @@
 import { readFileSync } from 'node:fs';
-
-/** A single failing update row we will output to CSV */
-export interface FailingUpdateRow {
-  /** The primary key / userId from receipts map key */
-  primaryKey: string;
-  /** When the upload attempt happened (ISO string) */
-  uploadedAt: string;
-  /** Error message */
-  error: string;
-  /** JSON-encoded "update" body (compact) */
-  updateJson: string;
-  /** Optional source file the row came from (helps triage) */
-  sourceFile?: string;
-}
+import type { FailingUpdateRow } from '../artifacts';
 
 /**
  * Parse failing updates out of a receipts.json file.

@@ -1,4 +1,3 @@
-// ui/frameModel.ts
 import type { ExportStatusMap, WorkerState } from '../../../../lib/pooling';
 
 export type UploadModeTotals = {

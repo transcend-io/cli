@@ -1,4 +1,3 @@
-// ui/render.ts
 import * as readline from 'node:readline';
 import { buildFrameModel, type RenderDashboardInput } from './buildFrameModel';
 import {
