@@ -200,3 +200,8 @@ export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
 export const RETRYABLE_BATCH_STATUSES = new Set([
   429, 502, 500, 504, 329,
 ] as const);
+
+/**
+ * Debugging
+ */
+export const DEBUG = process.env.DEBUG === '1';

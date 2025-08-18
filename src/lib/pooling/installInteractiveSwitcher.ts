@@ -5,6 +5,7 @@ import { replayFileTailToStdout } from './replayFileTailToStdout';
 import { keymap } from './keymap';
 import { cycleWorkers, getWorkerIds } from './workerIds';
 import type { WhichLogs } from './showCombinedLogs';
+import { DEBUG } from '../../constants';
 
 /**
  * Key action types for the interactive switcher
@@ -62,6 +63,18 @@ export function installInteractiveSwitcher(opts: {
   const stdout = ports?.stdout ?? process.stdout;
   const stderr = ports?.stderr ?? process.stderr;
 
+  const d = (...a: unknown[]): void => {
+    if (DEBUG) {
+      try {
+        (ports?.stderr ?? process.stderr).write(
+          `[keys] ${a.map(String).join(' ')}\n`,
+        );
+      } catch {
+        // noop
+      }
+    }
+  };
+
   if (!stdin.isTTY) {
     // Not a TTY; return a no-op cleanup
     return () => {
@@ -112,6 +125,8 @@ export function installInteractiveSwitcher(opts: {
   }
 
   const attach = async (id: number): Promise<void> => {
+    d('attach()', `id=${id}`); // at function entry
+
     const w = workers.get(id);
     if (!w) return;
 
@@ -124,11 +139,9 @@ export function installInteractiveSwitcher(opts: {
     // UX: clear + banner
     onEnterAttachScreen?.(id);
 
-    // 1) replay last bytes from logs so you see history
-    await replayLogs(id);
+    onAttach?.(id); // prints “Attached to worker …” and clears
+    await replayLogs(id); // now the tail stays visible
 
-    // 2) now mirror live child output to our terminal
-    onAttach?.(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     outHandler = (chunk: any) => stdout.write(chunk);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,6 +157,8 @@ export function installInteractiveSwitcher(opts: {
   };
 
   const detach = (): void => {
+    d('detach()', `id=${focus}`); // at function entry
+
     if (focus == null) return;
     const id = focus;
     const w = workers.get(id);
@@ -159,12 +174,27 @@ export function installInteractiveSwitcher(opts: {
   };
 
   const onKey = (str: string, key: readline.Key): void => {
+    d(
+      'keypress',
+      JSON.stringify({
+        str,
+        name: key.name,
+        seq: key.sequence,
+        ctrl: key.ctrl,
+        meta: key.meta,
+        shift: key.shift,
+        mode,
+      }),
+    );
     const act = keymap(str, key, mode);
+    d('mapped', JSON.stringify(act));
+
     if (!act) return;
 
     // eslint-disable-next-line default-case
     switch (act.type) {
       case 'CTRL_C': {
+        d('CTRL_C');
         if (mode === 'attached' && focus != null) {
           const w = workers.get(focus);
           try {
@@ -181,6 +211,8 @@ export function installInteractiveSwitcher(opts: {
       }
 
       case 'ATTACH': {
+        d('ATTACH', `id=${act.id}`, `has=${workers.has(act.id)}`);
+
         if (mode !== 'dashboard') return;
         // eslint-disable-next-line no-void
         if (workers.has(act.id)) void attach(act.id);
@@ -188,6 +220,7 @@ export function installInteractiveSwitcher(opts: {
       }
 
       case 'CYCLE': {
+        d('CYCLE', `delta=${act.delta}`);
         if (mode !== 'dashboard') return;
         const next = cycleWorkers(getWorkerIds(workers), focus, act.delta);
         // eslint-disable-next-line no-void
@@ -202,6 +235,7 @@ export function installInteractiveSwitcher(opts: {
       }
 
       case 'DETACH': {
+        d('DETACH');
         if (mode === 'attached') detach();
         return;
       }

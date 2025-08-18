@@ -239,7 +239,10 @@ export interface ExportArtifactResult {
   exported?: boolean;
 }
 
-export interface ExportStatusMap {
+/**
+ * Status map for export artifacts.
+ */
+export type ExportStatusMap = {
   /** The absolute paths to the error log artifacts */
   error?: ExportArtifactResult;
   /** The absolute paths to the warn log artifacts */
@@ -250,7 +253,7 @@ export interface ExportStatusMap {
   all?: ExportArtifactResult;
   /** The absolute paths to the failures CSV artifacts */
   failuresCsv?: ExportArtifactResult;
-}
+};
 
 /**
  * Return export statuses
