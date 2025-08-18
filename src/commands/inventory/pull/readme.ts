@@ -8,12 +8,10 @@ import {
   buildExampleCommand,
   buildExamples,
 } from '../../../lib/docgen/buildExamples';
+import { createPullResourceScopesTable } from '../../../lib/docgen/createPullResourceScopesTable';
 import type { PullCommandFlags } from './impl';
 import type { GenerateApiKeysCommandFlags } from '../../admin/generate-api-keys/impl';
-import {
-  SCOPE_DESCRIPTIONS,
-  TR_PULL_RESOURCE_SCOPE_MAP,
-} from '../../../constants';
+import { TR_PULL_RESOURCE_SCOPE_MAP } from '../../../constants';
 
 const examples = buildExamples<PullCommandFlags>(
   ['inventory', 'pull'],
@@ -206,7 +204,7 @@ export default `#### Scopes
 
 The API key permissions for this command vary based on the \`resources\` argument:
 
-${SCOPE_DESCRIPTIONS(TR_PULL_RESOURCE_SCOPE_MAP)}
+${createPullResourceScopesTable(TR_PULL_RESOURCE_SCOPE_MAP)}
 
 #### Examples
 
