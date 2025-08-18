@@ -1,16 +1,3 @@
-/*
- * Tests for lib/ui/dashboardPlugin.ts
- *
- * These tests verify:
- *  1) hotkeysHint formatting for various pool sizes and final state.
- *  2) dashboardPlugin frame composition (header, workers, hotkeys, extras).
- *  3) Duplicate-frame suppression while live (no re-render when unchanged).
- *  4) Cursor hide/restore behavior and readline repaint calls.
- *  5) Extras block inclusion only when provided.
- *
- * All helper functions include explicit return types and thorough documentation.
- */
-
 import {
   describe,
   it,
@@ -22,8 +9,6 @@ import {
 } from 'vitest';
 import type { CommonCtx } from '../dashboardPlugin';
 import type { ObjByString } from '@transcend-io/type-utils';
-
-// --- Mocks -------------------------------------------------------------------
 
 /**
  * Mock `colors` so that `colors.dim` returns the raw string (no ANSI codes).
@@ -48,8 +33,6 @@ vi.mock('node:readline', () => ({
   cursorTo: mCursorTo,
   clearScreenDown: mClearDown,
 }));
-
-// --- Helpers -----------------------------------------------------------------
 
 /**
  * Load the SUT module fresh to reset internal state (e.g., lastFrame cache).
@@ -144,8 +127,6 @@ function makePlugin(): Parameters<SutModule['dashboardPlugin']>[1] {
   };
   return plugin;
 }
-
-// --- Tests -------------------------------------------------------------------
 
 describe('hotkeysHint', () => {
   afterEach(() => {
