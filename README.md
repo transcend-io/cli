@@ -88,9 +88,11 @@
     - [Examples](#examples-35)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
     - [Examples](#examples-36)
+  - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+    - [Examples](#examples-37)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
     - [Authentication](#authentication)
-    - [Examples](#examples-37)
+    - [Examples](#examples-38)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -3088,6 +3090,41 @@ query {
     }
   }
 }
+```
+
+### `transcend admin chunk-csv`
+
+```txt
+USAGE
+  transcend admin chunk-csv (--directory value) [--outputDir value] [--clearOutputDir] [--chunkSizeMB value] [--concurrency value] [--viewerMode]
+  transcend admin chunk-csv --help
+
+Streams every CSV in --directory and writes chunked files of approximately N MB each.
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row-length consistency against the header row; logs periodic progress and memory usage.
+
+FLAGS
+      --directory                           Directory containing CSV files to split (required)
+     [--outputDir]                          Directory to write chunk files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing chunks                           [default = true]
+     [--chunkSizeMB]                        Approximate chunk size in megabytes. Keep well under JS string size limits [default = 10]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)          [default = false]
+  -h  --help                                Print help information and exit
+```
+
+#### Examples
+
+**Chunk a file into smaller CSV files**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
+```
+
+**Specify chunk size in MB**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --chunkSizeMB=250
 ```
 
 ### `transcend migration sync-ot`
