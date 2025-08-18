@@ -5,7 +5,7 @@ import type { ChunkProgress, ChunkResult, ChunkTask } from '../worker';
 
 // ⬇️ SUT imports AFTER mocks
 import { chunkCsvPlugin } from '../ui';
-import { chunkCsvParent, type ChunkCsvCommandFlags } from '../impl';
+import { chunkCsv, type ChunkCsvCommandFlags } from '../impl';
 
 const H = vi.hoisted(() => {
   const files = ['/abs/a.csv', '/abs/b.csv', '/abs/c.csv'];
@@ -120,7 +120,7 @@ vi.mock('../../../../lib/pooling', async () => {
 
 // -------------------------------------------------------------------------------------------------
 
-describe('chunkCsvParent', () => {
+describe('chunkCsv', () => {
   const ctx: LocalContext = {
     exit: vi.fn(),
     log: vi.fn(),
@@ -145,7 +145,7 @@ describe('chunkCsvParent', () => {
   });
 
   it('discovers files, sizes the pool, logs, builds queue, and invokes runPool with expected args', async () => {
-    await chunkCsvParent.call(ctx, baseFlags);
+    await chunkCsv.call(ctx, baseFlags);
 
     // collectCsvFilesOrExit called with directory + ctx
     expect(H.helpers.collectCsvFilesOrExit).toHaveBeenCalledWith(
@@ -185,7 +185,7 @@ describe('chunkCsvParent', () => {
   });
 
   it('queue + hooks: nextTask/fifo, labels, totals, onProgress, onResult', async () => {
-    await chunkCsvParent.call(ctx, baseFlags);
+    await chunkCsv.call(ctx, baseFlags);
     const hooks = H.lastRunPoolArgs.hooks!;
     // nextTask drains FIFO of discovered files turned into ChunkTask
     const seen: string[] = [];
@@ -230,7 +230,7 @@ describe('chunkCsvParent', () => {
   });
 
   it('render delegates to dashboardPlugin with chunkCsvPlugin and viewerMode', async () => {
-    await chunkCsvParent.call(ctx, baseFlags);
+    await chunkCsv.call(ctx, baseFlags);
     const render = H.lastRunPoolArgs.render!;
     const input = { pretend: 'frame' };
     const result = render(input);
@@ -251,7 +251,7 @@ describe('chunkCsvParent', () => {
   });
 
   it('extraKeyHandler is built via createExtraKeyHandler and passes through logs/repaint/setPaused', async () => {
-    await chunkCsvParent.call(ctx, baseFlags);
+    await chunkCsv.call(ctx, baseFlags);
     const ek = H.lastRunPoolArgs.extraKeyHandler!;
     const logsBySlot = new Map<number, string[]>();
     const repaint = vi.fn();
@@ -275,12 +275,12 @@ describe('chunkCsvParent', () => {
   });
 
   it('uses outputDir as baseDir when directory is empty', async () => {
-    await chunkCsvParent.call(ctx, { ...baseFlags, directory: '' });
+    await chunkCsv.call(ctx, { ...baseFlags, directory: '' });
     expect(H.lastRunPoolArgs.baseDir).toBe(baseFlags.outputDir);
   });
 
   it('falls back to cwd as baseDir when directory and outputDir are empty', async () => {
-    await chunkCsvParent.call(ctx, {
+    await chunkCsv.call(ctx, {
       ...baseFlags,
       directory: '',
       outputDir: '',

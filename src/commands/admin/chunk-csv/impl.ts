@@ -65,7 +65,7 @@ export type ChunkCsvCommandFlags = {
  * @param this  - Bound CLI context (provides process exit + logging).
  * @param flags - CLI options for the run.
  */
-export async function chunkCsvParent(
+export async function chunkCsv(
   this: LocalContext,
   flags: ChunkCsvCommandFlags,
 ): Promise<void> {
