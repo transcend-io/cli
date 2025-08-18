@@ -17,3 +17,4 @@ export * from './safeGetLogPathsForSlot';
 export * from './uiPlugins';
 export * from './types';
 export * from './runPool';
+export * from './createExtraKeyHandler';

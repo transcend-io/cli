@@ -1,32 +1,3 @@
-/**
- * Shared handler for "extra" keyboard shortcuts used by the interactive dashboard.
- *
- * It wires:
- * - **Viewers (lowercase):** `e` (errors), `w` (warnings), `i` (info), `l` (all)
- * - **Exports (uppercase, optional):** `E` (errors), `W` (warnings), `I` (info), `A` (all)
- * - **Dismiss:** `Esc` or `Ctrl+]` exits a viewer and returns to the dashboard
- * - **Custom keys (optional):** Provide a `custom` map to handle command-specific bindings
- *
- * Usage (inside `runPool({... extraKeyHandler })`):
- * ```ts
- * extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
- *   createExtraKeyHandler({ logsBySlot, repaint, setPaused })
- * ```
- *
- * If you also want export hotkeys + an "Exports" panel:
- * ```ts
- * extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
- *   createExtraKeyHandler({
- *     logsBySlot, repaint, setPaused,
- *     exportMgr,         // enables E/W/I/A
- *     exportStatus,      // keeps panel timestamps up to date
- *     custom: {          // optional, e.g. 'F' to export a CSV
- *       F: async ({ say, noteExport }) => { ... }
- *     }
- *   })
- * ```
- */
-
 import type { ExportStatusMap } from './logRotation';
 import { showCombinedLogs, type LogLocation } from './showCombinedLogs';
 import type { SlotPaths } from './spawnWorkerProcess';
@@ -110,6 +81,32 @@ export type CreateExtraKeyHandlerOpts = {
 
 /**
  * Create a keypress handler for interactive viewers/exports.
+ * Shared handler for "extra" keyboard shortcuts used by the interactive dashboard.
+ *
+ * It wires:
+ * - **Viewers (lowercase):** `e` (errors), `w` (warnings), `i` (info), `l` (all)
+ * - **Exports (uppercase, optional):** `E` (errors), `W` (warnings), `I` (info), `A` (all)
+ * - **Dismiss:** `Esc` or `Ctrl+]` exits a viewer and returns to the dashboard
+ * - **Custom keys (optional):** Provide a `custom` map to handle command-specific bindings
+ *
+ * Usage (inside `runPool({... extraKeyHandler })`):
+ * ```ts
+ * extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
+ *   createExtraKeyHandler({ logsBySlot, repaint, setPaused })
+ * ```
+ *
+ * If you also want export hotkeys + an "Exports" panel:
+ * ```ts
+ * extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
+ *   createExtraKeyHandler({
+ *     logsBySlot, repaint, setPaused,
+ *     exportMgr,         // enables E/W/I/A
+ *     exportStatus,      // keeps panel timestamps up to date
+ *     custom: {          // optional, e.g. 'F' to export a CSV
+ *       F: async ({ say, noteExport }) => { ... }
+ *     }
+ *   })
+ * ```
  *
  * @param opts - Configuration for viewers, exports, and custom keys.
  * @returns A `(buf: Buffer) => void` handler suitable for `process.stdin.on('data', ...)`.
