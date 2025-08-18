@@ -109,14 +109,19 @@ function approxRowBytes(obj: Record<string, unknown>): number {
  */
 export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
   const { filePath, outputDir, clearOutputDir, chunkSizeMB, onProgress } = opts;
+  logger.info(
+    colors.magenta(`Chunking ${filePath} into ~${chunkSizeMB}MB files...`),
+  );
 
   const chunkSizeBytes = Math.floor(chunkSizeMB * 1024 * 1024);
   const baseName = basename(filePath, '.csv');
   const outDir = outputDir || dirname(filePath);
+  logger.info(colors.magenta(`Output directory: ${outDir}`));
   await mkdir(outDir, { recursive: true });
 
   // Clear previous chunk files for this base
   if (clearOutputDir) {
+    logger.warn(colors.yellow(`Clearing output directory: ${outDir}`));
     const files = await readdir(outDir);
     await Promise.all(
       files
@@ -201,6 +206,11 @@ export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
           await writer.end();
           currentChunk += 1;
           currentSize = 0;
+          logger.info(
+            colors.green(
+              `Rolling to chunk ${currentChunk} after ${totalLines.toLocaleString()} rows.`,
+            ),
+          );
           writer = createCsvChunkWriter(currentChunkPath(), headerRow!);
         }
 

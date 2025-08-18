@@ -2,81 +2,91 @@ import * as readline from 'node:readline';
 import { buildFrameModel, type RenderDashboardInput } from './buildFrameModel';
 
 let lastFrame = '';
+let frameTick = 0;
+
+/** Simple unicode spinner for BUSY workers when total is unknown. */
+const SPIN = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+/** Left/right caps for bars; use ASCII if you prefer. */
+const BAR_LEFT = '│';
+const BAR_RIGHT = '│';
+const BAR_FULL = '█';
+const BAR_EMPTY = '░';
 
 /**
  * Render a flicker-free, text-based dashboard in the terminal (TTY)
  * for monitoring CSV chunking workers.
  *
- * This function is designed to continuously refresh the screen in place,
- * showing:
- *   - Overall progress (completed/failed/total files)
- *   - Pool and CPU metrics
- *   - Recent throughput rates
- *   - Each worker’s state (busy/idle, warning/error state, progress, file path)
+ * What you see:
+ *  - Overall progress (completed / failed / total)
+ *  - Pool/CPU metrics
+ *  - Recent throughput (r10s / r60s)
+ *  - Each worker: BUSY/IDLE (+WARN/ERROR), rows processed, file path
+ *  - A progress bar per worker (if total known), or a spinner if total unknown
  *
- * It achieves flicker-free rendering by:
- *   1. Caching the last rendered frame (`lastFrame`) and only redrawing if
- *      something has changed.
- *   2. Using ANSI escape sequences + `readline` helpers to overwrite the
- *      existing terminal content rather than printing new lines.
- *   3. Hiding the cursor while active updates are happening, then restoring it
- *      when rendering the final frame.
+ * Hotkeys (handled by the interactive switcher):
+ *   0–9 attach • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+D EOF • Ctrl+C quit
  *
- * @param input - The current state of the pool, worker map, throughput, etc.
- *   Typically produced on each heartbeat/interval by the main process.
+ * @param input - Input object containing state and metrics to render
  */
 export function renderDashboard(input: RenderDashboardInput): void {
-  // Normalize the current state into a simple model shape.
+  frameTick = (frameTick + 1) % SPIN.length;
   const m = buildFrameModel(input);
 
-  // Build the header line summarizing pool and throughput statistics.
+  // header
   const head =
     `Chunk CSV — ${m.filesCompleted}/${m.filesTotal} done, failed ${m.filesFailed}\n` +
     `Pool ${m.poolSize} • CPU ${m.cpuCount} • r10s ${m.throughput.r10s.toFixed(
       1,
-    )} r60s ${m.throughput.r60s.toFixed(1)}`;
+    )} ` +
+    `r60s ${m.throughput.r60s.toFixed(1)}\n` +
+    '(hotkeys: 0–9 attach • Tab/Shift+Tab cycle • Esc/Ctrl+] detach • Ctrl+D EOF • Ctrl+C quit)';
 
-  // Build per-worker status rows, including:
-  // - worker ID
-  // - BUSY/IDLE state
-  // - optional WARN/ERROR tag
-  // - processed row count
-  // - file currently assigned (if any)
+  // per-worker line with progress bar / spinner
   const rows = m.workers
     .map((w) => {
       const status = w.busy ? 'BUSY' : 'IDLE';
       const lvl =
         w.level === 'ok' ? '' : w.level === 'warn' ? ' [WARN]' : ' [ERROR]';
-      const prog = w.processed
-        ? `rows=${w.processed.toLocaleString()}`
-        : 'rows=0';
+
+      const processed = w.processed ?? 0;
+      const total = w.total ?? undefined;
+
+      let progressVisual = '';
+      if (w.busy && typeof total === 'number' && total > 0) {
+        const pct = Math.max(0, Math.min(1, processed / total));
+        const width = 28; // bar width
+        const filled = Math.round(pct * width);
+        const empty = width - filled;
+        progressVisual = `${BAR_LEFT}${BAR_FULL.repeat(
+          filled,
+        )}${BAR_EMPTY.repeat(empty)}${BAR_RIGHT} (${Math.floor(pct * 100)}%)`;
+      } else if (w.busy) {
+        progressVisual = `${SPIN[frameTick]} processing`;
+      } else {
+        progressVisual = '—';
+      }
+
+      const prog = `rows=${processed.toLocaleString()} ${progressVisual}`;
       const file = w.file ? ` — ${w.file}` : '';
+
       return `w${w.id
         .toString()
-        .padStart(2, '0')}: ${status}${lvl} ${prog}${file}`;
+        .padStart(2, '0')}: ${status}${lvl}  ${prog}${file}`;
     })
     .join('\n');
 
-  // Assemble the full frame string for this render cycle.
   const frame = `${head}\n\n${rows}\n`;
 
-  // Optimization: avoid redrawing if nothing has changed and we’re not final.
   if (!input.final && frame === lastFrame) return;
   lastFrame = frame;
 
   if (!input.final) {
-    // Live updates:
-    //   - Hide the cursor for aesthetics
-    //   - Reset cursor to top-left
-    //   - Clear the screen before redrawing
     process.stdout.write('\x1b[?25l');
     readline.cursorTo(process.stdout, 0, 0);
     readline.clearScreenDown(process.stdout);
   } else {
-    // Final frame: restore the cursor so the user can interact normally again.
     process.stdout.write('\x1b[?25h');
   }
-
-  // Write the frame (always with a trailing newline for separation).
   process.stdout.write(`${frame}\n`);
 }
