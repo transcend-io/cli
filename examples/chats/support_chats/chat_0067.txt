@@ -1,0 +1,15 @@
+Support Chat Transcript #67
+==================================
+Taylor: Can you assist me with logging into my account.
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Here is my Profile URL: https://social.example.com/jordan
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Here is my User Preferences: marketing_emails=false

@@ -1,0 +1,13 @@
+Support Chat Transcript #75
+==================================
+Riley: Hi, I need help with logging into my account.
+Noah: Let me look that up for you.
+Riley: Here is my Profile Picture URL: https://example.com/img/profile123.jpg
+Noah: Thanks, can you also provide your Email: jordan@example.com?
+Riley: Can you check on that?
+Noah: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?
+Riley: Can you check on that?
+Noah: Let me look that up for you.
+Riley: Here is my Phone: +1-202-555-0172
+Noah: Let me look that up for you.
+Riley: Here is my Gender: Non-binary

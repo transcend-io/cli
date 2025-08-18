@@ -1,0 +1,63 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0005.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0005.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.538,
+        "snippet": "===\nTaylor: Hi, I need help with a late delivery.\nLiam: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.981,
+        "snippet": "m: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nTaylor: Can you check on that?\nLiam: Let me look"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.995,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}

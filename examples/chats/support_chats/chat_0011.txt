@@ -1,0 +1,20 @@
+Support Chat Transcript #11
+==================================
+Sam: Hi, I need help with firmware update errors.
+Maya: Thanks, can you also provide your Religion: None?
+Sam: Can you check on that?
+Maya: Let me look that up for you.
+Sam: Can you check on that?
+Maya: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?
+Sam: Here is my Approximate Geolocation: San Francisco, CA
+Maya: Let me look that up for you.
+Sam: Can you check on that?
+Maya: Let me look that up for you.
+Sam: Here is my Date of Birth: 1990-05-12
+Maya: Thanks, can you also provide your User ID: U123456?
+Sam: Can you check on that?
+Maya: Let me look that up for you.
+Sam: Here is my Email: jordan@example.com
+Maya: Let me look that up for you.
+Sam: Can you check on that?
+Maya: Thanks, can you also provide your Email: jordan@example.com?

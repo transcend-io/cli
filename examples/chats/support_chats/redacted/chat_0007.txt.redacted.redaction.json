@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0007.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0007.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Region",
+        "value": "San Francisco, CA",
+        "confidence": 0.525,
+        "snippet": "d1234?\nRiley: Here is my Approximate Geolocation: San Francisco, CA\nSofia: Let me look that up for you.\nRiley: Here i"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.997,
+        "snippet": "hat up for you.\nRiley: Here is my Race/Ethnicity: Hispanic\nSofia: Let me look that up for you.\nRiley: Can yo"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.997,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nRiley: Here is my User Preferences: marketing_em"
+      },
+      {
+        "type": "User Preferences",
+        "value": "false",
+        "confidence": 0.681,
+        "snippet": "ey: Here is my User Preferences: marketing_emails=false"
+      }
+    ]
+  ]
+}

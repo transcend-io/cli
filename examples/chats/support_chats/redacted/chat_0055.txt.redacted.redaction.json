@@ -1,0 +1,57 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0055.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0055.txt.redacted",
+  "totalRedactions": 2,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID",
+        "confidence": 0.947,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nSam: Can you check on that?\nEthan: Le"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.987,
+        "snippet": "me look that up for you.\nSam: Here is my User ID: U123456\nEthan: Let me look that up for you.\nSam: Can you "
+      }
+    ]
+  ]
+}

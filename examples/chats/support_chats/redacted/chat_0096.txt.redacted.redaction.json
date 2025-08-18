@@ -1,0 +1,123 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0096.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0096.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.976,
+        "snippet": "Transcript #96\n==================================\nRiley: Good morning, question about logging into my acc"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.957,
+        "snippet": " morning, question about logging into my account.\nAva: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.973,
+        "snippet": "nto my account.\nAva: Let me look that up for you.\nRiley: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.958,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nAva: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.973,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nRiley: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.952,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nAva: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.973,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nRiley: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.954,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nAva: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.96,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nRiley: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.96,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nAva: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.994,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nRiley: Can you check on that?\nAva: Let me look t"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.969,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nRiley: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.96,
+        "snippet": "tion: Heterosexual?\nRiley: Can you check on that?\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

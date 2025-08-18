@@ -1,0 +1,15 @@
+Support Chat Transcript #63
+==================================
+Casey: Can you assist me with a double charge on my card.
+Noah: Thanks, can you also provide your Political Affiliation: Independent?
+Casey: Can you check on that?
+Noah: Thanks, can you also provide your Union Membership: None?
+Casey: Here is my Date of Birth: 1990-05-12
+Noah: Thanks, can you also provide your Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----?
+Casey: Can you check on that?
+Noah: Thanks, can you also provide your Serial Number: SN-1234567890?
+Casey: Can you check on that?
+Noah: Let me look that up for you.
+Casey: Can you check on that?
+Noah: Thanks, can you also provide your Profile Picture URL: https://example.com/img/profile123.jpg?
+Casey: Can you check on that?

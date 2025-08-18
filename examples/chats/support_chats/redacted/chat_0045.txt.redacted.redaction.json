@@ -1,0 +1,57 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0045.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0045.txt.redacted",
+  "totalRedactions": 1,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.992,
+        "snippet": " me look that up for you.\nAlex: Here is my Email: jordan@example.com\nSofia: Let me look that up for you.\nAlex: Can you"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.989,
+        "snippet": "?\nSofia: Thanks, can you also provide your Email: jordan@example.com?\nAlex: Can you check on that?\nSofia: Let me look "
+      }
+    ]
+  ]
+}

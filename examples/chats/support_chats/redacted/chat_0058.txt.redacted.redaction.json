@@ -1,0 +1,117 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0058.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0058.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.693,
+        "snippet": "Transcript #58\n==================================\nRiley: Hello—I'm having trouble with firmware update er"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.712,
+        "snippet": "o—I'm having trouble with firmware update errors.\nEthan: Thanks, can you also provide your Profile URL: h"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.98,
+        "snippet": "n: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nRiley: Can you check on that?\nEthan: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.664,
+        "snippet": "r Profile URL: https://social.example.com/jordan?\nRiley: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.693,
+        "snippet": "example.com/jordan?\nRiley: Can you check on that?\nEthan: Let me look that up for you.\nRiley: Here is my R"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.663,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nRiley: Here is my Race/Ethnicity: Hispanic\nEthan: Thank"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.997,
+        "snippet": "hat up for you.\nRiley: Here is my Race/Ethnicity: Hispanic\nEthan: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.669,
+        "snippet": "r you.\nRiley: Here is my Race/Ethnicity: Hispanic\nEthan: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.997,
+        "snippet": "n: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nEthan: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.716,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.703,
+        "snippet": " 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nEthan: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.648,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

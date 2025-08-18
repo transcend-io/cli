@@ -1,0 +1,111 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0050.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0050.txt.redacted",
+  "totalRedactions": 2,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.885,
+        "snippet": "Transcript #50\n==================================\nJordan: Good morning, question about firmware update err"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.774,
+        "snippet": "d morning, question about firmware update errors.\nMaya: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.883,
+        "snippet": "update errors.\nMaya: Let me look that up for you.\nJordan: Here is my Cookies: sessionid=abcd1234\nMaya: Let"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.76,
+        "snippet": "u.\nJordan: Here is my Cookies: sessionid=abcd1234\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.836,
+        "snippet": "ionid=abcd1234\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.775,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.839,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.814,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.789,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.852,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.826,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?"
+      }
+    ]
+  ]
+}

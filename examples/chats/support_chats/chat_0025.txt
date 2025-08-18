@@ -1,0 +1,17 @@
+Support Chat Transcript #25
+==================================
+Taylor: Can you assist me with logging into my account.
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Here is my Email: jordan@example.com
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Thanks, can you also provide your User Preferences: marketing_emails=false?
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Can you check on that?
+Ava: Let me look that up for you.
+Taylor: Can you check on that?

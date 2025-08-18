@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0060.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0060.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.998,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nJordan: Here is my Phone: +1-202-555-0172\nEthan:"
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.993,
+        "snippet": " Number: SN-1234567890?\nJordan: Here is my Phone: +1-202-555-0172\nEthan: Let me look that up for you.\nJordan: Can y"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Declared Interests",
+        "confidence": 0.527,
+        "snippet": "on that?\nEthan: Thanks, can you also provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\n"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.94,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\nEthan: Let me loo"
+      }
+    ]
+  ]
+}

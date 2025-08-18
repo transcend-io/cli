@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0049.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0049.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.995,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nAlex: Can you check on that?\nNoah: Let me look t"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.861,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nAlex: Here is my Social Security Number: 123-45-"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.999,
+        "snippet": "istered?\nAlex: Here is my Social Security Number: 123-45-6789\nNoah: Let me look that up for you.\nAlex: Can you "
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.611,
+        "snippet": " on that?\nNoah: Thanks, can you also provide your Religion: None?\nAlex: Can you check on that?\nNoah: Thanks,"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.933,
+        "snippet": "Noah: Thanks, can you also provide your Religion: None?\nAlex: Can you check on that?\nNoah: Thanks, can y"
+      },
+      {
+        "type": "Gender",
+        "value": "Gender",
+        "confidence": 0.539,
+        "snippet": " on that?\nNoah: Thanks, can you also provide your Gender: Non-binary?"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.978,
+        "snippet": "?\nNoah: Thanks, can you also provide your Gender: Non-binary?"
+      }
+    ]
+  ]
+}

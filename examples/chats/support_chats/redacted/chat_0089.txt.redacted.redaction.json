@@ -1,0 +1,153 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0089.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0089.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.783,
+        "snippet": "Transcript #89\n==================================\nTaylor: Can you assist me with resetting my password.\nLi"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.741,
+        "snippet": "or: Can you assist me with resetting my password.\nLiam: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.819,
+        "snippet": "g my password.\nLiam: Let me look that up for you.\nTaylor: Here is my Declared Interests: hiking, cooking\nL"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.894,
+        "snippet": "p for you.\nTaylor: Here is my Declared Interests: hiking, cooking\nLiam: Thanks, can you also provide your Race/Ethn"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.714,
+        "snippet": "r: Here is my Declared Interests: hiking, cooking\nLiam: Thanks, can you also provide your Race/Ethnicity"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.984,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nTaylor: Here is my Union Membership: None\nLiam: "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.768,
+        "snippet": "n you also provide your Race/Ethnicity: Hispanic?\nTaylor: Here is my Union Membership: None\nLiam: Let me l"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.967,
+        "snippet": "y: Hispanic?\nTaylor: Here is my Union Membership: None\nLiam: Let me look that up for you.\nTaylor: Can yo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.71,
+        "snippet": "spanic?\nTaylor: Here is my Union Membership: None\nLiam: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.687,
+        "snippet": "mbership: None\nLiam: Let me look that up for you.\nTaylor: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.712,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nLiam: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.698,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nTaylor: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.769,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nLiam: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.693,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nTaylor: Can you check on that?\nLiam: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.728,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nLiam: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "m: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nTaylor: Can you check on that?\nLiam: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.755,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nTaylor: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.676,
+        "snippet": "00:1B:44:11:3A:B7?\nTaylor: Can you check on that?\nLiam: Let me look that up for you."
+      }
+    ]
+  ]
+}

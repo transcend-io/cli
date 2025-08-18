@@ -1,0 +1,12 @@
+Support Chat Transcript #10
+==================================
+Sam: Can you assist me with updating my subscription.
+Ethan: Let me look that up for you.
+Sam: Can you check on that?
+Ethan: Let me look that up for you.
+Sam: Can you check on that?
+Ethan: Thanks, can you also provide your Survey Data: Q1=Yes, Q2=No?
+Sam: Can you check on that?
+Ethan: Thanks, can you also provide your Approximate Geolocation: San Francisco, CA?
+Sam: Can you check on that?
+Ethan: Thanks, can you also provide your Declared Interests: hiking, cooking?

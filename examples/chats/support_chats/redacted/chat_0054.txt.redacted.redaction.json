@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0054.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0054.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Preferences",
+        "value": "User Preferences",
+        "confidence": 0.545,
+        "snippet": "on that?\nSofia: Thanks, can you also provide your User Preferences: marketing_emails=false?\nRiley: Can you check on "
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.938,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nRiley: Can you check on that?\nSofia: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.97,
+        "snippet": "ia: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nRiley: Can you check"
+      },
+      {
+        "type": "MAC Address",
+        "value": "Macintosh; Intel Mac OS X",
+        "confidence": 0.523,
+        "snippet": "an you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nRiley: Can you check on that?\nSofia: Let me loo"
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.995,
+        "snippet": "me look that up for you.\nRiley: Here is my Phone: +1-202-555-0172\nSofia: Thanks, can you also provide your Private "
+      }
+    ]
+  ]
+}

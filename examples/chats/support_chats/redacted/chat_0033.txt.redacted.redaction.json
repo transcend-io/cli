@@ -1,0 +1,123 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0033.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0033.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.925,
+        "snippet": "Transcript #33\n==================================\nJordan: Can you assist me with firmware update errors.\nA"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.838,
+        "snippet": "n: Can you assist me with firmware update errors.\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.891,
+        "snippet": " update errors.\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.871,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.858,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.899,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.821,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.887,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Thanks, can you also provide your Profile URL: h"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com",
+        "confidence": 0.66,
+        "snippet": "a: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nJordan: Can you check on that?\nAva: Let m"
+      },
+      {
+        "type": "User Agent",
+        "value": "jordan",
+        "confidence": 0.601,
+        "snippet": "vide your Profile URL: https://social.example.com/jordan?\nJordan: Can you check on that?\nAva: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.865,
+        "snippet": "r Profile URL: https://social.example.com/jordan?\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.897,
+        "snippet": "xample.com/jordan?\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.849,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?"
+      }
+    ]
+  ]
+}

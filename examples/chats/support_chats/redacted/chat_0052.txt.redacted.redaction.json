@@ -1,0 +1,147 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0052.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0052.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.605,
+        "snippet": "Transcript #52\n==================================\nTaylor: Hi, I need help with updating my subscription.\nA"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.642,
+        "snippet": "r: Hi, I need help with updating my subscription.\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.545,
+        "snippet": "y subscription.\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.585,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.546,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.592,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.991,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nTaylor: Can you check on that?\nAva: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.503,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nTaylor: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.573,
+        "snippet": "ion: Heterosexual?\nTaylor: Can you check on that?\nAva: Thanks, can you also provide your Cookies: sessi"
+      },
+      {
+        "type": "User Preferences",
+        "value": "sessionid=abcd1234",
+        "confidence": 0.508,
+        "snippet": "?\nAva: Thanks, can you also provide your Cookies: sessionid=abcd1234?\nTaylor: Can you check on that?\nAva: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.539,
+        "snippet": "ou also provide your Cookies: sessionid=abcd1234?\nTaylor: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.577,
+        "snippet": "essionid=abcd1234?\nTaylor: Can you check on that?\nAva: Thanks, can you also provide your User ID: U1234"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.985,
+        "snippet": "?\nAva: Thanks, can you also provide your User ID: U123456?\nTaylor: Can you check on that?\nAva: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.528,
+        "snippet": "anks, can you also provide your User ID: U123456?\nTaylor: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.575,
+        "snippet": " User ID: U123456?\nTaylor: Can you check on that?\nAva: Thanks, can you also provide your Email: jordan@"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.998,
+        "snippet": "at?\nAva: Thanks, can you also provide your Email: jordan@example.com?\nTaylor: Can you check on that?"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.552,
+        "snippet": " you also provide your Email: jordan@example.com?\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}

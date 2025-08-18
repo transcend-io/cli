@@ -1,0 +1,105 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0020.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0020.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.674,
+        "snippet": "Transcript #20\n==================================\nCasey: Can you assist me with updating my subscription."
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.716,
+        "snippet": " Can you assist me with updating my subscription.\nMaya: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.988,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nCasey: Can you check on that?\nMaya: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.742,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nCasey: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.665,
+        "snippet": "tion: Heterosexual?\nCasey: Can you check on that?\nMaya: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.705,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nCasey: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.651,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nMaya: Thanks, can you also provide your Gender: Non-bi"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.975,
+        "snippet": "?\nMaya: Thanks, can you also provide your Gender: Non-binary?\nCasey: Can you check on that?\nMaya: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.687,
+        "snippet": "ks, can you also provide your Gender: Non-binary?\nCasey: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.661,
+        "snippet": "Gender: Non-binary?\nCasey: Can you check on that?\nMaya: Thanks, can you also provide your Approximate Ge"
+      }
+    ]
+  ]
+}

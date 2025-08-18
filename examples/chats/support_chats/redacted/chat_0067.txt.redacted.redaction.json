@@ -1,0 +1,147 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0067.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0067.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.951,
+        "snippet": "Transcript #67\n==================================\nTaylor: Can you assist me with logging into my account.\n"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.929,
+        "snippet": ": Can you assist me with logging into my account.\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.952,
+        "snippet": "nto my account.\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.925,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.946,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Here is my Profile URL: https://social.example.c"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.975,
+        "snippet": " that up for you.\nTaylor: Here is my Profile URL: https://social.example.com/jordan\nAva: Let me look that up for you.\nTaylor: Can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.925,
+        "snippet": "my Profile URL: https://social.example.com/jordan\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.925,
+        "snippet": "mple.com/jordan\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.93,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.929,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.927,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.948,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.92,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.941,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Here is my User Preferences: marketing_emails=fa"
+      },
+      {
+        "type": "User Preferences",
+        "value": "User Preferences",
+        "confidence": 0.579,
+        "snippet": ": Let me look that up for you.\nTaylor: Here is my User Preferences: marketing_emails=false"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails",
+        "confidence": 0.568,
+        "snippet": " up for you.\nTaylor: Here is my User Preferences: marketing_emails=false"
+      },
+      {
+        "type": "User Preferences",
+        "value": "false",
+        "confidence": 0.685,
+        "snippet": "or: Here is my User Preferences: marketing_emails=false"
+      }
+    ]
+  ]
+}

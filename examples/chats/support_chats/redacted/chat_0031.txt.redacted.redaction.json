@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0031.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0031.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User ID",
+        "value": "jordan_92",
+        "confidence": 0.875,
+        "snippet": "ofia: Thanks, can you also provide your Username: jordan_92?\nTaylor: Here is my Gender: Non-binary\nSofia: Tha"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.826,
+        "snippet": "ofia: Thanks, can you also provide your Username: jordan_92?\nTaylor: Here is my Gender: Non-binary\nSofia: Tha"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.971,
+        "snippet": "r Username: jordan_92?\nTaylor: Here is my Gender: Non-binary\nSofia: Thanks, can you also provide your User ID:"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.61,
+        "snippet": "r Username: jordan_92?\nTaylor: Here is my Gender: Non-binary\nSofia: Thanks, can you also provide your User ID:"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.967,
+        "snippet": "Sofia: Thanks, can you also provide your User ID: U123456?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      }
+    ]
+  ]
+}

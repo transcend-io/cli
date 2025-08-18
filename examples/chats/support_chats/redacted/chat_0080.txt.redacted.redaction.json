@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0080.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0080.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.522,
+        "snippet": "Transcript #80\n==================================\nJordan: Good morning, question about logging into my acc"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.559,
+        "snippet": " morning, question about logging into my account.\nMaya: Thanks, can you also provide your Gender: Non-bi"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.919,
+        "snippet": ".\nMaya: Thanks, can you also provide your Gender: Non-binary?\nJordan: Can you check on that?\nMaya: Thanks, can"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.711,
+        "snippet": ".\nMaya: Thanks, can you also provide your Gender: Non-binary?\nJordan: Can you check on that?\nMaya: Thanks, can"
+      }
+    ]
+  ]
+}

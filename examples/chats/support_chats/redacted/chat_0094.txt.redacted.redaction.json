@@ -1,0 +1,177 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0094.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0094.txt.redacted",
+  "totalRedactions": 8,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Alex",
+        "confidence": 0.534,
+        "snippet": "Transcript #94\n==================================\nAlex: Hi, I need help with firmware update errors.\nEth"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.589,
+        "snippet": "lex: Hi, I need help with firmware update errors.\nEthan: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "Username",
+        "value": "Alex",
+        "confidence": 0.518,
+        "snippet": "pdate errors.\nEthan: Let me look that up for you.\nAlex: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.858,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nEthan: Let me look that up for you.\nAlex: Here is my Bi"
+      },
+      {
+        "type": "Username",
+        "value": "Alex",
+        "confidence": 0.538,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nAlex: Here is my Biometric Identifier: FaceID register"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.945,
+        "snippet": "p for you.\nAlex: Here is my Biometric Identifier: FaceID registered\nEthan: Let me look that up for you.\nAlex: Can you"
+      },
+      {
+        "type": "User Preferences",
+        "value": "FaceID registered",
+        "confidence": 0.759,
+        "snippet": "p for you.\nAlex: Here is my Biometric Identifier: FaceID registered\nEthan: Let me look that up for you.\nAlex: Can you"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.872,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nEthan: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.871,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nEthan: Thanks, can you also provide your Username: jord"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.945,
+        "snippet": "than: Thanks, can you also provide your Username: jordan_92?\nAlex: Here is my Union Membership: None\nEthan: T"
+      },
+      {
+        "type": "Username",
+        "value": "Alex",
+        "confidence": 0.529,
+        "snippet": "s, can you also provide your Username: jordan_92?\nAlex: Here is my Union Membership: None\nEthan: Thanks,"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.93,
+        "snippet": "me: jordan_92?\nAlex: Here is my Union Membership: None\nEthan: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "User Agent",
+        "value": "None",
+        "confidence": 0.756,
+        "snippet": "me: jordan_92?\nAlex: Here is my Union Membership: None\nEthan: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.503,
+        "snippet": "ordan_92?\nAlex: Here is my Union Membership: None\nEthan: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": "n: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nAlex: Can you check on that?\nEthan: Let me look "
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.815,
+        "snippet": ": 00:1B:44:11:3A:B7?\nAlex: Can you check on that?\nEthan: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.808,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nEthan: Thanks, can you also provide your User Preferenc"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.902,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nAlex: Can you check on that?\nEthan: Thanks, can "
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "marketing_emails=false",
+        "confidence": 0.565,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nAlex: Can you check on that?\nEthan: Thanks, can "
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.86,
+        "snippet": "keting_emails=false?\nAlex: Can you check on that?\nEthan: Thanks, can you also provide your User Agent: Mo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.825,
+        "snippet": "an: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?"
+      },
+      {
+        "type": "Union Membership",
+        "value": "Mozilla/5.0",
+        "confidence": 0.536,
+        "snippet": "an: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?"
+      }
+    ]
+  ]
+}

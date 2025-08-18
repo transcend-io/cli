@@ -1,0 +1,141 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0019.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0019.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.671,
+        "snippet": "Transcript #19\n==================================\nCasey: Can you assist me with firmware update errors.\nN"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.59,
+        "snippet": "y: Can you assist me with firmware update errors.\nNoah: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.657,
+        "snippet": "update errors.\nNoah: Let me look that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.608,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.547,
+        "snippet": "check on that?\nNoah: Let me look that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.672,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.584,
+        "snippet": "check on that?\nNoah: Let me look that up for you.\nCasey: Can you check on that?\nNoah: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.642,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nNoah: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.995,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nCasey: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.555,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nCasey: Can you check on that?\nNoah: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.595,
+        "snippet": "tion: Heterosexual?\nCasey: Can you check on that?\nNoah: Thanks, can you also provide your Email: jordan@"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.996,
+        "snippet": "t?\nNoah: Thanks, can you also provide your Email: jordan@example.com?\nCasey: Can you check on that?\nNoah: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.576,
+        "snippet": " you also provide your Email: jordan@example.com?\nCasey: Can you check on that?\nNoah: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.511,
+        "snippet": "jordan@example.com?\nCasey: Can you check on that?\nNoah: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.671,
+        "snippet": "check on that?\nNoah: Let me look that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.574,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nNoah: Let me look that up for you."
+      }
+    ]
+  ]
+}

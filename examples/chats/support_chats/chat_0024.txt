@@ -1,0 +1,15 @@
+Support Chat Transcript #24
+==================================
+Sam: Hello—I'm having trouble with updating my subscription.
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Here is my Gender: Non-binary
+Sofia: Thanks, can you also provide your Political Affiliation: Independent?
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Here is my User ID: U123456
+Sofia: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?
+Sam: Can you check on that?
+Sofia: Thanks, can you also provide your Approximate Geolocation: San Francisco, CA?
+Sam: Can you check on that?

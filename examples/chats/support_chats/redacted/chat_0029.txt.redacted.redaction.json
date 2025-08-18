@@ -1,0 +1,177 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0029.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0029.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.892,
+        "snippet": "Transcript #29\n==================================\nJordan: Hello—I'm having trouble with a double charge on"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.829,
+        "snippet": "m having trouble with a double charge on my card.\nAva: Thanks, can you also provide your Serial Number:"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.996,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nJordan: Can you check on that?\nAva: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.81,
+        "snippet": "u also provide your Serial Number: SN-1234567890?\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.765,
+        "snippet": "er: SN-1234567890?\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.826,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.681,
+        "snippet": " is my Approximate Geolocation: San Francisco, CA\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.793,
+        "snippet": "n Francisco, CA\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.718,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.766,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.725,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.729,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.747,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.75,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.778,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Thanks, can you also provide your Approximate Ge"
+      },
+      {
+        "type": "Region",
+        "value": "San Francisco, CA",
+        "confidence": 0.594,
+        "snippet": "an you also provide your Approximate Geolocation: San Francisco, CA?\nJordan: Can you check on that?\nAva: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.804,
+        "snippet": " your Approximate Geolocation: San Francisco, CA?\nJordan: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.759,
+        "snippet": "San Francisco, CA?\nJordan: Can you check on that?\nAva: Thanks, can you also provide your Declared Inter"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Declared Interests",
+        "confidence": 0.609,
+        "snippet": "k on that?\nAva: Thanks, can you also provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\n"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.954,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\nAva: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.774,
+        "snippet": "provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.774,
+        "snippet": ": hiking, cooking?\nJordan: Can you check on that?\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

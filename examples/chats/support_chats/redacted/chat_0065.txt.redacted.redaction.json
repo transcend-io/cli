@@ -1,0 +1,63 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0065.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0065.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.994,
+        "snippet": "?\nSofia: Thanks, can you also provide your Email: jordan@example.com?\nCasey: Here is my Survey Data: Q1=Yes, Q2=No\nSof"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.988,
+        "snippet": "s, Q2=No\nSofia: Thanks, can you also provide your Religion: None?\nCasey: Can you check on that?\nSofia: Let m"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.916,
+        "snippet": "ofia: Thanks, can you also provide your Religion: None?\nCasey: Can you check on that?\nSofia: Let me look"
+      }
+    ]
+  ]
+}

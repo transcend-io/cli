@@ -1,0 +1,93 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0028.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0028.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.829,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nAlex: Can you check on that?\nSofia: Thanks, can "
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "marketing_emails=false",
+        "confidence": 0.601,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nAlex: Can you check on that?\nSofia: Thanks, can "
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.999,
+        "snippet": "?\nSofia: Thanks, can you also provide your Phone: +1-202-555-0172?\nAlex: Can you check on that?\nSofia: Let me look "
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.992,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nAlex: Here is my Survey Data: Q1=Yes, Q2=No\nSofi"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.902,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nAlex: Here is my Approximate Geolocation: San Fr"
+      },
+      {
+        "type": "User Preferences",
+        "value": "FaceID registered",
+        "confidence": 0.897,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nAlex: Here is my Approximate Geolocation: San Fr"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.999,
+        "snippet": "can you also provide your Social Security Number: 123-45-6789?\nAlex: Here is my Username: jordan_92"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.966,
+        "snippet": "y Number: 123-45-6789?\nAlex: Here is my Username: jordan_92"
+      }
+    ]
+  ]
+}

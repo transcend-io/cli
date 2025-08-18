@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0095.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0095.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.995,
+        "snippet": " Thanks, can you also provide your Date of Birth: 1990-05-12?\nSam: Here is my Race/Ethnicity: Hispanic\nLiam: L"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.994,
+        "snippet": "irth: 1990-05-12?\nSam: Here is my Race/Ethnicity: Hispanic\nLiam: Let me look that up for you.\nSam: Can you c"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.956,
+        "snippet": "anks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nLiam: Thanks, can yo"
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.999,
+        "snippet": "t?\nLiam: Thanks, can you also provide your Phone: +1-202-555-0172?\nSam: Here is my User Agent: Mozilla/5.0 (Macinto"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.893,
+        "snippet": "one: +1-202-555-0172?\nSam: Here is my User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)\nLiam: Let me look tha"
+      }
+    ]
+  ]
+}

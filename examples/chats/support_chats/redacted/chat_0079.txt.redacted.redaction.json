@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0079.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0079.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.648,
+        "snippet": "elivery.\nEthan: Thanks, can you also provide your Political Affiliation: Independent?\nJordan: Can you check on that?\nEtha"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.977,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nJordan: Can you check on that?\nEthan: Thanks, ca"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails",
+        "confidence": 0.948,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nJordan: Here is my Phone: +1-202-555-0172\n"
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.995,
+        "snippet": "marketing_emails=false?\nJordan: Here is my Phone: +1-202-555-0172\nEthan: Thanks, can you also provide your User Pre"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.95,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nJordan: Can you check on that?\nEthan: Let me loo"
+      }
+    ]
+  ]
+}

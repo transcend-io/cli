@@ -1,0 +1,129 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0032.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0032.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.893,
+        "snippet": "Transcript #32\n==================================\nSam: Can you assist me with updating my subscription."
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.883,
+        "snippet": " Can you assist me with updating my subscription.\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.852,
+        "snippet": "y subscription.\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.864,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.833,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.872,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also provide your Gender: Non-bi"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.982,
+        "snippet": "t?\nAva: Thanks, can you also provide your Gender: Non-binary?\nSam: Can you check on that?\nAva: Let me look tha"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.825,
+        "snippet": "ks, can you also provide your Gender: Non-binary?\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.866,
+        "snippet": "r Gender: Non-binary?\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.882,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.889,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also provide your Biometric Iden"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.918,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nSam: Here is my Race/Ethnicity: Hispanic"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.911,
+        "snippet": "ide your Biometric Identifier: FaceID registered?\nSam: Here is my Race/Ethnicity: Hispanic"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.989,
+        "snippet": "aceID registered?\nSam: Here is my Race/Ethnicity: Hispanic"
+      }
+    ]
+  ]
+}

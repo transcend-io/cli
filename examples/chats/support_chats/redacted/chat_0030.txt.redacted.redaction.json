@@ -1,0 +1,153 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0030.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0030.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.816,
+        "snippet": "Transcript #30\n==================================\nJordan: Hi, I need help with updating my subscription.\nM"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.843,
+        "snippet": "n: Hi, I need help with updating my subscription.\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.758,
+        "snippet": " subscription.\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.856,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.762,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.761,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.879,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Here is my MAC Address: 00:1B:44:11:3A:B7\nMaya: "
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": " that up for you.\nJordan: Here is my MAC Address: 00:1B:44:11:3A:B7\nMaya: Let me look that up for you.\nJordan: Here i"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.751,
+        "snippet": "Jordan: Here is my MAC Address: 00:1B:44:11:3A:B7\nMaya: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.848,
+        "snippet": "1B:44:11:3A:B7\nMaya: Let me look that up for you.\nJordan: Here is my Biometric Identifier: FaceID register"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.934,
+        "snippet": "for you.\nJordan: Here is my Biometric Identifier: FaceID registered\nMaya: Let me look that up for you.\nJordan: Can yo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.729,
+        "snippet": "ere is my Biometric Identifier: FaceID registered\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.788,
+        "snippet": "eID registered\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.779,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.781,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.793,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.763,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.842,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you."
+      }
+    ]
+  ]
+}

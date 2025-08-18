@@ -1,0 +1,141 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0039.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0039.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Riley",
+        "confidence": 0.517,
+        "snippet": "update errors.\nLiam: Let me look that up for you.\nRiley: Can you check on that?\nLiam: Thanks, can you als"
+      },
+      {
+        "type": "Username",
+        "value": "Liam",
+        "confidence": 0.725,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Thanks, can you also provide your Serial Number:"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.982,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nRiley: Can you check on that?\nLiam: Thanks, can "
+      },
+      {
+        "type": "Username",
+        "value": "Riley",
+        "confidence": 0.527,
+        "snippet": "u also provide your Serial Number: SN-1234567890?\nRiley: Can you check on that?\nLiam: Thanks, can you als"
+      },
+      {
+        "type": "Username",
+        "value": "Liam",
+        "confidence": 0.781,
+        "snippet": "ber: SN-1234567890?\nRiley: Can you check on that?\nLiam: Thanks, can you also provide your Profile Pictur"
+      },
+      {
+        "type": "Username",
+        "value": "Riley",
+        "confidence": 0.644,
+        "snippet": "ture URL: https://example.com/img/profile123.jpg?\nRiley: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "Username",
+        "value": "Liam",
+        "confidence": 0.717,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "Username",
+        "value": "Liam",
+        "confidence": 0.662,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Here is my R"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.862,
+        "snippet": "m: Let me look that up for you.\nRiley: Here is my Religion: None\nLiam: Thanks, can you also provide your Use"
+      },
+      {
+        "type": "Profile Picture Image",
+        "value": "Religion",
+        "confidence": 0.711,
+        "snippet": "m: Let me look that up for you.\nRiley: Here is my Religion: None\nLiam: Thanks, can you also provide your Use"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.963,
+        "snippet": "look that up for you.\nRiley: Here is my Religion: None\nLiam: Thanks, can you also provide your Username:"
+      },
+      {
+        "type": "Profile Picture Image",
+        "value": "None",
+        "confidence": 0.886,
+        "snippet": "look that up for you.\nRiley: Here is my Religion: None\nLiam: Thanks, can you also provide your Username:"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.975,
+        "snippet": "Liam: Thanks, can you also provide your Username: jordan_92?\nRiley: Can you check on that?\nLiam: Thanks, can "
+      },
+      {
+        "type": "Username",
+        "value": "Liam",
+        "confidence": 0.708,
+        "snippet": "sername: jordan_92?\nRiley: Can you check on that?\nLiam: Thanks, can you also provide your Social Securit"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.997,
+        "snippet": "can you also provide your Social Security Number: 123-45-6789?\nRiley: Can you check on that?"
+      },
+      {
+        "type": "Username",
+        "value": "Riley",
+        "confidence": 0.578,
+        "snippet": "provide your Social Security Number: 123-45-6789?\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

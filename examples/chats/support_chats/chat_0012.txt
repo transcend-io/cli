@@ -1,0 +1,12 @@
+Support Chat Transcript #12
+==================================
+Sam: Good morning, question about a double charge on my card.
+Ava: Thanks, can you also provide your Email: jordan@example.com?
+Sam: Can you check on that?
+Ava: Thanks, can you also provide your Political Affiliation: Independent?
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.

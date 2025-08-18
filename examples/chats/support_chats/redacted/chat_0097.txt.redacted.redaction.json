@@ -1,0 +1,117 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0097.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0097.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.75,
+        "snippet": "Transcript #97\n==================================\nSam: Hi, I need help with firmware update errors.\nMay"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.753,
+        "snippet": "Sam: Hi, I need help with firmware update errors.\nMaya: Thanks, can you also provide your Serial Number:"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.998,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nSam: Can you check on that?\nMaya: Let me look th"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.681,
+        "snippet": "u also provide your Serial Number: SN-1234567890?\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.657,
+        "snippet": "umber: SN-1234567890?\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.687,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.585,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.725,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.655,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.633,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.744,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.697,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?"
+      }
+    ]
+  ]
+}

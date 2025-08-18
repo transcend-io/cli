@@ -1,0 +1,129 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0092.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0092.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.869,
+        "snippet": "Transcript #92\n==================================\nRiley: Hi, I need help with firmware update errors.\nEth"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.886,
+        "snippet": "ley: Hi, I need help with firmware update errors.\nEthan: Thanks, can you also provide your Religion: None"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Religion",
+        "confidence": 0.679,
+        "snippet": " errors.\nEthan: Thanks, can you also provide your Religion: None?\nRiley: Can you check on that?\nEthan: Thank"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.596,
+        "snippet": " errors.\nEthan: Thanks, can you also provide your Religion: None?\nRiley: Can you check on that?\nEthan: Thank"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.863,
+        "snippet": "than: Thanks, can you also provide your Religion: None?\nRiley: Can you check on that?\nEthan: Thanks, can"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.877,
+        "snippet": "Thanks, can you also provide your Religion: None?\nRiley: Can you check on that?\nEthan: Thanks, can you al"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.898,
+        "snippet": "our Religion: None?\nRiley: Can you check on that?\nEthan: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.975,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nRiley: Can you check on that?\nEthan: Thanks, can"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.859,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nRiley: Can you check on that?\nEthan: Thanks, can you al"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.896,
+        "snippet": "tion: Heterosexual?\nRiley: Can you check on that?\nEthan: Thanks, can you also provide your IP Address: 19"
+      },
+      {
+        "type": "IP Address",
+        "value": "192.168.1.42",
+        "confidence": 0.998,
+        "snippet": "an: Thanks, can you also provide your IP Address: 192.168.1.42?\nRiley: Can you check on that?\nEthan: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.897,
+        "snippet": "n you also provide your IP Address: 192.168.1.42?\nRiley: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.909,
+        "snippet": "ress: 192.168.1.42?\nRiley: Can you check on that?\nEthan: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.877,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

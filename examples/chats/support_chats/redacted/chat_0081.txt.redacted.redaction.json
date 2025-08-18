@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0081.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0081.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.883,
+        "snippet": "k that up for you.\nRiley: Here is my Profile URL: https://social.example.com/jordan\nNoah: Let me look that up for you.\nRiley: Can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.913,
+        "snippet": "ok that up for you.\nRiley: Here is my User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)\nNoah: Let me look tha"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.999,
+        "snippet": "or you.\nRiley: Here is my Social Security Number: 123-45-6789\nNoah: Let me look that up for you.\nRiley: Can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.531,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nNoah: Let me look that up for you."
+      }
+    ]
+  ]
+}

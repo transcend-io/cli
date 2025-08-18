@@ -1,0 +1,93 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0038.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0038.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.514,
+        "snippet": "Transcript #38\n==================================\nJordan: Hello—I'm having trouble with a late delivery.\nE"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.711,
+        "snippet": "n: Hello—I'm having trouble with a late delivery.\nEthan: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.562,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nJordan: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.517,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nEthan: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.524,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nJordan: Here is my Date of Birth: 1990-05-12\nEthan: Let "
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.992,
+        "snippet": "hat up for you.\nJordan: Here is my Date of Birth: 1990-05-12\nEthan: Let me look that up for you.\nJordan: Can y"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.505,
+        "snippet": "h: 1990-05-12\nEthan: Let me look that up for you.\nJordan: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.632,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nEthan: Let me look that up for you."
+      }
+    ]
+  ]
+}

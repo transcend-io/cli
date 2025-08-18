@@ -1,0 +1,153 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0026.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0026.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.941,
+        "snippet": "Transcript #26\n==================================\nAlex: Can you assist me with logging into my account.\n"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.91,
+        "snippet": ": Can you assist me with logging into my account.\nAva: Let me look that up for you.\nAlex: Here is my Ge"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.937,
+        "snippet": "nto my account.\nAva: Let me look that up for you.\nAlex: Here is my Gender: Non-binary\nAva: Let me look t"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.949,
+        "snippet": "me look that up for you.\nAlex: Here is my Gender: Non-binary\nAva: Let me look that up for you.\nAlex: Can you c"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.862,
+        "snippet": "t up for you.\nAlex: Here is my Gender: Non-binary\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.92,
+        "snippet": "der: Non-binary\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.898,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Here is my MA"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.931,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: L"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "ok that up for you.\nAlex: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Let me look that up for you.\nAlex: Can you c"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.85,
+        "snippet": ".\nAlex: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.887,
+        "snippet": ":1B:44:11:3A:B7\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.896,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.879,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.904,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Here is my Ap"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.924,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.89,
+        "snippet": " is my Approximate Geolocation: San Francisco, CA\nAva: Let me look that up for you.\nAlex: Here is my Un"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.943,
+        "snippet": "n Francisco, CA\nAva: Let me look that up for you.\nAlex: Here is my Union Membership: None"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.954,
+        "snippet": "at up for you.\nAlex: Here is my Union Membership: None"
+      }
+    ]
+  ]
+}

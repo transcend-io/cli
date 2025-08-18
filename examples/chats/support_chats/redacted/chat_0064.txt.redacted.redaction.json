@@ -1,0 +1,153 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0064.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0064.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.785,
+        "snippet": "Transcript #64\n==================================\nCasey: Hello—I'm having trouble with a double charge on"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.769,
+        "snippet": "m having trouble with a double charge on my card.\nAva: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.79,
+        "snippet": "rge on my card.\nAva: Let me look that up for you.\nCasey: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.778,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nAva: Thanks, can you also provide your Social Securit"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.998,
+        "snippet": "can you also provide your Social Security Number: 123-45-6789?\nCasey: Can you check on that?\nAva: Thanks, can y"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.792,
+        "snippet": "provide your Social Security Number: 123-45-6789?\nCasey: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.758,
+        "snippet": "umber: 123-45-6789?\nCasey: Can you check on that?\nAva: Thanks, can you also provide your Sexual Orienta"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.99,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nCasey: Here is my MAC Address: 00:1B:44:11:3A:B7"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.842,
+        "snippet": "so provide your Sexual Orientation: Heterosexual?\nCasey: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: T"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.994,
+        "snippet": "ion: Heterosexual?\nCasey: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Thanks, can you also provide your Profile UR"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.744,
+        "snippet": "\nCasey: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Thanks, can you also provide your Profile URL: h"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.99,
+        "snippet": "a: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nCasey: Can you check on that?\nAva: Let me look t"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.808,
+        "snippet": "r Profile URL: https://social.example.com/jordan?\nCasey: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.714,
+        "snippet": "example.com/jordan?\nCasey: Can you check on that?\nAva: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.789,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nCasey: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.766,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nAva: Let me look that up for you.\nCasey: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Casey",
+        "confidence": 0.813,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nCasey: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.776,
+        "snippet": "ok that up for you.\nCasey: Can you check on that?\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

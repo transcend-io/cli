@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0072.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0072.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Region",
+        "value": "San Francisco, CA",
+        "confidence": 0.57,
+        "snippet": " you.\nTaylor: Here is my Approximate Geolocation: San Francisco, CA\nEthan: Thanks, can you also provide your Gender: "
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.983,
+        "snippet": "\nEthan: Thanks, can you also provide your Gender: Non-binary?\nTaylor: Here is my Date of Birth: 1990-05-12\nEth"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.755,
+        "snippet": "\nEthan: Thanks, can you also provide your Gender: Non-binary?\nTaylor: Here is my Date of Birth: 1990-05-12\nEth"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.996,
+        "snippet": "er: Non-binary?\nTaylor: Here is my Date of Birth: 1990-05-12\nEthan: Let me look that up for you.\nTaylor: Can y"
+      }
+    ]
+  ]
+}

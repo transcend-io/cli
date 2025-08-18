@@ -1,0 +1,159 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0061.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0061.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.722,
+        "snippet": "Transcript #61\n==================================\nTaylor: Hi, I need help with logging into my account.\nSo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.632,
+        "snippet": "or: Hi, I need help with logging into my account.\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.689,
+        "snippet": "o my account.\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.622,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.629,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Here is my Date of Birth: 1990-05-12\nSofia: Let "
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.997,
+        "snippet": "hat up for you.\nTaylor: Here is my Date of Birth: 1990-05-12\nSofia: Let me look that up for you.\nTaylor: Can y"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.594,
+        "snippet": "you.\nTaylor: Here is my Date of Birth: 1990-05-12\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.58,
+        "snippet": "h: 1990-05-12\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Thanks, can you al"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.672,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Thanks, can you also provide your Religion: None"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.986,
+        "snippet": "on that?\nSofia: Thanks, can you also provide your Religion: None?\nTaylor: Can you check on that?\nSofia: Let "
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.979,
+        "snippet": "ofia: Thanks, can you also provide your Religion: None?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.575,
+        "snippet": "Thanks, can you also provide your Religion: None?\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.581,
+        "snippet": "ur Religion: None?\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.629,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.538,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.63,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.582,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.601,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.615,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you."
+      }
+    ]
+  ]
+}

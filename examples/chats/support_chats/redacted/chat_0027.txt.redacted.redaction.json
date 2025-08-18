@@ -1,0 +1,117 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0027.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0027.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.58,
+        "snippet": "Transcript #27\n==================================\nTaylor: Can you assist me with resetting my password.\nSo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.541,
+        "snippet": "or: Can you assist me with resetting my password.\nSofia: Thanks, can you also provide your Declared Inter"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Declared Interests",
+        "confidence": 0.711,
+        "snippet": "assword.\nSofia: Thanks, can you also provide your Declared Interests: hiking, cooking?\nTaylor: Can you check on that?\n"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.775,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.555,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.549,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.573,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.513,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Thanks, can you also provide your Religion: None"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.867,
+        "snippet": "on that?\nSofia: Thanks, can you also provide your Religion: None?\nTaylor: Can you check on that?\nSofia: Than"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.837,
+        "snippet": "ofia: Thanks, can you also provide your Religion: None?\nTaylor: Can you check on that?\nSofia: Thanks, ca"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.502,
+        "snippet": "ur Religion: None?\nTaylor: Can you check on that?\nSofia: Thanks, can you also provide your Profile URL: h"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.986,
+        "snippet": "a: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?"
+      }
+    ]
+  ]
+}

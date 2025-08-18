@@ -1,0 +1,129 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0056.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0056.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.584,
+        "snippet": "Transcript #56\n==================================\nRiley: Hello—I'm having trouble with a late delivery.\nL"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.626,
+        "snippet": "y: Hello—I'm having trouble with a late delivery.\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.56,
+        "snippet": "late delivery.\nLiam: Let me look that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.684,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.53,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nRiley: Can you check on that?\nLiam: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.635,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Thanks, can you also provide your Race/Ethnicity"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.992,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nRiley: Can you check on that?\nLiam: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.575,
+        "snippet": "n you also provide your Race/Ethnicity: Hispanic?\nRiley: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.54,
+        "snippet": "thnicity: Hispanic?\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.686,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.57,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.544,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.682,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nLiam: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.529,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

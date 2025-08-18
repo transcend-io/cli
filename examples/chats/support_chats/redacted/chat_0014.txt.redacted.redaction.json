@@ -1,0 +1,63 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0014.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0014.txt.redacted",
+  "totalRedactions": 2,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.969,
+        "snippet": "Thanks, can you also provide your Race/Ethnicity: Hispanic?\nCasey: Can you check on that?\nAva: Let me look t"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.944,
+        "snippet": "va: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nCasey: Here is my Pr"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.979,
+        "snippet": "hat up for you.\nCasey: Here is my Race/Ethnicity: Hispanic\nAva: Let me look that up for you.\nCasey: Can you "
+      }
+    ]
+  ]
+}

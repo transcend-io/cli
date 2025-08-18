@@ -1,0 +1,81 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0099.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0099.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.915,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nTaylor: Can you check on that?\nMaya: Let me look"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.999,
+        "snippet": "t?\nMaya: Thanks, can you also provide your Email: jordan@example.com?\nTaylor: Can you check on that?\nMaya: Let me look"
+      },
+      {
+        "type": "User ID",
+        "value": "User ID",
+        "confidence": 0.58,
+        "snippet": ": Let me look that up for you.\nTaylor: Here is my User ID: U123456\nMaya: Let me look that up for you.\nTaylo"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.99,
+        "snippet": "look that up for you.\nTaylor: Here is my User ID: U123456\nMaya: Let me look that up for you.\nTaylor: Here i"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.991,
+        "snippet": "look that up for you.\nTaylor: Here is my User ID: U123456\nMaya: Let me look that up for you.\nTaylor: Here i"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.945,
+        "snippet": " look that up for you.\nTaylor: Here is my Gender: Non-binary"
+      }
+    ]
+  ]
+}

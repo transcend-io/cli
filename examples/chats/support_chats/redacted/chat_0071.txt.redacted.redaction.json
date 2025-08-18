@@ -1,0 +1,123 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0071.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0071.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.8,
+        "snippet": "Transcript #71\n==================================\nRiley: Good morning, question about updating my subscri"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.811,
+        "snippet": "morning, question about updating my subscription.\nNoah: Thanks, can you also provide your Declared Inter"
+      },
+      {
+        "type": "User Preferences",
+        "value": "Declared Interests",
+        "confidence": 0.514,
+        "snippet": "cription.\nNoah: Thanks, can you also provide your Declared Interests: hiking, cooking?\nRiley: Can you check on that?\nN"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.902,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nRiley: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.742,
+        "snippet": "provide your Declared Interests: hiking, cooking?\nRiley: Can you check on that?\nNoah: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.79,
+        "snippet": "s: hiking, cooking?\nRiley: Can you check on that?\nNoah: Thanks, can you also provide your Serial Number:"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.994,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nRiley: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.731,
+        "snippet": "u also provide your Serial Number: SN-1234567890?\nRiley: Can you check on that?\nNoah: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.782,
+        "snippet": "ber: SN-1234567890?\nRiley: Can you check on that?\nNoah: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "h: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.75,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nNoah: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Noah",
+        "confidence": 0.786,
+        "snippet": " 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nNoah: Thanks, can you also provide your Cookies: sessi"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.771,
+        "snippet": "ou also provide your Cookies: sessionid=abcd1234?\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

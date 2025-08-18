@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0088.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0088.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.892,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\nSam: Can you check on that?\nSofia: Let me look t"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.971,
+        "snippet": "k that up for you.\nSam: Here is my Date of Birth: 1990-05-12\nSofia: Let me look that up for you.\nSam: Here is "
+      },
+      {
+        "type": "IP Address",
+        "value": "192.168.1.42",
+        "confidence": 0.997,
+        "snippet": "look that up for you.\nSam: Here is my IP Address: 192.168.1.42\nSofia: Thanks, can you also provide your Date of "
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.977,
+        "snippet": " Thanks, can you also provide your Date of Birth: 1990-05-12?\nSam: Can you check on that?\nSofia: Let me look t"
+      },
+      {
+        "type": "Credit Card Number",
+        "value": "1990-05-12",
+        "confidence": 0.59,
+        "snippet": " Thanks, can you also provide your Date of Birth: 1990-05-12?\nSam: Can you check on that?\nSofia: Let me look t"
+      }
+    ]
+  ]
+}

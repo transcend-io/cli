@@ -7,6 +7,7 @@ import { pullUnstructuredDiscoveryFilesCommand } from './pull-unstructured-disco
 import { pullCommand } from './pull/command';
 import { pushCommand } from './push/command';
 import { scanPackagesCommand } from './scan-packages/command';
+import { redactUnstructuredDataCommand } from './redact-unstructured-data/command';
 import { consentManagerServiceJsonToYmlCommand } from './consent-manager-service-json-to-yml/command';
 import { consentManagersToBusinessEntitiesCommand } from './consent-managers-to-business-entities/command';
 
@@ -25,6 +26,7 @@ export const inventoryRoutes = buildRouteMap({
       consentManagerServiceJsonToYmlCommand,
     'consent-managers-to-business-entities':
       consentManagersToBusinessEntitiesCommand,
+    'redact-unstructured-data': redactUnstructuredDataCommand,
   },
   docs: {
     brief: 'Inventory commands',
