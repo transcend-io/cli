@@ -46,4 +46,5 @@ export * from './agentFunction';
 export * from './vendor';
 export * from './dataCategory';
 export * from './processingPurpose';
+export * from './processingActivity';
 export * from './sombraVersion';

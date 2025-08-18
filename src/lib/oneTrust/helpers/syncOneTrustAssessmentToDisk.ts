@@ -1,6 +1,6 @@
 import { logger } from '../../../logger';
 import colors from 'colors';
-import fs from 'fs';
+import fs from 'node:fs';
 import { oneTrustAssessmentToJson } from './oneTrustAssessmentToJson';
 import { OneTrustEnrichedAssessment } from '@transcend-io/privacy-types';
 

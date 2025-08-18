@@ -1,9 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs, { existsSync, mkdirSync } from 'fs';
+import { mapSeries } from 'bluebird';
+import { join } from 'node:path';
+import fs, { existsSync, mkdirSync } from 'node:fs';
 import {
   buildTranscendGraphQLClient,
   ConsentManagerMetricBin,
@@ -12,8 +12,9 @@ import { validateTranscendAuth } from '../../../lib/api-keys';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
 import { writeCsv } from '../../../lib/cron';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface PullConsentMetricsCommandFlags {
+export interface PullConsentMetricsCommandFlags {
   auth: string;
   start: Date;
   end?: Date;
@@ -33,19 +34,6 @@ export async function pullConsentMetrics(
     transcendUrl,
   }: PullConsentMetricsCommandFlags,
 ): Promise<void> {
-  // Parse authentication as API key or path to list of API keys
-  const apiKeyOrList = await validateTranscendAuth(auth);
-
-  // Ensure folder either does not exist or is not a file
-  if (fs.existsSync(folder) && !fs.lstatSync(folder).isDirectory()) {
-    logger.error(
-      colors.red(
-        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
-      ),
-    );
-    process.exit(1);
-  }
-
   // Validate bin
   const parsedBin = bin as ConsentManagerMetricBin;
   if (!Object.values(ConsentManagerMetricBin).includes(parsedBin)) {
@@ -57,7 +45,7 @@ export async function pullConsentMetrics(
           )}`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Parse the dates
@@ -69,7 +57,7 @@ export async function pullConsentMetrics(
         `Start date provided is invalid date. Got --start="${start}" expected --start="01/01/2023"`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
   if (Number.isNaN(endDate.getTime())) {
     logger.error(
@@ -77,7 +65,7 @@ export async function pullConsentMetrics(
         `End date provided is invalid date. Got --end="${end}" expected --end="01/01/2023"`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
   if (startDate > endDate) {
     logger.error(
@@ -86,7 +74,22 @@ export async function pullConsentMetrics(
           'Start date must be before end date.',
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
+  }
+
+  doneInputValidation(this.process.exit);
+
+  // Parse authentication as API key or path to list of API keys
+  const apiKeyOrList = await validateTranscendAuth(auth);
+
+  // Ensure folder either does not exist or is not a file
+  if (fs.existsSync(folder) && !fs.lstatSync(folder).isDirectory()) {
+    logger.error(
+      colors.red(
+        'The provided argument "folder" was passed a file. expected: folder="./consent-metrics/"',
+      ),
+    );
+    this.process.exit(1);
   }
 
   // Create the folder if it does not exist
@@ -133,7 +136,7 @@ export async function pullConsentMetrics(
       logger.error(
         colors.red(`An error occurred syncing the schema: ${err.message}`),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
 
     // Indicate success
@@ -205,7 +208,7 @@ export async function pullConsentMetrics(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 }

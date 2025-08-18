@@ -3,7 +3,7 @@ import { TranscendInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
@@ -41,6 +41,7 @@ import { syncAgentFiles } from './syncAgentFiles';
 import { syncVendors } from './syncVendors';
 import { syncDataCategories } from './syncDataCategories';
 import { syncProcessingPurposes } from './syncProcessingPurposes';
+import { syncProcessingActivities } from './syncProcessingActivities';
 import { syncPartitions } from './syncPartitions';
 
 const CONCURRENCY = 10;
@@ -97,6 +98,7 @@ export async function syncConfigurationToTranscend(
     'agent-files': agentFiles,
     vendors,
     'data-categories': dataCategories,
+    'processing-activities': processingActivities,
     'processing-purposes': processingPurposes,
     'action-items': actionItems,
     'action-item-collections': actionItemCollections,
@@ -118,7 +120,7 @@ export async function syncConfigurationToTranscend(
           )
         : ({} as { [k in string]: Identifier }),
       // Grab all data subjects in the organization
-      dataSilos || dataSubjects || enrichers
+      dataSilos || dataSubjects || enrichers || processingActivities
         ? ensureAllDataSubjectsExist(input, client)
         : {},
       // Grab API keys
@@ -538,6 +540,15 @@ export async function syncConfigurationToTranscend(
   // Dependencies updated at the end after all data silos are created
   if (dependencyUpdates.length > 0) {
     await syncDataSiloDependencies(client, dependencyUpdates);
+  }
+
+  // Update processing activities
+  if (processingActivities) {
+    const processingActivitySuccess = await syncProcessingActivities(
+      client,
+      processingActivities,
+    );
+    encounteredError = encounteredError || !processingActivitySuccess;
   }
 
   if (publishToPrivacyCenter) {

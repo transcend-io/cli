@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 const GRADLE_IMPLEMENTATION_REGEX =
   /implementation( *)('|")(.+?):(.+?):(.+?|)('|")/;

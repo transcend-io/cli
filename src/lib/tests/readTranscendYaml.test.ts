@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { join } from 'path';
+import { join } from 'node:path';
 
 import { readTranscendYaml } from '../../index';
 

@@ -1,9 +1,9 @@
 import type { LocalContext } from '../../../context';
 
 import { logger } from '../../../logger';
-import { mapSeries } from '../../../lib/bluebird-replace';
-import { existsSync, lstatSync } from 'fs';
-import { join } from 'path';
+import { mapSeries } from 'bluebird';
+import { existsSync, lstatSync } from 'node:fs';
+import { join } from 'node:path';
 import { readTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
 import {
@@ -16,6 +16,7 @@ import { TranscendInput } from '../../../codecs';
 import { validateTranscendAuth, listFiles } from '../../../lib/api-keys';
 import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
 import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 /**
  * Sync configuration to Transcend
@@ -72,7 +73,7 @@ async function syncConfiguration({
   }
 }
 
-interface PushCommandFlags {
+export interface PushCommandFlags {
   auth: string;
   file: string;
   transcendUrl: string;
@@ -96,6 +97,8 @@ export async function push(
     deleteExtraAttributeValues,
   }: PushCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 
@@ -124,7 +127,7 @@ export async function push(
           `The file path does not exist on disk: ${filePath}. You can specify the filepath using --file=./examples/transcend.yml`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     } else {
       logger.info(colors.magenta(`Reading file "${filePath}"...`));
     }
@@ -143,7 +146,7 @@ export async function push(
           `The shape of your yaml file is invalid with the following errors: ${err.message}`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
   });
 
@@ -172,7 +175,7 @@ export async function push(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   } else {
     // if passed multiple inputs, expect them to be one per instance
@@ -249,7 +252,7 @@ export async function push(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 

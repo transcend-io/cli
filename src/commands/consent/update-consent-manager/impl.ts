@@ -1,13 +1,14 @@
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from '../../../lib/bluebird-replace';
+import { mapSeries } from 'bluebird';
 
 import { logger } from '../../../logger';
 import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
 import { validateTranscendAuth } from '../../../lib/api-keys';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface UpdateConsentManagerCommandFlags {
+export interface UpdateConsentManagerCommandFlags {
   auth: string;
   bundleTypes: ConsentBundleType[];
   deploy: boolean;
@@ -23,6 +24,8 @@ export async function updateConsentManager(
     transcendUrl,
   }: UpdateConsentManagerCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 

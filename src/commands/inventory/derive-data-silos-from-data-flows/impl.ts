@@ -3,19 +3,20 @@ import {
   fetchAndIndexCatalogs,
   buildTranscendGraphQLClient,
 } from '../../../lib/graphql';
-import { join } from 'path';
+import { join } from 'node:path';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { listFiles } from '../../../lib/api-keys';
 import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface DeriveDataSilosFromDataFlowsCommandFlags {
+export interface DeriveDataSilosFromDataFlowsCommandFlags {
   auth: string;
   dataFlowsYmlFolder: string;
   dataSilosYmlFolder: string;
@@ -33,15 +34,7 @@ export async function deriveDataSilosFromDataFlows(
     transcendUrl,
   }: DeriveDataSilosFromDataFlowsCommandFlags,
 ): Promise<void> {
-  // Ensure folder is passed to dataFlowsYmlFolder
-  if (!dataFlowsYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
-    );
-    process.exit(1);
-  }
+  doneInputValidation(this.process.exit);
 
   // Ensure folder is passed
   if (
@@ -49,17 +42,7 @@ export async function deriveDataSilosFromDataFlows(
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
-  }
-
-  // Ensure folder is passed to dataSilosYmlFolder
-  if (!dataSilosYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataSilosYmlFolder=./working/data-silos/',
-      ),
-    );
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Ensure folder is passed
@@ -68,7 +51,7 @@ export async function deriveDataSilosFromDataFlows(
     !lstatSync(dataSilosYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataSilosYmlFolder}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Fetch all integrations in the catalog

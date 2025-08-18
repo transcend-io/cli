@@ -8,13 +8,14 @@ import {
   syncCodePackages,
 } from '../../../lib/graphql';
 import { execSync } from 'child_process';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 const REPO_ERROR =
   'A repository name must be provided. ' +
   'You can specify using --repositoryName=$REPO_NAME or by ensuring the ' +
   'command "git config --get remote.origin.url" returns the name of the repository';
 
-interface ScanPackagesCommandFlags {
+export interface ScanPackagesCommandFlags {
   auth: string;
   scanPath: string;
   ignoreDirs?: string[];
@@ -32,6 +33,8 @@ export async function scanPackages(
     transcendUrl,
   }: ScanPackagesCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Ensure repository name is specified
   let gitRepositoryName = repositoryName;
   if (!gitRepositoryName) {
@@ -46,11 +49,11 @@ export async function scanPackages(
         : url.split('/').slice(3).join('/').split('.');
       if (!gitRepositoryName) {
         logger.error(colors.red(REPO_ERROR));
-        process.exit(1);
+        this.process.exit(1);
       }
     } catch (err) {
       logger.error(colors.red(`${REPO_ERROR} - Got error: ${err.message}`));
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 

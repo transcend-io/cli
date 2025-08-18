@@ -13,7 +13,6 @@ import {
   AssessmentSyncColumn,
   RetentionScheduleType,
   AssessmentQuestionType,
-  UspapiOption,
   DataFlowScope,
   PromptAVendorEmailSendType,
   RetentionScheduleOperation,
@@ -53,6 +52,9 @@ import {
   AssessmentFormTemplateSource,
   UnstructuredSubDataPointRecommendationStatus,
   PreferenceTopicType,
+  Controllership,
+  RetentionType,
+  DataProtectionImpactAssessmentStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -218,12 +220,16 @@ export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 /**
  * The processing purpose for a field
  */
-export const ProcessingPurposePreviewInput = t.type({
-  /** The parent purpose */
-  purpose: valuesOf(ProcessingPurpose),
-  /** User-defined name for this processing purpose sub category */
-  name: t.string,
-});
+export const ProcessingPurposePreviewInput = t.intersection([
+  t.type({
+    /** The parent purpose */
+    purpose: valuesOf(ProcessingPurpose),
+  }),
+  t.partial({
+    /** User-defined name for this processing purpose sub category */
+    name: t.string,
+  }),
+]);
 
 /** Type override */
 export type ProcessingPurposePreviewInput = t.TypeOf<
@@ -819,6 +825,91 @@ export const BusinessEntityInput = t.intersection([
 /** Type override */
 export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
 
+export const RegionInput = t.partial({
+  /** The country */
+  country: valuesOf(IsoCountryCode),
+  /** The country subdivision */
+  countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+});
+
+/** Type override */
+export type RegionInput = t.TypeOf<typeof RegionInput>;
+
+/**
+ * Input to define a processing activity
+ *
+ * @see https://app.transcend.io/data-map/data-inventory/processing-activities
+ */
+export const ProcessingActivityInput = t.intersection([
+  t.type({
+    /** The title of the processing activity */
+    title: t.string,
+  }),
+  t.partial({
+    /** Description of the processing activity */
+    description: t.string,
+    /** Security measure details */
+    securityMeasureDetails: t.string,
+    /**
+     * Controllerships
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
+    controllerships: t.array(valuesOf(Controllership)),
+    /** Storage regions */
+    storageRegions: t.array(RegionInput),
+    /** Transfer regions */
+    transferRegions: t.array(RegionInput),
+    /**
+     * Retention type
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
+    retentionType: valuesOf(RetentionType),
+    /** Retention period in days */
+    retentionPeriod: t.number,
+    /** Data protection impact assessment link */
+    dataProtectionImpactAssessmentLink: t.string,
+    /**
+     * Data protection impact assessment status
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/processingActivity.ts.ts
+     */
+    dataProtectionImpactAssessmentStatus: valuesOf(
+      DataProtectionImpactAssessmentStatus,
+    ),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+    /** Data silo titles */
+    dataSiloTitles: t.array(t.string),
+    /** Data subject types */
+    dataSubjectTypes: t.array(t.string),
+    /** Team names */
+    teamNames: t.array(t.string),
+    /** Owner emails */
+    ownerEmails: t.array(t.string),
+    /**
+     * The purposes of processing for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    processingSubPurposes: t.array(ProcessingPurposePreviewInput),
+    /**
+     * The categories of personal data for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    dataSubCategories: t.array(DataCategoryPreviewInput),
+    /** SaaS category titles */
+    saaSCategories: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type ProcessingActivityInput = t.TypeOf<typeof ProcessingActivityInput>;
+
 /**
  * Software development kit inputs
  *
@@ -1018,6 +1109,8 @@ export const IdentifierInput = t.intersection([
     displayDescription: t.string,
     /** The display order for the identifier */
     displayOrder: t.number,
+    /** Whether or not the identifier is unique on the preference store */
+    isUniqueOnPreferenceStore: t.boolean,
   }),
 ]);
 
@@ -1124,12 +1217,7 @@ export const ConsentManageExperienceInput = t.intersection([
     /** Name of experience */
     displayName: t.string,
     /** Region that define this regional experience */
-    regions: t.array(
-      t.partial({
-        countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
-        country: valuesOf(IsoCountryCode),
-      }),
-    ),
+    regions: t.array(RegionInput),
     /** How to handle consent expiry */
     onConsentExpiry: valuesOf(OnConsentExpiry),
     /** Consent expiration lever */
@@ -1203,8 +1291,6 @@ export const ConsentManagerInput = t.partial({
   telemetryPartitioning: valuesOf(TelemetryPartitionStrategy),
   /** Whether the site owner has signed the IAB agreement */
   signedIabAgreement: valuesOf(SignedIabAgreementOption),
-  /** Whether or not to use the US Privacy API */
-  uspapi: valuesOf(UspapiOption),
   /** Regional experience configurations */
   experiences: t.array(ConsentManageExperienceInput),
   /** Theme config */
@@ -1962,6 +2048,10 @@ export const TranscendInput = t.partial({
    * The full list of assessment results
    */
   assessments: t.array(AssessmentInput),
+  /**
+   * Processing activity definitions
+   */
+  'processing-activities': t.array(ProcessingActivityInput),
   /**
    * Consent and preference management purposes
    */

@@ -8,9 +8,9 @@ import {
 
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { mapSeries } from '../../../lib/bluebird-replace';
-import { join } from 'path';
-import fs from 'fs';
+import { mapSeries } from 'bluebird';
+import { join } from 'node:path';
+import fs from 'node:fs';
 import {
   buildTranscendGraphQLClient,
   pullTranscendConfiguration,
@@ -19,8 +19,9 @@ import {
 import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { validateTranscendAuth } from '../../../lib/api-keys';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface PullCommandFlags {
+export interface PullCommandFlags {
   auth: string;
   resources?: (TranscendPullResource | 'all')[];
   file: string;
@@ -52,6 +53,8 @@ export async function pull(
     debug,
   }: PullCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   // Parse authentication as API key or path to list of API keys
   const apiKeyOrList = await validateTranscendAuth(auth);
 
@@ -87,7 +90,7 @@ export async function pull(
           }`,
         ),
       );
-      process.exit(1);
+      this.process.exit(1);
     }
 
     // Indicate success
@@ -156,7 +159,7 @@ export async function pull(
         ),
       );
 
-      process.exit(1);
+      this.process.exit(1);
     }
   }
 }

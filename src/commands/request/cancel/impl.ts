@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { cancelPrivacyRequests } from '../../../lib/requests';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface CancelCommandFlags {
+export interface CancelCommandFlags {
   auth: string;
   actions: RequestAction[];
   statuses?: RequestStatus[];
@@ -30,6 +31,8 @@ export async function cancel(
     concurrency,
   }: CancelCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await cancelPrivacyRequests({
     transcendUrl,
     requestActions: actions,

@@ -1,8 +1,16 @@
-import { ScopeName } from '@transcend-io/privacy-types';
+import { keyBy } from 'lodash-es';
+import {
+  ScopeName,
+  TRANSCEND_SCOPES,
+  type ScopeDefinition,
+} from '@transcend-io/privacy-types';
 import { TranscendPullResource } from './enums';
 import { TranscendInput } from './codecs';
 
 export { description, version } from '../package.json';
+/**
+ * The name of the main binary for the CLI
+ */
 export const name = 'transcend';
 
 export const ADMIN_DASH = 'https://app.transcend.io';
@@ -38,6 +46,7 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Enrichers]: [ScopeName.ManageRequestIdentities],
   [TranscendPullResource.BusinessEntities]: [ScopeName.ManageDataInventory],
+  [TranscendPullResource.ProcessingActivities]: [ScopeName.ManageDataMap],
   [TranscendPullResource.Identifiers]: [ScopeName.ManageRequestIdentities],
   [TranscendPullResource.Attributes]: [ScopeName.ManageGlobalAttributes],
   [TranscendPullResource.DataFlows]: [ScopeName.ManageDataFlow],
@@ -94,6 +103,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
   ],
   [TranscendPullResource.Enrichers]: [ScopeName.ViewRequestIdentitySettings],
   [TranscendPullResource.BusinessEntities]: [ScopeName.ViewDataInventory],
+  [TranscendPullResource.ProcessingActivities]: [ScopeName.ViewDataInventory],
   [TranscendPullResource.Identifiers]: [ScopeName.ViewRequestIdentitySettings],
   [TranscendPullResource.Attributes]: [ScopeName.ViewGlobalAttributes],
   [TranscendPullResource.DataFlows]: [ScopeName.ViewDataFlow],
@@ -140,6 +150,7 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Actions]: 'actions',
   [TranscendPullResource.DataSubjects]: 'data-subjects',
   [TranscendPullResource.BusinessEntities]: 'business-entities',
+  [TranscendPullResource.ProcessingActivities]: 'processing-activities',
   [TranscendPullResource.Identifiers]: 'identifiers',
   [TranscendPullResource.Enrichers]: 'enrichers',
   [TranscendPullResource.DataSilos]: 'data-silos',
@@ -163,3 +174,34 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
   [TranscendPullResource.Purposes]: 'purposes',
 };
+
+export const SCOPES_BY_TITLE = keyBy(
+  Object.entries(TRANSCEND_SCOPES).map(([name, value]) => ({
+    ...value,
+    name,
+  })),
+  'title',
+) as Record<
+  string,
+  ScopeDefinition & {
+    /** The camelCased name which identifies the scope */
+    name: ScopeName;
+  }
+>;
+
+export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
+
+/**
+ * HTTP statuses that should be retried *in place* without splitting.
+ * 429: Rate-limited
+ * 502: Upstream/edge gateway error
+ * 329: Reserved for custom infra (kept defensively)
+ */
+export const RETRYABLE_BATCH_STATUSES = new Set([
+  429, 502, 500, 504, 329,
+] as const);
+
+/**
+ * Debugging
+ */
+export const DEBUG = process.env.DEBUG === '1';

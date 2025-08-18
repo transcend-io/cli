@@ -1,11 +1,11 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { difference } from 'lodash-es';
-import { join } from 'path';
+import { join } from 'node:path';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
   buildTranscendGraphQLClient,

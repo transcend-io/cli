@@ -4,6 +4,17 @@
 ## Table of Contents
 
 - [Changelog](#changelog)
+  - [[8.0.0] - 2025-08-13](#800---2025-08-13)
+  - [[7.3.0] - 2025-08-13](#730---2025-08-13)
+    - [Added](#added)
+  - [[7.2.0] - 2025-08-13](#720---2025-08-13)
+    - [Added](#added-1)
+  - [[7.1.0] - 2025-08-05](#710---2025-08-05)
+    - [Added](#added-2)
+  - [[7.0.3] - 2025-07-29](#703---2025-07-29)
+    - [Fixed](#fixed)
+  - [[7.0.2] - 2025-07-23](#702---2025-07-23)
+    - [Fixed](#fixed-1)
   - [[7.0.0] - 2025-07-10](#700---2025-07-10)
     - [Improvements](#improvements)
     - [Breaking Changes](#breaking-changes)
@@ -20,6 +31,40 @@ All notable changes to the Transcend CLI tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [8.0.0] - 2025-08-13
+
+- Drop Node <22 support. Make sure you are on at least node 22 before calling CLI commands. `node --version; nvm install 22 && nvm use 22 && nvm alias default 22`
+
+## [7.3.0] - 2025-08-13
+
+### Added
+
+- Add identifiers[*].isUniqueOnPreferenceStore to `transcend.yml` - used in the inventory push and inventory pull commands.
+
+## [7.2.0] - 2025-08-13
+
+### Added
+
+- Writing processing activities to Transcend is now possible
+
+## [7.1.0] - 2025-08-05
+
+### Added
+
+- Pulling processing activities from Transcend is now possible
+
+## [7.0.3] - 2025-07-29
+
+### Fixed
+
+- Resolved an issue where `transcend consent upload-preferences` was incorrectly passing `consentUrl` (with default value `consent.transcend.io`) instead of `transcendUrl` (with default value `api.transcend.io`). The argument was renamed to `transcendUrl`, reverting the change to the argument name introduced in 7.0.0.
+
+## [7.0.2] - 2025-07-23
+
+### Fixed
+
+- Resolved an issue where an invalid reference to a GraphQL mutation caused the CLI to fail.
 
 ## [7.0.0] - 2025-07-10
 
@@ -94,7 +139,7 @@ All commands have been re-mapped to new commands under the `transcend` namespace
 | `tr-upload-data-flows-from-csv`                       | `transcend consent upload-data-flows-from-csv`                         |
 | `tr-upload-preferences`                               | `transcend consent upload-preferences`                                 |
 
-The previous arguments are the same, with one exception: for the `tr-upload-consent-preferences` and `tr-upload-preferences` commands, the `transcendUrl` argument has been renamed to `consentUrl`. The default value is the same—`https://consent.transcend.io` (for EU hosting)—and you can use `https://consent.us.transcend.io` for US hosting.
+The previous arguments are the same, with one exception: for the `tr-upload-consent-preferences` ~~and `tr-upload-preferences`~~ commands ([the change to `tr-upload-preferences` was reverted in 7.0.3](#703---2025-07-29)), the `transcendUrl` argument has been renamed to `consentUrl`. The default value is the same—`https://consent.transcend.io` (for EU hosting)—and you can use `https://consent.us.transcend.io` for US hosting.
 
 ## [6.0.0] - 2024-09-03
 

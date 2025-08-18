@@ -5,7 +5,7 @@ import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries } from '../bluebird-replace';
+import { mapSeries } from 'bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface DataSubject {
@@ -58,6 +58,7 @@ export async function ensureAllDataSubjectsExist(
   {
     'data-silos': dataSilos = [],
     'data-subjects': dataSubjects = [],
+    'processing-activities': processingActivities = [],
     enrichers = [],
   }: TranscendInput,
   client: GraphQLClient,
@@ -66,6 +67,11 @@ export async function ensureAllDataSubjectsExist(
   // Only need to fetch data subjects if specified in config
   const expectedDataSubjects = uniq([
     ...flatten(dataSilos.map((silo) => silo['data-subjects'] || []) || []),
+    ...flatten(
+      processingActivities.map(
+        ({ dataSubjectTypes }) => dataSubjectTypes ?? [],
+      ) ?? [],
+    ),
     ...flatten(
       enrichers.map((enricher) => enricher['data-subjects'] || []) || [],
     ),

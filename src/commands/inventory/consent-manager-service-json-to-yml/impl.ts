@@ -3,7 +3,7 @@ import * as t from 'io-ts';
 import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import colors from 'colors';
 import { logger } from '../../../logger';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { decodeCodec } from '@transcend-io/type-utils';
 import {
   ConsentManagerServiceMetadata,
@@ -14,8 +14,9 @@ import {
   ConsentTrackerStatus,
   DataFlowScope,
 } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface ConsentManagerServiceJsonToYmlCommandFlags {
+export interface ConsentManagerServiceJsonToYmlCommandFlags {
   file: string;
   output: string;
 }
@@ -24,10 +25,12 @@ export function consentManagerServiceJsonToYml(
   this: LocalContext,
   { file, output }: ConsentManagerServiceJsonToYmlCommandFlags,
 ): void {
+  doneInputValidation(this.process.exit);
+
   // Ensure files exist
   if (!existsSync(file)) {
     logger.error(colors.red(`File does not exist: --file="${file}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Read in each consent manager configuration

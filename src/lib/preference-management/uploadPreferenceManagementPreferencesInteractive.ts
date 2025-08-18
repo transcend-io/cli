@@ -7,9 +7,8 @@ import {
   Purpose,
 } from '../graphql';
 import colors from 'colors';
-import { map } from '../bluebird-replace';
+import { map } from 'bluebird';
 import { chunk } from 'lodash-es';
-import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';
 import { parseAttributesFromString } from '../requests';
@@ -38,7 +37,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   skipConflictUpdates = false,
   skipExistingRecordCheck = false,
   attributes = [],
-  transcendUrl = DEFAULT_TRANSCEND_CONSENT_API,
+  transcendUrl,
   forceTriggerWorkflows = false,
 }: {
   /** The Transcend API key */
@@ -52,7 +51,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
   /** The file to process */
   file: string;
   /** API URL for Transcend backend */
-  transcendUrl?: string;
+  transcendUrl: string;
   /** Whether to do a dry run */
   dryRun?: boolean;
   /** Whether to upload as isSilent */

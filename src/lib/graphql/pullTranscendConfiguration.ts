@@ -17,6 +17,7 @@ import {
   DatapointInput,
   FieldInput,
   ProcessingPurposeInput,
+  ProcessingActivityInput,
   DataCategoryInput,
   VendorInput,
   AgentFileInput,
@@ -38,6 +39,7 @@ import {
   RequestAction,
   ConsentTrackerStatus,
   ActionItemCode,
+  RetentionType,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { flatten, keyBy, mapValues } from 'lodash-es';
@@ -55,6 +57,7 @@ import {
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
+import { fetchAllProcessingActivities } from './fetchAllProcessingActivities';
 import { fetchAllActions } from './fetchAllActions';
 import { fetchAllAgents } from './fetchAllAgents';
 import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
@@ -73,6 +76,7 @@ import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { formatAttributeValues } from './formatAttributeValues';
+import { formatRegions } from './formatRegions';
 import { logger } from '../../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../../enums';
@@ -160,6 +164,7 @@ export async function pullTranscendConfiguration(
     identifiers,
     actions,
     businessEntities,
+    processingActivities,
     consentManager,
     consentManagerExperiences,
     prompts,
@@ -248,6 +253,10 @@ export async function pullTranscendConfiguration(
     // Fetch business entities
     resources.includes(TranscendPullResource.BusinessEntities)
       ? fetchAllBusinessEntities(client)
+      : [],
+    // Fetch processing activities
+    resources.includes(TranscendPullResource.ProcessingActivities)
+      ? fetchAllProcessingActivities(client)
       : [],
     // Fetch consent manager
     resources.includes(TranscendPullResource.ConsentManager)
@@ -396,7 +405,6 @@ export async function pullTranscendConfiguration(
         consentManager.configuration.telemetryPartitioning || undefined,
       signedIabAgreement:
         consentManager.configuration.signedIabAgreement || undefined,
-      uspapi: consentManager.configuration.uspapi || undefined,
       // TODO: https://transcend.height.app/T-23919 - reconsider simpler yml shape
       syncGroups: consentManager.configuration.syncGroups || undefined,
       theme: !consentManagerTheme
@@ -940,6 +948,88 @@ export async function pullTranscendConfiguration(
     );
   }
 
+  // Save processing activities
+  if (
+    processingActivities.length > 0 &&
+    resources.includes(TranscendPullResource.ProcessingActivities)
+  ) {
+    result['processing-activities'] = processingActivities.map(
+      ({
+        title,
+        description,
+        securityMeasureDetails,
+        controllerships,
+        storageRegions,
+        transferRegions,
+        retentionType,
+        retentionPeriod,
+        dataProtectionImpactAssessmentLink,
+        dataProtectionImpactAssessmentStatus,
+        attributeValues,
+        dataSilos,
+        dataSubjects,
+        teams,
+        owners,
+        processingPurposeSubCategories,
+        dataSubCategories,
+        saaSCategories,
+      }): ProcessingActivityInput => ({
+        title,
+        description,
+        securityMeasureDetails: securityMeasureDetails ?? undefined,
+        controllerships:
+          controllerships.length > 0 ? controllerships : undefined,
+        storageRegions:
+          storageRegions.length > 0 ? formatRegions(storageRegions) : undefined,
+        transferRegions:
+          transferRegions.length > 0
+            ? formatRegions(transferRegions)
+            : undefined,
+        retentionType,
+        retentionPeriod:
+          retentionType === RetentionType.StatedPeriod
+            ? retentionPeriod
+            : undefined,
+        dataProtectionImpactAssessmentLink:
+          dataProtectionImpactAssessmentLink ?? undefined,
+        dataProtectionImpactAssessmentStatus,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+        dataSiloTitles:
+          dataSilos.length > 0
+            ? dataSilos.map(({ title }) => title)
+            : undefined,
+        dataSubjectTypes:
+          dataSubjects.length > 0
+            ? dataSubjects.map(({ type }) => type)
+            : undefined,
+        teamNames: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        ownerEmails:
+          owners.length > 0 ? owners.map(({ email }) => email) : undefined,
+        processingSubPurposes:
+          processingPurposeSubCategories.length > 0
+            ? processingPurposeSubCategories.map(({ name, purpose }) => ({
+                purpose,
+                ...(name ? { name } : {}),
+              }))
+            : undefined,
+        dataSubCategories:
+          dataSubCategories.length > 0
+            ? dataSubCategories.map(({ name, category }) => ({
+                category,
+                ...(name ? { name } : {}),
+              }))
+            : undefined,
+        saaSCategories:
+          saaSCategories.length > 0
+            ? saaSCategories.map(({ title }) => title)
+            : undefined,
+      }),
+    );
+  }
+
   // Save Actions
   if (actions.length > 0 && resources.includes(TranscendPullResource.Actions)) {
     result.actions = actions.map(
@@ -985,6 +1075,7 @@ export async function pullTranscendConfiguration(
         dataSubjects,
         displayDescription,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }): IdentifierInput => ({
         name,
         type,
@@ -1003,6 +1094,7 @@ export async function pullTranscendConfiguration(
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }),
     );
   }

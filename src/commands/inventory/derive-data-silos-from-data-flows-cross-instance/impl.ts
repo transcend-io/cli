@@ -3,20 +3,21 @@ import {
   fetchAndIndexCatalogs,
   buildTranscendGraphQLClient,
 } from '../../../lib/graphql';
-import { join } from 'path';
+import { join } from 'node:path';
 import { difference } from 'lodash-es';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { dataFlowsToDataSilos } from '../../../lib/consent-manager/dataFlowsToDataSilos';
 import { DataFlowInput } from '../../../codecs';
-import { existsSync, lstatSync } from 'fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { listFiles } from '../../../lib/api-keys';
 import {
   readTranscendYaml,
   writeTranscendYaml,
 } from '../../../lib/readTranscendYaml';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
+export interface DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags {
   auth: string;
   dataFlowsYmlFolder: string;
   output: string;
@@ -34,15 +35,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     transcendUrl,
   }: DeriveDataSilosFromDataFlowsCrossInstanceCommandFlags,
 ): Promise<void> {
-  // Ensure folder is passed to dataFlowsYmlFolder
-  if (!dataFlowsYmlFolder) {
-    logger.error(
-      colors.red(
-        'Missing required arg: --dataFlowsYmlFolder=./working/data-flows/',
-      ),
-    );
-    process.exit(1);
-  }
+  doneInputValidation(this.process.exit);
 
   // Ensure folder is passed
   if (
@@ -50,7 +43,7 @@ export async function deriveDataSilosFromDataFlowsCrossInstance(
     !lstatSync(dataFlowsYmlFolder).isDirectory()
   ) {
     logger.error(colors.red(`Folder does not exist: "${dataFlowsYmlFolder}"`));
-    process.exit(1);
+    this.process.exit(1);
   }
 
   // Ignore the data flows in these yml files
