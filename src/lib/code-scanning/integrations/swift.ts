@@ -30,8 +30,8 @@ export const swift: CodeScanningConfig = {
 
     return [
       {
-        name: dirname(filePath).split('/').pop() || '', // FIXME pull from Package.swift ->> name if possible
-        type: CodePackageType.CocoaPods, // FIXME should be swift
+        name: dirname(filePath).split('/').pop() || '', // TODO pull from Package.swift ->> name if possible
+        type: CodePackageType.CocoaPods, // TODO should be swift
         softwareDevelopmentKits: parsed.pins.map((target) => ({
           name: target.identity,
           version: target.state.version,

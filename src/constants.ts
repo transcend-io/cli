@@ -197,4 +197,6 @@ export const SCOPE_TITLES = Object.keys(SCOPES_BY_TITLE);
  * 502: Upstream/edge gateway error
  * 329: Reserved for custom infra (kept defensively)
  */
-export const RETRYABLE_BATCH_STATUSES = new Set([429, 502, 329] as const);
+export const RETRYABLE_BATCH_STATUSES = new Set([
+  429, 502, 500, 504, 329,
+] as const);
