@@ -41,7 +41,7 @@ repos:
     hooks:
       - id: doctoc
         exclude: (.github)
-        args: [--title, "\n## Table of Contents", --maxlevel, '5']
+        args: [--title, "\n## Table of Contents", --maxlevel, '3']
   - repo: local
     hooks:
       - id: eslint
