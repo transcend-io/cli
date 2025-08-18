@@ -62,6 +62,14 @@ export function getPreferenceUpdatesFromRow({
         );
       }
 
+      // The value to parse
+      const rawValue = row[columnName];
+      const rawMapping = valueMapping[rawValue];
+      // When mapping is undefined, it means we should omit this column
+      if (rawMapping === undefined || rawMapping === null) {
+        return;
+      }
+
       // CHeck if parsing a preference or just the top level purpose
       if (preference) {
         const preferenceTopic = preferenceTopics.find(
@@ -89,8 +97,6 @@ export function getPreferenceUpdatesFromRow({
           result[purpose].preferences = [];
         }
 
-        // The value to parse
-        const rawValue = row[columnName];
         const rawMapping = valueMapping[rawValue];
         const trimmedMapping =
           typeof rawMapping === 'string' ? rawMapping.trim() || null : null;

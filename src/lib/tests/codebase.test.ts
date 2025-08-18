@@ -248,6 +248,7 @@ describe('CLI Command Structure', () => {
       const allowedDirs = [
         'artifacts',
         'ui',
+        'upload',
         'tests',
         '__mocks__',
         '__snapshots__',
