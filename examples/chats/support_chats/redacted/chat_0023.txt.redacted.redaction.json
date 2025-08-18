@@ -1,0 +1,123 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0023.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0023.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.875,
+        "snippet": "Transcript #23\n==================================\nTaylor: Hello—I'm having trouble with firmware update er"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.922,
+        "snippet": "o—I'm having trouble with firmware update errors.\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.881,
+        "snippet": "pdate errors.\nEthan: Let me look that up for you.\nTaylor: Can you check on that?\nEthan: Thanks, can you al"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.917,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nEthan: Thanks, can you also provide your IP Address: 19"
+      },
+      {
+        "type": "IP Address",
+        "value": "192.168.1.42",
+        "confidence": 0.998,
+        "snippet": "an: Thanks, can you also provide your IP Address: 192.168.1.42?\nTaylor: Here is my Race/Ethnicity: Hispanic\nEtha"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.909,
+        "snippet": "n you also provide your IP Address: 192.168.1.42?\nTaylor: Here is my Race/Ethnicity: Hispanic\nEthan: Let m"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.997,
+        "snippet": " 192.168.1.42?\nTaylor: Here is my Race/Ethnicity: Hispanic\nEthan: Let me look that up for you.\nTaylor: Can y"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.833,
+        "snippet": "1.42?\nTaylor: Here is my Race/Ethnicity: Hispanic\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.898,
+        "snippet": "ity: Hispanic\nEthan: Let me look that up for you.\nTaylor: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.899,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.889,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nTaylor: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ethan",
+        "confidence": 0.925,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.891,
+        "snippet": "heck on that?\nEthan: Let me look that up for you.\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}

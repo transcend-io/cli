@@ -1,0 +1,20 @@
+Support Chat Transcript #68
+==================================
+Sam: Hello—I'm having trouble with updating my subscription.
+Ava: Thanks, can you also provide your Survey Data: Q1=Yes, Q2=No?
+Sam: Can you check on that?
+Ava: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Here is my Serial Number: SN-1234567890
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Here is my Cookies: sessionid=abcd1234
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Let me look that up for you.

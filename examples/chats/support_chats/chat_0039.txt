@@ -1,0 +1,19 @@
+Support Chat Transcript #39
+==================================
+Riley: Good morning, question about firmware update errors.
+Liam: Let me look that up for you.
+Riley: Can you check on that?
+Liam: Thanks, can you also provide your Serial Number: SN-1234567890?
+Riley: Can you check on that?
+Liam: Thanks, can you also provide your Profile Picture URL: https://example.com/img/profile123.jpg?
+Riley: Here is my Approximate Geolocation: San Francisco, CA
+Liam: Let me look that up for you.
+Riley: Can you check on that?
+Liam: Let me look that up for you.
+Riley: Can you check on that?
+Liam: Let me look that up for you.
+Riley: Here is my Religion: None
+Liam: Thanks, can you also provide your Username: jordan_92?
+Riley: Can you check on that?
+Liam: Thanks, can you also provide your Social Security Number: 123-45-6789?
+Riley: Can you check on that?

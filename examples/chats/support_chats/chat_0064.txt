@@ -1,0 +1,16 @@
+Support Chat Transcript #64
+==================================
+Casey: Hello—I'm having trouble with a double charge on my card.
+Ava: Let me look that up for you.
+Casey: Can you check on that?
+Ava: Thanks, can you also provide your Social Security Number: 123-45-6789?
+Casey: Can you check on that?
+Ava: Thanks, can you also provide your Sexual Orientation: Heterosexual?
+Casey: Here is my MAC Address: 00:1B:44:11:3A:B7
+Ava: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?
+Casey: Can you check on that?
+Ava: Let me look that up for you.
+Casey: Can you check on that?
+Ava: Let me look that up for you.
+Casey: Can you check on that?
+Ava: Let me look that up for you.

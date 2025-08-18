@@ -1,0 +1,141 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0048.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0048.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.96,
+        "snippet": "Transcript #48\n==================================\nAlex: Can you assist me with a double charge on my car"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.96,
+        "snippet": "an you assist me with a double charge on my card.\nAva: Thanks, can you also provide your Political Affi"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.505,
+        "snippet": "n my card.\nAva: Thanks, can you also provide your Political Affiliation: Independent?\nAlex: Can you check on that?\nAva: L"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.971,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nAlex: Can you check on that?\nAva: Let me look th"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.955,
+        "snippet": " provide your Political Affiliation: Independent?\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.949,
+        "snippet": "iation: Independent?\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.939,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.949,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.937,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.943,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.946,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.935,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.952,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.953,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nAva: Let me look that up for you.\nAlex: Here is my Pr"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.965,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nAlex: Here is my Private Key: -----BEGIN PRIVATE KEY--"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.96,
+        "snippet": "ATE KEY----- [redacted] -----END PRIVATE KEY-----\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

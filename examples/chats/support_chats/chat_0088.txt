@@ -1,0 +1,20 @@
+Support Chat Transcript #88
+==================================
+Sam: Can you assist me with a double charge on my card.
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Thanks, can you also provide your Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----?
+Sam: Can you check on that?
+Sofia: Thanks, can you also provide your Biometric Identifier: FaceID registered?
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Here is my Date of Birth: 1990-05-12
+Sofia: Let me look that up for you.
+Sam: Here is my IP Address: 192.168.1.42
+Sofia: Thanks, can you also provide your Date of Birth: 1990-05-12?
+Sam: Can you check on that?
+Sofia: Let me look that up for you.

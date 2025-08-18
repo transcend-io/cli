@@ -1,0 +1,165 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0085.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0085.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.917,
+        "snippet": "Transcript #85\n==================================\nRiley: Hi, I need help with updating my subscription.\nM"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.834,
+        "snippet": "y: Hi, I need help with updating my subscription.\nMaya: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.933,
+        "snippet": " subscription.\nMaya: Let me look that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.857,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.931,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.861,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.895,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.87,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.892,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.852,
+        "snippet": "ok that up for you.\nRiley: Can you check on that?\nMaya: Let me look that up for you.\nRiley: Here is my I"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.932,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nRiley: Here is my IP Address: 192.168.1.42\nMaya: Thanks"
+      },
+      {
+        "type": "IP Address",
+        "value": "192.168.1.42",
+        "confidence": 0.994,
+        "snippet": "ok that up for you.\nRiley: Here is my IP Address: 192.168.1.42\nMaya: Thanks, can you also provide your Email: jo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.766,
+        "snippet": "r you.\nRiley: Here is my IP Address: 192.168.1.42\nMaya: Thanks, can you also provide your Email: jordan@"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.997,
+        "snippet": "42\nMaya: Thanks, can you also provide your Email: jordan@example.com?\nRiley: Can you check on that?\nMaya: Thanks, can "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.852,
+        "snippet": " you also provide your Email: jordan@example.com?\nRiley: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.868,
+        "snippet": "jordan@example.com?\nRiley: Can you check on that?\nMaya: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.993,
+        "snippet": "a: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nMaya: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.856,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.888,
+        "snippet": " 00:1B:44:11:3A:B7?\nRiley: Can you check on that?\nMaya: Let me look that up for you.\nRiley: Can you chec"
+      },
+      {
+        "type": "User Agent",
+        "value": "Riley",
+        "confidence": 0.894,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nRiley: Can you check on that?"
+      }
+    ]
+  ]
+}

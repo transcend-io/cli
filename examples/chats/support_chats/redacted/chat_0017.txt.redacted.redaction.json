@@ -1,0 +1,135 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0017.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0017.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.861,
+        "snippet": "Transcript #17\n==================================\nTaylor: Hello—I'm having trouble with updating my subscr"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.878,
+        "snippet": "I'm having trouble with updating my subscription.\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.857,
+        "snippet": " subscription.\nMaya: Let me look that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.906,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.887,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Here is my Private Key: -----BEGIN PRIVATE KEY--"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.902,
+        "snippet": "ATE KEY----- [redacted] -----END PRIVATE KEY-----\nMaya: Thanks, can you also provide your Political Affi"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.965,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nTaylor: Can you check on that?\nMaya: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.83,
+        "snippet": " provide your Political Affiliation: Independent?\nTaylor: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.853,
+        "snippet": "tion: Independent?\nTaylor: Can you check on that?\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.784,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.809,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.826,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.807,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.824,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.865,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up for you."
+      }
+    ]
+  ]
+}

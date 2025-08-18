@@ -1,0 +1,159 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0037.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0037.txt.redacted",
+  "totalRedactions": 9,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.787,
+        "snippet": "an you assist me with a double charge on my card.\nEthan: Thanks, can you also provide your Union Membersh"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.903,
+        "snippet": "anks, can you also provide your Union Membership: None?\nTaylor: Can you check on that?\nEthan: Let me loo"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.612,
+        "snippet": "can you also provide your Union Membership: None?\nTaylor: Can you check on that?\nEthan: Let me look that u"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.863,
+        "snippet": " Membership: None?\nTaylor: Can you check on that?\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.906,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nEthan: Thanks, can you also provide your Political Affi"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.532,
+        "snippet": "on that?\nEthan: Thanks, can you also provide your Political Affiliation: Independent?\nTaylor: Can you check on that?\nEtha"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.97,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nTaylor: Can you check on that?\nEthan: Let me loo"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.791,
+        "snippet": "tion: Independent?\nTaylor: Can you check on that?\nEthan: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.896,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nEthan: Thanks, can you also provide your User Preferenc"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.967,
+        "snippet": "anks, can you also provide your User Preferences: marketing_emails=false?\nTaylor: Here is my Approximate Geolocation: San "
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.632,
+        "snippet": "de your User Preferences: marketing_emails=false?\nTaylor: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.654,
+        "snippet": "Francisco, CA\nEthan: Let me look that up for you.\nTaylor: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "MAC Address",
+        "value": "San Francisco, CA",
+        "confidence": 0.626,
+        "snippet": " you.\nTaylor: Here is my Approximate Geolocation: San Francisco, CA\nEthan: Thanks, can you also provide your Username"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.732,
+        "snippet": " is my Approximate Geolocation: San Francisco, CA\nEthan: Thanks, can you also provide your Username: jord"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.956,
+        "snippet": "than: Thanks, can you also provide your Username: jordan_92?\nTaylor: Can you check on that?\nEthan: Thanks, ca"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.537,
+        "snippet": "s, can you also provide your Username: jordan_92?\nTaylor: Can you check on that?\nEthan: Thanks, can you al"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.922,
+        "snippet": "ername: jordan_92?\nTaylor: Can you check on that?\nEthan: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.995,
+        "snippet": "n: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nTaylor: Can you check on that?"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.783,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}

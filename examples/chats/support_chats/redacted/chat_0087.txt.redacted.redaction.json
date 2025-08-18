@@ -1,0 +1,111 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0087.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0087.txt.redacted",
+  "totalRedactions": 2,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.783,
+        "snippet": "Transcript #87\n==================================\nJordan: Hello—I'm having trouble with firmware update er"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.849,
+        "snippet": "o—I'm having trouble with firmware update errors.\nLiam: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.739,
+        "snippet": "update errors.\nLiam: Let me look that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.843,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.779,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.786,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.799,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.833,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.709,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.88,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nLiam: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.767,
+        "snippet": "check on that?\nLiam: Let me look that up for you.\nJordan: Can you check on that?"
+      }
+    ]
+  ]
+}

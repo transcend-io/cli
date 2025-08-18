@@ -1,0 +1,141 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0091.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0091.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.792,
+        "snippet": "Transcript #91\n==================================\nJordan: Good morning, question about logging into my acc"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.773,
+        "snippet": " morning, question about logging into my account.\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.717,
+        "snippet": "to my account.\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.796,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Thanks, can you also provide your Union Membersh"
+      },
+      {
+        "type": "Union Membership",
+        "value": "Union Membership",
+        "confidence": 0.902,
+        "snippet": " on that?\nMaya: Thanks, can you also provide your Union Membership: None?\nJordan: Can you check on that?\nMaya: Let m"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.967,
+        "snippet": "anks, can you also provide your Union Membership: None?\nJordan: Can you check on that?\nMaya: Let me look"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.725,
+        "snippet": "can you also provide your Union Membership: None?\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.745,
+        "snippet": " Membership: None?\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.69,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.72,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.829,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nJordan: Here is my Approximate Geolocation: San Francisc"
+      },
+      {
+        "type": "Region",
+        "value": "San Francisco, CA",
+        "confidence": 0.599,
+        "snippet": " you.\nJordan: Here is my Approximate Geolocation: San Francisco, CA\nMaya: Let me look that up for you.\nJordan: Can yo"
+      },
+      {
+        "type": "IP Address",
+        "value": "San Francisco, CA",
+        "confidence": 0.581,
+        "snippet": " you.\nJordan: Here is my Approximate Geolocation: San Francisco, CA\nMaya: Let me look that up for you.\nJordan: Can yo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.705,
+        "snippet": " is my Approximate Geolocation: San Francisco, CA\nMaya: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.716,
+        "snippet": " Francisco, CA\nMaya: Let me look that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.766,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nMaya: Let me look that up for you."
+      }
+    ]
+  ]
+}

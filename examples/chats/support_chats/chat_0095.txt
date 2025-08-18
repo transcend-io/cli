@@ -1,0 +1,19 @@
+Support Chat Transcript #95
+==================================
+Sam: Can you assist me with logging into my account.
+Liam: Thanks, can you also provide your Date of Birth: 1990-05-12?
+Sam: Here is my Race/Ethnicity: Hispanic
+Liam: Let me look that up for you.
+Sam: Can you check on that?
+Liam: Let me look that up for you.
+Sam: Can you check on that?
+Liam: Let me look that up for you.
+Sam: Can you check on that?
+Liam: Thanks, can you also provide your Union Membership: None?
+Sam: Can you check on that?
+Liam: Thanks, can you also provide your Phone: +1-202-555-0172?
+Sam: Here is my User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)
+Liam: Let me look that up for you.
+Sam: Can you check on that?
+Liam: Let me look that up for you.
+Sam: Here is my Survey Data: Q1=Yes, Q2=No

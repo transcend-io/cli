@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0022.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0022.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.762,
+        "snippet": "m having trouble with a double charge on my card.\nEthan: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.892,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nEthan: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.872,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nEthan: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": "n: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nSam: Can you check on that?\nEthan: Thanks, can y"
+      },
+      {
+        "type": "Username",
+        "value": "Ethan",
+        "confidence": 0.891,
+        "snippet": "s: 00:1B:44:11:3A:B7?\nSam: Can you check on that?\nEthan: Thanks, can you also provide your Username: jord"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.976,
+        "snippet": "than: Thanks, can you also provide your Username: jordan_92?\nSam: Can you check on that?"
+      },
+      {
+        "type": "Username",
+        "value": "Sam",
+        "confidence": 0.589,
+        "snippet": "s, can you also provide your Username: jordan_92?\nSam: Can you check on that?"
+      }
+    ]
+  ]
+}

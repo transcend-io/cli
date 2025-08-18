@@ -1,0 +1,19 @@
+Support Chat Transcript #34
+==================================
+Alex: Can you assist me with a late delivery.
+Noah: Thanks, can you also provide your Date of Birth: 1990-05-12?
+Alex: Can you check on that?
+Noah: Thanks, can you also provide your Serial Number: SN-1234567890?
+Alex: Can you check on that?
+Noah: Let me look that up for you.
+Alex: Can you check on that?
+Noah: Thanks, can you also provide your User ID: U123456?
+Alex: Can you check on that?
+Noah: Let me look that up for you.
+Alex: Here is my Email: jordan@example.com
+Noah: Let me look that up for you.
+Alex: Can you check on that?
+Noah: Let me look that up for you.
+Alex: Here is my Serial Number: SN-1234567890
+Noah: Let me look that up for you.
+Alex: Can you check on that?

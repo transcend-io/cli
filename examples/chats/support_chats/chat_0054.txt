@@ -1,0 +1,16 @@
+Support Chat Transcript #54
+==================================
+Riley: Hi, I need help with logging into my account.
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Thanks, can you also provide your User Preferences: marketing_emails=false?
+Riley: Can you check on that?
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?
+Riley: Can you check on that?
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Let me look that up for you.
+Riley: Here is my Phone: +1-202-555-0172
+Sofia: Thanks, can you also provide your Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----?

@@ -1,0 +1,111 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0090.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0090.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.807,
+        "snippet": "Transcript #90\n==================================\nSam: Hi, I need help with firmware update errors.\nAva"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.828,
+        "snippet": "Sam: Hi, I need help with firmware update errors.\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.773,
+        "snippet": " update errors.\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.818,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Thanks, can you also provide your Union Membersh"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.983,
+        "snippet": "anks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nAva: Thanks, can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.781,
+        "snippet": "can you also provide your Union Membership: None?\nSam: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.809,
+        "snippet": "ion Membership: None?\nSam: Can you check on that?\nAva: Thanks, can you also provide your Email: jordan@"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.998,
+        "snippet": "at?\nAva: Thanks, can you also provide your Email: jordan@example.com?\nSam: Can you check on that?\nAva: Let me look tha"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.791,
+        "snippet": " you also provide your Email: jordan@example.com?\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.842,
+        "snippet": ": jordan@example.com?\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.796,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Can you check on that?"
+      }
+    ]
+  ]
+}

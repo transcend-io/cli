@@ -1,0 +1,63 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0001.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0001.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.949,
+        "snippet": "a: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      },
+      {
+        "type": "Union Membership",
+        "value": "Union Membership",
+        "confidence": 0.78,
+        "snippet": "on that?\nSofia: Thanks, can you also provide your Union Membership: None?\nTaylor: Can you check on that?\nSofia: Let "
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.979,
+        "snippet": "anks, can you also provide your Union Membership: None?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      }
+    ]
+  ]
+}

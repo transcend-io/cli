@@ -1,0 +1,19 @@
+Support Chat Transcript #28
+==================================
+Alex: Hi, I need help with logging into my account.
+Sofia: Thanks, can you also provide your User Preferences: marketing_emails=false?
+Alex: Can you check on that?
+Sofia: Thanks, can you also provide your Phone: +1-202-555-0172?
+Alex: Can you check on that?
+Sofia: Let me look that up for you.
+Alex: Can you check on that?
+Sofia: Let me look that up for you.
+Alex: Can you check on that?
+Sofia: Thanks, can you also provide your Race/Ethnicity: Hispanic?
+Alex: Here is my Survey Data: Q1=Yes, Q2=No
+Sofia: Let me look that up for you.
+Alex: Can you check on that?
+Sofia: Thanks, can you also provide your Biometric Identifier: FaceID registered?
+Alex: Here is my Approximate Geolocation: San Francisco, CA
+Sofia: Thanks, can you also provide your Social Security Number: 123-45-6789?
+Alex: Here is my Username: jordan_92

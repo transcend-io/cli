@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0098.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0098.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.988,
+        "snippet": "p for you.\nTaylor: Here is my Sexual Orientation: Heterosexual\nSofia: Let me look that up for you.\nTaylor: Can y"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.994,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nTaylor: Here is my Profile URL: https://social.e"
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.983,
+        "snippet": "ion: Independent?\nTaylor: Here is my Profile URL: https://social.example.com/jordan\nSofia: Let me look that up for you.\nTaylor: Here "
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Hispanic",
+        "confidence": 0.963,
+        "snippet": "at up for you.\nTaylor: Here is my Race/Ethnicity: Hispanic"
+      }
+    ]
+  ]
+}

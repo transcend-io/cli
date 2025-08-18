@@ -1,0 +1,20 @@
+Support Chat Transcript #83
+==================================
+Sam: Hi, I need help with logging into my account.
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?
+Sam: Can you check on that?
+Sofia: Thanks, can you also provide your Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----?
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Can you check on that?
+Sofia: Let me look that up for you.
+Sam: Here is my Race/Ethnicity: Hispanic
+Sofia: Let me look that up for you.
+Sam: Here is my Serial Number: SN-1234567890
+Sofia: Let me look that up for you.

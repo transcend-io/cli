@@ -1,0 +1,16 @@
+Support Chat Transcript #48
+==================================
+Alex: Can you assist me with a double charge on my card.
+Ava: Thanks, can you also provide your Political Affiliation: Independent?
+Alex: Can you check on that?
+Ava: Let me look that up for you.
+Alex: Can you check on that?
+Ava: Let me look that up for you.
+Alex: Can you check on that?
+Ava: Let me look that up for you.
+Alex: Can you check on that?
+Ava: Let me look that up for you.
+Alex: Can you check on that?
+Ava: Let me look that up for you.
+Alex: Here is my Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----
+Ava: Let me look that up for you.

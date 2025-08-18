@@ -1,0 +1,129 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0051.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0051.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.71,
+        "snippet": "Transcript #51\n==================================\nAlex: Good morning, question about a late delivery.\nMa"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.598,
+        "snippet": "ex: Good morning, question about a late delivery.\nMaya: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.665,
+        "snippet": "late delivery.\nMaya: Let me look that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.546,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.57,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.652,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.534,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nAlex: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.614,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nMaya: Thanks, can you also provide your User ID: U1234"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.963,
+        "snippet": "\nMaya: Thanks, can you also provide your User ID: U123456?\nAlex: Can you check on that?\nMaya: Let me look t"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.628,
+        "snippet": "anks, can you also provide your User ID: U123456?\nAlex: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.535,
+        "snippet": "ur User ID: U123456?\nAlex: Can you check on that?\nMaya: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.553,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.637,
+        "snippet": "ook that up for you.\nAlex: Can you check on that?\nMaya: Let me look that up for you.\nAlex: Can you check"
+      },
+      {
+        "type": "User Agent",
+        "value": "Alex",
+        "confidence": 0.539,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nAlex: Can you check on that?"
+      }
+    ]
+  ]
+}

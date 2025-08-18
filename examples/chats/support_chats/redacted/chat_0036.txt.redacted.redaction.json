@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0036.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0036.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.953,
+        "snippet": "?\nNoah: Thanks, can you also provide your Gender: Non-binary?\nCasey: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Heterosexual",
+        "confidence": 0.996,
+        "snippet": "ks, can you also provide your Sexual Orientation: Heterosexual?\nCasey: Here is my Survey Data: Q1=Yes, Q2=No\nNoa"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": "h: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nCasey: Can you check on that?\nNoah: Let me look "
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.984,
+        "snippet": " look that up for you.\nCasey: Here is my User ID: U123456\nNoah: Let me look that up for you."
+      }
+    ]
+  ]
+}

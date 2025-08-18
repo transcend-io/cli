@@ -1,0 +1,99 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0013.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0013.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.984,
+        "snippet": "h: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nSam: Can you check on that?\nNoah: Thanks, can yo"
+      },
+      {
+        "type": "Union Membership",
+        "value": "Union Membership",
+        "confidence": 0.78,
+        "snippet": " on that?\nNoah: Thanks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nNoah: Let me l"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.964,
+        "snippet": "anks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nNoah: Let me look th"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.995,
+        "snippet": "k that up for you.\nSam: Here is my Serial Number: SN-1234567890\nNoah: Thanks, can you also provide your Union Mem"
+      },
+      {
+        "type": "Union Membership",
+        "value": "Union Membership",
+        "confidence": 0.795,
+        "snippet": "234567890\nNoah: Thanks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nNoah: Let me l"
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.955,
+        "snippet": "anks, can you also provide your Union Membership: None?\nSam: Can you check on that?\nNoah: Let me look th"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "123-45-6789",
+        "confidence": 0.998,
+        "snippet": " for you.\nSam: Here is my Social Security Number: 123-45-6789\nNoah: Thanks, can you also provide your IP Addres"
+      },
+      {
+        "type": "IP Address",
+        "value": "192.168.1.42",
+        "confidence": 0.998,
+        "snippet": "ah: Thanks, can you also provide your IP Address: 192.168.1.42?\nSam: Can you check on that?\nNoah: Let me look th"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.972,
+        "snippet": "ook that up for you.\nSam: Here is my MAC Address: 00:1B:44:11:3A:B7"
+      }
+    ]
+  ]
+}

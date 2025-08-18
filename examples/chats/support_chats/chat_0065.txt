@@ -1,0 +1,10 @@
+Support Chat Transcript #65
+==================================
+Casey: Good morning, question about a double charge on my card.
+Sofia: Let me look that up for you.
+Casey: Can you check on that?
+Sofia: Thanks, can you also provide your Email: jordan@example.com?
+Casey: Here is my Survey Data: Q1=Yes, Q2=No
+Sofia: Thanks, can you also provide your Religion: None?
+Casey: Can you check on that?
+Sofia: Let me look that up for you.

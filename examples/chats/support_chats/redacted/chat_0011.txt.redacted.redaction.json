@@ -1,0 +1,93 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0011.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0011.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.959,
+        "snippet": "e errors.\nMaya: Thanks, can you also provide your Religion: None?\nSam: Can you check on that?\nMaya: Let me l"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.947,
+        "snippet": "Maya: Thanks, can you also provide your Religion: None?\nSam: Can you check on that?\nMaya: Let me look th"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.965,
+        "snippet": "ya: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nSam: Here is my Appr"
+      },
+      {
+        "type": "Region",
+        "value": "San Francisco, CA",
+        "confidence": 0.564,
+        "snippet": "c OS X)?\nSam: Here is my Approximate Geolocation: San Francisco, CA\nMaya: Let me look that up for you.\nSam: Can you c"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.991,
+        "snippet": "k that up for you.\nSam: Here is my Date of Birth: 1990-05-12\nMaya: Thanks, can you also provide your User ID: "
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.992,
+        "snippet": "\nMaya: Thanks, can you also provide your User ID: U123456?\nSam: Can you check on that?\nMaya: Let me look th"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.999,
+        "snippet": "t me look that up for you.\nSam: Here is my Email: jordan@example.com\nMaya: Let me look that up for you.\nSam: Can you c"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.997,
+        "snippet": "t?\nMaya: Thanks, can you also provide your Email: jordan@example.com?"
+      }
+    ]
+  ]
+}

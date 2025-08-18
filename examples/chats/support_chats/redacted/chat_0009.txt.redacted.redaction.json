@@ -1,0 +1,147 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0009.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0009.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.688,
+        "snippet": " Transcript #9\n==================================\nTaylor: Good morning, question about firmware update err"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.736,
+        "snippet": "d morning, question about firmware update errors.\nSofia: Thanks, can you also provide your Private Key: -"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.71,
+        "snippet": "TE KEY----- [redacted] -----END PRIVATE KEY-----?\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.682,
+        "snippet": " PRIVATE KEY-----?\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.605,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.66,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.659,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Thanks, can you al"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.616,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Thanks, can you also provide your Serial Number:"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.998,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nTaylor: Can you check on that?\nSofia: Let me loo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.613,
+        "snippet": "u also provide your Serial Number: SN-1234567890?\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.504,
+        "snippet": "er: SN-1234567890?\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.717,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that u"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.585,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nSofia: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.773,
+        "snippet": "heck on that?\nSofia: Let me look that up for you.\nTaylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nSofia:"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": " that up for you.\nTaylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nSofia: Let me look that up for you.\nTaylor: Can y"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sofia",
+        "confidence": 0.631,
+        "snippet": "Taylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nSofia: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.7,
+        "snippet": "B:44:11:3A:B7\nSofia: Let me look that up for you.\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}

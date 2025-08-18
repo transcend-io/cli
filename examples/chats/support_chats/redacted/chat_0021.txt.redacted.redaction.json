@@ -1,0 +1,99 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0021.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0021.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Sam",
+        "confidence": 0.711,
+        "snippet": "Transcript #21\n==================================\nSam: Can you assist me with firmware update errors.\nS"
+      },
+      {
+        "type": "Username",
+        "value": "Sofia",
+        "confidence": 0.559,
+        "snippet": "m: Can you assist me with firmware update errors.\nSofia: Thanks, can you also provide your Political Affi"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.974,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nSam: Here is my Serial Number: SN-1234567890\nSof"
+      },
+      {
+        "type": "Username",
+        "value": "Sam",
+        "confidence": 0.734,
+        "snippet": " provide your Political Affiliation: Independent?\nSam: Here is my Serial Number: SN-1234567890\nSofia: L"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.996,
+        "snippet": "tion: Independent?\nSam: Here is my Serial Number: SN-1234567890\nSofia: Let me look that up for you.\nSam: Here is "
+      },
+      {
+        "type": "Username",
+        "value": "Sam",
+        "confidence": 0.571,
+        "snippet": "SN-1234567890\nSofia: Let me look that up for you.\nSam: Here is my Username: jordan_92\nSofia: Let me loo"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.976,
+        "snippet": "e look that up for you.\nSam: Here is my Username: jordan_92\nSofia: Let me look that up for you.\nSam: Can you "
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.98,
+        "snippet": "hat up for you.\nSam: Here is my Union Membership: None\nSofia: Let me look that up for you.\nSam: Can you "
+      },
+      {
+        "type": "Username",
+        "value": "Sofia",
+        "confidence": 0.549,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nSofia: Let me look that up for you."
+      }
+    ]
+  ]
+}

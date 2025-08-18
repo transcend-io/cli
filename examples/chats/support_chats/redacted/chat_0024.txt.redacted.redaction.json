@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0024.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0024.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.974,
+        "snippet": " me look that up for you.\nSam: Here is my Gender: Non-binary\nSofia: Thanks, can you also provide your Politica"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.55,
+        "snippet": " me look that up for you.\nSam: Here is my Gender: Non-binary\nSofia: Thanks, can you also provide your Politica"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.992,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nSam: Can you check on that?\nSofia: Let me look t"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.976,
+        "snippet": "me look that up for you.\nSam: Here is my User ID: U123456\nSofia: Thanks, can you also provide your User Age"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.953,
+        "snippet": "ia: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nSam: Can you check o"
+      }
+    ]
+  ]
+}

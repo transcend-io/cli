@@ -1,0 +1,17 @@
+Support Chat Transcript #9
+==================================
+Taylor: Good morning, question about firmware update errors.
+Sofia: Thanks, can you also provide your Private Key: -----BEGIN PRIVATE KEY----- [redacted] -----END PRIVATE KEY-----?
+Taylor: Can you check on that?
+Sofia: Let me look that up for you.
+Taylor: Can you check on that?
+Sofia: Let me look that up for you.
+Taylor: Can you check on that?
+Sofia: Thanks, can you also provide your Serial Number: SN-1234567890?
+Taylor: Can you check on that?
+Sofia: Let me look that up for you.
+Taylor: Can you check on that?
+Sofia: Let me look that up for you.
+Taylor: Here is my MAC Address: 00:1B:44:11:3A:B7
+Sofia: Let me look that up for you.
+Taylor: Can you check on that?

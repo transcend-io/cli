@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0063.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0063.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.989,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nCasey: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "Union Membership",
+        "value": "None",
+        "confidence": 0.98,
+        "snippet": "anks, can you also provide your Union Membership: None?\nCasey: Here is my Date of Birth: 1990-05-12\nNoah"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.999,
+        "snippet": "embership: None?\nCasey: Here is my Date of Birth: 1990-05-12\nNoah: Thanks, can you also provide your Private K"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.99,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nCasey: Can you check on that?\nNoah: Let me look "
+      }
+    ]
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0034.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0034.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.99,
+        "snippet": " Thanks, can you also provide your Date of Birth: 1990-05-12?\nAlex: Can you check on that?\nNoah: Thanks, can y"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.996,
+        "snippet": " Thanks, can you also provide your Serial Number: SN-1234567890?\nAlex: Can you check on that?\nNoah: Let me look t"
+      },
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.992,
+        "snippet": "\nNoah: Thanks, can you also provide your User ID: U123456?\nAlex: Can you check on that?\nNoah: Let me look t"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.998,
+        "snippet": " me look that up for you.\nAlex: Here is my Email: jordan@example.com\nNoah: Let me look that up for you.\nAlex: Can you "
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.995,
+        "snippet": " that up for you.\nAlex: Here is my Serial Number: SN-1234567890\nNoah: Let me look that up for you.\nAlex: Can you "
+      }
+    ]
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0077.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0077.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.678,
+        "snippet": "Transcript #77\n==================================\nJordan: Hi, I need help with firmware update errors.\nAva"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.554,
+        "snippet": "dan: Hi, I need help with firmware update errors.\nAva: Let me look that up for you.\nJordan: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.673,
+        "snippet": " update errors.\nAva: Let me look that up for you.\nJordan: Here is my Serial Number: SN-1234567890\nAva: Let"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.999,
+        "snippet": "hat up for you.\nJordan: Here is my Serial Number: SN-1234567890\nAva: Let me look that up for you.\nJordan: Can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.506,
+        "snippet": ".\nJordan: Here is my Serial Number: SN-1234567890\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.522,
+        "snippet": "k that up for you.\nJordan: Can you check on that?\nAva: Let me look that up for you.\nJordan: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.585,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nJordan: Here is my Gender: Non-binary\nAva: Thanks, can y"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.977,
+        "snippet": " look that up for you.\nJordan: Here is my Gender: Non-binary\nAva: Thanks, can you also provide your Declared I"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.914,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\nAva: Let me look "
+      },
+      {
+        "type": "User Agent",
+        "value": "Jordan",
+        "confidence": 0.559,
+        "snippet": "provide your Declared Interests: hiking, cooking?\nJordan: Can you check on that?\nAva: Let me look that up "
+      }
+    ]
+  ]
+}

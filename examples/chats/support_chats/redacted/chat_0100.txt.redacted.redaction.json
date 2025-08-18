@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0100.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0100.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User ID",
+        "value": "U123456",
+        "confidence": 0.987,
+        "snippet": " look that up for you.\nCasey: Here is my User ID: U123456\nNoah: Thanks, can you also provide your Declared "
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Declared Interests",
+        "confidence": 0.608,
+        "snippet": ": U123456\nNoah: Thanks, can you also provide your Declared Interests: hiking, cooking?\nCasey: Can you check on that?\nN"
+      },
+      {
+        "type": "User Preferences",
+        "value": "Declared Interests",
+        "confidence": 0.579,
+        "snippet": ": U123456\nNoah: Thanks, can you also provide your Declared Interests: hiking, cooking?\nCasey: Can you check on that?\nN"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.885,
+        "snippet": "ks, can you also provide your Declared Interests: hiking, cooking?\nCasey: Can you check on that?\nNoah: Let me look "
+      }
+    ]
+  ]
+}

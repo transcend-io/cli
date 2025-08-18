@@ -1,0 +1,57 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0003.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0003.txt.redacted",
+  "totalRedactions": 1,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.564,
+        "snippet": " morning, question about logging into my account.\nLiam: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Liam",
+        "confidence": 0.53,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nLiam: Let me look that up for you.\nSam: Can you check "
+      }
+    ]
+  ]
+}

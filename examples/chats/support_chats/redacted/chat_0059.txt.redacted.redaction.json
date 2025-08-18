@@ -1,0 +1,159 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0059.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0059.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.929,
+        "snippet": "Transcript #59\n==================================\nTaylor: Hi, I need help with updating my subscription.\nA"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.911,
+        "snippet": "r: Hi, I need help with updating my subscription.\nAva: Thanks, can you also provide your Approximate Ge"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.905,
+        "snippet": " your Approximate Geolocation: San Francisco, CA?\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.882,
+        "snippet": "San Francisco, CA?\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.912,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.863,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.919,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Here is my User Preferences: marketing_emails=fa"
+      },
+      {
+        "type": "User Preferences",
+        "value": "marketing_emails=false",
+        "confidence": 0.941,
+        "snippet": " up for you.\nTaylor: Here is my User Preferences: marketing_emails=false\nAva: Let me look that up for you.\nTaylor: Can you"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.793,
+        "snippet": "re is my User Preferences: marketing_emails=false\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.865,
+        "snippet": "ng_emails=false\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.885,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.863,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.855,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.887,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.855,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nAva: Let me look that up for you.\nTaylor: Here is my "
+      },
+      {
+        "type": "User Agent",
+        "value": "Taylor",
+        "confidence": 0.928,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nTaylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: L"
+      },
+      {
+        "type": "Region",
+        "value": "MAC Address",
+        "confidence": 0.512,
+        "snippet": ": Let me look that up for you.\nTaylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Let me look that up for y"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": " that up for you.\nTaylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Let me look that up for you."
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.877,
+        "snippet": "Taylor: Here is my MAC Address: 00:1B:44:11:3A:B7\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

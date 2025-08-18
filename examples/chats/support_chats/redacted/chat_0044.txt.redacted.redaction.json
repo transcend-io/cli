@@ -1,0 +1,81 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0044.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0044.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.957,
+        "snippet": " me look that up for you.\nSam: Here is my Gender: Non-binary\nLiam: Let me look that up for you.\nSam: Can you c"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.811,
+        "snippet": " me look that up for you.\nSam: Here is my Gender: Non-binary\nLiam: Let me look that up for you.\nSam: Can you c"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.751,
+        "snippet": " on that?\nLiam: Thanks, can you also provide your Political Affiliation: Independent?\nSam: Can you check on that?\nLiam: T"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.979,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nSam: Can you check on that?\nLiam: Thanks, can yo"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.917,
+        "snippet": " on that?\nLiam: Thanks, can you also provide your Political Affiliation: Independent?\nSam: Can you check on that?\nLiam: L"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.985,
+        "snippet": " can you also provide your Political Affiliation: Independent?\nSam: Can you check on that?\nLiam: Let me look th"
+      }
+    ]
+  ]
+}

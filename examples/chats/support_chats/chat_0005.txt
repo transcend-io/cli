@@ -1,0 +1,13 @@
+Support Chat Transcript #5
+==================================
+Taylor: Hi, I need help with a late delivery.
+Liam: Let me look that up for you.
+Taylor: Here is my Survey Data: Q1=Yes, Q2=No
+Liam: Let me look that up for you.
+Taylor: Can you check on that?
+Liam: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?
+Taylor: Can you check on that?
+Liam: Let me look that up for you.
+Taylor: Can you check on that?
+Liam: Thanks, can you also provide your Race/Ethnicity: Hispanic?
+Taylor: Can you check on that?

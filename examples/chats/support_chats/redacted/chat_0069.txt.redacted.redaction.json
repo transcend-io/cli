@@ -1,0 +1,111 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0069.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0069.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.582,
+        "snippet": "Transcript #69\n==================================\nSam: Hello—I'm having trouble with a late delivery.\nM"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.645,
+        "snippet": "m: Hello—I'm having trouble with a late delivery.\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.572,
+        "snippet": "late delivery.\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.627,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.51,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.51,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.607,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Maya",
+        "confidence": 0.631,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nMaya: Thanks, can you also provide your Phone: +1-202-"
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.993,
+        "snippet": "t?\nMaya: Thanks, can you also provide your Phone: +1-202-555-0172?\nSam: Here is my Date of Birth: 1990-05-12"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.532,
+        "snippet": "can you also provide your Phone: +1-202-555-0172?\nSam: Here is my Date of Birth: 1990-05-12"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.966,
+        "snippet": ": +1-202-555-0172?\nSam: Here is my Date of Birth: 1990-05-12"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0075.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0075.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Profile URL",
+        "value": "https://example.com",
+        "confidence": 0.538,
+        "snippet": "p for you.\nRiley: Here is my Profile Picture URL: https://example.com/img/profile123.jpg\nNoah: Thanks, can you also pro"
+      },
+      {
+        "type": "Email",
+        "value": "jordan@example.com",
+        "confidence": 0.982,
+        "snippet": "pg\nNoah: Thanks, can you also provide your Email: jordan@example.com?\nRiley: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "Profile URL",
+        "value": "https://social.example.com",
+        "confidence": 0.784,
+        "snippet": "h: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?\nRiley: Can you check on that?\nNoah: Let m"
+      },
+      {
+        "type": "Username",
+        "value": "jordan",
+        "confidence": 0.506,
+        "snippet": "vide your Profile URL: https://social.example.com/jordan?\nRiley: Can you check on that?\nNoah: Let me look "
+      },
+      {
+        "type": "Phone",
+        "value": "+1-202-555-0172",
+        "confidence": 0.994,
+        "snippet": "me look that up for you.\nRiley: Here is my Phone: +1-202-555-0172\nNoah: Let me look that up for you.\nRiley: Here is"
+      },
+      {
+        "type": "Gender",
+        "value": "Non-binary",
+        "confidence": 0.976,
+        "snippet": "e look that up for you.\nRiley: Here is my Gender: Non-binary"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Non-binary",
+        "confidence": 0.706,
+        "snippet": "e look that up for you.\nRiley: Here is my Gender: Non-binary"
+      }
+    ]
+  ]
+}

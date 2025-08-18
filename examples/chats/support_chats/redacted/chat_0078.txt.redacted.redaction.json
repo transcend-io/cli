@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0078.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0078.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.856,
+        "snippet": ": Let me look that up for you.\nJordan: Here is my Religion: None\nEthan: Thanks, can you also provide your Us"
+      },
+      {
+        "type": "Religion",
+        "value": "None",
+        "confidence": 0.888,
+        "snippet": "ook that up for you.\nJordan: Here is my Religion: None\nEthan: Thanks, can you also provide your User Age"
+      },
+      {
+        "type": "User Agent",
+        "value": "Mozilla/5.0",
+        "confidence": 0.964,
+        "snippet": "an: Thanks, can you also provide your User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X)?\nJordan: Can you chec"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": "n: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nJordan: Can you check on that?\nEthan: Let me loo"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "hiking, cooking",
+        "confidence": 0.572,
+        "snippet": "p for you.\nJordan: Here is my Declared Interests: hiking, cooking"
+      }
+    ]
+  ]
+}

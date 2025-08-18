@@ -1,0 +1,19 @@
+Support Chat Transcript #13
+==================================
+Sam: Good morning, question about updating my subscription.
+Noah: Thanks, can you also provide your Profile URL: https://social.example.com/jordan?
+Sam: Can you check on that?
+Noah: Thanks, can you also provide your Union Membership: None?
+Sam: Can you check on that?
+Noah: Let me look that up for you.
+Sam: Can you check on that?
+Noah: Let me look that up for you.
+Sam: Here is my Serial Number: SN-1234567890
+Noah: Thanks, can you also provide your Union Membership: None?
+Sam: Can you check on that?
+Noah: Let me look that up for you.
+Sam: Here is my Social Security Number: 123-45-6789
+Noah: Thanks, can you also provide your IP Address: 192.168.1.42?
+Sam: Can you check on that?
+Noah: Let me look that up for you.
+Sam: Here is my MAC Address: 00:1B:44:11:3A:B7

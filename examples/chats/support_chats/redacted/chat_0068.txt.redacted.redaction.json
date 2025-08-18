@@ -1,0 +1,165 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0068.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0068.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.973,
+        "snippet": "Transcript #68\n==================================\nSam: Hello—I'm having trouble with updating my subscr"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.952,
+        "snippet": "I'm having trouble with updating my subscription.\nAva: Thanks, can you also provide your Survey Data: Q"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.954,
+        "snippet": "you also provide your Survey Data: Q1=Yes, Q2=No?\nSam: Can you check on that?\nAva: Thanks, can you also"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.961,
+        "snippet": " Data: Q1=Yes, Q2=No?\nSam: Can you check on that?\nAva: Thanks, can you also provide your MAC Address: 0"
+      },
+      {
+        "type": "MAC Address",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "a: Thanks, can you also provide your MAC Address: 00:1B:44:11:3A:B7?\nSam: Can you check on that?\nAva: Let me look tha"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.941,
+        "snippet": "also provide your MAC Address: 00:1B:44:11:3A:B7?\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.943,
+        "snippet": "s: 00:1B:44:11:3A:B7?\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Here is my Ser"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.966,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Here is my Serial Number: SN-1234567890\nAva: Let"
+      },
+      {
+        "type": "Serial Number",
+        "value": "SN-1234567890",
+        "confidence": 0.998,
+        "snippet": "k that up for you.\nSam: Here is my Serial Number: SN-1234567890\nAva: Let me look that up for you.\nSam: Can you ch"
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.844,
+        "snippet": "you.\nSam: Here is my Serial Number: SN-1234567890\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.936,
+        "snippet": ": SN-1234567890\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.927,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Here is my Coo"
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.957,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Here is my Cookies: sessionid=abcd1234\nAva: Let "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.807,
+        "snippet": " you.\nSam: Here is my Cookies: sessionid=abcd1234\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.926,
+        "snippet": "sionid=abcd1234\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.924,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.922,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.925,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Let me look that up for you.\nSam: Can you check "
+      },
+      {
+        "type": "User Agent",
+        "value": "Sam",
+        "confidence": 0.954,
+        "snippet": " check on that?\nAva: Let me look that up for you.\nSam: Can you check on that?\nAva: Let me look that up "
+      },
+      {
+        "type": "User Agent",
+        "value": "Ava",
+        "confidence": 0.95,
+        "snippet": "look that up for you.\nSam: Can you check on that?\nAva: Let me look that up for you."
+      }
+    ]
+  ]
+}

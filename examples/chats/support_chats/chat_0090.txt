@@ -1,0 +1,11 @@
+Support Chat Transcript #90
+==================================
+Sam: Hi, I need help with firmware update errors.
+Ava: Let me look that up for you.
+Sam: Can you check on that?
+Ava: Thanks, can you also provide your Union Membership: None?
+Sam: Can you check on that?
+Ava: Thanks, can you also provide your Email: jordan@example.com?
+Sam: Can you check on that?
+Ava: Let me look that up for you.
+Sam: Can you check on that?

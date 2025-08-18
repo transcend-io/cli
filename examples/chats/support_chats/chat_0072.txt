@@ -1,0 +1,11 @@
+Support Chat Transcript #72
+==================================
+Taylor: Can you assist me with a double charge on my card.
+Ethan: Thanks, can you also provide your Profile Picture URL: https://example.com/img/profile123.jpg?
+Taylor: Can you check on that?
+Ethan: Let me look that up for you.
+Taylor: Here is my Approximate Geolocation: San Francisco, CA
+Ethan: Thanks, can you also provide your Gender: Non-binary?
+Taylor: Here is my Date of Birth: 1990-05-12
+Ethan: Let me look that up for you.
+Taylor: Can you check on that?

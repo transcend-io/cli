@@ -1,0 +1,15 @@
+Support Chat Transcript #7
+==================================
+Riley: Hi, I need help with a double charge on my card.
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Thanks, can you also provide your Cookies: sessionid=abcd1234?
+Riley: Here is my Approximate Geolocation: San Francisco, CA
+Sofia: Let me look that up for you.
+Riley: Here is my Race/Ethnicity: Hispanic
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Let me look that up for you.
+Riley: Can you check on that?
+Sofia: Thanks, can you also provide your Serial Number: SN-1234567890?
+Riley: Here is my User Preferences: marketing_emails=false

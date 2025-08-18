@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0093.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0093.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.63,
+        "snippet": "late delivery.\nMaya: Let me look that up for you.\nTaylor: Can you check on that?\nMaya: Thanks, can you als"
+      },
+      {
+        "type": "Username",
+        "value": "jordan_92",
+        "confidence": 0.972,
+        "snippet": "Maya: Thanks, can you also provide your Username: jordan_92?\nTaylor: Can you check on that?\nMaya: Let me look"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.572,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Here is my Political Affiliation: Independent\nMa"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Independent",
+        "confidence": 0.978,
+        "snippet": "or you.\nTaylor: Here is my Political Affiliation: Independent\nMaya: Let me look that up for you.\nTaylor: Can yo"
+      },
+      {
+        "type": "Username",
+        "value": "Maya",
+        "confidence": 0.513,
+        "snippet": "or: Here is my Political Affiliation: Independent\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "Username",
+        "value": "Maya",
+        "confidence": 0.51,
+        "snippet": "k that up for you.\nTaylor: Can you check on that?\nMaya: Let me look that up for you.\nTaylor: Can you che"
+      },
+      {
+        "type": "Username",
+        "value": "Taylor",
+        "confidence": 0.504,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\nTaylor: Can you check on that?"
+      }
+    ]
+  ]
+}
