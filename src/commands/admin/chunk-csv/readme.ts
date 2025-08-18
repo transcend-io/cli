@@ -19,6 +19,14 @@ const examples = buildExamples<ChunkCsvCommandFlags>(
         chunkSizeMB: 250,
       },
     },
+    {
+      description: 'Specify concurrency (pool size)',
+      flags: {
+        directory: './working/files',
+        outputDir: './working/chunks',
+        concurrency: 4,
+      },
+    },
   ],
 );
 

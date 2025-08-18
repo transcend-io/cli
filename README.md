@@ -3127,6 +3127,12 @@ transcend admin chunk-csv --directory=./working/files --outputDir=./working/chun
 transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --chunkSizeMB=250
 ```
 
+**Specify concurrency (pool size)**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --concurrency=4
+```
+
 ### `transcend migration sync-ot`
 
 ```txt
