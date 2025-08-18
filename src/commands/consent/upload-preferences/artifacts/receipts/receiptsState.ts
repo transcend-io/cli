@@ -91,7 +91,7 @@ export async function makeReceiptsState(
   };
 
   // Exponential backoff cap to avoid unbounded waits.
-  const MAX_DELAY_MS = 2_000;
+  const MAX_DELAY_MS = 5_000;
 
   try {
     const s = await retrySamePromise(

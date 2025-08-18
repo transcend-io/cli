@@ -1,5 +1,5 @@
 import { createReadStream, createWriteStream } from 'node:fs';
-import { mkdir, readdir, unlink } from 'node:fs/promises';
+import { mkdir, readdir, unlink, stat } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import { Transform } from 'node:stream';
 import { once } from 'node:events';
@@ -21,6 +21,8 @@ export type ChunkOpts = {
   clearOutputDir: boolean;
   /** Chunk size in MB */
   chunkSizeMB: number;
+  /** Optional report interval in milliseconds for progress updates */
+  reportEveryMs?: number;
   /** Callback for progress updates */
   onProgress: (processed: number, total?: number) => void;
 };
@@ -108,7 +110,17 @@ function approxRowBytes(obj: Record<string, unknown>): number {
  * @returns Promise that resolves when done
  */
 export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
-  const { filePath, outputDir, clearOutputDir, chunkSizeMB, onProgress } = opts;
+  const {
+    filePath,
+    outputDir,
+    clearOutputDir,
+    chunkSizeMB,
+    onProgress,
+    reportEveryMs = 500,
+  } = opts;
+  const { size: fileBytes } = await stat(filePath); // total bytes on disk
+  let lastTick = 0;
+
   logger.info(
     colors.magenta(`Chunking ${filePath} into ~${chunkSizeMB}MB files...`),
   );
@@ -140,6 +152,21 @@ export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
     columns: false,
     skip_empty_lines: true,
   });
+
+  // running sample to estimate avg row bytes
+  let sampleBytes = 0;
+  let sampleRows = 0;
+
+  const emit = (): void => {
+    const avg = sampleRows > 0 ? sampleBytes / sampleRows : 0;
+    const estTotal =
+      avg > 0 ? Math.max(totalLines, Math.ceil(fileBytes / avg)) : undefined;
+    onProgress(totalLines, estTotal); // <-- now has total
+    lastTick = Date.now();
+  };
+
+  // seed an initial 0/N as soon as we start
+  emit();
 
   // Current active chunk writer; created after we know headers
   let writer: {
@@ -195,6 +222,11 @@ export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
 
         // Determine the row size up-front
         const rowBytes = approxRowBytes(obj);
+        sampleBytes += rowBytes;
+        sampleRows += 1;
+
+        // time-based throttle for UI updates
+        if (Date.now() - lastTick >= reportEveryMs) emit();
 
         // If adding this row would exceed the threshold, roll first,
         // so this row becomes the first row in the next chunk.
@@ -241,6 +273,7 @@ export async function chunkOneCsvFile(opts: ChunkOpts): Promise<void> {
           await writer.end();
           writer = null;
         }
+        emit(); // Final progress tick
         cb();
       } catch (e) {
         cb(e as Error);

@@ -9,7 +9,12 @@ import {
   runPool,
   dashboardPlugin,
 } from '../../../lib/pooling';
-import { runChild } from './worker';
+import {
+  runChild,
+  type ChunkProgress,
+  type ChunkResult,
+  type ChunkTask,
+} from './worker';
 import { chunkCsvPlugin } from './ui';
 import { createExtraKeyHandler } from '../../../lib/pooling/extraKeys';
 
@@ -25,47 +30,6 @@ function getCurrentModulePath(): string {
   }
   return process.argv[1];
 }
-
-/**
- * A unit of work: instructs a worker to chunk a single CSV file.
- */
-export type ChunkTask = {
-  /** Absolute path of the CSV file to chunk. */
-  filePath: string;
-  /** Options controlling output and chunk size. */
-  options: {
-    /** Optional directory where chunked output files should be written. */
-    outputDir?: string;
-    /** Whether to clear any pre-existing output chunks before writing new ones. */
-    clearOutputDir: boolean;
-    /** Approximate target chunk size in MB (well under Node’s string size limits). */
-    chunkSizeMB: number;
-  };
-};
-
-/**
- * Per-worker progress snapshot for the chunk-csv command.
- */
-export type ChunkProgress = {
-  /** File being processed by the worker. */
-  filePath: string;
-  /** Number of rows processed so far. */
-  processed: number;
-  /** Optional total rows in the file (not always known). */
-  total?: number;
-};
-
-/**
- * Worker result message once a file has finished processing.
- */
-export type ChunkResult = {
-  /** Whether the file completed successfully. */
-  ok: boolean;
-  /** File path for which this result applies. */
-  filePath: string;
-  /** Optional error message if the file failed to chunk. */
-  error?: string;
-};
 
 /**
  * Totals aggregate for this command.

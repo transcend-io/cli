@@ -12,20 +12,7 @@ import {
 import { logger } from '../../../logger';
 import { buildInteractiveUploadPreferencePlan } from './upload/buildInteractiveUploadPlan';
 import type { TaskCommonOpts } from './buildTaskOptions';
-
-export interface TaskMessage {
-  type: 'task';
-  payload: {
-    filePath: string;
-    options: TaskCommonOpts;
-  };
-}
-
-export interface ShutdownMessage {
-  type: 'shutdown';
-}
-
-export type ParentMessage = TaskMessage | ShutdownMessage;
+import type { ToWorker } from '../../../lib/pooling';
 
 /**
  * Run the child process for handling upload preferences.
@@ -57,113 +44,120 @@ export async function runChild(): Promise<void> {
   process.send?.({ type: 'ready' });
 
   // Listen for messages from the parent process
-  process.on('message', async (msg: ParentMessage) => {
-    if (!msg || typeof msg !== 'object') return;
-
-    // Handle 'task' messages to process a file
-    if (msg.type === 'task') {
-      const { filePath, options } = msg.payload as {
+  process.on(
+    'message',
+    async (
+      msg: ToWorker<{
+        /** File path */
         filePath: string;
+        /** Options */
         options: TaskCommonOpts;
-      };
-      // Compute the path for receipts file
-      const receiptFilepath = join(
-        options.receiptsFolder,
-        `${getFilePrefix(filePath)}-receipts.json`,
-      );
-      try {
-        // Ensure receipts directory exists
-        mkdirSync(dirname(receiptFilepath), { recursive: true });
-        logger.info(`[w${workerId}] START ${filePath}`);
-        log(`START ${filePath}`);
+      }>,
+    ) => {
+      if (!msg || typeof msg !== 'object') return;
 
-        // Construct common state objects for the task
-        const receipts = await makeReceiptsState(receiptFilepath);
-        const schema = await makeSchemaState(options.schemaFile);
-        const client = buildTranscendGraphQLClient(
-          options.transcendUrl,
-          options.auth,
+      // Handle 'task' messages to process a file
+      if (msg.type === 'task') {
+        const { filePath, options } = msg.payload;
+        // Compute the path for receipts file
+        const receiptFilepath = join(
+          options.receiptsFolder,
+          `${getFilePrefix(filePath)}-receipts.json`,
         );
-        const sombra = await createSombraGotInstance(
-          options.transcendUrl,
-          options.auth,
-          options.sombraAuth,
-        );
+        try {
+          // Ensure receipts directory exists
+          mkdirSync(dirname(receiptFilepath), { recursive: true });
+          logger.info(`[w${workerId}] START ${filePath}`);
+          log(`START ${filePath}`);
 
-        // Step 1: Build the upload plan (validation-only)
-        const plan = await buildInteractiveUploadPreferencePlan({
-          sombra,
-          client,
-          file: filePath,
-          partition: options.partition,
-          receipts,
-          schema,
-          identifierDownloadLogInterval: options.uploadLogInterval * 10,
-          downloadIdentifierConcurrency: options.downloadIdentifierConcurrency,
-          skipExistingRecordCheck: options.skipExistingRecordCheck,
-          forceTriggerWorkflows: options.forceTriggerWorkflows,
-          allowedIdentifierNames: options.allowedIdentifierNames,
-          maxRecordsToReceipt: options.maxRecordsToReceipt,
-          identifierColumns: options.identifierColumns,
-          columnsToIgnore: options.columnsToIgnore,
-          attributes: splitCsvToList(options.attributes),
-        });
+          // Construct common state objects for the task
+          const receipts = await makeReceiptsState(receiptFilepath);
+          const schema = await makeSchemaState(options.schemaFile);
+          const client = buildTranscendGraphQLClient(
+            options.transcendUrl,
+            options.auth,
+          );
+          const sombra = await createSombraGotInstance(
+            options.transcendUrl,
+            options.auth,
+            options.sombraAuth,
+          );
 
-        // Step 2: Execute the upload using the plan
-        await interactivePreferenceUploaderFromPlan(plan, {
-          receipts,
-          sombra,
-          dryRun: options.dryRun,
-          isSilent: options.isSilent,
-          skipWorkflowTriggers: options.skipWorkflowTriggers,
-          skipConflictUpdates: options.skipConflictUpdates,
-          forceTriggerWorkflows: options.forceTriggerWorkflows,
-          uploadLogInterval: options.uploadLogInterval,
-          maxChunkSize: options.maxChunkSize,
-          uploadConcurrency: options.uploadConcurrency,
-          maxRecordsToReceipt: options.maxRecordsToReceipt,
-          // Report progress to parent process
-          onProgress: ({ successDelta, successTotal, fileTotal }) => {
-            process.send?.({
-              type: 'progress',
-              payload: {
-                filePath,
-                successDelta,
-                successTotal,
-                fileTotal,
-              },
-            });
-          },
-        });
+          // Step 1: Build the upload plan (validation-only)
+          const plan = await buildInteractiveUploadPreferencePlan({
+            sombra,
+            client,
+            file: filePath,
+            partition: options.partition,
+            receipts,
+            schema,
+            identifierDownloadLogInterval: options.uploadLogInterval * 10,
+            downloadIdentifierConcurrency:
+              options.downloadIdentifierConcurrency,
+            skipExistingRecordCheck: options.skipExistingRecordCheck,
+            forceTriggerWorkflows: options.forceTriggerWorkflows,
+            allowedIdentifierNames: options.allowedIdentifierNames,
+            maxRecordsToReceipt: options.maxRecordsToReceipt,
+            identifierColumns: options.identifierColumns,
+            columnsToIgnore: options.columnsToIgnore,
+            attributes: splitCsvToList(options.attributes),
+          });
 
-        // Log completion and send result to parent
-        logger.info(`[w${workerId}] DONE  ${filePath}`);
-        log(`SUCCESS ${filePath}`);
+          // Step 2: Execute the upload using the plan
+          await interactivePreferenceUploaderFromPlan(plan, {
+            receipts,
+            sombra,
+            dryRun: options.dryRun,
+            isSilent: options.isSilent,
+            skipWorkflowTriggers: options.skipWorkflowTriggers,
+            skipConflictUpdates: options.skipConflictUpdates,
+            forceTriggerWorkflows: options.forceTriggerWorkflows,
+            uploadLogInterval: options.uploadLogInterval,
+            maxChunkSize: options.maxChunkSize,
+            uploadConcurrency: options.uploadConcurrency,
+            maxRecordsToReceipt: options.maxRecordsToReceipt,
+            // Report progress to parent process
+            onProgress: ({ successTotal, fileTotal }) => {
+              process.send?.({
+                type: 'progress',
+                payload: {
+                  filePath,
+                  processed: successTotal,
+                  total: fileTotal,
+                },
+              });
+            },
+          });
 
-        process.send?.({
-          type: 'result',
-          payload: { ok: true, filePath, receiptFilepath },
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        // Handle errors, log them, and send failure result to parent
-        const e = err?.stack || err?.message || String(err);
-        logger.error(
-          `[w${workerId}] ERROR ${filePath}: ${err?.message || err}\n\n${e}`,
-        );
-        log(`FAIL ${filePath}\n${e}`);
-        process.send?.({
-          type: 'result',
-          payload: { ok: false, filePath, error: e, receiptFilepath },
-        });
+          // Log completion and send result to parent
+          logger.info(`[w${workerId}] DONE  ${filePath}`);
+          log(`SUCCESS ${filePath}`);
+
+          process.send?.({
+            type: 'result',
+            payload: { ok: true, filePath, receiptFilepath },
+          });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          // Handle errors, log them, and send failure result to parent
+          const e = err?.stack || err?.message || String(err);
+          logger.error(
+            `[w${workerId}] ERROR ${filePath}: ${err?.message || err}\n\n${e}`,
+          );
+          log(`FAIL ${filePath}\n${e}`);
+          process.send?.({
+            type: 'result',
+            payload: { ok: false, filePath, error: e, receiptFilepath },
+          });
+        }
+      } else if (msg.type === 'shutdown') {
+        // Handle shutdown message: log and exit gracefully
+        logger.info(`[w${workerId}] shutdown`);
+        log('Shutting down.');
+        logStream.end(() => process.exit(0));
       }
-    } else if (msg.type === 'shutdown') {
-      // Handle shutdown message: log and exit gracefully
-      logger.info(`[w${workerId}] shutdown`);
-      log('Shutting down.');
-      logStream.end(() => process.exit(0));
-    }
-  });
+    },
+  );
 
   // Handle uncaught exceptions: log and exit
   process.on('uncaughtException', (err) => {

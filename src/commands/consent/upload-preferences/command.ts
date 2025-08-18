@@ -177,7 +177,6 @@ export const uploadPreferencesCommand = buildCommand({
           'Columns in the CSV that should be ignored. Comma-separated list of column names.',
         optional: true,
       },
-      // FIXME
       viewerMode: {
         kind: 'boolean',
         brief:

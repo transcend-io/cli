@@ -145,6 +145,8 @@ export function createExtraKeyHandler(
     }
   };
 
+  let viewing = false; // optional guard to prevent stacking viewers
+
   /**
    * Show an inline combined log viewer for the selected sources/level.
    * Pauses dashboard repaint to keep the viewer visible until the user exits.
@@ -152,17 +154,28 @@ export function createExtraKeyHandler(
    * @param sources - Log sources to include (e.g., "err", "warn", "info").
    * @param level - Severity level to filter by (e.g., "error", "warn", "all").
    */
-  const view = async (
-    sources: LogLocation[],
-    level: ViewLevel,
-  ): Promise<void> => {
+  const view = (sources: LogLocation[], level: ViewLevel): void => {
+    if (viewing) return;
+    viewing = true;
     setPaused(true);
-    try {
-      await showCombinedLogs(logsBySlot, sources, level);
-    } finally {
-      setPaused(false);
-      repaint();
-    }
+
+    // optional UX: clear screen and show a hint
+    process.stdout.write('\x1b[2J\x1b[H'); // clear+home
+    process.stdout.write(
+      'Combined logs viewer (press Esc or Ctrl+] to return)\n\n',
+    );
+
+    (async () => {
+      try {
+        await showCombinedLogs(logsBySlot, sources, level);
+        // NOTE: do NOT unpause here; ESC will handle it.
+      } catch {
+        // If showCombinedLogs throws, recover and unpause
+        viewing = false;
+        setPaused(false);
+        repaint();
+      }
+    })();
   };
 
   /**
@@ -234,6 +247,7 @@ export function createExtraKeyHandler(
 
     // Exit a viewer (Esc / Ctrl+]) — resume dashboard
     if (s === '\x1b' || s === '\x1d') {
+      viewing = false;
       setPaused(false);
       repaint();
     }

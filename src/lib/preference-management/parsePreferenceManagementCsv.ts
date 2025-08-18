@@ -167,7 +167,7 @@ export async function parsePreferenceManagementCsvWithCache(
         Object.keys(currentColumnToIdentifierMap).length
       } identifiers and ${
         Object.keys(currentColumnToPurposeName).length
-      } purposes`,
+      } purposes.`,
     ),
   );
   preferences.forEach((pref, ind) => {

@@ -130,6 +130,12 @@ export async function interactivePreferenceUploaderFromPlan(
   const filtered = allEntries.filter(([userId]) => !successful[userId]);
   const fileTotal = filtered.length;
 
+  onProgress?.({
+    successDelta: 0,
+    successTotal: 0,
+    fileTotal,
+  });
+
   if (filtered.length === 0) {
     logger.warn(
       colors.yellow(

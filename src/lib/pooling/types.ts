@@ -16,20 +16,6 @@ export interface SlotState<TProg extends ObjByString> {
   progress?: TProg;
 }
 
-/** Shape of the optional throughput callback */
-export type ProgressInfo = {
-  /** ID of the worker */
-  workerId: number;
-  /** File path */
-  filePath: string;
-  /** Number of success updates */
-  successDelta: number;
-  /** Total number of success */
-  successTotal: number;
-  /** Total number of items being processed */
-  fileTotal: number;
-};
-
 /** Message sent by a worker indicating it is ready to receive tasks. */
 export type WorkerReady = {
   /** Type ready */
