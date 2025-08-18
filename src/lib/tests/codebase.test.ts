@@ -242,6 +242,7 @@ describe('CLI Command Structure', () => {
         'helpers.ts',
         'types.ts',
         'constants.ts',
+        'worker.ts',
       ];
 
       // Allowed subdirectories in leaf command dirs

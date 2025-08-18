@@ -27,17 +27,10 @@ export const uploadPreferencesCommand = buildCommand({
       },
       sombraAuth: createSombraAuthParameter(),
       transcendUrl: createTranscendUrlParameter(),
-      file: {
-        kind: 'parsed',
-        parse: String,
-        brief: 'Path to the CSV file to load preferences from',
-        optional: true,
-      },
       directory: {
         kind: 'parsed',
         parse: String,
         brief: 'Path to the directory of CSV files to load preferences from',
-        optional: true,
       },
       dryRun: {
         kind: 'boolean',

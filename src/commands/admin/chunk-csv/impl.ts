@@ -1,211 +1,276 @@
-#!/usr/bin/env node
-
-import { Parser } from 'csv-parse';
-import { createReadStream, mkdirSync, unlinkSync } from 'node:fs';
-import { readdir } from 'node:fs/promises';
-import { basename, dirname, join } from 'node:path';
-import { pipeline } from 'node:stream/promises';
-import { Transform } from 'node:stream';
+import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { logger } from '../../../logger';
-import { appendCsvSync, writeCsvSync } from '../../../lib/cron';
-import type { LocalContext } from '../../../context';
+import type { ChildProcess } from 'node:child_process';
 
-export interface ChunkCsvCommandFlags {
-  inputFile: string;
+import {
+  computePoolSize,
+  getWorkerLogPaths,
+  isIpcOpen,
+  safeSend,
+  spawnWorkerProcess,
+  classifyLogLevel,
+  makeLineSplitter,
+  initLogDir,
+  CHILD_FLAG,
+} from '../../../lib/pooling';
+import { getCurrentModulePath, RateCounter } from '../../../lib/helpers';
+import { renderDashboard } from './ui/renderDashboard';
+import { runChild } from './worker';
+import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
+
+/**
+ * Command-line flags supported by `chunkCsvParent`.
+ */
+export type ChunkCsvCommandFlags = {
+  /** Input directory containing CSV files to be chunked */
+  directory: string;
+  /** Directory where chunked CSV files will be written (defaults to CWD if not set) */
   outputDir?: string;
+  /** Whether to clear the output directory before writing new chunks */
   clearOutputDir: boolean;
+  /** Target chunk size in MB (approximate) */
   chunkSizeMB: number;
-}
+  /** Optional concurrency override (defaults to pool-size heuristic) */
+  concurrency?: number;
+};
+
+/** Per-worker progress (rows processed out of total rows, if known). */
+type WorkerProgress = {
+  processed: number;
+  total?: number;
+};
+
+/** Lightweight state tracked for each worker process. */
+type WorkerState = {
+  /** Whether the worker is currently busy with a task */
+  busy: boolean;
+  /** The file currently being processed, or null if idle */
+  file: string | null;
+  /** Last observed log severity from this worker */
+  lastLevel: 'ok' | 'warn' | 'error';
+  /** Progress stats, if reported */
+  progress?: WorkerProgress;
+};
+
+/** Messages received from child processes */
+type ReadyMsg = { type: 'ready' };
+type ProgressMsg = {
+  type: 'progress';
+  payload: { filePath: string; processed: number; total?: number };
+};
+type ResultMsg = {
+  type: 'result';
+  payload: { ok: boolean; filePath: string; error?: string };
+};
+type ParentInbound = ReadyMsg | ProgressMsg | ResultMsg;
 
 /**
- * Format memory usage for logging
+ * Parent entrypoint for the "chunk-csv" command.
  *
- * @param memoryData - The NodeJS memory usage data to format
- * @returns A formatted string showing memory usage in MB
+ * - Collects input CSV files.
+ * - Spawns a pool of worker processes to handle them concurrently.
+ * - Tracks per-worker state, progress, and errors.
+ * - Periodically re-renders a TTY dashboard until all work completes.
+ *
+ * @param this - Execution context (includes logger, config, etc.)
+ * @param flags - Command-line flags controlling chunking behavior
  */
-function formatMemoryUsage(memoryData: NodeJS.MemoryUsage): string {
-  return Object.entries(memoryData)
-    .map(([key, value]) => `${key}: ${(value / 1024 / 1024).toFixed(2)} MB`)
-    .join(', ');
-}
-
-/**
- * Chunks a large CSV file into smaller files of approximately 1.5GB each
- * Note that you may need to increase the node memory limit for this script to run!!
- *
- * Dev Usage:
- * yarn ts-node ./src/cli-chunk-csv.ts --inputFile=./working/full_export.csv
- *
- * Standard usage:
- * yarn tr-chunk-csv --inputFile=/path/to/large.csv --outputDir=/path/to/output
- *
- * @param this - The local context (not used here, but required by the CLI framework)
- * @param flags - The command line flags containing input file, output directory, and chunk size
- * @returns A promise that resolves when the chunking is complete
- */
-export async function chunkCsvImpl(
+export async function chunkCsvParent(
   this: LocalContext,
   flags: ChunkCsvCommandFlags,
 ): Promise<void> {
-  const { inputFile, outputDir, chunkSizeMB, clearOutputDir } = flags;
+  const { directory, outputDir, clearOutputDir, chunkSizeMB, concurrency } =
+    flags;
 
-  // Ensure inputFile is provided
-  if (!inputFile) {
-    logger.error(
-      colors.red(
-        'An input file must be provided. You can specify using --inputFile=/path/to/large.csv',
-      ),
-    );
-    process.exit(1);
-  }
+  // Gather CSV files from the input directory or exit if none found
+  const files = collectCsvFilesOrExit(directory, this);
 
-  const chunkSize = Math.floor((chunkSizeMB || chunkSizeMB) * 1024 * 1024);
+  // Determine pool size and CPU availability
+  const { poolSize, cpuCount } = computePoolSize(concurrency, files.length);
 
-  const baseFileName = basename(inputFile, '.csv');
-  const outputDirectory = outputDir || dirname(inputFile);
-  mkdirSync(outputDirectory, { recursive: true });
+  logger.info(
+    colors.green(
+      `Chunking ${files.length} CSV file(s) with pool size ${poolSize} (CPU=${cpuCount})`,
+    ),
+  );
 
-  // clear previous files
-  if (clearOutputDir) {
-    logger.info(colors.blue(`Clearing output directory: ${outputDirectory}`));
-    try {
-      const files = await readdir(outputDirectory);
-      await Promise.all(
-        files
-          .filter((file) => file.startsWith(`${baseFileName}_chunk`))
-          .map((file) => unlinkSync(join(outputDirectory, file))),
-      );
-      logger.info(colors.green('Output directory cleared.'));
-    } catch (error) {
-      logger.error(colors.red('Error clearing output directory:'), error);
-      process.exit(1);
-    }
-  }
+  // --- Shared counters and global state ---
+  const workers = new Map<number, ChildProcess>();
+  const workerState = new Map<number, WorkerState>();
+  const slotLogs = new Map<number, ReturnType<typeof getWorkerLogPaths>>();
+  const pending = [...files];
+  const totals = { completed: 0, failed: 0 };
+  let activeWorkers = 0;
 
-  let currentChunkSize = 0;
-  let currentChunkNumber = 1;
-  let headerRow: string[] | null = null;
-  let currentOutputFile = join(outputDirectory, `${baseFileName}_chunk1.csv`);
-  let expectedColumnCount: number | null = null;
-  let totalLinesProcessed = 0;
+  // Track global throughput (rows/sec across all workers)
+  const meter = new RateCounter();
 
-  const parser = new Parser({
-    columns: false,
-    skip_empty_lines: true,
-  });
+  /**
+   * Refresh the dashboard view in the terminal.
+   *
+   * @param final - When true, finalizes the view (shows cursor again).
+   */
+  const repaint = (final = false): void => {
+    renderDashboard({
+      poolSize,
+      cpuCount,
+      filesTotal: files.length,
+      filesCompleted: totals.completed,
+      filesFailed: totals.failed,
+      workerState,
+      final,
+      throughput: {
+        successSoFar: 0, // success counting not wired here
+        r10s: meter.rate(10_000),
+        r60s: meter.rate(60_000),
+      },
+      exportsDir: directory || outputDir || process.cwd(),
+      exportStatus: {}, // not used in this command
+    });
+  };
 
-  const chunker = new Transform({
-    objectMode: true,
-    /**
-     * Transform function that processes each chunk of CSV data
-     *
-     * @param chunk - Array of strings representing a CSV row
-     * @param _encoding - The encoding of the chunk
-     * @param callback - Callback function to signal completion
-     */
-    transform(chunk: string[], _encoding, callback) {
-      if (!headerRow) {
-        headerRow = chunk;
-        expectedColumnCount = headerRow.length;
-        logger.info(
-          colors.blue(
-            `Found header row with ${expectedColumnCount} columns: ${headerRow.join(
-              ', ',
-            )}`,
-          ),
-        );
-        callback();
+  /**
+   * Assign the next pending file to a given worker.
+   *
+   * @param id - Worker ID
+   */
+  const assign = (id: number): void => {
+    if (pending.length === 0) return;
+    const filePath = pending.shift();
+    if (!filePath) return;
+
+    const w = workers.get(id)!;
+    workerState.set(id, {
+      busy: true,
+      file: filePath,
+      lastLevel: 'ok',
+      progress: { processed: 0, total: undefined },
+    });
+
+    safeSend(w, {
+      type: 'task',
+      payload: {
+        filePath,
+        options: { outputDir, clearOutputDir, chunkSizeMB },
+      },
+    });
+
+    repaint();
+  };
+
+  // --- Spawn worker pool ---
+  const logDir = initLogDir(directory || outputDir || process.cwd());
+  const modulePath = getCurrentModulePath();
+
+  for (let i = 0; i < poolSize; i += 1) {
+    const child = spawnWorkerProcess({
+      id: i,
+      modulePath,
+      logDir,
+      openLogWindows: false,
+      isSilent: true,
+    });
+
+    workers.set(i, child);
+    workerState.set(i, {
+      busy: false,
+      file: null,
+      lastLevel: 'ok',
+      progress: undefined,
+    });
+    slotLogs.set(i, getWorkerLogPaths(child));
+    activeWorkers += 1;
+
+    // Classify stderr lines into warn/error for dashboard badges
+    const errLine = makeLineSplitter((line) => {
+      const lvl = classifyLogLevel(line);
+      if (!lvl) return;
+      const prev = workerState.get(i)!;
+      if (prev.lastLevel !== lvl) {
+        workerState.set(i, { ...prev, lastLevel: lvl });
+        repaint();
+      }
+    });
+    child.stderr?.on('data', errLine);
+
+    // Handle structured messages from the child process
+    child.on('message', (msg: ParentInbound) => {
+      if (!msg || typeof msg !== 'object') return;
+
+      if (msg.type === 'ready') {
+        assign(i);
+        repaint();
         return;
       }
 
-      // Validate row structure
-      if (
-        expectedColumnCount !== null &&
-        chunk.length !== expectedColumnCount
-      ) {
-        logger.warn(
-          colors.yellow(
-            `Warning: Row ${totalLinesProcessed + 1} has ${
-              chunk.length
-            } columns, expected ${expectedColumnCount}`,
-          ),
-        );
+      if (msg.type === 'progress') {
+        const { filePath, processed, total } = msg.payload || {};
+        const prev = workerState.get(i)!;
+        workerState.set(i, {
+          ...prev,
+          file: prev.file ?? filePath ?? prev.file,
+          progress: { processed, total },
+        });
+        repaint();
+        return;
       }
 
-      totalLinesProcessed += 1;
-      if (totalLinesProcessed % 1_000_000 === 0) {
-        const memoryUsage = formatMemoryUsage(process.memoryUsage());
-        logger.info(
-          colors.blue(
-            `Processed ${totalLinesProcessed.toLocaleString()} lines... ` +
-              `Memory usage: ${memoryUsage}`,
-          ),
-        );
+      if (msg.type === 'result') {
+        const { ok } = msg.payload || {};
+        if (ok) totals.completed += 1;
+        else totals.failed += 1;
+
+        const prev = workerState.get(i)!;
+        workerState.set(i, {
+          ...prev,
+          busy: false,
+          file: null,
+          progress: undefined,
+          lastLevel: ok ? 'ok' : 'error',
+        });
+
+        if (pending.length > 0) assign(i);
+        else if (!pending.length) {
+          if (isIpcOpen(child)) safeSend(child, { type: 'shutdown' });
+        }
+        repaint();
       }
+    });
 
-      const rowSize = Buffer.byteLength(chunk.join(','), 'utf8');
-
-      // Prepare row object from header/values
-      const data = [
-        {
-          ...Object.fromEntries(
-            headerRow.map((header, index) => [header, chunk[index]]),
-          ),
-        },
-      ];
-
-      // If this is the first write of the current chunk, write with headers
-      if (currentChunkSize === 0) {
-        logger.info(
-          colors.yellow(
-            `Starting new chunk ${currentChunkNumber} at ${currentOutputFile}`,
-          ),
-        );
-        writeCsvSync(currentOutputFile, data, headerRow);
-        currentChunkSize += rowSize;
-      } else {
-        appendCsvSync(currentOutputFile, data);
-        currentChunkSize += rowSize;
+    // Handle worker exit
+    // eslint-disable-next-line no-loop-func
+    child.on('exit', () => {
+      activeWorkers -= 1;
+      if (activeWorkers === 0) {
+        repaint(true);
       }
-
-      // Determine if we need to start a new chunk
-      if (currentChunkSize >= chunkSize) {
-        currentChunkNumber += 1;
-        currentChunkSize = 0;
-        currentOutputFile = join(
-          outputDirectory,
-          `${baseFileName}_chunk${currentChunkNumber}.csv`,
-        );
-      }
-
-      callback();
-    },
-    /**
-     * Flush function that writes the final chunk of data
-     *
-     * @param callback - Callback function to signal completion
-     */
-    flush(callback) {
-      callback();
-    },
-  });
-
-  const readStream = createReadStream(inputFile);
-
-  try {
-    logger.info(
-      colors.blue(`Starting to process ${inputFile}... for ${chunkSizeMB}MB`),
-    );
-    await pipeline(readStream, parser, chunker);
-    logger.info(
-      colors.green(
-        `Successfully chunked ${inputFile} into ${currentChunkNumber} files ` +
-          `(${totalLinesProcessed.toLocaleString()} total lines processed)`,
-      ),
-    );
-  } catch (error) {
-    logger.error(colors.red('Error chunking CSV file:'), error);
-    process.exit(1);
+    });
   }
+
+  // Periodic repaint while work is ongoing
+  const tick = setInterval(() => repaint(false), 350);
+
+  // Resolve once all files are processed and all workers have exited
+  await new Promise<void>((resolve) => {
+    const check = setInterval(() => {
+      if (pending.length === 0 && activeWorkers === 0) {
+        clearInterval(check);
+        clearInterval(tick);
+        repaint(true);
+        resolve();
+      }
+    }, 300);
+  });
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Child entrypoint:
+ * If process was invoked with CHILD_FLAG, run worker loop instead of parent.
+ * ------------------------------------------------------------------------------------------------- */
+if (process.argv.includes(CHILD_FLAG)) {
+  runChild().catch((err) => {
+    logger.error(err);
+    process.exit(1);
+  });
 }

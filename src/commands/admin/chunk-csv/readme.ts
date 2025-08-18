@@ -7,14 +7,14 @@ const examples = buildExamples<ChunkCsvCommandFlags>(
     {
       description: 'Chunk a file into smaller CSV files',
       flags: {
-        inputFile: './working/full_export.csv',
+        directory: './working/files',
         outputDir: './working/chunks',
       },
     },
     {
       description: 'Specify chunk size in MB',
       flags: {
-        inputFile: './working/full_export.csv',
+        directory: './working/files',
         outputDir: './working/chunks',
         chunkSizeMB: 250,
       },

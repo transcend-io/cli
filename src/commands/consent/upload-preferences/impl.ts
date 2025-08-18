@@ -6,11 +6,10 @@ import { join } from 'node:path';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
-import { collectCsvFilesOrExit } from './collectCsvFilesOrExit';
 
+import { runChild } from './worker';
 import type { ChildProcess } from 'node:child_process';
 
-import { runChild } from './runChild';
 import {
   computePoolSize,
   getWorkerLogPaths,
@@ -31,8 +30,9 @@ import {
   WorkerMaps,
   WorkerState,
   installInteractiveSwitcher,
+  CHILD_FLAG,
 } from '../../../lib/pooling';
-import { RateCounter } from '../../../lib/helpers';
+import { getCurrentModulePath, RateCounter } from '../../../lib/helpers';
 import {
   renderDashboard,
   AnyTotals,
@@ -48,11 +48,7 @@ import {
 
 import { applyReceiptSummary } from './receipts';
 import { buildCommonOpts } from './buildTaskOptions';
-
-function getCurrentModulePath(): string {
-  if (typeof __filename !== 'undefined') return __filename as unknown as string;
-  return process.argv[1];
-}
+import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
 
 /** CLI flags */
 export interface UploadPreferencesCommandFlags {
@@ -60,8 +56,7 @@ export interface UploadPreferencesCommandFlags {
   partition: string;
   sombraAuth?: string;
   transcendUrl: string;
-  file?: string;
-  directory?: string;
+  directory: string;
   dryRun: boolean;
   skipExistingRecordCheck: boolean;
   receiptFileDir?: string;
@@ -90,7 +85,6 @@ export async function uploadPreferences(
 ): Promise<void> {
   const {
     partition,
-    file = '',
     directory,
     dryRun,
     skipExistingRecordCheck,
@@ -100,7 +94,7 @@ export async function uploadPreferences(
     concurrency,
   } = flags;
 
-  const files = collectCsvFilesOrExit(directory, file, this);
+  const files = collectCsvFilesOrExit(directory, this);
   doneInputValidation(this.process.exit);
 
   logger.info(
@@ -478,7 +472,6 @@ export async function uploadPreferences(
 /* -------------------------------------------------------------------------------------------------
  * If invoked directly as a child process, enter worker loop
  * ------------------------------------------------------------------------------------------------- */
-const CHILD_FLAG = '--child-upload-preferences';
 if (process.argv.includes(CHILD_FLAG)) {
   runChild().catch((err) => {
     logger.error(err);

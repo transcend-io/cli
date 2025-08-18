@@ -2,21 +2,21 @@ import { buildCommand } from '@stricli/core';
 
 export const chunkCsvCommand = buildCommand({
   loader: async () => {
-    const { chunkCsvImpl } = await import('./impl');
-    return chunkCsvImpl;
+    const { chunkCsvParent } = await import('./impl');
+    return chunkCsvParent;
   },
   parameters: {
     flags: {
-      inputFile: {
+      directory: {
         kind: 'parsed',
         parse: String,
-        brief: 'Absolute or relative path to the large CSV file to split',
+        brief: 'Directory containing CSV files to split (required)',
       },
       outputDir: {
         kind: 'parsed',
         parse: String,
         brief:
-          "Directory to write chunk files (defaults to the input file's directory)",
+          "Directory to write chunk files (defaults to each input file's directory)",
         optional: true,
       },
       clearOutputDir: {
@@ -38,15 +38,19 @@ export const chunkCsvCommand = buildCommand({
           'Approximate chunk size in megabytes. Keep well under JS string size limits',
         default: '10',
       },
+      concurrency: {
+        kind: 'parsed',
+        parse: (v: string) => Math.max(1, Number(v) || 0),
+        brief:
+          'Max number of worker processes (defaults based on CPU and file count)',
+        optional: true,
+      },
     },
   },
   docs: {
-    brief: 'Chunk a large CSV into smaller CSV files',
-    fullDescription: `Chunks a large CSV file into smaller CSV files of approximately N MB each.
-
-Notes:
-- The script streams the input CSV and writes out chunks incrementally to avoid high memory usage.
-- You may still need to increase Node's memory limit for very large inputs.
-- It validates row length consistency against the header row and logs periodic progress/memory usage.`,
+    brief: 'Chunk all CSVs in a directory into smaller CSV files',
+    fullDescription: `Streams every CSV in --directory and writes chunked files of approximately N MB each.
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row-length consistency against the header row; logs periodic progress and memory usage.`,
   },
 });

@@ -2081,7 +2081,7 @@ transcend consent upload-data-flows-from-csv \
 
 ```txt
 USAGE
-  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] [--file value] [--directory value] [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--schemaFilePath value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value] [--uploadConcurrency value] [--maxChunkSize value] [--rateLimitRetryDelay value] [--uploadLogInterval value] [--downloadIdentifierConcurrency value] [--maxRecordsToReceipt value] (--allowedIdentifierNames value) (--identifierColumns value) [--columnsToIgnore value]
+  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] (--directory value) [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--schemaFilePath value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value] [--uploadConcurrency value] [--maxChunkSize value] [--rateLimitRetryDelay value] [--uploadLogInterval value] [--downloadIdentifierConcurrency value] [--maxRecordsToReceipt value] (--allowedIdentifierNames value) (--identifierColumns value) [--columnsToIgnore value]
   transcend consent upload-preferences --help
 
 Upload preference management data to your Preference Store.
@@ -2103,8 +2103,7 @@ FLAGS
       --partition                       The partition key to download consent preferences to
      [--sombraAuth]                     The Sombra internal key, use for additional authentication when self-hosting Sombra
      [--transcendUrl]                   URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                                                                                                                                                                                                                         [default = https://api.transcend.io]
-     [--file]                           Path to the CSV file to load preferences from
-     [--directory]                      Path to the directory of CSV files to load preferences from
+      --directory                       Path to the directory of CSV files to load preferences from
      [--dryRun]                         Whether to do a dry run only - will write results to receiptFilepath without updating Transcend                                                                                                                                                                                                                                                                                                      [default = false]
      [--skipExistingRecordCheck]        Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD                                                                                                                                                                                                                                                                                                               [default = false]
      [--receiptFileDir]                 Directory path where the response receipts should be saved. Defaults to ./receipts if a "file" is provided, or <directory>/../receipts if a "directory" is provided.
@@ -2137,7 +2136,7 @@ A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv).
 ```sh
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
-  --file=./preferences.csv \
+  --directory=./ \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
@@ -2147,7 +2146,7 @@ transcend consent upload-preferences \
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --file=./preferences.csv \
+  --directory=./csvs \
   --dryRun \
   --skipWorkflowTriggers \
   --skipConflictUpdates \
@@ -2162,7 +2161,7 @@ transcend consent upload-preferences \
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --file=./preferences.csv \
+  --directory=./folder \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -3114,21 +3113,19 @@ query {
 
 ```txt
 USAGE
-  transcend admin chunk-csv (--inputFile value) [--outputDir value] [--clearOutputDir value] [--chunkSizeMB value]
+  transcend admin chunk-csv (--directory value) [--outputDir value] [--clearOutputDir value] [--chunkSizeMB value] [--concurrency value]
   transcend admin chunk-csv --help
 
-Chunks a large CSV file into smaller CSV files of approximately N MB each.
-
-Notes:
-- The script streams the input CSV and writes out chunks incrementally to avoid high memory usage.
-- You may still need to increase Node's memory limit for very large inputs.
-- It validates row length consistency against the header row and logs periodic progress/memory usage.
+Streams every CSV in --directory and writes chunked files of approximately N MB each.
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row-length consistency against the header row; logs periodic progress and memory usage.
 
 FLAGS
-      --inputFile        Absolute or relative path to the large CSV file to split
-     [--outputDir]       Directory to write chunk files (defaults to the input file's directory)
+      --directory        Directory containing CSV files to split (required)
+     [--outputDir]       Directory to write chunk files (defaults to each input file's directory)
      [--clearOutputDir]  Clear the output directory before writing chunks                           [default = true]
      [--chunkSizeMB]     Approximate chunk size in megabytes. Keep well under JS string size limits [default = 10]
+     [--concurrency]     Max number of worker processes (defaults based on CPU and file count)
   -h  --help             Print help information and exit
 ```
 
@@ -3137,13 +3134,13 @@ FLAGS
 **Chunk a file into smaller CSV files**
 
 ```sh
-transcend admin chunk-csv --inputFile=./working/full_export.csv --outputDir=./working/chunks
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
 ```
 
 **Specify chunk size in MB**
 
 ```sh
-transcend admin chunk-csv --inputFile=./working/full_export.csv --outputDir=./working/chunks --chunkSizeMB=250
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --chunkSizeMB=250
 ```
 
 ### `transcend migration sync-ot`
