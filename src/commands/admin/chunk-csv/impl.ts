@@ -17,6 +17,7 @@ import {
   type ChunkTask,
 } from './worker';
 import { chunkCsvPlugin } from './ui';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 /**
  * Returns the current module's path so the worker pool knows what file to re-exec.
@@ -69,6 +70,8 @@ export async function chunkCsv(
   this: LocalContext,
   flags: ChunkCsvCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   const {
     directory,
     outputDir,

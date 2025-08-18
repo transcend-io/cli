@@ -124,6 +124,10 @@ describe('chunkCsv', () => {
   const ctx: LocalContext = {
     exit: vi.fn(),
     log: vi.fn(),
+    // whatever else you already had...
+    process: {
+      exit: vi.fn(), // <- this is what the SUT needs
+    },
   } as unknown as LocalContext;
 
   const baseFlags: ChunkCsvCommandFlags = {
