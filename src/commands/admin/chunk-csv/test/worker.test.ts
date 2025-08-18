@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// ── SUT ───────────────────────────────────────────────────────────────────────
 import { runChild } from '../worker';
 import type { ChunkOpts } from '../../../../lib/helpers/chunkOneCsvFile';
 
@@ -27,8 +26,6 @@ vi.mock('../../../../lib/helpers/chunkOneCsvFile', () => ({
 const { mLogger } = h;
 const { mExtractErrorMessage } = h;
 const { mChunkOneCsvFile } = h;
-
-// ── Utilities ────────────────────────────────────────────────────────────────
 
 /**
  * Microtask turn helper to allow handlers to run.
@@ -68,8 +65,6 @@ function startWorkerAndCaptureHandler(): (msg: unknown) => unknown {
   // If nothing found, fail loudly (should not happen)
   throw new Error('Failed to capture worker message handler');
 }
-
-// ── Test suite ───────────────────────────────────────────────────────────────
 
 describe('chunk-csv worker runChild()', () => {
   let origSend: unknown;
