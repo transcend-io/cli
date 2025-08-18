@@ -36,7 +36,10 @@ export const PurposeRowMapping = t.type({
    *   'value2': 'Value2',
    * }
    */
-  valueMapping: t.record(t.string, t.union([t.string, t.boolean, t.null])),
+  valueMapping: t.record(
+    t.string,
+    t.union([t.string, t.boolean, t.null, t.undefined]),
+  ),
 });
 
 /** Override type */

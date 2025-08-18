@@ -134,7 +134,6 @@ export async function runChild(): Promise<void> {
         type: 'result',
         payload: { ok: false, filePath, error: String(err) },
       } as ResultMsg);
-      process.exit(1);
     }
   });
 

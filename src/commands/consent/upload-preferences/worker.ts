@@ -156,7 +156,6 @@ export async function runChild(): Promise<void> {
           type: 'result',
           payload: { ok: false, filePath, error: e, receiptFilepath },
         });
-        process.exit(1);
       }
     } else if (msg.type === 'shutdown') {
       // Handle shutdown message: log and exit gracefully

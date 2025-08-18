@@ -1,9 +1,3 @@
-/**
- * Module: clients/graphql
- *
- * Fetch and shape the reference data needed to transform CSV rows into
- * PreferenceUpdateItem payloads (purposes, topics, identifiers).
- */
 import type { GraphQLClient } from 'graphql-request';
 import {
   buildTranscendGraphQLClient,
