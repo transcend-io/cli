@@ -4,7 +4,7 @@ import { getFilePrefix } from './computeFiles';
 import { splitCsvToList } from '../../../lib/requests';
 import { interactivePreferenceUploaderFromPlan } from './upload/interactivePreferenceUploaderFromPlan';
 import { makeSchemaState } from './schemaState';
-import { makeReceiptsState } from './receipts/receiptsState';
+import { makeReceiptsState } from './artifacts/receipts/receiptsState';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,

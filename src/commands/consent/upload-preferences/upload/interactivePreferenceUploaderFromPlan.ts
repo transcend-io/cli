@@ -3,13 +3,13 @@ import colors from 'colors';
 import { map as pMap } from 'bluebird';
 import { chunk, groupBy } from 'lodash-es';
 import { logger } from '../../../../logger';
-import { buildPendingUpdates } from '../transform/buildPendingUpdates';
+import { buildPendingUpdates } from './transform';
 import { uploadChunkWithSplit } from './batchUploader';
 import type { PreferenceUpdateItem } from '@transcend-io/privacy-types';
 import { RETRYABLE_BATCH_STATUSES } from '../../../../constants';
 import { extractErrorMessage, limitRecords } from '../../../../lib/helpers';
 import type { InteractiveUploadPreferencePlan } from './buildInteractiveUploadPlan';
-import type { PreferenceReceiptsInterface } from '../receipts';
+import type { PreferenceReceiptsInterface } from '../artifacts/receipts';
 import type { Got } from 'got';
 
 /**

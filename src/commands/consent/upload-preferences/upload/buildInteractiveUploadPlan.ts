@@ -7,7 +7,7 @@ import {
   loadReferenceData,
   type PreferenceUploadReferenceData,
 } from './loadReferenceData';
-import { type PreferenceReceiptsInterface } from '../receipts/receiptsState';
+import { type PreferenceReceiptsInterface } from '../artifacts/receipts/receiptsState';
 import { type PreferenceSchemaInterface } from '../schemaState';
 import { parsePreferenceManagementCsvWithCache } from '../../../../lib/preference-management';
 import type {
@@ -19,7 +19,7 @@ import type {
 import type { FormattedAttribute } from '../../../../lib/graphql/formatAttributeValues';
 import type { GraphQLClient } from 'graphql-request';
 import { limitRecords } from '../../../../lib/helpers';
-import { transformCsv } from '../transform';
+import { transformCsv } from './transform';
 
 export interface InteractiveUploadPreferencePlan {
   /** CSV file path to load preference records from */

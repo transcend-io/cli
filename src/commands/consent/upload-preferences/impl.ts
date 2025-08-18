@@ -1,4 +1,3 @@
-// impl.ts
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { logger } from '../../../logger';
@@ -6,51 +5,95 @@ import { join } from 'node:path';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
-
-import { runChild } from './worker';
-import type { ChildProcess } from 'node:child_process';
+import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
 
 import {
   computePoolSize,
-  getWorkerLogPaths,
-  isIpcOpen,
-  safeSend,
-  spawnWorkerProcess,
-  isWorkerProgressMessage,
-  isWorkerReadyMessage,
-  isWorkerResultMessage,
-  classifyLogLevel,
-  makeLineSplitter,
-  initLogDir,
-  buildExportStatus,
-  assignWorkToSlot,
-  refillIdleWorkers,
-  safeGetLogPathsForSlot,
-  WorkerLogPaths,
-  WorkerMaps,
-  WorkerState,
-  installInteractiveSwitcher,
   CHILD_FLAG,
+  type PoolHooks,
+  runPool,
+  dashboardPlugin,
+  buildExportStatus,
 } from '../../../lib/pooling';
-import { getCurrentModulePath, RateCounter } from '../../../lib/helpers';
+
+import { runChild } from './worker';
 import {
-  renderDashboard,
+  ExportManager,
+  writeFailingUpdatesCsv,
+  type FailingUpdateRow,
+} from './artifacts';
+import { applyReceiptSummary } from './artifacts/receipts';
+import { buildCommonOpts } from './buildTaskOptions';
+import {
   AnyTotals,
   isUploadModeTotals,
   isCheckModeTotals,
-  makeOnKeypressExtra,
+  uploadPreferencesPlugin,
 } from './ui';
-import {
-  writeFailingUpdatesCsv,
-  ExportManager,
-  type FailingUpdateRow,
-} from './artifacts';
+import { createExtraKeyHandler } from '../../../lib/pooling/extraKeys';
 
-import { applyReceiptSummary } from './receipts';
-import { buildCommonOpts } from './buildTaskOptions';
-import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
+/**
+ * A unit of work: instructs a worker to upload (or check) a single CSV file.
+ */
+export type UploadPreferencesTask = {
+  /** Absolute path of the CSV file to process. */
+  filePath: string;
+  /** Command/worker options shared across tasks (built from CLI flags). */
+  options: ReturnType<typeof buildCommonOpts>;
+};
 
-/** CLI flags */
+/**
+ * Per-worker progress snapshot emitted by the worker.
+ * This mirrors the previous IPC progress payload for this command.
+ */
+export type UploadPreferencesProgress = {
+  /** File currently being processed. */
+  filePath: string;
+  /** New successes since the last progress message (used to compute rates). */
+  successDelta?: number;
+  /** Cumulative successes so far for the current file. */
+  successTotal?: number;
+  /** Optional total row count for the file (if known). */
+  fileTotal?: number;
+};
+
+/**
+ * Final result for a single file.
+ */
+export type UploadPreferencesResult = {
+  /** Success flag for the file. */
+  ok: boolean;
+  /** File this result pertains to. */
+  filePath: string;
+  /** Optional path to the worker-generated receipt file. */
+  receiptFilepath?: string;
+  /** Optional error string when `ok === false`. */
+  error?: string;
+};
+
+/**
+ * Aggregate totals shown in the dashboard.
+ * This command supports two modes:
+ *  - upload mode totals
+ *  - check mode totals
+ *
+ * The union is already defined in `./ui` as `AnyTotals`.
+ */
+type Totals = AnyTotals;
+
+/**
+ * Returns the current module's path so the worker pool knows what file to re-exec.
+ * In Node ESM, __filename is undefined, so we fall back to argv[1].
+ *
+ * @returns The current module's path as a string
+ */
+function getCurrentModulePath(): string {
+  if (typeof __filename !== 'undefined') {
+    return __filename as unknown as string;
+  }
+  return process.argv[1];
+}
+
 export interface UploadPreferencesCommandFlags {
   auth: string;
   partition: string;
@@ -77,14 +120,34 @@ export interface UploadPreferencesCommandFlags {
   allowedIdentifierNames: string[];
   identifierColumns: string[];
   columnsToIgnore?: string[];
+  viewerMode: boolean;
 }
 
+/**
+ * Parent entrypoint for uploading/checking many preference CSVs in parallel.
+ *
+ * Flow:
+ *  1) Validate inputs & discover CSV files (exit if none).
+ *  2) Compute pool size from `--concurrency` or CPU heuristic.
+ *  3) Build `common` worker options and task queue (one task per file).
+ *  4) Define `PoolHooks` for task scheduling, progress, and results aggregation.
+ *  5) Launch the pool with `runPool`, rendering via `dashboardPlugin(uploadPreferencesPlugin)`.
+ *
+ * All log exporting / artifact work that used to be done in “viewer mode” can be handled
+ * in `postProcess` using the new log context from the runner.
+ *
+ * @param flags - CLI options for the run.
+ * @returns Promise that resolves when the pool completes.
+ */
 export async function uploadPreferences(
   this: LocalContext,
   flags: UploadPreferencesCommandFlags,
 ): Promise<void> {
   const {
+    auth,
     partition,
+    sombraAuth,
+    transcendUrl,
     directory,
     dryRun,
     skipExistingRecordCheck,
@@ -92,8 +155,24 @@ export async function uploadPreferences(
     schemaFilePath,
     isSilent,
     concurrency,
+    attributes,
+    receiptFilepath,
+    uploadConcurrency,
+    maxChunkSize,
+    rateLimitRetryDelay,
+    uploadLogInterval,
+    downloadIdentifierConcurrency,
+    maxRecordsToReceipt,
+    allowedIdentifierNames,
+    identifierColumns,
+    columnsToIgnore,
+    skipWorkflowTriggers,
+    forceTriggerWorkflows,
+    skipConflictUpdates,
+    viewerMode,
   } = flags;
 
+  /* 1) Validate & find inputs */
   const files = collectCsvFilesOrExit(directory, this);
   doneInputValidation(this.process.exit);
 
@@ -102,371 +181,189 @@ export async function uploadPreferences(
       `Processing ${files.length} consent preferences files for partition: ${partition}`,
     ),
   );
-  logger.debug(`Files to process:\n${files.join('\n')}`);
+  logger.debug(
+    `Files to process:\n${files.slice(0, 10).join('\n')}\n${
+      files.length > 10 ? `... and ${files.length - 10} more` : ''
+    }`,
+  );
 
   if (skipExistingRecordCheck) {
-    logger.info(
-      colors.bgYellow(
-        `Skipping existing record check: ${skipExistingRecordCheck}`,
-      ),
-    );
+    logger.info(colors.bgYellow('Skipping existing record check: true'));
   }
-
-  // Throughput metering (records/s)
-  const meter = new RateCounter();
-  let liveSuccessTotal = 0;
 
   const receiptsFolder = computeReceiptsFolder(receiptFileDir, directory);
   const schemaFile = computeSchemaFile(schemaFilePath, directory, files[0]);
 
+  /* 2) Pool size */
   const { poolSize, cpuCount } = computePoolSize(concurrency, files.length);
-  const common = buildCommonOpts(flags, schemaFile, receiptsFolder);
 
-  // ---- Worker pool lifecycle ----
-  const logDir = initLogDir(directory || receiptsFolder);
-  const modulePath = getCurrentModulePath();
+  /* 3) Build shared worker options and queue */
+  const common = buildCommonOpts(
+    {
+      ...flags,
+      // explicit for clarity (even if buildCommonOpts infers these):
+      auth,
+      partition,
+      sombraAuth,
+      transcendUrl,
+      dryRun,
+      skipExistingRecordCheck,
+      skipWorkflowTriggers,
+      forceTriggerWorkflows,
+      skipConflictUpdates,
+      isSilent,
+      attributes,
+      receiptFilepath,
+      uploadConcurrency,
+      maxChunkSize,
+      rateLimitRetryDelay,
+      uploadLogInterval,
+      downloadIdentifierConcurrency,
+      maxRecordsToReceipt,
+      allowedIdentifierNames,
+      identifierColumns,
+      columnsToIgnore,
+    },
+    schemaFile,
+    receiptsFolder,
+  );
 
-  const workers = new Map<number, ChildProcess>();
-  const workerState = new Map<number, WorkerState>();
-  const slotLogPaths = new Map<number, WorkerLogPaths | undefined>();
+  // FIFO queue: one task per file
+  const queue = files.map<UploadPreferencesTask>((filePath) => ({
+    filePath,
+    options: common,
+  }));
+
+  // Dashboard artifacts/export status (shown during renders)
+  // inside uploadPreferences() before runPool call:
+  const exportMgr = new ExportManager(receiptsFolder);
+  const exportStatus = buildExportStatus(receiptsFolder);
   const failingUpdatesMem: FailingUpdateRow[] = [];
 
-  const pending = [...files];
-  const totals = { completed: 0, failed: 0 };
-  let activeWorkers = 0;
-
-  const agg: AnyTotals = !common.dryRun
-    ? {
-        mode: 'upload',
-        success: 0,
-        skipped: 0,
-        error: 0,
-        errors: {} as Record<string, number>,
-      }
-    : {
-        mode: 'check',
-        totalPending: 0,
-        pendingConflicts: 0,
-        pendingSafe: 0,
-        skipped: 0,
-      };
-
-  // Export status + manager
-  const exportStatus = buildExportStatus(logDir);
-  const exportMgr = new ExportManager(logDir);
-
-  // Dashboard
-  let dashboardPaused = false;
-  const repaint = (final = false): void => {
-    if (dashboardPaused && !final) return;
-    renderDashboard({
-      poolSize,
-      cpuCount,
-      filesTotal: files.length,
-      filesCompleted: totals.completed,
-      filesFailed: totals.failed,
-      workerState,
-      totals: agg,
-      final,
-      throughput: {
-        successSoFar: liveSuccessTotal,
-        r10s: meter.rate(10_000),
-        r60s: meter.rate(60_000),
-      },
-      exportsDir: logDir,
-      exportStatus,
-    });
-  };
-
-  const maps: WorkerMaps = { workers, workerState, slotLogPaths };
-  const assign = (id: number): void =>
-    assignWorkToSlot(id, pending, common, maps);
-  const refill = (): void => refillIdleWorkers(pending, maps, assign);
-
-  // Spawn pool
-  for (let i = 0; i < poolSize; i += 1) {
-    const child = spawnWorkerProcess({
-      id: i,
-      modulePath,
-      logDir,
-      openLogWindows: true,
-      isSilent,
-    });
-    workers.set(i, child);
-    workerState.set(i, {
-      busy: false,
-      file: null,
-      startedAt: null,
-      lastLevel: 'ok',
-      progress: undefined,
-    });
-    slotLogPaths.set(i, getWorkerLogPaths(child));
-    activeWorkers += 1;
-
-    // Live WARN/ERROR status from stderr
-    const errLine = makeLineSplitter((line) => {
-      const lvl = classifyLogLevel(line);
-      if (!lvl) return;
-      const prev = workerState.get(i)!;
-      if (prev.lastLevel !== lvl) {
-        workerState.set(i, { ...prev, lastLevel: lvl });
-        repaint();
-      }
-    });
-    child.stderr?.on('data', errLine);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    child.on('error', (err: any) => {
-      if (
-        err?.code === 'ERR_IPC_CHANNEL_CLOSED' ||
-        err?.code === 'EPIPE' ||
-        err?.errno === -32
-      ) {
-        return; // benign during shutdown/restarts
-      }
-      logger.error(colors.red(`Worker ${i} error: ${err?.stack || err}`));
-    });
-
-    // eslint-disable-next-line no-loop-func
-    child.on('message', (msg: unknown): void => {
-      if (!msg || typeof msg !== 'object') return;
-
-      if (isWorkerReadyMessage(msg)) {
-        refill();
-        repaint();
-        return;
-      }
-
-      if (isWorkerProgressMessage(msg)) {
-        const { successDelta, successTotal, fileTotal, filePath } =
-          msg.payload || {};
-        liveSuccessTotal += successDelta || 0;
-
-        const prev = workerState.get(i)!;
-        const processed = successTotal ?? prev.progress?.processed ?? 0;
-        const total = fileTotal ?? prev.progress?.total ?? 0;
-        workerState.set(i, {
-          ...prev,
-          file: prev.file ?? filePath ?? prev.file,
-          progress: { processed, total },
-        });
-
-        if (successDelta) meter.add(successDelta);
-        repaint();
-        return;
-      }
-
-      if (isWorkerResultMessage(msg)) {
-        const { ok, filePath, receiptFilepath } = msg.payload || {};
-        if (ok) totals.completed += 1;
-        else totals.failed += 1;
-
-        applyReceiptSummary({
-          receiptsFolder: common.receiptsFolder,
-          filePath,
-          receiptFilepath,
-          agg,
-          dryRun,
-          failingUpdatesMem,
-        });
-
-        const prev = workerState.get(i)!;
-        workerState.set(i, {
-          ...prev,
-          busy: false,
-          file: null,
-          startedAt: null,
-          lastLevel: ok ? 'ok' : 'error',
-          progress: undefined,
-        });
-
-        refill();
-        repaint();
-      }
-    });
-
-    // eslint-disable-next-line no-loop-func
-    child.on('exit', (code, signal) => {
-      activeWorkers -= 1;
-      const prev = workerState.get(i)!;
-      const abnormal = (typeof code === 'number' && code !== 0) || !!signal;
-
-      workerState.set(i, {
-        ...prev,
-        busy: false,
-        file: null,
-        startedAt: null,
-        lastLevel: abnormal ? 'error' : prev.lastLevel ?? 'ok',
-        progress: undefined,
+  /* 4) Hooks */
+  const hooks: PoolHooks<
+    UploadPreferencesTask,
+    UploadPreferencesProgress,
+    UploadPreferencesResult,
+    Totals
+  > = {
+    nextTask: () => queue.shift(),
+    taskLabel: (t) => t.filePath,
+    initTotals: () =>
+      !common.dryRun
+        ? ({
+            mode: 'upload',
+            success: 0,
+            skipped: 0,
+            error: 0,
+            errors: {},
+          } as Totals)
+        : ({
+            mode: 'check',
+            totalPending: 0,
+            pendingConflicts: 0,
+            pendingSafe: 0,
+            skipped: 0,
+          } as Totals),
+    initSlotProgress: () => undefined,
+    onProgress: (totals) => totals,
+    onResult: (totals, res) => {
+      applyReceiptSummary({
+        receiptsFolder: common.receiptsFolder,
+        filePath: res.filePath,
+        receiptFilepath: res.receiptFilepath,
+        agg: totals,
+        dryRun: common.dryRun,
+        failingUpdatesMem,
       });
-
-      repaint();
-    });
-  }
-
-  const renderInterval = setInterval(() => repaint(false), 350);
-
-  // graceful Ctrl+C
-  let cleanupSwitcher: () => void = () => {
-    // noop, will be replaced by installInteractiveSwitcher
-  };
-  const onSigint = (): void => {
-    clearInterval(renderInterval);
-    cleanupSwitcher();
-    process.stdout.write('\nStopping workers...\n');
-    for (const [, w] of workers) {
-      if (isIpcOpen(w)) safeSend(w!, { type: 'shutdown' });
-      try {
-        w?.kill('SIGTERM');
-      } catch {
-        // noop
-      }
-    }
-    this.process.exit(130);
-  };
-  process.once('SIGINT', onSigint);
-
-  // attach/switch UI with replay
-  const detachScreen = (): void => {
-    dashboardPaused = false;
-    repaint();
-  };
-  const attachScreen = (id: number): void => {
-    dashboardPaused = true;
-    process.stdout.write('\x1b[2J\x1b[H');
-    process.stdout.write(
-      `Attached to worker ${id}. (Esc/Ctrl+] detach • Ctrl+C SIGINT)\n`,
-    );
-  };
-
-  cleanupSwitcher = installInteractiveSwitcher({
-    workers,
-    onAttach: attachScreen,
-    onDetach: detachScreen,
-    onCtrlC: onSigint,
-    getLogPaths: (id: number) =>
-      safeGetLogPathsForSlot(id, workers, slotLogPaths),
-    replayBytes: 200 * 1024,
-    replayWhich: ['out', 'err'],
-    onEnterAttachScreen: attachScreen,
-  });
-
-  // key handlers (viewer/export/dashboard)
-  const onKeypressExtra = makeOnKeypressExtra({
-    slotLogPaths,
-    exportMgr,
-    exportStatus,
-    failingUpdates: failingUpdatesMem,
-    onRepaint: () => repaint(),
-    onPause: (p) => {
-      dashboardPaused = p;
+      return { totals, ok: !!res.ok };
     },
-  });
+    exportStatus: () => exportStatus,
+    /**
+     * Finalization after all workers exit.
+     * With the new runner you also receive:
+     *   - logDir
+     *   - logsBySlot (Map<slotId, WorkerLogPaths | undefined>)
+     *   - startedAt / finishedAt
+     *   - getLogPathsForSlot(id)
+     *   - viewerMode (boolean)
+     *
+     * @param options - Options with logDir, logsBySlot, startedAt, finishedAt, etc.
+     */
+    postProcess: async ({ totals, logDir /* , logsBySlot, viewerMode */ }) => {
+      try {
+        // Persist failing updates CSV next to receipts/logDir.
+        const fPath = join(logDir || receiptsFolder, 'failing-updates.csv');
+        await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
+        exportStatus.failuresCsv = {
+          path: fPath,
+          savedAt: Date.now(),
+          exported: true,
+        };
 
-  try {
-    process.stdin.setRawMode?.(true);
-  } catch {
-    // ignore if not supported (e.g. Windows)
-  }
-  process.stdin.resume();
-  process.stdin.on('data', onKeypressExtra);
+        // (Optional) If you want to auto-export combined logs like the old viewer:
+        // - import and use ExportManager here, using `logsBySlot`.
+        // - e.g., exportManager.exportCombinedLogs(logsBySlot, 'error' | 'warn' | 'info' | 'all')
 
-  // wait for completion of work (not viewer)
-  await new Promise<void>((resolveWork) => {
-    const check = setInterval(async () => {
-      if (pending.length === 0) {
-        for (const [id, w] of workers) {
-          const st = workerState.get(id);
-          if (st && !st.busy && isIpcOpen(w)) {
-            safeSend(w!, { type: 'shutdown' });
-          }
-        }
-      }
-      if (pending.length === 0 && activeWorkers === 0) {
-        clearInterval(check);
-        clearInterval(renderInterval);
-
-        // Final “auto-export” of artifacts
-        try {
-          const e = exportMgr.exportCombinedLogs(slotLogPaths, 'error');
-          exportStatus.error = { path: e, savedAt: Date.now(), exported: true };
-          const w = exportMgr.exportCombinedLogs(slotLogPaths, 'warn');
-          exportStatus.warn = { path: w, savedAt: Date.now(), exported: true };
-          const i = exportMgr.exportCombinedLogs(slotLogPaths, 'info');
-          exportStatus.info = { path: i, savedAt: Date.now(), exported: true };
-          const a = exportMgr.exportCombinedLogs(slotLogPaths, 'all');
-          exportStatus.all = { path: a, savedAt: Date.now(), exported: true };
-          const fPath = join(logDir, 'failing-updates.csv');
-          await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
-          exportStatus.failuresCsv = {
-            path: fPath,
-            savedAt: Date.now(),
-            exported: true,
-          };
-          process.stdout.write(
-            `\nArtifacts:\n  ${e}\n  ${w}\n  ${i}\n  ${a}\n  ${fPath}\n\n`,
-          );
-        } catch (err) {
-          process.stdout.write(
-            colors.red(`Failed to download CSV:${err.stack}`),
-          );
-        }
-
-        // Final repaint with exportStatus visible & green
-        repaint(true);
-
-        if (isUploadModeTotals(agg)) {
-          process.stdout.write(
+        // Summarize totals to stdout (parity with the old implementation)
+        if (isUploadModeTotals(totals)) {
+          logger.info(
             colors.green(
-              `\nAll done. Success:${agg.success.toLocaleString()}  Skipped:${agg.skipped.toLocaleString()}  Error:${agg.error.toLocaleString()}\n`,
+              `All done. Success:${totals.success.toLocaleString()}  ` +
+                `Skipped:${totals.skipped.toLocaleString()}  ` +
+                `Error:${totals.error.toLocaleString()}`,
             ),
           );
-        } else if (isCheckModeTotals(agg)) {
-          process.stdout.write(
+        } else if (isCheckModeTotals(totals)) {
+          logger.info(
             colors.green(
-              `\nAll done. Pending:${agg.totalPending.toLocaleString()}  PendingConflicts:${agg.pendingConflicts.toLocaleString()}  ` +
-                `PendingSafe:${agg.pendingSafe.toLocaleString()}  Skipped:${agg.skipped.toLocaleString()}\n`,
+              `All done. Pending:${totals.totalPending.toLocaleString()}  ` +
+                `PendingConflicts:${totals.pendingConflicts.toLocaleString()}  ` +
+                `PendingSafe:${totals.pendingSafe.toLocaleString()}  ` +
+                `Skipped:${totals.skipped.toLocaleString()}`,
             ),
           );
-        } else {
-          throw new Error(
-            `Unknown totals type, expected UploadModeTotals or CheckModeTotals. ${JSON.stringify(
-              agg,
-            )}`,
-          );
         }
-
-        process.stdout.write(
-          colors.dim(
-            '\nViewer mode — digits to view logs • Tab/Shift+Tab • Esc detach • press q to quit\n',
-          ),
-        );
-
-        resolveWork();
+      } catch (err: unknown) {
+        logger.error(colors.red(`Failed to export artifacts: ${String(err)}`));
       }
-    }, 300);
-  });
+    },
+  };
 
-  // --- Viewer mode: leave switcher active until user presses 'q' ---
-  await new Promise<void>((resolveViewer) => {
-    const onKeypress = (buf: Buffer): void => {
-      const s = buf.toString('utf8');
-      if (s === 'q' || s === 'Q') {
-        process.stdin.off('data', onKeypress);
-        resolveViewer();
-      }
-    };
-    try {
-      process.stdin.setRawMode?.(true);
-    } catch {
-      // noop
-    }
-    process.stdin.resume();
-    process.stdin.on('data', onKeypress);
+  /* 5) Launch the pool runner with our hooks and dashboard plugin. */
+  await runPool<
+    UploadPreferencesTask,
+    UploadPreferencesProgress,
+    UploadPreferencesResult,
+    Totals
+  >({
+    title: 'Upload Preferences',
+    baseDir: directory || receiptsFolder || process.cwd(),
+    childFlag: CHILD_FLAG,
+    childModulePath: getCurrentModulePath(),
+    poolSize,
+    cpuCount,
+    filesTotal: files.length,
+    hooks,
+    viewerMode,
+    render: (input) => dashboardPlugin(input, uploadPreferencesPlugin),
+    extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
+      createExtraKeyHandler({
+        logsBySlot,
+        repaint,
+        setPaused,
+        exportMgr, // enables E/W/I/A
+        exportStatus, // keeps the exports panel updated
+        custom: {
+          F: async ({ noteExport, say }) => {
+            const fPath = join(exportMgr.exportsDir, 'failing-updates.csv');
+            await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
+            say(`\nWrote failing updates CSV to: ${fPath}`);
+            noteExport('failuresCsv', fPath);
+          },
+        },
+      }),
   });
-
-  cleanupSwitcher();
-  process.removeListener('SIGINT', onSigint);
 }
 
 /* -------------------------------------------------------------------------------------------------

@@ -2081,7 +2081,7 @@ transcend consent upload-data-flows-from-csv \
 
 ```txt
 USAGE
-  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] (--directory value) [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--schemaFilePath value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value] [--uploadConcurrency value] [--maxChunkSize value] [--rateLimitRetryDelay value] [--uploadLogInterval value] [--downloadIdentifierConcurrency value] [--maxRecordsToReceipt value] (--allowedIdentifierNames value) (--identifierColumns value) [--columnsToIgnore value]
+  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] (--directory value) [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--schemaFilePath value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value] [--uploadConcurrency value] [--maxChunkSize value] [--rateLimitRetryDelay value] [--uploadLogInterval value] [--downloadIdentifierConcurrency value] [--maxRecordsToReceipt value] (--allowedIdentifierNames value) (--identifierColumns value) [--columnsToIgnore value] [--viewerMode]
   transcend consent upload-preferences --help
 
 Upload preference management data to your Preference Store.
@@ -2096,7 +2096,7 @@ Parallel preference uploader (Node 22+ ESM/TS)
 - Shows a live dashboard in the parent terminal with progress per worker.
 - Creates per-worker log files and (optionally) opens OS terminals to tail them.
 - Uses the same module as both parent and child; the child mode is toggled
-  by the presence of a CLI flag ('--child-upload-preferences').
+  by the presence of a CLI flag ('--as-child').
 
 FLAGS
       --auth                            The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
@@ -2124,6 +2124,7 @@ FLAGS
       --allowedIdentifierNames          Identifiers configured for the run. Comma-separated list of identifier names.
       --identifierColumns               Columns in the CSV that should be used as identifiers. Comma-separated list of column names.
      [--columnsToIgnore]                Columns in the CSV that should be ignored. Comma-separated list of column names.
+     [--viewerMode]                     Run in non-interactive viewer mode (no attach UI, auto-artifacts)                                                                                                                                                                                                                                                                                                                                    [default = false]
   -h  --help                            Print help information and exit
 ```
 
@@ -3113,7 +3114,7 @@ query {
 
 ```txt
 USAGE
-  transcend admin chunk-csv (--directory value) [--outputDir value] [--clearOutputDir value] [--chunkSizeMB value] [--concurrency value]
+  transcend admin chunk-csv (--directory value) [--outputDir value] [--clearOutputDir] [--chunkSizeMB value] [--concurrency value] [--viewerMode]
   transcend admin chunk-csv --help
 
 Streams every CSV in --directory and writes chunked files of approximately N MB each.
@@ -3121,12 +3122,13 @@ Streams every CSV in --directory and writes chunked files of approximately N MB 
 - Validates row-length consistency against the header row; logs periodic progress and memory usage.
 
 FLAGS
-      --directory        Directory containing CSV files to split (required)
-     [--outputDir]       Directory to write chunk files (defaults to each input file's directory)
-     [--clearOutputDir]  Clear the output directory before writing chunks                           [default = true]
-     [--chunkSizeMB]     Approximate chunk size in megabytes. Keep well under JS string size limits [default = 10]
-     [--concurrency]     Max number of worker processes (defaults based on CPU and file count)
-  -h  --help             Print help information and exit
+      --directory                           Directory containing CSV files to split (required)
+     [--outputDir]                          Directory to write chunk files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing chunks                           [default = true]
+     [--chunkSizeMB]                        Approximate chunk size in megabytes. Keep well under JS string size limits [default = 10]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)          [default = false]
+  -h  --help                                Print help information and exit
 ```
 
 #### Examples

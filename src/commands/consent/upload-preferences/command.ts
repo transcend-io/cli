@@ -157,6 +157,7 @@ export const uploadPreferencesCommand = buildCommand({
           'This is to avoid the receipt file getting too large for JSON.parse/stringify.',
         default: '10',
       },
+      // FIXME
       allowedIdentifierNames: {
         kind: 'parsed',
         parse: (value: string) => value.split(',').map((s) => s.trim()),
@@ -176,6 +177,13 @@ export const uploadPreferencesCommand = buildCommand({
           'Columns in the CSV that should be ignored. Comma-separated list of column names.',
         optional: true,
       },
+      // FIXME
+      viewerMode: {
+        kind: 'boolean',
+        brief:
+          'Run in non-interactive viewer mode (no attach UI, auto-artifacts)',
+        default: false,
+      },
     },
   },
   docs: {
@@ -192,6 +200,6 @@ Parallel preference uploader (Node 22+ ESM/TS)
 - Shows a live dashboard in the parent terminal with progress per worker.
 - Creates per-worker log files and (optionally) opens OS terminals to tail them.
 - Uses the same module as both parent and child; the child mode is toggled
-  by the presence of a CLI flag ('--child-upload-preferences').`,
+  by the presence of a CLI flag ('--as-child').`,
   },
 });

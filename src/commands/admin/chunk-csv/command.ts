@@ -20,10 +20,9 @@ export const chunkCsvCommand = buildCommand({
         optional: true,
       },
       clearOutputDir: {
-        kind: 'parsed',
-        parse: Boolean,
+        kind: 'boolean',
         brief: 'Clear the output directory before writing chunks',
-        default: 'true',
+        default: true,
       },
       chunkSizeMB: {
         kind: 'parsed',
@@ -44,6 +43,12 @@ export const chunkCsvCommand = buildCommand({
         brief:
           'Max number of worker processes (defaults based on CPU and file count)',
         optional: true,
+      },
+      viewerMode: {
+        kind: 'boolean',
+        brief:
+          'Run in non-interactive viewer mode (no attach UI, auto-artifacts)',
+        default: false,
       },
     },
   },
