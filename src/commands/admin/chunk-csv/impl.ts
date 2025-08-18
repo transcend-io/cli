@@ -121,7 +121,7 @@ export async function chunkCsvParent(
     filesTotal: files.length,
     hooks,
     viewerMode,
-    render: (input) => dashboardPlugin(input, chunkCsvPlugin),
+    render: (input) => dashboardPlugin(input, chunkCsvPlugin, viewerMode),
     extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
       createExtraKeyHandler({
         logsBySlot,

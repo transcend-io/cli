@@ -3133,6 +3133,36 @@ transcend admin chunk-csv --directory=./working/files --outputDir=./working/chun
 transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --concurrency=4
 ```
 
+**Viewer mode - no ability to switch between files**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --viewerMode
+```
+
+**Clear output directory before writing chunks**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --clearOutputDir
+```
+
+**Run with all options**
+
+```sh
+transcend admin chunk-csv \
+  --directory=./working/files \
+  --outputDir=./working/chunks \
+  --chunkSizeMB=100 \
+  --concurrency=2 \
+  --viewerMode=false \
+  --clearOutputDir
+```
+
+**Run with no output directory specified (defaults to input directory)**
+
+```sh
+transcend admin chunk-csv --directory=./working/files
+```
+
 ### `transcend migration sync-ot`
 
 ```txt

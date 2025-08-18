@@ -142,17 +142,18 @@ export const hotkeysHint = (poolSize: number, final: boolean): string => {
  *
  * @param ctx - Shared context containing pool state, worker state, totals, throughput, etc.
  * @param plugin - The plugin that defines how to render the header, workers, and optional extras.
+ * @param viewerMode - If true, renders in viewer mode (no ability to switch between files).
  */
 export function dashboardPlugin<TTotals, TSlotState extends ObjByString>(
   ctx: CommonCtx<TTotals, TSlotState>,
   plugin: DashboardPlugin<TTotals, TSlotState>,
+  viewerMode = false,
 ): void {
   const frame = [
     ...plugin.renderHeader(ctx),
     '',
     ...plugin.renderWorkers(ctx),
-    '',
-    hotkeysHint(ctx.poolSize, ctx.final),
+    ...(viewerMode ? [] : ['', hotkeysHint(ctx.poolSize, ctx.final)]),
     ...(plugin.renderExtras ? [''].concat(plugin.renderExtras(ctx)) : []),
   ].join('\n');
 

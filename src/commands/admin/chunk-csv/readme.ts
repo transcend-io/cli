@@ -27,6 +27,40 @@ const examples = buildExamples<ChunkCsvCommandFlags>(
         concurrency: 4,
       },
     },
+    {
+      description: 'Viewer mode - no ability to switch between files',
+      flags: {
+        directory: './working/files',
+        outputDir: './working/chunks',
+        viewerMode: true,
+      },
+    },
+    {
+      description: 'Clear output directory before writing chunks',
+      flags: {
+        directory: './working/files',
+        outputDir: './working/chunks',
+        clearOutputDir: true,
+      },
+    },
+    {
+      description: 'Run with all options',
+      flags: {
+        directory: './working/files',
+        outputDir: './working/chunks',
+        chunkSizeMB: 100,
+        concurrency: 2,
+        viewerMode: false,
+        clearOutputDir: true,
+      },
+    },
+    {
+      description:
+        'Run with no output directory specified (defaults to input directory)',
+      flags: {
+        directory: './working/files',
+      },
+    },
   ],
 );
 
