@@ -5,7 +5,8 @@ import { openLogTailWindowMulti } from './openTerminal';
 import { ensureLogFile } from './ensureLogFile';
 import { classifyLogLevel, makeLineSplitter } from './logRotation';
 
-export const CHILD_FLAG = '--child-upload-preferences';
+/** Default child-flag used if a caller doesn’t provide one. */
+export const CHILD_FLAG = '--as-child';
 
 // Symbol key so we can stash/retrieve paths on the child proc safely
 const LOG_PATHS_SYM: unique symbol = Symbol('workerLogPaths');
@@ -180,7 +181,7 @@ export function spawnWorkerProcess(opts: SpawnWorkerOptions): ChildProcess {
       try {
         if (lvl === 'error') {
           errorStream.write(`${line}\n`);
-        } else if (lvl === 'warn' || lvl == null) {
+        } else {
           // Treat untagged stderr as WARN by default (common in libs)
           warnStream.write(`${line}\n`);
         }

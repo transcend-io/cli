@@ -19,6 +19,7 @@ export * from './fetchAllDataCategories';
 export * from './fetchAllDataFlows';
 export * from './fetchAllMessages';
 export * from './fetchAllPolicies';
+export * from './formatAttributeValues';
 export * from './fetchAllPreferenceTopics';
 export * from './fetchAllPrivacyCenters';
 export * from './fetchAllProcessingActivities';

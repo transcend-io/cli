@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { spawnWorkerProcess } from '../spawnWorkerProcess';
+import { CHILD_FLAG, spawnWorkerProcess } from '../spawnWorkerProcess';
 import { fork } from 'node:child_process';
 import { createWriteStream, type WriteStream } from 'node:fs';
 import { ensureLogFile } from '../ensureLogFile';
@@ -128,7 +128,7 @@ describe('spawnWorkerProcess', () => {
     // fork args
     expect(mFork).toHaveBeenCalledWith(
       '/worker.js',
-      ['--child-upload-preferences'],
+      [CHILD_FLAG],
       expect.objectContaining({
         stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
         env: expect.objectContaining({
