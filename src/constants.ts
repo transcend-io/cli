@@ -337,12 +337,12 @@ export const RESOURCE_DOCUMENTATION: Record<
       '[Administration -> Teams](https://app.transcend.io/admin/teams)',
   },
   [TranscendPullResource.PrivacyCenters]: {
-    description: 'The privacy center configurations.',
+    description: 'The Privacy Center configurations.',
     markdownLink:
       '[Privacy Center](https://app.transcend.io/privacy-center/general-settings)',
   },
   [TranscendPullResource.Policies]: {
-    description: 'The privacy center policies.',
+    description: 'The Privacy Center policies.',
     markdownLink:
       '[Privacy Center -> Policies](https://app.transcend.io/privacy-center/policies)',
   },
@@ -375,14 +375,13 @@ export const RESOURCE_DOCUMENTATION: Record<
 export const SCOPE_DESCRIPTIONS = (scopeMap: {
   [k in TranscendPullResource]: ScopeName[];
 }): string =>
-  `| Resource | Description | Scopes | Link |\n| --- | --- | --- | --- |\n${Object.entries(
-    RESOURCE_DOCUMENTATION,
-  )
+  `| Resource | Key in \`transcend.yml\` | Description | Scopes | Link |
+| --- | --- | --- | --- | --- |\n${Object.entries(RESOURCE_DOCUMENTATION)
     .map(
       ([resource, { description, markdownLink }]) =>
-        `| ${resource} | ${description} | ${scopeMap[
-          resource as TranscendPullResource
-        ]
+        `| \`${resource}\` | \`${
+          TR_YML_RESOURCE_TO_FIELD_NAME[resource as TranscendPullResource]
+        }\` | ${description} | ${scopeMap[resource as TranscendPullResource]
           .map((scopeName) => TRANSCEND_SCOPES[scopeName].title)
           .join(', ')} | ${markdownLink} |`,
     )
