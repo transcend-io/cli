@@ -4,6 +4,7 @@ import { logger } from '../../../logger';
 import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
 import {
   computePoolSize,
+  createExtraKeyHandler,
   CHILD_FLAG,
   type PoolHooks,
   runPool,
@@ -16,7 +17,6 @@ import {
   type ChunkTask,
 } from './worker';
 import { chunkCsvPlugin } from './ui';
-import { createExtraKeyHandler } from '../../../lib/pooling/createExtraKeyHandler';
 
 /**
  * Returns the current module's path so the worker pool knows what file to re-exec.
