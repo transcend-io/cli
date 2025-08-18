@@ -1,3 +1,5 @@
+/* eslint-disable no-multi-str -- Break long strings into multiple lines. This syntax is required for the TS compiler to check against markdownLink */
+
 import { TRANSCEND_SCOPES, type ScopeName } from '@transcend-io/privacy-types';
 import { TranscendPullResource } from '../../enums';
 import { TR_YML_RESOURCE_TO_FIELD_NAME } from '../../constants';
@@ -13,14 +15,14 @@ const RESOURCE_DOCUMENTATION: Record<
 > = {
   [TranscendPullResource.ApiKeys]: {
     description:
-      'API Key definitions assigned to Data Silos. API keys cannot be created through the CLI, ' +
-      'but you can map API key usage to Data Silos.',
+      'API Key definitions assigned to Data Systems (formerly "Data Silos"). API keys cannot be created through the CLI, ' +
+      'but you can map API key usage to Data Systems.',
     markdownLink:
       '[Developer Tools -> API keys](https://app.transcend.io/infrastructure/api-keys)',
   },
   [TranscendPullResource.Attributes]: {
     description:
-      'Custom field definitions that define extra metadata for each table in the Admin Dashboard.',
+      'Custom Field definitions that define extra metadata for each table in the Admin Dashboard.',
     markdownLink:
       '[Custom Fields](https://app.transcend.io/infrastructure/attributes)',
   },
@@ -28,15 +30,13 @@ const RESOURCE_DOCUMENTATION: Record<
     description:
       'Email templates. Only template titles can be created and mapped to other resources.',
     markdownLink:
-      '[DSR Automation -> Email Templates](https://app.transcend.io/privacy-requests/email-templates)',
+      '[DSR Automation -> Email Settings -> Templates]\
+(https://app.transcend.io/privacy-requests/email-settings/templates)',
   },
   [TranscendPullResource.DataSilos]: {
-    description: 'The Data Silo/Integration definitions.',
+    description: 'The Data System (formerly "Data Silo") definitions.',
     markdownLink:
-      // The compiler only recognizes that `markdownLink` has the right format if we use a multiline string
-      // eslint-disable-next-line no-multi-str
-      '[Data Inventory -> Data Silos](https://app.transcend.io/data-map/data-inventory/) and \
-[Infrastucture -> Integrations](https://app.transcend.io/infrastructure/integrationsdata-silos)',
+      '[Data Inventory -> Data Systems](https://app.transcend.io/data-map/data-inventory/data-silos)',
   },
   [TranscendPullResource.Enrichers]: {
     description: 'The Privacy Request enricher configurations.',
@@ -49,27 +49,29 @@ const RESOURCE_DOCUMENTATION: Record<
       '[Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)',
   },
   [TranscendPullResource.BusinessEntities]: {
-    description: 'The business entities in the data inventory.',
+    description: 'The business entities in the Data Inventory.',
     markdownLink:
       '[Data Inventory -> Business Entities](https://app.transcend.io/data-map/data-inventory/business-entities)',
   },
   [TranscendPullResource.ProcessingActivities]: {
-    description: 'The processing activities in the data inventory.',
+    description: 'The processing activities in the Data Inventory.',
     markdownLink:
       '[Data Inventory -> Processing Activities](https://app.transcend.io/data-map/data-inventory/processing-activities)',
   },
   [TranscendPullResource.Actions]: {
-    description: 'The Privacy Request action settings.',
+    description: 'The privacy request action settings.',
     markdownLink:
-      '[DSR Automation -> Request Settings](https://app.transcend.io/privacy-requests/settings)',
+      '[DSR Automation -> Request Settings -> Data Actions]\
+(https://app.transcend.io/privacy-requests/settings/data-actions)',
   },
   [TranscendPullResource.DataSubjects]: {
-    description: 'The Privacy Request data subject settings.',
+    description: 'The privacy request data subject settings.',
     markdownLink:
-      '[DSR Automation -> Request Settings](https://app.transcend.io/privacy-requests/settings)',
+      '[DSR Automation -> Request Settings -> Data Subjects]\
+(https://app.transcend.io/privacy-requests/settings/data-subjects)',
   },
   [TranscendPullResource.Identifiers]: {
-    description: 'The Privacy Request identifier configurations.',
+    description: 'The privacy request identifier configurations.',
     markdownLink:
       '[DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)',
   },
@@ -87,8 +89,6 @@ const RESOURCE_DOCUMENTATION: Record<
     description:
       'The partitions in the account (often representative of separate data controllers).',
     markdownLink:
-      // The compiler only recognizes that `markdownLink` has the right format if we use a multiline string
-      // eslint-disable-next-line no-multi-str
       '[Consent Management -> Developer Settings -> Advanced Settings]\
 (https://app.transcend.io/consent-manager/developer-settings/advanced-settings)',
   },
@@ -100,7 +100,7 @@ const RESOURCE_DOCUMENTATION: Record<
   [TranscendPullResource.PromptPartials]: {
     description: 'The Transcend AI prompt partials',
     markdownLink:
-      '[Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)',
+      '[Prompt Manager -> Partials](https://app.transcend.io/prompts/partials)',
   },
   [TranscendPullResource.PromptGroups]: {
     description: 'The Transcend AI prompt groups',
@@ -108,41 +108,41 @@ const RESOURCE_DOCUMENTATION: Record<
       '[Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)',
   },
   [TranscendPullResource.Agents]: {
-    description: 'The agents in the prompt manager.',
+    description: 'The agents in Pathfinder.',
     markdownLink:
-      '[Prompt Manager -> Agents](https://app.transcend.io/prompts/agents)',
+      '[Pathfinder -> Agents](https://app.transcend.io/pathfinder/agents)',
   },
   [TranscendPullResource.AgentFunctions]: {
-    description: 'The agent functions in the prompt manager.',
+    description: 'The agent functions in Pathfinder.',
     markdownLink:
-      '[Prompt Manager -> Agent Functions](https://app.transcend.io/prompts/agent-functions)',
+      '[Pathfinder -> Agent Functions](https://app.transcend.io/pathfinder/agent-functions)',
   },
   [TranscendPullResource.AgentFiles]: {
-    description: 'The agent files in the prompt manager.',
+    description: 'The agent files in Pathfinder.',
     markdownLink:
-      '[Prompt Manager -> Agent Files](https://app.transcend.io/prompts/agent-files)',
+      '[Pathfinder -> Agent Files](https://app.transcend.io/pathfinder/agent-files)',
   },
   [TranscendPullResource.Vendors]: {
-    description: 'The vendors in the data inventory.',
+    description: 'The vendors in the Data Inventory.',
     markdownLink:
       '[Data Inventory -> Vendors](https://app.transcend.io/data-map/data-inventory/vendors)',
   },
   [TranscendPullResource.DataCategories]: {
-    description: 'The data categories in the data inventory.',
+    description: 'The data categories in the Data Inventory.',
     markdownLink:
       '[Data Inventory -> Data Categories](https://app.transcend.io/data-map/data-inventory/data-categories)',
   },
   [TranscendPullResource.ProcessingPurposes]: {
-    description: 'The processing purposes in the data inventory.',
+    description: 'The processing purposes in the Data Inventory.',
     markdownLink:
       '[Data Inventory -> Processing Purposes](https://app.transcend.io/data-map/data-inventory/purposes)',
   },
   [TranscendPullResource.ActionItems]: {
-    description: 'Onboarding related action items',
+    description: 'Onboarding-related action items',
     markdownLink: '[Action Items](https://app.transcend.io/action-items/all)',
   },
   [TranscendPullResource.ActionItemCollections]: {
-    description: 'Onboarding related action item group names',
+    description: 'Onboarding-related action item group names',
     markdownLink: '[Action Items](https://app.transcend.io/action-items/all)',
   },
   [TranscendPullResource.Teams]: {
@@ -151,7 +151,7 @@ const RESOURCE_DOCUMENTATION: Record<
       '[Administration -> Teams](https://app.transcend.io/admin/teams)',
   },
   [TranscendPullResource.PrivacyCenters]: {
-    description: 'The Privacy Center configurations.',
+    description: 'The Privacy Center settings.',
     markdownLink:
       '[Privacy Center](https://app.transcend.io/privacy-center/general-settings)',
   },
@@ -162,11 +162,10 @@ const RESOURCE_DOCUMENTATION: Record<
   },
   [TranscendPullResource.Messages]: {
     description:
-      'Message definitions used across consent, privacy center, email templates and more.',
+      'Message definitions used across Consent Management, the Privacy Center, email templates and more.',
     markdownLink:
-      // The compiler only recognizes that `markdownLink` has the right format if we use a multiline string
-      // eslint-disable-next-line no-multi-str
-      '[Privacy Center -> Messages](https://app.transcend.io/privacy-center/messages-internationalization), \
+      '[Privacy Center -> Messages & Internationalization]\
+(https://app.transcend.io/privacy-center/messages-internationalization), \
 [Consent Management -> Display Settings -> Messages]\
 (https://app.transcend.io/consent-manager/display-settings/messages)',
   },
@@ -183,8 +182,6 @@ const RESOURCE_DOCUMENTATION: Record<
   [TranscendPullResource.Purposes]: {
     description: 'Consent purposes and related preference management topics.',
     markdownLink:
-      // The compiler only recognizes that `markdownLink` has the right format if we use a multiline string
-      // eslint-disable-next-line no-multi-str
       '[Consent Management -> Regional Experiences -> Purposes]\
 (https://app.transcend.io/consent-manager/regional-experiences/purposes)',
   },
@@ -211,3 +208,5 @@ export function createPullResourceScopesTable(
     )
     .join('\n')}`;
 }
+
+/* eslint-enable no-multi-str */
