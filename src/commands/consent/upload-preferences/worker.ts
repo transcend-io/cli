@@ -1,6 +1,5 @@
 import { mkdirSync, createWriteStream } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { getFilePrefix } from './computeFiles';
 import { splitCsvToList } from '../../../lib/requests';
 import { interactivePreferenceUploaderFromPlan } from './upload/interactivePreferenceUploaderFromPlan';
 import { makeSchemaState } from './schemaState';
@@ -13,6 +12,7 @@ import { logger } from '../../../logger';
 import { buildInteractiveUploadPreferencePlan } from './upload/buildInteractiveUploadPlan';
 import type { TaskCommonOpts } from './buildTaskOptions';
 import type { ToWorker } from '../../../lib/pooling';
+import { getFilePrefix } from './artifacts';
 
 /**
  * Run the child process for handling upload preferences.

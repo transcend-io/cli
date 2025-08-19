@@ -4,7 +4,6 @@ import { logger } from '../../../logger';
 import { join } from 'node:path';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
-import { computeReceiptsFolder, computeSchemaFile } from './computeFiles';
 import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
 
 import {
@@ -19,6 +18,8 @@ import {
 
 import { runChild } from './worker';
 import {
+  computeReceiptsFolder,
+  computeSchemaFile,
   ExportManager,
   writeFailingUpdatesCsv,
   type FailingUpdateRow,
