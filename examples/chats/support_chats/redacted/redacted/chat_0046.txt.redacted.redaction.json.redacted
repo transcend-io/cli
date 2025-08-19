@@ -1,0 +1,153 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0046.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0046.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.945,
+        "snippet": "Transcript #46\n==================================\n<<<USER_AGENT_64542dba>>>: Can you assist me with updating my subscription."
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.924,
+        "snippet": " Can you assist me with updating my subscription.\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.93,
+        "snippet": " subscription.\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.956,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.906,
+        "snippet": "check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.955,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Here is my So"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.938,
+        "snippet": "check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Here is my <<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>: 123-45-6789\nN"
+      },
+      {
+        "type": "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+        "value": "123-45-6789",
+        "confidence": 0.998,
+        "snippet": "for you.\n<<<USER_AGENT_64542dba>>>: Here is my <<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>: 123-45-6789\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.895,
+        "snippet": "x: Here is my <<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>: 123-45-6789\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.92,
+        "snippet": "r: 123-45-6789\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.936,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.918,
+        "snippet": "check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.94,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.902,
+        "snippet": "check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.963,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.918,
+        "snippet": "check on that?\n<<<USER_AGENT_2bbb1146>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_2bbb1146>>>",
+        "confidence": 0.951,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_2bbb1146>>>: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 0"
+      },
+      {
+        "type": "<<<MAC_ADDRESS_72334fe7>>>",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "h: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?"
+      }
+    ]
+  ]
+}

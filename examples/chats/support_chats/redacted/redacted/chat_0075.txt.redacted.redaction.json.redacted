@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0075.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0075.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<SEXUAL_ORIENTATION_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<PROFILE_PICTURE_IMAGE_6d033d9f>>>",
+    "<<<INDUSTRY_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<RACE_ETHNICITY_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_ID_23bf49da>>>",
+    "<<<USER_PREFERENCES_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<PROFILE_URL_a03157c5>>>",
+        "value": "https://example.com",
+        "confidence": 0.538,
+        "snippet": "p for you.\nRiley: Here is my <<<INDUSTRY_72f7d9d9>>>: https://example.com/img/profile123.jpg\nNoah: Thanks, can you also pro"
+      },
+      {
+        "type": "<<<EMAIL_84add5b2>>>",
+        "value": "<<<EMAIL_6f1862cc>>>",
+        "confidence": 0.982,
+        "snippet": "pg\nNoah: Thanks, can you also provide your <<<EMAIL_84add5b2>>>: <<<EMAIL_6f1862cc>>>?\nRiley: Can you check on that?\nNoah: Thanks, can "
+      },
+      {
+        "type": "<<<PROFILE_URL_a03157c5>>>",
+        "value": "https://social.example.com",
+        "confidence": 0.784,
+        "snippet": "h: Thanks, can you also provide your <<<PROFILE_URL_a03157c5>>>: https://social.example.com/jordan?\nRiley: Can you check on that?\nNoah: Let m"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "jordan",
+        "confidence": 0.506,
+        "snippet": "vide your <<<PROFILE_URL_a03157c5>>>: https://social.example.com/jordan?\nRiley: Can you check on that?\nNoah: Let me look "
+      },
+      {
+        "type": "<<<PHONE_77064d52>>>",
+        "value": "+1-202-555-0172",
+        "confidence": 0.994,
+        "snippet": "me look that up for you.\nRiley: Here is my <<<PHONE_77064d52>>>: +1-202-555-0172\nNoah: Let me look that up for you.\nRiley: Here is"
+      },
+      {
+        "type": "<<<GENDER_8a754c61>>>",
+        "value": "Non-binary",
+        "confidence": 0.976,
+        "snippet": "e look that up for you.\nRiley: Here is my <<<GENDER_8a754c61>>>: Non-binary"
+      },
+      {
+        "type": "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+        "value": "Non-binary",
+        "confidence": 0.706,
+        "snippet": "e look that up for you.\nRiley: Here is my <<<GENDER_8a754c61>>>: Non-binary"
+      }
+    ]
+  ]
+}

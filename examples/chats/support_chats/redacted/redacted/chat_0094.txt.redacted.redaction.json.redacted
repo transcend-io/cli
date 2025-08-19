@@ -1,0 +1,177 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0094.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0094.txt.redacted",
+  "totalRedactions": 8,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<SEXUAL_ORIENTATION_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "Profile Picture URL",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<RACE_ETHNICITY_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<NAME_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_64542dba>>>",
+        "confidence": 0.534,
+        "snippet": "Transcript #94\n==================================\n<<<USERNAME_64542dba>>>: Hi, I need help with firmware update errors.\nEth"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.589,
+        "snippet": "<<<USERNAME_d1f3732a>>>: Hi, I need help with firmware update errors.\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_64542dba>>>",
+        "confidence": 0.518,
+        "snippet": "pdate errors.\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Let me look that u"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.858,
+        "snippet": "ook that up for you.\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Here is my Bi"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_64542dba>>>",
+        "confidence": 0.538,
+        "snippet": "heck on that?\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Here is my <<<BIOMETRIC_IDENTIFIER_4e31be6d>>>: FaceID register"
+      },
+      {
+        "type": "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+        "value": "FaceID registered",
+        "confidence": 0.945,
+        "snippet": "p for you.\n<<<USERNAME_64542dba>>>: Here is my <<<BIOMETRIC_IDENTIFIER_4e31be6d>>>: FaceID registered\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you"
+      },
+      {
+        "type": "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+        "value": "FaceID registered",
+        "confidence": 0.759,
+        "snippet": "p for you.\n<<<USERNAME_64542dba>>>: Here is my <<<BIOMETRIC_IDENTIFIER_4e31be6d>>>: FaceID registered\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.872,
+        "snippet": "ook that up for you.\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.871,
+        "snippet": "ook that up for you.\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your <<<USERNAME_84c29015>>>: jord"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "jordan_92",
+        "confidence": 0.945,
+        "snippet": "than: Thanks, can you also provide your <<<USERNAME_84c29015>>>: jordan_92?\n<<<USERNAME_64542dba>>>: Here is my <<<UNION_MEMBERSHIP_7663b808>>>: None\n<<<USERNAME_2f8f37e0>>>: T"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_64542dba>>>",
+        "confidence": 0.529,
+        "snippet": "s, can you also provide your <<<USERNAME_84c29015>>>: jordan_92?\n<<<USERNAME_64542dba>>>: Here is my <<<UNION_MEMBERSHIP_7663b808>>>: None\n<<<USERNAME_2f8f37e0>>>: Thanks,"
+      },
+      {
+        "type": "<<<UNION_MEMBERSHIP_7663b808>>>",
+        "value": "None",
+        "confidence": 0.93,
+        "snippet": "me: jordan_92?\n<<<USERNAME_64542dba>>>: Here is my <<<UNION_MEMBERSHIP_7663b808>>>: None\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "None",
+        "confidence": 0.756,
+        "snippet": "me: jordan_92?\n<<<USERNAME_64542dba>>>: Here is my <<<UNION_MEMBERSHIP_7663b808>>>: None\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.503,
+        "snippet": "ordan_92?\n<<<USERNAME_64542dba>>>: Here is my <<<UNION_MEMBERSHIP_7663b808>>>: None\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 0"
+      },
+      {
+        "type": "<<<MAC_ADDRESS_72334fe7>>>",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.999,
+        "snippet": "n: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Let me look "
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.815,
+        "snippet": ": 00:1B:44:11:3A:B7?\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Let me look that up for you.\n<<<USERNAME_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.808,
+        "snippet": "ook that up for you.\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your User Preferenc"
+      },
+      {
+        "type": "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+        "value": "marketing_emails=false",
+        "confidence": 0.902,
+        "snippet": "anks, can you also provide your <<<BIOMETRIC_IDENTIFIER_c66488ae>>>: marketing_emails=false?\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Thanks, can "
+      },
+      {
+        "type": "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+        "value": "marketing_emails=false",
+        "confidence": 0.565,
+        "snippet": "anks, can you also provide your <<<BIOMETRIC_IDENTIFIER_c66488ae>>>: marketing_emails=false?\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Thanks, can "
+      },
+      {
+        "type": "<<<USERNAME_84c29015>>>",
+        "value": "<<<USERNAME_2f8f37e0>>>",
+        "confidence": 0.86,
+        "snippet": "keting_emails=false?\n<<<USERNAME_64542dba>>>: Can you check on that?\n<<<USERNAME_2f8f37e0>>>: Thanks, can you also provide your <<<USER_AGENT_8f9f2317>>>: Mo"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "Mozilla/5.0",
+        "confidence": 0.825,
+        "snippet": "an: Thanks, can you also provide your <<<USER_AGENT_8f9f2317>>>: Mozilla/5.0 (Macintosh; Intel Mac OS X)?"
+      },
+      {
+        "type": "<<<UNION_MEMBERSHIP_7663b808>>>",
+        "value": "Mozilla/5.0",
+        "confidence": 0.536,
+        "snippet": "an: Thanks, can you also provide your <<<USER_AGENT_8f9f2317>>>: Mozilla/5.0 (Macintosh; Intel Mac OS X)?"
+      }
+    ]
+  ]
+}

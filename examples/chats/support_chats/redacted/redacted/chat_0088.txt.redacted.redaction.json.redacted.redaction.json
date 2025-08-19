@@ -1,0 +1,471 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0088.txt.redacted.redaction.json",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/redacted/chat_0088.txt.redacted.redaction.json.redacted",
+  "totalRedactions": 36,
+  "labels": [
+    "Account Number",
+    "Biometric Identifier",
+    "Credit Card Number",
+    "Date of Birth",
+    "Declared Interests",
+    "Driver's License",
+    "Email",
+    "Gender",
+    "Income",
+    "Industry",
+    "Interaction Events",
+    "IP Address",
+    "MAC Address",
+    "Name",
+    "Page views",
+    "Passport Number",
+    "Phone",
+    "Political Affiliation",
+    "Profile Picture Image",
+    "Profile Picture URL",
+    "Profile URL",
+    "Race/Ethnicity",
+    "Region",
+    "Religion",
+    "Routing Number",
+    "Serial Number",
+    "Sexual Orientation",
+    "Social Security Number",
+    "Tax Information",
+    "Union Membership",
+    "User Agent",
+    "User ID",
+    "User Preferences",
+    "Username"
+  ],
+  "matches": [
+    [
+      {
+        "type": "Account Number",
+        "value": "Account Number",
+        "confidence": 0.807,
+        "snippet": "cted\",\n  \"totalRedactions\": 3,\n  \"labels\": [\n    \"Account Number\",\n    \"Biometric Identifier\",\n    \"Credit Card Nu"
+      },
+      {
+        "type": "IP Address",
+        "value": "Account Number",
+        "confidence": 0.716,
+        "snippet": "cted\",\n  \"totalRedactions\": 3,\n  \"labels\": [\n    \"Account Number\",\n    \"Biometric Identifier\",\n    \"Credit Card Nu"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "Biometric Identifier",
+        "confidence": 0.919,
+        "snippet": "ons\": 3,\n  \"labels\": [\n    \"Account Number\",\n    \"Biometric Identifier\",\n    \"Credit Card Number\",\n    \"Date of Birth\",\n"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "Credit Card Number",
+        "confidence": 0.933,
+        "snippet": "Account Number\",\n    \"Biometric Identifier\",\n    \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n"
+      },
+      {
+        "type": "Credit Card Number",
+        "value": "Credit Card Number",
+        "confidence": 0.933,
+        "snippet": "Account Number\",\n    \"Biometric Identifier\",\n    \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "Date of Birth",
+        "confidence": 0.757,
+        "snippet": "etric Identifier\",\n    \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n    \"Driver's License"
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Declared Interests",
+        "confidence": 0.798,
+        "snippet": "  \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gende"
+      },
+      {
+        "type": "Interaction Events",
+        "value": "Declared Interests",
+        "confidence": 0.758,
+        "snippet": "  \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gende"
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Declared Interests",
+        "confidence": 0.688,
+        "snippet": "  \"Credit Card Number\",\n    \"Date of Birth\",\n    \"Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gende"
+      },
+      {
+        "type": "Driver's License",
+        "value": "Driver's License",
+        "confidence": 0.793,
+        "snippet": "  \"Date of Birth\",\n    \"Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"I"
+      },
+      {
+        "type": "Email",
+        "value": "Email",
+        "confidence": 0.948,
+        "snippet": "Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n   "
+      },
+      {
+        "type": "Phone",
+        "value": "Email",
+        "confidence": 0.522,
+        "snippet": "Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n   "
+      },
+      {
+        "type": "Credit Card Number",
+        "value": "Email",
+        "confidence": 0.501,
+        "snippet": "Declared Interests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n   "
+      },
+      {
+        "type": "Gender",
+        "value": "Gender",
+        "confidence": 0.932,
+        "snippet": "rests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction "
+      },
+      {
+        "type": "User Preferences",
+        "value": "Gender",
+        "confidence": 0.701,
+        "snippet": "rests\",\n    \"Driver's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction "
+      },
+      {
+        "type": "Income",
+        "value": "Income",
+        "confidence": 0.884,
+        "snippet": "river's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \""
+      },
+      {
+        "type": "Page views",
+        "value": "Income",
+        "confidence": 0.717,
+        "snippet": "river's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \""
+      },
+      {
+        "type": "Interaction Events",
+        "value": "Income",
+        "confidence": 0.599,
+        "snippet": "river's License\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \""
+      },
+      {
+        "type": "Industry",
+        "value": "Industry",
+        "confidence": 0.951,
+        "snippet": "e\",\n    \"Email\",\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \"IP Address\",\n   "
+      },
+      {
+        "type": "Interaction Events",
+        "value": "Interaction Events",
+        "confidence": 0.877,
+        "snippet": "\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\""
+      },
+      {
+        "type": "Declared Interests",
+        "value": "Interaction Events",
+        "confidence": 0.856,
+        "snippet": "\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\""
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Interaction Events",
+        "confidence": 0.631,
+        "snippet": "\n    \"Gender\",\n    \"Income\",\n    \"Industry\",\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\""
+      },
+      {
+        "type": "IP Address",
+        "value": "IP Address",
+        "confidence": 0.865,
+        "snippet": "\",\n    \"Industry\",\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\""
+      },
+      {
+        "type": "MAC Address",
+        "value": "MAC Address",
+        "confidence": 0.935,
+        "snippet": "\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Num"
+      },
+      {
+        "type": "Passport Number",
+        "value": "MAC Address",
+        "confidence": 0.684,
+        "snippet": "\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Num"
+      },
+      {
+        "type": "IP Address",
+        "value": "MAC Address",
+        "confidence": 0.677,
+        "snippet": "\n    \"Interaction Events\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Num"
+      },
+      {
+        "type": "Name",
+        "value": "Name",
+        "confidence": 0.855,
+        "snippet": "vents\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"P"
+      },
+      {
+        "type": "Username",
+        "value": "Name",
+        "confidence": 0.602,
+        "snippet": "vents\",\n    \"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"P"
+      },
+      {
+        "type": "Page views",
+        "value": "Page views",
+        "confidence": 0.97,
+        "snippet": "\"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Politi"
+      },
+      {
+        "type": "Income",
+        "value": "Page views",
+        "confidence": 0.92,
+        "snippet": "\"IP Address\",\n    \"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Politi"
+      },
+      {
+        "type": "Passport Number",
+        "value": "Passport Number",
+        "confidence": 0.979,
+        "snippet": "\"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \""
+      },
+      {
+        "type": "MAC Address",
+        "value": "Passport Number",
+        "confidence": 0.821,
+        "snippet": "\"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \""
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Passport Number",
+        "confidence": 0.817,
+        "snippet": "\"MAC Address\",\n    \"Name\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \""
+      },
+      {
+        "type": "Phone",
+        "value": "Phone",
+        "confidence": 0.985,
+        "snippet": "e\",\n    \"Page views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \"Profile Pictu"
+      },
+      {
+        "type": "Political Affiliation",
+        "value": "Political Affiliation",
+        "confidence": 0.951,
+        "snippet": " views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Pictu"
+      },
+      {
+        "type": "Passport Number",
+        "value": "Political Affiliation",
+        "confidence": 0.595,
+        "snippet": " views\",\n    \"Passport Number\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Pictu"
+      },
+      {
+        "type": "Profile Picture Image",
+        "value": "Profile Picture Image",
+        "confidence": 0.608,
+        "snippet": "\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n "
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Profile Picture Image",
+        "confidence": 0.555,
+        "snippet": "\",\n    \"Phone\",\n    \"Political Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n "
+      },
+      {
+        "type": "Profile URL",
+        "value": "Profile Picture URL",
+        "confidence": 0.672,
+        "snippet": "l Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"R"
+      },
+      {
+        "type": "Profile Picture URL",
+        "value": "Profile Picture URL",
+        "confidence": 0.626,
+        "snippet": "l Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"R"
+      },
+      {
+        "type": "Region",
+        "value": "Profile Picture URL",
+        "confidence": 0.544,
+        "snippet": "l Affiliation\",\n    \"Profile Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"R"
+      },
+      {
+        "type": "Profile URL",
+        "value": "Profile URL",
+        "confidence": 0.716,
+        "snippet": "e Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religi"
+      },
+      {
+        "type": "Region",
+        "value": "Profile URL",
+        "confidence": 0.558,
+        "snippet": "e Picture Image\",\n    \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religi"
+      },
+      {
+        "type": "User Agent",
+        "value": "Race/Ethnicity",
+        "confidence": 0.645,
+        "snippet": "   \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Numb"
+      },
+      {
+        "type": "Race/Ethnicity",
+        "value": "Race/Ethnicity",
+        "confidence": 0.643,
+        "snippet": "   \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Numb"
+      },
+      {
+        "type": "User ID",
+        "value": "Race/Ethnicity",
+        "confidence": 0.643,
+        "snippet": "   \"Profile Picture URL\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Numb"
+      },
+      {
+        "type": "Region",
+        "value": "Region",
+        "confidence": 0.523,
+        "snippet": "L\",\n    \"Profile URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Number\",\n    \"Seri"
+      },
+      {
+        "type": "Religion",
+        "value": "Religion",
+        "confidence": 0.653,
+        "snippet": "le URL\",\n    \"Race/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Number\",\n    \"Serial Number\",\n    "
+      },
+      {
+        "type": "Routing Number",
+        "value": "Routing Number",
+        "confidence": 0.941,
+        "snippet": "ce/Ethnicity\",\n    \"Region\",\n    \"Religion\",\n    \"Routing Number\",\n    \"Serial Number\",\n    \"Sexual Orientation\",\n"
+      },
+      {
+        "type": "Serial Number",
+        "value": "Serial Number",
+        "confidence": 0.951,
+        "snippet": "gion\",\n    \"Religion\",\n    \"Routing Number\",\n    \"Serial Number\",\n    \"Sexual Orientation\",\n    \"Social Security "
+      },
+      {
+        "type": "Sexual Orientation",
+        "value": "Sexual Orientation",
+        "confidence": 0.845,
+        "snippet": ",\n    \"Routing Number\",\n    \"Serial Number\",\n    \"Sexual Orientation\",\n    \"Social Security Number\",\n    \"Tax Informat"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "Sexual Orientation",
+        "confidence": 0.533,
+        "snippet": ",\n    \"Routing Number\",\n    \"Serial Number\",\n    \"Sexual Orientation\",\n    \"Social Security Number\",\n    \"Tax Informat"
+      },
+      {
+        "type": "Social Security Number",
+        "value": "Social Security Number",
+        "confidence": 0.834,
+        "snippet": "  \"Serial Number\",\n    \"Sexual Orientation\",\n    \"Social Security Number\",\n    \"Tax Information\",\n    \"Union Membership\",\n"
+      },
+      {
+        "type": "Tax Information",
+        "value": "Tax Information",
+        "confidence": 0.958,
+        "snippet": " Orientation\",\n    \"Social Security Number\",\n    \"Tax Information\",\n    \"Union Membership\",\n    \"User Agent\",\n    \""
+      },
+      {
+        "type": "Union Membership",
+        "value": "Union Membership",
+        "confidence": 0.849,
+        "snippet": "ial Security Number\",\n    \"Tax Information\",\n    \"Union Membership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Pref"
+      },
+      {
+        "type": "Account Number",
+        "value": "Union Membership",
+        "confidence": 0.61,
+        "snippet": "ial Security Number\",\n    \"Tax Information\",\n    \"Union Membership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Pref"
+      },
+      {
+        "type": "User Agent",
+        "value": "User Agent",
+        "confidence": 0.936,
+        "snippet": "  \"Tax Information\",\n    \"Union Membership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Use"
+      },
+      {
+        "type": "User ID",
+        "value": "User ID",
+        "confidence": 0.909,
+        "snippet": "\",\n    \"Union Membership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Username\"\n  ],\n  \""
+      },
+      {
+        "type": "User Agent",
+        "value": "User ID",
+        "confidence": 0.88,
+        "snippet": "\",\n    \"Union Membership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Username\"\n  ],\n  \""
+      },
+      {
+        "type": "User Preferences",
+        "value": "User Preferences",
+        "confidence": 0.937,
+        "snippet": "embership\",\n    \"User Agent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Username\"\n  ],\n  \"matches\": [\n    [\n      "
+      },
+      {
+        "type": "Username",
+        "value": "Username",
+        "confidence": 0.881,
+        "snippet": "ent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Username\"\n  ],\n  \"matches\": [\n    [\n      {\n        \"type\""
+      },
+      {
+        "type": "Name",
+        "value": "Username",
+        "confidence": 0.53,
+        "snippet": "ent\",\n    \"User ID\",\n    \"User Preferences\",\n    \"Username\"\n  ],\n  \"matches\": [\n    [\n      {\n        \"type\""
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "Biometric Identifier",
+        "confidence": 0.87,
+        "snippet": " ],\n  \"matches\": [\n    [\n      {\n        \"type\": \"Biometric Identifier\",\n        \"value\": \"FaceID registered\",\n        \""
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.919,
+        "snippet": "\"type\": \"Biometric Identifier\",\n        \"value\": \"FaceID registered\",\n        \"confidence\": 0.892,\n        \"snippet\":"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "Biometric Identifier",
+        "confidence": 0.614,
+        "snippet": ",\n        \"snippet\": \", can you also provide your Biometric Identifier: FaceID registered?\\nSam: Can you check on that?\\"
+      },
+      {
+        "type": "Biometric Identifier",
+        "value": "FaceID registered",
+        "confidence": 0.962,
+        "snippet": ", can you also provide your Biometric Identifier: FaceID registered?\\nSam: Can you check on that?\\nSofia: Let me look"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.957,
+        "snippet": "       \"type\": \"Date of Birth\",\n        \"value\": \"1990-05-12\",\n        \"confidence\": 0.971,\n        \"snippet\":"
+      },
+      {
+        "type": "Credit Card Number",
+        "value": "1990-05-12",
+        "confidence": 0.826,
+        "snippet": "       \"type\": \"Date of Birth\",\n        \"value\": \"1990-05-12\",\n        \"confidence\": 0.971,\n        \"snippet\":"
+      },
+      {
+        "type": "Date of Birth",
+        "value": "1990-05-12",
+        "confidence": 0.954,
+        "snippet": " that up for you.\\nSam: Here is my Date of Birth: 1990-05-12\\nSofia: Let me look that up for you.\\nSam: Here i"
+      },
+      {
+        "type": "Credit Card Number",
+        "value": "1990-05-12",
+        "confidence": 0.891,
+        "snippet": " that up for you.\\nSam: Here is my Date of Birth: 1990-05-12\\nSofia: Let me look that up for you.\\nSam: Here i"
+      },
+      {
+        "type": "IP Address",
+        "value": "IP Address",
+        "confidence": 0.709,
+        "snippet": "nSam: Here is \"\n      },\n      {\n        \"type\": \"IP Address\",\n        \"value\": \"192.168.1.42\",\n        \"confi"
+      }
+    ]
+  ]
+}

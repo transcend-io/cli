@@ -1,0 +1,105 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0020.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0020.txt.redacted",
+  "totalRedactions": 4,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "Profile Picture Image",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_a9e0cb33>>>",
+        "confidence": 0.674,
+        "snippet": "Transcript #20\n==================================\n<<<USER_ID_a9e0cb33>>>: Can you assist me with updating my subscription."
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_26414e77>>>",
+        "confidence": 0.716,
+        "snippet": " Can you assist me with updating my subscription.\n<<<USER_ID_26414e77>>>: Thanks, can you also provide your <<<SEXUAL_ORIENTATION_a3792985>>>"
+      },
+      {
+        "type": "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+        "value": "Heterosexual",
+        "confidence": 0.988,
+        "snippet": "ks, can you also provide your <<<SEXUAL_ORIENTATION_606fa76d>>>: Heterosexual?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Let me look "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_a9e0cb33>>>",
+        "confidence": 0.742,
+        "snippet": "so provide your <<<SEXUAL_ORIENTATION_606fa76d>>>: Heterosexual?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_26414e77>>>",
+        "confidence": 0.665,
+        "snippet": "tion: Heterosexual?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Let me look that up for you.\n<<<USER_ID_a9e0cb33>>>: Can you chec"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_a9e0cb33>>>",
+        "confidence": 0.705,
+        "snippet": "check on that?\n<<<USER_ID_26414e77>>>: Let me look that up for you.\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_26414e77>>>",
+        "confidence": 0.651,
+        "snippet": "ok that up for you.\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Thanks, can you also provide your <<<GENDER_8a754c61>>>: Non-bi"
+      },
+      {
+        "type": "<<<GENDER_8a754c61>>>",
+        "value": "Non-binary",
+        "confidence": 0.975,
+        "snippet": "?\n<<<USER_ID_26414e77>>>: Thanks, can you also provide your <<<GENDER_8a754c61>>>: Non-binary?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Thanks, can "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_a9e0cb33>>>",
+        "confidence": 0.687,
+        "snippet": "ks, can you also provide your <<<GENDER_8a754c61>>>: Non-binary?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_26414e77>>>",
+        "confidence": 0.661,
+        "snippet": "<<<GENDER_8a754c61>>>: Non-binary?\n<<<USER_ID_a9e0cb33>>>: Can you check on that?\n<<<USER_ID_26414e77>>>: Thanks, can you also provide your Approximate Ge"
+      }
+    ]
+  ]
+}

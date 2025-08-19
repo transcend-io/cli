@@ -1,0 +1,123 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0071.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0071.txt.redacted",
+  "totalRedactions": 6,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<USER_PREFERENCES_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.8,
+        "snippet": "Transcript #71\n==================================\n<<<USER_ID_2458b62b>>>: Good morning, question about updating my subscri"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2bbb1146>>>",
+        "confidence": 0.811,
+        "snippet": "morning, question about updating my subscription.\n<<<USER_ID_2bbb1146>>>: Thanks, can you also provide your Declared Inter"
+      },
+      {
+        "type": "<<<USER_PREFERENCES_c66488ae>>>",
+        "value": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "confidence": 0.514,
+        "snippet": "cription.\n<<<USER_ID_2bbb1146>>>: Thanks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: hiking, cooking?\n<<<USER_ID_2458b62b>>>: Can you check on that?\nN"
+      },
+      {
+        "type": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "value": "hiking, cooking",
+        "confidence": 0.902,
+        "snippet": "ks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: hiking, cooking?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.742,
+        "snippet": "provide your <<<DECLARED_INTERESTS_ece3aab3>>>: hiking, cooking?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2bbb1146>>>",
+        "confidence": 0.79,
+        "snippet": "s: hiking, cooking?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you also provide your <<<SERIAL_NUMBER_46d9d515>>>:"
+      },
+      {
+        "type": "<<<SERIAL_NUMBER_46d9d515>>>",
+        "value": "SN-1234567890",
+        "confidence": 0.994,
+        "snippet": " Thanks, can you also provide your <<<SERIAL_NUMBER_46d9d515>>>: SN-1234567890?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.731,
+        "snippet": "u also provide your <<<SERIAL_NUMBER_46d9d515>>>: SN-1234567890?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2bbb1146>>>",
+        "confidence": 0.782,
+        "snippet": "ber: SN-1234567890?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 0"
+      },
+      {
+        "type": "<<<MAC_ADDRESS_72334fe7>>>",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.998,
+        "snippet": "h: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can "
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.75,
+        "snippet": "also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2bbb1146>>>",
+        "confidence": 0.786,
+        "snippet": " 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2bbb1146>>>: Thanks, can you also provide your Cookies: sessi"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.771,
+        "snippet": "ou also provide your Cookies: sessionid=abcd1234?\n<<<USER_ID_2458b62b>>>: Can you check on that?"
+      }
+    ]
+  ]
+}

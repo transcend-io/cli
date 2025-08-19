@@ -1,0 +1,75 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0043.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0043.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<BIOMETRIC_IDENTIFIER_265dc298>>>",
+        "confidence": 0.582,
+        "snippet": "Transcript #43\n==================================\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Hi, I need help with updating my subscription.\nM"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<BIOMETRIC_IDENTIFIER_265dc298>>>",
+        "confidence": 0.605,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Here is my <<<EMAIL_84add5b2>>>: jordan@example.com\nMaya: Let m"
+      },
+      {
+        "type": "<<<EMAIL_84add5b2>>>",
+        "value": "jordan@example.com",
+        "confidence": 0.998,
+        "snippet": "t me look that up for you.\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Here is my <<<EMAIL_84add5b2>>>: jordan@example.com\nMaya: Let me look that up for you.\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Can you c"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<BIOMETRIC_IDENTIFIER_265dc298>>>",
+        "confidence": 0.517,
+        "snippet": "check on that?\nMaya: Let me look that up for you.\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Can you check on that?\nMaya: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "Maya",
+        "confidence": 0.542,
+        "snippet": "look that up for you.\n<<<BIOMETRIC_IDENTIFIER_265dc298>>>: Can you check on that?\nMaya: Let me look that up for you."
+      }
+    ]
+  ]
+}

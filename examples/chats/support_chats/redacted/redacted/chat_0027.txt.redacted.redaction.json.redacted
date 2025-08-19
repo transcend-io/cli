@@ -1,0 +1,117 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0027.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0027.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<USER_PREFERENCES_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_1e5fa751>>>",
+        "confidence": 0.58,
+        "snippet": "Transcript #27\n==================================\n<<<USER_ID_1e5fa751>>>: Can you assist me with resetting my password.\nSo"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_dc81691d>>>",
+        "confidence": 0.541,
+        "snippet": "or: Can you assist me with resetting my password.\n<<<USER_ID_dc81691d>>>: Thanks, can you also provide your Declared Inter"
+      },
+      {
+        "type": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "value": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "confidence": 0.711,
+        "snippet": "assword.\n<<<USER_ID_dc81691d>>>: Thanks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: hiking, cooking?\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n"
+      },
+      {
+        "type": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "value": "hiking, cooking",
+        "confidence": 0.775,
+        "snippet": "ks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: hiking, cooking?\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Let me loo"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_1e5fa751>>>",
+        "confidence": 0.555,
+        "snippet": "heck on that?\n<<<USER_ID_dc81691d>>>: Let me look that up for you.\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Let me look that u"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_1e5fa751>>>",
+        "confidence": 0.549,
+        "snippet": "heck on that?\n<<<USER_ID_dc81691d>>>: Let me look that up for you.\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Let me look that u"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_dc81691d>>>",
+        "confidence": 0.573,
+        "snippet": "k that up for you.\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Let me look that up for you.\n<<<USER_ID_1e5fa751>>>: Can you che"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_dc81691d>>>",
+        "confidence": 0.513,
+        "snippet": "k that up for you.\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Thanks, can you also provide your <<<RELIGION_b04d58c6>>>: None"
+      },
+      {
+        "type": "<<<RELIGION_b04d58c6>>>",
+        "value": "<<<RELIGION_b04d58c6>>>",
+        "confidence": 0.867,
+        "snippet": "on that?\n<<<USER_ID_dc81691d>>>: Thanks, can you also provide your <<<RELIGION_b04d58c6>>>: None?\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Than"
+      },
+      {
+        "type": "<<<RELIGION_b04d58c6>>>",
+        "value": "None",
+        "confidence": 0.837,
+        "snippet": "ofia: Thanks, can you also provide your <<<RELIGION_b04d58c6>>>: None?\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Thanks, ca"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_dc81691d>>>",
+        "confidence": 0.502,
+        "snippet": "ur <<<RELIGION_b04d58c6>>>: None?\n<<<USER_ID_1e5fa751>>>: Can you check on that?\n<<<USER_ID_dc81691d>>>: Thanks, can you also provide your <<<PROFILE_URL_a03157c5>>>: h"
+      },
+      {
+        "type": "<<<PROFILE_URL_a03157c5>>>",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.986,
+        "snippet": "a: Thanks, can you also provide your <<<PROFILE_URL_a03157c5>>>: https://social.example.com/jordan?"
+      }
+    ]
+  ]
+}

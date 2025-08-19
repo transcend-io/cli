@@ -1,0 +1,129 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0051.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0051.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_AGENT_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.71,
+        "snippet": "Transcript #51\n==================================\n<<<USER_AGENT_64542dba>>>: Good morning, question about a late delivery.\nMa"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.598,
+        "snippet": "ex: Good morning, question about a late delivery.\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.665,
+        "snippet": "late delivery.\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.546,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.57,
+        "snippet": "check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.652,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.534,
+        "snippet": "check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Thanks, can you als"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.614,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Thanks, can you also provide your <<<USER_AGENT_23bf49da>>>: U1234"
+      },
+      {
+        "type": "<<<USER_AGENT_23bf49da>>>",
+        "value": "U123456",
+        "confidence": 0.963,
+        "snippet": "\n<<<USER_AGENT_26414e77>>>: Thanks, can you also provide your <<<USER_AGENT_23bf49da>>>: U123456?\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look t"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.628,
+        "snippet": "anks, can you also provide your <<<USER_AGENT_23bf49da>>>: U123456?\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.535,
+        "snippet": "ur <<<USER_AGENT_23bf49da>>>: U123456?\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.553,
+        "snippet": "check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_26414e77>>>",
+        "confidence": 0.637,
+        "snippet": "ook that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_AGENT_64542dba>>>",
+        "confidence": 0.539,
+        "snippet": "check on that?\n<<<USER_AGENT_26414e77>>>: Let me look that up for you.\n<<<USER_AGENT_64542dba>>>: Can you check on that?"
+      }
+    ]
+  ]
+}

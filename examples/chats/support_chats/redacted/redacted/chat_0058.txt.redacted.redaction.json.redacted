@@ -1,0 +1,117 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0058.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0058.txt.redacted",
+  "totalRedactions": 5,
+  "labels": [
+    "<<<ACCOUNT_NUMBER_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<SEXUAL_ORIENTATION_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RACE_ETHNICITY_6d033d9f>>>",
+    "<<<INDUSTRY_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<RACE_ETHNICITY_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_AGENT_23bf49da>>>",
+    "<<<BIOMETRIC_IDENTIFIER_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.693,
+        "snippet": "Transcript #58\n==================================\n<<<USER_ID_2458b62b>>>: Hello—I'm having trouble with firmware update er"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2f8f37e0>>>",
+        "confidence": 0.712,
+        "snippet": "o—I'm having trouble with firmware update errors.\n<<<USER_ID_2f8f37e0>>>: Thanks, can you also provide your <<<PROFILE_URL_a03157c5>>>: h"
+      },
+      {
+        "type": "<<<PROFILE_URL_a03157c5>>>",
+        "value": "https://social.example.com/jordan",
+        "confidence": 0.98,
+        "snippet": "n: Thanks, can you also provide your <<<PROFILE_URL_a03157c5>>>: https://social.example.com/jordan?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.664,
+        "snippet": "r <<<PROFILE_URL_a03157c5>>>: https://social.example.com/jordan?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that u"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2f8f37e0>>>",
+        "confidence": 0.693,
+        "snippet": "example.com/jordan?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that up for you.\n<<<USER_ID_2458b62b>>>: Here is my R"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.663,
+        "snippet": "heck on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that up for you.\n<<<USER_ID_2458b62b>>>: Here is my <<<RACE_ETHNICITY_13ef4473>>>: Hispanic\n<<<USER_ID_2f8f37e0>>>: Thank"
+      },
+      {
+        "type": "<<<RACE_ETHNICITY_13ef4473>>>",
+        "value": "Hispanic",
+        "confidence": 0.997,
+        "snippet": "hat up for you.\n<<<USER_ID_2458b62b>>>: Here is my <<<RACE_ETHNICITY_13ef4473>>>: Hispanic\n<<<USER_ID_2f8f37e0>>>: Thanks, can you also provide your MAC Addr"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2f8f37e0>>>",
+        "confidence": 0.669,
+        "snippet": "r you.\n<<<USER_ID_2458b62b>>>: Here is my <<<RACE_ETHNICITY_13ef4473>>>: Hispanic\n<<<USER_ID_2f8f37e0>>>: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 0"
+      },
+      {
+        "type": "<<<MAC_ADDRESS_72334fe7>>>",
+        "value": "00:1B:44:11:3A:B7",
+        "confidence": 0.997,
+        "snippet": "n: Thanks, can you also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.716,
+        "snippet": "also provide your <<<MAC_ADDRESS_72334fe7>>>: 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that u"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2f8f37e0>>>",
+        "confidence": 0.703,
+        "snippet": " 00:1B:44:11:3A:B7?\n<<<USER_ID_2458b62b>>>: Can you check on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that up for you.\n<<<USER_ID_2458b62b>>>: Can you chec"
+      },
+      {
+        "type": "<<<USER_AGENT_8f9f2317>>>",
+        "value": "<<<USER_ID_2458b62b>>>",
+        "confidence": 0.648,
+        "snippet": "heck on that?\n<<<USER_ID_2f8f37e0>>>: Let me look that up for you.\n<<<USER_ID_2458b62b>>>: Can you check on that?"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0049.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0049.txt.redacted",
+  "totalRedactions": 7,
+  "labels": [
+    "<<<IP_ADDRESS_0bd62e3d>>>",
+    "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+    "<<<DATE_OF_BIRTH_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<SEXUAL_ORIENTATION_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<RACE_ETHNICITY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<RELIGION_6d033d9f>>>",
+    "<<<PROFILE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<RACE_ETHNICITY_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<SEXUAL_ORIENTATION_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_ID_23bf49da>>>",
+    "<<<USER_PREFERENCES_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<RACE_ETHNICITY_13ef4473>>>",
+        "value": "<<<RACE_ETHNICITY_04790fed>>>",
+        "confidence": 0.995,
+        "snippet": "Thanks, can you also provide your <<<RACE_ETHNICITY_13ef4473>>>: <<<RACE_ETHNICITY_04790fed>>>?\nAlex: Can you check on that?\nNoah: Let me look t"
+      },
+      {
+        "type": "<<<BIOMETRIC_IDENTIFIER_4e31be6d>>>",
+        "value": "<<<BIOMETRIC_IDENTIFIER_f9c58269>>>",
+        "confidence": 0.861,
+        "snippet": ", can you also provide your <<<BIOMETRIC_IDENTIFIER_4e31be6d>>>: <<<BIOMETRIC_IDENTIFIER_f9c58269>>>?\nAlex: Here is my <<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>: <<<POLITICAL_AFFILIATION_7ab96dcd>>>"
+      },
+      {
+        "type": "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+        "value": "<<<POLITICAL_AFFILIATION_7ab96dcd>>>6789",
+        "confidence": 0.999,
+        "snippet": "istered?\nAlex: Here is my <<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>: <<<POLITICAL_AFFILIATION_7ab96dcd>>>6789\nNoah: Let me look that up for you.\nAlex: Can you "
+      },
+      {
+        "type": "<<<RELIGION_b04d58c6>>>",
+        "value": "<<<RELIGION_b04d58c6>>>",
+        "confidence": 0.611,
+        "snippet": " on that?\nNoah: Thanks, can you also provide your <<<RELIGION_b04d58c6>>>: None?\nAlex: Can you check on that?\nNoah: Thanks,"
+      },
+      {
+        "type": "<<<RELIGION_b04d58c6>>>",
+        "value": "None",
+        "confidence": 0.933,
+        "snippet": "Noah: Thanks, can you also provide your <<<RELIGION_b04d58c6>>>: None?\nAlex: Can you check on that?\nNoah: Thanks, can y"
+      },
+      {
+        "type": "<<<GENDER_8a754c61>>>",
+        "value": "<<<GENDER_8a754c61>>>",
+        "confidence": 0.539,
+        "snippet": " on that?\nNoah: Thanks, can you also provide your <<<GENDER_8a754c61>>>: Non-binary?"
+      },
+      {
+        "type": "<<<GENDER_8a754c61>>>",
+        "value": "Non-binary",
+        "confidence": 0.978,
+        "snippet": "?\nNoah: Thanks, can you also provide your <<<GENDER_8a754c61>>>: Non-binary?"
+      }
+    ]
+  ]
+}

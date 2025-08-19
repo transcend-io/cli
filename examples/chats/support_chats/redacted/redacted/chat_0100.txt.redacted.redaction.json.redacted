@@ -1,0 +1,69 @@
+{
+  "file": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/chat_0100.txt",
+  "outFile": "/Users/michaelfarrell/transcend/cli/examples/chats/support_chats/redacted/chat_0100.txt.redacted",
+  "totalRedactions": 3,
+  "labels": [
+    "<<<IP_ADDRESS_0bd62e3d>>>",
+    "<<<USER_PREFERENCES_4e31be6d>>>",
+    "<<<CREDIT_CARD_NUMBER_400e287e>>>",
+    "<<<DATE_OF_BIRTH_13316059>>>",
+    "<<<DECLARED_INTERESTS_ece3aab3>>>",
+    "<<<DRIVER_S_LICENSE_e9c0fd9a>>>",
+    "<<<EMAIL_84add5b2>>>",
+    "<<<GENDER_8a754c61>>>",
+    "<<<INCOME_1c89b1f2>>>",
+    "<<<INDUSTRY_973d438f>>>",
+    "<<<INTERACTION_EVENTS_e3eae72b>>>",
+    "<<<IP_ADDRESS_11f51070>>>",
+    "<<<MAC_ADDRESS_72334fe7>>>",
+    "<<<NAME_709a2322>>>",
+    "<<<PAGE_VIEWS_faee7ce2>>>",
+    "<<<PASSPORT_NUMBER_d962f7dd>>>",
+    "<<<PHONE_77064d52>>>",
+    "<<<POLITICAL_AFFILIATION_63eea2fa>>>",
+    "<<<PROFILE_PICTURE_IMAGE_6d033d9f>>>",
+    "<<<PROFILE_PICTURE_URL_72f7d9d9>>>",
+    "<<<PROFILE_URL_a03157c5>>>",
+    "<<<USER_ID_13ef4473>>>",
+    "<<<REGION_0f217179>>>",
+    "<<<RELIGION_b04d58c6>>>",
+    "<<<ROUTING_NUMBER_6d3dc90a>>>",
+    "<<<SERIAL_NUMBER_46d9d515>>>",
+    "<<<DECLARED_INTERESTS_606fa76d>>>",
+    "<<<SOCIAL_SECURITY_NUMBER_6e02f8b1>>>",
+    "<<<TAX_INFORMATION_9728dc2e>>>",
+    "<<<UNION_MEMBERSHIP_7663b808>>>",
+    "<<<USER_AGENT_8f9f2317>>>",
+    "<<<USER_ID_23bf49da>>>",
+    "<<<USER_PREFERENCES_c66488ae>>>",
+    "<<<USERNAME_84c29015>>>"
+  ],
+  "matches": [
+    [
+      {
+        "type": "<<<USER_ID_23bf49da>>>",
+        "value": "<<<USER_ID_73228f57>>>",
+        "confidence": 0.987,
+        "snippet": " look that up for you.\nCasey: Here is my <<<USER_ID_23bf49da>>>: <<<USER_ID_73228f57>>>\nNoah: Thanks, can you also provide your Declared "
+      },
+      {
+        "type": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "value": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "confidence": 0.608,
+        "snippet": ": <<<USER_ID_73228f57>>>\nNoah: Thanks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: <<<INDUSTRY_20f025d2>>>?\nCasey: Can you check on that?\nN"
+      },
+      {
+        "type": "<<<USER_PREFERENCES_c66488ae>>>",
+        "value": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "confidence": 0.579,
+        "snippet": ": <<<USER_ID_73228f57>>>\nNoah: Thanks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: <<<INDUSTRY_20f025d2>>>?\nCasey: Can you check on that?\nN"
+      },
+      {
+        "type": "<<<DECLARED_INTERESTS_ece3aab3>>>",
+        "value": "<<<INDUSTRY_20f025d2>>>",
+        "confidence": 0.885,
+        "snippet": "ks, can you also provide your <<<DECLARED_INTERESTS_ece3aab3>>>: <<<INDUSTRY_20f025d2>>>?\nCasey: Can you check on that?\nNoah: Let me look "
+      }
+    ]
+  ]
+}
