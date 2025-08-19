@@ -1,5 +1,5 @@
-import { mkdirSync } from 'fs';
-import { join, basename } from 'path';
+import { mkdirSync } from 'node:fs';
+import { join, basename } from 'node:path';
 
 /**
  * Derive a "prefix" for a CSV file (basename without ".csv"),

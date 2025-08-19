@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// SUT imports AFTER mocks
 import { applyReceiptSummary } from '../applyReceiptSummary';
 import type { AnyTotals, CheckModeTotals, UploadModeTotals } from '../../../ui';
 
-// --- Hoisted shared/mocked state ---------------------------------------------
 const H = vi.hoisted(() => {
   // capture last calls/args
   const calls = {
@@ -29,7 +27,6 @@ const H = vi.hoisted(() => {
   return { calls, stubs };
 });
 
-// --- Module mocks (must precede SUT import) ----------------------------------
 vi.mock('../summarizeReceipt', () => ({
   summarizeReceipt: vi.fn((...a: unknown[]) => {
     H.calls.summarize.push(a);
@@ -50,8 +47,6 @@ vi.mock('../readFailingUpdatesFromReceipt', () => ({
     return H.stubs.readFailingUpdatesFromReceipt();
   }),
 }));
-
-// -------------------------------------------------------------------------------------------------
 
 describe('applyReceiptSummary', () => {
   beforeEach(() => {
