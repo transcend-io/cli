@@ -1,98 +1,55 @@
 # Transcend CLI
 
+A command line interface that allows you to programatically interact with the Transcend.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 ## Table of Contents
 
 - [Changelog](#changelog)
-- [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
   - [`transcend request approve`](#transcend-request-approve)
-    - [Examples](#examples)
   - [`transcend request upload`](#transcend-request-upload)
-    - [Examples](#examples-1)
   - [`transcend request download-files`](#transcend-request-download-files)
-    - [Examples](#examples-2)
   - [`transcend request cancel`](#transcend-request-cancel)
-    - [Examples](#examples-3)
   - [`transcend request restart`](#transcend-request-restart)
-    - [Examples](#examples-4)
   - [`transcend request notify-additional-time`](#transcend-request-notify-additional-time)
-    - [Examples](#examples-5)
   - [`transcend request mark-silent`](#transcend-request-mark-silent)
-    - [Examples](#examples-6)
   - [`transcend request enricher-restart`](#transcend-request-enricher-restart)
-    - [Examples](#examples-7)
   - [`transcend request reject-unverified-identifiers`](#transcend-request-reject-unverified-identifiers)
-    - [Examples](#examples-8)
   - [`transcend request export`](#transcend-request-export)
-    - [Examples](#examples-9)
   - [`transcend request skip-preflight-jobs`](#transcend-request-skip-preflight-jobs)
-    - [Examples](#examples-10)
   - [`transcend request system mark-request-data-silos-completed`](#transcend-request-system-mark-request-data-silos-completed)
-    - [Examples](#examples-11)
   - [`transcend request system retry-request-data-silos`](#transcend-request-system-retry-request-data-silos)
-    - [Examples](#examples-12)
   - [`transcend request system skip-request-data-silos`](#transcend-request-system-skip-request-data-silos)
-    - [Examples](#examples-13)
   - [`transcend request preflight pull-identifiers`](#transcend-request-preflight-pull-identifiers)
-    - [Examples](#examples-14)
   - [`transcend request preflight push-identifiers`](#transcend-request-preflight-push-identifiers)
-    - [Examples](#examples-15)
   - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
-    - [Examples](#examples-16)
   - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
-    - [Examples](#examples-17)
   - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
-    - [Examples](#examples-18)
   - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
-    - [Examples](#examples-19)
   - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
-    - [Examples](#examples-20)
   - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
-    - [Examples](#examples-21)
   - [`transcend consent upload-consent-preferences`](#transcend-consent-upload-consent-preferences)
-    - [Examples](#examples-22)
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
-    - [Examples](#examples-23)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
-    - [Examples](#examples-24)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
-    - [Examples](#examples-25)
   - [`transcend inventory pull`](#transcend-inventory-pull)
-    - [Scopes](#scopes)
-    - [Examples](#examples-26)
   - [`transcend inventory push`](#transcend-inventory-push)
-    - [Scopes](#scopes-1)
-    - [Examples](#examples-27)
-    - [CI Integration](#ci-integration)
-    - [Dynamic Variables](#dynamic-variables)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
-    - [Examples](#examples-28)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
-    - [Examples](#examples-29)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
-    - [Examples](#examples-30)
   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
-    - [Examples](#examples-31)
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
-    - [Examples](#examples-32)
   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
-    - [Examples](#examples-33)
   - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
-    - [Examples](#examples-34)
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
-    - [Examples](#examples-35)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
-    - [Examples](#examples-36)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
-    - [Examples](#examples-37)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
-    - [Authentication](#authentication)
-    - [Examples](#examples-38)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
 
@@ -101,10 +58,6 @@
 ## Changelog
 
 To stay up to date on breaking changes to the CLI between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
-
-## Overview
-
-A command line interface that allows you to programatically interact with the Transcend.
 
 ## Installation
 
