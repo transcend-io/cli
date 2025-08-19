@@ -3385,5 +3385,3 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the CLI inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
-
-> > > > > > > main
