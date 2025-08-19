@@ -2,8 +2,8 @@ import { buildCommand } from '@stricli/core';
 
 export const chunkCsvCommand = buildCommand({
   loader: async () => {
-    const { chunkCsvParent } = await import('./impl');
-    return chunkCsvParent;
+    const { chunkCsv } = await import('./impl');
+    return chunkCsv;
   },
   parameters: {
     flags: {

@@ -241,6 +241,7 @@ describe('CLI Command Structure', () => {
         'readme.ts',
         'helpers.ts',
         'types.ts',
+        'worker.ts',
         'constants.ts',
         'worker.ts',
       ];

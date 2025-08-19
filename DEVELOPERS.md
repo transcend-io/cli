@@ -18,7 +18,7 @@
 
 ## Getting started
 
-1. Make sure you are on node v22 or above
+1. Make sure you are on Node 22 or above
 
 ```bash
 node --version
@@ -59,14 +59,14 @@ If you have the appropriate permissions, you can generate your own API key at ht
 
 ## Repo Structure
 
-The `src/commands/` directory contains the CLI commands and has a strict structure which is tested.
+The `src/commands/` directory contains the CLI commands and has a strict structure which is [tested](https://github.com/transcend-io/cli/blob/77652c1959807610ec97fe0be73d69e78b8e5480/src/lib/tests/codebase.test.ts).
 
-The folders are the namespace of the CLI, so `src/commands/request/cron/pull-identifiers/command.ts` is the command for `transcend request cron pull-identifiers`.
+The folders are the namespace of the CLI, so `src/commands/request/cron/pull-identifiers/command.ts` is the command for `transcend request cron pull-identifiers`. The _route_ portion of the file path is `/request/cron` and the _command_ portion of the file path is `/pull-identifiers`.
 
-- `src/commands/**/command.ts` contains the command arguments and CLI documentation.
-- `src/commands/**/impl.ts` contains the actual function that gets executed when the command runs.
-- `src/commands/**/readme.ts` is an optional file that can be used to add additional documentation to README.md for the command. This gets injected into the README.md below the CLI documentation for that command. NOTE: This should be used sparingly, since it is difficult to keep up to date. Prefer to use the `docs` field in the `command.ts` file instead.
-- `src/commands/**/routes.ts` contains the command routes. This must export any new commands.
+- `src/commands/[...route]/[command]/command.ts` contains the [command](https://bloomberg.github.io/stricli/docs/features/command-routing/commands) arguments and CLI documentation.
+- `src/commands/[...route]/[command]/impl.ts` contains the actual function that gets executed when the command runs.
+- `src/commands/[...route]/[command]/readme.ts` is an optional file that can be used to add additional documentation to this repo's README.md for the command. This gets injected into the README.md below the CLI documentation for that command. NOTE: This should be used sparingly, since it is difficult to keep up to date. Prefer to use the `docs` field in the `command.ts` file instead.
+- `src/commands/[...route]/routes.ts` contains the command [route maps](https://bloomberg.github.io/stricli/docs/features/command-routing/route-maps). This must export any new commands.
 
 For more information on the commands and routings, see [the Stricli documentation](https://bloomberg.github.io/stricli/).
 

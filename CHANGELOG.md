@@ -5,13 +5,15 @@
 
 - [Changelog](#changelog)
   - [[9.0.0] - 2025-08-15](#900---2025-08-15)
+  - [[8.1.0] - 2025-08-18](#810---2025-08-18)
+    - [Added](#added)
   - [[8.0.0] - 2025-08-13](#800---2025-08-13)
   - [[7.3.0] - 2025-08-13](#730---2025-08-13)
-    - [Added](#added)
-  - [[7.2.0] - 2025-08-13](#720---2025-08-13)
     - [Added](#added-1)
-  - [[7.1.0] - 2025-08-05](#710---2025-08-05)
+  - [[7.2.0] - 2025-08-13](#720---2025-08-13)
     - [Added](#added-2)
+  - [[7.1.0] - 2025-08-05](#710---2025-08-05)
+    - [Added](#added-3)
   - [[7.0.3] - 2025-07-29](#703---2025-07-29)
     - [Fixed](#fixed)
   - [[7.0.2] - 2025-07-23](#702---2025-07-23)
@@ -36,6 +38,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [9.0.0] - 2025-08-15
 
 FIXME
+
+## [8.1.0] - 2025-08-18
+
+### Added
+
+- Adds new cli command to split CSVs into multiple chunks.
+
+```sh
+transcend admin chunk-csv --directory=$DIRECTORY_WITH_RAW_FILES --outputDir=$DIRECTORY_TO_UPLOAD --chunkSizeMB=5 --concurrency=10
+```
 
 ## [8.0.0] - 2025-08-13
 

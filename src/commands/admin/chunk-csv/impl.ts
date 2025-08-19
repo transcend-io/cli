@@ -4,6 +4,7 @@ import { logger } from '../../../logger';
 import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
 import {
   computePoolSize,
+  createExtraKeyHandler,
   CHILD_FLAG,
   type PoolHooks,
   runPool,
@@ -16,7 +17,7 @@ import {
   type ChunkTask,
 } from './worker';
 import { chunkCsvPlugin } from './ui';
-import { createExtraKeyHandler } from '../../../lib/pooling/extraKeys';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 /**
  * Returns the current module's path so the worker pool knows what file to re-exec.
@@ -65,10 +66,12 @@ export type ChunkCsvCommandFlags = {
  * @param this  - Bound CLI context (provides process exit + logging).
  * @param flags - CLI options for the run.
  */
-export async function chunkCsvParent(
+export async function chunkCsv(
   this: LocalContext,
   flags: ChunkCsvCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   const {
     directory,
     outputDir,
@@ -121,7 +124,7 @@ export async function chunkCsvParent(
     filesTotal: files.length,
     hooks,
     viewerMode,
-    render: (input) => dashboardPlugin(input, chunkCsvPlugin),
+    render: (input) => dashboardPlugin(input, chunkCsvPlugin, viewerMode),
     extraKeyHandler: ({ logsBySlot, repaint, setPaused }) =>
       createExtraKeyHandler({
         logsBySlot,
