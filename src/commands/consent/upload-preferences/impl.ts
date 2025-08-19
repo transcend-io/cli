@@ -14,6 +14,7 @@ import {
   runPool,
   dashboardPlugin,
   buildExportStatus,
+  createExtraKeyHandler,
 } from '../../../lib/pooling';
 
 import { runChild } from './worker';
@@ -30,7 +31,6 @@ import {
   isCheckModeTotals,
   uploadPreferencesPlugin,
 } from './ui';
-import { createExtraKeyHandler } from '../../../lib/pooling/extraKeys';
 
 /**
  * A unit of work: instructs a worker to upload (or check) a single CSV file.
