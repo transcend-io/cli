@@ -291,10 +291,10 @@ export async function uploadPreferences(
      *
      * @param options - Options with logDir, logsBySlot, startedAt, finishedAt, etc.
      */
-    postProcess: async ({ totals, logDir /* , logsBySlot, viewerMode */ }) => {
+    postProcess: async ({ totals }) => {
       try {
         // Persist failing updates CSV next to receipts/logDir.
-        const fPath = join(logDir || receiptsFolder, 'failing-updates.csv');
+        const fPath = join(receiptsFolder, 'failing-updates.csv');
         await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
         exportStatus.failuresCsv = {
           path: fPath,
@@ -357,7 +357,7 @@ export async function uploadPreferences(
         exportStatus, // keeps the exports panel updated
         custom: {
           F: async ({ noteExport, say }) => {
-            const fPath = join(exportMgr.exportsDir, 'failing-updates.csv');
+            const fPath = join(receiptsFolder, 'failing-updates.csv');
             await writeFailingUpdatesCsv(failingUpdatesMem, fPath);
             say(`\nWrote failing updates CSV to: ${fPath}`);
             noteExport('failuresCsv', fPath);

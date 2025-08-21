@@ -258,15 +258,15 @@ export type ExportStatusMap = {
 /**
  * Return export statuses
  *
- * @param logDir - Log directory
+ * @param receiptsFolder - Receipts directory
  * @returns Export map
  */
-export function buildExportStatus(logDir: string): ExportStatusMap {
+export function buildExportStatus(receiptsFolder: string): ExportStatusMap {
   return {
-    error: { path: join(logDir, 'combined-errors.log') },
-    warn: { path: join(logDir, 'combined-warns.log') },
-    info: { path: join(logDir, 'combined-info.log') },
-    all: { path: join(logDir, 'combined-all.log') },
-    failuresCsv: { path: join(logDir, 'failing-updates.csv') },
+    error: { path: join(receiptsFolder, 'combined-errors.log') },
+    warn: { path: join(receiptsFolder, 'combined-warns.log') },
+    info: { path: join(receiptsFolder, 'combined-info.log') },
+    all: { path: join(receiptsFolder, 'combined-all.log') },
+    failuresCsv: { path: join(receiptsFolder, 'failing-updates.csv') },
   };
 }
