@@ -77,7 +77,7 @@ export async function makeGraphQLRequest<T, V extends Variables = Variables>(
       retryCount += 1;
       logger.log(
         colors.yellow(
-          `REQUEST FAILED: ${err.message}. Retrying ${retryCount}/${maxRequests}...`,
+          `Retrying failed request (${retryCount} / ${maxRequests}): ${err.message}`,
         ),
       );
     }

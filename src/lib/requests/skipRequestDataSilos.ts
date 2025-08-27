@@ -6,6 +6,7 @@ import {
   makeGraphQLRequest,
   buildTranscendGraphQLClient,
   fetchRequestDataSilos,
+  fetchRequestDataSilosCount,
 } from '../graphql';
 import cliProgress from 'cli-progress';
 import { RequestStatus } from '@transcend-io/privacy-types';
@@ -20,7 +21,8 @@ import { DEFAULT_TRANSCEND_API } from '../../constants';
 export async function skipRequestDataSilos({
   dataSiloId,
   auth,
-  concurrency = 100,
+  concurrency = 50,
+  maxUploadPerChunk = 50000,
   status = 'SKIPPED',
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
@@ -37,6 +39,8 @@ export async function skipRequestDataSilos({
   transcendUrl?: string;
   /** Request statuses to mark as completed */
   requestStatuses?: RequestStatus[];
+  /** Maximum number of items to mark skipped per go */
+  maxUploadPerChunk?: number;
 }): Promise<number> {
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
@@ -44,16 +48,15 @@ export async function skipRequestDataSilos({
   // Time duration
   const t0 = new Date().getTime();
 
-  // fetch all RequestDataSilos that are open
-  const requestDataSilos = await fetchRequestDataSilos(client, {
+  // Determine total number of request data silos
+  const requestDataSiloCount = await fetchRequestDataSilosCount(client, {
     dataSiloId,
     requestStatuses,
   });
 
-  // Notify Transcend
   logger.info(
     colors.magenta(
-      `Processing data silo: "${dataSiloId}" marking "${requestDataSilos.length}" requests as skipped.`,
+      `Marking ${requestDataSiloCount} request data silos as completed`,
     ),
   );
 
@@ -64,29 +67,45 @@ export async function skipRequestDataSilos({
   );
 
   let total = 0;
-  progressBar.start(requestDataSilos.length, 0);
-  await map(
-    requestDataSilos,
-    async (requestDataSilo) => {
-      try {
-        await makeGraphQLRequest<{
-          /** Whether we successfully uploaded the results */
-          success: boolean;
-        }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
-          requestDataSiloId: requestDataSilo.id,
-          status,
-        });
-      } catch (err) {
-        if (!err.message.includes('Client error: Request must be active:')) {
-          throw err;
-        }
-      }
+  progressBar.start(requestDataSiloCount, 0);
 
-      total += 1;
-      progressBar.update(total);
-    },
-    { concurrency },
-  );
+  // fetch all RequestDataSilos that are open
+  while (total < requestDataSiloCount) {
+    const requestDataSilos = await fetchRequestDataSilos(client, {
+      dataSiloId,
+      requestStatuses,
+      limit: maxUploadPerChunk,
+      // eslint-disable-next-line no-loop-func
+      onProgress: (numUpdated) => {
+        total += numUpdated / 2;
+        progressBar.update(total);
+      },
+    });
+
+    await map(
+      requestDataSilos,
+      // eslint-disable-next-line no-loop-func
+      async (requestDataSilo) => {
+        try {
+          await makeGraphQLRequest<{
+            /** Whether we successfully uploaded the results */
+            success: boolean;
+          }>(client, CHANGE_REQUEST_DATA_SILO_STATUS, {
+            requestDataSiloId: requestDataSilo.id,
+            status,
+          });
+        } catch (err) {
+          if (!err.message.includes('Client error: Request must be active:')) {
+            throw err;
+          }
+        }
+
+        total += 0.5;
+        progressBar.update(total);
+      },
+      { concurrency },
+    );
+  }
 
   progressBar.stop();
   const t1 = new Date().getTime();
@@ -94,10 +113,10 @@ export async function skipRequestDataSilos({
 
   logger.info(
     colors.green(
-      `Successfully skipped  "${requestDataSilos.length}" requests in "${
+      `Successfully skipped  "${requestDataSiloCount}" requests in "${
         totalTime / 1000
       }" seconds!`,
     ),
   );
-  return requestDataSilos.length;
+  return requestDataSiloCount;
 }

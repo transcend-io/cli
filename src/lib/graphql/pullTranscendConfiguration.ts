@@ -88,8 +88,8 @@ import { fetchPartitions } from './syncPartitions';
 import { fetchAllAssessments } from './fetchAllAssessments';
 import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
 import {
-  AssessmentNestedRule,
   parseAssessmentDisplayLogic,
+  type AssessmentRule,
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
@@ -530,29 +530,30 @@ export async function pullTranscendConfiguration(
                                 'comparison-operator':
                                   displayLogicParsed.rule.comparisonOperator,
                                 'comparison-operands':
-                                  displayLogicParsed.rule.comparisonOperands,
+                                  // Safely access property with a check
+                                  'comparisonOperands' in
+                                  displayLogicParsed.rule
+                                    ? displayLogicParsed.rule.comparisonOperands
+                                    : undefined,
                               }
                             : undefined,
                           'nested-rule': displayLogicParsed.nestedRule
                             ? {
                                 'logic-operator':
                                   displayLogicParsed.nestedRule.logicOperator,
-                                rules:
-                                  /* eslint-disable @typescript-eslint/no-explicit-any */
-                                  (
-                                    (
-                                      (displayLogicParsed as any)
-                                        .nestedRule as AssessmentNestedRule
-                                    ).rules || []
-                                  ).map((rule) => ({
-                                    'depends-on-question-reference-id':
-                                      rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
-                                      rule.comparisonOperator,
-                                    'comparison-operands':
-                                      rule.comparisonOperands,
-                                  })),
-                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                                rules: (
+                                  displayLogicParsed.nestedRule.rules || []
+                                ).map((rule: AssessmentRule) => ({
+                                  'depends-on-question-reference-id':
+                                    rule.dependsOnQuestionReferenceId,
+                                  'comparison-operator':
+                                    rule.comparisonOperator,
+                                  'comparison-operands':
+                                    // Safely access property on the nested rule
+                                    'comparisonOperands' in rule
+                                      ? rule.comparisonOperands
+                                      : undefined,
+                                })),
                               }
                             : undefined,
                         }
@@ -706,29 +707,30 @@ export async function pullTranscendConfiguration(
                                 'comparison-operator':
                                   displayLogicParsed.rule.comparisonOperator,
                                 'comparison-operands':
-                                  displayLogicParsed.rule.comparisonOperands,
+                                  // Safely access property with a check
+                                  'comparisonOperands' in
+                                  displayLogicParsed.rule
+                                    ? displayLogicParsed.rule.comparisonOperands
+                                    : undefined,
                               }
                             : undefined,
                           'nested-rule': displayLogicParsed.nestedRule
                             ? {
                                 'logic-operator':
                                   displayLogicParsed.nestedRule.logicOperator,
-                                rules:
-                                  /* eslint-disable @typescript-eslint/no-explicit-any */
-                                  (
-                                    (
-                                      (displayLogicParsed as any)
-                                        .nestedRule as AssessmentNestedRule
-                                    ).rules || []
-                                  ).map((rule) => ({
-                                    'depends-on-question-reference-id':
-                                      rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
-                                      rule.comparisonOperator,
-                                    'comparison-operands':
-                                      rule.comparisonOperands,
-                                  })),
-                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                                rules: (
+                                  displayLogicParsed.nestedRule.rules || []
+                                ).map((rule: AssessmentRule) => ({
+                                  'depends-on-question-reference-id':
+                                    rule.dependsOnQuestionReferenceId,
+                                  'comparison-operator':
+                                    rule.comparisonOperator,
+                                  'comparison-operands':
+                                    // Safely access property on the nested rule
+                                    'comparisonOperands' in rule
+                                      ? rule.comparisonOperands
+                                      : undefined,
+                                })),
                               }
                             : undefined,
                         }

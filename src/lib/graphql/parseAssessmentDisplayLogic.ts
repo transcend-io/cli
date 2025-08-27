@@ -6,12 +6,33 @@ import {
 import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import * as t from 'io-ts';
 
-export const AssessmentRule = t.type({
+// This codec is for rules that logically require a list of values to compare against.
+export const AssessmentRuleWithOperands = t.type({
   dependsOnQuestionReferenceId: t.string,
-  comparisonOperator: valuesOf(ComparisonOperator),
+  comparisonOperator: t.union([
+    t.literal(ComparisonOperator.IsEqualTo),
+    t.literal(ComparisonOperator.IsNotEqualTo),
+    t.literal(ComparisonOperator.IsOneOf),
+    t.literal(ComparisonOperator.IsNotOneOf),
+    t.literal(ComparisonOperator.Contains),
+    t.literal(ComparisonOperator.IsShown),
+  ]),
   comparisonOperands: t.array(t.string),
 });
 
+// This codec is for the specific rule that does NOT require comparison operands.
+export const AssessmentRuleWithoutOperands = t.type({
+  dependsOnQuestionReferenceId: t.string,
+  comparisonOperator: t.literal(ComparisonOperator.IsNotShown),
+});
+
+/**
+ * The final, flexible codec that accepts EITHER a rule with operands OR a rule without them.
+ */
+export const AssessmentRule = t.union([
+  AssessmentRuleWithOperands,
+  AssessmentRuleWithoutOperands,
+]);
 /** Type override */
 export type AssessmentRule = t.TypeOf<typeof AssessmentRule>;
 
