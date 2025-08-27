@@ -49,6 +49,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+  - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
@@ -3167,6 +3168,69 @@ transcend admin chunk-csv \
 
 ```sh
 transcend admin chunk-csv --directory=./working/files
+```
+
+### `transcend admin parquet-to-csv`
+
+```txt
+USAGE
+  transcend admin parquet-to-csv (--directory value) [--outputDir value] [--clearOutputDir] [--concurrency value] [--viewerMode]
+  transcend admin parquet-to-csv --help
+
+Streams every .parquet in --directory and writes CSV output files
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row consistency; logs periodic progress and memory usage.
+
+FLAGS
+      --directory                           Directory containing Parquet files to convert (required)
+     [--outputDir]                          Directory to write CSV files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing CSVs                         [default = true]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)      [default = false]
+  -h  --help                                Print help information and exit
+```
+
+#### Examples
+
+**Convert all Parquet files in a directory to CSV**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv
+```
+
+**Limit worker pool concurrency**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --concurrency=4
+```
+
+**Viewer mode - non-interactive dashboard**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --viewerMode
+```
+
+**Clear output directory before writing**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --clearOutputDir
+```
+
+**Run with all options**
+
+```sh
+transcend admin parquet-to-csv \
+  --directory=./working/parquet \
+  --outputDir=./working/csv \
+  --concurrency=2 \
+  --viewerMode=false \
+  --clearOutputDir
+```
+
+**Default output directory (writes next to each input file)**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet
 ```
 
 ### `transcend migration sync-ot`

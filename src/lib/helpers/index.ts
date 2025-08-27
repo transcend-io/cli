@@ -10,3 +10,5 @@ export * from './retrySamePromise';
 export * from './limitRecords';
 export * from './RateCounter';
 export * from './readSafe';
+export * from './collectParquetFilesOrExit';
+export * from './parquetToCsvOneFile';

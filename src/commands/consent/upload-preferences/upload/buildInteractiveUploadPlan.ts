@@ -20,6 +20,7 @@ import type { FormattedAttribute } from '../../../../lib/graphql/formatAttribute
 import type { GraphQLClient } from 'graphql-request';
 import { limitRecords } from '../../../../lib/helpers';
 import { transformCsv } from './transform';
+import type { PreferenceUploadProgress } from './types';
 
 export interface InteractiveUploadPreferencePlan {
   /** CSV file path to load preference records from */
@@ -75,6 +76,7 @@ export async function buildInteractiveUploadPreferencePlan({
   identifierColumns,
   columnsToIgnore = [],
   attributes = [],
+  onProgress,
 }: {
   /** Transcend GraphQL client */
   client: GraphQLClient;
@@ -106,6 +108,8 @@ export async function buildInteractiveUploadPreferencePlan({
   identifierDownloadLogInterval?: number;
   /** Maximum records to write out to the receipt file */
   maxRecordsToReceipt?: number;
+  /** on progress callback */
+  onProgress?: (info: PreferenceUploadProgress) => void;
 }): Promise<InteractiveUploadPreferencePlan> {
   const parsedAttributes = parseAttributesFromString(attributes);
 
@@ -146,6 +150,7 @@ export async function buildInteractiveUploadPreferencePlan({
       identifierColumns,
       identifierDownloadLogInterval,
       columnsToIgnore,
+      onProgress,
     },
     schema.state,
   );

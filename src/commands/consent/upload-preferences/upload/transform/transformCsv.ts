@@ -21,7 +21,8 @@ export function transformCsv(
   const isUdp =
     keys.includes('email_address') &&
     keys.includes('person_id') &&
-    keys.includes('member_id');
+    keys.includes('member_id') &&
+    keys.includes('birth_dt');
   if (isUdp) {
     logger.info(
       colors.yellow(
@@ -33,9 +34,20 @@ export function transformCsv(
       const email = (pref.email_address || '').toLowerCase().trim();
       const emailAddress =
         !email || disallowedEmails.includes(email) ? '' : pref.email_address;
+      const birthDate = new Date(pref.birth_dt);
+      if (!!pref.birth_dt || Number.isNaN(birthDate.getTime())) {
+        logger.warn(
+          colors.yellow(`No birth date for record: ${pref.email_address}`),
+        );
+      }
       return {
         ...pref,
-        person_id: pref.person_id !== '-2' ? pref.person_id : '',
+        Minor:
+          !pref.birth_dt || Number.isNaN(birthDate.getTime())
+            ? ''
+            : Date.now() - birthDate.getTime() < 1000 * 60 * 60 * 24 * 365 * 18
+            ? 'True'
+            : 'False',
         email_address: emailAddress,
         // preference email address over transcendID
         transcendID: emailAddress
@@ -46,6 +58,33 @@ export function transformCsv(
       };
     });
   }
+
+  const isAdobe =
+    keys.includes('hashedCostcoID') &&
+    keys.includes('address') &&
+    keys.includes('lastUpdatedDate');
+  if (isAdobe) {
+    logger.info(colors.green('Pre-processing as adobe '));
+    return preferences.map((pref) => {
+      if (!pref.lastUpdatedDate) {
+        logger.warn(
+          colors.yellow(
+            `Record missing lastUpdatedDate - setting to now() - ${JSON.stringify(
+              pref,
+            )}`,
+          ),
+        );
+      }
+      return {
+        ...pref,
+        lastUpdatedDate: pref.lastUpdatedDate
+          ? pref.lastUpdatedDate
+          : new Date('08/24/2025').toISOString(),
+      };
+    });
+  }
+
+  logger.info(colors.green('No special transformations applied.'));
 
   // FIXME skip the emails
   return preferences;

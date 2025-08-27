@@ -1,11 +1,3 @@
-/**
- * Module: state/schemaState
- *
- * Thin wrapper over PersistedState(FileFormatState) for schema/config
- * discovered during CSV parsing. Includes exponential backoff on transient
- * JSON parse errors ("Unexpected end of JSON input") which can occur if a
- * schema cache file is being written by another process.
- */
 import { PersistedState } from '@transcend-io/persisted-state';
 import {
   FileFormatState,

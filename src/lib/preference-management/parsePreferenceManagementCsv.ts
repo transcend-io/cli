@@ -23,6 +23,7 @@ import { checkIfPendingPreferenceUpdatesAreNoOp } from './checkIfPendingPreferen
 import { checkIfPendingPreferenceUpdatesCauseConflict } from './checkIfPendingPreferenceUpdatesCauseConflict';
 import type { ObjByString } from '@transcend-io/type-utils';
 import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
+import type { PreferenceUploadProgress } from '../../commands/consent/upload-preferences/upload';
 
 /**
  * Parse a file into the cache
@@ -49,6 +50,7 @@ export async function parsePreferenceManagementCsvWithCache(
     downloadIdentifierConcurrency,
     identifierDownloadLogInterval,
     columnsToIgnore,
+    onProgress,
   }: {
     /** File to parse */
     file: string;
@@ -76,6 +78,8 @@ export async function parsePreferenceManagementCsvWithCache(
     identifierDownloadLogInterval: number;
     /** Concurrency for downloading identifiers */
     downloadIdentifierConcurrency: number;
+    /** on progress callback */
+    onProgress?: (info: PreferenceUploadProgress) => void;
   },
   schemaState: PersistedState<typeof FileFormatState>,
 ): Promise<{
@@ -129,6 +133,7 @@ export async function parsePreferenceManagementCsvWithCache(
         logInterval: identifierDownloadLogInterval,
         partitionKey,
         concurrency: downloadIdentifierConcurrency,
+        onProgress,
       });
 
   // Create a map of all unique identifiers to consent records

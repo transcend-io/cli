@@ -1,7 +1,10 @@
 import { mkdirSync, createWriteStream } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { splitCsvToList } from '../../../lib/requests';
-import { interactivePreferenceUploaderFromPlan } from './upload/interactivePreferenceUploaderFromPlan';
+import {
+  interactivePreferenceUploaderFromPlan,
+  buildInteractiveUploadPreferencePlan,
+} from './upload';
 import { makeSchemaState } from './schemaState';
 import { makeReceiptsState } from './artifacts/receipts/receiptsState';
 import {
@@ -9,7 +12,6 @@ import {
   createSombraGotInstance,
 } from '../../../lib/graphql';
 import { logger } from '../../../logger';
-import { buildInteractiveUploadPreferencePlan } from './upload/buildInteractiveUploadPlan';
 import type { TaskCommonOpts } from './buildTaskOptions';
 import type { ToWorker } from '../../../lib/pooling';
 import { getFilePrefix } from './artifacts';
@@ -101,6 +103,17 @@ export async function runChild(): Promise<void> {
             identifierColumns: options.identifierColumns,
             columnsToIgnore: options.columnsToIgnore,
             attributes: splitCsvToList(options.attributes),
+            // Report progress to parent process
+            onProgress: ({ successTotal, fileTotal }) => {
+              process.send?.({
+                type: 'progress',
+                payload: {
+                  filePath,
+                  processed: successTotal,
+                  total: fileTotal,
+                },
+              });
+            },
           });
 
           // Step 2: Execute the upload using the plan

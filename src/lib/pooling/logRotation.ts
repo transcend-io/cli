@@ -221,6 +221,7 @@ export function initLogDir(rootDir: string): string {
   const logDir = join(rootDir, 'logs');
   mkdirSync(logDir, { recursive: true });
 
+  // FIXME
   const RESET_MODE =
     (process.env.RESET_LOGS as 'truncate' | 'delete') ?? 'truncate';
   resetWorkerLogs(logDir, RESET_MODE);
@@ -257,6 +258,8 @@ export type ExportStatusMap = {
 
 /**
  * Return export statuses
+ *
+ * FIXME what is this for?
  *
  * @param receiptsFolder - Receipts directory
  * @returns Export map

@@ -11,6 +11,7 @@ import { extractErrorMessage, limitRecords } from '../../../../lib/helpers';
 import type { InteractiveUploadPreferencePlan } from './buildInteractiveUploadPlan';
 import type { PreferenceReceiptsInterface } from '../artifacts/receipts';
 import type { Got } from 'got';
+import type { PreferenceUploadProgress } from './types';
 
 /**
  * Execute the upload using a pre-built InteractiveUploadPlan.
@@ -67,15 +68,8 @@ export async function interactivePreferenceUploaderFromPlan(
     uploadConcurrency?: number;
     /** Maximum records to write out to the receipt file */
     maxRecordsToReceipt?: number;
-    /* existing options ... */
-    onProgress?: (info: {
-      /** how many records just succeeded */
-      successDelta: number;
-      /** cumulative successes in this file */
-      successTotal: number;
-      /** total records that will be uploaded in this file */
-      fileTotal: number;
-    }) => void;
+    /** on progress callback */
+    onProgress?: (info: PreferenceUploadProgress) => void;
   },
 ): Promise<void> {
   // Build final payloads (pure transform; no network)
@@ -123,6 +117,10 @@ export async function interactivePreferenceUploaderFromPlan(
   const t0 = Date.now();
   let uploadedCount = 0;
 
+  // reset failing
+  await receipts.setFailing({});
+
+  // Get successful and filtered entries
   const successful = receipts.getSuccessful();
   const allEntries = Object.entries(pendingUpdates) as Array<
     [string, PreferenceUpdateItem]
@@ -159,7 +157,7 @@ export async function interactivePreferenceUploaderFromPlan(
 
   // Retry policy for "retry in place" statuses
   const retryPolicy = {
-    maxAttempts: 3,
+    maxAttempts: 5,
     delayMs: 10_000,
     shouldRetry: (status?: number) =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

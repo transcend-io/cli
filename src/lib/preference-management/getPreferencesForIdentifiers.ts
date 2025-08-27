@@ -8,6 +8,7 @@ import { map } from 'bluebird';
 import { logger } from '../../logger';
 import { extractErrorMessage, getErrorStatus, splitInHalf } from '../helpers';
 import { RETRYABLE_BATCH_STATUSES } from '../../constants';
+import type { PreferenceUploadProgress } from '../../commands/consent/upload-preferences/upload';
 
 const PreferenceRecordsQueryResponse = t.intersection([
   t.type({
@@ -38,9 +39,10 @@ export async function getPreferencesForIdentifiers(
   {
     identifiers,
     partitionKey,
-    skipLogging = false,
-    logInterval = 10000,
     concurrency = 30,
+    onProgress,
+    logInterval = 10000,
+    skipLogging = false,
   }: {
     /** The list of identifiers to look up */
     identifiers: {
@@ -57,6 +59,8 @@ export async function getPreferencesForIdentifiers(
     logInterval?: number;
     /** Concurrency for fetching identifiers */
     concurrency?: number;
+    /** on progress callback */
+    onProgress?: (info: PreferenceUploadProgress) => void;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const results: PreferenceQueryResponseItem[] = [];
@@ -66,9 +70,24 @@ export async function getPreferencesForIdentifiers(
   const t0 = new Date().getTime();
 
   let total = 0;
+  onProgress?.({
+    successDelta: 0,
+    successTotal: 0,
+    fileTotal: identifiers.length, // FIXME should be record not identifier count
+  });
 
-  /** Progress logger respecting `logInterval` */
-  const maybeLogProgress = (): void => {
+  /**
+   * Progress logger respecting `logInterval`
+   *
+   * @param delta - delta updated
+   */
+  const maybeLogProgress = (delta: number): void => {
+    onProgress?.({
+      successDelta: delta,
+      successTotal: total,
+      fileTotal: identifiers.length,
+    });
+
     if (skipLogging) return;
     const shouldLog =
       total % logInterval === 0 ||
@@ -173,7 +192,7 @@ export async function getPreferencesForIdentifiers(
       const nodes = await postGroupWithRetries(group);
       results.push(...nodes);
       total += group.length;
-      maybeLogProgress();
+      maybeLogProgress(group.length);
     } catch (err) {
       const msg = extractErrorMessage(err);
 
@@ -187,7 +206,7 @@ export async function getPreferencesForIdentifiers(
             ),
           );
           total += 1;
-          maybeLogProgress();
+          maybeLogProgress(1);
           return;
         }
 

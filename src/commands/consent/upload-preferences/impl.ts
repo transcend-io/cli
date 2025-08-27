@@ -291,7 +291,7 @@ export async function uploadPreferences(
      *
      * @param options - Options with logDir, logsBySlot, startedAt, finishedAt, etc.
      */
-    postProcess: async ({ totals }) => {
+    postProcess: async ({ totals, logsBySlot }) => {
       try {
         // Persist failing updates CSV next to receipts/logDir.
         const fPath = join(receiptsFolder, 'failing-updates.csv');
@@ -302,9 +302,13 @@ export async function uploadPreferences(
           exported: true,
         };
 
-        // (Optional) If you want to auto-export combined logs like the old viewer:
-        // - import and use ExportManager here, using `logsBySlot`.
-        // - e.g., exportManager.exportCombinedLogs(logsBySlot, 'error' | 'warn' | 'info' | 'all')
+        // Save logs
+        await Promise.all([
+          exportMgr.exportCombinedLogs(logsBySlot, 'error'),
+          exportMgr.exportCombinedLogs(logsBySlot, 'warn'),
+          exportMgr.exportCombinedLogs(logsBySlot, 'info'),
+          exportMgr.exportCombinedLogs(logsBySlot, 'all'),
+        ]);
 
         // Summarize totals to stdout (parity with the old implementation)
         if (isUploadModeTotals(totals)) {
@@ -338,7 +342,7 @@ export async function uploadPreferences(
     UploadPreferencesResult,
     Totals
   >({
-    title: 'Upload Preferences',
+    title: `Upload Preferences - ${directory}`,
     baseDir: directory || receiptsFolder || process.cwd(),
     childFlag: CHILD_FLAG,
     childModulePath: getCurrentModulePath(),
