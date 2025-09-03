@@ -115,7 +115,7 @@ export async function chunkCsv(
 
   /* 5) Launch the pool runner with our hooks and custom dashboard plugin. */
   await runPool({
-    title: 'Chunk CSV',
+    title: `Chunk CSV - ${directory}`,
     baseDir: directory || outputDir || process.cwd(),
     childFlag: CHILD_FLAG,
     childModulePath: getCurrentModulePath(),
