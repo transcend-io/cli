@@ -22,7 +22,7 @@ export async function skipRequestDataSilos({
   dataSiloId,
   auth,
   concurrency = 50,
-  maxUploadPerChunk = 50000,
+  maxUploadPerChunk = 200000, // FIXME
   status = 'SKIPPED',
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
@@ -86,6 +86,15 @@ export async function skipRequestDataSilos({
       requestDataSilos,
       // eslint-disable-next-line no-loop-func
       async (requestDataSilo) => {
+        // FIXME
+        if (
+          requestDataSilo.status === 'SKIPPED' ||
+          requestDataSilo.status === 'RESOLVED'
+        ) {
+          total += 0.5;
+          progressBar.update(total);
+          return;
+        }
         try {
           await makeGraphQLRequest<{
             /** Whether we successfully uploaded the results */
