@@ -22,7 +22,7 @@ export async function skipRequestDataSilos({
   dataSiloId,
   auth,
   concurrency = 50,
-  maxUploadPerChunk = 1000,
+  maxUploadPerChunk = 50000,
   status = 'SKIPPED',
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestStatuses = [RequestStatus.Compiling, RequestStatus.Secondary],
