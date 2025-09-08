@@ -43,12 +43,6 @@ export const exportCommand = buildCommand({
         brief: 'Path to the CSV file where identifiers will be written to',
         default: './transcend-request-export.csv',
       },
-      concurrency: {
-        kind: 'parsed',
-        parse: numberParser,
-        brief: 'The concurrency to use when uploading requests in parallel',
-        default: '100',
-      },
       createdAtBefore: {
         kind: 'parsed',
         parse: dateParser,

@@ -36,10 +36,10 @@ const examples = buildExamples<ExportCommandFlags>(
       },
     },
     {
-      description: 'Increase the concurrency (defaults to 100)',
+      description: 'Decrease the concurrency (defaults to 100)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        concurrency: 500,
+        pageLimit: 50,
       },
     },
     {

@@ -15,7 +15,6 @@ export interface ExportCommandFlags {
   statuses?: RequestStatus[];
   transcendUrl: string;
   file: string;
-  concurrency: number;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
   showTests?: boolean;
