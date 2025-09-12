@@ -15,7 +15,6 @@ export const AssessmentRuleWithOperands = t.type({
     t.literal(ComparisonOperator.IsOneOf),
     t.literal(ComparisonOperator.IsNotOneOf),
     t.literal(ComparisonOperator.Contains),
-    t.literal(ComparisonOperator.IsShown),
   ]),
   comparisonOperands: t.array(t.string),
 });
@@ -23,7 +22,10 @@ export const AssessmentRuleWithOperands = t.type({
 // This codec is for the specific rule that does NOT require comparison operands.
 export const AssessmentRuleWithoutOperands = t.type({
   dependsOnQuestionReferenceId: t.string,
-  comparisonOperator: t.literal(ComparisonOperator.IsNotShown),
+  comparisonOperator: t.union([
+    t.literal(ComparisonOperator.IsNotShown),
+    t.literal(ComparisonOperator.IsShown),
+  ]),
 });
 
 /**
