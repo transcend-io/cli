@@ -1210,7 +1210,8 @@ FLAGS
 ```sh
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
-  --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
+  --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+  --statuses=COMPILING,SECONDARY
 ```
 
 **Specifying the backend URL, needed for US hosted backend infrastructure**
@@ -1219,7 +1220,8 @@ transcend request system skip-request-data-silos \
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
   --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
-  --transcendUrl=https://api.us.transcend.io
+  --transcendUrl=https://api.us.transcend.io \
+  --statuses=COMPILING,SECONDARY
 ```
 
 **Only mark as completed requests in "removing data" phase**
@@ -1237,6 +1239,7 @@ transcend request system skip-request-data-silos \
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
   --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+  --statuses=COMPILING,SECONDARY \
   --status=RESOLVED
 ```
 
