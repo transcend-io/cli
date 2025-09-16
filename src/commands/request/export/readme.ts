@@ -64,6 +64,13 @@ const examples = buildExamples<ExportCommandFlags>(
         file: './path/to/file.csv',
       },
     },
+    {
+      description: 'Skip fetching request identifiers',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        skipRequestIdentifiers: true,
+      },
+    },
   ],
 );
 

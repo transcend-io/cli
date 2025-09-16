@@ -34,6 +34,7 @@ export async function pullPrivacyRequests({
   pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
+  skipRequestIdentifiers = false,
   createdAtAfter,
   isTest,
 }: {
@@ -57,6 +58,8 @@ export async function pullPrivacyRequests({
   createdAtAfter?: Date;
   /** Return test requests */
   isTest?: boolean;
+  /** Skip fetching request identifier */
+  skipRequestIdentifiers?: boolean;
 }): Promise<{
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
@@ -102,25 +105,30 @@ export async function pullPrivacyRequests({
   });
 
   // Fetch the request identifiers for those requests
-  const requestsWithRequestIdentifiers = await map(
-    requests,
-    async (request) => {
-      const requestIdentifiers = await fetchAllRequestIdentifiers(
-        client,
-        sombra,
+  const requestsWithRequestIdentifiers = skipRequestIdentifiers
+    ? requests.map((request) => ({
+        ...request,
+        requestIdentifiers: [],
+      }))
+    : await map(
+        requests,
+        async (request) => {
+          const requestIdentifiers = await fetchAllRequestIdentifiers(
+            client,
+            sombra,
+            {
+              requestId: request.id,
+            },
+          );
+          return {
+            ...request,
+            requestIdentifiers,
+          };
+        },
         {
-          requestId: request.id,
+          concurrency: pageLimit,
         },
       );
-      return {
-        ...request,
-        requestIdentifiers,
-      };
-    },
-    {
-      concurrency: pageLimit,
-    },
-  );
 
   logger.info(
     colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),
@@ -145,6 +153,7 @@ export async function pullPrivacyRequests({
       isSilent,
       isTest,
       coreIdentifier,
+      purpose,
       ...request
     }) => ({
       'Request ID': id,
@@ -161,6 +170,19 @@ export async function pullPrivacyRequests({
       'Silent Mode': isSilent,
       'Is Test Request': isTest,
       Language: locale,
+      'Purpose Trigger Name': purpose?.title || purpose?.name || '',
+      'Purpose Trigger Value': purpose?.consent?.toString() || '',
+      ...(purpose?.enrichedPreferences || []).reduce((acc, p) => {
+        const title = p.preferenceTopic?.title.defaultMessage || p.name;
+        return title
+          ? {
+              ...acc,
+              [title]: p.selectValues
+                ? p.selectValues.map((x) => x.name).join(';')
+                : p.selectValue?.name || p.booleanValue,
+            }
+          : acc;
+      }, {}),
       ...request,
       ...Object.entries(groupBy(attributeValues, 'attributeKey.name')).reduce(
         (acc, [name, values]) =>
