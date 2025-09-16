@@ -15,6 +15,47 @@ import {
 import { logger } from '../../logger';
 import { LanguageKey } from '@transcend-io/internationalization';
 
+export const RequestPurposeTrigger = t.type({
+  title: t.string,
+  name: t.string,
+  consent: t.boolean,
+  enrichedPreferences: t.array(
+    t.type({
+      topic: t.string,
+      selectValues: t.array(
+        t.type({
+          id: t.string,
+          name: t.string,
+          preferenceOption: t.type({
+            id: t.string,
+            slug: t.string,
+            title: t.type({
+              defaultMessage: t.string,
+            }),
+          }),
+        }),
+      ),
+      selectValue: t.type({
+        id: t.string,
+        name: t.string,
+      }),
+      preferenceTopic: t.type({
+        title: t.type({
+          defaultMessage: t.string,
+        }),
+        id: t.string,
+        slug: t.string,
+      }),
+      name: t.string,
+      id: t.string,
+      booleanValue: t.boolean,
+    }),
+  ),
+});
+
+/** Override type */
+export type RequestPurposeTrigger = t.TypeOf<typeof RequestPurposeTrigger>;
+
 export const PrivacyRequest = t.intersection([
   t.type({
     /** Request ID */
@@ -59,6 +100,8 @@ export const PrivacyRequest = t.intersection([
   t.partial({
     /** Days remaining until expired */
     daysRemaining: t.union([t.null, t.number]),
+    /** Purpose */
+    purpose: RequestPurposeTrigger,
   }),
 ]);
 

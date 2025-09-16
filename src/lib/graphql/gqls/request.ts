@@ -35,6 +35,43 @@ export const REQUESTS = gql`
         subjectType
         country
         countrySubDivision
+        purpose {
+          title
+          name
+          consent
+          enrichedPreferences {
+            topic
+            selectValues {
+              id
+              name
+              preferenceOption {
+                id
+                slug
+                title {
+                  defaultMessage
+                }
+              }
+            }
+            selectValue {
+              id
+              name
+            }
+            selectValue {
+              id
+              name
+            }
+            preferenceTopic {
+              title {
+                defaultMessage
+              }
+              id
+              slug
+            }
+            name
+            id
+            booleanValue
+          }
+        }
         attributeValues {
           id
           name
