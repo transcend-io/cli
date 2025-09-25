@@ -41760,7 +41760,8 @@
                                       "SECURITY_MEASURE_DETAILS",
                                       "STORAGE_REGIONS",
                                       "DATA_PROTECTION_IMPACT_ASSESSMENT_LINK",
-                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS"
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS",
+                                      "METADATA"
                                     ]
                                   },
                                   "attribute-key": {
@@ -42237,7 +42238,8 @@
                                       "SECURITY_MEASURE_DETAILS",
                                       "STORAGE_REGIONS",
                                       "DATA_PROTECTION_IMPACT_ASSESSMENT_LINK",
-                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS"
+                                      "DATA_PROTECTION_IMPACT_ASSESSMENT_STATUS",
+                                      "METADATA"
                                     ]
                                   },
                                   "attribute-key": {
