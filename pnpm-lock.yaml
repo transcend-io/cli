@@ -21,8 +21,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@transcend-io/internationalization':
-        specifier: ^1.6.0
-        version: 1.7.4
+        specifier: ^2.0.0
+        version: 2.0.0
       '@transcend-io/persisted-state':
         specifier: ^1.0.4
         version: 1.0.4
@@ -644,6 +644,9 @@ packages:
 
   '@transcend-io/internationalization@1.7.4':
     resolution: {integrity: sha512-kg6c2Bjr823hBWrx62074ZlyBcW1FvK1dj77+lN7E70EyYxj6o5PordsOzxbLmTV1iZ0GLKGu+QiNl4xVOWfLA==}
+
+  '@transcend-io/internationalization@2.0.0':
+    resolution: {integrity: sha512-48z8n5tawHgZrwr+nQ7g48ehIkashAmpGDgmTMF3Q1dIk2tWYUFl5IL6nCrWCCI1bR5wtXzCF1WWkfOBpIN0wQ==}
 
   '@transcend-io/persisted-state@1.0.4':
     resolution: {integrity: sha512-jEDN64pr5Q1fniHMERa2+DKhuHbwdB1zzGdHoWgq4EIEx/ZJQxraiNfYoCpf5hpuiKxtXcIN41SC2/MI6MraoQ==}
@@ -3742,6 +3745,8 @@ snapshots:
       pluralize: 8.0.0
 
   '@transcend-io/internationalization@1.7.4': {}
+
+  '@transcend-io/internationalization@2.0.0': {}
 
   '@transcend-io/persisted-state@1.0.4':
     dependencies:
