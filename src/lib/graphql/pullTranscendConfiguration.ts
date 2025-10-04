@@ -83,7 +83,7 @@ import { TranscendPullResource } from '../../enums';
 import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
 import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LocaleValue } from '@transcend-io/internationalization';
 import { fetchPartitions } from './syncPartitions';
 import { fetchAllAssessments } from './fetchAllAssessments';
 import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
@@ -887,7 +887,7 @@ export async function pullTranscendConfiguration(
         targetReactIntlId: targetReactIntlId || undefined,
         translations: translations.reduce(
           (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),
-          {} as Record<LanguageKey, string>,
+          {} as Record<LocaleValue, string>,
         ),
       }),
     );

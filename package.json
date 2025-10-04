@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "8.21.0",
+  "version": "8.22.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -101,7 +101,7 @@
     "@stricli/core": "^1.2.0",
     "@transcend-io/airgap.js-types": "^12.12.1",
     "@transcend-io/handlebars-utils": "^1.1.0",
-    "@transcend-io/internationalization": "^1.6.0",
+    "@transcend-io/internationalization": "^2.0.0",
     "@transcend-io/persisted-state": "^1.0.4",
     "@transcend-io/privacy-types": "^4.134.0",
     "@transcend-io/secret-value": "^1.2.0",
