@@ -65,7 +65,7 @@ import {
 import { buildEnabledRouteType } from './lib/helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './lib/helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LOCALE_KEY } from '@transcend-io/internationalization';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -1337,9 +1337,9 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: t.boolean,
   /** What languages are supported for the privacy center */
-  locales: t.array(valuesOf(LanguageKey)),
+  locales: t.array(valuesOf(LOCALE_KEY)),
   /** The default locale for the privacy center */
-  defaultLocale: valuesOf(LanguageKey),
+  defaultLocale: valuesOf(LOCALE_KEY),
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: t.boolean,
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
@@ -1382,7 +1382,7 @@ export const PolicyInput = t.intersection([
     /** Content of the policy */
     content: t.string,
     /** The languages for which the policy is disabled for */
-    disabledLocales: t.array(valuesOf(LanguageKey)),
+    disabledLocales: t.array(valuesOf(LOCALE_KEY)),
   }),
 ]);
 
@@ -1403,7 +1403,7 @@ export const IntlMessageInput = t.intersection([
     /** The default message to use */
     defaultMessage: t.string,
     /** The translations */
-    translations: t.partial(applyEnum(LanguageKey, () => t.string)),
+    translations: t.partial(applyEnum(LOCALE_KEY, () => t.string)),
   }),
 ]);
 
