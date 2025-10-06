@@ -27,8 +27,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       '@transcend-io/privacy-types':
-        specifier: ^4.134.0
-        version: 4.134.0
+        specifier: ^4.138.0
+        version: 4.138.0
       '@transcend-io/secret-value':
         specifier: ^1.2.0
         version: 1.2.1
@@ -642,17 +642,14 @@ packages:
   '@transcend-io/handlebars-utils@1.1.0':
     resolution: {integrity: sha512-mDbKm9JObd9mioNlEYGa2zfTBqli1KAAM+iRHSqi6s2l7MAYENxjlfvXN5uC97T9/90vfWlxNbHjLpUuQVURaA==}
 
-  '@transcend-io/internationalization@1.7.4':
-    resolution: {integrity: sha512-kg6c2Bjr823hBWrx62074ZlyBcW1FvK1dj77+lN7E70EyYxj6o5PordsOzxbLmTV1iZ0GLKGu+QiNl4xVOWfLA==}
-
   '@transcend-io/internationalization@2.0.0':
     resolution: {integrity: sha512-48z8n5tawHgZrwr+nQ7g48ehIkashAmpGDgmTMF3Q1dIk2tWYUFl5IL6nCrWCCI1bR5wtXzCF1WWkfOBpIN0wQ==}
 
   '@transcend-io/persisted-state@1.0.4':
     resolution: {integrity: sha512-jEDN64pr5Q1fniHMERa2+DKhuHbwdB1zzGdHoWgq4EIEx/ZJQxraiNfYoCpf5hpuiKxtXcIN41SC2/MI6MraoQ==}
 
-  '@transcend-io/privacy-types@4.134.0':
-    resolution: {integrity: sha512-RSW4uC0Cw0IGnxhyHAXiU/Z2VnHeZ9TOd8mPrH4kxb/Ps2LFFlqKkukgE49d6iPIM5PIj+54H//MBVbeXSKWbA==}
+  '@transcend-io/privacy-types@4.138.0':
+    resolution: {integrity: sha512-aQeDAzgBgp4XTvUhDRFLatOzxowSkZ/Rto9Dy6tQ5uXXSkviBbLVvN/SzNj8idWDOm+G0tvkPb18a8n2Q7jUbQ==}
 
   '@transcend-io/secret-value@1.2.1':
     resolution: {integrity: sha512-pb2thX9znGJ9GOm6A2kgIzwEchB3E6Zn1KTLIBJx+T+K7XkqRwQJsQL0vKGiJVmZZ0iB3bLSAABHoWwNAZcFxA==}
@@ -3744,8 +3741,6 @@ snapshots:
       lodash: 4.17.21
       pluralize: 8.0.0
 
-  '@transcend-io/internationalization@1.7.4': {}
-
   '@transcend-io/internationalization@2.0.0': {}
 
   '@transcend-io/persisted-state@1.0.4':
@@ -3755,9 +3750,9 @@ snapshots:
       io-ts: 2.2.22(fp-ts@2.16.10)
       mkdirp: 1.0.4
 
-  '@transcend-io/privacy-types@4.134.0':
+  '@transcend-io/privacy-types@4.138.0':
     dependencies:
-      '@transcend-io/internationalization': 1.7.4
+      '@transcend-io/internationalization': 2.0.0
       '@transcend-io/type-utils': 1.8.4
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)

@@ -103,7 +103,7 @@
     "@transcend-io/handlebars-utils": "^1.1.0",
     "@transcend-io/internationalization": "^2.0.0",
     "@transcend-io/persisted-state": "^1.0.4",
-    "@transcend-io/privacy-types": "^4.134.0",
+    "@transcend-io/privacy-types": "^4.138.0",
     "@transcend-io/secret-value": "^1.2.0",
     "@transcend-io/type-utils": "^1.8.0",
     "JSONStream": "^1.3.5",
