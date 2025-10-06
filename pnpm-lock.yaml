@@ -15,8 +15,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       '@transcend-io/airgap.js-types':
-        specifier: ^12.12.1
-        version: 12.12.2
+        specifier: ^12.14.0
+        version: 12.14.0
       '@transcend-io/handlebars-utils':
         specifier: ^1.1.0
         version: 1.1.0
@@ -30,7 +30,7 @@ importers:
         specifier: ^4.138.0
         version: 4.138.0
       '@transcend-io/secret-value':
-        specifier: ^1.2.0
+        specifier: ^1.2.1
         version: 1.2.1
       '@transcend-io/type-utils':
         specifier: ^1.8.0
@@ -636,8 +636,8 @@ packages:
   '@textlint/markdown-to-ast@12.6.1':
     resolution: {integrity: sha512-T0HO+VrU9VbLRiEx/kH4+gwGMHNMIGkp0Pok+p0I33saOOLyhfGvwOKQgvt2qkxzQEV2L5MtGB8EnW4r5d3CqQ==}
 
-  '@transcend-io/airgap.js-types@12.12.2':
-    resolution: {integrity: sha512-bvJGlcmd+vY0iatpBTHpGE1Qg4L004v2xSYd2aBGZ/rHPH21GHdtskEGbX5pzaJpUem8ZnI4B3d7aQLbdmJTUQ==}
+  '@transcend-io/airgap.js-types@12.14.0':
+    resolution: {integrity: sha512-TyiCDjO1hESpq4I8oMiax3+1RDSf6VOHBFlPzea3TJkWsXnY2c93kKQBIbj0f3w3G/mnOT3qcxJ3FwMIynTxsw==}
 
   '@transcend-io/handlebars-utils@1.1.0':
     resolution: {integrity: sha512-mDbKm9JObd9mioNlEYGa2zfTBqli1KAAM+iRHSqi6s2l7MAYENxjlfvXN5uC97T9/90vfWlxNbHjLpUuQVURaA==}
@@ -3727,7 +3727,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@transcend-io/airgap.js-types@12.12.2':
+  '@transcend-io/airgap.js-types@12.14.0':
     dependencies:
       '@transcend-io/type-utils': 1.8.4
       fp-ts: 2.16.10

@@ -60,7 +60,6 @@
                   "PLUGINS_WITH_ERRORS",
                   "ONBOARDING",
                   "REQUEST_ASSIGNED_TO_USER",
-                  "DATA_SILO_NEEDS_TRAINING",
                   "BUSINESS_ENTITY_NEEDS_DOCUMENTATION",
                   "DATA_POINT_DATABASE_QUERY_NEEDS_APPROVAL"
                 ]
