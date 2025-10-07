@@ -5,7 +5,7 @@ import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { difference } from 'lodash-es';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
   buildTranscendGraphQLClient,
@@ -102,7 +102,7 @@ export async function bulkRestartRequests({
   // Create a new state file to store the requests from this run
   const cacheFile = join(
     requestReceiptFolder,
-    `tr-request-restart-${new Date().toISOString()}`,
+    `tr-request-restart-${new Date().toISOString()}.json`,
   );
   const state = new PersistedState(cacheFile, CachedRequestState, {
     restartedRequests: [],
@@ -114,8 +114,8 @@ export async function bulkRestartRequests({
 
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
-
   const allRequests = await fetchAllRequests(client, {
+    requestIds,
     actions: requestActions,
     statuses: requestStatuses,
     createdAtBefore,
@@ -124,7 +124,7 @@ export async function bulkRestartRequests({
   const requests = allRequests.filter(
     (request) => new Date(request.createdAt) < createdAt,
   );
-  logger.info(`Found ${requests.length} requests to process`);
+  logger.info(`Found ${requests.length} requests to restart`);
 
   if (copyIdentifiers) {
     logger.info('copyIdentifiers detected - All Identifiers will be copied.');
@@ -239,7 +239,9 @@ export async function bulkRestartRequests({
     logger.error(
       colors.red(
         `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
+          `See "${resolve(
+            cacheFile,
+          )}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);
