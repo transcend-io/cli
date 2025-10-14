@@ -1667,14 +1667,14 @@ transcend consent build-xdi-sync-endpoint \
 
 ```txt
 USAGE
-  transcend consent generate-access-tokens (--auth value) [--file value] (--subjectType value) [--emailColumnName value] [--coreIdentifierColumnName value] [--duration value] [--transcendUrl value]
+  transcend consent generate-access-tokens (--auth value) (--file value) (--subjectType value) [--emailColumnName value] [--coreIdentifierColumnName value] [--duration value] [--transcendUrl value]
   transcend consent generate-access-tokens --help
 
 This command allows for the generation of access tokens for users specified in a CSV file.
 
 FLAGS
       --auth                       The Transcend API key. Requires scopes: "Generate Preference Access Tokens"
-     [--file]                      Path to the CSV file containing user identifiers to generate access tokens for                                                                                                                        [default = ./users.csv]
+      --file                       Path to the CSV file containing user identifiers to generate access tokens for
       --subjectType                Slug for the data subject that the user will be logged in as on the Privacy Center. e.g. "customer" or "employee"
      [--emailColumnName]           Name of the column in the CSV that contains user email addresses                                                                                                                                      [default = email]
      [--coreIdentifierColumnName]  Name of the column in the CSV that contains user core identifiers

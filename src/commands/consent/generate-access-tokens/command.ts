@@ -21,7 +21,6 @@ export const generateAccessTokensCommand = buildCommand({
         parse: String,
         brief:
           'Path to the CSV file containing user identifiers to generate access tokens for',
-        default: './users.csv',
       },
       subjectType: {
         kind: 'parsed',
