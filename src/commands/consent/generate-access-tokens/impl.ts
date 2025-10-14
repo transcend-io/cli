@@ -51,6 +51,7 @@ export async function generateAccessTokens(
     coreIdentifierColumnName,
   }: GenerateAccessTokenCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
   if (!existsSync(file)) {
     logger.error(
       colors.red(
@@ -59,7 +60,6 @@ export async function generateAccessTokens(
     );
     this.process.exit(1);
   }
-  doneInputValidation(this.process.exit);
 
   try {
     // Create a GraphQL client
