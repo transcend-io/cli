@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { POLICIES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
+import type { LocaleValue } from '@transcend-io/internationalization';
 import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 
 export interface Policy {
@@ -13,7 +13,7 @@ export interface Policy {
     defaultMessage: string;
   };
   /** Disabled locales */
-  disabledLocales: LanguageKey[];
+  disabledLocales: LocaleValue[];
   /** Versions */
   versions: {
     /** Message content */

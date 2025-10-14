@@ -1,4 +1,4 @@
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LOCALE_KEY } from '@transcend-io/internationalization';
 import { DateFromISOString } from 'io-ts-types';
 
 import * as t from 'io-ts';
@@ -80,7 +80,7 @@ export const PrivacyRequestInput = t.intersection([
     /** Data silo IDs to submit for */
     dataSiloIds: t.array(t.string),
     /** Language key to map to */
-    locale: valuesOf(LanguageKey),
+    locale: valuesOf(LOCALE_KEY),
   }),
 ]);
 

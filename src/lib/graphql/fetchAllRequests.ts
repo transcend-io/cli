@@ -13,7 +13,7 @@ import {
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
 import { logger } from '../../logger';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LOCALE_KEY } from '@transcend-io/internationalization';
 
 export const RequestPurposeTrigger = t.type({
   title: t.string,
@@ -79,7 +79,7 @@ export const PrivacyRequest = t.intersection([
     /** Request details */
     details: t.string,
     /** Locale of request */
-    locale: valuesOf(LanguageKey),
+    locale: valuesOf(LOCALE_KEY),
     /** Status of request */
     status: valuesOf(RequestStatus),
     /** Type of data subject */

@@ -60,7 +60,6 @@
                   "PLUGINS_WITH_ERRORS",
                   "ONBOARDING",
                   "REQUEST_ASSIGNED_TO_USER",
-                  "DATA_SILO_NEEDS_TRAINING",
                   "BUSINESS_ENTITY_NEEDS_DOCUMENTATION",
                   "DATA_POINT_DATABASE_QUERY_NEEDS_APPROVAL"
                 ]
@@ -40700,6 +40699,72 @@
               "it",
               "ja",
               "ru",
+              "af",
+              "bg",
+              "zh",
+              "hr",
+              "cs",
+              "da",
+              "fi",
+              "el",
+              "hi",
+              "hu",
+              "ko",
+              "lt",
+              "ms",
+              "mr",
+              "nb",
+              "pl",
+              "pt",
+              "ro",
+              "sr",
+              "sv",
+              "ta",
+              "th",
+              "tr",
+              "uk",
+              "vi",
+              "zu",
+              "he",
+              "nl",
+              "et",
+              "is",
+              "lv",
+              "mt",
+              "sk",
+              "sl",
+              "fil",
+              "bs",
+              "ca",
+              "eu",
+              "gl",
+              "dv",
+              "ur",
+              "sq",
+              "am",
+              "hy",
+              "az",
+              "bn",
+              "fa-AF",
+              "tl",
+              "ka",
+              "gu",
+              "ht",
+              "ha",
+              "ga",
+              "kn",
+              "kk",
+              "mk",
+              "ml",
+              "mn",
+              "ps",
+              "pa",
+              "si",
+              "so",
+              "sw",
+              "te",
+              "uz",
+              "cy",
               "ar-AE",
               "fr-FR",
               "de-DE",
@@ -40710,6 +40775,7 @@
               "af-ZA",
               "bg-BG",
               "zh-CN",
+              "zh-TW",
               "hr-HR",
               "cs-CZ",
               "da-DK",
@@ -40725,6 +40791,7 @@
               "ko-KR",
               "lt-LT",
               "ms-MY",
+              "ms-SG",
               "mr-IN",
               "nb-NO",
               "pl-PL",
@@ -40733,6 +40800,7 @@
               "ro-RO",
               "ru-RU",
               "sr-Latn-RS",
+              "sr-Cyrl-RS",
               "sv-SE",
               "ta-IN",
               "th-TH",
@@ -40749,6 +40817,11 @@
               "nl-NL",
               "nl-BE",
               "es-ES",
+              "es-AR",
+              "es-CR",
+              "es-CL",
+              "es-CO",
+              "es-MX",
               "es-419",
               "zh-HK",
               "he-IL",
@@ -40758,7 +40831,55 @@
               "lv-LV",
               "mt-MT",
               "sk-SK",
-              "sl-SL"
+              "sl-SL",
+              "fil-PH",
+              "sq-AL",
+              "sq-MK",
+              "sq-XK",
+              "am-ET",
+              "hy-AM",
+              "az-AZ",
+              "bn-BD",
+              "bn-IN",
+              "bs-BA",
+              "bs-Cyrl-BA",
+              "bs-Latn-BA",
+              "ca-ES",
+              "ca-AD",
+              "ca-FR",
+              "ca-IT",
+              "tl-PH",
+              "ka-GE",
+              "gu-IN",
+              "ht-HT",
+              "ha-NG",
+              "ha-NE",
+              "ha-GH",
+              "ga-IE",
+              "kn-IN",
+              "kk-KZ",
+              "mk-MK",
+              "ml-IN",
+              "mn-MN",
+              "ps-AF",
+              "pa-Guru-IN",
+              "pa-Arab-PK",
+              "si-LK",
+              "so-SO",
+              "so-DJ",
+              "so-ET",
+              "so-KE",
+              "sw-KE",
+              "sw-TZ",
+              "sw-UG",
+              "sw-CD",
+              "te-IN",
+              "ur-PK",
+              "ur-IN",
+              "uz-UZ",
+              "cy-GB",
+              "eu-ES",
+              "gl-ES"
             ]
           }
         },
@@ -40773,6 +40894,72 @@
             "it",
             "ja",
             "ru",
+            "af",
+            "bg",
+            "zh",
+            "hr",
+            "cs",
+            "da",
+            "fi",
+            "el",
+            "hi",
+            "hu",
+            "ko",
+            "lt",
+            "ms",
+            "mr",
+            "nb",
+            "pl",
+            "pt",
+            "ro",
+            "sr",
+            "sv",
+            "ta",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zu",
+            "he",
+            "nl",
+            "et",
+            "is",
+            "lv",
+            "mt",
+            "sk",
+            "sl",
+            "fil",
+            "bs",
+            "ca",
+            "eu",
+            "gl",
+            "dv",
+            "ur",
+            "sq",
+            "am",
+            "hy",
+            "az",
+            "bn",
+            "fa-AF",
+            "tl",
+            "ka",
+            "gu",
+            "ht",
+            "ha",
+            "ga",
+            "kn",
+            "kk",
+            "mk",
+            "ml",
+            "mn",
+            "ps",
+            "pa",
+            "si",
+            "so",
+            "sw",
+            "te",
+            "uz",
+            "cy",
             "ar-AE",
             "fr-FR",
             "de-DE",
@@ -40783,6 +40970,7 @@
             "af-ZA",
             "bg-BG",
             "zh-CN",
+            "zh-TW",
             "hr-HR",
             "cs-CZ",
             "da-DK",
@@ -40798,6 +40986,7 @@
             "ko-KR",
             "lt-LT",
             "ms-MY",
+            "ms-SG",
             "mr-IN",
             "nb-NO",
             "pl-PL",
@@ -40806,6 +40995,7 @@
             "ro-RO",
             "ru-RU",
             "sr-Latn-RS",
+            "sr-Cyrl-RS",
             "sv-SE",
             "ta-IN",
             "th-TH",
@@ -40822,6 +41012,11 @@
             "nl-NL",
             "nl-BE",
             "es-ES",
+            "es-AR",
+            "es-CR",
+            "es-CL",
+            "es-CO",
+            "es-MX",
             "es-419",
             "zh-HK",
             "he-IL",
@@ -40831,7 +41026,55 @@
             "lv-LV",
             "mt-MT",
             "sk-SK",
-            "sl-SL"
+            "sl-SL",
+            "fil-PH",
+            "sq-AL",
+            "sq-MK",
+            "sq-XK",
+            "am-ET",
+            "hy-AM",
+            "az-AZ",
+            "bn-BD",
+            "bn-IN",
+            "bs-BA",
+            "bs-Cyrl-BA",
+            "bs-Latn-BA",
+            "ca-ES",
+            "ca-AD",
+            "ca-FR",
+            "ca-IT",
+            "tl-PH",
+            "ka-GE",
+            "gu-IN",
+            "ht-HT",
+            "ha-NG",
+            "ha-NE",
+            "ha-GH",
+            "ga-IE",
+            "kn-IN",
+            "kk-KZ",
+            "mk-MK",
+            "ml-IN",
+            "mn-MN",
+            "ps-AF",
+            "pa-Guru-IN",
+            "pa-Arab-PK",
+            "si-LK",
+            "so-SO",
+            "so-DJ",
+            "so-ET",
+            "so-KE",
+            "sw-KE",
+            "sw-TZ",
+            "sw-UG",
+            "sw-CD",
+            "te-IN",
+            "ur-PK",
+            "ur-IN",
+            "uz-UZ",
+            "cy-GB",
+            "eu-ES",
+            "gl-ES"
           ]
         },
         "preferBrowserDefaultLocale": {
@@ -41082,6 +41325,72 @@
                     "it",
                     "ja",
                     "ru",
+                    "af",
+                    "bg",
+                    "zh",
+                    "hr",
+                    "cs",
+                    "da",
+                    "fi",
+                    "el",
+                    "hi",
+                    "hu",
+                    "ko",
+                    "lt",
+                    "ms",
+                    "mr",
+                    "nb",
+                    "pl",
+                    "pt",
+                    "ro",
+                    "sr",
+                    "sv",
+                    "ta",
+                    "th",
+                    "tr",
+                    "uk",
+                    "vi",
+                    "zu",
+                    "he",
+                    "nl",
+                    "et",
+                    "is",
+                    "lv",
+                    "mt",
+                    "sk",
+                    "sl",
+                    "fil",
+                    "bs",
+                    "ca",
+                    "eu",
+                    "gl",
+                    "dv",
+                    "ur",
+                    "sq",
+                    "am",
+                    "hy",
+                    "az",
+                    "bn",
+                    "fa-AF",
+                    "tl",
+                    "ka",
+                    "gu",
+                    "ht",
+                    "ha",
+                    "ga",
+                    "kn",
+                    "kk",
+                    "mk",
+                    "ml",
+                    "mn",
+                    "ps",
+                    "pa",
+                    "si",
+                    "so",
+                    "sw",
+                    "te",
+                    "uz",
+                    "cy",
                     "ar-AE",
                     "fr-FR",
                     "de-DE",
@@ -41092,6 +41401,7 @@
                     "af-ZA",
                     "bg-BG",
                     "zh-CN",
+                    "zh-TW",
                     "hr-HR",
                     "cs-CZ",
                     "da-DK",
@@ -41107,6 +41417,7 @@
                     "ko-KR",
                     "lt-LT",
                     "ms-MY",
+                    "ms-SG",
                     "mr-IN",
                     "nb-NO",
                     "pl-PL",
@@ -41115,6 +41426,7 @@
                     "ro-RO",
                     "ru-RU",
                     "sr-Latn-RS",
+                    "sr-Cyrl-RS",
                     "sv-SE",
                     "ta-IN",
                     "th-TH",
@@ -41131,6 +41443,11 @@
                     "nl-NL",
                     "nl-BE",
                     "es-ES",
+                    "es-AR",
+                    "es-CR",
+                    "es-CL",
+                    "es-CO",
+                    "es-MX",
                     "es-419",
                     "zh-HK",
                     "he-IL",
@@ -41140,7 +41457,55 @@
                     "lv-LV",
                     "mt-MT",
                     "sk-SK",
-                    "sl-SL"
+                    "sl-SL",
+                    "fil-PH",
+                    "sq-AL",
+                    "sq-MK",
+                    "sq-XK",
+                    "am-ET",
+                    "hy-AM",
+                    "az-AZ",
+                    "bn-BD",
+                    "bn-IN",
+                    "bs-BA",
+                    "bs-Cyrl-BA",
+                    "bs-Latn-BA",
+                    "ca-ES",
+                    "ca-AD",
+                    "ca-FR",
+                    "ca-IT",
+                    "tl-PH",
+                    "ka-GE",
+                    "gu-IN",
+                    "ht-HT",
+                    "ha-NG",
+                    "ha-NE",
+                    "ha-GH",
+                    "ga-IE",
+                    "kn-IN",
+                    "kk-KZ",
+                    "mk-MK",
+                    "ml-IN",
+                    "mn-MN",
+                    "ps-AF",
+                    "pa-Guru-IN",
+                    "pa-Arab-PK",
+                    "si-LK",
+                    "so-SO",
+                    "so-DJ",
+                    "so-ET",
+                    "so-KE",
+                    "sw-KE",
+                    "sw-TZ",
+                    "sw-UG",
+                    "sw-CD",
+                    "te-IN",
+                    "ur-PK",
+                    "ur-IN",
+                    "uz-UZ",
+                    "cy-GB",
+                    "eu-ES",
+                    "gl-ES"
                   ]
                 }
               }
@@ -41200,6 +41565,204 @@
                   "ru": {
                     "type": "string"
                   },
+                  "af": {
+                    "type": "string"
+                  },
+                  "bg": {
+                    "type": "string"
+                  },
+                  "zh": {
+                    "type": "string"
+                  },
+                  "hr": {
+                    "type": "string"
+                  },
+                  "cs": {
+                    "type": "string"
+                  },
+                  "da": {
+                    "type": "string"
+                  },
+                  "fi": {
+                    "type": "string"
+                  },
+                  "el": {
+                    "type": "string"
+                  },
+                  "hi": {
+                    "type": "string"
+                  },
+                  "hu": {
+                    "type": "string"
+                  },
+                  "ko": {
+                    "type": "string"
+                  },
+                  "lt": {
+                    "type": "string"
+                  },
+                  "ms": {
+                    "type": "string"
+                  },
+                  "mr": {
+                    "type": "string"
+                  },
+                  "nb": {
+                    "type": "string"
+                  },
+                  "pl": {
+                    "type": "string"
+                  },
+                  "pt": {
+                    "type": "string"
+                  },
+                  "ro": {
+                    "type": "string"
+                  },
+                  "sr": {
+                    "type": "string"
+                  },
+                  "sv": {
+                    "type": "string"
+                  },
+                  "ta": {
+                    "type": "string"
+                  },
+                  "th": {
+                    "type": "string"
+                  },
+                  "tr": {
+                    "type": "string"
+                  },
+                  "uk": {
+                    "type": "string"
+                  },
+                  "vi": {
+                    "type": "string"
+                  },
+                  "zu": {
+                    "type": "string"
+                  },
+                  "he": {
+                    "type": "string"
+                  },
+                  "nl": {
+                    "type": "string"
+                  },
+                  "et": {
+                    "type": "string"
+                  },
+                  "is": {
+                    "type": "string"
+                  },
+                  "lv": {
+                    "type": "string"
+                  },
+                  "mt": {
+                    "type": "string"
+                  },
+                  "sk": {
+                    "type": "string"
+                  },
+                  "sl": {
+                    "type": "string"
+                  },
+                  "fil": {
+                    "type": "string"
+                  },
+                  "bs": {
+                    "type": "string"
+                  },
+                  "ca": {
+                    "type": "string"
+                  },
+                  "eu": {
+                    "type": "string"
+                  },
+                  "gl": {
+                    "type": "string"
+                  },
+                  "dv": {
+                    "type": "string"
+                  },
+                  "ur": {
+                    "type": "string"
+                  },
+                  "sq": {
+                    "type": "string"
+                  },
+                  "am": {
+                    "type": "string"
+                  },
+                  "hy": {
+                    "type": "string"
+                  },
+                  "az": {
+                    "type": "string"
+                  },
+                  "bn": {
+                    "type": "string"
+                  },
+                  "fa-AF": {
+                    "type": "string"
+                  },
+                  "tl": {
+                    "type": "string"
+                  },
+                  "ka": {
+                    "type": "string"
+                  },
+                  "gu": {
+                    "type": "string"
+                  },
+                  "ht": {
+                    "type": "string"
+                  },
+                  "ha": {
+                    "type": "string"
+                  },
+                  "ga": {
+                    "type": "string"
+                  },
+                  "kn": {
+                    "type": "string"
+                  },
+                  "kk": {
+                    "type": "string"
+                  },
+                  "mk": {
+                    "type": "string"
+                  },
+                  "ml": {
+                    "type": "string"
+                  },
+                  "mn": {
+                    "type": "string"
+                  },
+                  "ps": {
+                    "type": "string"
+                  },
+                  "pa": {
+                    "type": "string"
+                  },
+                  "si": {
+                    "type": "string"
+                  },
+                  "so": {
+                    "type": "string"
+                  },
+                  "sw": {
+                    "type": "string"
+                  },
+                  "te": {
+                    "type": "string"
+                  },
+                  "uz": {
+                    "type": "string"
+                  },
+                  "cy": {
+                    "type": "string"
+                  },
                   "ar-AE": {
                     "type": "string"
                   },
@@ -41228,6 +41791,9 @@
                     "type": "string"
                   },
                   "zh-CN": {
+                    "type": "string"
+                  },
+                  "zh-TW": {
                     "type": "string"
                   },
                   "hr-HR": {
@@ -41275,6 +41841,9 @@
                   "ms-MY": {
                     "type": "string"
                   },
+                  "ms-SG": {
+                    "type": "string"
+                  },
                   "mr-IN": {
                     "type": "string"
                   },
@@ -41297,6 +41866,9 @@
                     "type": "string"
                   },
                   "sr-Latn-RS": {
+                    "type": "string"
+                  },
+                  "sr-Cyrl-RS": {
                     "type": "string"
                   },
                   "sv-SE": {
@@ -41347,6 +41919,21 @@
                   "es-ES": {
                     "type": "string"
                   },
+                  "es-AR": {
+                    "type": "string"
+                  },
+                  "es-CR": {
+                    "type": "string"
+                  },
+                  "es-CL": {
+                    "type": "string"
+                  },
+                  "es-CO": {
+                    "type": "string"
+                  },
+                  "es-MX": {
+                    "type": "string"
+                  },
                   "es-419": {
                     "type": "string"
                   },
@@ -41375,6 +41962,150 @@
                     "type": "string"
                   },
                   "sl-SL": {
+                    "type": "string"
+                  },
+                  "fil-PH": {
+                    "type": "string"
+                  },
+                  "sq-AL": {
+                    "type": "string"
+                  },
+                  "sq-MK": {
+                    "type": "string"
+                  },
+                  "sq-XK": {
+                    "type": "string"
+                  },
+                  "am-ET": {
+                    "type": "string"
+                  },
+                  "hy-AM": {
+                    "type": "string"
+                  },
+                  "az-AZ": {
+                    "type": "string"
+                  },
+                  "bn-BD": {
+                    "type": "string"
+                  },
+                  "bn-IN": {
+                    "type": "string"
+                  },
+                  "bs-BA": {
+                    "type": "string"
+                  },
+                  "bs-Cyrl-BA": {
+                    "type": "string"
+                  },
+                  "bs-Latn-BA": {
+                    "type": "string"
+                  },
+                  "ca-ES": {
+                    "type": "string"
+                  },
+                  "ca-AD": {
+                    "type": "string"
+                  },
+                  "ca-FR": {
+                    "type": "string"
+                  },
+                  "ca-IT": {
+                    "type": "string"
+                  },
+                  "tl-PH": {
+                    "type": "string"
+                  },
+                  "ka-GE": {
+                    "type": "string"
+                  },
+                  "gu-IN": {
+                    "type": "string"
+                  },
+                  "ht-HT": {
+                    "type": "string"
+                  },
+                  "ha-NG": {
+                    "type": "string"
+                  },
+                  "ha-NE": {
+                    "type": "string"
+                  },
+                  "ha-GH": {
+                    "type": "string"
+                  },
+                  "ga-IE": {
+                    "type": "string"
+                  },
+                  "kn-IN": {
+                    "type": "string"
+                  },
+                  "kk-KZ": {
+                    "type": "string"
+                  },
+                  "mk-MK": {
+                    "type": "string"
+                  },
+                  "ml-IN": {
+                    "type": "string"
+                  },
+                  "mn-MN": {
+                    "type": "string"
+                  },
+                  "ps-AF": {
+                    "type": "string"
+                  },
+                  "pa-Guru-IN": {
+                    "type": "string"
+                  },
+                  "pa-Arab-PK": {
+                    "type": "string"
+                  },
+                  "si-LK": {
+                    "type": "string"
+                  },
+                  "so-SO": {
+                    "type": "string"
+                  },
+                  "so-DJ": {
+                    "type": "string"
+                  },
+                  "so-ET": {
+                    "type": "string"
+                  },
+                  "so-KE": {
+                    "type": "string"
+                  },
+                  "sw-KE": {
+                    "type": "string"
+                  },
+                  "sw-TZ": {
+                    "type": "string"
+                  },
+                  "sw-UG": {
+                    "type": "string"
+                  },
+                  "sw-CD": {
+                    "type": "string"
+                  },
+                  "te-IN": {
+                    "type": "string"
+                  },
+                  "ur-PK": {
+                    "type": "string"
+                  },
+                  "ur-IN": {
+                    "type": "string"
+                  },
+                  "uz-UZ": {
+                    "type": "string"
+                  },
+                  "cy-GB": {
+                    "type": "string"
+                  },
+                  "eu-ES": {
+                    "type": "string"
+                  },
+                  "gl-ES": {
                     "type": "string"
                   }
                 }
