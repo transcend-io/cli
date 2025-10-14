@@ -30,6 +30,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
   - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
   - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
+  - [`transcend consent generate-access-tokens`](#transcend-consent-generate-access-tokens)
   - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
   - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
   - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
@@ -1662,6 +1663,66 @@ transcend consent build-xdi-sync-endpoint \
   --transcendUrl=https://api.us.transcend.io
 ```
 
+### `transcend consent generate-access-tokens`
+
+```txt
+USAGE
+  transcend consent generate-access-tokens (--auth value) [--file value] (--subjectType value) [--emailColumnName value] [--coreIdentifierColumnName value] [--duration value] [--transcendUrl value]
+  transcend consent generate-access-tokens --help
+
+This command allows for the generation of access tokens for users specified in a CSV file.
+
+FLAGS
+      --auth                       The Transcend API key. Requires scopes: "Generate Preference Access Tokens"
+     [--file]                      Path to the CSV file containing user identifiers to generate access tokens for                                                                                                                        [default = ./users.csv]
+      --subjectType                Slug for the data subject that the user will be logged in as on the Privacy Center. e.g. "customer" or "employee"
+     [--emailColumnName]           Name of the column in the CSV that contains user email addresses                                                                                                                                      [default = email]
+     [--coreIdentifierColumnName]  Name of the column in the CSV that contains user core identifiers
+     [--duration]                  How long the access tokens should be valid. Accepts natural language and returns milliseconds. Examples: "3600", "1h", "90 minutes", "one day", "one month", "one year". Maximum duration is 3 years. [default = 1 year]
+     [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                          [default = https://api.transcend.io]
+  -h  --help                       Print help information and exit
+```
+
+#### Examples
+
+**Generate access tokens for users as the "customer" subject type**
+
+```sh
+transcend consent generate-access-tokens --auth="$TRANSCEND_API_KEY" --file=./users.csv --subjectType=customer
+```
+
+**Use natural-language duration (parsed to milliseconds) — e.g. 1 month**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./users.csv \
+  --subjectType=customer \
+  --duration="1 month"
+```
+
+**CSV with custom column names for email/coreIdentifier + a 90-day duration**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./my-users.csv \
+  --subjectType=employee \
+  --emailColumnName=user_email \
+  --coreIdentifierColumnName=crm_id \
+  --duration="90 days"
+```
+
+**Specifying the backend URL (US-hosted backend infrastructure)**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./users.csv \
+  --subjectType=customer \
+  --transcendUrl=https://api.us.transcend.io
+```
+
 ### `transcend consent pull-consent-metrics`
 
 ```txt
@@ -2992,7 +3053,7 @@ transcend inventory consent-managers-to-business-entities \
 
 ```txt
 USAGE
-  transcend admin generate-api-keys (--email value) (--password value) (--apiKeyTitle value) (--file value) (--scopes View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories) [--deleteExistingApiKey] [--createNewApiKey] [--parentOrganizationId value] [--transcendUrl value]
+  transcend admin generate-api-keys (--email value) (--password value) (--apiKeyTitle value) (--file value) (--scopes View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories|Generate Preference Access Tokens) [--deleteExistingApiKey] [--createNewApiKey] [--parentOrganizationId value] [--transcendUrl value]
   transcend admin generate-api-keys --help
 
 This command allows for creating API keys across multiple Transcend instances. This is useful for customers that are managing many Transcend instances and need to regularly create, cycle or delete API keys across all of their instances.
@@ -3006,7 +3067,7 @@ FLAGS
       --password                                        The password for your account login
       --apiKeyTitle                                     The title of the API key being generated or destroyed
       --file                                            The file where API keys should be written to
-      --scopes                                          The list of scopes that should be given to the API key                                                        [View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories, separator = ,]
+      --scopes                                          The list of scopes that should be given to the API key                                                        [View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories|Generate Preference Access Tokens, separator = ,]
      [--deleteExistingApiKey/--noDeleteExistingApiKey]  When true, if an API key exists with the specified apiKeyTitle, the existing API key is deleted               [default = true]
      [--createNewApiKey/--noCreateNewApiKey]            When true, new API keys will be created. Set to false if you simply want to delete all API keys with a title  [default = true]
      [--parentOrganizationId]                           Filter for only a specific organization by ID, returning all child accounts associated with that organization

@@ -20,7 +20,7 @@ export async function createSombraGotInstance(
   // Create GraphQL client to connect to Transcend backend
   const client = buildTranscendGraphQLClient(transcendUrl, transcendApiKey);
   // Grab metadata about organization's sombra from GraphQL endpoint
-  await makeGraphQLRequest<{
+  const { organization } = await makeGraphQLRequest<{
     /** Requests */
     organization: {
       /** PrimarySombra related to organization */
@@ -31,8 +31,7 @@ export async function createSombraGotInstance(
     };
   }>(client, ORGANIZATION);
   // Check if the sombra customerUrl is the default reverse tunnel URL
-  // const { customerUrl } = organization.sombra;
-  const customerUrl = 'https://multi-tenant.sombra.transcend.io';
+  const { customerUrl } = organization.sombra;
   if (
     [
       'https://sombra-reverse-tunnel.transcend.io',
