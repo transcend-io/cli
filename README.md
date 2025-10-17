@@ -1694,14 +1694,14 @@ https://docs.transcend.io/docs/articles/preference-management/access-links
 transcend consent generate-access-tokens --auth="$TRANSCEND_API_KEY" --file=./users.csv --subjectType=customer
 ```
 
-**Use natural-language duration (parsed to milliseconds) — e.g. 1 month**
+**One month (parsed to milliseconds) — e.g. 30d**
 
 ```sh
 transcend consent generate-access-tokens \
   --auth="$TRANSCEND_API_KEY" \
   --file=./users.csv \
   --subjectType=customer \
-  --duration="1 month"
+  --duration=30d
 ```
 
 **CSV with custom column names for email/coreIdentifier + a 90-day duration**

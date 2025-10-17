@@ -14,14 +14,13 @@ const examples = buildExamples<GenerateAccessTokenCommandFlags>(
       },
     },
     {
-      description:
-        'Use natural-language duration (parsed to milliseconds) — e.g. 1 month',
+      description: 'One month (parsed to milliseconds) — e.g. 30d',
       flags: {
         auth: '$TRANSCEND_API_KEY',
         file: './users.csv',
         subjectType: 'customer',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        duration: '1 month' as any,
+        duration: '30d' as any,
       },
     },
     {
