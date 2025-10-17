@@ -103,16 +103,15 @@ export class ExportManager {
     if (!this.exportsDir) throw new Error('exportsDir not set');
 
     mkdirSync(this.exportsDir, { recursive: true });
-    const ts = new Date().toISOString().replace(/[:.]/g, '-');
     const outPath = resolve(
       this.exportsDir,
       kind === 'error'
-        ? `combined-errors-${ts}.log`
+        ? 'combined-errors.log'
         : kind === 'warn'
-        ? `combined-warns-${ts}.log`
+        ? 'combined-warns.log'
         : kind === 'info'
-        ? `combined-info-${ts}.log`
-        : `combined-all-${ts}.log`,
+        ? 'combined-info.log'
+        : 'combined-all.log',
     );
 
     const lines: string[] = [];

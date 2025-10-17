@@ -50,6 +50,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+  - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
@@ -2108,7 +2109,7 @@ transcend consent upload-data-flows-from-csv \
 
 ```txt
 USAGE
-  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] [--file value] [--directory value] [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value]
+  transcend consent upload-preferences (--auth value) (--partition value) [--sombraAuth value] [--transcendUrl value] (--directory value) [--dryRun] [--skipExistingRecordCheck] [--receiptFileDir value] [--schemaFilePath value] [--skipWorkflowTriggers] [--forceTriggerWorkflows] [--skipConflictUpdates] [--isSilent] [--attributes value] [--receiptFilepath value] [--concurrency value] [--uploadConcurrency value] [--maxChunkSize value] [--rateLimitRetryDelay value] [--uploadLogInterval value] [--downloadIdentifierConcurrency value] [--maxRecordsToReceipt value] (--allowedIdentifierNames value) (--identifierColumns value) [--columnsToIgnore value] [--viewerMode]
   transcend consent upload-preferences --help
 
 Upload preference management data to your Preference Store.
@@ -2117,24 +2118,42 @@ This command prompts you to map the shape of the CSV to the shape of the Transce
 
 The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.
 
+Parallel preference uploader (Node 22+ ESM/TS)
+-----------------------------------------------------------------------------
+- Spawns a pool of child *processes* (not threads) to run uploads in parallel.
+- Shows a live dashboard in the parent terminal with progress per worker.
+- Creates per-worker log files and (optionally) opens OS terminals to tail them.
+- Uses the same module as both parent and child; the child mode is toggled
+  by the presence of a CLI flag ('--as-child').
+
 FLAGS
-      --auth                      The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
-      --partition                 The partition key to download consent preferences to
-     [--sombraAuth]               The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--transcendUrl]             URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                          [default = https://api.transcend.io]
-     [--file]                     Path to the CSV file to load preferences from
-     [--directory]                Path to the directory of CSV files to load preferences from
-     [--dryRun]                   Whether to do a dry run only - will write results to receiptFilepath without updating Transcend                                                       [default = false]
-     [--skipExistingRecordCheck]  Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD                                                                [default = false]
-     [--receiptFileDir]           Directory path where the response receipts should be saved                                                                                            [default = ./receipts]
-     [--skipWorkflowTriggers]     Whether to skip workflow triggers when uploading to preference store                                                                                  [default = false]
-     [--forceTriggerWorkflows]    Whether to force trigger workflows for existing consent records                                                                                       [default = false]
-     [--skipConflictUpdates]      Whether to skip uploading of any records where the preference store and file have a hard conflict                                                     [default = false]
-     [--isSilent/--noIsSilent]    Whether to skip sending emails in workflows                                                                                                           [default = true]
-     [--attributes]               Attributes to add to any DSR request if created. Comma-separated list of key:value pairs.                                                             [default = Tags:transcend-cli,Source:transcend-cli]
-     [--receiptFilepath]          Store resulting, continuing where left off                                                                                                            [default = ./preference-management-upload-receipts.json]
-     [--concurrency]              The concurrency to use when uploading in parallel                                                                                                     [default = 10]
-  -h  --help                      Print help information and exit
+      --auth                            The Transcend API key. Requires scopes: "Modify User Stored Preferences", "View Managed Consent Database Admin API", "View Preference Store Settings"
+      --partition                       The partition key to download consent preferences to
+     [--sombraAuth]                     The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--transcendUrl]                   URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                                                                                                                                                                                                                         [default = https://api.transcend.io]
+      --directory                       Path to the directory of CSV files to load preferences from
+     [--dryRun]                         Whether to do a dry run only - will write results to receiptFilepath without updating Transcend                                                                                                                                                                                                                                                                                                      [default = false]
+     [--skipExistingRecordCheck]        Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD                                                                                                                                                                                                                                                                                                               [default = false]
+     [--receiptFileDir]                 Directory path where the response receipts should be saved. Defaults to ./receipts if a "file" is provided, or <directory>/../receipts if a "directory" is provided.
+     [--schemaFilePath]                 The path to where the schema for the file should be saved. If file is provided, it will default to ./<filePrefix>-preference-upload-schema.json If directory is provided, it will default to <directory>/../preference-upload-schema.json
+     [--skipWorkflowTriggers]           Whether to skip workflow triggers when uploading to preference store                                                                                                                                                                                                                                                                                                                                 [default = false]
+     [--forceTriggerWorkflows]          Whether to force trigger workflows for existing consent records                                                                                                                                                                                                                                                                                                                                      [default = false]
+     [--skipConflictUpdates]            Whether to skip uploading of any records where the preference store and file have a hard conflict                                                                                                                                                                                                                                                                                                    [default = false]
+     [--isSilent/--noIsSilent]          Whether to skip sending emails in workflows                                                                                                                                                                                                                                                                                                                                                          [default = true]
+     [--attributes]                     Attributes to add to any DSR request if created. Comma-separated list of key:value pairs.                                                                                                                                                                                                                                                                                                            [default = Tags:transcend-cli,Source:transcend-cli]
+     [--receiptFilepath]                Store resulting, continuing where left off                                                                                                                                                                                                                                                                                                                                                           [default = ./preference-management-upload-receipts.json]
+     [--concurrency]                    The number of concurrent processes to use to upload the files. When this is not set, it defaults to the number of CPU cores available on the machine. e.g. if there are 5 concurrent processes for 15 files, each parallel job would get 3 files to process.
+     [--uploadConcurrency]              When uploading preferences to v1/preferences - this is the number of concurrent requests made at any given time by a single process.This is NOT the batch size—it's how many batch *tasks* run in parallel. The number of total concurrent requests is maxed out at concurrency * uploadConcurrency.                                                                                                 [default = 75]
+     [--maxChunkSize]                   When uploading preferences to v1/preferences - this is the maximum number of records to put in a single request.The number of total concurrent records being put in at any one time is is maxed out at maxChunkSize * concurrency * uploadConcurrency.                                                                                                                                               [default = 25]
+     [--rateLimitRetryDelay]            When uploading preferences to v1/preferences - this is the number of milliseconds to wait before retrying a request that was rate limited. This is only used if the request is rate limited by the Transcend API. If the request fails for any other reason, it will not be retried.                                                                                                                 [default = 3000]
+     [--uploadLogInterval]              When uploading preferences to v1/preferences - this is the number of records after which to log progress. Output will be logged to console and also to the receipt file. Setting this value lower will allow for you to more easily pick up where you left off. Setting this value higher can avoid excessive i/o operations slowing down the upload. Default is a good optimization for most cases. [default = 1000]
+     [--downloadIdentifierConcurrency]  When downloading identifiers for the upload - this is the number of concurrent requests to make. This is only used if the records are not already cached in the preference store.                                                                                                                                                                                                                    [default = 30]
+     [--maxRecordsToReceipt]            When writing out successful and pending records to the receipt file - this is the maximum number of records to write out. This is to avoid the receipt file getting too large for JSON.parse/stringify.                                                                                                                                                                                              [default = 10]
+      --allowedIdentifierNames          Identifiers configured for the run. Comma-separated list of identifier names.
+      --identifierColumns               Columns in the CSV that should be used as identifiers. Comma-separated list of column names.
+     [--columnsToIgnore]                Columns in the CSV that should be ignored. Comma-separated list of column names.
+     [--viewerMode]                     Run in non-interactive viewer mode (no attach UI, auto-artifacts)                                                                                                                                                                                                                                                                                                                                    [default = false]
+  -h  --help                            Print help information and exit
 ```
 
 A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv). In this example, `Sales` and `Marketing` are two custom Purposes, and `SalesCommunications` and `MarketingCommunications` are Preference Topics. During the interactive CLI prompt, you can map these columns to the slugs stored in Transcend!
@@ -2146,7 +2165,7 @@ A sample CSV can be found [here](./examples/cli-upload-preferences-example.csv).
 ```sh
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
-  --file=./preferences.csv \
+  --directory=./ \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
@@ -2156,7 +2175,7 @@ transcend consent upload-preferences \
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --file=./preferences.csv \
+  --directory=./csvs \
   --dryRun \
   --skipWorkflowTriggers \
   --skipConflictUpdates \
@@ -2171,7 +2190,7 @@ transcend consent upload-preferences \
 transcend consent upload-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --file=./preferences.csv \
+  --directory=./folder \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -3240,6 +3259,69 @@ transcend admin chunk-csv \
 
 ```sh
 transcend admin chunk-csv --directory=./working/files
+```
+
+### `transcend admin parquet-to-csv`
+
+```txt
+USAGE
+  transcend admin parquet-to-csv (--directory value) [--outputDir value] [--clearOutputDir] [--concurrency value] [--viewerMode]
+  transcend admin parquet-to-csv --help
+
+Streams every .parquet in --directory and writes CSV output files
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row consistency; logs periodic progress and memory usage.
+
+FLAGS
+      --directory                           Directory containing Parquet files to convert (required)
+     [--outputDir]                          Directory to write CSV files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing CSVs                         [default = true]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)      [default = false]
+  -h  --help                                Print help information and exit
+```
+
+#### Examples
+
+**Convert all Parquet files in a directory to CSV**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv
+```
+
+**Limit worker pool concurrency**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --concurrency=4
+```
+
+**Viewer mode - non-interactive dashboard**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --viewerMode
+```
+
+**Clear output directory before writing**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --clearOutputDir
+```
+
+**Run with all options**
+
+```sh
+transcend admin parquet-to-csv \
+  --directory=./working/parquet \
+  --outputDir=./working/csv \
+  --concurrency=2 \
+  --viewerMode=false \
+  --clearOutputDir
+```
+
+**Default output directory (writes next to each input file)**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet
 ```
 
 ### `transcend migration sync-ot`

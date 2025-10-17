@@ -5,14 +5,14 @@ import { logger } from '../../logger';
 import type { LocalContext } from '../../context';
 
 /**
- * Validate flags and collect CSV file paths from a directory.
+ * Validate flags and collect Parquet file paths from a directory.
  * On validation error, the provided `exit` function is called.
  *
- * @param directory - the directory containing CSV files
+ * @param directory - the directory containing Parquet files
  * @param localContext - the context of the command, used for logging and exit
- * @returns an array of valid CSV file paths
+ * @returns an array of valid Parquet file paths
  */
-export function collectCsvFilesOrExit(
+export function collectParquetFilesOrExit(
   directory: string | undefined,
   localContext: LocalContext,
 ): string[] {
@@ -25,7 +25,7 @@ export function collectCsvFilesOrExit(
   try {
     const entries = readdirSync(directory);
     files = entries
-      .filter((f) => f.endsWith('.csv'))
+      .filter((f) => f.endsWith('.parquet'))
       .map((f) => join(directory, f))
       .filter((p) => {
         try {
@@ -41,9 +41,11 @@ export function collectCsvFilesOrExit(
   }
 
   if (files.length === 0) {
-    logger.error(colors.red(`No CSV files found in directory: ${directory}`));
+    logger.error(
+      colors.red(`No Parquet files found in directory: ${directory}`),
+    );
     localContext.process.exit(1);
   }
-  logger.info(colors.green(`Found: ${files.join(', ')} CSV files`));
+  logger.info(colors.green(`Found: ${files.join(', ')} parquet files`));
   return files;
 }
