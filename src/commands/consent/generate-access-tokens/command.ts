@@ -46,11 +46,12 @@ export const generateAccessTokensCommand = buildCommand({
         kind: 'parsed',
         parse: parseDurationToMs,
         brief:
-          'How long the access tokens should be valid. Accepts natural language and returns milliseconds. ' +
-          'Examples: "3600", "1h", "90 minutes", "one day", "one month", "one year". ' +
-          'Maximum duration is 3 years.',
-        // Default of "1 year" → parsed to 31_536_000_000 ms
-        default: '1 year',
+          'How long the access tokens should be valid. Accepts human-friendly values ' +
+          'like "2 days", "10h", "90 minutes". A bare number is interpreted as seconds ' +
+          '(e.g., "300" = 5 minutes). Powered by the `ms` library: ' +
+          'https://github.com/vercel/ms',
+        // Default of "1y" → parsed to 31_557_600_000 ms
+        default: '1y',
       },
       transcendUrl: createTranscendUrlParameter(),
     },

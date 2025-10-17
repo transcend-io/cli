@@ -1,4 +1,4 @@
-import humanInterval from 'human-interval';
+import ms, { type StringValue as MsStringValue } from 'ms';
 
 /**
  * Validates and returns a UUID string.
@@ -65,37 +65,50 @@ export function dateParser(input: string): Date {
 
 /**
  * Parse a duration string to milliseconds.
- * Accepts natural language and returns milliseconds.
- * Examples: "3600", "1h", "90 minutes", "one day", "one month", "one year".
+ * Accepts concise/natural-ish strings (powered by `ms`) and returns milliseconds.
+ * Examples: "3600", "2d", "1h", "90 minutes", "10s".
  *
- * @param input - The duration string to parse
+ * @param input - The duration to parse
  * @returns The parsed duration in milliseconds
  * @throws Error if input is not a valid duration
  */
 export function parseDurationToMs(input: unknown): number {
-  // Numbers: keep backward-compat — interpret as seconds
   if (typeof input === 'number' && Number.isFinite(input)) {
+    // backward-compat: numbers => seconds
     return Math.round(input * 1000);
   }
 
-  // Strings: try number-first (seconds), then human phrases
   if (typeof input === 'string') {
     const trimmed = input.trim();
+    // empty string → our standardized error (avoid ms throwing its own)
+    if (trimmed === '') {
+      throw new Error(
+        'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
+      );
+    }
 
-    // Bare numeric string -> seconds
+    // bare numeric string => seconds (backward-compat)
     const asNumber = Number(trimmed);
-    if (!Number.isNaN(asNumber) && trimmed !== '') {
+    if (trimmed !== '' && Number.isFinite(asNumber)) {
       return Math.round(asNumber * 1000);
     }
 
-    // Human phrase -> ms (e.g., "one second", "1h", "90 minutes", "one year")
-    const ms = humanInterval(trimmed);
-    if (typeof ms === 'number' && Number.isFinite(ms)) {
-      return ms;
+    // let ms parse human strings
+    let parsed: number | undefined;
+    try {
+      parsed = ms(trimmed as MsStringValue);
+    } catch {
+      // normalize ms' error to ours
+      throw new Error(
+        'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
+      );
+    }
+    if (typeof parsed === 'number' && Number.isFinite(parsed)) {
+      return parsed;
     }
   }
 
   throw new Error(
-    'Invalid duration. Examples: "45", "1h", "90 minutes", "one day", "one month", "one year".',
+    'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
   );
 }

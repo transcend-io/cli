@@ -50,6 +50,10 @@ const examples = buildExamples<GenerateAccessTokenCommandFlags>(
   ],
 );
 
-export default `#### Examples
+export default `
+Learn more about generating access tokens in the Transcend Docs:
+https://docs.transcend.io/docs/articles/preference-management/access-links
+
+#### Examples
 
 ${examples}`;

@@ -1676,12 +1676,15 @@ FLAGS
       --auth                       The Transcend API key. Requires scopes: "Generate Preference Access Tokens"
       --file                       Path to the CSV file containing user identifiers to generate access tokens for
       --subjectType                Slug for the data subject that the user will be logged in as on the Privacy Center. e.g. "customer" or "employee"
-     [--emailColumnName]           Name of the column in the CSV that contains user email addresses                                                                                                                                      [default = email]
+     [--emailColumnName]           Name of the column in the CSV that contains user email addresses                                                                                                                                                                           [default = email]
      [--coreIdentifierColumnName]  Name of the column in the CSV that contains user core identifiers
-     [--duration]                  How long the access tokens should be valid. Accepts natural language and returns milliseconds. Examples: "3600", "1h", "90 minutes", "one day", "one month", "one year". Maximum duration is 3 years. [default = 1 year]
-     [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                          [default = https://api.transcend.io]
+     [--duration]                  How long the access tokens should be valid. Accepts human-friendly values like "2 days", "10h", "90 minutes". A bare number is interpreted as seconds (e.g., "300" = 5 minutes). Powered by the `ms` library: https://github.com/vercel/ms [default = 1y]
+     [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                                                               [default = https://api.transcend.io]
   -h  --help                       Print help information and exit
 ```
+
+Learn more about generating access tokens in the Transcend Docs:
+https://docs.transcend.io/docs/articles/preference-management/access-links
 
 #### Examples
 
