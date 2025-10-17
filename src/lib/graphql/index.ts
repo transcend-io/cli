@@ -11,6 +11,7 @@ export * from './fetchAllAgentFunctions';
 export * from './fetchAllAgents';
 export * from './fetchAllAssessments';
 export * from './fetchAllAssessmentTemplates';
+export * from './createPreferenceAccessTokens';
 export * from './fetchAllAttributeKeys';
 export * from './fetchAllAttributes';
 export * from './fetchAllBusinessEntities';

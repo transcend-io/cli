@@ -1,3 +1,5 @@
+import ms, { type StringValue as MsStringValue } from 'ms';
+
 /**
  * Validates and returns a UUID string.
  *
@@ -59,4 +61,54 @@ export function dateParser(input: string): Date {
     );
   }
   return date;
+}
+
+/**
+ * Parse a duration string to milliseconds.
+ * Accepts concise/natural-ish strings (powered by `ms`) and returns milliseconds.
+ * Examples: "3600", "2d", "1h", "90 minutes", "10s".
+ *
+ * @param input - The duration to parse
+ * @returns The parsed duration in milliseconds
+ * @throws Error if input is not a valid duration
+ */
+export function parseDurationToMs(input: unknown): number {
+  if (typeof input === 'number' && Number.isFinite(input)) {
+    // backward-compat: numbers => seconds
+    return Math.round(input * 1000);
+  }
+
+  if (typeof input === 'string') {
+    const trimmed = input.trim();
+    // empty string → our standardized error (avoid ms throwing its own)
+    if (trimmed === '') {
+      throw new Error(
+        'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
+      );
+    }
+
+    // bare numeric string => seconds (backward-compat)
+    const asNumber = Number(trimmed);
+    if (trimmed !== '' && Number.isFinite(asNumber)) {
+      return Math.round(asNumber * 1000);
+    }
+
+    // let ms parse human strings
+    let parsed: number | undefined;
+    try {
+      parsed = ms(trimmed as MsStringValue);
+    } catch {
+      // normalize ms' error to ours
+      throw new Error(
+        'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
+      );
+    }
+    if (typeof parsed === 'number' && Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  throw new Error(
+    'Invalid duration. Examples: "45", "2d", "1h", "90 minutes", "10s".',
+  );
 }

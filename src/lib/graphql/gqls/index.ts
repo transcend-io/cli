@@ -7,6 +7,7 @@ export * from './identifier';
 export * from './dataSubject';
 export * from './repository';
 export * from './apiKey';
+export * from './preferenceAccessTokens';
 export * from './siloDiscovery';
 export * from './template';
 export * from './organization';
