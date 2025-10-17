@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { MESSAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
+import type { LocaleValue } from '@transcend-io/internationalization';
 
 export interface Message {
   /** ID of message */
@@ -13,7 +13,7 @@ export interface Message {
   /** Disabled locales */
   translations: {
     /** Locale */
-    locale: LanguageKey;
+    locale: LocaleValue;
     /** Value */
     value: string;
   }[];

@@ -415,6 +415,341 @@ const expected: CodePackageInput[] = [
     repositoryName: 'transcend-io/cli',
   },
   {
+    name: 'test-kotlin',
+    relativePath: 'test-kotlin/build.gradle.kts',
+    repositoryName: 'transcend-io/cli',
+    softwareDevelopmentKits: [],
+    type: 'GRADLE',
+  },
+  {
+    name: 'test-kotlin',
+    relativePath: 'test-kotlin/build.gradle.kts',
+    repositoryName: 'transcend-io/cli',
+    softwareDevelopmentKits: [
+      {
+        name: 'androidx.credentials:credentials',
+        version: undefined,
+      },
+      {
+        name: 'androidx.hilt:hilt-navigation-compose',
+        version: undefined,
+      },
+      {
+        name: 'androidx.hilt:hilt-work',
+        version: undefined,
+      },
+      {
+        name: 'androidx.localbroadcastmanager:localbroadcastmanager',
+        version: undefined,
+      },
+      {
+        name: 'androidx.media3:media3-exoplayer',
+        version: undefined,
+      },
+      {
+        name: 'androidx.media3:media3-exoplayer-dash',
+        version: undefined,
+      },
+      {
+        name: 'androidx.media3:media3-exoplayer-ima',
+        version: undefined,
+      },
+      {
+        name: 'androidx.media3:media3-ui',
+        version: undefined,
+      },
+      {
+        name: 'androidx.profileinstaller:profileinstaller',
+        version: undefined,
+      },
+      {
+        name: 'androidx.test.espresso:espresso-contrib',
+        version: undefined,
+      },
+      {
+        name: 'androidx.test.espresso:espresso-core',
+        version: undefined,
+      },
+      {
+        name: 'androidx.test.espresso:espresso-intents',
+        version: undefined,
+      },
+      {
+        name: 'com.airbnb.android:lottie',
+        version: undefined,
+      },
+      {
+        name: 'com.android.application',
+        version: undefined,
+      },
+      {
+        name: 'com.android.installreferrer:installreferrer',
+        version: undefined,
+      },
+      {
+        name: 'com.appsflyer:af-android-sdk',
+        version: undefined,
+      },
+      {
+        name: 'com.braze:android-sdk-ui',
+        version: undefined,
+      },
+      {
+        name: 'com.facebook.android:facebook-android-sdk',
+        version: undefined,
+      },
+      {
+        name: 'com.facebook.android:facebook-applinks',
+        version: undefined,
+      },
+      {
+        name: 'com.facebook.android:facebook-login',
+        version: undefined,
+      },
+      {
+        name: 'com.facebook.android:facebook-share',
+        version: undefined,
+      },
+      {
+        name: 'com.foursquare:movementsdk',
+        version: undefined,
+      },
+      {
+        name: 'com.github.anrwatchdog:anrwatchdog',
+        version: undefined,
+      },
+      {
+        name: 'com.github.bumptech.glide:compiler',
+        version: undefined,
+      },
+      {
+        name: 'com.github.bumptech.glide:glide',
+        version: undefined,
+      },
+      {
+        name: 'com.github.bumptech.glide:ksp',
+        version: undefined,
+      },
+      {
+        name: 'com.github.bumptech.glide:okhttp3-integration',
+        version: undefined,
+      },
+      {
+        name: 'com.github.bumptech.glide:recyclerview-integration',
+        version: undefined,
+      },
+      {
+        name: 'com.github.chrisbanes:PhotoView',
+        version: undefined,
+      },
+      {
+        name: 'com.github.chuckerteam.chucker:library',
+        version: undefined,
+      },
+      {
+        name: 'com.github.chuckerteam.chucker:library-no-op',
+        version: undefined,
+      },
+      {
+        name: 'com.github.jinatonic.confetti:confetti',
+        version: undefined,
+      },
+      {
+        name: 'com.github.MasayukiSuda:EasingInterpolator',
+        version: undefined,
+      },
+      {
+        name: 'com.github.newrelic.video-agent-android:NewRelicVideoCore',
+        version: undefined,
+      },
+      {
+        name: 'com.github.newrelic.video-agent-android:NRExoPlayerTracker',
+        version: undefined,
+      },
+      {
+        name: 'com.github.newrelic.video-agent-android:NRIMATracker',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.gms:play-services-auth-api-phone',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.gms:play-services-maps',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.material:material',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.play:app-update',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.play:asset-delivery',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.play:feature-delivery',
+        version: undefined,
+      },
+      {
+        name: 'com.google.android.play:review',
+        version: undefined,
+      },
+      {
+        name: 'com.google.api-client:google-api-client-android',
+        version: undefined,
+      },
+      {
+        name: 'com.google.apis:google-api-services-gmail',
+        version: undefined,
+      },
+      {
+        name: 'com.google.code.findbugs:jsr305',
+        version: undefined,
+      },
+      {
+        name: 'com.google.devtools.ksp',
+        version: undefined,
+      },
+      {
+        name: 'com.google.firebase:firebase-perf',
+        version: undefined,
+      },
+      {
+        name: 'com.google.firebase.crashlytics',
+        version: undefined,
+      },
+      {
+        name: 'com.google.firebase.firebase-perf',
+        version: undefined,
+      },
+      {
+        name: 'com.google.gms.google-services',
+        version: undefined,
+      },
+      {
+        name: 'com.google.guava:guava',
+        version: undefined,
+      },
+      {
+        name: 'com.google.http-client:google-http-client-gson',
+        version: undefined,
+      },
+      {
+        name: 'com.google.zxing:core',
+        version: undefined,
+      },
+      {
+        name: 'com.googlecode.json-simple:json-simple',
+        version: undefined,
+      },
+      {
+        name: 'com.microblink.blinkreceipt:blinkreceipt-account-linking',
+        version: undefined,
+      },
+      {
+        name: 'com.microblink.blinkreceipt:blinkreceipt-bom',
+        version: undefined,
+      },
+      {
+        name: 'com.microblink.blinkreceipt:blinkreceipt-recognizer',
+        version: undefined,
+      },
+      {
+        name: 'com.newrelic.agent.android:android-agent',
+        version: undefined,
+      },
+      {
+        name: 'com.scandit.datacapture:barcode',
+        version: undefined,
+      },
+      {
+        name: 'com.scandit.datacapture:core',
+        version: undefined,
+      },
+      {
+        name: 'com.siftscience:sift-android',
+        version: undefined,
+      },
+      {
+        name: 'com.sun.mail:android-activation',
+        version: undefined,
+      },
+      {
+        name: 'com.sun.mail:android-mail',
+        version: undefined,
+      },
+      {
+        name: 'com.usebutton:android-sdk',
+        version: undefined,
+      },
+      {
+        name: 'com.wdullaer:materialdatetimepicker',
+        version: undefined,
+      },
+      {
+        name: 'dagger.hilt.android.plugin',
+        version: undefined,
+      },
+      {
+        name: 'io.mockk:mockk',
+        version: undefined,
+      },
+      {
+        name: 'jp.wasabeef:glide-transformations',
+        version: undefined,
+      },
+      {
+        name: 'kotlin-android',
+        version: undefined,
+      },
+      {
+        name: 'kotlin-kapt',
+        version: undefined,
+      },
+      {
+        name: 'net.toddm:androidcommframework',
+        version: undefined,
+      },
+      {
+        name: 'newrelic',
+        version: undefined,
+      },
+      {
+        name: 'org.apache.commons:commons-lang3',
+        version: undefined,
+      },
+      {
+        name: 'org.apache.httpcomponents:httpclient',
+        version: undefined,
+      },
+      {
+        name: 'org.javassist:javassist',
+        version: undefined,
+      },
+      {
+        name: 'org.jetbrains.kotlin.plugin.compose',
+        version: undefined,
+      },
+      {
+        name: 'org.json:json',
+        version: undefined,
+      },
+      {
+        name: 'org.mockito:mockito-core',
+        version: undefined,
+      },
+      {
+        name: 'org.mockito.kotlin:mockito-kotlin',
+        version: undefined,
+      },
+    ],
+    type: 'KOTLIN',
+  },
+  {
     name: 'test-nested-gemfile',
     type: 'GEMFILE',
     softwareDevelopmentKits: [

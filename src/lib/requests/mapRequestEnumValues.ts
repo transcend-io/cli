@@ -7,7 +7,10 @@ import {
   IsoCountryCode,
   IsoCountrySubdivisionCode,
 } from '@transcend-io/privacy-types';
-import { LanguageKey } from '@transcend-io/internationalization';
+import {
+  LOCALE_KEY,
+  type LocaleValue,
+} from '@transcend-io/internationalization';
 import { ObjByString } from '@transcend-io/type-utils';
 import { logger } from '../../logger';
 import { makeGraphQLRequest, DataSubject, DATA_SUBJECTS } from '../graphql';
@@ -73,9 +76,9 @@ export async function mapRequestEnumValues(
 
   // Map locale
   logger.info(colors.magenta('Determining mapping of columns for locale'));
-  const languageToLocale: { [k in string]: LanguageKey } = await mapEnumValues(
+  const languageToLocale: { [k in string]: LocaleValue } = await mapEnumValues(
     getUniqueValuesForColumn(requests, getMappedName(ColumnName.Locale)),
-    Object.values(LanguageKey),
+    Object.values(LOCALE_KEY),
     state.getValue('languageToLocale'),
   );
   await state.setValue(languageToLocale, 'languageToLocale');

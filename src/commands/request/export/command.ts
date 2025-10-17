@@ -47,7 +47,12 @@ export const exportCommand = buildCommand({
         kind: 'parsed',
         parse: numberParser,
         brief: 'The concurrency to use when uploading requests in parallel',
-        default: '100',
+        default: '50',
+      },
+      skipRequestIdentifiers: {
+        kind: 'boolean',
+        brief: 'Skip exporting request identifiers',
+        optional: true,
       },
       createdAtBefore: {
         kind: 'parsed',

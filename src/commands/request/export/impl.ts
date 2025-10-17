@@ -19,6 +19,7 @@ export interface ExportCommandFlags {
   createdAtBefore?: Date;
   createdAtAfter?: Date;
   showTests?: boolean;
+  skipRequestIdentifiers?: boolean;
   pageLimit: number;
 }
 
@@ -33,6 +34,7 @@ export async function _export(
     pageLimit,
     actions,
     sombraAuth,
+    skipRequestIdentifiers,
     statuses,
     createdAtBefore,
     createdAtAfter,
@@ -45,6 +47,7 @@ export async function _export(
     transcendUrl,
     pageLimit,
     actions,
+    skipRequestIdentifiers,
     statuses,
     auth,
     sombraAuth,
