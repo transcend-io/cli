@@ -335,7 +335,8 @@
                     "llmLogTransfer",
                     "manageWorkflows",
                     "viewDataSubCategories",
-                    "manageDataSubCategories"
+                    "manageDataSubCategories",
+                    "generatePreferenceAccessTokens"
                   ]
                 }
               }
