@@ -5,6 +5,7 @@ import { parquetToCsv, type ParquetToCsvCommandFlags } from '../impl';
 
 import type { LocalContext } from '../../../../context';
 import type { ParquetTask, ParquetProgress, ParquetResult } from '../worker';
+import type { PoolHooks } from '../../../../lib/pooling';
 
 const H = vi.hoisted(() => {
   const files = ['/abs/a.parquet', '/abs/b.parquet', '/abs/c.parquet'];
@@ -23,7 +24,7 @@ const H = vi.hoisted(() => {
     poolSize?: number;
     cpuCount?: number;
     filesTotal?: number;
-    hooks?: import('../../../../lib/pooling').PoolHooks<
+    hooks?: PoolHooks<
       ParquetTask,
       ParquetProgress,
       ParquetResult,
