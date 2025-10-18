@@ -3268,6 +3268,8 @@ FLAGS
 
 #### Examples
 
+https://github.com/user-attachments/assets/dc9262ee-0478-4eb7-8cc2-935efc062b18
+
 **Convert all Parquet files in a directory to CSV**
 
 ```sh
