@@ -174,7 +174,7 @@ describe('chunkCsv', () => {
     expect(H.pooling.runPool).toHaveBeenCalledTimes(1);
 
     const a = H.lastRunPoolArgs;
-    expect(a.title).toBe('Chunk CSV');
+    expect(a.title).toBe('Chunk CSV - /abs');
     // baseDir prefers directory (present)
     expect(a.baseDir).toBe(baseFlags.directory);
     expect(a.childFlag).toBe(H.pooling.CHILD_FLAG);

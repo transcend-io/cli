@@ -40,10 +40,12 @@ export const parquetToCsvCommand = buildCommand({
     },
   },
   docs: {
-    brief:
-      'Convert all Parquet files in a directory to CSV (optionally chunked)',
+    brief: 'Convert all Parquet files in a directory to CSV',
     fullDescription: `Streams every .parquet in --directory and writes CSV output files
 - Runs files in parallel across worker processes (configurable via --concurrency).
-- Validates row consistency; logs periodic progress and memory usage.`,
+- Validates row consistency; logs periodic progress and memory usage.
+
+This is a useful administrative tool for converting Parquet exports to CSV for the purposes
+of uploading DSRs or Consent Preferences. e.g. transcend consent upload-preferences ...`,
   },
 });
