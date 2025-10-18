@@ -4,8 +4,8 @@ import { join as pathJoin } from 'node:path';
 // Now import mocked symbols + SUT
 import { readdirSync, statSync } from 'node:fs';
 
-import { collectCsvFilesOrExit } from '../collectCsvFilesOrExit';
 import type { LocalContext } from '../../../context';
+import { collectParquetFilesOrExit } from '../collectParquetFilesOrExit';
 
 const H = vi.hoisted(() => ({
   loggerSpies: {
@@ -57,11 +57,13 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('collectCsvFilesOrExit', () => {
+describe('collectParquetFilesOrExit', () => {
   it('exits when directory is undefined', () => {
     const ctx = makeCtx();
 
-    expect(() => collectCsvFilesOrExit(undefined, ctx)).toThrowError(/EXIT:1/);
+    expect(() => collectParquetFilesOrExit(undefined, ctx)).toThrowError(
+      /EXIT:1/,
+    );
 
     expect(H.loggerSpies.error).toHaveBeenCalledWith(
       expect.stringContaining('--directory must be provided'),
@@ -76,7 +78,9 @@ describe('collectCsvFilesOrExit', () => {
       throw new Error('boom');
     });
 
-    expect(() => collectCsvFilesOrExit('/data/in', ctx)).toThrowError(/EXIT:1/);
+    expect(() => collectParquetFilesOrExit('/data/in', ctx)).toThrowError(
+      /EXIT:1/,
+    );
 
     expect(H.loggerSpies.error).toHaveBeenNthCalledWith(
       1,
@@ -89,7 +93,7 @@ describe('collectCsvFilesOrExit', () => {
     expect(ctx.process.exit).toHaveBeenCalledWith(1);
   });
 
-  it('exits when no CSV files are found', () => {
+  it('exits when no Parquet files are found', () => {
     const ctx = makeCtx();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -98,58 +102,63 @@ describe('collectCsvFilesOrExit', () => {
       typeof statSync
     >);
 
-    expect(() => collectCsvFilesOrExit('/dir', ctx)).toThrowError(/EXIT:1/);
+    expect(() => collectParquetFilesOrExit('/dir', ctx)).toThrowError(/EXIT:1/);
 
     expect(H.loggerSpies.error).toHaveBeenCalledWith(
-      expect.stringContaining('No CSV files found in directory: /dir'),
+      expect.stringContaining('No Parquet files found in directory: /dir'),
     );
     expect(ctx.process.exit).toHaveBeenCalledWith(1);
   });
 
-  it('returns only CSV files that are real files', () => {
+  it('returns only .parquet files that are real files', () => {
     const ctx = makeCtx();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mReadDir.mockReturnValue(['a.csv', 'b.txt', 'c.csv'] as any);
+    mReadDir.mockReturnValue(['a.parquet', 'b.txt', 'c.parquet'] as any);
     mStat.mockImplementation((p) => {
       const isFile =
-        p === pathJoin('/data', 'a.csv') || p === pathJoin('/data', 'c.csv');
+        p === pathJoin('/data', 'a.parquet') ||
+        p === pathJoin('/data', 'c.parquet');
       return { isFile: () => isFile } as unknown as ReturnType<typeof statSync>;
     });
 
-    const out = collectCsvFilesOrExit('/data', ctx);
+    const out = collectParquetFilesOrExit('/data', ctx);
 
     expect(out).toEqual([
-      pathJoin('/data', 'a.csv'),
-      pathJoin('/data', 'c.csv'),
+      pathJoin('/data', 'a.parquet'),
+      pathJoin('/data', 'c.parquet'),
     ]);
     expect(ctx.process.exit).not.toHaveBeenCalled();
     expect(H.loggerSpies.error).not.toHaveBeenCalled();
   });
 
-  it('filters out CSV entries whose statSync throws (e.g., broken symlink)', () => {
+  it('filters out .parquet entries whose statSync throws (e.g., broken symlink)', () => {
     const ctx = makeCtx();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mReadDir.mockReturnValue(['good.csv', 'bad.csv', 'skip.txt'] as any);
+    mReadDir.mockReturnValue([
+      'good.parquet',
+      'bad.parquet',
+      'skip.txt',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as any);
     mStat.mockImplementation((p) => {
-      if (p === pathJoin('/x', 'bad.csv')) throw new Error('ENOENT');
+      if (p === pathJoin('/x', 'bad.parquet')) throw new Error('ENOENT');
       return { isFile: () => true } as unknown as ReturnType<typeof statSync>;
     });
 
-    const out = collectCsvFilesOrExit('/x', ctx);
+    const out = collectParquetFilesOrExit('/x', ctx);
 
-    expect(out).toEqual([pathJoin('/x', 'good.csv')]);
+    expect(out).toEqual([pathJoin('/x', 'good.parquet')]);
     expect(ctx.process.exit).not.toHaveBeenCalled();
   });
 
-  it('ignores CSVs that are directories (isFile() === false)', () => {
+  it('ignores .parquet entries that are directories (isFile() === false)', () => {
     const ctx = makeCtx();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mReadDir.mockReturnValue(['dirlike.csv', 'real.csv'] as any);
+    mReadDir.mockReturnValue(['dirlike.parquet', 'real.parquet'] as any);
     mStat.mockImplementation((p) => {
-      if (p === pathJoin('/root', 'dirlike.csv')) {
+      if (p === pathJoin('/root', 'dirlike.parquet')) {
         return { isFile: () => false } as unknown as ReturnType<
           typeof statSync
         >;
@@ -157,9 +166,9 @@ describe('collectCsvFilesOrExit', () => {
       return { isFile: () => true } as unknown as ReturnType<typeof statSync>;
     });
 
-    const out = collectCsvFilesOrExit('/root', ctx);
+    const out = collectParquetFilesOrExit('/root', ctx);
 
-    expect(out).toEqual([pathJoin('/root', 'real.csv')]);
+    expect(out).toEqual([pathJoin('/root', 'real.parquet')]);
     expect(ctx.process.exit).not.toHaveBeenCalled();
   });
 });

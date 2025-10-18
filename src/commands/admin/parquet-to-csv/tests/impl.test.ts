@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import type { LocalContext } from '../../../../context';
-import type { ChunkProgress, ChunkResult, ChunkTask } from '../worker';
+import { parquetToCsvPlugin } from '../ui';
+import { parquetToCsv, type ParquetToCsvCommandFlags } from '../impl';
 
-// ⬇️ SUT imports AFTER mocks
-import { chunkCsvPlugin } from '../ui';
-import { chunkCsv, type ChunkCsvCommandFlags } from '../impl';
+import type { LocalContext } from '../../../../context';
+import type { ParquetTask, ParquetProgress, ParquetResult } from '../worker';
+import type { PoolHooks } from '../../../../lib/pooling';
 
 const H = vi.hoisted(() => {
-  const files = ['/abs/a.csv', '/abs/b.csv', '/abs/c.csv'];
+  const files = ['/abs/a.parquet', '/abs/b.parquet', '/abs/c.parquet'];
 
   const logger = {
     info: vi.fn(),
@@ -24,10 +24,10 @@ const H = vi.hoisted(() => {
     poolSize?: number;
     cpuCount?: number;
     filesTotal?: number;
-    hooks?: import('../../../../lib/pooling').PoolHooks<
-      ChunkTask,
-      ChunkProgress,
-      ChunkResult,
+    hooks?: PoolHooks<
+      ParquetTask,
+      ParquetProgress,
+      ParquetResult,
       Record<string, never>
     >;
     viewerMode?: boolean;
@@ -42,8 +42,8 @@ const H = vi.hoisted(() => {
   const pooling = {
     CHILD_FLAG: '--child',
     computePoolSize: vi.fn(() => ({
-      poolSize: 7,
-      cpuCount: 10,
+      poolSize: 5,
+      cpuCount: 8,
     })),
     // runPool will just record its args for later inspection
     runPool: vi.fn((args: typeof lastRunPoolArgs): void => {
@@ -70,8 +70,10 @@ const H = vi.hoisted(() => {
   };
 
   const helpers = {
-    collectCsvFilesOrExit: vi.fn(() => files.slice()),
+    collectParquetFilesOrExit: vi.fn(() => files.slice()),
   };
+
+  const doneInputValidation = vi.fn();
 
   // colors.* passthrough so assertions don’t deal with ANSI codes
   const colors = {
@@ -83,21 +85,29 @@ const H = vi.hoisted(() => {
     yellow: (s: string) => s,
   };
 
-  return { files, logger, pooling, helpers, colors, lastRunPoolArgs };
+  return {
+    files,
+    logger,
+    pooling,
+    helpers,
+    colors,
+    lastRunPoolArgs,
+    doneInputValidation,
+  };
 });
 
-// --- Module mocks (MUST be before importing the SUT) ---------------------------------------------
+// --- Module mocks (MUST be before importing the SUT code paths) -------------------------------
 vi.mock('../../../../logger', () => ({ logger: H.logger }));
 
 // single colors mock with default export (SUT does `import colors from 'colors'`)
 vi.mock('colors', () => ({
   __esModule: true,
   default: H.colors,
-  ...H.colors, // if any code uses named imports style
+  ...H.colors, // support named import style just in case
 }));
 
-vi.mock('../../../../lib/helpers/collectCsvFilesOrExit', () => ({
-  collectCsvFilesOrExit: H.helpers.collectCsvFilesOrExit,
+vi.mock('../../../../lib/helpers', () => ({
+  collectParquetFilesOrExit: H.helpers.collectParquetFilesOrExit,
 }));
 
 /**
@@ -118,23 +128,25 @@ vi.mock('../../../../lib/pooling', async () => {
   };
 });
 
+vi.mock('../../../../lib/cli/done-input-validation', () => ({
+  doneInputValidation: H.doneInputValidation,
+}));
+
 // -------------------------------------------------------------------------------------------------
 
-describe('chunkCsv', () => {
+describe('parquetToCsv', () => {
   const ctx: LocalContext = {
     exit: vi.fn(),
     log: vi.fn(),
-    // whatever else you already had...
     process: {
-      exit: vi.fn(), // <- this is what the SUT needs
+      exit: vi.fn(), // used by doneInputValidation
     },
   } as unknown as LocalContext;
 
-  const baseFlags: ChunkCsvCommandFlags = {
+  const baseFlags: ParquetToCsvCommandFlags = {
     directory: '/abs',
     outputDir: '/out',
     clearOutputDir: true,
-    chunkSizeMB: 100,
     concurrency: undefined,
     viewerMode: true,
   };
@@ -148,16 +160,22 @@ describe('chunkCsv', () => {
     expect(process.argv.includes(H.pooling.CHILD_FLAG)).toBe(false);
   });
 
-  it('discovers files, sizes the pool, logs, builds queue, and invokes runPool with expected args', async () => {
-    await chunkCsv.call(ctx, baseFlags);
+  it('calls doneInputValidation with ctx.process.exit', async () => {
+    await parquetToCsv.call(ctx, baseFlags);
+    expect(H.doneInputValidation).toHaveBeenCalledTimes(1);
+    expect(H.doneInputValidation).toHaveBeenCalledWith(ctx.process.exit);
+  });
 
-    // collectCsvFilesOrExit called with directory + ctx
-    expect(H.helpers.collectCsvFilesOrExit).toHaveBeenCalledWith(
+  it('discovers files, sizes the pool, logs, builds queue, and invokes runPool with expected args', async () => {
+    await parquetToCsv.call(ctx, baseFlags);
+
+    // discovery
+    expect(H.helpers.collectParquetFilesOrExit).toHaveBeenCalledWith(
       baseFlags.directory,
       ctx,
     );
 
-    // pool sizing called with concurrency + number of files
+    // sizing
     expect(H.pooling.computePoolSize).toHaveBeenCalledWith(
       undefined,
       H.files.length,
@@ -166,21 +184,21 @@ describe('chunkCsv', () => {
     // info log includes file count and pool size text (unstyled)
     expect(H.logger.info).toHaveBeenCalledTimes(1);
     const msg = H.logger.info.mock.calls[0]?.[0];
-    expect(msg).toContain(`Chunking ${H.files.length} CSV file(s)`);
-    expect(msg).toContain('pool size 7');
-    expect(msg).toContain('CPU=10');
+    expect(msg).toContain(`Converting ${H.files.length} Parquet file(s)`);
+    expect(msg).toContain('pool size 5');
+    expect(msg).toContain('CPU=8');
 
     // runPool called once
     expect(H.pooling.runPool).toHaveBeenCalledTimes(1);
 
     const a = H.lastRunPoolArgs;
-    expect(a.title).toBe('Chunk CSV - /abs');
+    expect(a.title).toBe('Parquet → CSV - /abs');
     // baseDir prefers directory (present)
     expect(a.baseDir).toBe(baseFlags.directory);
     expect(a.childFlag).toBe(H.pooling.CHILD_FLAG);
     expect(typeof a.childModulePath).toBe('string'); // env-dependent
-    expect(a.poolSize).toBe(7);
-    expect(a.cpuCount).toBe(10);
+    expect(a.poolSize).toBe(5);
+    expect(a.cpuCount).toBe(8);
     expect(a.filesTotal).toBe(H.files.length);
     expect(a.viewerMode).toBe(true);
     expect(typeof a.render).toBe('function');
@@ -189,9 +207,9 @@ describe('chunkCsv', () => {
   });
 
   it('queue + hooks: nextTask/fifo, labels, totals, onProgress, onResult', async () => {
-    await chunkCsv.call(ctx, baseFlags);
+    await parquetToCsv.call(ctx, baseFlags);
     const hooks = H.lastRunPoolArgs.hooks!;
-    // nextTask drains FIFO of discovered files turned into ChunkTask
+    // nextTask drains FIFO of discovered files turned into ParquetTask
     const seen: string[] = [];
     for (;;) {
       const t = hooks.nextTask?.();
@@ -199,6 +217,11 @@ describe('chunkCsv', () => {
       seen.push(t.filePath);
       // taskLabel echoes filePath
       expect(hooks.taskLabel?.(t)).toBe(t.filePath);
+      // options are wired from flags
+      expect(t.options).toEqual({
+        outputDir: baseFlags.outputDir,
+        clearOutputDir: baseFlags.clearOutputDir,
+      });
       // initSlotProgress returns undefined
       expect(hooks.initSlotProgress?.(t)).toBeUndefined();
     }
@@ -219,12 +242,12 @@ describe('chunkCsv', () => {
     // onResult sets ok based on res.ok
     const r1 = hooks.onResult?.(
       totals as Record<string, never>,
-      { ok: true } as ChunkResult,
+      { ok: true } as ParquetResult,
     );
     expect(r1?.ok).toBe(true);
     const r2 = hooks.onResult?.(
       totals as Record<string, never>,
-      { ok: false } as ChunkResult,
+      { ok: false } as ParquetResult,
     );
     expect(r2?.ok).toBe(false);
 
@@ -233,8 +256,8 @@ describe('chunkCsv', () => {
     await hooks.postProcess?.({} as any);
   });
 
-  it('render delegates to dashboardPlugin with chunkCsvPlugin and viewerMode', async () => {
-    await chunkCsv.call(ctx, baseFlags);
+  it('render delegates to dashboardPlugin with parquetToCsvPlugin and viewerMode', async () => {
+    await parquetToCsv.call(ctx, baseFlags);
     const render = H.lastRunPoolArgs.render!;
     const input = { pretend: 'frame' };
     const result = render(input);
@@ -242,20 +265,20 @@ describe('chunkCsv', () => {
     expect(H.pooling.dashboardPlugin).toHaveBeenCalledTimes(1);
     const call = H.pooling.dashboardPlugin.mock.calls[0];
     expect(call?.[0]).toBe(input);
-    expect(call?.[1]).toBe(chunkCsvPlugin);
+    expect(call?.[1]).toBe(parquetToCsvPlugin);
     expect(call?.[2]).toBe(true);
 
     // just assert passthrough of whatever dashboardPlugin returns
     expect(result).toEqual({
       input,
-      plugin: chunkCsvPlugin,
+      plugin: parquetToCsvPlugin,
       viewerMode: true,
       tag: 'dashboard-plugin-result',
     });
   });
 
   it('extraKeyHandler is built via createExtraKeyHandler and passes through logs/repaint/setPaused', async () => {
-    await chunkCsv.call(ctx, baseFlags);
+    await parquetToCsv.call(ctx, baseFlags);
     const ek = H.lastRunPoolArgs.extraKeyHandler!;
     const logsBySlot = new Map<number, string[]>();
     const repaint = vi.fn();
@@ -279,16 +302,21 @@ describe('chunkCsv', () => {
   });
 
   it('uses outputDir as baseDir when directory is empty', async () => {
-    await chunkCsv.call(ctx, { ...baseFlags, directory: '' });
+    await parquetToCsv.call(ctx, { ...baseFlags, directory: '' });
     expect(H.lastRunPoolArgs.baseDir).toBe(baseFlags.outputDir);
   });
 
   it('falls back to cwd as baseDir when directory and outputDir are empty', async () => {
-    await chunkCsv.call(ctx, {
+    await parquetToCsv.call(ctx, {
       ...baseFlags,
       directory: '',
       outputDir: '',
     });
     expect(H.lastRunPoolArgs.baseDir).toBe(process.cwd());
+  });
+
+  it('passes an explicit concurrency override to computePoolSize', async () => {
+    await parquetToCsv.call(ctx, { ...baseFlags, concurrency: 12 });
+    expect(H.pooling.computePoolSize).toHaveBeenCalledWith(12, H.files.length);
   });
 });
