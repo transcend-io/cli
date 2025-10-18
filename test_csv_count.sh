@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # test_csv_count.sh — count lines in CSV files (works on macOS Bash 3.2)
+# This command is useful to compare the output count from the transcend admin chunk-csv command
 # Usage:
 #   bash test_csv_count.sh [-r] [-H] [DIR]
 #   -r  Recurse into subdirectories

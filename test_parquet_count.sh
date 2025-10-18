@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # test_parquet_count.sh — count rows in Parquet files (macOS Bash 3.2 compatible)
+# This command is useful to compare the output count from the transcend admin parquet-to-csv command
 # Usage:
 #   bash test_parquet_count.sh [-r] [-T duckdb|parquet-tools] [DIR]
 # Options:
