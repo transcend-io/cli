@@ -1,7 +1,5 @@
-// src/commands/consent/upload-preferences/upload/tests/loadReferenceData.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Type-only imports
 import type { GraphQLClient } from 'graphql-request';
 import type {
   Identifier,
