@@ -4,6 +4,7 @@
 ## Table of Contents
 
 - [Changelog](#changelog)
+  - [[9.0.0] - 2025-08-15](#900---2025-08-15)
   - [[8.1.0] - 2025-08-18](#810---2025-08-18)
     - [Added](#added)
   - [[8.0.0] - 2025-08-13](#800---2025-08-13)
@@ -33,6 +34,10 @@ All notable changes to the Transcend CLI tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [9.0.0] - 2025-08-15
+
+FIXME
 
 ## [8.1.0] - 2025-08-18
 
