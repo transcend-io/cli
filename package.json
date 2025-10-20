@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "8.24.0",
+  "version": "8.25.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",

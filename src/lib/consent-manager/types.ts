@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 
-export const ConsentPreferenceBase = t.intersection([
+export const ConsentPreferenceUpload = t.intersection([
   t.type({
     /** User ID */
     userId: t.string,
@@ -24,15 +24,6 @@ export const ConsentPreferenceBase = t.intersection([
     usp: t.union([t.string, t.null]),
     /** IAB GPP String */
     gpp: t.union([t.string, t.null]),
-  }),
-]);
-
-/** Type override */
-export type ConsentPreferenceBase = t.TypeOf<typeof ConsentPreferenceUpload>;
-
-export const ConsentPreferenceUpload = t.intersection([
-  ConsentPreferenceBase,
-  t.partial({
     /**
      * Purpose map
      * This is a stringified JSON object with keys as purpose names and values as booleans or 'Auto'
@@ -43,23 +34,3 @@ export const ConsentPreferenceUpload = t.intersection([
 
 /** Type override */
 export type ConsentPreferenceUpload = t.TypeOf<typeof ConsentPreferenceUpload>;
-
-export const ConsentPreferenceFetch = t.intersection([
-  ConsentPreferenceBase,
-  t.type({
-    /** This is the partition key used for the dynamo entry  */
-    partition: t.string,
-  }),
-  t.partial({
-    /** IAB TCF String */
-    tcf: t.union([t.string, t.null]),
-    /**
-     * Purpose map
-     * This is a JSON object with keys as purpose names and values as booleans or 'Auto'
-     */
-    purposes: t.record(t.string, t.union([t.boolean, t.string])),
-  }),
-]);
-
-/** Type override */
-export type ConsentPreferenceFetch = t.TypeOf<typeof ConsentPreferenceFetch>;

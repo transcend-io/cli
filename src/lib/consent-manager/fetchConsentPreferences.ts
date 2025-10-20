@@ -1,18 +1,16 @@
 import * as t from 'io-ts';
 import { decodeCodec } from '@transcend-io/type-utils';
 import type { Got } from 'got';
-import { ConsentPreferenceFetch } from './types';
+import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 
+/** New response codec for the query endpoint */
 export const ConsentPreferenceResponse = t.intersection([
   t.type({
-    nodes: t.array(ConsentPreferenceFetch),
+    nodes: t.array(PreferenceQueryResponseItem),
   }),
   t.partial({
-    lastKey: t.partial({
-      userId: t.string,
-      partition: t.string,
-      timestamp: t.string,
-    }),
+    /** Cursor for next page (opaque) */
+    cursor: t.string,
   }),
 ]);
 
@@ -21,12 +19,39 @@ export type ConsentPreferenceResponse = t.TypeOf<
   typeof ConsentPreferenceResponse
 >;
 
+/** Identifier filter (new shape) */
+export type PreferenceIdentifier = {
+  /** e.g., "email", "phone" */
+  name: string;
+  /** identifier value */
+  value: string;
+};
+
+/** Filter shape for the new query endpoint */
+export type PreferencesQueryFilter = {
+  /** Filter by user identifiers (new shape) */
+  identifiers?: PreferenceIdentifier[];
+  /** Filter by when consent was collected */
+  timestampBefore?: string;
+  /** Timestamp after consent was collected */
+  timestampAfter?: string;
+  /** Filter by system metadata (updatedAt window, etc.) */
+  system?: {
+    /** Filter by record updated at date before */
+    updatedBefore?: string;
+    /** Filter by record updated at date after */
+    updatedAfter?: string;
+  };
+};
+
 /**
- * Fetch consent preferences for the managed consent database
+ * Fetch consent preferences for the managed consent database (new query endpoint)
  *
- * @param sombra - Sombra instance configured to make requests
- * @param options - Additional options
- * @returns The consent preferences
+ * Uses POST /v1/preferences/{partition}/query with cursor pagination.
+ *
+ * @param sombra - Sombra instance configured to make requests (should include auth headers)
+ * @param options - Query options
+ * @returns All consent preference nodes accumulated across pages
  */
 export async function fetchConsentPreferences(
   sombra: Got,
@@ -35,50 +60,70 @@ export async function fetchConsentPreferences(
     filterBy = {},
     limit = 50,
   }: {
-    /** Partition key to fetch */
+    /** Partition key to fetch (moved to URL path on new endpoint) */
     partition: string;
-    /** Filter consent preferences */
-    filterBy?: {
-      /** Fetch specific identifiers */
-      identifiers?: string[];
-      /** Filter before timestamp */
-      timestampBefore?: string;
-      /** Filter after timestamp */
-      timestampAfter?: string;
-    };
-    /** Number of items to pull back at once */
+    /** Query filter (wrapped under "filter" in request body) */
+    filterBy?: PreferencesQueryFilter;
+    /** Number of users per page (1–50 per API spec) */
     limit?: number;
   },
-): Promise<ConsentPreferenceFetch[]> {
-  let currentLastKey: ConsentPreferenceResponse['lastKey'];
-  const data: ConsentPreferenceFetch[] = [];
-  let shouldContinue = true;
+): Promise<PreferenceQueryResponseItem[]> {
+  const data: PreferenceQueryResponseItem[] = [];
 
-  while (shouldContinue) {
+  // Cursor-based pagination per new endpoint
+  let cursor: string | undefined;
+
+  // Build the filter payload, omitting empty filter
+  const hasFilter =
+    filterBy &&
+    (Object.keys(filterBy).length > 0 ||
+      (filterBy.system && Object.keys(filterBy.system).length > 0));
+
+  // Enforce API max (defensive; backend also validates)
+  const pageSize = Math.max(1, Math.min(50, limit ?? 50));
+
+  // Keep fetching until no cursor is returned
+  // (The API returns an opaque cursor string for the next page)
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const body: {
+      /** Filter by user identifiers (new shape) */
+      filter?: PreferencesQueryFilter;
+      /** Cursor for pagination */
+      cursor?: string;
+      /** Number of records per page */
+      limit: number;
+    } = { limit: pageSize };
+
+    if (hasFilter) {
+      body.filter = filterBy;
+    }
+    if (cursor) {
+      body.cursor = cursor;
+    }
+
     const response = await sombra
-      .post('v1/consent-preferences', {
-        json: {
-          partition,
-          ...filterBy,
-          // using lastKey to paginate if it exists (will not for first iteration)
-          startKey: currentLastKey || undefined,
-          limit,
-        },
+      .post(`v1/preferences/${encodeURIComponent(partition)}/query`, {
+        json: body,
       })
       .json();
-    const { nodes, lastKey } = decodeCodec(ConsentPreferenceResponse, response);
+
+    const { nodes, cursor: nextCursor } = decodeCodec(
+      ConsentPreferenceResponse,
+      response,
+    );
 
     if (!nodes || nodes.length === 0) {
       break;
     }
 
-    // Process the data received from the API call
-    // For example, push the new data into an array
     data.push(...nodes);
 
-    // Extract the lastKey from the API response
-    currentLastKey = lastKey;
-    shouldContinue = !!lastKey && Object.keys(lastKey).length > 0;
+    if (!nextCursor) {
+      break;
+    }
+
+    cursor = nextCursor;
   }
 
   return data;
