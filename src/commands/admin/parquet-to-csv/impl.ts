@@ -44,7 +44,7 @@ export type ParquetToCsvCommandFlags = {
 };
 
 /**
- * Convert all Parquet files in a directory to CSV (optionally chunked), in parallel.
+ * Convert all Parquet files in a directory to CSV, in parallel.
  *
  * @param flags - The command flags.
  */

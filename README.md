@@ -3272,6 +3272,9 @@ Streams every .parquet in --directory and writes CSV output files
 - Runs files in parallel across worker processes (configurable via --concurrency).
 - Validates row consistency; logs periodic progress and memory usage.
 
+This is a useful administrative tool for converting Parquet exports to CSV for the purposes
+of uploading DSRs or Consent Preferences. e.g. transcend consent upload-preferences ...
+
 FLAGS
       --directory                           Directory containing Parquet files to convert (required)
      [--outputDir]                          Directory to write CSV files (defaults to each input file's directory)
@@ -3282,6 +3285,8 @@ FLAGS
 ```
 
 #### Examples
+
+https://github.com/user-attachments/assets/dc9262ee-0478-4eb7-8cc2-935efc062b18
 
 **Convert all Parquet files in a directory to CSV**
 
