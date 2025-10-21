@@ -6,10 +6,10 @@ import {
   transformPreferenceRecordToCsv,
   type PreferenceIdentifier,
 } from '../../../lib/preference-management';
-import { writeCsv } from '../../../lib/cron';
 import { createSombraGotInstance } from '../../../lib/graphql';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { logger } from '../../../logger';
+import { writeLargeCsv } from '../../../lib/helpers';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;
@@ -98,7 +98,7 @@ export async function pullConsentPreferences(
   logger.info(colors.magenta(`Writing preferences to CSV file at: ${file}`));
 
   // Write to disk
-  writeCsv(file, preferences.map(transformPreferenceRecordToCsv));
+  await writeLargeCsv(file, preferences.map(transformPreferenceRecordToCsv));
 
   logger.info(colors.green(`Successfully wrote preferences to ${file}`));
 }

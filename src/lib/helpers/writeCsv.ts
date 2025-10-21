@@ -15,6 +15,7 @@ function escapeCsvValue(value: string): string {
   }
   return value;
 }
+
 /**
  * Write a csv to file synchronously, overwriting any existing content
  *
@@ -74,13 +75,16 @@ export async function writeCsv(
   headers: boolean | string[] = true,
 ): Promise<void> {
   const ws = createWriteStream(filePath);
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     try {
-      fastcsv
+      const stream = fastcsv
         .write(data, { headers, objectMode: true })
-        .pipe(ws)
-        .on('error', reject)
-        .on('end', () => resolve(true));
+        .on('error', reject);
+
+      ws.on('error', reject);
+      ws.on('finish', () => resolve());
+
+      stream.pipe(ws);
     } catch (err) {
       reject(err);
     }
@@ -108,43 +112,90 @@ export function parseFilePath(filePath: string): {
 }
 
 /**
- * Write a large CSV dataset to multiple files to avoid file size limits
+ * Convert an object row into values aligned to header order
  *
- * @param filePath - Base file path (will be modified to include chunk numbers)
- * @param data - Data to write
- * @param headers - Headers
- * @param chunkSize - Maximum number of rows per file (default 100000)
- * @returns Array of written file paths
+ * @param row - Row object
+ * @param headerOrder - Header order
+ * @returns Aligned row object
+ */
+function rowToValues(
+  row: ObjByString,
+  headerOrder: string[],
+): Record<string, unknown> {
+  // fast-csv with objectMode expects objects; we ensure consistent key ordering
+  // by building a new object with keys in headerOrder.
+  const ordered: Record<string, unknown> = {};
+  for (const key of headerOrder) {
+    // Preserve undefined -> becomes empty cell in CSV
+    ordered[key] = row[key];
+  }
+  return ordered;
+}
+
+/**
+ * Await the 'drain' event when backpressure indicates buffering
+ *
+ * @param stream - Writable stream
+ * @returns Promise that resolves on 'drain'
+ */
+function waitForDrain(stream: NodeJS.WritableStream): Promise<void> {
+  return new Promise((resolve) => {
+    stream.once('drain', resolve);
+  });
+}
+
+/**
+ * Stream a large CSV dataset to a single file with proper backpressure handling.
+ *
+ * @param filePath - File to write out to
+ * @param data - Data to write (iterated without buffering the entire file content)
+ * @param headers - If true, infer from first row; if string[], use provided; if false, omit header row
+ * @returns Array with a single written file path
  */
 export async function writeLargeCsv(
   filePath: string,
   data: ObjByString[],
   headers: boolean | string[] = true,
-  chunkSize = 100000,
 ): Promise<string[]> {
-  if (data.length <= chunkSize) {
-    // If data is small enough, write to single file
-    await writeCsv(filePath, data, headers);
-    return [filePath];
+  // Determine header order
+  let headerOrder: string[] | false;
+  if (Array.isArray(headers)) {
+    headerOrder = headers;
+  } else if (headers === true) {
+    headerOrder = data.length > 0 ? Object.keys(data[0]) : [];
+  } else {
+    headerOrder = false;
   }
 
-  // Split data into chunks and write to multiple files
-  const writtenFiles: string[] = [];
-  const totalChunks = Math.ceil(data.length / chunkSize);
-  const { baseName, extension } = parseFilePath(filePath);
+  const ws = createWriteStream(filePath);
+  const csvStream = fastcsv.format<ObjByString, ObjByString>({
+    headers: headerOrder || undefined,
+    objectMode: true,
+  });
 
-  for (let i = 0; i < totalChunks; i += 1) {
-    const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, data.length);
-    const chunk = data.slice(start, end);
+  // Pipe CSV stream into file write stream
+  const piping = csvStream.pipe(ws);
 
-    // Create filename with chunk number and zero-padding
-    const chunkNumber = String(i + 1).padStart(String(totalChunks).length, '0');
-    const chunkFilePath = `${baseName}_part${chunkNumber}_of_${totalChunks}${extension}`;
+  const completion = new Promise<void>((resolve, reject) => {
+    piping.on('finish', () => resolve());
+    piping.on('error', reject);
+    csvStream.on('error', reject);
+    ws.on('error', reject);
+  });
 
-    await writeCsv(chunkFilePath, chunk, headers);
-    writtenFiles.push(chunkFilePath);
+  // Stream rows with backpressure handling
+  for (const row of data) {
+    const toWrite = headerOrder ? rowToValues(row, headerOrder) : row;
+    const ok = csvStream.write(toWrite);
+    if (!ok) {
+      // Respect backpressure: wait until the internal buffer drains
+      await waitForDrain(csvStream);
+    }
   }
 
-  return writtenFiles;
+  // Signal end of input and wait for finish
+  csvStream.end();
+  await completion;
+
+  return [filePath];
 }

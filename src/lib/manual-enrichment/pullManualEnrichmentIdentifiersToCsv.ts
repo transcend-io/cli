@@ -3,7 +3,7 @@ import { map } from 'bluebird';
 import colors from 'colors';
 import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { writeCsv } from '../cron/writeCsv';
+import { writeCsv } from '../helpers/writeCsv';
 import {
   PrivacyRequest,
   RequestEnricher,

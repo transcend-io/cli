@@ -26,7 +26,7 @@ const H = vi.hoisted(() => {
   const transformPreferenceRecordToCsv = vi.fn((x: unknown) => ({ csv: x }));
 
   // spy for writing CSV
-  const writeCsv = vi.fn();
+  const writeLargeCsv = vi.fn();
 
   // capture the last args passed to fetchConsentPreferences
   const lastFetchArgs: {
@@ -41,7 +41,7 @@ const H = vi.hoisted(() => {
     sombra,
     fetchConsentPreferences,
     transformPreferenceRecordToCsv,
-    writeCsv,
+    writeLargeCsv,
     lastFetchArgs,
   };
 });
@@ -83,7 +83,7 @@ vi.mock('../../../../lib/graphql/makeGraphQLRequest', () => ({
 }));
 
 vi.mock('../../../../lib/cron', () => ({
-  writeCsv: H.writeCsv,
+  writeLargeCsv: H.writeLargeCsv,
 }));
 
 vi.mock('../../../../lib/preference-management', () => ({
@@ -223,9 +223,9 @@ describe('pullConsentPreferences', () => {
     expect((calls as any)[1][1]).toBe(1);
     expect((calls as any)[1][2]).toBe(apiNodes);
 
-    // writeCsv called with mapped rows
-    expect(H.writeCsv).toHaveBeenCalledTimes(1);
-    const [pathArg, rowsArg] = H.writeCsv.mock.calls[0];
+    // writeLargeCsv called with mapped rows
+    expect(H.writeLargeCsv).toHaveBeenCalledTimes(1);
+    const [pathArg, rowsArg] = H.writeLargeCsv.mock.calls[0];
     expect(pathArg).toBe('/abs/prefs.csv');
     expect(Array.isArray(rowsArg)).toBe(true);
     expect(rowsArg).toEqual(apiNodes.map((n) => ({ csv: n }))); // our mock transform
