@@ -91,7 +91,8 @@ export async function fetchConsentPreferencesChunked(
     /** Max lookback days for discovering bounds */
     maxLookbackDays?: number;
     /** Optional streaming sink; if provided, items are not accumulated */
-    onItems?: (items: PreferenceQueryResponseItem[]) => Promise<void> | void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onItems?: (items: PreferenceQueryResponseItem[]) => Promise<any> | any;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const mode: ChunkMode = pickConsentChunkMode(filterBy);
