@@ -1800,24 +1800,25 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-
 
 ```txt
 USAGE
-  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value]
+  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value] [--shouldChunk]
   transcend consent pull-consent-preferences --help
 
 Uses POST /v1/preferences/{partition}/query with cursor-based pagination. Supports filtering by identifiers, collection timestamps, and system.updatedAt.
 
 FLAGS
-      --auth              The Transcend API key. Requires scopes: "View Managed Consent Database Admin API"
-      --partition         Partition ID to query in the Preference Store
-     [--sombraAuth]       The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--file]             Path to CSV output file                                                                                                               [default = ./preferences.csv]
-     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                          [default = https://api.transcend.io]
-     [--timestampBefore]  Filter: preferences collected before this time (timestampBefore)
-     [--timestampAfter]   Filter: preferences collected after this time (timestampAfter)
-     [--updatedBefore]    Filter: preferences updated before this time (system.updatedAt)
-     [--updatedAfter]     Filter: preferences updated after this time (system.updatedAt)
-     [--identifiers]...   Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas. [separator = ,]
-     [--concurrency]      Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                   [default = 50]
-  -h  --help              Print help information and exit
+      --auth                          The Transcend API key. Requires scopes: "View Managed Consent Database Admin API"
+      --partition                     Partition ID to query in the Preference Store
+     [--sombraAuth]                   The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--file]                         Path to CSV output file                                                                                                               [default = ./preferences.csv]
+     [--transcendUrl]                 URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                          [default = https://api.transcend.io]
+     [--timestampBefore]              Filter: preferences collected before this time (timestampBefore)
+     [--timestampAfter]               Filter: preferences collected after this time (timestampAfter)
+     [--updatedBefore]                Filter: preferences updated before this time (system.updatedAt)
+     [--updatedAfter]                 Filter: preferences updated after this time (system.updatedAt)
+     [--identifiers]...               Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas. [separator = ,]
+     [--concurrency]                  Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                   [default = 50]
+     [--shouldChunk/--noShouldChunk]  Whether to download requests in timestamp window chunks.                                                                              [default = true]
+  -h  --help                          Print help information and exit
 ```
 
 #### Examples

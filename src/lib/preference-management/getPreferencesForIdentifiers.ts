@@ -4,26 +4,10 @@ import colors from 'colors';
 import cliProgress from 'cli-progress';
 import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
-import * as t from 'io-ts';
 import { map } from 'bluebird';
 import { logger } from '../../logger';
-
-const PreferenceRecordsQueryResponse = t.intersection([
-  t.type({
-    nodes: t.array(PreferenceQueryResponseItem),
-  }),
-  t.partial({
-    /** The base64 encoded(PreferenceStorePaginationKey) cursor for pagination */
-    cursor: t.string,
-  }),
-]);
-
-const MSGS = [
-  'ENOTFOUND',
-  'ETIMEDOUT',
-  '504 Gateway Time-out',
-  'Task timed out after',
-];
+import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { ConsentPreferenceResponse } from './types';
 
 /**
  * Grab the current consent preference values for a list of identifiers
@@ -38,6 +22,7 @@ export async function getPreferencesForIdentifiers(
     identifiers,
     partitionKey,
     skipLogging = false,
+    concurrency = 40,
   }: {
     /** The list of identifiers to look up */
     identifiers: {
@@ -48,6 +33,8 @@ export async function getPreferencesForIdentifiers(
     partitionKey: string;
     /** Whether to skip logging */
     skipLogging?: boolean;
+    /** Concurrency for requests (default 40) */
+    concurrency?: number;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const results: PreferenceQueryResponseItem[] = [];
@@ -67,50 +54,34 @@ export async function getPreferencesForIdentifiers(
   await map(
     groupedIdentifiers,
     async (group) => {
-      // Make the request with retry logic
-      let attempts = 0;
-      const maxAttempts = 3;
-      while (attempts < maxAttempts) {
-        try {
-          const rawResult = await sombra
+      const rawResult = await withPreferenceQueryRetry(
+        () =>
+          sombra
             .post(`v1/preferences/${partitionKey}/query`, {
               json: {
-                filter: {
-                  identifiers: group,
-                },
+                filter: { identifiers: group },
                 limit: group.length,
               },
             })
-            .json();
-
-          const result = decodeCodec(PreferenceRecordsQueryResponse, rawResult);
-          results.push(...result.nodes);
-          total += group.length;
-          progressBar.update(total);
-          break; // Exit loop if successful
-        } catch (err) {
-          attempts += 1;
-          const msg = err?.response?.body || err?.message || '';
-          if (
-            attempts >= maxAttempts ||
-            !MSGS.some((errorMessage) => msg.includes(errorMessage))
-          ) {
-            throw new Error(
-              `Received an error from server after ${attempts} attempts: ${msg}`,
+            .json(),
+        {
+          onRetry: (attempt, _err, msg) => {
+            logger.warn(
+              colors.yellow(
+                `[RETRY] group size=${group.length} partition=${partitionKey} attempt=${attempt}: ${msg}`,
+              ),
             );
-          }
+          },
+        },
+      );
 
-          logger.warn(
-            colors.yellow(
-              `[RETRYING FAILED REQUEST - Attempt ${attempts}] ` +
-                `Failed to fetch ${group.length} user preferences from partition ${partitionKey}: ${msg}`,
-            ),
-          );
-        }
-      }
+      const result = decodeCodec(ConsentPreferenceResponse, rawResult);
+      results.push(...result.nodes);
+      total += group.length;
+      progressBar.update(total);
     },
     {
-      concurrency: 40,
+      concurrency,
     },
   );
 

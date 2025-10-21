@@ -6,5 +6,4 @@ export * from './buildXdiSyncEndpoint';
 export * from './consentManagersToBusinessEntities';
 export * from './domainToHost';
 export * from './createConsentToken';
-export * from './fetchConsentPreferences';
 export * from './uploadConsents';

@@ -74,6 +74,11 @@ export const pullConsentPreferencesCommand = buildCommand({
           'Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.',
         default: '50',
       },
+      shouldChunk: {
+        kind: 'boolean',
+        brief: 'Whether to download requests in timestamp window chunks.',
+        default: true,
+      },
     },
   },
   docs: {

@@ -1,48 +1,10 @@
-import * as t from 'io-ts';
 import { decodeCodec } from '@transcend-io/type-utils';
+import colors from 'colors';
 import type { Got } from 'got';
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
-
-/** New response codec for the query endpoint */
-export const ConsentPreferenceResponse = t.intersection([
-  t.type({
-    nodes: t.array(PreferenceQueryResponseItem),
-  }),
-  t.partial({
-    /** Cursor for next page (opaque) */
-    cursor: t.string,
-  }),
-]);
-
-/** Type override */
-export type ConsentPreferenceResponse = t.TypeOf<
-  typeof ConsentPreferenceResponse
->;
-
-/** Identifier filter (new shape) */
-export type PreferenceIdentifier = {
-  /** e.g., "email", "phone" */
-  name: string;
-  /** identifier value */
-  value: string;
-};
-
-/** Filter shape for the new query endpoint */
-export type PreferencesQueryFilter = {
-  /** Filter by user identifiers (new shape) */
-  identifiers?: PreferenceIdentifier[];
-  /** Filter by when consent was collected */
-  timestampBefore?: string;
-  /** Timestamp after consent was collected */
-  timestampAfter?: string;
-  /** Filter by system metadata (updatedAt window, etc.) */
-  system?: {
-    /** Filter by record updated at date before */
-    updatedBefore?: string;
-    /** Filter by record updated at date after */
-    updatedAfter?: string;
-  };
-};
+import { ConsentPreferenceResponse, PreferencesQueryFilter } from './types';
+import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { logger } from '../../logger';
 
 /**
  * Fetch consent preferences for the managed consent database (new query endpoint)
@@ -102,11 +64,23 @@ export async function fetchConsentPreferences(
       body.cursor = cursor;
     }
 
-    const response = await sombra
-      .post(`v1/preferences/${encodeURIComponent(partition)}/query`, {
-        json: body,
-      })
-      .json();
+    const response = await withPreferenceQueryRetry(
+      () =>
+        sombra
+          .post(`v1/preferences/${partition}/query`, {
+            json: body,
+          })
+          .json(),
+      {
+        onRetry: (attempt, error, message) => {
+          logger.warn(
+            colors.yellow(
+              `Retry attempt ${attempt} for fetchConsentPreferences due to error: ${message}`,
+            ),
+          );
+        },
+      },
+    );
 
     const { nodes, cursor: nextCursor } = decodeCodec(
       ConsentPreferenceResponse,
