@@ -9,3 +9,4 @@ export * from './parsePreferenceTimestampsFromCsv';
 export * from './parsePreferenceAndPurposeValuesFromCsv';
 export * from './checkIfPendingPreferenceUpdatesAreNoOp';
 export * from './checkIfPendingPreferenceUpdatesCauseConflict';
+export * from './transformPreferenceRecordToCsv';
