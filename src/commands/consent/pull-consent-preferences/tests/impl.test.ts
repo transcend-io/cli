@@ -117,6 +117,7 @@ describe('pullConsentPreferences', () => {
       file: '/tmp/out.csv',
       transcendUrl: 'https://app.transcend.io',
       concurrency: 25,
+      shouldChunk: false,
     };
 
     H.fetchConsentPreferences.mockResolvedValueOnce([]);
@@ -143,6 +144,7 @@ describe('pullConsentPreferences', () => {
         'email:second@email.com', // -> {name:'email', value:'second@email.com'}
       ],
       concurrency: 17,
+      shouldChunk: false,
     };
 
     const apiNodes = [
@@ -238,6 +240,7 @@ describe('pullConsentPreferences', () => {
       file: '/tmp/x.csv',
       transcendUrl: 'https://example',
       concurrency: 5,
+      shouldChunk: false,
     };
 
     H.fetchConsentPreferences.mockResolvedValueOnce([]);

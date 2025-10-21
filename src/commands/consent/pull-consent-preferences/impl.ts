@@ -96,15 +96,14 @@ export async function pullConsentPreferences(
         filterBy,
         limit: concurrency,
         // FIXME
-        windowConcurrency: 100, // 10 chunks in parallel
-        maxChunks: 1000, // up to 1000 chunks, min 1h
+        windowConcurrency: 25,
+        maxChunks: 1000,
       })
     : fetchConsentPreferences(sombra, {
         partition,
         filterBy,
         limit: concurrency,
       }));
-
   logger.info(
     colors.green(
       `Fetched ${preferences.length} consent preference records from partition ${partition}. `,
@@ -114,7 +113,7 @@ export async function pullConsentPreferences(
   logger.info(colors.magenta(`Writing preferences to CSV file at: ${file}`));
 
   // Write to disk
-  writeLargeCsv(file, preferences.map(transformPreferenceRecordToCsv));
+  await writeLargeCsv(file, preferences.map(transformPreferenceRecordToCsv));
 
   logger.info(colors.green(`Successfully wrote preferences to ${file}`));
 }

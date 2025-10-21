@@ -12,12 +12,10 @@ import {
   pickConsentChunkMode,
 } from './discoverConsentWindow';
 import { buildConsentChunks } from './buildConsentChunks';
-import { addDaysUtc, clampPageSize, LruSet, Mutex } from '../helpers';
+import { addDaysUtc, clampPageSize } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
-import { hashPreferenceRecord } from './hashPreferenceRecord';
 import { sortConsentPreferences } from './sortConsentPreferences';
-import { consentIntervalToHalfOpen } from './consentIntervalToHalfOpen';
 
 /**
  * Merge baseFilter with a window filter, taking care not to mix timestamp/updated fields improperly.
@@ -72,7 +70,7 @@ export async function fetchConsentPreferencesChunked(
     partition,
     filterBy = {},
     limit = 50,
-    windowConcurrency = 10,
+    windowConcurrency = 25,
     maxChunks = 1000,
   }: {
     /** Partition */
@@ -162,67 +160,34 @@ export async function fetchConsentPreferencesChunked(
     ),
   );
 
-  // Progress bar over chunks; now shows:
+  // Progress bar over chunks (unordered):
   // - value = completed chunks (out-of-order OK)
-  // - payload flushed = in-order flushed chunks
   // - payload fetched = total records fetched
   const bar = new cliProgress.SingleBar(
     {
       format:
-        'Downloading [{bar}] {percentage}% | chunks {value}/{total} | flushed {flushed} | fetched {fetched}',
-      hideCursor: true,
-      fps: 30,
-      etaBuffer: 100,
-      clearOnComplete: true,
-      stopOnComplete: true,
+        'Downloading [{bar}] {percentage}% | chunks {value}/{total} | fetched {fetched}',
     },
     cliProgress.Presets.shades_classic,
   );
 
-  // state used for bar payload + ordering
-  let nextFlush = 0; // next chunk index to flush into final output
   let completed = 0; // finished chunks (out-of-order)
   let fetched = 0; // raw records counter
 
-  bar.start(chunks.length, 0, { fetched, flushed: 0 });
+  bar.start(chunks.length, 0, { fetched });
 
   const t0 = Date.now();
-
   const pageSize = clampPageSize(limit);
-  const recent = new LruSet(100_000); // tune as needed
-  const resultsByChunk = new Map<number, PreferenceQueryResponseItem[]>();
-  const flushMutex = new Mutex();
 
+  // If we are streaming, do not accumulate everything in memory.
   const out: PreferenceQueryResponseItem[] = [];
-
-  // helper to flush ready chunks in order; atomic to avoid interleaved updates
-  const flushReady = async (): Promise<void> => {
-    await flushMutex.run(() => {
-      for (;;) {
-        const ready = resultsByChunk.get(nextFlush);
-        if (!ready) break;
-
-        for (const item of ready) {
-          const key = hashPreferenceRecord(item);
-          // eslint-disable-next-line no-continue
-          if (recent.has(key)) continue; // drop boundary dupes
-          recent.add(key);
-          out.push(item);
-        }
-        resultsByChunk.delete(nextFlush);
-        nextFlush += 1;
-      }
-
-      // value = completed; payload shows flushed count + fetched
-      bar.update(completed, { fetched, flushed: nextFlush });
-    });
-  };
 
   await pmap(
     chunks.map((windowFilter, idx) => ({ windowFilter, idx })),
-    async ({ windowFilter, idx }) => {
-      const halfOpen = consentIntervalToHalfOpen(mode, windowFilter);
-      const filter = mergeFilter(mode, filterBy, halfOpen);
+    async ({ windowFilter }) => {
+      const filter = mergeFilter(mode, filterBy, windowFilter);
+
+      // Gather this chunk’s pages locally, then emit immediately.
       const bucket: PreferenceQueryResponseItem[] = [];
 
       for await (const page of iterateConsentPages(
@@ -231,30 +196,27 @@ export async function fetchConsentPreferencesChunked(
         filter,
         pageSize,
       )) {
-        // append raw page; dedupe happens on flush
         bucket.push(...page);
-        fetched += page.length; // update raw count as we go
-        bar.update(completed, { fetched, flushed: nextFlush });
+        fetched += page.length;
+        bar.update(completed, { fetched });
       }
 
-      resultsByChunk.set(idx, bucket);
-      completed += 1; // this chunk is done (even if not yet flushed)
-      bar.update(completed, { fetched, flushed: nextFlush });
-      await flushReady();
+      out.push(...bucket);
+
+      completed += 1;
+      bar.update(completed, { fetched });
     },
     { concurrency: Math.max(1, windowConcurrency) },
   );
 
-  await flushReady();
-
-  bar.update(completed, { fetched, flushed: nextFlush });
+  bar.update(completed, { fetched });
   bar.stop();
 
   logger.info(
     colors.green(
       `Fetched ${
         out.length
-      } unique consent preference records from partition ${partition} in ${
+      } consent preference records from partition ${partition} in ${
         (Date.now() - t0) / 1000
       }s.`,
     ),

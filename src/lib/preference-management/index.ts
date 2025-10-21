@@ -19,6 +19,4 @@ export * from './buildConsentChunks';
 export * from './fetchConsentPreferencesChunked';
 export * from './fetchConsentPreferences';
 export * from './types';
-export * from './hashPreferenceRecord';
-export * from './consentIntervalToHalfOpen';
 export * from './sortConsentPreferences';
