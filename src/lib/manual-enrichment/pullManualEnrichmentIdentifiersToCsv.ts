@@ -3,7 +3,7 @@ import { map } from 'bluebird';
 import colors from 'colors';
 import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { writeCsv } from '../cron/writeCsv';
+import { writeCsv } from '../helpers/writeCsv';
 import {
   PrivacyRequest,
   RequestEnricher,
@@ -135,7 +135,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
   // Write out to CSV
   const headers = uniq(data.map((d) => Object.keys(d)).flat());
-  writeCsv(file, data, headers);
+  await writeCsv(file, data, headers);
 
   logger.info(
     colors.green(

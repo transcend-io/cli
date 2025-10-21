@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { map, mapSeries } from 'bluebird';
 import { join } from 'node:path';
 import fs, { existsSync, mkdirSync } from 'node:fs';
 import {
@@ -11,8 +11,8 @@ import {
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
-import { writeCsv } from '../../../lib/cron';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { writeCsv } from '../../../lib/helpers';
 
 export interface PullConsentMetricsCommandFlags {
   auth: string;
@@ -117,21 +117,31 @@ export async function pullConsentMetrics(
       });
 
       // Write to file
-      Object.entries(configuration).forEach(([metricName, metrics]) => {
-        metrics.forEach(({ points, name }) => {
-          const file = join(folder, `${metricName}_${name}.csv`);
-          logger.info(
-            colors.magenta(`Writing configuration to file "${file}"...`),
+      await map(
+        Object.entries(configuration),
+        async ([metricName, metrics]) => {
+          await map(
+            metrics,
+            async ({ points, name }) => {
+              const file = join(folder, `${metricName}_${name}.csv`);
+              logger.info(
+                colors.magenta(`Writing configuration to file "${file}"...`),
+              );
+              await writeCsv(
+                file,
+                points.map(({ key, value }) => ({
+                  timestamp: key,
+                  value,
+                })),
+              );
+            },
+            {
+              concurrency: 5,
+            },
           );
-          writeCsv(
-            file,
-            points.map(({ key, value }) => ({
-              timestamp: key,
-              value,
-            })),
-          );
-        });
-      });
+        },
+        { concurrency: 5 },
+      );
     } catch (err) {
       logger.error(
         colors.red(`An error occurred syncing the schema: ${err.message}`),
