@@ -11,3 +11,4 @@ export * from './checkIfPendingPreferenceUpdatesAreNoOp';
 export * from './checkIfPendingPreferenceUpdatesCauseConflict';
 export * from './types';
 export * from './withPreferenceQueryRetry';
+export * from './transformPreferenceRecordToCsv';
