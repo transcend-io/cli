@@ -12,16 +12,20 @@ import {
   pickConsentChunkMode,
 } from './discoverConsentWindow';
 import { buildConsentChunks } from './buildConsentChunks';
-import { addDaysUtc, clampPageSize } from '../helpers';
+import { addDaysUtc, clampPageSize, LruSet, Mutex } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
+import { hashPreferenceRecord } from './hashPreferenceRecord';
+import { sortConsentPreferences } from './sortConsentPreferences';
+import { consentIntervalToHalfOpen } from './consentIntervalToHalfOpen';
 
 /**
  * Merge baseFilter with a window filter, taking care not to mix timestamp/updated fields improperly.
  *
- * @param mode
- * @param base
- * @param window
+ * @param mode - The chunking mode
+ * @param base - The base filter
+ * @param window - The per-chunk window filter
+ * @returns merged filter
  */
 function mergeFilter(
   mode: ChunkMode,
@@ -56,85 +60,11 @@ function mergeFilter(
 }
 
 /**
- * Convert a per-chunk window to half-open [after, before) by nudging `before` back 1ms.
- * This pairs cleanly with a backend that is inclusive when both bounds are supplied.
- *
- * If `before` is undefined (open-ended tail), we leave it as-is.
- * If `before - 1ms < after`, we clamp to `after` to avoid inverted windows.
- *
- * @param mode
- * @param window
- */
-function toHalfOpen(
-  mode: ChunkMode,
-  window: PreferencesQueryFilter,
-): PreferencesQueryFilter {
-  const minus1 = (iso?: string) =>
-    iso ? new Date(new Date(iso).getTime() - 1).toISOString() : undefined;
-
-  if (mode === 'timestamp') {
-    const a = window.timestampAfter;
-    const b = window.timestampBefore;
-    if (!b) return window;
-
-    const bMinus = minus1(b);
-    if (a && bMinus) {
-      // clamp if necessary
-      if (new Date(bMinus).getTime() < new Date(a).getTime()) {
-        return { ...window, timestampBefore: a };
-      }
-      return { ...window, timestampBefore: bMinus };
-    }
-    return { ...window, timestampBefore: bMinus };
-  }
-
-  // mode === 'updated'
-  const a = window.system?.updatedAfter;
-  const b = window.system?.updatedBefore;
-  if (!b) return window;
-
-  const bMinus = minus1(b);
-  if (a && bMinus) {
-    if (new Date(bMinus).getTime() < new Date(a).getTime()) {
-      return {
-        ...window,
-        system: { ...(window.system || {}), updatedBefore: a },
-      };
-    }
-    return {
-      ...window,
-      system: { ...(window.system || {}), updatedBefore: bMinus },
-    };
-  }
-  return {
-    ...window,
-    system: { ...(window.system || {}), updatedBefore: bMinus },
-  };
-}
-
-/**
- * Get the comparison instant for sorting based on the chosen dimension.
- *
- * @param mode
- * @param item
- */
-function getItemInstant(
-  mode: ChunkMode,
-  item: PreferenceQueryResponseItem,
-): Date {
-  if (mode === 'timestamp') {
-    return new Date(item.timestamp);
-  }
-  // mode === 'updated'
-  const d = item.system?.updatedAt ?? item.metadataTimestamp ?? item.timestamp;
-  return new Date(d);
-}
-
-/**
  * High-level chunked fetch with progress bar.
  *
- * @param sombra
- * @param root0
+ * @param sombra - Got instance
+ * @param options - Options
+ * @returns preference items
  */
 export async function fetchConsentPreferencesChunked(
   sombra: Got,
@@ -232,114 +162,112 @@ export async function fetchConsentPreferencesChunked(
     ),
   );
 
-  // Progress bar over chunks; also shows running record count
+  // Progress bar over chunks; now shows:
+  // - value = completed chunks (out-of-order OK)
+  // - payload flushed = in-order flushed chunks
+  // - payload fetched = total records fetched
   const bar = new cliProgress.SingleBar(
     {
       format:
-        'Downloading [{bar}] {percentage}% | chunks {value}/{total} | records {records}',
+        'Downloading [{bar}] {percentage}% | chunks {value}/{total} | flushed {flushed} | fetched {fetched}',
       hideCursor: true,
+      fps: 30,
+      etaBuffer: 100,
+      clearOnComplete: true,
+      stopOnComplete: true,
     },
     cliProgress.Presets.shades_classic,
   );
 
-  let records = 0;
-  let completed = 0;
-  bar.start(chunks.length, 0, { records });
+  // state used for bar payload + ordering
+  let nextFlush = 0; // next chunk index to flush into final output
+  let completed = 0; // finished chunks (out-of-order)
+  let fetched = 0; // raw records counter
+
+  bar.start(chunks.length, 0, { fetched, flushed: 0 });
+
   const t0 = Date.now();
 
   const pageSize = clampPageSize(limit);
-  const all: PreferenceQueryResponseItem[] = [];
+  const recent = new LruSet(100_000); // tune as needed
+  const resultsByChunk = new Map<number, PreferenceQueryResponseItem[]>();
+  const flushMutex = new Mutex();
 
-  try {
-    await pmap(
-      chunks,
-      async (windowFilter) => {
-        // Make each chunk half-open: [after, before) via before-1ms
-        const halfOpen = toHalfOpen(mode, windowFilter);
-        const filter = mergeFilter(mode, filterBy, halfOpen);
+  const out: PreferenceQueryResponseItem[] = [];
 
-        for await (const page of iterateConsentPages(
-          sombra,
-          partition,
-          filter,
-          pageSize,
-        )) {
-          all.push(...page);
-          records += page.length;
-          bar.update(completed, { records });
+  // helper to flush ready chunks in order; atomic to avoid interleaved updates
+  const flushReady = async (): Promise<void> => {
+    await flushMutex.run(() => {
+      for (;;) {
+        const ready = resultsByChunk.get(nextFlush);
+        if (!ready) break;
+
+        for (const item of ready) {
+          const key = hashPreferenceRecord(item);
+          // eslint-disable-next-line no-continue
+          if (recent.has(key)) continue; // drop boundary dupes
+          recent.add(key);
+          out.push(item);
         }
+        resultsByChunk.delete(nextFlush);
+        nextFlush += 1;
+      }
 
-        completed += 1;
-        bar.update(completed, { records });
-      },
-      { concurrency: Math.max(1, windowConcurrency) },
-    );
-  } finally {
-    bar.stop();
-  }
+      // value = completed; payload shows flushed count + fetched
+      bar.update(completed, { fetched, flushed: nextFlush });
+    });
+  };
 
-  // Deep de-dupe identical rows across chunk/page boundaries
-  const beforeCount = all.length;
-  const deduped = dedupeByDeepEquality(all);
-  const removed = beforeCount - deduped.length;
-  if (removed > 0) {
-    logger.info(
-      colors.yellow(`De-dupe removed ${removed} exact duplicate record(s)`),
-    );
-  }
+  await pmap(
+    chunks.map((windowFilter, idx) => ({ windowFilter, idx })),
+    async ({ windowFilter, idx }) => {
+      const halfOpen = consentIntervalToHalfOpen(mode, windowFilter);
+      const filter = mergeFilter(mode, filterBy, halfOpen);
+      const bucket: PreferenceQueryResponseItem[] = [];
+
+      for await (const page of iterateConsentPages(
+        sombra,
+        partition,
+        filter,
+        pageSize,
+      )) {
+        // append raw page; dedupe happens on flush
+        bucket.push(...page);
+        fetched += page.length; // update raw count as we go
+        bar.update(completed, { fetched, flushed: nextFlush });
+      }
+
+      resultsByChunk.set(idx, bucket);
+      completed += 1; // this chunk is done (even if not yet flushed)
+      bar.update(completed, { fetched, flushed: nextFlush });
+      await flushReady();
+    },
+    { concurrency: Math.max(1, windowConcurrency) },
+  );
+
+  await flushReady();
+
+  bar.update(completed, { fetched, flushed: nextFlush });
+  bar.stop();
 
   logger.info(
     colors.green(
       `Fetched ${
-        deduped.length
+        out.length
       } unique consent preference records from partition ${partition} in ${
         (Date.now() - t0) / 1000
       }s.`,
     ),
   );
 
-  // Deterministic sort by the active dimension (descending: newest first)
-  deduped.sort((a, b) => {
-    const ta = getItemInstant(mode, a).getTime();
-    const tb = getItemInstant(mode, b).getTime();
-    return tb - ta; // newest → oldest
-  });
+  // Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
+  const sorted = sortConsentPreferences(out, mode);
 
-  return deduped;
-}
+  logger.info(
+    colors.green(
+      `Sorted ${sorted.length} unique consent preference records from partition ${partition}.`,
+    ),
+  );
 
-// -------- Deep de-dupe helpers (entire row identical) --------
-/**
- *
- * @param x
- */
-function stableStringify(x: any): string {
-  const seen = new WeakSet<object>();
-  const norm = (v: any): any => {
-    if (v === null || typeof v !== 'object') return v;
-    if (seen.has(v)) return '[Circular]';
-    seen.add(v);
-    if (Array.isArray(v)) return v.map(norm);
-    const out: Record<string, any> = {};
-    for (const k of Object.keys(v).sort()) out[k] = norm(v[k]);
-    return out;
-  };
-  return JSON.stringify(norm(x));
-}
-
-/**
- *
- * @param items
- */
-function dedupeByDeepEquality<T>(items: T[]): T[] {
-  const seen = new Set<string>();
-  const out: T[] = [];
-  for (const item of items) {
-    const key = stableStringify(item);
-    if (!seen.has(key)) {
-      seen.add(key);
-      out.push(item);
-    }
-  }
-  return out;
+  return sorted;
 }
