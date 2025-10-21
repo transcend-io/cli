@@ -14,3 +14,8 @@ export * from './withPreferenceQueryRetry';
 export * from './transformPreferenceRecordToCsv';
 export * from './fetchConsentPreferences';
 export * from './buildConsentChunks';
+export * from './discoverConsentWindow';
+export * from './iterateConsentPages';
+export * from './consentWindowHasAny';
+export * from './getComparisonTimeForRecord';
+export * from './pickConsentChunkMode';

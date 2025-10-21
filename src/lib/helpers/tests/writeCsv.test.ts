@@ -9,6 +9,8 @@ import {
   writeCsv,
   parseFilePath,
   writeLargeCsv,
+  initCsvFile,
+  appendCsvRowsOrdered,
 } from '../writeCsv';
 
 /**
@@ -80,7 +82,7 @@ describe('CSV helpers', () => {
         { k1: 'c', k2: 'd' },
       ]);
 
-      const lines = read(file).split('\n');
+      const lines = read(file).trimEnd().split('\n');
       expect(lines[0]).toBe('k1,k2'); // header
       expect(lines[1]).toBe('x,y'); // first row
       expect(lines[2]).toBe('a,b');
@@ -120,6 +122,81 @@ describe('CSV helpers', () => {
       await writeCsv(file, data, false);
       const lines = read(file).trimEnd().split('\n');
       expect(lines).toEqual(['p,q']); // only one row, no header
+    });
+  });
+
+  // ---- initCsvFile + appendCsvRowsOrdered (incremental path) ----------------
+  describe('incremental CSV writing', () => {
+    it('initCsvFile writes only the header row with trailing newline', () => {
+      const file = join(dir, 'init.csv');
+      initCsvFile(file, ['a', 'b', 'c']);
+      const content = read(file);
+      expect(content).toBe('a,b,c\n');
+    });
+
+    it('initCsvFile creates an empty file when headers=[]', () => {
+      const file = join(dir, 'init-empty.csv');
+      initCsvFile(file, []);
+      const content = read(file);
+      expect(content).toBe('');
+    });
+
+    it('appendCsvRowsOrdered appends rows using provided header order', () => {
+      const file = join(dir, 'ordered.csv');
+      const headers = ['a', 'b', 'c'];
+      initCsvFile(file, headers);
+
+      appendCsvRowsOrdered(file, [{ b: 'two', a: 1, c: 'x' }], headers);
+      appendCsvRowsOrdered(
+        file,
+        [
+          { a: 2, b: 'three', c: 'y' },
+          { a: 3, b: 'four', c: 'z' },
+        ],
+        headers,
+      );
+
+      const lines = read(file).trimEnd().split('\n');
+      expect(lines).toEqual(['a,b,c', '1,two,x', '2,three,y', '3,four,z']);
+    });
+
+    it('appendCsvRowsOrdered properly escapes commas, quotes, and newlines', () => {
+      const file = join(dir, 'ordered-escape.csv');
+      const headers = ['a', 'b', 'c'];
+      initCsvFile(file, headers);
+
+      appendCsvRowsOrdered(
+        file,
+        [
+          {
+            a: 'hi,there',
+            b: 'He said "yo"',
+            c: 'line1\nline2',
+          },
+        ],
+        headers,
+      );
+
+      // IMPORTANT: CSV allows embedded newlines inside quoted fields.
+      // Splitting the file by '\n' would split this single CSV record into two lines.
+      // Instead, compare the raw file content for exact CSV text.
+      const content = read(file);
+      expect(content).toBe(
+        'a,b,c\n"hi,there","He said ""yo""","line1\nline2"\n',
+      );
+    });
+
+    it('appendCsvRowsOrdered is a no-op when data is empty', () => {
+      const file = join(dir, 'ordered-noop.csv');
+      const headers = ['a', 'b'];
+      initCsvFile(file, headers);
+
+      const before = read(file);
+      appendCsvRowsOrdered(file, [], headers);
+      const after = read(file);
+
+      expect(before).toBe('a,b\n');
+      expect(after).toBe('a,b\n');
     });
   });
 

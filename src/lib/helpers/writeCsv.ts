@@ -43,8 +43,49 @@ export function writeCsvSync(
 }
 
 /**
- * Append data to an existing csv file synchronously
- * Assumes the data structure matches the existing file
+ * Initialize a CSV file by writing only the header row (or an empty file if no headers).
+ *
+ * @param filePath - CSV path
+ * @param headers - Ordered list of column names; if empty, creates/empties the file
+ */
+export function initCsvFile(filePath: string, headers: string[]): void {
+  if (!headers || headers.length === 0) {
+    writeFileSync(filePath, '');
+    return;
+  }
+  const headerLine = headers.map(escapeCsvValue).join(',');
+  writeFileSync(filePath, `${headerLine}\n`);
+}
+
+/**
+ * Append rows to CSV using an explicit header order (no header line).
+ * Values are written in the order of `headerOrder`.
+ *
+ * @param filePath - CSV path
+ * @param data - Row objects
+ * @param headerOrder - Column order to apply
+ */
+export function appendCsvRowsOrdered(
+  filePath: string,
+  data: ObjByString[],
+  headerOrder: string[],
+): void {
+  if (!data.length) return;
+
+  const lines = data.map((row) => {
+    const vals = headerOrder.map((key) => {
+      const v = row[key];
+      return v == null ? '' : String(v);
+    });
+    return vals.map(escapeCsvValue).join(',');
+  });
+
+  appendFileSync(filePath, `${lines.join('\n')}\n`);
+}
+
+/**
+ * Append data to an existing csv file synchronously (legacy, uses Object.values order).
+ * Prefer appendCsvRowsOrdered for deterministic column order.
  *
  * @param filePath - File to append to
  * @param data - Data to append
