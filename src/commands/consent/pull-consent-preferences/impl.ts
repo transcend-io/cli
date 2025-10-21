@@ -1,9 +1,15 @@
 import type { LocalContext } from '../../../context';
+import colors from 'colors';
 
-import { fetchConsentPreferences } from '../../../lib/consent-manager';
+import {
+  fetchConsentPreferences,
+  transformPreferenceRecordToCsv,
+  type PreferenceIdentifier,
+} from '../../../lib/preference-management';
 import { writeCsv } from '../../../lib/cron';
 import { createSombraGotInstance } from '../../../lib/graphql';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { logger } from '../../../logger';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;
@@ -13,6 +19,8 @@ export interface PullConsentPreferencesCommandFlags {
   transcendUrl: string;
   timestampBefore?: Date;
   timestampAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
   identifiers?: string[];
   concurrency: number;
 }
@@ -27,6 +35,8 @@ export async function pullConsentPreferences(
     transcendUrl,
     timestampBefore,
     timestampAfter,
+    updatedBefore,
+    updatedAfter,
     identifiers = [],
     concurrency,
   }: PullConsentPreferencesCommandFlags,
@@ -36,28 +46,59 @@ export async function pullConsentPreferences(
   // Create sombra instance to communicate with
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
+  // Identifiers are key:value, parse to PreferenceIdentifier[]
+  const parsedIdentifiers = identifiers.map(
+    (identifier): PreferenceIdentifier => {
+      if (!identifier.includes(':')) {
+        return {
+          name: 'email',
+          value: identifier,
+        };
+      }
+      const [name, value] = identifier.split(':');
+      return { name, value };
+    },
+  );
+
   // Fetch preferences
+  const filterBy = {
+    ...(timestampBefore
+      ? { timestampBefore: timestampBefore.toISOString() }
+      : {}),
+    ...(timestampAfter ? { timestampAfter: timestampAfter.toISOString() } : {}),
+    ...(updatedAfter || updatedBefore
+      ? {
+          system: {
+            ...(updatedBefore
+              ? { updatedBefore: updatedBefore.toISOString() }
+              : {}),
+            ...(updatedAfter
+              ? { updatedAfter: updatedAfter.toISOString() }
+              : {}),
+          },
+        }
+      : {}),
+    ...(parsedIdentifiers.length > 0 ? { identifiers: parsedIdentifiers } : {}),
+  };
+
+  logger.info(`Fetching consent preferences from partition ${partition}...`);
+
   const preferences = await fetchConsentPreferences(sombra, {
     partition,
-    filterBy: {
-      ...(timestampBefore
-        ? { timestampBefore: timestampBefore.toISOString() }
-        : {}),
-      ...(timestampAfter
-        ? { timestampAfter: timestampAfter.toISOString() }
-        : {}),
-      ...(identifiers.length > 0 ? { identifiers } : {}),
-    },
+    filterBy,
     limit: concurrency,
   });
 
-  // Write to disk
-  writeCsv(
-    file,
-    preferences.map((pref) => ({
-      ...pref,
-      purposes: JSON.stringify(pref.purposes),
-      ...pref.purposes,
-    })),
+  logger.info(
+    colors.green(
+      `Fetched ${preferences.length} consent preference records from partition ${partition}. `,
+    ),
   );
+
+  logger.info(colors.magenta(`Writing preferences to CSV file at: ${file}`));
+
+  // Write to disk
+  writeCsv(file, preferences.map(transformPreferenceRecordToCsv));
+
+  logger.info(colors.green(`Successfully wrote preferences to ${file}`));
 }
