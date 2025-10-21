@@ -267,4 +267,4 @@ describe('discoverConsentWindow helpers', () => {
     });
   });
 });
-/* eslint-enabke @typescript-eslint/no-explicit-any */
+/* eslint-enable @typescript-eslint/no-explicit-any */
