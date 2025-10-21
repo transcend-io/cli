@@ -21,3 +21,8 @@ export * from './types';
 export * from './getComparisonTimeForRecord';
 export * from './pickConsentChunkMode';
 export * from './buildConsentChunks';
+export * from './discoverConsentWindow';
+export * from './iterateConsentPages';
+export * from './consentWindowHasAny';
+export * from './getComparisonTimeForRecord';
+export * from './pickConsentChunkMode';
