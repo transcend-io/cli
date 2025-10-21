@@ -225,7 +225,7 @@ describe('pullConsentPreferences', () => {
     expect((calls as any)[1][1]).toBe(1);
     expect((calls as any)[1][2]).toBe(apiNodes);
 
-    // writeCsv called with mapped rows
+    // writeLargeCsv called with mapped rows
     expect(H.writeLargeCsv).toHaveBeenCalledTimes(1);
     const [pathArg, rowsArg] = H.writeLargeCsv.mock.calls[0];
     expect(pathArg).toBe('/abs/prefs.csv');
