@@ -11,9 +11,12 @@ import { logger } from '../../logger';
  *
  * Uses POST /v1/preferences/{partition}/query with cursor pagination.
  *
- * @param sombra - Sombra instance configured to make requests (should include auth headers)
+ * If `onItems` is provided, this streams pages to the callback and does not
+ * accumulate results in memory. If omitted, the function returns all items.
+ *
+ * @param sombra - Sombra instance (must include auth headers)
  * @param options - Query options
- * @returns All consent preference nodes accumulated across pages
+ * @returns All nodes (only when onItems is not provided)
  */
 export async function fetchConsentPreferences(
   sombra: Got,
@@ -21,6 +24,7 @@ export async function fetchConsentPreferences(
     partition,
     filterBy = {},
     limit = 50,
+    onItems,
   }: {
     /** Partition key to fetch (moved to URL path on new endpoint) */
     partition: string;
@@ -28,9 +32,11 @@ export async function fetchConsentPreferences(
     filterBy?: PreferencesQueryFilter;
     /** Number of users per page (1–50 per API spec) */
     limit?: number;
+    /** Optional streaming sink; if provided, pages are not accumulated */
+    onItems?: (items: PreferenceQueryResponseItem[]) => Promise<void> | void;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
-  const data: PreferenceQueryResponseItem[] = [];
+  const collected: PreferenceQueryResponseItem[] = [];
 
   // Cursor-based pagination per new endpoint
   let cursor: string | undefined;
@@ -72,7 +78,7 @@ export async function fetchConsentPreferences(
           })
           .json(),
       {
-        onRetry: (attempt, error, message) => {
+        onRetry: (attempt, _error, message) => {
           logger.warn(
             colors.yellow(
               `Retry attempt ${attempt} for fetchConsentPreferences due to error: ${message}`,
@@ -91,14 +97,17 @@ export async function fetchConsentPreferences(
       break;
     }
 
-    data.push(...nodes);
+    if (onItems) {
+      await onItems(nodes);
+    } else {
+      collected.push(...nodes);
+    }
 
     if (!nextCursor) {
       break;
     }
-
     cursor = nextCursor;
   }
 
-  return data;
+  return onItems ? [] : collected;
 }

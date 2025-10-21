@@ -10,11 +10,8 @@ import {
 import { createSombraGotInstance } from '../../../lib/graphql';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { logger } from '../../../logger';
-import {
-  initCsvFile,
-  appendCsvRowsOrdered,
-  writeLargeCsv,
-} from '../../../lib/helpers';
+import { initCsvFile, appendCsvRowsOrdered } from '../../../lib/helpers';
+import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;
@@ -90,16 +87,25 @@ export async function pullConsentPreferences(
 
   logger.info(
     `Fetching consent preferences from partition ${partition}, using mode=${
-      shouldChunk ? 'chunked-stream' : 'single'
+      shouldChunk ? 'chunked-stream' : 'paged-stream'
     }...`,
   );
 
   logger.info(colors.magenta(`Preparing CSV at: ${file}`));
 
-  // We will initialize headers lazily on the first page so we can derive
-  // the exact column order from the transformer.
+  // Lazily initialize CSV header order from the first transformed row.
   let headerOrder: string[] | null = null;
   let wroteHeader = false;
+  const writeRows = (items: PreferenceQueryResponseItem[]): void => {
+    if (!items || items.length === 0) return;
+    const rows = items.map(transformPreferenceRecordToCsv);
+    if (!wroteHeader) {
+      headerOrder = Object.keys(rows[0]);
+      initCsvFile(file, headerOrder);
+      wroteHeader = true;
+    }
+    appendCsvRowsOrdered(file, rows, headerOrder!);
+  };
 
   if (shouldChunk) {
     // Stream via chunked fetcher with page callback
@@ -107,45 +113,24 @@ export async function pullConsentPreferences(
       partition,
       filterBy,
       limit: concurrency,
+      // FIXME
       windowConcurrency: 100,
       maxChunks: 5000,
       maxLookbackDays: 3650,
-      onItems: (items) => {
-        if (!items || items.length === 0) return;
-
-        const rows = items.map(transformPreferenceRecordToCsv);
-
-        if (!wroteHeader) {
-          headerOrder = Object.keys(rows[0]);
-          initCsvFile(file, headerOrder);
-          wroteHeader = true;
-        }
-
-        appendCsvRowsOrdered(file, rows, headerOrder!);
-      },
+      onItems: (items) => writeRows(items),
     });
 
     logger.info(colors.green(`Finished writing CSV to ${file}`));
     return;
   }
 
-  // Non-chunked path: fetch then write in one go, but still use init+append for consistency
-  const preferences = await fetchConsentPreferences(sombra, {
+  // Non-chunked path: still stream page-by-page via onItems (no in-memory accumulation)
+  await fetchConsentPreferences(sombra, {
     partition,
     filterBy,
-    limit: concurrency,
+    limit: concurrency, // page size (API max 50 enforced internally)
+    onItems: (items) => writeRows(items),
   });
 
-  logger.info(
-    colors.green(
-      `Fetched ${preferences.length} consent preference records from partition ${partition}. `,
-    ),
-  );
-
-  logger.info(colors.magenta(`Writing preferences to CSV file at: ${file}`));
-
-  // Write to disk
-  await writeLargeCsv(file, preferences.map(transformPreferenceRecordToCsv));
-
-  logger.info(colors.green(`Successfully wrote preferences to ${file}`));
+  logger.info(colors.green(`Finished writing CSV to ${file}`));
 }
