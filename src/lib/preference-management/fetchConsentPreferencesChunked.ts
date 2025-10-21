@@ -59,9 +59,13 @@ function mergeFilter(
 /**
  * High-level chunked fetch with progress bar.
  *
+ * If an `onItems` callback is provided, pages are streamed to the callback
+ * as they are fetched (no accumulation in memory). If no callback is provided,
+ * the function returns all items (legacy behavior).
+ *
  * @param sombra - Got instance
  * @param options - Options
- * @returns preference items
+ * @returns preference items (only if onItems is not provided)
  */
 export async function fetchConsentPreferencesChunked(
   sombra: Got,
@@ -72,12 +76,13 @@ export async function fetchConsentPreferencesChunked(
     windowConcurrency = 25,
     maxChunks = 1000,
     maxLookbackDays = 3650,
+    onItems,
   }: {
     /** Partition */
     partition: string;
     /** Filter by preferences */
     filterBy?: PreferencesQueryFilter;
-    /** Limit number of results */
+    /** Limit number of results (page size) */
     limit?: number;
     /** Window concurrency */
     windowConcurrency?: number;
@@ -85,6 +90,8 @@ export async function fetchConsentPreferencesChunked(
     maxChunks?: number; // up to N chunks; min 1 hour per chunk
     /** Max lookback days for discovering bounds */
     maxLookbackDays?: number;
+    /** Optional streaming sink; if provided, items are not accumulated */
+    onItems?: (items: PreferenceQueryResponseItem[]) => Promise<void> | void;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const mode: ChunkMode = pickConsentChunkMode(filterBy);
@@ -189,21 +196,22 @@ export async function fetchConsentPreferencesChunked(
     async ({ windowFilter }) => {
       const filter = mergeFilter(mode, filterBy, windowFilter);
 
-      // Gather this chunk’s pages locally, then emit immediately.
-      const bucket: PreferenceQueryResponseItem[] = [];
-
+      // Stream this chunk page-by-page
       for await (const page of iterateConsentPages(
         sombra,
         partition,
         filter,
         pageSize,
       )) {
-        bucket.push(...page);
         fetched += page.length;
         bar.update(completed, { fetched });
-      }
 
-      out.push(...bucket);
+        if (onItems) {
+          await onItems(page);
+        } else {
+          out.push(...page);
+        }
+      }
 
       completed += 1;
       bar.update(completed, { fetched });
@@ -216,13 +224,11 @@ export async function fetchConsentPreferencesChunked(
 
   logger.info(
     colors.green(
-      `Fetched ${
-        out.length
-      } consent preference records from partition ${partition} in ${
+      `Fetched ${fetched} consent preference records from partition ${partition} in ${
         (Date.now() - t0) / 1000
       }s.`,
     ),
   );
 
-  return out;
+  return onItems ? [] : out;
 }

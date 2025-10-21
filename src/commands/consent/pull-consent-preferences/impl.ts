@@ -10,7 +10,11 @@ import {
 import { createSombraGotInstance } from '../../../lib/graphql';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { logger } from '../../../logger';
-import { writeLargeCsv } from '../../../lib/helpers';
+import {
+  initCsvFile,
+  appendCsvRowsOrdered,
+  writeLargeCsv,
+} from '../../../lib/helpers';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;
@@ -41,7 +45,7 @@ export async function pullConsentPreferences(
     updatedAfter,
     identifiers = [],
     concurrency,
-    shouldChunk, // FIXME
+    shouldChunk, // streaming path uses chunked with onItems
   }: PullConsentPreferencesCommandFlags,
 ): Promise<void> {
   doneInputValidation(this.process.exit);
@@ -63,7 +67,7 @@ export async function pullConsentPreferences(
     },
   );
 
-  // Fetch preferences
+  // Build filter
   const filterBy = {
     ...(timestampBefore
       ? { timestampBefore: timestampBefore.toISOString() }
@@ -85,26 +89,53 @@ export async function pullConsentPreferences(
   };
 
   logger.info(
-    `Fetching consent preferences from partition ${partition}, using chunkMode=${
-      shouldChunk ? 'chunked' : 'single'
+    `Fetching consent preferences from partition ${partition}, using mode=${
+      shouldChunk ? 'chunked-stream' : 'single'
     }...`,
   );
 
-  const preferences = await (shouldChunk
-    ? fetchConsentPreferencesChunked(sombra, {
-        partition,
-        filterBy,
-        limit: concurrency,
-        // FIXME
-        windowConcurrency: 100,
-        maxChunks: 5000,
-        maxLookbackDays: 3650,
-      })
-    : fetchConsentPreferences(sombra, {
-        partition,
-        filterBy,
-        limit: concurrency,
-      }));
+  logger.info(colors.magenta(`Preparing CSV at: ${file}`));
+
+  // We will initialize headers lazily on the first page so we can derive
+  // the exact column order from the transformer.
+  let headerOrder: string[] | null = null;
+  let wroteHeader = false;
+
+  if (shouldChunk) {
+    // Stream via chunked fetcher with page callback
+    await fetchConsentPreferencesChunked(sombra, {
+      partition,
+      filterBy,
+      limit: concurrency,
+      windowConcurrency: 100,
+      maxChunks: 5000,
+      maxLookbackDays: 3650,
+      onItems: (items) => {
+        if (!items || items.length === 0) return;
+
+        const rows = items.map(transformPreferenceRecordToCsv);
+
+        if (!wroteHeader) {
+          headerOrder = Object.keys(rows[0]);
+          initCsvFile(file, headerOrder);
+          wroteHeader = true;
+        }
+
+        appendCsvRowsOrdered(file, rows, headerOrder!);
+      },
+    });
+
+    logger.info(colors.green(`Finished writing CSV to ${file}`));
+    return;
+  }
+
+  // Non-chunked path: fetch then write in one go, but still use init+append for consistency
+  const preferences = await fetchConsentPreferences(sombra, {
+    partition,
+    filterBy,
+    limit: concurrency,
+  });
+
   logger.info(
     colors.green(
       `Fetched ${preferences.length} consent preference records from partition ${partition}. `,
