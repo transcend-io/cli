@@ -82,7 +82,7 @@ vi.mock('../../../../lib/graphql/makeGraphQLRequest', () => ({
   })),
 }));
 
-vi.mock('../../../../lib/cron', () => ({
+vi.mock('../../../../lib/helpers', () => ({
   writeLargeCsv: H.writeLargeCsv,
 }));
 
