@@ -14,7 +14,7 @@ import { buildConsentChunks } from './buildConsentChunks';
 import { addDaysUtc, clampPageSize } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
-import { sortConsentPreferences } from './sortConsentPreferences';
+// import { sortConsentPreferences } from './sortConsentPreferences';
 import { pickConsentChunkMode } from './pickConsentChunkMode';
 
 /**
@@ -222,14 +222,15 @@ export async function fetchConsentPreferencesChunked(
     ),
   );
 
-  // Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
-  const sorted = sortConsentPreferences(out, mode);
+  // FIXME
+  // // Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
+  // const sorted = sortConsentPreferences(out, mode);
 
-  logger.info(
-    colors.green(
-      `Sorted ${sorted.length} unique consent preference records from partition ${partition}.`,
-    ),
-  );
+  // logger.info(
+  //   colors.green(
+  //     `Sorted ${sorted.length} unique consent preference records from partition ${partition}.`,
+  //   ),
+  // );
 
-  return sorted;
+  return out;
 }

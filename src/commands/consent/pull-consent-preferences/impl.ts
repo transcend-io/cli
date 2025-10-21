@@ -96,8 +96,8 @@ export async function pullConsentPreferences(
         filterBy,
         limit: concurrency,
         // FIXME
-        windowConcurrency: 25,
-        maxChunks: 1000,
+        windowConcurrency: 100,
+        maxChunks: 5000,
       })
     : fetchConsentPreferences(sombra, {
         partition,
