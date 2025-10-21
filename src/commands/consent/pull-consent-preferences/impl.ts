@@ -7,10 +7,10 @@ import {
   transformPreferenceRecordToCsv,
   type PreferenceIdentifier,
 } from '../../../lib/preference-management';
-import { writeLargeCsv } from '../../../lib/cron';
 import { createSombraGotInstance } from '../../../lib/graphql';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { logger } from '../../../logger';
+import { writeLargeCsv } from '../../../lib/helpers';
 
 export interface PullConsentPreferencesCommandFlags {
   auth: string;

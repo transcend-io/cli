@@ -10,9 +10,9 @@ import {
   createPreferenceAccessTokens,
   PreferenceAccessTokenInput,
 } from '../../../lib/graphql';
-import { writeCsv } from '../../../lib/cron';
 import { readCsv } from '../../../lib/requests';
 import { SombraStandardScope } from '@transcend-io/privacy-types';
+import { writeCsv } from '../../../lib/helpers';
 
 /**
  * CLI flags accepted by the `generate-access-tokens` command.

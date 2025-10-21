@@ -11,8 +11,8 @@ import {
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
-import { writeCsv } from '../../../lib/cron';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { writeCsv } from '../../../lib/helpers';
 
 export interface PullConsentMetricsCommandFlags {
   auth: string;
