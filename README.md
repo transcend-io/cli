@@ -1895,6 +1895,15 @@ transcend consent pull-consent-preferences \
   --transcendUrl=https://api.us.transcend.io
 ```
 
+**Pull data in a single thread, instead of using the default which pulls data in parallel chunks with non-overlapping time windows (for large datasets)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --shouldChunk=false
+```
+
 ### `transcend consent update-consent-manager`
 
 ```txt

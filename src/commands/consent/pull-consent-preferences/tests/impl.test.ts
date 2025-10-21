@@ -22,16 +22,18 @@ const H = vi.hoisted(() => {
   const sombra = { tag: 'sombra' };
 
   // spies for preference-management exports
-  const fetchConsentPreferences = vi.fn();
+  const fetchConsentPreferences = vi.fn(); // we'll .mockImplementationOnce per test to drive streaming
+  const fetchConsentPreferencesChunked = vi.fn();
   const transformPreferenceRecordToCsv = vi.fn((x: unknown) => ({ csv: x }));
 
-  // spy for writing CSV
-  const writeLargeCsv = vi.fn();
+  // CSV helpers (new code path)
+  const initCsvFile = vi.fn();
+  const appendCsvRowsOrdered = vi.fn();
 
   // capture the last args passed to fetchConsentPreferences
   const lastFetchArgs: {
     sombra?: unknown;
-    opts?: unknown;
+    opts?: any;
   } = {};
 
   return {
@@ -40,8 +42,10 @@ const H = vi.hoisted(() => {
     doneInputValidation,
     sombra,
     fetchConsentPreferences,
+    fetchConsentPreferencesChunked,
     transformPreferenceRecordToCsv,
-    writeLargeCsv,
+    initCsvFile,
+    appendCsvRowsOrdered,
     lastFetchArgs,
   };
 });
@@ -82,17 +86,23 @@ vi.mock('../../../../lib/graphql/makeGraphQLRequest', () => ({
   })),
 }));
 
+// New CSV helpers used by impl after your refactor
 vi.mock('../../../../lib/helpers', () => ({
-  writeLargeCsv: H.writeLargeCsv,
+  initCsvFile: H.initCsvFile,
+  appendCsvRowsOrdered: H.appendCsvRowsOrdered,
 }));
 
+// preference-management: forward and record args, then delegate to our spies
 vi.mock('../../../../lib/preference-management', () => ({
   // eslint-disable-next-line require-await
-  fetchConsentPreferences: async (sombra: unknown, opts: unknown) => {
+  fetchConsentPreferences: async (sombra: unknown, opts: any) => {
     H.lastFetchArgs.sombra = sombra;
     H.lastFetchArgs.opts = opts;
     return H.fetchConsentPreferences(sombra, opts);
   },
+  // eslint-disable-next-line require-await
+  fetchConsentPreferencesChunked: async (sombra: unknown, opts: any) =>
+    H.fetchConsentPreferencesChunked(sombra, opts),
   transformPreferenceRecordToCsv: H.transformPreferenceRecordToCsv,
 }));
 
@@ -120,14 +130,37 @@ describe('pullConsentPreferences', () => {
       shouldChunk: false,
     };
 
-    H.fetchConsentPreferences.mockResolvedValueOnce([]);
+    // streaming path: no accumulation; just ensure we can call onItems zero times
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, require-await
+    H.fetchConsentPreferences.mockImplementationOnce(async (_sombra, _opts) =>
+      // don't call onItems → no rows
+      [],
+    );
+
     await pullConsentPreferences.call(ctx, flags);
 
     expect(H.doneInputValidation).toHaveBeenCalledTimes(1);
     expect(H.doneInputValidation).toHaveBeenCalledWith(ctx.process.exit);
+
+    // logs include mode and preparing/finished
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('using mode=paged-stream'),
+      ),
+    ).toBe(true);
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('Preparing CSV at: /tmp/out.csv'),
+      ),
+    ).toBe(true);
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('Finished writing CSV to /tmp/out.csv'),
+      ),
+    ).toBe(true);
   });
 
-  it('parses identifiers (with and without ":"), builds filter, passes limit=concurrency, logs, transforms, and writes CSV', async () => {
+  it('parses identifiers, builds filter, passes limit=concurrency, streams pages, initializes header once, and appends rows', async () => {
     const flags: PullConsentPreferencesCommandFlags = {
       auth: 'tok',
       partition: 'part-xyz',
@@ -147,12 +180,20 @@ describe('pullConsentPreferences', () => {
       shouldChunk: false,
     };
 
-    const apiNodes = [
+    const page1 = [
       { partition: 'part-xyz', timestamp: '2025-06-01T01:00:00.000Z' },
+    ];
+    const page2 = [
       { partition: 'part-xyz', timestamp: '2025-06-01T02:00:00.000Z' },
     ];
 
-    H.fetchConsentPreferences.mockResolvedValueOnce(apiNodes);
+    // streaming: call onItems twice
+    H.fetchConsentPreferences.mockImplementationOnce(async (_sombra, opts) => {
+      expect(typeof opts.onItems).toBe('function');
+      await opts.onItems(page1 as any);
+      await opts.onItems(page2 as any);
+      return []; // streaming mode returns []
+    });
 
     await pullConsentPreferences.call(ctx, flags);
 
@@ -164,6 +205,7 @@ describe('pullConsentPreferences', () => {
       partition: string;
       filterBy: Record<string, unknown>;
       limit: number;
+      onItems: (items: any[]) => Promise<void> | void;
     };
     expect(opts.partition).toBe('part-xyz');
     expect(opts.limit).toBe(17);
@@ -183,57 +225,56 @@ describe('pullConsentPreferences', () => {
       ],
     });
 
-    // Logs: started, fetched N, writing, success
-    expect(H.logger.info).toHaveBeenCalledWith(
-      'Fetching consent preferences from partition part-xyz...',
-    );
+    // Logs: mode + preparing + finished (no aggregate count anymore)
     expect(
       H.logger.info.mock.calls.some((c) =>
         String(c[0]).includes(
-          `Fetched ${apiNodes.length} consent preference records from partition part-xyz.`,
+          'Fetching consent preferences from partition part-xyz, using mode=paged-stream',
         ),
       ),
     ).toBe(true);
     expect(
       H.logger.info.mock.calls.some((c) =>
-        String(c[0]).includes(
-          'Writing preferences to CSV file at: /abs/prefs.csv',
-        ),
+        String(c[0]).includes('Preparing CSV at: /abs/prefs.csv'),
       ),
     ).toBe(true);
     expect(
       H.logger.info.mock.calls.some((c) =>
-        String(c[0]).includes(
-          'Successfully wrote preferences to /abs/prefs.csv',
-        ),
+        String(c[0]).includes('Finished writing CSV to /abs/prefs.csv'),
       ),
     ).toBe(true);
 
+    // The transformer is called for each item in streaming order
+    const allItems = [...page1, ...page2];
     expect(H.transformPreferenceRecordToCsv).toHaveBeenCalledTimes(
-      apiNodes.length,
+      allItems.length,
+    );
+    expect(H.transformPreferenceRecordToCsv.mock.calls[0][0]).toEqual(
+      allItems[0],
+    );
+    expect(H.transformPreferenceRecordToCsv.mock.calls[1][0]).toEqual(
+      allItems[1],
     );
 
-    const { calls } = H.transformPreferenceRecordToCsv.mock;
+    // initCsvFile called once with derived header from first transformed row
+    expect(H.initCsvFile).toHaveBeenCalledTimes(1);
+    const [initPath, headers] = H.initCsvFile.mock.calls[0];
+    expect(initPath).toBe('/abs/prefs.csv');
+    expect(headers).toEqual(['csv']); // from transformPreferenceRecordToCsv mock
 
-    // 1st call: value, index, array
-    expect(calls[0][0]).toEqual(apiNodes[0]);
-    expect((calls as any)[0][1]).toBe(0);
-    expect((calls as any)[0][2]).toBe(apiNodes);
-
-    // 2nd call: value, index, array
-    expect(calls[1][0]).toEqual(apiNodes[1]);
-    expect((calls as any)[1][1]).toBe(1);
-    expect((calls as any)[1][2]).toBe(apiNodes);
-
-    // writeLargeCsv called with mapped rows
-    expect(H.writeLargeCsv).toHaveBeenCalledTimes(1);
-    const [pathArg, rowsArg] = H.writeLargeCsv.mock.calls[0];
-    expect(pathArg).toBe('/abs/prefs.csv');
-    expect(Array.isArray(rowsArg)).toBe(true);
-    expect(rowsArg).toEqual(apiNodes.map((n) => ({ csv: n }))); // our mock transform
+    // appendCsvRowsOrdered called for each onItems invocation
+    expect(H.appendCsvRowsOrdered).toHaveBeenCalledTimes(2);
+    const [p1Path, p1Rows, p1Order] = H.appendCsvRowsOrdered.mock.calls[0];
+    const [p2Path, p2Rows, p2Order] = H.appendCsvRowsOrdered.mock.calls[1];
+    expect(p1Path).toBe('/abs/prefs.csv');
+    expect(p2Path).toBe('/abs/prefs.csv');
+    expect(p1Order).toEqual(['csv']);
+    expect(p2Order).toEqual(['csv']);
+    expect(p1Rows).toEqual(page1.map((n) => ({ csv: n })));
+    expect(p2Rows).toEqual(page2.map((n) => ({ csv: n })));
   });
 
-  it('omits identifiers/system/timestamps in filter when flags are absent', async () => {
+  it('omits identifiers/system/timestamps in filter when flags are absent; still streams with empty pages and writes header only after first rows', async () => {
     const flags: PullConsentPreferencesCommandFlags = {
       auth: 'tok',
       partition: 'p0',
@@ -243,7 +284,11 @@ describe('pullConsentPreferences', () => {
       shouldChunk: false,
     };
 
-    H.fetchConsentPreferences.mockResolvedValueOnce([]);
+    // No rows at all: onItems never called
+    H.fetchConsentPreferences.mockImplementationOnce(
+      // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
+      async (_sombra, _opts) => [],
+    );
 
     await pullConsentPreferences.call(ctx, flags);
 
@@ -251,12 +296,34 @@ describe('pullConsentPreferences', () => {
       partition: string;
       filterBy: Record<string, unknown>;
       limit: number;
+      onItems?: (items: any[]) => Promise<void> | void;
     };
 
     expect(opts.partition).toBe('p0');
     expect(opts.limit).toBe(5);
     // Should be an empty object
     expect(opts.filterBy).toEqual({});
+
+    // Since no rows ever streamed, we never initialized/append
+    expect(H.initCsvFile).not.toHaveBeenCalled();
+    expect(H.appendCsvRowsOrdered).not.toHaveBeenCalled();
+
+    // Logs show mode + preparing + finished
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('using mode=paged-stream'),
+      ),
+    ).toBe(true);
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('Preparing CSV at: /tmp/x.csv'),
+      ),
+    ).toBe(true);
+    expect(
+      H.logger.info.mock.calls.some((c) =>
+        String(c[0]).includes('Finished writing CSV to /tmp/x.csv'),
+      ),
+    ).toBe(true);
   });
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
