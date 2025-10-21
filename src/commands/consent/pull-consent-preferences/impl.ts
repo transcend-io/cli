@@ -98,6 +98,7 @@ export async function pullConsentPreferences(
         // FIXME
         windowConcurrency: 100,
         maxChunks: 5000,
+        maxLookbackDays: 3650,
       })
     : fetchConsentPreferences(sombra, {
         partition,

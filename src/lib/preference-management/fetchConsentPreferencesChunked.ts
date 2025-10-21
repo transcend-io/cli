@@ -14,7 +14,6 @@ import { buildConsentChunks } from './buildConsentChunks';
 import { addDaysUtc, clampPageSize } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
-// import { sortConsentPreferences } from './sortConsentPreferences';
 import { pickConsentChunkMode } from './pickConsentChunkMode';
 
 /**
@@ -72,6 +71,7 @@ export async function fetchConsentPreferencesChunked(
     limit = 50,
     windowConcurrency = 25,
     maxChunks = 1000,
+    maxLookbackDays = 3650,
   }: {
     /** Partition */
     partition: string;
@@ -83,6 +83,8 @@ export async function fetchConsentPreferencesChunked(
     windowConcurrency?: number;
     /** Max chunks */
     maxChunks?: number; // up to N chunks; min 1 hour per chunk
+    /** Max lookback days for discovering bounds */
+    maxLookbackDays?: number;
   },
 ): Promise<PreferenceQueryResponseItem[]> {
   const mode: ChunkMode = pickConsentChunkMode(filterBy);
@@ -115,7 +117,7 @@ export async function fetchConsentPreferencesChunked(
         partition,
         mode,
         baseFilter: filterBy,
-        maxLookbackDays: 3650, // FIXME
+        maxLookbackDays,
       });
       logger.info(
         colors.green(
@@ -221,16 +223,6 @@ export async function fetchConsentPreferencesChunked(
       }s.`,
     ),
   );
-
-  // FIXME
-  // // Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
-  // const sorted = sortConsentPreferences(out, mode);
-
-  // logger.info(
-  //   colors.green(
-  //     `Sorted ${sorted.length} unique consent preference records from partition ${partition}.`,
-  //   ),
-  // );
 
   return out;
 }
