@@ -41,8 +41,8 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        updatedAfter: getExampleDate('08/26/2024 21:21:19'),
-        updatedBefore: getExampleDate('08/27/2024 21:21:19'),
+        updatedAfter: getExampleDate('08/26/2024'),
+        updatedBefore: getExampleDate('08/27/2024'),
       },
     },
     {
