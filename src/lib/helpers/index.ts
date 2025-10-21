@@ -12,3 +12,4 @@ export * from './RateCounter';
 export * from './readSafe';
 export * from './collectParquetFilesOrExit';
 export * from './parquetToCsvOneFile';
+export * from './time';
