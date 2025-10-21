@@ -9,13 +9,13 @@ import {
   findEarliestDayWithData,
   findLatestDayWithData,
   getBoundsFromConsentFilter,
-  pickConsentChunkMode,
 } from './discoverConsentWindow';
 import { buildConsentChunks } from './buildConsentChunks';
 import { addDaysUtc, clampPageSize } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
 import { sortConsentPreferences } from './sortConsentPreferences';
+import { pickConsentChunkMode } from './pickConsentChunkMode';
 
 /**
  * Merge baseFilter with a window filter, taking care not to mix timestamp/updated fields improperly.

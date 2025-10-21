@@ -6,19 +6,8 @@ import { ChunkMode, PreferencesQueryFilter } from './types';
 import { startOfUtcDay, DAY_MS } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
-
-/**
- * Decide which dimension to chunk on: 'timestamp' if timestamps provided, otherwise 'updated'
- *
- * @param filterBy - Filter to examine
- * @returns Chosen chunk mode
- */
-export function pickConsentChunkMode(
-  filterBy: PreferencesQueryFilter,
-): ChunkMode {
-  const hasTimestamp = !!filterBy.timestampAfter || !!filterBy.timestampBefore;
-  return hasTimestamp ? 'timestamp' : 'updated';
-}
+import { pickConsentChunkMode } from './pickConsentChunkMode';
+import { getComparisonTimeForRecord } from './getComparisonTimeForRecord';
 
 /**
  * Get after/before bounds from filter for the given mode
@@ -51,25 +40,6 @@ export function getBoundsFromConsentFilter(
     after: u.updatedAfter ? new Date(u.updatedAfter) : undefined,
     before: u.updatedBefore ? new Date(u.updatedBefore) : undefined,
   };
-}
-
-/**
- * Extract the comparison date from an item based on the chosen dimension.
- *
- * @param mode - Chunking mode
- * @param item - Preference item
- * @returns Date for comparison
- */
-function getItemInstant(
-  mode: ChunkMode,
-  item: PreferenceQueryResponseItem,
-): Date {
-  if (mode === 'timestamp') {
-    return new Date(item.timestamp);
-  }
-  // mode === 'updated'
-  const d = item.system?.updatedAt ?? item.metadataTimestamp ?? item.timestamp;
-  return new Date(d);
 }
 
 /**
@@ -130,7 +100,7 @@ async function fetchOne(
   const item = res.value[0]!;
   logger.info(
     colors.green(
-      `Probe result: found record at ${getItemInstant(
+      `Probe result: found record at ${getComparisonTimeForRecord(
         pickConsentChunkMode(filter),
         item,
       ).toISOString()}`,
@@ -181,7 +151,7 @@ export async function findEarliestDayWithData(
     );
     return startOfUtcDay(new Date());
   }
-  const newestInstant = getItemInstant(mode, newest);
+  const newestInstant = getComparisonTimeForRecord(mode, newest);
   logger.info(colors.green(`Newest instant: ${newestInstant.toISOString()}`));
 
   // 2) Exponential jump back to find an empty region.
@@ -231,7 +201,7 @@ export async function findEarliestDayWithData(
     );
 
     if (hit) {
-      lastFoundInstant = getItemInstant(mode, hit);
+      lastFoundInstant = getComparisonTimeForRecord(mode, hit);
       logger.info(
         colors.green(
           `Found older record at ${lastFoundInstant.toISOString()} — continue jumping back.`,
@@ -300,7 +270,7 @@ export async function findEarliestDayWithData(
 
     if (hit) {
       // We crossed into data — tighten hi to the actual hit instant.
-      hi = getItemInstant(mode, hit);
+      hi = getComparisonTimeForRecord(mode, hit);
       logger.info(
         colors.green(
           `Gallop hit at ${hi.toISOString()} — tightening found bound. Next step halves.`,
@@ -336,7 +306,7 @@ export async function findEarliestDayWithData(
     );
 
     if (hit) {
-      const when = getItemInstant(mode, hit);
+      const when = getComparisonTimeForRecord(mode, hit);
       logger.info(
         colors.green(`Binary probe found record at ${when.toISOString()}.`),
       );
@@ -393,7 +363,7 @@ export async function findLatestDayWithData(
     return startOfUtcDay(new Date());
   }
 
-  const when = getItemInstant(mode, latest);
+  const when = getComparisonTimeForRecord(mode, latest);
   logger.info(colors.green(`Newest record instant is ${when.toISOString()}.`));
 
   const latestDay = startOfUtcDay(when);

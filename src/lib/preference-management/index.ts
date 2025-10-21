@@ -19,3 +19,5 @@ export * from './fetchConsentPreferencesChunked';
 export * from './fetchConsentPreferences';
 export * from './types';
 export * from './sortConsentPreferences';
+export * from './getComparisonTimeForRecord';
+export * from './pickConsentChunkMode';
