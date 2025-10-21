@@ -13,3 +13,4 @@ export * from './types';
 export * from './withPreferenceQueryRetry';
 export * from './transformPreferenceRecordToCsv';
 export * from './fetchConsentPreferences';
+export * from './buildConsentChunks';
