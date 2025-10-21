@@ -148,7 +148,7 @@ export async function generateAccessTokens(
     }));
 
     logger.info(colors.magenta(`Writing access tokens to file "${file}"...`));
-    writeCsv(file, outputRows, true);
+    await writeCsv(file, outputRows, true);
 
     const totalTimeSec = Math.round((Date.now() - t0) / 1000);
     logger.info(

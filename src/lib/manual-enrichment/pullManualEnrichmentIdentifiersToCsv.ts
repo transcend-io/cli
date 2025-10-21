@@ -135,7 +135,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
   // Write out to CSV
   const headers = uniq(data.map((d) => Object.keys(d)).flat());
-  writeCsv(file, data, headers);
+  await writeCsv(file, data, headers);
 
   logger.info(
     colors.green(
