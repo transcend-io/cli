@@ -1800,27 +1800,29 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-
 
 ```txt
 USAGE
-  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--identifiers value]... [--concurrency value]
+  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value]
   transcend consent pull-consent-preferences --help
 
-This command allows for pull of consent preferences from the Managed Consent Database.
+Uses POST /v1/preferences/{partition}/query with cursor-based pagination. Supports filtering by identifiers, collection timestamps, and system.updatedAt.
 
 FLAGS
       --auth              The Transcend API key. Requires scopes: "View Managed Consent Database Admin API"
-      --partition         The partition key to download consent preferences to
+      --partition         Partition ID to query in the Preference Store
      [--sombraAuth]       The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--file]             Path to the CSV file to save preferences to                                         [default = ./preferences.csv]
-     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting        [default = https://api.transcend.io]
-     [--timestampBefore]  Filter for consents updated this time
-     [--timestampAfter]   Filter for consents updated after this time
-     [--identifiers]...   Filter for specific identifiers                                                     [separator = ,]
-     [--concurrency]      The concurrency to use when downloading consents in parallel                        [default = 100]
+     [--file]             Path to CSV output file                                                                                                               [default = ./preferences.csv]
+     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                          [default = https://api.transcend.io]
+     [--timestampBefore]  Filter: preferences collected before this time (timestampBefore)
+     [--timestampAfter]   Filter: preferences collected after this time (timestampAfter)
+     [--updatedBefore]    Filter: preferences updated before this time (system.updatedAt)
+     [--updatedAfter]     Filter: preferences updated after this time (system.updatedAt)
+     [--identifiers]...   Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas. [separator = ,]
+     [--concurrency]      Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                   [default = 50]
   -h  --help              Print help information and exit
 ```
 
 #### Examples
 
-**Fetch all consent preferences from partition key**
+**Fetch all consent preferences from a partition**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1828,7 +1830,7 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Fetch all consent preferences from partition key and save to ./consent.csv**
+**Fetch all consent preferences and save to ./consent.csv**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1837,7 +1839,7 @@ transcend consent pull-consent-preferences \
   --file=./consent.csv
 ```
 
-**Filter on consent updates before a date**
+**Filter by consent collection time (timestampBefore)**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1846,7 +1848,7 @@ transcend consent pull-consent-preferences \
   --timestampBefore=2024-04-03T00:00:00.000Z
 ```
 
-**Filter on consent updates after a date**
+**Filter by consent collection time (timestampAfter)**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1855,7 +1857,26 @@ transcend consent pull-consent-preferences \
   --timestampAfter=2024-04-03T00:00:00.000Z
 ```
 
-**For self-hosted sombras that use an internal key**
+**Filter by last update time (system.updatedAt window)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --updatedAfter=2024-08-26T00:00:00.000Z \
+  --updatedBefore=2024-08-27T00:00:00.000Z
+```
+
+**Filter specific users by identifiers (name:value). Default name=email if omitted.**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --identifiers=email:no-track@example.com,phone:+11234567890,pls-no-track@example.com
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1864,7 +1885,7 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Specifying the backend URL, needed for US hosted backend infrastructure**
+**Use a specific backend base URL (e.g., US-hosted)**
 
 ```sh
 transcend consent pull-consent-preferences \
