@@ -1,23 +1,6 @@
 import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 import type { ChunkMode } from './types';
-
-/**
- * Get the comparison instant for sorting based on the chosen dimension.
- *
- * @param mode - Chunking mode
- * @param item - Preference item
- * @returns date
- */
-function getItemInstant(
-  mode: ChunkMode,
-  item: PreferenceQueryResponseItem,
-): Date {
-  if (mode === 'timestamp') {
-    return new Date(item.timestamp);
-  }
-  // mode === 'updated'
-  return item.system?.updatedAt ? new Date(item.system.updatedAt) : new Date();
-}
+import { getComparisonTimeForRecord } from './getComparisonTimeForRecord';
 
 /**
  * Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
@@ -32,8 +15,8 @@ export function sortConsentPreferences(
 ): PreferenceQueryResponseItem[] {
   // Deterministic sort by the active dimension (descending: newest first), then by userId, then by first identifier
   preferences.sort((a, b) => {
-    const ta = getItemInstant(mode, a).getTime();
-    const tb = getItemInstant(mode, b).getTime();
+    const ta = getComparisonTimeForRecord(mode, a).getTime();
+    const tb = getComparisonTimeForRecord(mode, b).getTime();
 
     // Primary sort: time (newest → oldest)
     const timeDiff = tb - ta;
@@ -41,8 +24,8 @@ export function sortConsentPreferences(
 
     // Secondary sort: the other dimension time
     const otherMode: ChunkMode = mode === 'timestamp' ? 'updated' : 'timestamp';
-    const ta2 = getItemInstant(otherMode, a).getTime();
-    const tb2 = getItemInstant(otherMode, b).getTime();
+    const ta2 = getComparisonTimeForRecord(otherMode, a).getTime();
+    const tb2 = getComparisonTimeForRecord(otherMode, b).getTime();
     const otherTimeDiff = tb2 - ta2;
     if (otherTimeDiff !== 0) return otherTimeDiff;
 
