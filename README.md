@@ -1864,8 +1864,8 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --updatedAfter=2024-08-27T00:00:00.000Z \
-  --updatedBefore=2024-08-28T00:00:00.000Z
+  --updatedAfter=2024-08-26T00:00:00.000Z \
+  --updatedBefore=2024-08-27T00:00:00.000Z
 ```
 
 **Filter specific users by identifiers (name:value). Default name=email if omitted.**
