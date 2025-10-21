@@ -11,7 +11,6 @@ export * from './checkIfPendingPreferenceUpdatesAreNoOp';
 export * from './checkIfPendingPreferenceUpdatesCauseConflict';
 export * from './withPreferenceQueryRetry';
 export * from './transformPreferenceRecordToCsv';
-export * from './buildConsentTimestampChunks';
 export * from './iterateConsentPages';
 export * from './consentWindowHasAny';
 export * from './discoverConsentWindow';
