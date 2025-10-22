@@ -36,16 +36,12 @@ export function transformPreferenceRecordToCsv({
     }
   }
 
-  // ── metadata: group by key; each unique key -> CSV of values
+  // ── metadata: serialize as JSON
   if (Array.isArray(metadata)) {
-    const byKey = new Map<string, Set<string>>();
-    for (const { key, value } of metadata) {
-      if (!byKey.has(key)) byKey.set(key, new Set());
-      if (value) byKey.get(key)!.add(value);
-    }
-    for (const [key, set] of byKey.entries()) {
-      out[`metadata_${key}`] = Array.from(set).join(',');
-    }
+    out.metadata = JSON.stringify(metadata.reduce((acc, { key, value }) => {
+      acc[key] = value;
+      return acc;
+    }, {} as Record<string, string>));
   }
 
   // ── purposes:

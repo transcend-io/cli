@@ -86,10 +86,9 @@ describe('transformPreferenceRecordToCsv', () => {
       expect(out.email).toBe('no-track@example.com,foo@example.com');
       expect(out.phone).toBe('+11234567890');
 
-      // — metadata: metadata_<key> -> CSV (deduped)
-      expect(out.metadata_version).toBe('1.0.0');
-      expect(out.metadata_confirmationTimestamp).toBe(
-        '2023-06-13T07:03:12.621Z',
+      // — metadata
+      expect(out.metadata).toBe(
+        '{"version":"1.0.0","confirmationTimestamp":"2023-06-13T07:03:12.621Z"}',
       );
 
       // — purposes: one column per purpose = boolean

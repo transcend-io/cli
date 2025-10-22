@@ -30,6 +30,8 @@ const CORE_COLS = [
   'gpp',
   'tcf',
   'airgapVersion',
+  'metadata',
+  'metadataTimestamp',
 ];
 
 export interface PullConsentPreferencesCommandFlags {
@@ -131,7 +133,9 @@ export async function pullConsentPreferences(
   // Preference topic columns: topic names (de-duped)
   const topicCols = Array.from(
     new Set(
-      purposesWithTopics.flatMap((p) => p.topics?.map((t) => t.slug) ?? []),
+      purposesWithTopics.flatMap(
+        (p) => p.topics?.map((t) => `${p.trackingType}_${t.slug}`) ?? [],
+      ),
     ),
   ).sort((a, b) => a.localeCompare(b));
 
