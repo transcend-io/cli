@@ -51,7 +51,7 @@ describe('fetchConsentPreferences', () => {
     vi.restoreAllMocks();
   });
 
-  it('paginates with cursor, aggregates nodes, and includes filter in first call only', async () => {
+  it('paginates with cursor, aggregates nodes (no onItems), and includes filter on every call', async () => {
     const partition = 'p-part';
     const filterBy = { system: { updatedAfter: '2025-01-01T00:00:00.000Z' } };
     const page1Nodes: PreferenceQueryResponseItem[] = [
@@ -98,10 +98,10 @@ describe('fetchConsentPreferences', () => {
               } as unknown),
           };
         }
-        // second call uses cursor, no filter mutation
+        // second call uses cursor, filter remains (hasFilter=true)
         if (json.cursor === 'C1') {
           expect(json.limit).toBe(50);
-          expect(json.filter).toEqual(filterBy); // still present because hasFilter=true
+          expect(json.filter).toEqual(filterBy); // still present
           return {
             json: async () =>
               ({
@@ -224,6 +224,98 @@ describe('fetchConsentPreferences', () => {
 
     expect(out).toHaveLength(0);
     expect(post).toHaveBeenCalledTimes(1);
+  });
+
+  it('streams pages to onItems (no aggregation) and still honors filter + cursor flow', async () => {
+    const partition = 'p-stream';
+    const filterBy = { identifiers: [{ name: 'email', value: 'a@b.com' }] };
+    const page1Nodes: PreferenceQueryResponseItem[] = [
+      {
+        partition,
+        timestamp: '2025-03-01T00:00:00.000Z',
+        system: { updatedAt: '2025-03-01T00:00:00.000Z' },
+      } as unknown as PreferenceQueryResponseItem,
+    ];
+    const page2Nodes: PreferenceQueryResponseItem[] = [
+      {
+        partition,
+        timestamp: '2025-03-02T00:00:00.000Z',
+        system: { updatedAt: '2025-03-02T00:00:00.000Z' },
+      } as unknown as PreferenceQueryResponseItem,
+    ];
+
+    const delivered: PreferenceQueryResponseItem[][] = [];
+
+    const post = vi.fn(
+      (
+        url: string,
+        {
+          json,
+        }: {
+          /** JSON */
+          json: any;
+        },
+      ) => {
+        // first call -> cursor "CX1"
+        if (!json.cursor) {
+          expect(url).toBe(`v1/preferences/${partition}/query`);
+          expect(json.limit).toBe(50);
+          expect(json.filter).toEqual(filterBy);
+          return {
+            json: async () =>
+              ({
+                nodes: page1Nodes,
+                cursor: 'CX1',
+              } as unknown),
+          };
+        }
+        // second call -> cursor "CX2"
+        if (json.cursor === 'CX1') {
+          expect(json.filter).toEqual(filterBy);
+          return {
+            json: async () =>
+              ({
+                nodes: page2Nodes,
+                cursor: 'CX2',
+              } as unknown),
+          };
+        }
+        // final call -> end
+        if (json.cursor === 'CX2') {
+          return {
+            json: async () =>
+              ({
+                nodes: [],
+                cursor: undefined,
+              } as unknown),
+          };
+        }
+        throw new Error('Unexpected call');
+      },
+    );
+
+    const sombra = { post } as unknown as Got;
+
+    const out = await fetchConsentPreferences(sombra, {
+      partition,
+      filterBy,
+      onItems: async (page) => {
+        delivered.push(page);
+      },
+    });
+
+    // In streaming mode, nothing is accumulated
+    expect(out).toEqual([]);
+
+    // Pages were delivered in order
+    expect(delivered).toHaveLength(2);
+    expect(delivered[0]).toEqual(page1Nodes);
+    expect(delivered[1]).toEqual(page2Nodes);
+
+    // decodeCodec & wrapper called per page (3 calls including the final empty-page response)
+    expect(H.decodeCodec).toHaveBeenCalledTimes(3);
+    expect(H.withRetrySpy).toHaveBeenCalledTimes(3);
+    expect(H.decodeCodec.mock.calls[0][0]).toBe(ConsentPreferenceResponse);
   });
 });
 /* eslint-enable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars,require-await */

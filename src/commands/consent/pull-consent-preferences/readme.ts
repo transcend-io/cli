@@ -76,6 +76,40 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
         transcendUrl: 'https://api.us.transcend.io',
       },
     },
+    {
+      description:
+        'Pull data in a single thread, instead of using the default which pulls data in parallel ' +
+        'chunks with non-overlapping time windows (for large datasets)',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        shouldChunk: false,
+      },
+    },
+    {
+      description: 'Configure window concurrency for faster parallel downloads',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        windowConcurrency: 200,
+      },
+    },
+    {
+      description: 'Limit maximum number of chunks to download',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        maxChunks: 1000,
+      },
+    },
+    {
+      description: 'Set maximum lookback period to 30 days',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
+        maxLookbackDays: 30,
+      },
+    },
   ],
 );
 

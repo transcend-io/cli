@@ -187,6 +187,7 @@ function waitForDrain(stream: NodeJS.WritableStream): Promise<void> {
 
 /**
  * Stream a large CSV dataset to a single file with proper backpressure handling.
+ * (Kept for completeness; not used by the incremental write path.)
  *
  * @param filePath - File to write out to
  * @param data - Data to write (iterated without buffering the entire file content)

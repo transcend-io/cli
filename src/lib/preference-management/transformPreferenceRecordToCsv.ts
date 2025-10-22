@@ -36,16 +36,14 @@ export function transformPreferenceRecordToCsv({
     }
   }
 
-  // ── metadata: group by key; each unique key -> CSV of values
+  // ── metadata: serialize as JSON
   if (Array.isArray(metadata)) {
-    const byKey = new Map<string, Set<string>>();
-    for (const { key, value } of metadata) {
-      if (!byKey.has(key)) byKey.set(key, new Set());
-      if (value) byKey.get(key)!.add(value);
-    }
-    for (const [key, set] of byKey.entries()) {
-      out[`metadata_${key}`] = Array.from(set).join(',');
-    }
+    out.metadata = JSON.stringify(
+      metadata.reduce((acc, { key, value }) => {
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, string>),
+    );
   }
 
   // ── purposes:
@@ -62,16 +60,12 @@ export function transformPreferenceRecordToCsv({
 
           let val: unknown = null;
 
-          if (Object.prototype.hasOwnProperty.call(choice, 'booleanValue')) {
-            val = Boolean(choice.booleanValue);
-          } else if (
-            Object.prototype.hasOwnProperty.call(choice, 'selectValue')
-          ) {
-            val = String(choice.selectValue ?? '');
+          if (typeof choice.booleanValue === 'boolean') {
+            val = choice.booleanValue;
+          } else if (choice.selectValue) {
+            val = choice.selectValue;
           } else if (Array.isArray(choice.selectValues)) {
-            const vs = choice.selectValues
-              .map((v: unknown) => String(v))
-              .filter((v: string) => v.length > 0);
+            const vs = choice.selectValues.filter((v) => v.length > 0);
             val = vs.join(',');
           } else {
             // no pref value present -> null
