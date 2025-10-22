@@ -15,7 +15,11 @@ export const pullConsentPreferencesCommand = buildCommand({
   parameters: {
     flags: {
       auth: createAuthParameter({
-        scopes: [ScopeName.ViewManagedConsentDatabaseAdminApi],
+        scopes: [
+          ScopeName.ViewManagedConsentDatabaseAdminApi,
+          ScopeName.ViewRequestIdentitySettings,
+          ScopeName.ViewPreferenceStoreSettings,
+        ],
       }),
       partition: {
         kind: 'parsed',
@@ -78,6 +82,27 @@ export const pullConsentPreferencesCommand = buildCommand({
         kind: 'boolean',
         brief: 'Whether to download requests in timestamp window chunks.',
         default: true,
+      },
+      windowConcurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When chunking, how many windows to download in parallel (higher = faster, but more load).',
+        default: '100',
+      },
+      maxChunks: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'Maximum number of chunks to download (higher = more data, but more load).',
+        default: '5000',
+      },
+      maxLookbackDays: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'Maximum lookback period in days for fetching consent preferences.',
+        default: '3650',
       },
     },
   },

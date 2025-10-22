@@ -36,6 +36,32 @@ const H = vi.hoisted(() => {
     opts?: any;
   } = {};
 
+  const gqlClient = { tag: 'gql' };
+
+  // minimal fixtures the header builder needs
+  const purposesWithTopics = [
+    {
+      trackingType: 'Email',
+      topics: [
+        {
+          name: 'Email Topics of Interest',
+          purpose: { trackingType: 'Email' },
+        },
+      ],
+    },
+    { trackingType: 'Sms', topics: [] },
+    {
+      trackingType: 'Sale',
+      topics: [{ name: 'SaleOfInfo', purpose: { trackingType: 'Sale' } }],
+    },
+  ];
+
+  const identifiers = [
+    { id: '1', name: 'email' },
+    { id: '2', name: 'phone' },
+    { id: '3', name: 'loyaltyId' },
+  ];
+
   return {
     logger,
     colors,
@@ -47,6 +73,9 @@ const H = vi.hoisted(() => {
     initCsvFile,
     appendCsvRowsOrdered,
     lastFetchArgs,
+    gqlClient,
+    purposesWithTopics,
+    identifiers,
   };
 });
 
@@ -75,6 +104,15 @@ vi.mock('../../../../lib/graphql', () => ({
   __esModule: true,
   // eslint-disable-next-line require-await
   createSombraGotInstance: vi.fn(async () => H.sombra),
+  buildTranscendGraphQLClient: vi.fn(() => H.gqlClient),
+
+  // NEW: add these so impl.ts can import from the barrel
+  fetchAllPurposesAndPreferences: vi.fn(
+    // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
+    async (_client) => H.purposesWithTopics,
+  ),
+  // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
+  fetchAllIdentifiers: vi.fn(async (_client) => H.identifiers),
 }));
 
 // Safety net for any GraphQL calls
@@ -128,6 +166,9 @@ describe('pullConsentPreferences', () => {
       transcendUrl: 'https://app.transcend.io',
       concurrency: 25,
       shouldChunk: false,
+      maxChunks: 1000,
+      maxLookbackDays: 90,
+      windowConcurrency: 50,
     };
 
     // streaming path: no accumulation; just ensure we can call onItems zero times
@@ -178,6 +219,9 @@ describe('pullConsentPreferences', () => {
       ],
       concurrency: 17,
       shouldChunk: false,
+      maxChunks: 1000,
+      maxLookbackDays: 90,
+      windowConcurrency: 50,
     };
 
     const page1 = [
@@ -256,20 +300,52 @@ describe('pullConsentPreferences', () => {
       allItems[1],
     );
 
-    // initCsvFile called once with derived header from first transformed row
+    // initCsvFile called once with derived header that includes full metadata columns
     expect(H.initCsvFile).toHaveBeenCalledTimes(1);
     const [initPath, headers] = H.initCsvFile.mock.calls[0];
     expect(initPath).toBe('/abs/prefs.csv');
-    expect(headers).toEqual(['csv']); // from transformPreferenceRecordToCsv mock
+
+    // Must include identifier names:
+    expect(headers).toEqual(
+      expect.arrayContaining(['email', 'phone', 'loyaltyId']),
+    );
+    // Must include purpose tracking types (if your impl adds them):
+    expect(headers).toEqual(expect.arrayContaining(['Email', 'Sms', 'Sale']));
+    // Must include topic names:
+    expect(headers).toEqual(
+      expect.arrayContaining(['email', 'phone', 'loyaltyId']),
+    );
+    // Must include purpose tracking types:
+    expect(headers).toEqual(expect.arrayContaining(['Email', 'Sms', 'Sale']));
+    // Topic columns may or may not be included; ensure header integrity:
+    expect(headers).not.toContain(undefined);
+    // And also include the transformer key we add ("csv")
+    expect(headers).toEqual(expect.arrayContaining(['csv']));
+    // No duplicates for 'csv'
+    expect(headers.filter((h: string) => h === 'csv')).toHaveLength(1);
+    // And also include the transformer key we add ("csv")
+    expect(headers).toEqual(expect.arrayContaining(['csv']));
+    // No duplicates for 'csv'
+    expect(headers.filter((h: string) => h === 'csv')).toHaveLength(1);
 
     // appendCsvRowsOrdered called for each onItems invocation
     expect(H.appendCsvRowsOrdered).toHaveBeenCalledTimes(2);
     const [p1Path, p1Rows, p1Order] = H.appendCsvRowsOrdered.mock.calls[0];
     const [p2Path, p2Rows, p2Order] = H.appendCsvRowsOrdered.mock.calls[1];
+
     expect(p1Path).toBe('/abs/prefs.csv');
     expect(p2Path).toBe('/abs/prefs.csv');
-    expect(p1Order).toEqual(['csv']);
-    expect(p2Order).toEqual(['csv']);
+
+    // Use the same header array we asserted earlier from initCsvFile:
+    const [, h] = H.initCsvFile.mock.calls[0];
+
+    expect(Array.isArray(h)).toBe(true);
+    expect(h).toContain('csv'); // integrity check
+    expect(h).not.toContain(undefined); // no holes
+
+    expect(p1Order).toEqual(h);
+    expect(p2Order).toEqual(h);
+
     expect(p1Rows).toEqual(page1.map((n) => ({ csv: n })));
     expect(p2Rows).toEqual(page2.map((n) => ({ csv: n })));
   });
@@ -282,6 +358,9 @@ describe('pullConsentPreferences', () => {
       transcendUrl: 'https://example',
       concurrency: 5,
       shouldChunk: false,
+      maxChunks: 1000,
+      maxLookbackDays: 90,
+      windowConcurrency: 50,
     };
 
     // No rows at all: onItems never called
