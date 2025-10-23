@@ -51,6 +51,12 @@ async function createPreferenceAccessTokensPage(
   return nodes.map((node) => node.token);
 }
 
+export interface PreferenceAccessTokenInputWithIndex
+  extends PreferenceAccessTokenInput {
+  /** Index of the input record */
+  index?: number;
+}
+
 /**
  * Create preference access tokens for the given identifiers.
  *
@@ -63,13 +69,13 @@ async function createPreferenceAccessTokensPage(
  */
 export async function createPreferenceAccessTokens(
   client: GraphQLClient,
-  records: PreferenceAccessTokenInput[],
+  records: PreferenceAccessTokenInputWithIndex[],
   emitProgress?: (progress: number) => void,
   concurrency = 10,
 ): Promise<
   {
     /** Identifier for the record */
-    input: PreferenceAccessTokenInput;
+    input: PreferenceAccessTokenInputWithIndex;
     /** Access token */
     accessToken: string;
   }[]
@@ -91,7 +97,8 @@ export async function createPreferenceAccessTokens(
     async (chunkedRecords) => {
       const tokens = await createPreferenceAccessTokensPage(
         client,
-        chunkedRecords,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        chunkedRecords.map(({ index, ...rest }) => rest),
       );
       const mappedResults = tokens.map((token, index) => ({
         input: chunkedRecords[index],

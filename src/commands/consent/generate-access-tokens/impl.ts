@@ -8,7 +8,7 @@ import cliProgress from 'cli-progress';
 import {
   buildTranscendGraphQLClient,
   createPreferenceAccessTokens,
-  PreferenceAccessTokenInput,
+  type PreferenceAccessTokenInputWithIndex,
 } from '../../../lib/graphql';
 import { readCsv } from '../../../lib/requests';
 import { SombraStandardScope } from '@transcend-io/privacy-types';
@@ -107,7 +107,7 @@ export async function generateAccessTokens(
     const expiresInSeconds = Math.max(1, Math.floor(duration / 1000));
 
     // Build inputs for GraphQL
-    const inputs = rows.map((r): PreferenceAccessTokenInput => {
+    const inputs = rows.map((r, index): PreferenceAccessTokenInputWithIndex => {
       const email = r[emailColumnName].trim();
       const coreIdentifier = coreIdentifierColumnName
         ? r[coreIdentifierColumnName]?.trim()
@@ -119,6 +119,7 @@ export async function generateAccessTokens(
         expiresIn: expiresInSeconds,
         email,
         ...(coreIdentifier ? { coreIdentifier } : {}),
+        index,
       };
     });
 
@@ -142,10 +143,15 @@ export async function generateAccessTokens(
     progressBar.stop();
 
     // Prepare output CSV rows
-    const outputRows = results.map(({ accessToken }, ind) => ({
-      ...rows[ind],
-      token: accessToken,
-    }));
+    const outputRows = results.map(({ accessToken, input }) => {
+      if (typeof input.index !== 'number') {
+        throw new Error('Internal error: missing input index.');
+      }
+      return {
+        ...rows[input.index],
+        token: accessToken,
+      };
+    });
 
     logger.info(colors.magenta(`Writing access tokens to file "${file}"...`));
     await writeCsv(file, outputRows, true);
