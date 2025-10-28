@@ -10,6 +10,7 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
   'ENOTFOUND',
   'ECONNRESET',
   'ETIMEDOUT',
+  '502 Bad Gateway',
   '504 Gateway Time-out',
   'Task timed out after',
 ];
