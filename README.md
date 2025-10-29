@@ -2427,7 +2427,13 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=purposes
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSubjects
 ```
 
-**Pull assessments and assessment templates**
+**Pull privacy center and internationalized messages (see [this example](./examples/privacy-center-and-messages.yml))**
+
+```sh
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=privacyCenters,messages
+```
+
+**Pull pi**
 
 ```sh
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=assessments,assessmentTemplates

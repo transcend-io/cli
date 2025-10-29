@@ -8,6 +8,8 @@ export interface Message {
   id: string;
   /** Default message */
   defaultMessage: string;
+  /** Description */
+  description: string;
   /** React Intl ID */
   targetReactIntlId: string | null;
   /** Disabled locales */
