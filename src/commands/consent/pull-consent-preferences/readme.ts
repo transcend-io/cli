@@ -115,4 +115,12 @@ const examples = buildExamples<PullConsentPreferencesCommandFlags>(
 
 export default `#### Examples
 
-${examples}`;
+${examples}
+
+#### Large Exports
+
+If you are exporting a large number of consent preferences (e.g. 100M+), this command will output a file that may be 50-100GB+ in size.
+If you need to transfer this data, you may want to leverage the following command to break the single CSV into multiple:
+\`\`\`
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
+\`\`\``;
