@@ -192,7 +192,7 @@ const examples = buildExamples<PullCommandFlags>(
       },
     },
     {
-      description: 'Pull pi',
+      description: 'Pull assessments and assessment templates',
       flags: {
         auth: '$TRANSCEND_API_KEY',
         resources: [
