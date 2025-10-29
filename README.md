@@ -2433,7 +2433,7 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSubjects
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=privacyCenters,messages
 ```
 
-**Pull pi**
+**Pull assessments and assessment templates**
 
 ```sh
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=assessments,assessmentTemplates
