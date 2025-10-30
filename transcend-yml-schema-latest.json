@@ -41536,6 +41536,9 @@
               "targetReactIntlId": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "defaultMessage": {
                 "type": "string"
               },

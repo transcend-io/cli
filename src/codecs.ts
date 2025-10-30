@@ -1400,6 +1400,8 @@ export const IntlMessageInput = t.intersection([
   t.partial({
     /** The hard-coded ID that the message refers to in the Privacy Center or Consent Manager UI, null if message is dynamic */
     targetReactIntlId: t.string,
+    /** The description of the message */
+    description: t.string,
     /** The default message to use */
     defaultMessage: t.string,
     /** The translations */
