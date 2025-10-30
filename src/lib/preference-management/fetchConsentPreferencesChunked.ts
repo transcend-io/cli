@@ -74,7 +74,7 @@ export async function fetchConsentPreferencesChunked(
     filterBy = {},
     limit = 50,
     windowConcurrency = 25,
-    maxChunks = 1000,
+    maxChunks = 5000,
     maxLookbackDays = 3650,
     onItems,
   }: {

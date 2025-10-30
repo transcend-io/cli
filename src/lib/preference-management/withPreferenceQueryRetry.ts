@@ -13,7 +13,8 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
   '502 Bad Gateway',
   '504 Gateway Time-out',
   'Task timed out after',
-];
+  'unknown request error',
+].map((s) => s.toLowerCase());
 
 /**
  * Options for retrying preference queries.
@@ -43,7 +44,7 @@ export async function withPreferenceQueryRetry<T>(
     maxAttempts = 3,
     baseDelayMs = 250,
     isRetryable = (_err, msg) =>
-      RETRY_PREFERENCE_MSGS.some((m) => msg.includes(m)),
+      RETRY_PREFERENCE_MSGS.some((m) => msg.toLowerCase().includes(m)),
     onRetry,
   }: RetryOptions = {},
 ): Promise<T> {
