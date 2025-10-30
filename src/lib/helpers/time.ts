@@ -1,5 +1,6 @@
 export const DAY_MS = 24 * 60 * 60 * 1000;
 export const HOUR_MS = 60 * 60 * 1000;
+export const FIVE_MIN_MS = 5 * 60 * 1000;
 
 /**
  * Clamp 1..50 per API spec

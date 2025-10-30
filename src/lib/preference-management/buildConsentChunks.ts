@@ -1,10 +1,10 @@
-import { startOfHour, HOUR_MS } from '../helpers';
+import { FIVE_MIN_MS } from '../helpers';
 import type { ChunkMode, PreferencesQueryFilter } from './types';
 
 /**
  * Build chunk windows by splitting [lower, upperExclusive) into up to `maxChunks`
- * equal-sized ranges, with a minimum chunk span of 1 hour. Boundaries are snapped
- * once at the start to the top of the hour for stability.
+ * equal-sized ranges, with a minimum chunk span of 5 minutes. Boundaries are snapped
+ *  once at the start to the nearest 5-minute boundary for stability.
  *
  * Each returned window is already "half-open" for an *inclusive* backend:
  * we subtract 1ms from the exclusive end so adjacent chunks do not overlap.
@@ -21,18 +21,20 @@ export function buildConsentChunks(
   mode: ChunkMode,
   lower: Date,
   upperExclusive: Date,
-  maxChunks = 1000,
+  maxChunks = 5000,
 ): Array<PreferencesQueryFilter> {
   const totalMs = Math.max(0, upperExclusive.getTime() - lower.getTime());
   if (totalMs === 0) return [];
 
-  // Snap only the starting boundary to the hour. We avoid re-snapping every step
-  // to prevent cumulative drift.
-  const seriesStart = startOfHour(lower);
+  // Snap only the starting boundary to the nearest 5-minute boundary.
+  // We avoid re-snapping every step to prevent cumulative drift.
+  const seriesStart = new Date(
+    Math.floor(lower.getTime() / FIVE_MIN_MS) * FIVE_MIN_MS,
+  );
 
-  // Compute base chunk size (ceil to ensure ≤ maxChunks), enforced ≥ 1h.
+  // Compute base chunk size (ceil to ensure ≤ maxChunks), enforced ≥ 5m.
   const rawChunkMs = Math.ceil(totalMs / Math.max(1, maxChunks));
-  const chunkMs = Math.max(HOUR_MS, rawChunkMs);
+  const chunkMs = Math.max(FIVE_MIN_MS, rawChunkMs);
 
   // Number of chunks needed to cover [seriesStart, upperExclusive)
   const count = Math.ceil(
