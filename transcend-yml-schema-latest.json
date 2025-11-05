@@ -40777,6 +40777,7 @@
               "bg-BG",
               "zh-CN",
               "zh-TW",
+              "zh-Hans",
               "hr-HR",
               "cs-CZ",
               "da-DK",
@@ -40972,6 +40973,7 @@
             "bg-BG",
             "zh-CN",
             "zh-TW",
+            "zh-Hans",
             "hr-HR",
             "cs-CZ",
             "da-DK",
@@ -41403,6 +41405,7 @@
                     "bg-BG",
                     "zh-CN",
                     "zh-TW",
+                    "zh-Hans",
                     "hr-HR",
                     "cs-CZ",
                     "da-DK",
@@ -41798,6 +41801,9 @@
                     "type": "string"
                   },
                   "zh-TW": {
+                    "type": "string"
+                  },
+                  "zh-Hans": {
                     "type": "string"
                   },
                   "hr-HR": {
