@@ -79,47 +79,26 @@ export const ColumnIdentifierMap = t.record(
 /** Override type */
 export type ColumnIdentifierMap = t.TypeOf<typeof ColumnIdentifierMap>;
 
-export const FileMetadataState = t.intersection([
+export const FileFormatState = t.intersection([
   t.type({
     /**
      * Definition of how to map each column in the CSV to
      * the relevant purpose and preference definitions in transcend
      */
-    columnToPurposeName: t.record(t.string, PurposeRowMapping),
+    columnToPurposeName: ColumnPurposeMap,
     /** Last time the file was last parsed at */
     lastFetchedAt: t.string,
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * These uploads are overwriting non-existent preferences and are safe
-     */
-    pendingSafeUpdates: t.record(t.string, t.record(t.string, t.string)),
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * these records have conflicts with existing consent preferences
-     */
-    pendingConflictUpdates: t.record(
-      t.string,
-      t.type({
-        record: PreferenceQueryResponseItem,
-        row: t.record(t.string, t.string),
-      }),
-    ),
-    /**
-     * Mapping of userId to the rows in the file that can be skipped because
-     * their preferences are already in the store
-     */
-    skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
+    /** The column name that maps to the identifier */
+    columnToIdentifier: ColumnIdentifierMap,
   }),
   t.partial({
-    /** Determine which column name in file maps to consent record identifier to upload on  */
-    identifierColumn: t.string,
     /** Determine which column name in file maps to the timestamp  */
-    timestampColum: t.string,
+    timestampColumn: t.string,
   }),
 ]);
 
 /** Override type */
-export type FileMetadataState = t.TypeOf<typeof FileMetadataState>;
+export type FileFormatState = t.TypeOf<typeof FileFormatState>;
 
 /**
  * This is the type of the receipts that are stored in the file
@@ -220,33 +199,66 @@ export type SkippedPreferenceUpdates = t.TypeOf<
   typeof SkippedPreferenceUpdates
 >;
 
-/** Persist this data between runs of the script */
-export const PreferenceState = t.type({
+export const RequestUploadReceipts = t.type({
+  /** Last time the file was last parsed at */
+  lastFetchedAt: t.string,
   /**
-   * Store a cache of previous files read in
+   * Mapping of primaryKey to the rows in the file that need to be uploaded
+   *
+   * These uploads are overwriting non-existent preferences and are not in
+   * conflict with existing consent preferences.
+   *
+   * Note: If --skipExistingRecordCheck=true is set, there will not be on check
+   * for existing record conflicts in order to speed up the upload.
+   * So this will say the updates were safe when in fact we don't know.
+   * We just let the default consent resolution logic handle it.
    */
-  fileMetadata: t.record(t.string, FileMetadataState),
+  pendingSafeUpdates: PendingSafePreferenceUpdates,
   /**
-   * The set of successful uploads to Transcend
-   * Mapping from userId to the upload metadata
+   * Mapping of primaryKey to the rows in the file that need to be uploaded
+   * these records have conflicts with existing consent preferences.
+   * Normally the default consent resolution logic will handle these
+   * conflicts, but these are useful situations in which to investigate
+   * and ensure consent resolution is working as expected.
+   *
+   * Note: If --skipExistingRecordCheck=true is set, there will not be on check
+   * for existing record conflicts in order to speed up the upload. and this will
+   * be under-counted.
+   *
+   * Set to `--skipExistingRecordCheck=false --dryRun=true` to get the list of conflicts.
    */
-  failingUpdates: t.record(
-    t.string,
-    t.type({
-      /** Time upload ran at */
-      uploadedAt: t.string,
-      /** Attempts to upload that resulted in an error */
-      error: t.string,
-      /** The update body */
-      update: PreferenceUpdateItem,
-    }),
-  ),
+  pendingConflictUpdates: PendingWithConflictPreferenceUpdates,
   /**
-   * The set of pending uploads to Transcend
-   * Mapping from userId to the upload metadata
+   * Mapping of primaryKey to the rows in the file that can be skipped because
+   * their preferences are already in the store. These records may be skipped
+   * as they could be a duplicate row in the CSV file.
+   *
+   * If  `--skipExistingRecordCheck=false` - then no-ops will be filtered out.
    */
-  pendingUpdates: t.record(t.string, PreferenceUpdateItem),
+  skippedUpdates: SkippedPreferenceUpdates,
+  /**
+   * The set of failing updates
+   * Mapping from primaryKey to the request payload, time upload happened
+   * and error message.
+   */
+  failingUpdates: FailingPreferenceUpdates,
+  /**
+   * The set of uploads that were pending at the time that the cache file
+   * was last written to. When using `--dryRun=true` this list will be full.
+   *
+   * When running `--dryRun=false` this set will shrink as updates are processed.
+   */
+  pendingUpdates: PreferenceUpdateMap,
+  /**
+   * The updates that were successfully processed
+   * Mapping from primaryKey to the request response.
+   *
+   * This will be empty if `--dryRun=true` is set.
+   * If `--dryRun=false` is set, this will contain
+   * the updates that were successfully processed.
+   */
+  successfulUpdates: PreferenceUpdateMap,
 });
 
 /** Override type */
-export type PreferenceState = t.TypeOf<typeof PreferenceState>;
+export type RequestUploadReceipts = t.TypeOf<typeof RequestUploadReceipts>;
