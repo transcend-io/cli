@@ -24,8 +24,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@transcend-io/internationalization':
-        specifier: ^2.2.0
-        version: 2.2.0
+        specifier: ^2.3.0
+        version: 2.3.0
       '@transcend-io/persisted-state':
         specifier: ^1.0.4
         version: 1.0.4
@@ -691,8 +691,8 @@ packages:
   '@transcend-io/handlebars-utils@1.1.0':
     resolution: {integrity: sha512-mDbKm9JObd9mioNlEYGa2zfTBqli1KAAM+iRHSqi6s2l7MAYENxjlfvXN5uC97T9/90vfWlxNbHjLpUuQVURaA==}
 
-  '@transcend-io/internationalization@2.2.0':
-    resolution: {integrity: sha512-I1BWNs9ictO/DeHXZ7RN+DAW5A6gTokDiGBznSPd0ekVwsAP/ng43PqJ7Ck6Y80tQaPsaXJ1eocVi38viOneMQ==}
+  '@transcend-io/internationalization@2.3.0':
+    resolution: {integrity: sha512-krDnCZ0lLVSq9vV2D9aZEbZm0fg7k9q5uH9tegHJVqonbiYsP9hy1F4fZR0RJlC1a8W9ZuNOr/k0fCTYHYIqgQ==}
 
   '@transcend-io/persisted-state@1.0.4':
     resolution: {integrity: sha512-jEDN64pr5Q1fniHMERa2+DKhuHbwdB1zzGdHoWgq4EIEx/ZJQxraiNfYoCpf5hpuiKxtXcIN41SC2/MI6MraoQ==}
@@ -3863,7 +3863,7 @@ snapshots:
       lodash: 4.17.21
       pluralize: 8.0.0
 
-  '@transcend-io/internationalization@2.2.0': {}
+  '@transcend-io/internationalization@2.3.0': {}
 
   '@transcend-io/persisted-state@1.0.4':
     dependencies:
@@ -3874,7 +3874,7 @@ snapshots:
 
   '@transcend-io/privacy-types@4.142.0':
     dependencies:
-      '@transcend-io/internationalization': 2.2.0
+      '@transcend-io/internationalization': 2.3.0
       '@transcend-io/type-utils': 1.8.4
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
