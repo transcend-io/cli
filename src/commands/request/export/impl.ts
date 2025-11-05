@@ -4,7 +4,7 @@ import colors from 'colors';
 import { logger } from '../../../logger';
 import { uniq } from 'lodash-es';
 import { pullPrivacyRequests } from '../../../lib/requests';
-import { writeCsv } from '../../../lib/cron';
+import { writeLargeCsv } from '../../../lib/helpers';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
@@ -60,7 +60,7 @@ export async function _export(
   const headers = uniq(
     requestsFormattedForCsv.map((d) => Object.keys(d)).flat(),
   );
-  writeCsv(file, requestsFormattedForCsv, headers);
+  await writeLargeCsv(file, requestsFormattedForCsv, headers);
   logger.info(
     colors.green(
       `Successfully wrote ${requestsFormattedForCsv.length} requests to file "${file}"`,

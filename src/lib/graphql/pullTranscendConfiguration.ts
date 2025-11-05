@@ -880,10 +880,12 @@ export async function pullTranscendConfiguration(
         id,
         defaultMessage,
         targetReactIntlId,
+        description,
         translations,
       }): IntlMessageInput => ({
         id,
         defaultMessage,
+        description,
         targetReactIntlId: targetReactIntlId || undefined,
         translations: translations.reduce(
           (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),

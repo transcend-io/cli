@@ -1800,27 +1800,33 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-
 
 ```txt
 USAGE
-  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--identifiers value]... [--concurrency value]
+  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value] [--shouldChunk] [--windowConcurrency value] [--maxChunks value] [--maxLookbackDays value]
   transcend consent pull-consent-preferences --help
 
-This command allows for pull of consent preferences from the Managed Consent Database.
+Uses POST /v1/preferences/{partition}/query with cursor-based pagination. Supports filtering by identifiers, collection timestamps, and system.updatedAt.
 
 FLAGS
-      --auth              The Transcend API key. Requires scopes: "View Managed Consent Database Admin API"
-      --partition         The partition key to download consent preferences to
-     [--sombraAuth]       The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--file]             Path to the CSV file to save preferences to                                         [default = ./preferences.csv]
-     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting        [default = https://api.transcend.io]
-     [--timestampBefore]  Filter for consents updated this time
-     [--timestampAfter]   Filter for consents updated after this time
-     [--identifiers]...   Filter for specific identifiers                                                     [separator = ,]
-     [--concurrency]      The concurrency to use when downloading consents in parallel                        [default = 100]
-  -h  --help              Print help information and exit
+      --auth                          The Transcend API key. Requires scopes: "View Managed Consent Database Admin API", "View Identity Verification Settings", "View Preference Store Settings"
+      --partition                     Partition ID to query in the Preference Store
+     [--sombraAuth]                   The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--file]                         Path to CSV output file                                                                                                                                    [default = ./preferences.csv]
+     [--transcendUrl]                 URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                               [default = https://api.transcend.io]
+     [--timestampBefore]              Filter: preferences collected before this time (timestampBefore)
+     [--timestampAfter]               Filter: preferences collected after this time (timestampAfter)
+     [--updatedBefore]                Filter: preferences updated before this time (system.updatedAt)
+     [--updatedAfter]                 Filter: preferences updated after this time (system.updatedAt)
+     [--identifiers]...               Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas.                      [separator = ,]
+     [--concurrency]                  Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
+     [--shouldChunk/--noShouldChunk]  Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
+     [--windowConcurrency]            When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 100]
+     [--maxChunks]                    Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 5000]
+     [--maxLookbackDays]              Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
+  -h  --help                          Print help information and exit
 ```
 
 #### Examples
 
-**Fetch all consent preferences from partition key**
+**Fetch all consent preferences from a partition**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1828,7 +1834,7 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Fetch all consent preferences from partition key and save to ./consent.csv**
+**Fetch all consent preferences and save to ./consent.csv**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1837,7 +1843,7 @@ transcend consent pull-consent-preferences \
   --file=./consent.csv
 ```
 
-**Filter on consent updates before a date**
+**Filter by consent collection time (timestampBefore)**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1846,7 +1852,7 @@ transcend consent pull-consent-preferences \
   --timestampBefore=2024-04-03T00:00:00.000Z
 ```
 
-**Filter on consent updates after a date**
+**Filter by consent collection time (timestampAfter)**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1855,7 +1861,26 @@ transcend consent pull-consent-preferences \
   --timestampAfter=2024-04-03T00:00:00.000Z
 ```
 
-**For self-hosted sombras that use an internal key**
+**Filter by last update time (system.updatedAt window)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --updatedAfter=2024-08-26T00:00:00.000Z \
+  --updatedBefore=2024-08-27T00:00:00.000Z
+```
+
+**Filter specific users by identifiers (name:value). Default name=email if omitted.**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --identifiers=email:no-track@example.com,phone:+11234567890,pls-no-track@example.com
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1864,13 +1889,58 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Specifying the backend URL, needed for US hosted backend infrastructure**
+**Use a specific backend base URL (e.g., US-hosted)**
 
 ```sh
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --transcendUrl=https://api.us.transcend.io
+```
+
+**Pull data in a single thread, instead of using the default which pulls data in parallel chunks with non-overlapping time windows (for large datasets)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --shouldChunk=false
+```
+
+**Configure window concurrency for faster parallel downloads**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --windowConcurrency=200
+```
+
+**Limit maximum number of chunks to download**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --maxChunks=1000
+```
+
+**Set maximum lookback period to 30 days**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --maxLookbackDays=30
+```
+
+#### Large Exports
+
+If you are exporting a large number of consent preferences (e.g. 100M+), this command will output a file that may be 50-100GB+ in size.
+If you need to transfer this data, you may want to leverage the following command to break the single CSV into multiple:
+
+```
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
 ```
 
 ### `transcend consent update-consent-manager`
@@ -2382,6 +2452,12 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=purposes
 
 ```sh
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSubjects
+```
+
+**Pull privacy center and internationalized messages (see [this example](./examples/privacy-center-and-messages.yml))**
+
+```sh
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=privacyCenters,messages
 ```
 
 **Pull assessments and assessment templates**

@@ -181,6 +181,17 @@ const examples = buildExamples<PullCommandFlags>(
       },
     },
     {
+      description:
+        'Pull privacy center and internationalized messages (see [this example](./examples/privacy-center-and-messages.yml))',
+      flags: {
+        auth: '$TRANSCEND_API_KEY',
+        resources: [
+          TranscendPullResource.PrivacyCenters,
+          TranscendPullResource.Messages,
+        ],
+      },
+    },
+    {
       description: 'Pull assessments and assessment templates',
       flags: {
         auth: '$TRANSCEND_API_KEY',

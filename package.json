@@ -155,6 +155,7 @@
     "@typescript-eslint/parser": "^5.58.0",
     "depcheck": "^1.4.3",
     "doctoc": "^2.2.1",
+    "date-fns": "^4.1.0",
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.5.5",
