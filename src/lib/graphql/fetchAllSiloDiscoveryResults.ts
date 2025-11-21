@@ -13,9 +13,10 @@ export interface SiloDiscoveryResult {
   resourceId: string;
   /** Suggested catalog */
   suggestedCatalog: {
-    /** Title */
+    /** Title for the suggested catalog */
     title: string;
   };
+  /** The likelihood that data is sensitive for this results */
   containsSensitiveData: string;
   /** Hosting country of data silo discovery result */
   country?: IsoCountryCode;
@@ -53,7 +54,9 @@ export async function fetchAllSiloDiscoveryResults(
     const {
       siloDiscoveryResults: { nodes },
     } = await makeGraphQLRequest<{
+      /** Discovery results */
       siloDiscoveryResults: {
+        /** Nodes */
         nodes: SiloDiscoveryResult[];
       };
     }>(client, SILO_DISCOVERY_RESULTS, {
