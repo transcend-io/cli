@@ -9,6 +9,7 @@ export const SILO_DISCOVERY_RESULTS = gql`
         country
         countrySubDivision
         plaintextContext
+        status
         containsSensitiveData
         suggestedCatalog {
           title

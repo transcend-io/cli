@@ -1948,6 +1948,8 @@ export const SiloDiscoveryResultInput = t.intersection([
     suggestedCatalog: t.string,
     /** The likelihood that data is sensitive for this results */
     containsSensitiveData: t.string,
+    /** The status of silo discovery triage */
+    status: t.string,
   }),
   t.partial({
     /** The ISO country code for the AWS Region if applicable */

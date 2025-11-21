@@ -18,6 +18,8 @@ export interface SiloDiscoveryResult {
   };
   /** The likelihood that data is sensitive for this results */
   containsSensitiveData: string;
+  /** The status of silo discovery triage */
+  status: string;
   /** Hosting country of data silo discovery result */
   country?: IsoCountryCode;
   /** Hosting subdivision data silo discovery result */

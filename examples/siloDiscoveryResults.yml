@@ -16,3 +16,4 @@ siloDiscoveryResults:
         "driver": "MySQL"
       }
     containsSensitiveData: LIKELY
+    status: IGNORED

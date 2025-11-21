@@ -804,6 +804,7 @@ export async function pullTranscendConfiguration(
         countrySubDivision,
         plaintextContext,
         containsSensitiveData,
+        status,
       }): SiloDiscoveryResultInput => ({
         title,
         resourceId,
@@ -813,6 +814,7 @@ export async function pullTranscendConfiguration(
         countrySubDivision: countrySubDivision || undefined,
         plaintextContext,
         containsSensitiveData,
+        status,
       }),
     );
   }
