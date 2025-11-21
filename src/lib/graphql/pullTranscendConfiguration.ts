@@ -34,6 +34,7 @@ import {
   AssessmentSectionQuestionInput,
   RiskLogicInput,
   ConsentPurpose,
+  type SiloDiscoveryResultInput,
 } from '../../codecs';
 import {
   RequestAction,
@@ -93,6 +94,7 @@ import {
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
+import { fetchAllSiloDiscoveryResults } from './fetchAllSiloDiscoveryResults';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -186,6 +188,7 @@ export async function pullTranscendConfiguration(
     assessments,
     assessmentTemplates,
     purposes,
+    siloDiscoveryResults,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -341,6 +344,10 @@ export async function pullTranscendConfiguration(
     // Fetch purpose and preferences
     resources.includes(TranscendPullResource.Purposes)
       ? fetchAllPurposesAndPreferences(client)
+      : [],
+    // Fetch silo discovery results
+    resources.includes(TranscendPullResource.SiloDiscoveryResults)
+      ? fetchAllSiloDiscoveryResults(client)
       : [],
   ]);
 
@@ -776,6 +783,36 @@ export async function pullTranscendConfiguration(
               operand: retentionSchedule.operation,
             }
           : undefined,
+      }),
+    );
+  }
+
+  // Save Silo Discovery Results
+  if (
+    siloDiscoveryResults.length > 0 &&
+    resources.includes(TranscendPullResource.SiloDiscoveryResults)
+  ) {
+    result.siloDiscoveryResults = siloDiscoveryResults.map(
+      ({
+        title,
+        resourceId,
+        suggestedCatalog: { title: suggestedCatalogTitle },
+        plugin: {
+          dataSilo: { title: dataSiloTitle },
+        },
+        country,
+        countrySubDivision,
+        plaintextContext,
+        containsSensitiveData,
+      }): SiloDiscoveryResultInput => ({
+        title,
+        resourceId,
+        suggestedCatalog: suggestedCatalogTitle,
+        plugin: dataSiloTitle,
+        country: country || undefined,
+        countrySubDivision: countrySubDivision || undefined,
+        plaintextContext,
+        containsSensitiveData,
       }),
     );
   }

@@ -180,7 +180,7 @@ export const EnricherInput = t.intersection([
      */
     'input-identifier': t.string,
     /**
-     * A regular expression that can be used to match on for cancelation
+     * A regular expression that can be used to match on for cancellation
      */
     testRegex: t.string,
     /**
@@ -1933,6 +1933,39 @@ export const ConsentPurpose = t.intersection([
 /** Type override */
 export type ConsentPurpose = t.TypeOf<typeof ConsentPurpose>;
 
+/**
+ * Input to define a silo discovery results
+ *
+ * @see https://docs.transcend.io/docs/silo-discovery
+ */
+export const SiloDiscoveryResultInput = t.intersection([
+  t.type({
+    /** The unique identifier for the resource */
+    resourceId: t.string,
+    /** The plugin that found this results */
+    plugin: t.string, // Assuming Plugin is a string, replace with appropriate type if necessary
+    /** The suggested catalog for this results */
+    suggestedCatalog: t.string,
+    /** The likelihood that data is sensitive for this results */
+    containsSensitiveData: t.string,
+  }),
+  t.partial({
+    /** The ISO country code for the AWS Region if applicable */
+    country: valuesOf(IsoCountryCode),
+    /** The ISO country subdivision code for the AWS Region if applicable */
+    countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** The plaintext that we will pass into results */
+    plaintextContext: t.string,
+    /** The custom title of the data silo results */
+    title: t.union([t.string, t.null]),
+  }),
+]);
+
+/** Type override */
+export type SiloDiscoveryResultInput = t.TypeOf<
+  typeof SiloDiscoveryResultInput
+>;
+
 export const TranscendInput = t.partial({
   /**
    * Action items
@@ -2058,6 +2091,10 @@ export const TranscendInput = t.partial({
    * Consent and preference management purposes
    */
   purposes: t.array(ConsentPurpose),
+  /**
+   * The full list of silo discovery results
+   */
+  siloDiscoveryResults: t.array(SiloDiscoveryResultInput),
 });
 
 /** Type override */

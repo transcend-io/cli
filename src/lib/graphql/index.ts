@@ -88,3 +88,4 @@ export * from './syncSoftwareDevelopmentKits';
 export * from './syncTemplates';
 export * from './syncVendors';
 export * from './uploadSiloDiscoveryResults';
+export * from './fetchAllSiloDiscoveryResults';
