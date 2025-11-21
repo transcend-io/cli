@@ -223,6 +223,13 @@ const RESOURCE_DOCUMENTATION: Record<
 (https://app.transcend.io/consent-manager/regional-experiences/purposes)',
     ],
   },
+  [TranscendPullResource.SiloDiscoveryResults]: {
+    description: 'System discovery results',
+    markdownLinks: [
+      '[System Discovery]\
+(https://app.transcend.io/data-map/data-inventory/silo-discovery)',
+    ],
+  },
 };
 
 /**
