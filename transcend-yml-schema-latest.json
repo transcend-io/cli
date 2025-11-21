@@ -54386,7 +54386,8 @@
               "resourceId",
               "plugin",
               "suggestedCatalog",
-              "containsSensitiveData"
+              "containsSensitiveData",
+              "status"
             ],
             "properties": {
               "resourceId": {
@@ -54399,6 +54400,9 @@
                 "type": "string"
               },
               "containsSensitiveData": {
+                "type": "string"
+              },
+              "status": {
                 "type": "string"
               }
             }
