@@ -20,23 +20,68 @@ const SwiftPackage = t.type({
   version: t.number,
 });
 
+const SwiftPackageV1 = t.type({
+  object: t.type({
+    pins: t.array(
+      t.type({
+        package: t.string,
+        repositoryURL: t.string,
+        state: t.type({
+          branch: t.union([t.string, t.undefined, t.null]),
+          revision: t.string,
+          version: t.string,
+        }),
+      }),
+    ),
+  }),
+  version: t.number,
+});
+
 export const swift: CodeScanningConfig = {
   supportedFiles: ['Package.resolved'],
   ignoreDirs: [],
   scanFunction: (filePath) => {
     const fileContents = readFileSync(filePath, 'utf-8');
 
-    const parsed = decodeCodec(SwiftPackage, fileContents);
+    // Attempt latest version first
+    try {
+      const parsed = decodeCodec(SwiftPackage, fileContents);
 
-    return [
-      {
-        name: dirname(filePath).split('/').pop() || '', // TODO pull from Package.swift ->> name if possible
-        type: CodePackageType.CocoaPods, // TODO should be swift
-        softwareDevelopmentKits: parsed.pins.map((target) => ({
-          name: target.identity,
-          version: target.state.version,
-        })),
-      },
-    ];
+      return [
+        {
+          name: dirname(filePath).split('/').pop() || '', // TODO pull from Package.swift ->> name if possible
+          type: CodePackageType.Swift,
+          softwareDevelopmentKits: parsed.pins.map((target) => ({
+            name: target.identity,
+            version: target.state.version,
+          })),
+        },
+      ];
+    } catch (e) {
+      // Throw non codec errors
+      if (!e?.message?.includes('Failed to decode codec')) {
+        throw e;
+      }
+
+      // Attempt v1
+      try {
+        const parsed = decodeCodec(SwiftPackageV1, fileContents);
+        return [
+          {
+            name: dirname(filePath).split('/').pop() || '', // TODO pull from Package.swift ->> name if possible
+            type: CodePackageType.Swift,
+            softwareDevelopmentKits: parsed.object.pins.map((target) => ({
+              name: target.package,
+              version: target.state.version,
+            })),
+          },
+        ];
+      } catch (e2) {
+        if (!e2?.message?.includes('Failed to decode codec')) {
+          throw e2;
+        }
+        throw e;
+      }
+    }
   },
 };
