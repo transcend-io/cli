@@ -1034,6 +1034,22 @@ const expected: CodePackageInput[] = [
       },
     ],
   },
+  {
+    name: 'test-swift-v1',
+    relativePath: 'test-swift/test-swift-v1/Package.resolved',
+    repositoryName: 'transcend-io/cli',
+    softwareDevelopmentKits: [
+      {
+        name: 'Apollo',
+        version: '1.25.2',
+      },
+      {
+        name: 'CwlCatchException',
+        version: '2.1.1',
+      },
+    ],
+    type: 'SWIFT',
+  },
 ];
 
 /**
