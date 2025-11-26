@@ -1045,7 +1045,7 @@ const expected: CodePackageInput[] = [
       },
       {
         name: 'CwlCatchException',
-        version: '2.1.1',
+        version: undefined,
       },
     ],
     type: 'SWIFT',

@@ -11,10 +11,14 @@ const SwiftPackage = t.type({
       identity: t.string,
       kind: t.string,
       location: t.string,
-      state: t.type({
-        revision: t.string,
-        version: t.string,
-      }),
+      state: t.intersection([
+        t.type({
+          revision: t.string,
+        }),
+        t.partial({
+          version: t.union([t.string, t.undefined, t.null]),
+        }),
+      ]),
     }),
   ),
   version: t.number,
@@ -26,11 +30,15 @@ const SwiftPackageV1 = t.type({
       t.type({
         package: t.string,
         repositoryURL: t.string,
-        state: t.type({
-          branch: t.union([t.string, t.undefined, t.null]),
-          revision: t.string,
-          version: t.string,
-        }),
+        state: t.intersection([
+          t.type({
+            branch: t.union([t.string, t.undefined, t.null]),
+            revision: t.string,
+          }),
+          t.partial({
+            version: t.union([t.string, t.undefined, t.null]),
+          }),
+        ]),
       }),
     ),
   }),
