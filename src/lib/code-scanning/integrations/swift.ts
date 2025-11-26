@@ -61,7 +61,7 @@ export const swift: CodeScanningConfig = {
           type: CodePackageType.Swift,
           softwareDevelopmentKits: parsed.pins.map((target) => ({
             name: target.identity,
-            version: target.state.version,
+            version: target.state.version || undefined,
           })),
         },
       ];
@@ -80,7 +80,7 @@ export const swift: CodeScanningConfig = {
             type: CodePackageType.Swift,
             softwareDevelopmentKits: parsed.object.pins.map((target) => ({
               name: target.package,
-              version: target.state.version,
+              version: target.state.version || undefined,
             })),
           },
         ];
