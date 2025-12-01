@@ -87,7 +87,7 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
     ScopeName.ManageConsentManager,
     ScopeName.ManagePreferenceStoreSettings,
   ],
-  [TranscendPullResource.SiloDiscoveryResults]: [ScopeName.ManageDataMap],
+  [TranscendPullResource.SystemDiscovery]: [ScopeName.ManageDataMap],
 };
 
 /**
@@ -136,7 +136,7 @@ export const TR_PULL_RESOURCE_SCOPE_MAP: {
     ScopeName.ViewConsentManager,
     ScopeName.ViewPreferenceStoreSettings,
   ],
-  [TranscendPullResource.SiloDiscoveryResults]: [ScopeName.ViewDataMap],
+  [TranscendPullResource.SystemDiscovery]: [ScopeName.ViewDataMap],
 };
 
 export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
@@ -175,7 +175,7 @@ export const TR_YML_RESOURCE_TO_FIELD_NAME: Record<
   [TranscendPullResource.Assessments]: 'assessments',
   [TranscendPullResource.AssessmentTemplates]: 'assessment-templates',
   [TranscendPullResource.Purposes]: 'purposes',
-  [TranscendPullResource.SiloDiscoveryResults]: 'siloDiscoveryResults',
+  [TranscendPullResource.SystemDiscovery]: 'system-discovery',
 };
 
 export const SCOPES_BY_TITLE = keyBy(

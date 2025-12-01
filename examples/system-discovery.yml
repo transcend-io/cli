@@ -1,4 +1,4 @@
-siloDiscoveryResults:
+system-discovery:
   - title: aurora-mysql - test-aurora-db-instance-1 - 207539467107:eu-west-1
     resourceId: arn:aws:rds:eu-west-1:207539467107:db:test-aurora-db-instance-1
     suggestedCatalog: Amazon Aurora

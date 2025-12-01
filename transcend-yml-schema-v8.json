@@ -54376,7 +54376,7 @@
         ]
       }
     },
-    "siloDiscoveryResults": {
+    "system-discovery": {
       "type": "array",
       "items": {
         "allOf": [

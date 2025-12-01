@@ -2096,7 +2096,7 @@ export const TranscendInput = t.partial({
   /**
    * The full list of silo discovery results
    */
-  siloDiscoveryResults: t.array(SiloDiscoveryResultInput),
+  'system-discovery': t.array(SiloDiscoveryResultInput),
 });
 
 /** Type override */
