@@ -346,7 +346,7 @@ export async function pullTranscendConfiguration(
       ? fetchAllPurposesAndPreferences(client)
       : [],
     // Fetch silo discovery results
-    resources.includes(TranscendPullResource.SiloDiscoveryResults)
+    resources.includes(TranscendPullResource.SystemDiscovery)
       ? fetchAllSiloDiscoveryResults(client)
       : [],
   ]);
@@ -790,9 +790,9 @@ export async function pullTranscendConfiguration(
   // Save Silo Discovery Results
   if (
     siloDiscoveryResults.length > 0 &&
-    resources.includes(TranscendPullResource.SiloDiscoveryResults)
+    resources.includes(TranscendPullResource.SystemDiscovery)
   ) {
-    result.siloDiscoveryResults = siloDiscoveryResults.map(
+    result['system-discovery'] = siloDiscoveryResults.map(
       ({
         title,
         resourceId,
