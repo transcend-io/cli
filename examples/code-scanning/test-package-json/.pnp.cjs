@@ -1707,7 +1707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tedious", null],\
             ["toposort-class", "npm:1.0.1"],\
             ["uuid", "npm:8.3.2"],\
-            ["validator", "npm:13.15.20"],\
+            ["validator", "npm:13.15.23"],\
             ["wkx", "npm:0.5.0"]\
           ],\
           "packagePeers": [\
@@ -1954,10 +1954,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["validator", [\
-        ["npm:13.15.20", {\
-          "packageLocation": "./.yarn/cache/validator-npm-13.15.20-81be70a87b-e8e50470ac.zip/node_modules/validator/",\
+        ["npm:13.15.23", {\
+          "packageLocation": "./.yarn/cache/validator-npm-13.15.23-617cdf95cc-7ac57d4c56.zip/node_modules/validator/",\
           "packageDependencies": [\
-            ["validator", "npm:13.15.20"]\
+            ["validator", "npm:13.15.23"]\
           ],\
           "linkType": "HARD"\
         }]\
