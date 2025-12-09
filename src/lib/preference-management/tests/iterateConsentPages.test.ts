@@ -18,7 +18,7 @@ const H = vi.hoisted(() => {
   };
   const pages: Page[] = [];
 
-  // last retry options captured from withPreferenceQueryRetry
+  // last retry options captured from withPreferenceRetry
   let lastRetryOpts: {
     /** On retry */
     onRetry?: (attempt: number, error: unknown, message: string) => void;
@@ -90,10 +90,10 @@ vi.mock('colors', () => ({
   ...H.colors,
 }));
 
-// Make withPreferenceQueryRetry just call the fn once, and capture retry opts.
-vi.mock('../withPreferenceQueryRetry', () => ({
+// Make withPreferenceRetry just call the fn once, and capture retry opts.
+vi.mock('../withPreferenceRetry', () => ({
   __esModule: true,
-  withPreferenceQueryRetry: vi.fn(
+  withPreferenceRetry: vi.fn(
     async (
       fn: () => Promise<unknown>,
       opts: {

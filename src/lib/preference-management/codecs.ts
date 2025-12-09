@@ -1,5 +1,6 @@
 import {
   PreferenceQueryResponseItem,
+  PreferenceStoreIdentifier,
   PreferenceUpdateItem,
 } from '@transcend-io/privacy-types';
 import * as t from 'io-ts';
@@ -250,3 +251,69 @@ export const PreferenceState = t.type({
 
 /** Override type */
 export type PreferenceState = t.TypeOf<typeof PreferenceState>;
+
+export const DeletePreferenceRecordsInput = t.type({
+  /** Array of consent preference records to delete */
+  records: t.array(
+    t.type({
+      /** The anchor identifier to locate the consent record */
+      anchorIdentifier: PreferenceStoreIdentifier,
+      /** The ISO 8601 timestamp of when the deletion is requested */
+      timestamp: t.string,
+    }),
+  ),
+});
+
+/** Override type */
+export type DeletePreferenceRecordsInput = t.TypeOf<
+  typeof DeletePreferenceRecordsInput
+>;
+
+export const DeletePreferenceRecordsResponse = t.intersection([
+  t.type({
+    /** Array of results for each preference record deletion */
+    records: t.array(
+      t.intersection([
+        t.type({
+          /** Whether the deletion was successful */
+          success: t.boolean,
+        }),
+        t.partial({
+          /** An error message if the deletion failed */
+          errorMessage: t.string,
+        }),
+      ]),
+    ),
+    /** The list of failed deletions with their respective errors */
+    failures: t.array(
+      t.type({
+        /** The index of the failed update in the original request */
+        index: t.number,
+        /** The error message associated with the failure */
+        error: t.string,
+      }),
+    ),
+  }),
+  t.partial({
+    /** Any general errors that occurred during the operation */
+    errors: t.array(t.string),
+  }),
+]);
+
+/** Override type */
+export type DeletePreferenceRecordsResponse = t.TypeOf<
+  typeof DeletePreferenceRecordsResponse
+>;
+
+/** CLI CSV Row for deleting preference records */
+export const DeletePreferenceRecordCliCsvRow = t.type({
+  /** The name of the identifier type (e.g., email, userId) */
+  name: t.string,
+  /** The value of the identifier */
+  value: t.string,
+});
+
+/** Override type */
+export type DeletePreferenceRecordCliCsvRow = t.TypeOf<
+  typeof DeletePreferenceRecordCliCsvRow
+>;

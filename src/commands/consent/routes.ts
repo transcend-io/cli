@@ -8,6 +8,7 @@ import { uploadCookiesFromCsvCommand } from './upload-cookies-from-csv/command';
 import { uploadDataFlowsFromCsvCommand } from './upload-data-flows-from-csv/command';
 import { uploadPreferencesCommand } from './upload-preferences/command';
 import { generateAccessTokensCommand } from './generate-access-tokens/command';
+import { deletePreferenceRecordsCommand } from './delete-preference-records/command';
 
 export const consentRoutes = buildRouteMap({
   routes: {
@@ -20,6 +21,7 @@ export const consentRoutes = buildRouteMap({
     'upload-cookies-from-csv': uploadCookiesFromCsvCommand,
     'upload-data-flows-from-csv': uploadDataFlowsFromCsvCommand,
     'upload-preferences': uploadPreferencesCommand,
+    'delete-preference-records': deletePreferenceRecordsCommand,
   },
   docs: {
     brief: 'Consent commands',

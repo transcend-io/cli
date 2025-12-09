@@ -6,7 +6,7 @@ import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
 import { map } from 'bluebird';
 import { logger } from '../../logger';
-import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { withPreferenceRetry } from './withPreferenceRetry';
 import { ConsentPreferenceResponse } from './types';
 
 /**
@@ -54,7 +54,8 @@ export async function getPreferencesForIdentifiers(
   await map(
     groupedIdentifiers,
     async (group) => {
-      const rawResult = await withPreferenceQueryRetry(
+      const rawResult = await withPreferenceRetry(
+        'Preference Query',
         () =>
           sombra
             .post(`v1/preferences/${partitionKey}/query`, {

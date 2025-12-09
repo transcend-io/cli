@@ -2,9 +2,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import {
-  withPreferenceQueryRetry,
+  withPreferenceRetry,
   RETRY_PREFERENCE_MSGS,
-} from '../withPreferenceQueryRetry';
+} from '../withPreferenceRetry';
 
 // Hoist shared spies so the mock factory can capture them
 const H = vi.hoisted(() => ({
@@ -31,7 +31,7 @@ vi.mock('colors', () => ({
   yellow: (s: string) => s,
 }));
 
-describe('withPreferenceQueryRetry', () => {
+describe('withPreferenceRetry', () => {
   beforeEach(() => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5); // deterministic jitter
   });
@@ -45,7 +45,7 @@ describe('withPreferenceQueryRetry', () => {
   it('returns immediately on first success (no retries)', async () => {
     const fn = vi.fn(async (): Promise<string> => 'ok');
 
-    const out = await withPreferenceQueryRetry(fn);
+    const out = await withPreferenceRetry('Preference Query', fn);
     expect(out).toEqual('ok');
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -62,7 +62,7 @@ describe('withPreferenceQueryRetry', () => {
       .mockResolvedValueOnce('ok-2');
 
     const onRetry = vi.fn();
-    const out = await withPreferenceQueryRetry(fn, {
+    const out = await withPreferenceRetry('Preference Query', fn, {
       baseDelayMs: 200, // backoff = 200 * 2^(attempt-1)
       onRetry,
     });
@@ -85,7 +85,7 @@ describe('withPreferenceQueryRetry', () => {
     const fn = vi.fn().mockRejectedValue(new Error('Something fatal'));
 
     await expect(
-      withPreferenceQueryRetry(fn, {
+      withPreferenceRetry('Preference Query', fn, {
         maxAttempts: 5,
       }),
     ).rejects.toThrow('Preference query failed after 1 attempt(s):');
@@ -101,7 +101,7 @@ describe('withPreferenceQueryRetry', () => {
     const fn = vi.fn().mockRejectedValue(new Error(retryMsg));
 
     await expect(
-      withPreferenceQueryRetry(fn, {
+      withPreferenceRetry('Preference Query', fn, {
         maxAttempts: 3,
         baseDelayMs: 100,
       }),
@@ -125,7 +125,7 @@ describe('withPreferenceQueryRetry', () => {
       return 'ok-custom';
     });
 
-    const out = await withPreferenceQueryRetry(fn, {
+    const out = await withPreferenceRetry('Preference Query', fn, {
       isRetryable: (_err, msg) => msg.includes('custom-transient'),
       baseDelayMs: 10,
     });

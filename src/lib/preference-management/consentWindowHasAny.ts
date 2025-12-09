@@ -6,7 +6,7 @@ import {
   PreferencesQueryFilter,
   ChunkMode,
 } from './types';
-import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { withPreferenceRetry } from './withPreferenceRetry';
 import { logger } from '../../logger';
 
 /**
@@ -55,7 +55,8 @@ export async function consentWindowHasAny(
             updatedBefore: beforeISO,
           },
         };
-  const resp = await withPreferenceQueryRetry(
+  const resp = await withPreferenceRetry(
+    'Preference Query',
     () =>
       sombra
         .post(`v1/preferences/${partition}/query`, {

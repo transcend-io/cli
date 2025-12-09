@@ -38,6 +38,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
+  - [`transcend consent delete-preference-records`](#transcend-consent-delete-preference-records)
   - [`transcend inventory pull`](#transcend-inventory-pull)
   - [`transcend inventory push`](#transcend-inventory-push)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
@@ -2244,6 +2245,119 @@ transcend consent upload-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --file=./preferences.csv \
   --transcendUrl=https://api.us.transcend.io
+```
+
+### `transcend consent delete-preference-records`
+
+```txt
+USAGE
+  transcend consent delete-preference-records (--auth value) [--sombraAuth value] (--partition value) (--timestamp value) [--file value] [--directory value] [--transcendUrl value] [--maxItemsInChunk value] [--maxConcurrency value] [--fileConcurrency value] [--receiptDirectory value]
+  transcend consent delete-preference-records --help
+
+Uses POST /v1/preferences/{partition}/delete route on sombra to delete consent preference records in bulk from Preference Store based on a CSV file input.
+
+FLAGS
+      --auth               The Transcend API key. Requires scopes: "Modify User Stored Preferences"
+     [--sombraAuth]        The Sombra internal key, use for additional authentication when self-hosting Sombra
+      --partition          Partition ID to used to delete preference records from
+      --timestamp          The timestamp when the deletion operation is made. Used for logging purposes.
+     [--file]              Path to the CSV file used to identify preference records to delete
+     [--directory]         Path to the directory of CSV files to load preferences from
+     [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                       [default = https://api.transcend.io]
+     [--maxItemsInChunk]   When chunking, how many items to delete in a single chunk (higher = faster, but more load).                                        [default = 10]
+     [--maxConcurrency]    Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors). [default = 10]
+     [--fileConcurrency]   Number of files to process concurrently when deleting preference records from multiple files.                                      [default = 5]
+     [--receiptDirectory]  Directory to write receipts of failed deletions to.                                                                                [default = ./receipts]
+  -h  --help               Print help information and exit
+```
+
+A sample CSV can be found [here](./examples/cli-delete-preference-records-example.csv).
+
+#### Examples
+
+**Delete preference records from preference store using a CSV file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Delete preference records from preference store using multiple CSV files in a directory**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --directory=./preferences-to-delete \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Use a specific backend base URL (e.g., US-hosted)**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --transcendUrl=https://api.us.transcend.io \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of concurrent API calls for a deletion file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxConcurrency=100 \
+  --fileConcurrency=10 \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of files to process concurrently**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --fileConcurrency=10 \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
+```
+
+**Configure maximum items in chunk**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 ### `transcend inventory pull`

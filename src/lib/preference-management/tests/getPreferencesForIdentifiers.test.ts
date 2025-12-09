@@ -65,12 +65,12 @@ vi.mock('@transcend-io/type-utils', () => ({
   decodeCodec: vi.fn((_codec, raw) => raw),
 }));
 
-// withPreferenceQueryRetry should invoke the provided fn and return its result,
+// withPreferenceRetry should invoke the provided fn and return its result,
 // but we still want to see that it's being called.
 const withRetrySpy = vi.fn(async (fn: () => Promise<any>, _opts?: any) => fn());
 
-vi.mock('../withPreferenceQueryRetry', () => ({
-  withPreferenceQueryRetry: (fn: unknown, opts?: unknown) =>
+vi.mock('../withPreferenceRetry', () => ({
+  withPreferenceRetry: (fn: unknown, opts?: unknown) =>
     // @ts-expect-error test-only
     withRetrySpy(fn, opts),
 }));

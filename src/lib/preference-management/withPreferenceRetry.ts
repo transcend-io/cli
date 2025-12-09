@@ -17,7 +17,7 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
 ].map((s) => s.toLowerCase());
 
 /**
- * Options for retrying preference queries.
+ * Options for retrying preference operations.
  */
 export type RetryOptions = {
   /** Max attempts including the first try (default 3) */
@@ -31,14 +31,16 @@ export type RetryOptions = {
 };
 
 /**
- * Run an async function with standardized retry behavior for preference queries.
+ * Run an async function with standardized retry behavior for preference operations.
  * Exponential backoff with jitter; only retries on known-transient messages.
  *
+ * @param name - Name of the operation (for logging)
  * @param fn - Function to run
  * @param options - Retry options
  * @returns Result of the function
  */
-export async function withPreferenceQueryRetry<T>(
+export async function withPreferenceRetry<T>(
+  name: string,
   fn: () => Promise<T>,
   {
     maxAttempts = 3,
@@ -61,9 +63,7 @@ export async function withPreferenceQueryRetry<T>(
         String(err ?? 'Unknown error');
       const willRetry = attempt < maxAttempts && isRetryable(err, msg);
       if (!willRetry) {
-        throw new Error(
-          `Preference query failed after ${attempt} attempt(s): ${msg}`,
-        );
+        throw new Error(`${name} failed after ${attempt} attempt(s): ${msg}`);
       }
       onRetry?.(attempt, err, msg);
 
