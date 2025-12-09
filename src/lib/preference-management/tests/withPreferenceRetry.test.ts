@@ -88,7 +88,7 @@ describe('withPreferenceRetry', () => {
       withPreferenceRetry('Preference Query', fn, {
         maxAttempts: 5,
       }),
-    ).rejects.toThrow('Preference query failed after 1 attempt(s):');
+    ).rejects.toThrow('Preference Query failed after 1 attempt(s):');
 
     // No retries, no sleeps, no logs
     expect(fn).toHaveBeenCalledTimes(1);
@@ -105,7 +105,7 @@ describe('withPreferenceRetry', () => {
         maxAttempts: 3,
         baseDelayMs: 100,
       }),
-    ).rejects.toThrow('Preference query failed after 3 attempt(s):');
+    ).rejects.toThrow('Preference Query failed after 3 attempt(s):');
 
     expect(fn).toHaveBeenCalledTimes(3);
     // Two intervals (between 1->2 and 2->3)

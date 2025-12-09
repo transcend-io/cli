@@ -20,4 +20,4 @@ export * from './iterateConsentPages';
 export * from './consentWindowHasAny';
 export * from './getComparisonTimeForRecord';
 export * from './pickConsentChunkMode';
-export * from './deletePreferenceRecords';
+export * from './bulkDeletePreferenceRecords';

@@ -83,6 +83,7 @@ vi.mock('../withPreferenceRetry', () => ({
   __esModule: true,
   withPreferenceRetry: vi.fn(
     async (
+      name: string,
       fn: () => Promise<unknown>,
       opts: {
         /** On retry */

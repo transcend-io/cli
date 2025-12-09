@@ -7,7 +7,7 @@ import { logger } from '../../../logger';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { map } from 'bluebird';
-import { deletePreferenceRecords } from '../../../lib/preference-management';
+import { bulkDeletePreferenceRecords } from '../../../lib/preference-management';
 import cliProgress from 'cli-progress';
 import { writeCsv } from '../../../lib/helpers';
 
@@ -36,7 +36,7 @@ export interface DeletePreferenceRecordsCommandFlags {
   fileConcurrency: number;
 }
 
-export async function deletePreferenceRecordsImpl(
+export async function deletePreferenceRecords(
   this: LocalContext,
   {
     auth,
@@ -132,7 +132,7 @@ export async function deletePreferenceRecordsImpl(
   const failedResultsArrays = await map(
     files,
     async (filePath) => {
-      const result = await deletePreferenceRecords(sombra, {
+      const result = await bulkDeletePreferenceRecords(sombra, {
         partition,
         filePath,
         timestamp,

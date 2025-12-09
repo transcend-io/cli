@@ -9,8 +9,8 @@ import { dateParser } from '../../../lib/cli/parsers';
 
 export const deletePreferenceRecordsCommand = buildCommand({
   loader: async () => {
-    const { deletePreferenceRecordsImpl } = await import('./impl');
-    return deletePreferenceRecordsImpl;
+    const { deletePreferenceRecords } = await import('./impl');
+    return deletePreferenceRecords;
   },
   parameters: {
     flags: {
