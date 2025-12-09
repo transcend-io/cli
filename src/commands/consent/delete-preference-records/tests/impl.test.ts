@@ -1,400 +1,289 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { describe, it, expect, vi, beforeEach } from 'vitest';
-// import { deletePreferenceRecords } from '../impl';
-// import type { DeletePreferenceRecordsCommandFlags } from '../impl';
-// import type { LocalContext } from '../../../../context';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { deletePreferenceRecords } from '../impl';
+import type { DeletePreferenceRecordsCommandFlags } from '../impl';
+import type { LocalContext } from '../../../../context';
 
-// const H = vi.hoisted(() => {
-//   const logger = {
-//     info: vi.fn(),
-//   };
+const H = vi.hoisted(() => {
+  const logger = {
+    info: vi.fn(),
+    debug: vi.fn(),
+    error: vi.fn(),
+  };
 
-//   // colors passthrough so assertions don’t include ANSI codes
-//   const colors = {
-//     green: (s: string) => s,
-//     yellow: (s: string) => s,
-//     magenta: (s: string) => s,
-//   };
+  // colors passthrough so assertions don’t include ANSI codes
+  const colors = {
+    green: (s: string) => s,
+    yellow: (s: string) => s,
+    magenta: (s: string) => s,
+    cyan: (s: string) => s,
+    red: (s: string) => s,
+  };
 
-//   const doneInputValidation = vi.fn();
+  const doneInputValidation = vi.fn();
 
-//   // Sombra GOT instance returned by factory
-//   const sombra = { tag: 'sombra' };
+  // Sombra GOT instance returned by factory
+  const sombra = { tag: 'sombra' };
 
-//   // spies for preference-management exports
-//   const fetchConsentPreferences = vi.fn(); // we'll .mockImplementationOnce per test to drive streaming
-//   const fetchConsentPreferencesChunked = vi.fn();
-//   const transformPreferenceRecordToCsv = vi.fn((x: unknown) => ({ csv: x }));
+  // spies for preference-management exports
+  const bulkDeletePreferenceRecords = vi.fn(); // we'll .mockImplementationOnce per test to drive streaming
 
-//   // CSV helpers (new code path)
-//   const initCsvFile = vi.fn();
-//   const appendCsvRowsOrdered = vi.fn();
+  // // CSV helpers (new code path)
+  const writeCsv = vi.fn();
 
-//   // capture the last args passed to fetchConsentPreferences
-//   const lastFetchArgs: {
-//     sombra?: unknown;
-//     opts?: any;
-//   } = {};
+  const reaDirSync = vi.fn((): string[] => []);
 
-//   const gqlClient = { tag: 'gql' };
+  const gqlClient = { tag: 'gql' };
 
-//   // minimal fixtures the header builder needs
-//   const purposesWithTopics = [
-//     {
-//       trackingType: 'Email',
-//       topics: [
-//         {
-//           name: 'Email Topics of Interest',
-//           purpose: { trackingType: 'Email' },
-//         },
-//       ],
-//     },
-//     { trackingType: 'Sms', topics: [] },
-//     {
-//       trackingType: 'Sale',
-//       topics: [{ name: 'SaleOfInfo', purpose: { trackingType: 'Sale' } }],
-//     },
-//   ];
+  return {
+    logger,
+    colors,
+    doneInputValidation,
+    sombra,
+    bulkDeletePreferenceRecords,
+    gqlClient,
+    writeCsv,
+    reaDirSync,
+  };
+});
 
-//   const identifiers = [
-//     { id: '1', name: 'email' },
-//     { id: '2', name: 'phone' },
-//     { id: '3', name: 'loyaltyId' },
-//   ];
+/* ----------------- Mocks (must be declared before importing SUT) ----------------- */
+vi.mock('../../../../logger', () => ({ logger: H.logger }));
 
-//   return {
-//     logger,
-//     colors,
-//     doneInputValidation,
-//     sombra,
-//     fetchConsentPreferences,
-//     fetchConsentPreferencesChunked,
-//     transformPreferenceRecordToCsv,
-//     initCsvFile,
-//     appendCsvRowsOrdered,
-//     lastFetchArgs,
-//     gqlClient,
-//     purposesWithTopics,
-//     identifiers,
-//   };
-// });
+vi.mock('colors', () => ({
+  __esModule: true,
+  default: H.colors,
+  ...H.colors,
+}));
 
-// /* ----------------- Mocks (must be declared before importing SUT) ----------------- */
-// vi.mock('../../../../logger', () => ({ logger: H.logger }));
+vi.mock('../../../../lib/cli/done-input-validation', () => ({
+  doneInputValidation: H.doneInputValidation,
+}));
 
-// vi.mock('colors', () => ({
-//   __esModule: true,
-//   default: H.colors,
-//   ...H.colors,
-// }));
+// GraphQL: sombra factory and client builder
+vi.mock('../../../../lib/graphql', () => ({
+  __esModule: true,
+  // eslint-disable-next-line require-await
+  createSombraGotInstance: vi.fn(async () => H.sombra),
+  buildTranscendGraphQLClient: vi.fn(() => H.gqlClient),
+}));
 
-// vi.mock('../../../../lib/cli/done-input-validation', () => ({
-//   doneInputValidation: H.doneInputValidation,
-// }));
+// New CSV helpers used by impl after your refactor
+vi.mock('../../../../lib/helpers', () => ({
+  writeCsv: H.writeCsv,
+}));
 
-// // Mock the concrete creator…
-// vi.mock('../../../../lib/graphql/createSombraGotInstance', () => ({
-//   __esModule: true,
-//   // eslint-disable-next-line require-await
-//   createSombraGotInstance: vi.fn(async () => H.sombra),
-// }));
+// preference-management: forward and record args, then delegate to our spies
+vi.mock('../../../../lib/preference-management', () => ({
+  // eslint-disable-next-line require-await
+  bulkDeletePreferenceRecords: async (sombra: unknown, opts: any) =>
+    H.bulkDeletePreferenceRecords(sombra, opts),
+}));
 
-// // …and the barrel that re-exports it
-// vi.mock('../../../../lib/graphql', () => ({
-//   __esModule: true,
-//   // eslint-disable-next-line require-await
-//   createSombraGotInstance: vi.fn(async () => H.sombra),
-//   buildTranscendGraphQLClient: vi.fn(() => H.gqlClient),
+vi.mock('node:fs', () => ({
+  readdirSync: H.reaDirSync,
+}));
 
-//   // NEW: add these so impl.ts can import from the barrel
-//   fetchAllPurposesAndPreferences: vi.fn(
-//     // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
-//     async (_client) => H.purposesWithTopics,
-//   ),
-//   // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
-//   fetchAllIdentifiers: vi.fn(async (_client) => H.identifiers),
-// }));
+describe('deletePreferenceRecordsImpl', () => {
+  const ctx: LocalContext = {
+    exit: vi.fn(),
+    log: vi.fn(),
+    process: {
+      exit: vi.fn(),
+    },
+  } as unknown as LocalContext;
 
-// // Safety net for any GraphQL calls
-// vi.mock('../../../../lib/graphql/makeGraphQLRequest', () => ({
-//   __esModule: true,
-//   // eslint-disable-next-line require-await
-//   makeGraphQLRequest: vi.fn(async () => ({
-//     organization: { sombra: { customerUrl: 'https://mocked' } },
-//   })),
-// }));
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-// // New CSV helpers used by impl after your refactor
-// vi.mock('../../../../lib/helpers', () => ({
-//   initCsvFile: H.initCsvFile,
-//   appendCsvRowsOrdered: H.appendCsvRowsOrdered,
-// }));
+  it('calls doneInputValidation with ctx.process.exit', async () => {
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      file: '/tmp/out.csv',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
 
-// // preference-management: forward and record args, then delegate to our spies
-// vi.mock('../../../../lib/preference-management', () => ({
-//   // eslint-disable-next-line require-await
-//   fetchConsentPreferences: async (sombra: unknown, opts: any) => {
-//     H.lastFetchArgs.sombra = sombra;
-//     H.lastFetchArgs.opts = opts;
-//     return H.fetchConsentPreferences(sombra, opts);
-//   },
-//   // eslint-disable-next-line require-await
-//   fetchConsentPreferencesChunked: async (sombra: unknown, opts: any) =>
-//     H.fetchConsentPreferencesChunked(sombra, opts),
-//   transformPreferenceRecordToCsv: H.transformPreferenceRecordToCsv,
-// }));
+    await deletePreferenceRecords.call(ctx, flags);
 
-// describe('deletePreferenceRecordsImpl', () => {
-//   const ctx: LocalContext = {
-//     exit: vi.fn(),
-//     log: vi.fn(),
-//     process: {
-//       exit: vi.fn(),
-//     },
-//   } as unknown as LocalContext;
+    expect(H.doneInputValidation).toHaveBeenCalledTimes(1);
+    expect(H.doneInputValidation).toHaveBeenCalledWith(ctx.process.exit);
+  });
 
-//   beforeEach(() => {
-//     vi.clearAllMocks();
-//   });
+  it('errors if both file and directory are provided', async () => {
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      file: '/tmp/out.csv',
+      directory: '/tmp/dir',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.logger.error).toHaveBeenCalledWith(
+      H.colors.red(
+        'Cannot provide both a directory and a file. Please provide only one.',
+      ),
+    );
+    expect(ctx.process.exit).toHaveBeenCalledWith(1);
+  });
 
-//   it('calls doneInputValidation with ctx.process.exit', async () => {
-//     const flags: DeletePreferenceRecordsCommandFlags = {
-//       auth: 'tok',
-//       partition: 'part-1',
-//       sombraAuth: 'sombra-tok',
-//       file: '/tmp/out.csv',
-//       transcendUrl: 'https://app.transcend.io',
-//       maxItemsInChunk: 1000,
-//       maxConcurrency: 90,
-//       timestamp: new Date(),
-//       receiptDirectory: '/tmp/receipts',
-//       fileConcurrency: 5,
-//     };
+  it('errors if neither file nor directory is provided', async () => {
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.logger.error).toHaveBeenCalledWith(
+      H.colors.red(
+        'A file or directory must be provided. Please provide one using --file=./preferences.csv or --directory=./preferences',
+      ),
+    );
+    expect(ctx.process.exit).toHaveBeenCalledWith(1);
+  });
 
-//     // streaming path: no accumulation; just ensure we can call onItems zero times
-//     // eslint-disable-next-line @typescript-eslint/no-unused-vars, require-await
-//     H.fetchConsentPreferences.mockImplementationOnce(async (_sombra, _opts) =>
-//       // don't call onItems → no rows
-//       [],
-//     );
+  it('errors if file is not a CSV', async () => {
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      file: '/tmp/out.txt',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.logger.error).toHaveBeenCalledWith(
+      H.colors.red('File must be a CSV file'),
+    );
+    expect(ctx.process.exit).toHaveBeenCalledWith(1);
+  });
 
-//     await deletePreferenceRecords.call(ctx, flags);
+  it('errors if directory has no CSV files', async () => {
+    // Mock readdirSync to return no CSVs
+    vi.doMock('node:fs', () => ({
+      readdirSync: vi.fn(() => ['not-a-csv.txt']),
+    }));
+    // Re-import impl to use new mock
+    const { deletePreferenceRecords: deletePrefRecs } = await import('../impl');
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      directory: '/tmp/dir',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePrefRecs.call(ctx, flags);
+    expect(H.logger.error).toHaveBeenCalledWith(
+      H.colors.red('No CSV files found in directory: /tmp/dir'),
+    );
+    expect(ctx.process.exit).toHaveBeenCalledWith(1);
+  });
 
-//     expect(H.doneInputValidation).toHaveBeenCalledTimes(1);
-//     expect(H.doneInputValidation).toHaveBeenCalledWith(ctx.process.exit);
+  it('processes a single CSV file successfully', async () => {
+    H.bulkDeletePreferenceRecords.mockResolvedValueOnce([]);
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      file: '/tmp/out.csv',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.bulkDeletePreferenceRecords).toHaveBeenCalledWith(
+      H.sombra,
+      expect.objectContaining({ filePath: '/tmp/out.csv' }),
+    );
+    expect(H.logger.info).toHaveBeenCalledWith(
+      expect.stringContaining('Deletion Summary Report'),
+    );
+    expect(H.writeCsv).not.toHaveBeenCalled();
+  });
 
-//     // logs include mode and preparing/finished
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('using mode=paged-stream'),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Preparing CSV at: /tmp/out.csv'),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Finished writing CSV to /tmp/out.csv'),
-//       ),
-//     ).toBe(true);
-//   });
+  it('processes multiple CSV files in a directory', async () => {
+    // Mock readdirSync to return CSVs
 
-//   it('parses identifiers, builds filter, passes limit=concurrency, streams pages, initializes header once, and appends rows', async () => {
-//     const flags: DeletePreferenceRecordsCommandFlags = {
-//       auth: 'tok',
-//       partition: 'part-1',
-//       sombraAuth: 'sombra-tok',
-//       file: '/tmp/out.csv',
-//       transcendUrl: 'https://app.transcend.io',
-//       maxItemsInChunk: 1000,
-//       maxConcurrency: 90,
-//       timestamp: new Date(),
-//       receiptDirectory: '/tmp/receipts',
-//       fileConcurrency: 5,
-//     };
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      directory: '/tmp/dir',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    H.reaDirSync.mockReturnValueOnce(['a.csv', 'b.csv', 'c.csv']);
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.bulkDeletePreferenceRecords).toHaveBeenCalledTimes(3);
+    expect(H.bulkDeletePreferenceRecords).toHaveBeenCalledWith(
+      H.sombra,
+      expect.objectContaining({ filePath: expect.stringContaining('a.csv') }),
+    );
+    expect(H.logger.info).toHaveBeenCalledWith(
+      expect.stringContaining('Deletion Summary Report'),
+    );
+  });
 
-//     const page1 = [
-//       { partition: 'part-xyz', timestamp: '2025-06-01T01:00:00.000Z' },
-//     ];
-//     const page2 = [
-//       { partition: 'part-xyz', timestamp: '2025-06-01T02:00:00.000Z' },
-//     ];
-
-//     // streaming: call onItems twice
-//     H.fetchConsentPreferences.mockImplementationOnce(async (_sombra, opts) => {
-//       expect(typeof opts.onItems).toBe('function');
-//       await opts.onItems(page1 as any);
-//       await opts.onItems(page2 as any);
-//       return []; // streaming mode returns []
-//     });
-
-//     await deletePreferenceRecords.call(ctx, flags);
-
-//     // fetchConsentPreferences called once, with sombra instance from factory
-//     expect(H.lastFetchArgs.sombra).toBe(H.sombra);
-
-//     // Verify options passed to fetchConsentPreferences
-//     const opts = H.lastFetchArgs.opts as {
-//       partition: string;
-//       filterBy: Record<string, unknown>;
-//       limit: number;
-//       onItems: (items: any[]) => Promise<void> | void;
-//     };
-//     expect(opts.partition).toBe('part-xyz');
-//     expect(opts.limit).toBe(17);
-
-//     // Filter composition
-//     expect(opts.filterBy).toEqual({
-//       timestampBefore: '2025-06-02T00:00:00.000Z',
-//       timestampAfter: '2025-06-01T00:00:00.000Z',
-//       system: {
-//         updatedBefore: '2025-06-05T00:00:00.000Z',
-//         updatedAfter: '2025-06-03T00:00:00.000Z',
-//       },
-//       identifiers: [
-//         { name: 'email', value: 'plain@email.com' },
-//         { name: 'phone', value: '+11234567890' },
-//         { name: 'email', value: 'second@email.com' },
-//       ],
-//     });
-
-//     // Logs: mode + preparing + finished (no aggregate count anymore)
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes(
-//           'Fetching consent preferences from partition part-xyz, using mode=paged-stream',
-//         ),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Preparing CSV at: /abs/prefs.csv'),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Finished writing CSV to /abs/prefs.csv'),
-//       ),
-//     ).toBe(true);
-
-//     // The transformer is called for each item in streaming order
-//     const allItems = [...page1, ...page2];
-//     expect(H.transformPreferenceRecordToCsv).toHaveBeenCalledTimes(
-//       allItems.length,
-//     );
-//     expect(H.transformPreferenceRecordToCsv.mock.calls[0][0]).toEqual(
-//       allItems[0],
-//     );
-//     expect(H.transformPreferenceRecordToCsv.mock.calls[1][0]).toEqual(
-//       allItems[1],
-//     );
-
-//     // initCsvFile called once with derived header that includes full metadata columns
-//     expect(H.initCsvFile).toHaveBeenCalledTimes(1);
-//     const [initPath, headers] = H.initCsvFile.mock.calls[0];
-//     expect(initPath).toBe('/abs/prefs.csv');
-
-//     // Must include identifier names:
-//     expect(headers).toEqual(
-//       expect.arrayContaining(['email', 'phone', 'loyaltyId']),
-//     );
-//     // Must include purpose tracking types (if your impl adds them):
-//     expect(headers).toEqual(expect.arrayContaining(['Email', 'Sms', 'Sale']));
-//     // Must include topic names:
-//     expect(headers).toEqual(
-//       expect.arrayContaining(['email', 'phone', 'loyaltyId']),
-//     );
-//     // Must include purpose tracking types:
-//     expect(headers).toEqual(expect.arrayContaining(['Email', 'Sms', 'Sale']));
-//     // Topic columns may or may not be included; ensure header integrity:
-//     expect(headers).not.toContain(undefined);
-//     // And also include the transformer key we add ("csv")
-//     expect(headers).toEqual(expect.arrayContaining(['csv']));
-//     // No duplicates for 'csv'
-//     expect(headers.filter((h: string) => h === 'csv')).toHaveLength(1);
-//     // And also include the transformer key we add ("csv")
-//     expect(headers).toEqual(expect.arrayContaining(['csv']));
-//     // No duplicates for 'csv'
-//     expect(headers.filter((h: string) => h === 'csv')).toHaveLength(1);
-
-//     // appendCsvRowsOrdered called for each onItems invocation
-//     expect(H.appendCsvRowsOrdered).toHaveBeenCalledTimes(2);
-//     const [p1Path, p1Rows, p1Order] = H.appendCsvRowsOrdered.mock.calls[0];
-//     const [p2Path, p2Rows, p2Order] = H.appendCsvRowsOrdered.mock.calls[1];
-
-//     expect(p1Path).toBe('/abs/prefs.csv');
-//     expect(p2Path).toBe('/abs/prefs.csv');
-
-//     // Use the same header array we asserted earlier from initCsvFile:
-//     const [, h] = H.initCsvFile.mock.calls[0];
-
-//     expect(Array.isArray(h)).toBe(true);
-//     expect(h).toContain('csv'); // integrity check
-//     expect(h).not.toContain(undefined); // no holes
-
-//     expect(p1Order).toEqual(h);
-//     expect(p2Order).toEqual(h);
-
-//     expect(p1Rows).toEqual(page1.map((n) => ({ csv: n })));
-//     expect(p2Rows).toEqual(page2.map((n) => ({ csv: n })));
-//   });
-
-//   it('omits identifiers/system/timestamps in filter when flags are absent; still streams with empty pages and writes header only after first rows', async () => {
-//     const flags: DeletePreferenceRecordsCommandFlags = {
-//       auth: 'tok',
-//       partition: 'part-1',
-//       sombraAuth: 'sombra-tok',
-//       file: '/tmp/out.csv',
-//       transcendUrl: 'https://app.transcend.io',
-//       maxItemsInChunk: 1000,
-//       maxConcurrency: 90,
-//       timestamp: new Date(),
-//       receiptDirectory: '/tmp/receipts',
-//       fileConcurrency: 5,
-//     };
-
-//     // No rows at all: onItems never called
-//     H.fetchConsentPreferences.mockImplementationOnce(
-//       // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
-//       async (_sombra, _opts) => [],
-//     );
-
-//     await deletePreferenceRecords.call(ctx, flags);
-
-//     const opts = H.lastFetchArgs.opts as {
-//       partition: string;
-//       filterBy: Record<string, unknown>;
-//       limit: number;
-//       onItems?: (items: any[]) => Promise<void> | void;
-//     };
-
-//     expect(opts.partition).toBe('p0');
-//     expect(opts.limit).toBe(5);
-//     // Should be an empty object
-//     expect(opts.filterBy).toEqual({});
-
-//     // Since no rows ever streamed, we never initialized/append
-//     expect(H.initCsvFile).not.toHaveBeenCalled();
-//     expect(H.appendCsvRowsOrdered).not.toHaveBeenCalled();
-
-//     // Logs show mode + preparing + finished
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('using mode=paged-stream'),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Preparing CSV at: /tmp/x.csv'),
-//       ),
-//     ).toBe(true);
-//     expect(
-//       H.logger.info.mock.calls.some((c) =>
-//         String(c[0]).includes('Finished writing CSV to /tmp/x.csv'),
-//       ),
-//     ).toBe(true);
-//   });
-// });
-// /* eslint-enable @typescript-eslint/no-explicit-any */
+  it('writes a receipt if there are failed deletions', async () => {
+    H.bulkDeletePreferenceRecords.mockResolvedValueOnce([
+      { id: 1, error: 'fail' },
+    ]);
+    const flags: DeletePreferenceRecordsCommandFlags = {
+      auth: 'tok',
+      partition: 'part-1',
+      sombraAuth: 'sombra-tok',
+      file: '/tmp/out.csv',
+      transcendUrl: 'https://app.transcend.io',
+      maxItemsInChunk: 1000,
+      maxConcurrency: 90,
+      timestamp: new Date(),
+      receiptDirectory: '/tmp/receipts',
+      fileConcurrency: 5,
+    };
+    await deletePreferenceRecords.call(ctx, flags);
+    expect(H.writeCsv).toHaveBeenCalledWith(
+      expect.stringContaining('/tmp/receipts/deletion-failures-'),
+      [{ id: 1, error: 'fail' }],
+      true,
+    );
+    expect(H.logger.info).toHaveBeenCalledWith(
+      expect.stringContaining('Receipt Path:'),
+    );
+  });
+});
+/* eslint-enable @typescript-eslint/no-explicit-any */
