@@ -2254,7 +2254,7 @@ USAGE
   transcend consent delete-preference-records (--auth value) [--sombraAuth value] (--partition value) (--timestamp value) [--file value] [--directory value] [--transcendUrl value] [--maxItemsInChunk value] [--maxConcurrency value] [--fileConcurrency value] [--receiptDirectory value]
   transcend consent delete-preference-records --help
 
-Uses POST /v1/preferences/{partition}/delete route on sombra to delete consent preference records in bulk from Preference Store based on a CSV file input.
+Uses POST /v1/preferences/{partition}/delete route on sombra to delete consent preference records in bulk from Preference Store based on a CSV file input. Refer to examples/cli-upload-preferences-example.csv for the expected format of the CSV file. The CSV expects the following headers: "name" and "value". The "name" field corresponds to the identifier name as defined on https://app.transcend.io/privacy-requests/identifiers The "value" refers to the actual identifier value for the user whose preference record is being deleted. For Large scale deletions, consider chunking the input CSV into smaller files and using the --directory option to process them concurrently.
 
 FLAGS
       --auth               The Transcend API key. Requires scopes: "Modify User Stored Preferences"
