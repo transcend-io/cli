@@ -1,4 +1,4 @@
-import { map as pmap } from 'bluebird';
+import { map as pmap } from '../bluebird';
 import type { Got } from 'got';
 import cliProgress from 'cli-progress';
 import colors from 'colors';

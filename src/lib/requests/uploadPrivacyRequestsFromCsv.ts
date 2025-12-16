@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import colors from 'colors';
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
 import cliProgress from 'cli-progress';

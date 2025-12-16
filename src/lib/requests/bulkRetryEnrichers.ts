@@ -3,7 +3,7 @@ import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import { difference } from 'lodash-es';

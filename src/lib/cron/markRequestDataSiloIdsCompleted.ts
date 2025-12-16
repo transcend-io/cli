@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {

@@ -1,4 +1,4 @@
-import { map, mapSeries } from 'bluebird';
+import { map, mapSeries } from '../bluebird';
 import { chunk } from 'lodash-es';
 import { createSombraGotInstance } from '../graphql';
 import colors from 'colors';

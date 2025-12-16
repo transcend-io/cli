@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { map, mapSeries } from 'bluebird';
+import { map, mapSeries } from '../../../lib/bluebird';
 import { join } from 'node:path';
 import fs, { existsSync, mkdirSync } from 'node:fs';
 import {
