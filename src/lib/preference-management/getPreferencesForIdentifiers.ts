@@ -4,7 +4,7 @@ import colors from 'colors';
 import cliProgress from 'cli-progress';
 import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import { logger } from '../../logger';
 import { withPreferenceRetry } from './withPreferenceRetry';
 import { ConsentPreferenceResponse } from './types';

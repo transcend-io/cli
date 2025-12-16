@@ -6,7 +6,7 @@ import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { logger } from '../../../logger';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { map } from 'bluebird';
+import { map } from '../../../lib/bluebird';
 import { bulkDeletePreferenceRecords } from '../../../lib/preference-management';
 import cliProgress from 'cli-progress';
 import { writeCsv } from '../../../lib/helpers';

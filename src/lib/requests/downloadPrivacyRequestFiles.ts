@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import colors from 'colors';

@@ -5,7 +5,7 @@ import { keyBy, uniq, flatten, difference } from 'lodash-es';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
 export interface Identifier {

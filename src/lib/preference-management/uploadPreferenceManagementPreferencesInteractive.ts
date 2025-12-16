@@ -7,7 +7,7 @@ import {
   Purpose,
 } from '../graphql';
 import colors from 'colors';
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import { chunk } from 'lodash-es';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';

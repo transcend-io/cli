@@ -8,7 +8,7 @@ import {
 } from './codecs';
 import { readCsv } from '../requests';
 import { chunk } from 'lodash-es';
-import { map } from 'bluebird';
+import { map } from '../bluebird';
 import { withPreferenceRetry } from './withPreferenceRetry';
 
 interface FailedResult extends DeletePreferenceRecordCliCsvRow {
