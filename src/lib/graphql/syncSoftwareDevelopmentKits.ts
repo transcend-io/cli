@@ -7,8 +7,7 @@ import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import Bluebird from 'bluebird';
-const { mapSeries, map } = Bluebird;
+import { mapSeries, map } from 'bluebird';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,

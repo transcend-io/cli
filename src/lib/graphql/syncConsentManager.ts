@@ -24,8 +24,7 @@ import {
   fetchConsentManagerExperiences,
 } from './fetchConsentManagerId';
 import { keyBy } from 'lodash-es';
-import Bluebird from 'bluebird';
-const { map } = Bluebird;
+import { map } from 'bluebird';
 import {
   InitialViewState,
   OnConsentExpiry,

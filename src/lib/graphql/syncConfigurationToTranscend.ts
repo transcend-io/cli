@@ -3,8 +3,7 @@ import { TranscendInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
-const { map } = Bluebird;
+import { map } from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,

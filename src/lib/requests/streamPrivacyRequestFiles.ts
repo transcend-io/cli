@@ -1,5 +1,4 @@
-import Bluebird from 'bluebird';
-const { map } = Bluebird;
+import { map } from 'bluebird';
 import colors from 'colors';
 import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 import type { Got } from 'got';
