@@ -12,6 +12,7 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
   'ETIMEDOUT',
   '502 Bad Gateway',
   '504 Gateway Time-out',
+  'Rate limit exceeded',
   'Task timed out after',
   'unknown request error',
 ].map((s) => s.toLowerCase());
