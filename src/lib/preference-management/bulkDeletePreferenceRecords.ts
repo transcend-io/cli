@@ -1,4 +1,5 @@
 import { decodeCodec } from '@transcend-io/type-utils';
+import { uniq, chunk, keyBy } from 'lodash-es';
 import colors from 'colors';
 import type { Got } from 'got';
 import { logger } from '../../logger';
@@ -7,9 +8,10 @@ import {
   DeletePreferenceRecordsResponse,
 } from './codecs';
 import { readCsv } from '../requests';
-import { chunk } from 'lodash-es';
 import { map } from '../bluebird';
 import { withPreferenceRetry } from './withPreferenceRetry';
+import { getPreferencesForIdentifiers } from './getPreferencesForIdentifiers';
+import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 
 interface FailedResult extends DeletePreferenceRecordCliCsvRow {
   /** Error message describing the failure */
@@ -74,7 +76,7 @@ async function deletePreferenceRecordsRepository(
           })
           .json(),
       {
-        maxAttempts: 10,
+        maxAttempts: 5,
         onRetry: (attempt, err, msg) => {
           logger.warn(
             colors.yellow(
@@ -120,8 +122,49 @@ export async function bulkDeletePreferenceRecords(
     maxConcurrency,
   }: DeletePreferenceRecordsOptions,
 ): Promise<FailedResult[]> {
+  // Determine identifiers to delete
   const anchorIdentifiers = readCsv(filePath, DeletePreferenceRecordCliCsvRow);
-  const chunks = chunk(anchorIdentifiers, maxItemsInChunk);
+
+  // Fetch existing records
+  // FIXME progress bar in this conflicts with progress bar one level higher
+  const existingRecords = await getPreferencesForIdentifiers(sombra, {
+    identifiers: anchorIdentifiers,
+    partitionKey: partition,
+  });
+  const anchorNames = uniq(anchorIdentifiers.map((id) => id.name));
+
+  logger.info(
+    colors.magenta(
+      `Found ${existingRecords.length} existing preference records to delete ` +
+        `out of ${
+          anchorIdentifiers.length
+        } identifiers provided. Using anchors: ${anchorNames.join(', ')}`,
+    ),
+  );
+
+  // Create a lookup of records in db
+  const recordExists = anchorNames.reduce<
+    Record<string, Record<string, PreferenceQueryResponseItem>>
+  >((acc, anchorName) => {
+    acc[anchorName] = keyBy(
+      existingRecords,
+      (record) =>
+        record.identifiers?.find((id) => id.name === anchorName)?.value || '',
+    );
+    return acc;
+  }, {} as Record<string, Record<string, PreferenceQueryResponseItem>>);
+
+  // Filter identifiers to only those that exist
+  const identifiersToDelete = anchorIdentifiers.filter(
+    (identifier) => recordExists[identifier.name]?.[identifier.value],
+  );
+  if (identifiersToDelete.length !== existingRecords.length) {
+    throw new Error(
+      `Mismatch in existing records found (${existingRecords.length}) ` +
+        `and identifiers to delete (${identifiersToDelete.length})`,
+    );
+  }
+  const chunks = chunk(identifiersToDelete, maxItemsInChunk);
 
   const failedResults = await map(
     chunks,
