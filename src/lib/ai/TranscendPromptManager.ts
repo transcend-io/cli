@@ -42,8 +42,7 @@ import {
   fetchAllLargeLanguageModels,
 } from '../graphql/fetchLargeLanguageModels';
 import { groupBy, keyBy, uniq, chunk } from 'lodash-es';
-import Bluebird from 'bluebird';
-const { mapSeries } = Bluebird;
+import { mapSeries } from 'bluebird';
 import {
   PromptThread,
   fetchAllPromptThreads,

@@ -8,8 +8,7 @@ import {
 
 import { logger } from '../../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
-const { mapSeries } = Bluebird;
+import { mapSeries } from 'bluebird';
 import { join } from 'node:path';
 import fs from 'node:fs';
 import {

@@ -5,8 +5,7 @@ import colors from 'colors';
 import { UPDATE_OR_CREATE_COOKIES } from './gqls';
 import { chunk } from 'lodash-es';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
-import Bluebird from 'bluebird';
-const { mapSeries } = Bluebird;
+import { mapSeries } from 'bluebird';
 // import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
