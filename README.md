@@ -2265,8 +2265,8 @@ FLAGS
      [--directory]         Path to the directory of CSV files to load preferences from
      [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                       [default = https://api.transcend.io]
      [--maxItemsInChunk]   When chunking, how many items to delete in a single chunk (higher = faster, but more load).                                        [default = 10]
-     [--maxConcurrency]    Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors). [default = 10]
-     [--fileConcurrency]   Number of files to process concurrently when deleting preference records from multiple files.                                      [default = 5]
+     [--maxConcurrency]    Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors). [default = 1]
+     [--fileConcurrency]   Number of files to process concurrently when deleting preference records from multiple files.                                      [default = 1]
      [--receiptDirectory]  Directory to write receipts of failed deletions to.                                                                                [default = ./receipts]
   -h  --help               Print help information and exit
 ```

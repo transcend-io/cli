@@ -46,7 +46,7 @@ export async function createSombraGotInstance(
   }
   // Create got instance with default values
   return got.extend({
-    prefixUrl: customerUrl,
+    prefixUrl: process.env.SOMBRA_URL || customerUrl,
     headers: {
       Authorization: `Bearer ${transcendApiKey}`,
       ...(sombraApiKey

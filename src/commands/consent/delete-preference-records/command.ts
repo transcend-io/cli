@@ -55,14 +55,14 @@ export const deletePreferenceRecordsCommand = buildCommand({
         parse: numberParser,
         brief:
           'Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors).',
-        default: '10',
+        default: '1',
       },
       fileConcurrency: {
         kind: 'parsed',
         parse: numberParser,
         brief:
           'Number of files to process concurrently when deleting preference records from multiple files.',
-        default: '5',
+        default: '1',
       },
       receiptDirectory: {
         kind: 'parsed',
