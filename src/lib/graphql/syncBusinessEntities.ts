@@ -1,6 +1,7 @@
 import { BusinessEntityInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import { UPDATE_BUSINESS_ENTITIES, CREATE_BUSINESS_ENTITY } from './gqls';
 import { logger } from '../../logger';
 import { keyBy, chunk } from 'lodash-es';

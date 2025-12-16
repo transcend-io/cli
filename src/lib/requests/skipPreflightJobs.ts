@@ -1,4 +1,5 @@
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries, map } = Bluebird;
 import colors from 'colors';
 import { logger } from '../../logger';
 import {

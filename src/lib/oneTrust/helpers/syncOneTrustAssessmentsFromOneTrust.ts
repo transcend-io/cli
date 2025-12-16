@@ -6,7 +6,8 @@ import {
   getOneTrustRisk,
   getOneTrustUser,
 } from '../endpoints';
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries, map } = Bluebird;
 import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,

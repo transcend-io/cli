@@ -8,7 +8,8 @@ import {
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries, map } = Bluebird;
 import {
   DATA_SILOS,
   CREATE_DATA_SILOS,

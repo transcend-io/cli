@@ -1,6 +1,7 @@
 import { ProcessingActivityInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import {
   UPDATE_PROCESSING_ACTIVITIES,
   CREATE_PROCESSING_ACTIVITY,

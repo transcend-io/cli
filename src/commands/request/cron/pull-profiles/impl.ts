@@ -2,7 +2,8 @@ import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
 import { uniq, chunk } from 'lodash-es';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { map } = Bluebird;
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,

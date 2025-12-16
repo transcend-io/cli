@@ -1,6 +1,7 @@
 import { TeamInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import { UPDATE_TEAM, CREATE_TEAM } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';

@@ -1,5 +1,6 @@
 import colors from 'colors';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { map } = Bluebird;
 import { logger } from '../../logger';
 import {
   UPDATE_PRIVACY_REQUEST,

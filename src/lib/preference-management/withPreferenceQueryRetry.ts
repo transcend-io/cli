@@ -13,6 +13,7 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
   '502 Bad Gateway',
   '504 Gateway Time-out',
   'Task timed out after',
+  '429',
   'unknown request error',
 ].map((s) => s.toLowerCase());
 

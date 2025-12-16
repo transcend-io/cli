@@ -1,6 +1,7 @@
 import { DataCategoryInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import { UPDATE_DATA_SUB_CATEGORIES, CREATE_DATA_SUB_CATEGORY } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';

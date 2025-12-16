@@ -1,7 +1,8 @@
 import type { LocalContext } from '../../../context';
 
 import { logger } from '../../../logger';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import { existsSync, lstatSync } from 'node:fs';
 import { join } from 'node:path';
 import { readTranscendYaml } from '../../../lib/readTranscendYaml';

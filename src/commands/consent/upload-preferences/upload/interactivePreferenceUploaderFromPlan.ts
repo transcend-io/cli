@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import colors from 'colors';
-import { map as pMap } from 'bluebird';
+import Bluebird from 'bluebird';
 import { chunk, groupBy } from 'lodash-es';
 import { logger } from '../../../../logger';
 import { buildPendingUpdates } from './transform';
@@ -12,6 +12,8 @@ import type { InteractiveUploadPreferencePlan } from './buildInteractiveUploadPl
 import type { PreferenceReceiptsInterface } from '../artifacts/receipts';
 import type { Got } from 'got';
 import type { PreferenceUploadProgress } from './types';
+
+const { map: pMap } = Bluebird;
 
 /**
  * Execute the upload using a pre-built InteractiveUploadPlan.

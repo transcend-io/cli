@@ -1,6 +1,7 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
+const { map } = Bluebird;
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';

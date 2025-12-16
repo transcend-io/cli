@@ -1,5 +1,6 @@
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import {
   updateConsentManagerToLatest,
   buildTranscendGraphQLClient,

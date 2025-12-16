@@ -1,4 +1,5 @@
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import {
   buildTranscendGraphQLClientGeneric,
   loginUser,

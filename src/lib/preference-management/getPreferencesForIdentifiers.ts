@@ -3,12 +3,14 @@ import type { Got } from 'got';
 import colors from 'colors';
 import { chunk } from 'lodash-es';
 import { decodeCodec } from '@transcend-io/type-utils';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import { logger } from '../../logger';
 import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
 import { ConsentPreferenceResponse } from './types';
 import type { PreferenceUploadProgress } from '../../commands/consent/upload-preferences/upload';
 import { extractErrorMessage, splitInHalf } from '../helpers';
+
+const { map } = Bluebird;
 
 /**
  * Grab the current consent preference values for a list of identifiers
@@ -109,7 +111,7 @@ export async function getPreferencesForIdentifiers(
           .post(`v1/preferences/${partitionKey}/query`, {
             json: {
               filter: { identifiers: group },
-              limit: group.length,
+              // limit: group.length,
             },
           })
           .json(),

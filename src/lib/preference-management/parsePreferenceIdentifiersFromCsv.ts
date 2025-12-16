@@ -8,7 +8,8 @@ import type {
 } from './codecs';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+const { mapSeries } = Bluebird;
 import type { Identifier } from '../graphql';
 import type { PreferenceStoreIdentifier } from '@transcend-io/privacy-types';
 import type { PersistedState } from '@transcend-io/persisted-state';
