@@ -96,7 +96,8 @@ async function fileContainsExactBytes(
       }
 
       const buf = carry.length ? Buffer.concat([carry, chunk]) : chunk;
-      if (buf.indexOf(needle) !== -1) {
+      const haystack = buf.toString('utf8').toLowerCase();
+      if (haystack.includes(needle.toString('utf8'))) {
         stream.destroy();
         resolve(true);
         return;
@@ -277,7 +278,7 @@ async function main() {
     suppressErrors: true,
   });
 
-  const needleBuf = Buffer.from(opts.needle, 'utf8');
+  const needleBuf = Buffer.from(opts.needle.toLowerCase(), 'utf8');
 
   const hits: string[] = [];
   await runWithConcurrency(normalFiles, opts.concurrency, async (file) => {
