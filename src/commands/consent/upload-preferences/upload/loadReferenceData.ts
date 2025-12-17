@@ -28,13 +28,9 @@ export type PreferenceUploadReferenceData = {
  * Load all required reference data for an upload run.
  *
  * @param client - GraphQL client
- * @param forceTriggerWorkflows - If true, skip loading purposes/topics
  * @returns GraphQL client and reference data arrays
  */
-export async function loadReferenceData(
-  client: GraphQLClient,
-  forceTriggerWorkflows: boolean,
-): Promise<
+export async function loadReferenceData(client: GraphQLClient): Promise<
   {
     /**
      * GraphQL client to use for making requests
@@ -43,12 +39,8 @@ export async function loadReferenceData(
   } & PreferenceUploadReferenceData
 > {
   const [purposes, preferenceTopics, identifiers] = await Promise.all([
-    forceTriggerWorkflows
-      ? Promise.resolve([] as Purpose[])
-      : fetchAllPurposes(client),
-    forceTriggerWorkflows
-      ? Promise.resolve([] as PreferenceTopic[])
-      : fetchAllPreferenceTopics(client),
+    fetchAllPurposes(client),
+    fetchAllPreferenceTopics(client),
     fetchAllIdentifiers(client),
   ]);
   return { client, purposes, preferenceTopics, identifiers };

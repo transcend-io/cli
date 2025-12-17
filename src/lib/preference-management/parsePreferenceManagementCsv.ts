@@ -45,7 +45,7 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey: string;
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
     skipExistingRecordCheck: boolean;
-    /** Wheather to force workflow triggers */
+    /** Whether to force workflow triggers */
     forceTriggerWorkflows: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,

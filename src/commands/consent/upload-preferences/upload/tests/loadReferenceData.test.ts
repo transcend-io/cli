@@ -57,7 +57,7 @@ describe('loadReferenceData', () => {
     mFetchAllPreferenceTopics.mockResolvedValueOnce(preferenceTopics);
     mFetchAllIdentifiers.mockResolvedValueOnce(identifiers);
 
-    const result = await loadReferenceData(client, false);
+    const result = await loadReferenceData(client);
 
     expect(result.client).toBe(client);
     expect(result.purposes).toEqual(purposes);
@@ -88,7 +88,7 @@ describe('loadReferenceData', () => {
     });
     mFetchAllIdentifiers.mockResolvedValueOnce(identifiers);
 
-    const result = await loadReferenceData(client, true);
+    const result = await loadReferenceData(client);
 
     expect(result.client).toBe(client);
     expect(result.purposes).toEqual([]);
@@ -112,7 +112,7 @@ describe('loadReferenceData', () => {
     ] as PreferenceTopic[]);
     mFetchAllIdentifiers.mockRejectedValueOnce(err);
 
-    await expect(loadReferenceData(client, false)).rejects.toBe(err);
+    await expect(loadReferenceData(client)).rejects.toBe(err);
 
     expect(mFetchAllPurposes).toHaveBeenCalledTimes(1);
     expect(mFetchAllPreferenceTopics).toHaveBeenCalledTimes(1);
