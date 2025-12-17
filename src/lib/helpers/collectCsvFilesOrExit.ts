@@ -44,6 +44,6 @@ export function collectCsvFilesOrExit(
     logger.error(colors.red(`No CSV files found in directory: ${directory}`));
     localContext.process.exit(1);
   }
-
+  logger.info(colors.green(`Found: ${files.join(', ')} CSV files`));
   return files;
 }
