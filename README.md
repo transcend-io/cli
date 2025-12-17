@@ -55,6 +55,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
+- [Using non-primary Sombra](#using-non-primary-sombra)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -3719,3 +3720,9 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the CLI inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
+
+## Using non-primary Sombra
+
+By default, if a CLI command has to call a Sombra endpoint, the primary Sombra gateway on the account will be used. If the primary Sombra is self hosted, you will need to provide the --sombraAuth variable.
+
+If you want to use a non-primary Sombra, you can specify the environment variable `SOMBRA_URL` e.g. `SOMBRA_URL="https://multi-tenant.sombra.us.transcend.io"` and that Sombra will be used instead.
