@@ -7,7 +7,7 @@ import type {
   Purpose,
 } from '../../../../../lib/graphql';
 
-// Shared mocks (we’ll register them per-test after resetModules)
+// Shared mocks (we’ll reset them each test)
 const mFetchAllPurposes = vi.fn();
 const mFetchAllPreferenceTopics = vi.fn();
 const mFetchAllIdentifiers = vi.fn();
@@ -17,7 +17,7 @@ const mBuildTranscendGraphQLClient = vi.fn();
 async function importSut(): Promise<{
   loadReferenceData: typeof import('../loadReferenceData')['loadReferenceData'];
 }> {
-  // IMPORTANT: mock BEFORE importing the SUT; specifier must match exactly
+  // Mock BEFORE importing the SUT
   vi.mock('../../../../../lib/graphql', () => ({
     buildTranscendGraphQLClient: mBuildTranscendGraphQLClient,
     fetchAllPurposes: mFetchAllPurposes,
@@ -25,7 +25,6 @@ async function importSut(): Promise<{
     fetchAllIdentifiers: mFetchAllIdentifiers,
   }));
 
-  // Dynamic import AFTER mocks are registered
   const mod = await import('../loadReferenceData');
   return {
     loadReferenceData:
@@ -37,16 +36,21 @@ describe('loadReferenceData', () => {
   let client: GraphQLClient;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules(); // ensure a clean module graph so our mocks stick
+    vi.resetModules(); // ensure a clean module graph so mocks stick
 
-    // Minimal safe stub so any unintended calls don't crash
+    // IMPORTANT: reset implementations + once-queues between tests
+    mFetchAllPurposes.mockReset();
+    mFetchAllPreferenceTopics.mockReset();
+    mFetchAllIdentifiers.mockReset();
+    mBuildTranscendGraphQLClient.mockReset();
+
+    // Minimal safe stub
     client = {
       request: vi.fn().mockResolvedValue({}),
     } as unknown as GraphQLClient;
   });
 
-  it('loads purposes, topics, and identifiers when forceTriggerWorkflows=false', async () => {
+  it('loads purposes, topics, and identifiers', async () => {
     const { loadReferenceData } = await importSut();
 
     const purposes = [{ id: 'p1' }, { id: 'p2' }] as Purpose[];
@@ -70,33 +74,6 @@ describe('loadReferenceData', () => {
     expect(mFetchAllPreferenceTopics).toHaveBeenCalledTimes(1);
     expect(mFetchAllPreferenceTopics).toHaveBeenCalledWith(client);
 
-    expect(mFetchAllIdentifiers).toHaveBeenCalledTimes(1);
-    expect(mFetchAllIdentifiers).toHaveBeenCalledWith(client);
-  });
-
-  it('skips purposes/topics and still loads identifiers when forceTriggerWorkflows=true', async () => {
-    const { loadReferenceData } = await importSut();
-
-    const identifiers = [{ id: 'i-only' }] as Identifier[];
-
-    // Should not be called at all when forcing triggers
-    mFetchAllPurposes.mockImplementation(() => {
-      throw new Error('should not be called');
-    });
-    mFetchAllPreferenceTopics.mockImplementation(() => {
-      throw new Error('should not be called');
-    });
-    mFetchAllIdentifiers.mockResolvedValueOnce(identifiers);
-
-    const result = await loadReferenceData(client);
-
-    expect(result.client).toBe(client);
-    expect(result.purposes).toEqual([]);
-    expect(result.preferenceTopics).toEqual([]);
-    expect(result.identifiers).toEqual(identifiers);
-
-    expect(mFetchAllPurposes).not.toHaveBeenCalled();
-    expect(mFetchAllPreferenceTopics).not.toHaveBeenCalled();
     expect(mFetchAllIdentifiers).toHaveBeenCalledTimes(1);
     expect(mFetchAllIdentifiers).toHaveBeenCalledWith(client);
   });
