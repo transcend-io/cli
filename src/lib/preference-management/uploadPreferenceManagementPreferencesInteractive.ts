@@ -3,8 +3,6 @@ import {
   createSombraGotInstance,
   fetchAllPurposes,
   fetchAllPreferenceTopics,
-  PreferenceTopic,
-  Purpose,
 } from '../graphql';
 import colors from 'colors';
 import { map } from '../bluebird';
@@ -108,12 +106,8 @@ export async function uploadPreferenceManagementPreferencesInteractive({
     // Create sombra instance to communicate with
     createSombraGotInstance(transcendUrl, auth, sombraAuth),
     // get all purposes and topics
-    forceTriggerWorkflows
-      ? Promise.resolve([] as Purpose[])
-      : fetchAllPurposes(client),
-    forceTriggerWorkflows
-      ? Promise.resolve([] as PreferenceTopic[])
-      : fetchAllPreferenceTopics(client),
+    fetchAllPurposes(client),
+    fetchAllPreferenceTopics(client),
   ]);
 
   // Process the file
@@ -188,6 +182,9 @@ export async function uploadPreferenceManagementPreferencesInteractive({
           attributes: parsedAttributes,
           isSilent,
           skipWorkflowTrigger: skipWorkflowTriggers,
+          ...(forceTriggerWorkflows
+            ? { forceTriggerWorkflow: forceTriggerWorkflows }
+            : {}),
         },
       })),
     };
@@ -239,7 +236,6 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             json: {
               records: currentChunk.map(([, update]) => update),
               skipWorkflowTriggers,
-              forceTriggerWorkflows,
             },
           })
           .json();
