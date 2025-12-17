@@ -239,7 +239,7 @@ export async function uploadPreferenceManagementPreferencesInteractive({
             json: {
               records: currentChunk.map(([, update]) => update),
               skipWorkflowTriggers,
-              forceTriggerWorkflows,
+              ...(forceTriggerWorkflows ? { forceTriggerWorkflows } : {}),
             },
           })
           .json();
