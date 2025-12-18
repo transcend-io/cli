@@ -1,8 +1,10 @@
 name: ci
 on: push
 
+# These settings are required for NPM Trusted Publishing
+# see: https://docs.npmjs.com/trusted-publishers
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write
   contents: read
 
 jobs:
@@ -67,10 +69,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: ./.github/commands/dependencies/install_deps
-      - name: Configure npm authentication
-        run: |
-          pnpm config set always-auth true
-          pnpm config set //registry.npmjs.org/:_authToken "${{ secrets.NPM_TOKEN }}"
       - name: Publish to npm
         run: pnpm publish
 
