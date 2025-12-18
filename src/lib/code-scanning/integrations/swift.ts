@@ -54,10 +54,23 @@ export const swift: CodeScanningConfig = {
     // Attempt latest version first
     try {
       const parsed = decodeCodec(SwiftPackage, fileContents);
-
+      const splitPath = dirname(filePath).split('/');
+      const originalName = splitPath[splitPath.length - 1];
+      let name = originalName;
+      if (name === 'swiftpm') {
+        name = splitPath[splitPath.length - 2];
+        if (name === 'xcshareddata') {
+          name = splitPath[splitPath.length - 3];
+        } else if (!name) {
+          name = originalName;
+        }
+        if (name === 'project.xcworkspace') {
+          name = splitPath[splitPath.length - 4];
+        }
+      }
       return [
         {
-          name: dirname(filePath).split('/').pop() || '', // TODO pull from Package.swift ->> name if possible
+          name,
           type: CodePackageType.Swift,
           softwareDevelopmentKits: parsed.pins.map((target) => ({
             name: target.identity,
