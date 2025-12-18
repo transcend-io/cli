@@ -1,6 +1,10 @@
 name: ci
 on: push
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   build-and-upload-artifacts:
     runs-on: ubuntu-latest
