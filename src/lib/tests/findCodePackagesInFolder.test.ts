@@ -167,6 +167,23 @@ const expected: CodePackageInput[] = [
     repositoryName: 'transcend-io/cli',
   },
   {
+    name: 'transcend.xcodeproj',
+    relativePath:
+      'test-swift/transcend.xcworkspace/transcend.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved',
+    repositoryName: 'transcend-io/cli',
+    softwareDevelopmentKits: [
+      {
+        name: 'alamofire',
+        version: '5.8.1',
+      },
+      {
+        name: 'swift-numerics',
+        version: '1.0.2',
+      },
+    ],
+    type: 'SWIFT',
+  },
+  {
     name: 'NotificationServiceExtension',
     relativePath: 'test-requirements-txt/nested-cocoapods-2/Podfile',
     repositoryName: 'transcend-io/cli',
@@ -1046,6 +1063,23 @@ const expected: CodePackageInput[] = [
       {
         name: 'CwlCatchException',
         version: undefined,
+      },
+    ],
+    type: 'SWIFT',
+  },
+  {
+    name: 'transcend.xcworkspace',
+    relativePath:
+      'test-swift/transcend.xcworkspace/xcshareddata/swiftpm/Package.resolved',
+    repositoryName: 'transcend-io/cli',
+    softwareDevelopmentKits: [
+      {
+        name: 'alamofire',
+        version: '5.8.1',
+      },
+      {
+        name: 'swift-numerics',
+        version: '1.0.2',
       },
     ],
     type: 'SWIFT',
