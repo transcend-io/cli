@@ -4,19 +4,23 @@ import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
  * Transforms the output of the consent preferences query into a CSV-friendly format.
  *
  * @param input - The input object containing consent preferences data.
+ * @param identifierDelimiter - Delimiter to use when combining multiple identifier values.
  * @returns A record representing the transformed CSV output.
  */
-export function transformPreferenceRecordToCsv({
-  identifiers = [],
-  purposes = [],
-  metadata = [],
-  consentManagement = {},
-  system = {
-    decryptionStatus: 'DECRYPTED',
-  },
-  // keep other top-level fields as-is (e.g., partition, timestamp, metadataTimestamp)
-  ...topLevel
-}: PreferenceQueryResponseItem): Record<string, unknown> {
+export function transformPreferenceRecordToCsv(
+  {
+    identifiers = [],
+    purposes = [],
+    metadata = [],
+    consentManagement = {},
+    system = {
+      decryptionStatus: 'DECRYPTED',
+    },
+    // keep other top-level fields as-is (e.g., partition, timestamp, metadataTimestamp)
+    ...topLevel
+  }: PreferenceQueryResponseItem,
+  identifierDelimiter: string,
+): Record<string, unknown> {
   // Start with: all other top-level fields + spread system and consentManagement
   const out: Record<string, unknown> = {
     ...topLevel,
@@ -32,7 +36,7 @@ export function transformPreferenceRecordToCsv({
       if (value) byName.get(name)!.add(value);
     }
     for (const [name, set] of byName.entries()) {
-      out[name] = Array.from(set).join(',');
+      out[name] = Array.from(set).join(identifierDelimiter);
     }
   }
 

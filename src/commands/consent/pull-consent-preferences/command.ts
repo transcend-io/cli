@@ -83,6 +83,13 @@ export const pullConsentPreferencesCommand = buildCommand({
         brief: 'Whether to download requests in timestamp window chunks.',
         default: true,
       },
+      identifierDelimiter: {
+        kind: 'parsed',
+        parse: String,
+        brief:
+          'Delimiter to use when combining multiple identifiers into a single column in the output CSV.',
+        default: ',',
+      },
       windowConcurrency: {
         kind: 'parsed',
         parse: numberParser,

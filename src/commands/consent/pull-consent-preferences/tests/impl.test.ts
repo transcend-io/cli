@@ -167,6 +167,7 @@ describe('pullConsentPreferences', () => {
       concurrency: 25,
       shouldChunk: false,
       maxChunks: 1000,
+      identifierDelimiter: ',',
       maxLookbackDays: 90,
       windowConcurrency: 50,
     };
@@ -218,6 +219,7 @@ describe('pullConsentPreferences', () => {
         'email:second@email.com', // -> {name:'email', value:'second@email.com'}
       ],
       concurrency: 17,
+      identifierDelimiter: ',',
       shouldChunk: false,
       maxChunks: 1000,
       maxLookbackDays: 90,
@@ -360,6 +362,7 @@ describe('pullConsentPreferences', () => {
       shouldChunk: false,
       maxChunks: 1000,
       maxLookbackDays: 90,
+      identifierDelimiter: ',',
       windowConcurrency: 50,
     };
 

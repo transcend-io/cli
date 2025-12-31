@@ -41,6 +41,7 @@ export interface PullConsentPreferencesCommandFlags {
   file: string;
   transcendUrl: string;
   timestampBefore?: Date;
+  identifierDelimiter: string;
   timestampAfter?: Date;
   updatedBefore?: Date;
   updatedAfter?: Date;
@@ -69,6 +70,7 @@ export async function pullConsentPreferences(
     shouldChunk,
     windowConcurrency,
     maxChunks,
+    identifierDelimiter,
     maxLookbackDays,
   }: PullConsentPreferencesCommandFlags,
 ): Promise<void> {
@@ -159,7 +161,9 @@ export async function pullConsentPreferences(
   let wroteHeader = false;
   const writeRows = (items: PreferenceQueryResponseItem[]): void => {
     if (!items || items.length === 0) return;
-    const rows = items.map(transformPreferenceRecordToCsv);
+    const rows = items.map((row) =>
+      transformPreferenceRecordToCsv(row, identifierDelimiter),
+    );
     if (!wroteHeader) {
       const firstKeys = Object.keys(rows[0] ?? {});
       const seen = new Set<string>();
