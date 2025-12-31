@@ -102,7 +102,7 @@ export const pullConsentPreferencesCommand = buildCommand({
         parse: numberParser,
         brief:
           'Maximum number of chunks to download (higher = more data, but more load).',
-        default: '5000',
+        default: '20000',
       },
       maxLookbackDays: {
         kind: 'parsed',

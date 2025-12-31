@@ -232,7 +232,7 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --origin
 transcend request approve \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --silentModeBefore=2024-05-02T00:00:00.000Z
+  --silentModeBefore=2024-05-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -247,8 +247,8 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --concur
 transcend request approve \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-02T00:00:00.000Z \
-  --createdAtAfter=2024-04-02T00:00:00.000Z
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 ### `transcend request upload`
@@ -455,8 +455,8 @@ transcend request download-files --auth="$TRANSCEND_API_KEY" --concurrency=100
 ```sh
 transcend request download-files \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-05-02T00:00:00.000Z \
-  --createdAtAfter=2024-04-02T00:00:00.000Z
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Download specific requests**
@@ -522,7 +522,7 @@ transcend request cancel --auth="$TRANSCEND_API_KEY" --actions=ERASURE --cancell
 transcend request cancel \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --silentModeBefore=2024-05-02T00:00:00.000Z
+  --silentModeBefore=2024-05-03T00:00:00.000Z
 ```
 
 **Cancel all open SALE_OPT_OUT, within a specific time frame**
@@ -531,8 +531,8 @@ transcend request cancel \
 transcend request cancel \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-02T00:00:00.000Z \
-  --createdAtAfter=2024-04-02T00:00:00.000Z
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -666,8 +666,8 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --createdAtBefore=2024-04-04T00:00:00.000Z \
-  --createdAtAfter=2024-02-20T00:00:00.000Z
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Send email receipts to the restarted requests**
@@ -728,7 +728,7 @@ FLAGS
 **Notify all request types that were made before 01/01/2024**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=2024-12-31T00:00:00.000Z
+transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=2024-01-01T00:00:00.000Z
 ```
 
 **Notify all request types that were made during a date range**
@@ -736,8 +736,8 @@ transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAt
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
-  --createdAtAfter=2024-12-14T00:00:00.000Z
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtAfter=2024-12-15T00:00:00.000Z
 ```
 
 **Notify certain request types**
@@ -745,7 +745,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --actions=SALE_OPT_OUT,ERASURE
 ```
 
@@ -754,7 +754,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -763,7 +763,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
@@ -772,7 +772,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --daysLeft=3
 ```
 
@@ -781,7 +781,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --days=30
 ```
 
@@ -790,7 +790,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --emailTemplate="Custom Email Template"
 ```
 
@@ -799,7 +799,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-12-31T00:00:00.000Z \
+  --createdAtBefore=2024-01-01T00:00:00.000Z \
   --concurrency=500
 ```
 
@@ -863,8 +863,8 @@ transcend request mark-silent \
 transcend request mark-silent \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-02T00:00:00.000Z \
-  --createdAtAfter=2024-04-02T00:00:00.000Z
+  --createdAtBefore=2024-05-03T00:00:00.000Z \
+  --createdAtAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -939,8 +939,8 @@ transcend request enricher-restart \
 transcend request enricher-restart \
   --auth="$TRANSCEND_API_KEY" \
   --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 \
-  --createdAtBefore=2024-04-04T00:00:00.000Z \
-  --createdAtAfter=2024-02-20T00:00:00.000Z
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Restart requests that are in an error state**
@@ -1063,8 +1063,8 @@ transcend request export --auth="$TRANSCEND_API_KEY" --showTests=false
 ```sh
 transcend request export \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-04-04T00:00:00.000Z \
-  --createdAtAfter=2024-02-20T00:00:00.000Z
+  --createdAtBefore=2024-04-05T00:00:00.000Z \
+  --createdAtAfter=2024-02-21T00:00:00.000Z
 ```
 
 **Write to a specific file location**
@@ -1761,7 +1761,7 @@ FLAGS
 **Pull consent manager metrics for a Transcend account**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-12-31T00:00:00.000Z
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z
 ```
 
 **Specifying the backend URL, needed for US hosted backend infrastructure**
@@ -1769,7 +1769,7 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-12-31T00:00:00.000Z \
+  --start=2024-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -1778,8 +1778,8 @@ transcend consent pull-consent-metrics \
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-12-31T00:00:00.000Z \
-  --end=2024-02-28T00:00:00.000Z
+  --start=2024-01-01T00:00:00.000Z \
+  --end=2024-03-01T00:00:00.000Z
 ```
 
 **Save to an explicit folder**
@@ -1787,15 +1787,15 @@ transcend consent pull-consent-metrics \
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-12-31T00:00:00.000Z \
-  --end=2024-02-28T00:00:00.000Z \
+  --start=2024-01-01T00:00:00.000Z \
+  --end=2024-03-01T00:00:00.000Z \
   --folder=./my-folder/
 ```
 
 **Bin data hourly vs daily**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-12-31T00:00:00.000Z --bin=1h
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z --bin=1h
 ```
 
 ### `transcend consent pull-consent-preferences`
@@ -1820,9 +1820,9 @@ FLAGS
      [--identifiers]...               Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas.                      [separator = ,]
      [--concurrency]                  Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
      [--shouldChunk/--noShouldChunk]  Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
-     [--identifierDelimiter]          Delimiter to use when combining multiple identifiers into a single column in the output CSV.                                                               [default = ,]
+     [--identifierDelimiter] Delimiter to use when combining multiple identifiers into a single column in the output CSV. [default = ,]
      [--windowConcurrency]            When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 100]
-     [--maxChunks]                    Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 5000]
+     [--maxChunks]                    Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 20000]
      [--maxLookbackDays]              Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
   -h  --help                          Print help information and exit
 ```
@@ -1852,7 +1852,7 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampBefore=2024-04-02T00:00:00.000Z
+  --timestampBefore=2024-04-03T00:00:00.000Z
 ```
 
 **Filter by consent collection time (timestampAfter)**
@@ -1861,7 +1861,7 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampAfter=2024-04-02T00:00:00.000Z
+  --timestampAfter=2024-04-03T00:00:00.000Z
 ```
 
 **Filter by last update time (system.updatedAt window)**
@@ -1870,8 +1870,8 @@ transcend consent pull-consent-preferences \
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --updatedAfter=2024-08-25T00:00:00.000Z \
-  --updatedBefore=2024-08-26T00:00:00.000Z
+  --updatedAfter=2024-08-26T00:00:00.000Z \
+  --updatedBefore=2024-08-27T00:00:00.000Z
 ```
 
 **Filter specific users by identifiers (name:value). Default name=email if omitted.**
@@ -2285,7 +2285,7 @@ transcend consent delete-preference-records \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --file=./preferences-to-delete.csv \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Delete preference records from preference store using multiple CSV files in a directory**
@@ -2296,7 +2296,7 @@ transcend consent delete-preference-records \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --directory=./preferences-to-delete \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Self-hosted Sombra: include Sombra internal key header**
@@ -2308,7 +2308,7 @@ transcend consent delete-preference-records \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --file=./preferences-to-delete.csv \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Use a specific backend base URL (e.g., US-hosted)**
@@ -2321,7 +2321,7 @@ transcend consent delete-preference-records \
   --file=./preferences-to-delete.csv \
   --receiptDirectory=./receipts \
   --transcendUrl=https://api.us.transcend.io \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Configure maximum number of concurrent API calls for a deletion file**
@@ -2335,7 +2335,7 @@ transcend consent delete-preference-records \
   --fileConcurrency=10 \
   --maxItemsInChunk=5 \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Configure maximum number of files to process concurrently**
@@ -2347,7 +2347,7 @@ transcend consent delete-preference-records \
   --file=./preferences-to-delete.csv \
   --fileConcurrency=10 \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 **Configure maximum items in chunk**
@@ -2359,7 +2359,7 @@ transcend consent delete-preference-records \
   --file=./preferences-to-delete.csv \
   --maxItemsInChunk=5 \
   --receiptDirectory=./receipts \
-  --timestamp=2024-08-25T00:00:00.000Z
+  --timestamp=2024-08-26T00:00:00.000Z
 ```
 
 ### `transcend inventory pull`
