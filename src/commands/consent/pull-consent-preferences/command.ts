@@ -95,7 +95,7 @@ export const pullConsentPreferencesCommand = buildCommand({
         parse: numberParser,
         brief:
           'When chunking, how many windows to download in parallel (higher = faster, but more load).',
-        default: '100',
+        default: '80',
       },
       maxChunks: {
         kind: 'parsed',
