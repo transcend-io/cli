@@ -1821,7 +1821,7 @@ FLAGS
      [--concurrency]                  Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
      [--shouldChunk/--noShouldChunk]  Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
      [--identifierDelimiter]          Delimiter to use when combining multiple identifiers into a single column in the output CSV.                                                               [default = ,]
-     [--windowConcurrency]            When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 100]
+     [--windowConcurrency]            When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 80]
      [--maxChunks]                    Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 20000]
      [--maxLookbackDays]              Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
   -h  --help                          Print help information and exit
