@@ -1,5 +1,6 @@
 /**
  * Formats a date to the ISO string for an example command
+ * Ensures the dates in our documentation are relatively recent, while guaranteeing a date is not in the future
  *
  * NOTE: for date spans where the start/end dates are in different years, pass `{ overrideToThisYear: false }`
  *
@@ -12,7 +13,7 @@ export function getExampleDate(
   {
     /** Whether to override the date to be within the current year. Good for keeping docs up to date. */
     overrideToLastYear = true,
-    /** Whether to override the date to be within the current year. Generally recommended. */
+    /** Whether to override the time to be midnight UTC. Generally recommended. */
     overrideToUtcMidnight = true,
   } = {},
 ): Date {
