@@ -83,7 +83,7 @@ export const pullConsentPreferencesCommand = buildCommand({
         brief: 'Whether to download requests in timestamp window chunks.',
         default: true,
       },
-      identifierDelimiter: {
+      exportIdentifiersWithDelimiter: {
         kind: 'parsed',
         parse: String,
         brief:
