@@ -2,7 +2,7 @@
   "author": "Transcend Inc.",
   "name": "@transcend-io/cli",
   "description": "A command line interface for programmatic operations across Transcend.",
-  "version": "8.32.7",
+  "version": "8.34.0",
   "homepage": "https://github.com/transcend-io/cli",
   "repository": {
     "type": "git",
@@ -62,8 +62,8 @@
   "scripts": {
     "start": "./dist/bin/cli.cjs",
     "prebuild": "tsc -p tsconfig.json",
-    "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
     "prepublishOnly": "pnpm lint && pnpm build && pnpm test && pnpm publint",
     "lint": "pnpm run /^lint:/",
     "lint:prettier": "prettier --check . --loglevel=warn",
@@ -76,7 +76,7 @@
     "docgen": "tsx scripts/buildReadmeDocs.ts",
     "genfiles": "pnpm script:transcend-json-schema && pnpm script:pathfinder-json-schema && pnpm docgen"
   },
-  "tsup": {
+  "tsdown": {
     "entry": [
       "src/bin/cli.ts",
       "src/bin/bash-complete.ts",
@@ -166,7 +166,7 @@
     "prettier": "^2.8.7",
     "publint": "^0.3.12",
     "shellcheck": "^3.1.0",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.19.0-beta.1",
     "tsx": "^4.20.3",
     "typescript": "^5.0.4",
     "vite-tsconfig-paths": "^5.1.4",

@@ -1089,10 +1089,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["lodash", [\
-        ["npm:4.17.21", {\
-          "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-eb835a2e51.zip/node_modules/lodash/",\
+        ["npm:4.17.23", {\
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.23-50bdb1c01a-7daad39758.zip/node_modules/lodash/",\
           "packageDependencies": [\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.23"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1690,7 +1690,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dottie", "npm:2.0.6"],\
             ["ibm_db", null],\
             ["inflection", "npm:1.13.4"],\
-            ["lodash", "npm:4.17.21"],\
+            ["lodash", "npm:4.17.23"],\
             ["mariadb", null],\
             ["moment", "npm:2.30.1"],\
             ["moment-timezone", "npm:0.5.45"],\
@@ -1740,7 +1740,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["sequelize-mock", "npm:0.10.2"],\
             ["bluebird", "npm:3.7.2"],\
             ["inflection", "npm:1.13.4"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.23"]\
           ],\
           "linkType": "HARD"\
         }]\
