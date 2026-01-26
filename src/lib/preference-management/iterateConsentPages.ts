@@ -38,6 +38,7 @@ export async function* iterateConsentPages(
           })
           .json(),
       {
+        maxAttempts: 5,
         onRetry: (attempt, error, message) => {
           logger.warn(
             colors.yellow(
