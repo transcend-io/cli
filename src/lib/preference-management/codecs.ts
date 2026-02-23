@@ -79,6 +79,27 @@ export const ColumnIdentifierMap = t.record(
 /** Override type */
 export type ColumnIdentifierMap = t.TypeOf<typeof ColumnIdentifierMap>;
 
+/**
+ * Mapping for a single metadata field.
+ * Maps a CSV column to a metadata key in the API.
+ */
+export const MetadataMapping = t.type({
+  /** The metadata key name in the API */
+  key: t.string,
+});
+
+/** Override type */
+export type MetadataMapping = t.TypeOf<typeof MetadataMapping>;
+
+/**
+ * Mapping of CSV column names to metadata keys.
+ * This is used to map columns in the CSV to metadata fields in the preference store.
+ */
+export const ColumnMetadataMap = t.record(t.string, MetadataMapping);
+
+/** Override type */
+export type ColumnMetadataMap = t.TypeOf<typeof ColumnMetadataMap>;
+
 export const FileFormatState = t.intersection([
   t.type({
     /**
@@ -94,6 +115,8 @@ export const FileFormatState = t.intersection([
   t.partial({
     /** Determine which column name in file maps to the timestamp  */
     timestampColumn: t.string,
+    /** Mapping of CSV column names to metadata keys */
+    columnToMetadata: ColumnMetadataMap,
   }),
 ]);
 

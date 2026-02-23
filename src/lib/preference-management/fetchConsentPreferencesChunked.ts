@@ -1,5 +1,4 @@
 import Bluebird from 'bluebird';
-const { map: pmap } = Bluebird;
 import type { Got } from 'got';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
@@ -16,6 +15,8 @@ import { addDaysUtc, clampPageSize } from '../helpers';
 import { iterateConsentPages } from './iterateConsentPages';
 import { logger } from '../../logger';
 import { pickConsentChunkMode } from './pickConsentChunkMode';
+
+const { map: pmap } = Bluebird;
 
 /**
  * Merge baseFilter with a window filter, taking care not to mix timestamp/updated fields improperly.

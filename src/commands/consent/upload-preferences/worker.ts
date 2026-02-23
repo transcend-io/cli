@@ -125,6 +125,7 @@ export async function runChild(): Promise<void> {
             skipWorkflowTriggers: options.skipWorkflowTriggers,
             skipConflictUpdates: options.skipConflictUpdates,
             forceTriggerWorkflows: options.forceTriggerWorkflows,
+            skipMetadata: options.skipMetadata,
             uploadLogInterval: options.uploadLogInterval,
             maxChunkSize: options.maxChunkSize,
             uploadConcurrency: options.uploadConcurrency,

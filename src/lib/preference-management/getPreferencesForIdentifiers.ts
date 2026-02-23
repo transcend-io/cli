@@ -111,6 +111,7 @@ export async function getPreferencesForIdentifiers(
           .post(`v1/preferences/${partitionKey}/query`, {
             json: {
               filter: { identifiers: group },
+              // FIXME
               // limit: group.length,
             },
           })
