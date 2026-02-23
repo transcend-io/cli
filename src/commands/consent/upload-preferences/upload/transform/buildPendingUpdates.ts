@@ -13,8 +13,10 @@ import type {
 import {
   getPreferenceIdentifiersFromRow,
   getPreferenceUpdatesFromRow,
+  getPreferenceMetadataFromRow,
   NONE_PREFERENCE_MAP,
   type ColumnIdentifierMap,
+  type ColumnMetadataMap,
   type ColumnPurposeMap,
   type PendingSafePreferenceUpdates,
   type PendingWithConflictPreferenceUpdates,
@@ -33,6 +35,8 @@ export interface BuildPendingParams {
   columnToPurposeName: ColumnPurposeMap;
   /** CSV column -> identifier mapping */
   columnToIdentifier: ColumnIdentifierMap;
+  /** CSV column -> metadata key mapping (optional) */
+  columnToMetadata?: ColumnMetadataMap;
   /** Full set of preference topics for resolving row → preference values */
   preferenceTopics: PreferenceTopic[];
   /** Full set of purposes for resolving slugs/trackingTypes */
@@ -45,6 +49,8 @@ export interface BuildPendingParams {
   isSilent: boolean;
   /** If true, skip triggering workflows downstream */
   skipWorkflowTriggers: boolean;
+  /** If true, force trigger workflows even if preferences haven't changed */
+  forceTriggerWorkflows: boolean;
 }
 
 /**
@@ -65,12 +71,14 @@ export function buildPendingUpdates(
     timestampColumn,
     columnToPurposeName,
     columnToIdentifier,
+    columnToMetadata,
     preferenceTopics,
     purposes,
     partition,
     workflowAttrs,
     isSilent,
     skipWorkflowTriggers,
+    forceTriggerWorkflows,
   } = params;
 
   // If conflicts are to be included, normalize the shape to match `safe` rows.
@@ -108,6 +116,11 @@ export function buildPendingUpdates(
       columnToIdentifier,
     });
 
+    // Resolve metadata from mapped columns (if any)
+    const metadata = columnToMetadata
+      ? getPreferenceMetadataFromRow({ row, columnToMetadata })
+      : undefined;
+
     out[userId] = {
       identifiers,
       partition,
@@ -119,8 +132,11 @@ export function buildPendingUpdates(
           attributes: workflowAttrs,
           isSilent,
           skipWorkflowTrigger: skipWorkflowTriggers,
+          forceTriggerWorkflow: forceTriggerWorkflows,
         },
       })),
+      // Only include metadata if there are values
+      ...(metadata && metadata.length > 0 ? { metadata } : {}),
     };
   }
 

@@ -1,6 +1,6 @@
 import { ProcessingPurposeInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   UPDATE_PROCESSING_PURPOSE_SUB_CATEGORIES,
   CREATE_PROCESSING_PURPOSE_SUB_CATEGORY,
@@ -13,6 +13,8 @@ import {
   fetchAllProcessingPurposes,
   ProcessingPurposeSubCategory,
 } from './fetchAllProcessingPurposes';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new processing purpose

@@ -1,6 +1,6 @@
 import { ProcessingActivityInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   UPDATE_PROCESSING_ACTIVITIES,
   CREATE_PROCESSING_ACTIVITY,
@@ -13,6 +13,8 @@ import {
   fetchAllProcessingActivities,
   ProcessingActivity,
 } from './fetchAllProcessingActivities';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Create a new processing activity, setting only title and description

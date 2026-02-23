@@ -87,7 +87,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 3, delayMs: 10, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -136,7 +136,7 @@ describe('uploadChunkWithSplit', () => {
         delayMs: 1,
         shouldRetry: () => true, // retryable by default
       },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn((s?: number) => s === 503),
     };
 
@@ -177,7 +177,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 2, delayMs: 1, shouldRetry: () => true },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn((s?: number) => s === 429),
     };
 
@@ -226,7 +226,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 1, delayMs: 1, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -266,7 +266,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 1, delayMs: 1, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -301,7 +301,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 2, delayMs: 1, shouldRetry: () => true },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false), // not retryable by status, but soft-rate-limit triggers retry anyway
     };
 

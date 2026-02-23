@@ -3,7 +3,7 @@ import {
   RequestEnricherStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import { difference } from 'lodash-es';
@@ -15,6 +15,8 @@ import {
   retryRequestEnricher,
 } from '../graphql';
 import { logger } from '../../logger';
+
+const { map } = Bluebird;
 
 /**
  * Restart a bunch of request enrichers

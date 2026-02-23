@@ -1,4 +1,4 @@
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {
@@ -14,6 +14,8 @@ import {
   RequestStatus,
 } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+
+const { mapSeries, map } = Bluebird;
 
 /**
  * Given an enricher ID, mark all open request enrichers as skipped

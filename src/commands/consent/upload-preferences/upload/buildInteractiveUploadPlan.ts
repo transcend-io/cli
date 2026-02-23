@@ -177,6 +177,7 @@ export async function buildInteractiveUploadPreferencePlan({
       timestampColumn: schema.getTimestampColumn(),
       columnToPurposeName: schema.getColumnToPurposeName(),
       columnToIdentifier: schema.getColumnToIdentifier(),
+      columnToMetadata: schema.getColumnToMetadata(),
     },
   };
 }

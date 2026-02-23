@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import colors from 'colors';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import * as t from 'io-ts';
 import { uniq } from 'lodash-es';
 import cliProgress from 'cli-progress';
@@ -24,6 +24,8 @@ import { mapCsvRowsToRequestInputs } from './mapCsvRowsToRequestInputs';
 import { filterRows } from './filterRows';
 import { extractClientError } from './extractClientError';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+
+const { map } = Bluebird;
 
 /**
  * Upload a set of privacy requests from CSV

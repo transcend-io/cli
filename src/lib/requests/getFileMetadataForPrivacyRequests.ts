@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import colors from 'colors';
 import cliProgress from 'cli-progress';
 
@@ -8,6 +8,8 @@ import type { Got } from 'got';
 import { decodeCodec, valuesOf } from '@transcend-io/type-utils';
 import { logger } from '../../logger';
 import { TableEncryptionType } from '@transcend-io/privacy-types';
+
+const { map } = Bluebird;
 
 export const IntlMessage = t.type({
   /** The message key */

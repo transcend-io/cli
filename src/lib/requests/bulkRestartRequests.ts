@@ -1,6 +1,6 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
@@ -17,6 +17,8 @@ import { logger } from '../../logger';
 import { SuccessfulRequest } from './constants';
 import { extractClientError } from './extractClientError';
 import { restartPrivacyRequest } from './restartPrivacyRequest';
+
+const { map } = Bluebird;
 
 /** Minimal state we need to keep a list of requests */
 const ErrorRequest = t.intersection([

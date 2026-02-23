@@ -3,11 +3,13 @@ import colors from 'colors';
 import inquirer from 'inquirer';
 import { FileFormatState } from './codecs';
 import { logger } from '../../logger';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { PreferenceTopic } from '../graphql';
 import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';
 import type { PersistedState } from '@transcend-io/persisted-state';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
