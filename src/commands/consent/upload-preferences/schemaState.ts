@@ -2,6 +2,7 @@ import { PersistedState } from '@transcend-io/persisted-state';
 import {
   FileFormatState,
   type ColumnIdentifierMap,
+  type ColumnMetadataMap,
   type ColumnPurposeMap,
 } from '../../../lib/preference-management';
 import {
@@ -16,6 +17,8 @@ export interface PreferenceSchemaInterface {
   getColumnToPurposeName(): ColumnPurposeMap;
   /** CSV column name -> Identifier mapping */
   getColumnToIdentifier(): ColumnIdentifierMap;
+  /** CSV column name -> Metadata key mapping */
+  getColumnToMetadata(): ColumnMetadataMap | undefined;
   /** The persisted cache */ // FIXME remove this
   state: PersistedState<typeof FileFormatState>;
 }
@@ -82,6 +85,8 @@ export async function makeSchemaState(
         state.getValue('columnToPurposeName'),
       getColumnToIdentifier: (): ColumnIdentifierMap =>
         state.getValue('columnToIdentifier'),
+      getColumnToMetadata: (): ColumnMetadataMap | undefined =>
+        state.getValue('columnToMetadata'),
     };
   } catch (err) {
     throw new Error(

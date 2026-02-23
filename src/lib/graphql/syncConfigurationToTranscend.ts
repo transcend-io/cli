@@ -3,7 +3,7 @@ import { TranscendInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   fetchIdentifiersAndCreateMissing,
   Identifier,
@@ -43,6 +43,8 @@ import { syncDataCategories } from './syncDataCategories';
 import { syncProcessingPurposes } from './syncProcessingPurposes';
 import { syncProcessingActivities } from './syncProcessingActivities';
 import { syncPartitions } from './syncPartitions';
+
+const { map } = Bluebird;
 
 const CONCURRENCY = 10;
 

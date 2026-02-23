@@ -4,12 +4,14 @@ import { GraphQLClient } from 'graphql-request';
 import { CodePackage, fetchAllCodePackages } from './fetchAllCodePackages';
 import { logger } from '../../logger';
 import { syncSoftwareDevelopmentKits } from './syncSoftwareDevelopmentKits';
-import { map, mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { CodePackageInput, RepositoryInput } from '../../codecs';
 import { CodePackageType } from '@transcend-io/privacy-types';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { CREATE_CODE_PACKAGE, UPDATE_CODE_PACKAGES } from './gqls';
 import { syncRepositories } from './syncRepositories';
+
+const { map, mapSeries } = Bluebird;
 
 const CHUNK_SIZE = 100;
 

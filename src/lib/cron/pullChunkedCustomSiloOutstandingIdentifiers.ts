@@ -13,7 +13,9 @@ import { RequestAction } from '@transcend-io/privacy-types';
 
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
+
+const { mapSeries } = Bluebird;
 
 /**
  * A CSV formatted identifier

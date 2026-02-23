@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_DATA_FLOWS, UPDATE_DATA_FLOWS } from './gqls';
 import { chunk } from 'lodash-es';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { DataFlowInput } from '../../codecs';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
@@ -9,6 +9,8 @@ import { logger } from '../../logger';
 import colors from 'colors';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { ConsentTrackerStatus } from '@transcend-io/privacy-types';
+
+const { mapSeries } = Bluebird;
 
 const MAX_PAGE_SIZE = 100;
 

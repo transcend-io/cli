@@ -1,9 +1,11 @@
 import { chunk } from 'lodash-es';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { ADD_SILO_DISCOVERY_RESULTS } from './gqls';
 import { GraphQLClient } from 'graphql-request';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { SiloDiscoveryRawResults } from '../code-scanning/findFilesToScan';
+
+const { mapSeries } = Bluebird;
 
 const CHUNK_SIZE = 1000;
 

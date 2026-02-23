@@ -25,6 +25,7 @@ export type TaskCommonOpts = Pick<
   | 'allowedIdentifierNames'
   | 'identifierColumns'
   | 'columnsToIgnore'
+  | 'skipMetadata'
 > & {
   schemaFile: string;
   receiptsFolder: string;
@@ -65,6 +66,7 @@ export function buildCommonOpts(
     maxRecordsToReceipt,
     uploadLogInterval,
     columnsToIgnore = [],
+    skipMetadata = false,
   } = flags;
 
   return {
@@ -91,5 +93,6 @@ export function buildCommonOpts(
     maxRecordsToReceipt,
     uploadLogInterval,
     columnsToIgnore,
+    skipMetadata,
   };
 }

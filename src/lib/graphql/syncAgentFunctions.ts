@@ -1,6 +1,6 @@
 import { AgentFunctionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { UPDATE_AGENT_FUNCTIONS, CREATE_AGENT_FUNCTION } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';
@@ -10,6 +10,8 @@ import {
   fetchAllAgentFunctions,
   AgentFunction,
 } from './fetchAllAgentFunctions';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new agent function

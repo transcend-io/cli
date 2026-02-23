@@ -1,5 +1,5 @@
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   updateConsentManagerToLatest,
   buildTranscendGraphQLClient,
@@ -10,6 +10,8 @@ import colors from 'colors';
 
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Update the consent manager to latest version

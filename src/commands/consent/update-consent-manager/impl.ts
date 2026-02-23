@@ -1,12 +1,14 @@
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 
 import { logger } from '../../../logger';
 import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+
+const { mapSeries } = Bluebird;
 
 export interface UpdateConsentManagerCommandFlags {
   auth: string;

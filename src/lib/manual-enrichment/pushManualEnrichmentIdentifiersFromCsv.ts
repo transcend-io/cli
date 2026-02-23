@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import { logger } from '../../logger';
 import {
   UPDATE_PRIVACY_REQUEST,
@@ -13,6 +13,8 @@ import {
 } from './enrichPrivacyRequest';
 import { readCsv } from '../requests';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
+
+const { map } = Bluebird;
 
 /**
  * Push a CSV of enriched requests back into Transcend

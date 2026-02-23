@@ -121,6 +121,7 @@ export interface UploadPreferencesCommandFlags {
   allowedIdentifierNames: string[];
   identifierColumns: string[];
   columnsToIgnore?: string[];
+  skipMetadata: boolean;
   viewerMode: boolean;
 }
 

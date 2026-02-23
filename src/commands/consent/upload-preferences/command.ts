@@ -18,6 +18,7 @@ export const uploadPreferencesCommand = buildCommand({
           ScopeName.ManageStoredPreferences,
           ScopeName.ViewManagedConsentDatabaseAdminApi,
           ScopeName.ViewPreferenceStoreSettings,
+          ScopeName.ViewRequestIdentitySettings,
         ],
       }),
       partition: {
@@ -176,6 +177,12 @@ export const uploadPreferencesCommand = buildCommand({
         brief:
           'Columns in the CSV that should be ignored. Comma-separated list of column names.',
         optional: true,
+      },
+      skipMetadata: {
+        kind: 'boolean',
+        brief:
+          'Whether to skip uploading metadata fields. Use this for subsequent batch uploads to avoid replacing existing metadata.',
+        default: false,
       },
       viewerMode: {
         kind: 'boolean',

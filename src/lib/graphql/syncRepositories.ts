@@ -4,9 +4,11 @@ import { RepositoryInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
 import { UPDATE_REPOSITORIES, CREATE_REPOSITORY } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
 import { fetchAllRepositories, Repository } from './fetchAllRepositories';
 import { logger } from '../../logger';
+
+const { mapSeries, map } = Bluebird;
 
 const CHUNK_SIZE = 100;
 

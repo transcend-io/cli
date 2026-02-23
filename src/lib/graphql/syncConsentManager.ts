@@ -24,7 +24,7 @@ import {
   fetchConsentManagerExperiences,
 } from './fetchConsentManagerId';
 import { keyBy } from 'lodash-es';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   InitialViewState,
   OnConsentExpiry,
@@ -33,6 +33,8 @@ import { logger } from '../../logger';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchPartitions } from './syncPartitions';
 import { fetchAllPurposes } from './fetchAllPurposes';
+
+const { map } = Bluebird;
 
 const PURPOSES_LINK =
   'https://app.transcend.io/consent-manager/regional-experiences/purposes';

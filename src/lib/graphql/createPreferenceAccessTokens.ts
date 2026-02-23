@@ -3,7 +3,9 @@ import { CREATE_PREFERENCE_ACCESS_TOKENS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import type { GraphQLClient } from 'graphql-request';
 import { chunk } from 'lodash-es';
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
+
+const { map } = Bluebird;
 
 export interface PreferenceAccessTokenInput {
   /** Slug of data subject to authenticate as */

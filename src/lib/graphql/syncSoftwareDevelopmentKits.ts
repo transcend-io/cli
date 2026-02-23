@@ -7,13 +7,15 @@ import {
   CREATE_SOFTWARE_DEVELOPMENT_KIT,
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries, map } from 'bluebird';
+import Bluebird from 'bluebird';
 import {
   fetchAllSoftwareDevelopmentKits,
   SoftwareDevelopmentKit,
 } from './fetchAllSoftwareDevelopmentKits';
 import { logger } from '../../logger';
 import { CodePackageType } from '@transcend-io/privacy-types';
+
+const { mapSeries, map } = Bluebird;
 
 const CHUNK_SIZE = 100;
 

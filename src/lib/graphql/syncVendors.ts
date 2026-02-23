@@ -1,12 +1,14 @@
 import { VendorInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { UPDATE_VENDORS, CREATE_VENDOR } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllVendors, Vendor } from './fetchAllVendors';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new vendor

@@ -1,7 +1,7 @@
 import { ActionItemInput } from '../../codecs';
 import { uniq, keyBy, chunk } from 'lodash-es';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { UPDATE_ACTION_ITEMS, CREATE_ACTION_ITEMS } from './gqls';
 import { logger } from '../../logger';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
@@ -12,6 +12,8 @@ import {
   fetchAllActionItemCollections,
 } from './fetchAllActionItemCollections';
 import { Attribute, fetchAllAttributes } from './fetchAllAttributes';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new actionItem

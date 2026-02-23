@@ -1,4 +1,4 @@
-import { map } from 'bluebird';
+import Bluebird from 'bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {
@@ -10,6 +10,8 @@ import {
 import cliProgress from 'cli-progress';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { RequestDataSiloStatus } from '@transcend-io/privacy-types';
+
+const { map } = Bluebird;
 
 /**
  * Given a CSV of Request IDs, mark associated RequestDataSilos as completed

@@ -4,10 +4,12 @@ import { PolicyInput } from '../../codecs';
 import colors from 'colors';
 import { UPDATE_POLICIES } from './gqls';
 import { chunk, keyBy } from 'lodash-es';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { fetchPrivacyCenterId } from './fetchPrivacyCenterId';
 import { fetchAllPolicies } from './fetchAllPolicies';
+
+const { mapSeries } = Bluebird;
 
 const MAX_PAGE_SIZE = 100;
 

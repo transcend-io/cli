@@ -1,6 +1,6 @@
 import { DataCategoryInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import { mapSeries } from 'bluebird';
+import Bluebird from 'bluebird';
 import { UPDATE_DATA_SUB_CATEGORIES, CREATE_DATA_SUB_CATEGORY } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';
@@ -10,6 +10,8 @@ import {
   fetchAllDataCategories,
   DataSubCategory,
 } from './fetchAllDataCategories';
+
+const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new data category
