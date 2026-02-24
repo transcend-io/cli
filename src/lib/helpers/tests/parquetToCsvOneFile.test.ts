@@ -4,6 +4,7 @@ import { join as pathJoin, dirname as pathDirname } from 'node:path';
 
 // Now import the SUT
 import { parquetToCsvOneFile } from '../parquetToCsvOneFile';
+import { DuckDBInstance } from '@duckdb/node-api';
 
 // Hoisted spies & fakes so the mock factories can close over them safely
 const H = vi.hoisted(() => {
@@ -106,12 +107,15 @@ describe('parquetToCsvOneFile', () => {
 
     const onProgress = vi.fn();
 
-    await parquetToCsvOneFile({
-      filePath,
-      outputDir,
-      clearOutputDir: true,
-      onProgress,
-    });
+    await parquetToCsvOneFile(
+      {
+        filePath,
+        outputDir,
+        clearOutputDir: true,
+        onProgress,
+      },
+      DuckDBInstance,
+    );
 
     // Ensures output dir exists
     expect(H.fsSpies.mkdirSync).toHaveBeenCalledWith(outputDir, {
@@ -168,11 +172,14 @@ describe('parquetToCsvOneFile', () => {
 
     H.fsSpies.existsSync.mockImplementation((p: string) => p === outCsv);
 
-    await parquetToCsvOneFile({
-      filePath,
-      outputDir: outDir,
-      clearOutputDir: true,
-    });
+    await parquetToCsvOneFile(
+      {
+        filePath,
+        outputDir: outDir,
+        clearOutputDir: true,
+      },
+      DuckDBInstance,
+    );
 
     expect(H.fsSpies.existsSync).toHaveBeenCalledWith(outCsv);
     expect(H.fsSpies.rmSync).toHaveBeenCalledWith(outCsv, { force: true });
@@ -188,11 +195,14 @@ describe('parquetToCsvOneFile', () => {
       throw new Error('perm denied');
     });
 
-    await parquetToCsvOneFile({
-      filePath,
-      outputDir: outDir,
-      clearOutputDir: true,
-    });
+    await parquetToCsvOneFile(
+      {
+        filePath,
+        outputDir: outDir,
+        clearOutputDir: true,
+      },
+      DuckDBInstance,
+    );
 
     expect(H.loggerSpies.warn).toHaveBeenCalled();
     const warnMsg = String(H.loggerSpies.warn.mock.calls[0][0]);
@@ -205,10 +215,13 @@ describe('parquetToCsvOneFile', () => {
     const inferredDir = pathDirname(filePath);
     const expectedOut = pathJoin(inferredDir, 'in.csv');
 
-    await parquetToCsvOneFile({
-      filePath,
-      clearOutputDir: false,
-    });
+    await parquetToCsvOneFile(
+      {
+        filePath,
+        clearOutputDir: false,
+      },
+      DuckDBInstance,
+    );
 
     // mkdirSync called on inferred dir
     expect(H.fsSpies.mkdirSync).toHaveBeenCalledWith(inferredDir, {
@@ -232,11 +245,14 @@ describe('parquetToCsvOneFile', () => {
     const filePath = '/data/abc.parquet';
     const outDir = '/out';
 
-    await parquetToCsvOneFile({
-      filePath,
-      outputDir: outDir,
-      clearOutputDir: false,
-    });
+    await parquetToCsvOneFile(
+      {
+        filePath,
+        outputDir: outDir,
+        clearOutputDir: false,
+      },
+      DuckDBInstance,
+    );
 
     // Should still run COPY successfully
     const calls = H.duck.connRun.mock.calls.map((c: any) => String(c[0]));

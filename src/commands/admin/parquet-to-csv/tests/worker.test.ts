@@ -18,6 +18,7 @@ vi.mock('../../../../lib/helpers', () => ({
   parquetToCsvOneFile: (...a: Parameters<typeof h.mParquetToCsvOneFile>) =>
     h.mParquetToCsvOneFile(...a),
 }));
+vi.mock('@duckdb/node-api', () => ({ DuckDBInstance: {} }));
 
 // Aliases
 const { mLogger, mExtractErrorMessage, mParquetToCsvOneFile } = h;
@@ -132,8 +133,7 @@ describe('parquet-to-csv worker runChild()', () => {
       },
     } as const;
 
-    workerMsgHandler(msg);
-    await nextTick();
+    await workerMsgHandler(msg);
 
     expect(mParquetToCsvOneFile).toHaveBeenCalledTimes(1);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -194,8 +194,7 @@ describe('parquet-to-csv worker runChild()', () => {
       },
     } as const;
 
-    workerMsgHandler(msg);
-    await nextTick();
+    await workerMsgHandler(msg);
 
     expect(mLogger.error).toHaveBeenCalledTimes(1);
     const errLine = mLogger.error.mock.calls[0][0] as string;
