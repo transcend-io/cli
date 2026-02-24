@@ -2,7 +2,7 @@ import { mkdirSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join, parse } from 'node:path';
 import colors from 'colors';
 import { logger } from '../../logger';
-import { DuckDBInstance, type DuckDBConnection } from '@duckdb/node-api';
+import type { DuckDBConnection, DuckDBInstance } from '@duckdb/node-api';
 
 /** Progress callback used by the parent runner to surface progress to the UI. */
 type OnProgress = (processed: number, total?: number) => void;
@@ -60,10 +60,12 @@ export type ParquetToCsvOneFileOptions = {
  *  - Supported platform binary (mac arm64/x64, linux x64, windows x64).
  *
  * @param opts - Conversion options
+ * @param DuckDb - DuckDB instance to use
  * @returns Promise<void> when the CSV has been written
  */
 export async function parquetToCsvOneFile(
   opts: ParquetToCsvOneFileOptions,
+  DuckDb: typeof DuckDBInstance,
 ): Promise<void> {
   const { filePath, outputDir, clearOutputDir, onProgress } = opts;
 
@@ -90,7 +92,7 @@ export async function parquetToCsvOneFile(
   }
 
   // In-memory DB: no .db file created on disk
-  const db = await DuckDBInstance.create(':memory:');
+  const db = await DuckDb.create(':memory:');
   const conn = await db.connect();
 
   try {
