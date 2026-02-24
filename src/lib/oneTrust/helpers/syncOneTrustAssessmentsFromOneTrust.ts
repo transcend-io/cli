@@ -6,7 +6,7 @@ import {
   getOneTrustRisk,
   getOneTrustUser,
 } from '../endpoints';
-import Bluebird from 'bluebird';
+import { mapSeries, map } from '../../bluebird';
 import { logger } from '../../../logger';
 import {
   OneTrustAssessmentQuestion,
@@ -20,8 +20,6 @@ import { enrichOneTrustAssessment } from './enrichOneTrustAssessment';
 import { syncOneTrustAssessmentToDisk } from './syncOneTrustAssessmentToDisk';
 import { GraphQLClient } from 'graphql-request';
 import { syncOneTrustAssessmentToTranscend } from './syncOneTrustAssessmentToTranscend';
-
-const { mapSeries, map } = Bluebird;
 
 export interface AssessmentForm {
   /** ID of Assessment Form */

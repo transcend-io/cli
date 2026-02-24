@@ -4,10 +4,8 @@ import { IntlMessageInput } from '../../codecs';
 import colors from 'colors';
 import { UPDATE_INTL_MESSAGES } from './gqls';
 import { chunk } from 'lodash-es';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-
-const { mapSeries } = Bluebird;
 
 const MAX_PAGE_SIZE = 100;
 

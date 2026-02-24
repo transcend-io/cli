@@ -49,16 +49,20 @@ export async function runChild(): Promise<void> {
 
     try {
       logger.info(`[w${workerId}] processing ${filePath}`);
-      await parquetToCsvOneFile({
-        filePath,
-        outputDir,
-        clearOutputDir,
-        onProgress: (processed, total) =>
-          process.send?.({
-            type: 'progress',
-            payload: { filePath, processed, total },
-          }),
-      });
+      const { DuckDBInstance } = await import('@duckdb/node-api');
+      await parquetToCsvOneFile(
+        {
+          filePath,
+          outputDir,
+          clearOutputDir,
+          onProgress: (processed, total) =>
+            process.send?.({
+              type: 'progress',
+              payload: { filePath, processed, total },
+            }),
+        },
+        DuckDBInstance,
+      );
 
       process.send?.({
         type: 'result',

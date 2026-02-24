@@ -1,4 +1,4 @@
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import {
   buildTranscendGraphQLClientGeneric,
   loginUser,
@@ -12,8 +12,6 @@ import colors from 'colors';
 import { StoredApiKey } from '../../codecs';
 import { logger } from '../../logger';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-
-const { mapSeries } = Bluebird;
 
 export interface ApiKeyGenerateError {
   /** Name of instance */

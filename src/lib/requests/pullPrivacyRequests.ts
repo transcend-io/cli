@@ -1,5 +1,5 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { groupBy } from 'lodash-es';
 
@@ -13,8 +13,6 @@ import {
   fetchAllRequests,
 } from '../graphql';
 import { logger } from '../../logger';
-
-const { map } = Bluebird;
 
 export interface ExportedPrivacyRequest extends PrivacyRequest {
   /** Request identifiers */

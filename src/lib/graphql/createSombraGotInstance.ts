@@ -32,9 +32,13 @@ export async function createSombraGotInstance(
       };
     };
   }>(client, ORGANIZATION);
-  // Check if the sombra customerUrl is the default reverse tunnel URL
+  // Use SOMBRA_URL env var if provided, otherwise fall back to the primary sombra's customerUrl
   const { customerUrl } = organization.sombra;
+  const sombraToUse = process.env.SOMBRA_URL || customerUrl;
+
+  // Only validate the reverse tunnel URL if we're using the primary sombra (not SOMBRA_URL override)
   if (
+    !process.env.SOMBRA_URL &&
     [
       'https://sombra-reverse-tunnel.transcend.io',
       'https://sombra-reverse-tunnel.us.transcend.io',
@@ -46,10 +50,11 @@ export async function createSombraGotInstance(
         'https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking',
     );
   }
-  logger.info(colors.green(`Using sombra: ${customerUrl}`));
+  logger.info(colors.green(`Using sombra: ${sombraToUse}`));
+
   // Create got instance with default values
   return got.extend({
-    prefixUrl: process.env.SOMBRA_URL || customerUrl,
+    prefixUrl: sombraToUse,
     headers: {
       Authorization: `Bearer ${transcendApiKey}`,
       ...(sombraApiKey

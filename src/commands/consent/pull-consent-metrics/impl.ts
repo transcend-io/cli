@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
+import { map, mapSeries } from '../../../lib/bluebird';
 import { join } from 'node:path';
 import fs, { existsSync, mkdirSync } from 'node:fs';
 import {
@@ -13,8 +13,6 @@ import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { pullConsentManagerMetrics } from '../../../lib/consent-manager';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { writeCsv } from '../../../lib/helpers';
-
-const { map, mapSeries } = Bluebird;
 
 export interface PullConsentMetricsCommandFlags {
   auth: string;

@@ -38,6 +38,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
+  - [`transcend consent delete-preference-records`](#transcend-consent-delete-preference-records)
   - [`transcend inventory pull`](#transcend-inventory-pull)
   - [`transcend inventory push`](#transcend-inventory-push)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
@@ -54,6 +55,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
+- [Using non-primary Sombra](#using-non-primary-sombra)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1800,28 +1802,29 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2025-
 
 ```txt
 USAGE
-  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value] [--shouldChunk] [--windowConcurrency value] [--maxChunks value] [--maxLookbackDays value]
+  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value] [--shouldChunk] [--exportIdentifiersWithDelimiter value] [--windowConcurrency value] [--maxChunks value] [--maxLookbackDays value]
   transcend consent pull-consent-preferences --help
 
 Uses POST /v1/preferences/{partition}/query with cursor-based pagination. Supports filtering by identifiers, collection timestamps, and system.updatedAt.
 
 FLAGS
-      --auth                          The Transcend API key. Requires scopes: "View Managed Consent Database Admin API", "View Identity Verification Settings", "View Preference Store Settings"
-      --partition                     Partition ID to query in the Preference Store
-     [--sombraAuth]                   The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--file]                         Path to CSV output file                                                                                                                                    [default = ./preferences.csv]
-     [--transcendUrl]                 URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                               [default = https://api.transcend.io]
-     [--timestampBefore]              Filter: preferences collected before this time (timestampBefore)
-     [--timestampAfter]               Filter: preferences collected after this time (timestampAfter)
-     [--updatedBefore]                Filter: preferences updated before this time (system.updatedAt)
-     [--updatedAfter]                 Filter: preferences updated after this time (system.updatedAt)
-     [--identifiers]...               Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas.                      [separator = ,]
-     [--concurrency]                  Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
-     [--shouldChunk/--noShouldChunk]  Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
-     [--windowConcurrency]            When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 100]
-     [--maxChunks]                    Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 5000]
-     [--maxLookbackDays]              Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
-  -h  --help                          Print help information and exit
+      --auth                             The Transcend API key. Requires scopes: "View Managed Consent Database Admin API", "View Identity Verification Settings", "View Preference Store Settings"
+      --partition                        Partition ID to query in the Preference Store
+     [--sombraAuth]                      The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--file]                            Path to CSV output file                                                                                                                                    [default = ./preferences.csv]
+     [--transcendUrl]                    URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                               [default = https://api.transcend.io]
+     [--timestampBefore]                 Filter: preferences collected before this time (timestampBefore)
+     [--timestampAfter]                  Filter: preferences collected after this time (timestampAfter)
+     [--updatedBefore]                   Filter: preferences updated before this time (system.updatedAt)
+     [--updatedAfter]                    Filter: preferences updated after this time (system.updatedAt)
+     [--identifiers]...                  Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas.                      [separator = ,]
+     [--concurrency]                     Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
+     [--shouldChunk/--noShouldChunk]     Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
+     [--exportIdentifiersWithDelimiter]  Delimiter to use when combining multiple identifiers into a single column in the output CSV.                                                               [default = ,]
+     [--windowConcurrency]               When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 80]
+     [--maxChunks]                       Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 20000]
+     [--maxLookbackDays]                 Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
+  -h  --help                             Print help information and exit
 ```
 
 #### Examples
@@ -2265,11 +2268,124 @@ transcend consent upload-preferences \
   --transcendUrl=https://api.us.transcend.io
 ```
 
+### `transcend consent delete-preference-records`
+
+```txt
+USAGE
+  transcend consent delete-preference-records (--auth value) [--sombraAuth value] (--partition value) (--timestamp value) [--file value] [--directory value] [--transcendUrl value] [--maxItemsInChunk value] [--maxConcurrency value] [--fileConcurrency value] [--receiptDirectory value]
+  transcend consent delete-preference-records --help
+
+Uses POST /v1/preferences/{partition}/delete route on sombra to delete consent preference records in bulk from Preference Store based on a CSV file input. Refer to examples/cli-upload-preferences-example.csv for the expected format of the CSV file. The CSV expects the following headers: "name" and "value". The "name" field corresponds to the identifier name as defined on https://app.transcend.io/privacy-requests/identifiers The "value" refers to the actual identifier value for the user whose preference record is being deleted. For Large scale deletions, consider chunking the input CSV into smaller files and using the --directory option to process them concurrently.
+
+FLAGS
+      --auth               The Transcend API key. Requires scopes: "Modify User Stored Preferences"
+     [--sombraAuth]        The Sombra internal key, use for additional authentication when self-hosting Sombra
+      --partition          Partition ID to used to delete preference records from
+      --timestamp          The timestamp when the deletion operation is made. Used for logging purposes.
+     [--file]              Path to the CSV file used to identify preference records to delete
+     [--directory]         Path to the directory of CSV files to load preferences from
+     [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                       [default = https://api.transcend.io]
+     [--maxItemsInChunk]   When chunking, how many items to delete in a single chunk (higher = faster, but more load).                                        [default = 10]
+     [--maxConcurrency]    Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors). [default = 10]
+     [--fileConcurrency]   Number of files to process concurrently when deleting preference records from multiple files.                                      [default = 5]
+     [--receiptDirectory]  Directory to write receipts of failed deletions to.                                                                                [default = ./receipts]
+  -h  --help               Print help information and exit
+```
+
+A sample CSV can be found [here](./examples/cli-delete-preference-records-example.csv).
+
+#### Examples
+
+**Delete preference records from preference store using a CSV file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Delete preference records from preference store using multiple CSV files in a directory**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --directory=./preferences-to-delete \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Use a specific backend base URL (e.g., US-hosted)**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --transcendUrl=https://api.us.transcend.io \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of concurrent API calls for a deletion file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxConcurrency=100 \
+  --fileConcurrency=10 \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of files to process concurrently**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --fileConcurrency=10 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum items in chunk**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
 ### `transcend inventory pull`
 
 ```txt
 USAGE
-  transcend inventory pull (--auth value) [--resources all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
+  transcend inventory pull (--auth value) [--resources all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes|systemDiscovery] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
   transcend inventory pull --help
 
 Generates a transcend.yml by pulling the configuration from your Transcend instance.
@@ -2283,7 +2399,7 @@ This command can be helpful if you are looking to:
 
 FLAGS
       --auth                       The Transcend API key. The scopes required will vary depending on the operation performed. If in doubt, the Full Admin scope will always work.
-     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes, separator = ,]
+     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes|systemDiscovery, separator = ,]
      [--file]                      Path to the YAML file to pull into                                                                                                             [default = ./transcend.yml]
      [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                   [default = https://api.transcend.io]
      [--dataSiloIds]...            The UUIDs of the data silos that should be pulled into the YAML file                                                                           [separator = ,]
@@ -2335,6 +2451,7 @@ The API key permissions for this command vary based on the `resources` argument:
 | `assessments`           | `assessments`             | Assessment responses.                                                                                                                                            | View Assessments                                     | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                                              |
 | `assessmentTemplates`   | `assessment-templates`    | Assessment template configurations.                                                                                                                              | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                                         |
 | `purposes`              | `purposes`                | Consent purposes and related preference management topics.                                                                                                       | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                                                       |
+| `systemDiscovery`       | `system-discovery`        | System discovery results                                                                                                                                         | View Data Map                                        | [System Discovery](https://app.transcend.io/data-map/data-inventory/silo-discovery)                                                                                                                                                                    |
 
 #### Examples
 
@@ -2546,6 +2663,7 @@ The API key permissions for this command vary based on the resources declared as
 | `assessments`           | `assessments`             | Assessment responses.                                                                                                                                            | Manage Assessments                                       | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                                              |
 | `assessmentTemplates`   | `assessment-templates`    | Assessment template configurations.                                                                                                                              | Manage Assessments                                       | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                                         |
 | `purposes`              | `purposes`                | Consent purposes and related preference management topics.                                                                                                       | Manage Consent Manager, Manage Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                                                       |
+| `systemDiscovery`       | `system-discovery`        | System discovery results                                                                                                                                         | Manage Data Map                                          | [System Discovery](https://app.transcend.io/data-map/data-inventory/silo-discovery)                                                                                                                                                                    |
 
 #### Examples
 
@@ -3622,3 +3740,9 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the CLI inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
+
+## Using non-primary Sombra
+
+By default, if a CLI command has to call a Sombra endpoint, the primary Sombra gateway on the account will be used. If the primary Sombra is self hosted, you will need to provide the --sombraAuth variable.
+
+If you want to use a non-primary Sombra, you can specify the environment variable `SOMBRA_URL` e.g. `SOMBRA_URL="https://multi-tenant.sombra.us.transcend.io"` and that Sombra will be used instead.

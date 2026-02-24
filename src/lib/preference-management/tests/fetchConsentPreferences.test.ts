@@ -19,7 +19,9 @@ const H = vi.hoisted(() => ({
     yellow: (s: string) => s,
   },
   // track wrapper usage
-  withRetrySpy: vi.fn(async (fn: () => Promise<any>, _opts?: any) => fn()),
+  withRetrySpy: vi.fn(
+    async (name: string, fn: () => Promise<any>, _opts?: any) => fn(),
+  ),
 }));
 
 /** Mock external deps BEFORE SUT import */
@@ -36,10 +38,10 @@ vi.mock('colors', () => ({
   yellow: H.colors.yellow,
 }));
 
-vi.mock('../withPreferenceQueryRetry', () => ({
-  withPreferenceQueryRetry: (fn: unknown, opts?: unknown) =>
+vi.mock('../withPreferenceRetry', () => ({
+  withPreferenceRetry: (name: string, fn: unknown, opts?: unknown) =>
     // @ts-expect-error test-only
-    H.withRetrySpy(fn, opts),
+    H.withRetrySpy(name, fn, opts),
 }));
 
 describe('fetchConsentPreferences', () => {
@@ -145,7 +147,7 @@ describe('fetchConsentPreferences', () => {
     // Wrapper used for each page
     expect(H.withRetrySpy).toHaveBeenCalledTimes(3);
     // The options passed to wrapper include onRetry hook
-    const optsArg = H.withRetrySpy.mock.calls[0][1];
+    const optsArg = H.withRetrySpy.mock.calls[0][2];
     expect(typeof optsArg?.onRetry).toBe('function');
   });
 

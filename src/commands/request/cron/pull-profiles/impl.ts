@@ -2,7 +2,7 @@ import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
 import { uniq, chunk } from 'lodash-es';
-import Bluebird from 'bluebird';
+import { map } from '../../../../lib/bluebird';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
@@ -14,8 +14,6 @@ import {
 } from '../../../../lib/cron';
 import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 import { parseFilePath, writeLargeCsv } from '../../../../lib/helpers';
-
-const { map } = Bluebird;
 
 export interface PullProfilesCommandFlags {
   file: string;

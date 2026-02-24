@@ -1,10 +1,8 @@
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { RequestFileMetadata } from './getFileMetadataForPrivacyRequests';
 import type { Got } from 'got';
 import { logger } from '../../logger';
-
-const { map } = Bluebird;
 
 /**
  * This function will take in a set of file metadata for privacy requests

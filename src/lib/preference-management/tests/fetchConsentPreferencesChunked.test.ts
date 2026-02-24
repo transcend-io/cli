@@ -81,7 +81,7 @@ vi.mock('cli-progress', () => {
   };
 });
 
-vi.mock('bluebird', () => ({
+vi.mock('../../bluebird', () => ({
   // Use deterministic Promise.all behavior
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   map: (arr: any[], fn: (x: any) => Promise<unknown>, _opts?: any) =>

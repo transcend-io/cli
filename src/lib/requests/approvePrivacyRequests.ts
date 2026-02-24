@@ -1,4 +1,4 @@
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {
@@ -15,8 +15,6 @@ import {
 } from '../graphql';
 import cliProgress from 'cli-progress';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-
-const { map } = Bluebird;
 
 /**
  * Approve a set of privacy requests

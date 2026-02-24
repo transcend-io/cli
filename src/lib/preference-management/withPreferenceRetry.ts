@@ -1,6 +1,6 @@
 import colors from 'colors';
 import { logger } from '../../logger';
-import { sleepPromise } from '../helpers';
+import { extractErrorMessage, sleepPromise } from '../helpers';
 
 /**
  * Transient network / platform errors that merit a retry.
@@ -12,16 +12,17 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
   'ETIMEDOUT',
   '502 Bad Gateway',
   '504 Gateway Time-out',
-  'Task timed out after',
   '429',
+  'Rate limit exceeded',
+  'Task timed out after',
   'unknown request error',
 ].map((s) => s.toLowerCase());
 
 /**
- * Options for retrying preference queries.
+ * Options for retrying preference operations.
  */
 export type RetryOptions = {
-  /** Max attempts including the first try (default 3) */
+  /** Max attempts including the first try (default 5) */
   maxAttempts?: number;
   /** Initial backoff in ms (default 250) */
   baseDelayMs?: number;
@@ -32,17 +33,19 @@ export type RetryOptions = {
 };
 
 /**
- * Run an async function with standardized retry behavior for preference queries.
+ * Run an async function with standardized retry behavior for preference operations.
  * Exponential backoff with jitter; only retries on known-transient messages.
  *
+ * @param name - Name of the operation (for logging)
  * @param fn - Function to run
  * @param options - Retry options
  * @returns Result of the function
  */
-export async function withPreferenceQueryRetry<T>(
+export async function withPreferenceRetry<T>(
+  name: string,
   fn: () => Promise<T>,
   {
-    maxAttempts = 3,
+    maxAttempts = 5,
     baseDelayMs = 250,
     isRetryable = (_err, msg) =>
       RETRY_PREFERENCE_MSGS.some((m) => msg.toLowerCase().includes(m)),
@@ -57,14 +60,10 @@ export async function withPreferenceQueryRetry<T>(
       return await fn();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      const msg: string =
-        (err && (err.response?.body || err.message)) ??
-        String(err ?? 'Unknown error');
+      const msg: string = extractErrorMessage(err);
       const willRetry = attempt < maxAttempts && isRetryable(err, msg);
       if (!willRetry) {
-        throw new Error(
-          `Preference query failed after ${attempt} attempt(s): ${msg}`,
-        );
+        throw new Error(`${name} failed after ${attempt} attempt(s): ${msg}`);
       }
       onRetry?.(attempt, err, msg);
 

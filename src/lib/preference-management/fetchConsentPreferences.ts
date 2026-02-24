@@ -3,7 +3,7 @@ import colors from 'colors';
 import type { Got } from 'got';
 import { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 import { ConsentPreferenceResponse, PreferencesQueryFilter } from './types';
-import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { withPreferenceRetry } from './withPreferenceRetry';
 import { logger } from '../../logger';
 
 /**
@@ -70,7 +70,8 @@ export async function fetchConsentPreferences(
       body.cursor = cursor;
     }
 
-    const response = await withPreferenceQueryRetry(
+    const response = await withPreferenceRetry(
+      'Preference Query',
       () =>
         sombra
           .post(`v1/preferences/${partition}/query`, {

@@ -2,15 +2,13 @@ import { createTranscendConsentGotInstance } from '../graphql';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { DEFAULT_TRANSCEND_CONSENT_API } from '../../constants';
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import { createConsentToken } from './createConsentToken';
 import { logger } from '../../logger';
 import cliProgress from 'cli-progress';
 import { decodeCodec } from '@transcend-io/type-utils';
 import type { ConsentPreferenceUpload } from './types';
 import { ConsentPreferencesBody } from '@transcend-io/airgap.js-types';
-
-const { map } = Bluebird;
 
 export const USP_STRING_REGEX = /^[0-9][Y|N]([Y|N])[Y|N]$/;
 

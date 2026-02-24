@@ -8,7 +8,7 @@ import {
 
 import { logger } from '../../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../../../lib/bluebird';
 import { join } from 'node:path';
 import fs from 'node:fs';
 import {
@@ -20,8 +20,6 @@ import { writeTranscendYaml } from '../../../lib/readTranscendYaml';
 import { ADMIN_DASH_INTEGRATIONS } from '../../../constants';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
-
-const { mapSeries } = Bluebird;
 
 export interface PullCommandFlags {
   auth: string;

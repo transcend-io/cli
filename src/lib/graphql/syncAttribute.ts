@@ -11,10 +11,8 @@ import {
 } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { Attribute } from './fetchAllAttributes';
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import { logger } from '../../logger';
-
-const { map } = Bluebird;
 
 /**
  * Sync attribute

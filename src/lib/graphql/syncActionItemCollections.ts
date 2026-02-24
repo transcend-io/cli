@@ -1,6 +1,6 @@
 import { ActionItemCollectionInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import {
   UPDATE_ACTION_ITEM_COLLECTION,
   CREATE_ACTION_ITEM_COLLECTION,
@@ -13,8 +13,6 @@ import {
   ActionItemCollection,
   fetchAllActionItemCollections,
 } from './fetchAllActionItemCollections';
-
-const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new action item collection

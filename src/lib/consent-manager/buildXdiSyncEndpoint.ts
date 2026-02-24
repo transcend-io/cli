@@ -2,13 +2,11 @@ import colors from 'colors';
 
 import { buildTranscendGraphQLClient, fetchConsentManager } from '../graphql';
 import { difference } from 'lodash-es';
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import { StoredApiKey } from '../../codecs';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { logger } from '../../logger';
 import { domainToHost } from './domainToHost';
-
-const { map } = Bluebird;
 
 /**
  * Sync group configuration mapping

@@ -1,14 +1,12 @@
 import { TeamInput } from '../../codecs';
 import { GraphQLClient } from 'graphql-request';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { UPDATE_TEAM, CREATE_TEAM } from './gqls';
 import { logger } from '../../logger';
 import { keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import colors from 'colors';
 import { fetchAllTeams, Team } from './fetchAllTeams';
-
-const { mapSeries } = Bluebird;
 
 /**
  * Input to create a new team

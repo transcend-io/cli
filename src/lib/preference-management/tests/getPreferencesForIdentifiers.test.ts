@@ -47,7 +47,7 @@ vi.mock('colors', () => ({
 }));
 
 // Intercept bluebird.map to capture concurrency and still execute
-vi.mock('bluebird', () => ({
+vi.mock('../../bluebird', () => ({
   map: vi.fn(async (arr: unknown[], mapper: (x: unknown) => unknown, opts) => {
     H.mapOpts.current = opts;
     const results = [];
@@ -65,14 +65,16 @@ vi.mock('@transcend-io/type-utils', () => ({
   decodeCodec: vi.fn((_codec, raw) => raw),
 }));
 
-// withPreferenceQueryRetry should invoke the provided fn and return its result,
+// withPreferenceRetry should invoke the provided fn and return its result,
 // but we still want to see that it's being called.
-const withRetrySpy = vi.fn(async (fn: () => Promise<any>, _opts?: any) => fn());
+const withRetrySpy = vi.fn(
+  async (name: string, fn: () => Promise<any>, _opts?: any) => fn(),
+);
 
-vi.mock('../withPreferenceQueryRetry', () => ({
-  withPreferenceQueryRetry: (fn: unknown, opts?: unknown) =>
+vi.mock('../withPreferenceRetry', () => ({
+  withPreferenceRetry: (name: string, fn: unknown, opts?: unknown) =>
     // @ts-expect-error test-only
-    withRetrySpy(fn, opts),
+    withRetrySpy(name, fn, opts),
 }));
 
 describe('getPreferencesForIdentifiers', () => {

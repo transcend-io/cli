@@ -3,7 +3,7 @@ import colors from 'colors';
 import type { Got } from 'got';
 import { ConsentPreferenceResponse, PreferencesQueryFilter } from './types';
 import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
-import { withPreferenceQueryRetry } from './withPreferenceQueryRetry';
+import { withPreferenceRetry } from './withPreferenceRetry';
 import { logger } from '../../logger';
 
 /**
@@ -29,7 +29,8 @@ export async function* iterateConsentPages(
     if (filter && Object.keys(filter).length) body.filter = filter;
     if (cursor) body.cursor = cursor;
 
-    const resp = await withPreferenceQueryRetry(
+    const resp = await withPreferenceRetry(
+      'Preference Query',
       () =>
         sombra
           .post(`v1/preferences/${partition}/query`, {
@@ -37,10 +38,10 @@ export async function* iterateConsentPages(
           })
           .json(),
       {
-        onRetry: (attempt, error, message) => {
+        onRetry: (attempt, _error, message) => {
           logger.warn(
             colors.yellow(
-              `Retry attempt ${attempt} for fetchConsentPreferences due to error: ${message}`,
+              `Retry attempt ${attempt} for iterateConsentPages due to error: ${message}`,
             ),
           );
         },

@@ -3,14 +3,14 @@ import type { Got } from 'got';
 import type { PreferencesQueryFilter } from '../types';
 
 import { consentWindowHasAny } from '../consentWindowHasAny';
-import { withPreferenceQueryRetry } from '../withPreferenceQueryRetry';
+import { withPreferenceRetry } from '../withPreferenceRetry';
 import type { PreferenceQueryResponseItem } from '@transcend-io/privacy-types';
 
 // --- Hoisted test state so mocks can reference it before SUT import ---------
 const H = vi.hoisted(() => {
   const logger = { warn: vi.fn(), info: vi.fn(), error: vi.fn() };
 
-  // Capture retry opts passed to withPreferenceQueryRetry
+  // Capture retry opts passed to withPreferenceRetry
   let lastRetryOpts: {
     /** Options for retrying the request */
     onRetry?: (attempt: number, error: unknown, message: string) => void;
@@ -79,10 +79,11 @@ vi.mock('colors', () => ({
   ...H.colors,
 }));
 
-vi.mock('../withPreferenceQueryRetry', () => ({
+vi.mock('../withPreferenceRetry', () => ({
   __esModule: true,
-  withPreferenceQueryRetry: vi.fn(
+  withPreferenceRetry: vi.fn(
     async (
+      name: string,
       fn: () => Promise<unknown>,
       opts: {
         /** On retry */
@@ -159,8 +160,8 @@ describe('consentWindowHasAny', () => {
 
     expect(ok).toBe(true);
 
-    // Called via withPreferenceQueryRetry
-    expect(withPreferenceQueryRetry).toHaveBeenCalledTimes(1);
+    // Called via withPreferenceRetry
+    expect(withPreferenceRetry).toHaveBeenCalledTimes(1);
 
     // Verify POST target + body
     expect(H.postCalls).toHaveLength(1);

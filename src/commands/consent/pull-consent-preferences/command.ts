@@ -83,19 +83,26 @@ export const pullConsentPreferencesCommand = buildCommand({
         brief: 'Whether to download requests in timestamp window chunks.',
         default: true,
       },
+      exportIdentifiersWithDelimiter: {
+        kind: 'parsed',
+        parse: String,
+        brief:
+          'Delimiter to use when combining multiple identifiers into a single column in the output CSV.',
+        default: ',',
+      },
       windowConcurrency: {
         kind: 'parsed',
         parse: numberParser,
         brief:
           'When chunking, how many windows to download in parallel (higher = faster, but more load).',
-        default: '100',
+        default: '80',
       },
       maxChunks: {
         kind: 'parsed',
         parse: numberParser,
         brief:
           'Maximum number of chunks to download (higher = more data, but more load).',
-        default: '5000',
+        default: '20000',
       },
       maxLookbackDays: {
         kind: 'parsed',

@@ -19,7 +19,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
       tldr \
       tree \
       zsh-autosuggestions \
-    && mkdir -p /root/.local/share && tldr -u
+      python3-pip \
+    && mkdir -p /root/.local/share && tldr -u \
+    && pip install pre-commit
 
 # Ensure the root folder referenced here is accessible to the user that will run the container
 RUN sudo chown root -R /root

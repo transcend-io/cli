@@ -67,7 +67,7 @@ describe('transformPreferenceRecordToCsv', () => {
         ],
       } as unknown as PreferenceQueryResponseItem;
 
-      const out = transformPreferenceRecordToCsv(input);
+      const out = transformPreferenceRecordToCsv(input, ',');
 
       // — top-level passthrough
       expect(out.partition).toBe('ee1a0845-694e-4820-9d51-50c7d0a23467');
@@ -111,7 +111,7 @@ describe('transformPreferenceRecordToCsv', () => {
       // no system, no consentManagement, no identifiers/metadata/purposes
     } as unknown as PreferenceQueryResponseItem;
 
-    const out = transformPreferenceRecordToCsv(input);
+    const out = transformPreferenceRecordToCsv(input, ',');
 
     // top-level preserved
     expect(out.partition).toBe('p');
@@ -141,7 +141,7 @@ describe('transformPreferenceRecordToCsv', () => {
       ],
     } as unknown as PreferenceQueryResponseItem;
 
-    const out = transformPreferenceRecordToCsv(input);
+    const out = transformPreferenceRecordToCsv(input, ',');
     expect(out.Newsletters).toBe(true);
     expect(out.Newsletters_UnspecifiedChoice).toBeNull();
   });
@@ -164,7 +164,7 @@ describe('transformPreferenceRecordToCsv', () => {
       ],
     } as unknown as PreferenceQueryResponseItem;
 
-    const out = transformPreferenceRecordToCsv(input);
+    const out = transformPreferenceRecordToCsv(input, ',');
     expect(out.email).toBe('a@x.com');
     // empty selectValues => filtered tokens => join('') => '' (empty string)
     expect(out.Prefs_Multi).toBe('');

@@ -8,7 +8,7 @@ import {
 import { GraphQLClient } from 'graphql-request';
 import { logger } from '../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
+import { mapSeries, map } from '../bluebird';
 import {
   DATA_SILOS,
   CREATE_DATA_SILOS,
@@ -36,8 +36,6 @@ import {
 import { sortBy, chunk, keyBy } from 'lodash-es';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { apply } from '@transcend-io/type-utils';
-
-const { mapSeries, map } = Bluebird;
 
 export interface DataSiloAttributeValue {
   /** Key associated to value */

@@ -5,10 +5,8 @@ import { RequestActionObjectResolver } from '@transcend-io/privacy-types';
 import { TranscendInput } from '../../codecs';
 import { logger } from '../../logger';
 import colors from 'colors';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-
-const { mapSeries } = Bluebird;
 
 export interface DataSubject {
   /** ID of data subject */

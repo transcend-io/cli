@@ -2,13 +2,11 @@ import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_CONSENT_PARTITION, CONSENT_PARTITIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { difference } from 'lodash-es';
 import { logger } from '../../logger';
 import { PartitionInput } from '../../codecs';
 import { fetchConsentManagerId } from './fetchConsentManagerId';
-
-const { mapSeries } = Bluebird;
 
 const PAGE_SIZE = 50;
 

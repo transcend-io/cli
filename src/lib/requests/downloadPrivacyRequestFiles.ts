@@ -1,4 +1,4 @@
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import colors from 'colors';
@@ -15,8 +15,6 @@ import cliProgress from 'cli-progress';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import { getFileMetadataForPrivacyRequests } from './getFileMetadataForPrivacyRequests';
 import { streamPrivacyRequestFiles } from './streamPrivacyRequestFiles';
-
-const { map } = Bluebird;
 
 /**
  * Download a set of privacy requests to disk

@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 
 import { logger } from '../../../logger';
-import Bluebird from 'bluebird';
+import { mapSeries } from '../../../lib/bluebird';
 import { existsSync, lstatSync } from 'node:fs';
 import { join } from 'node:path';
 import { readTranscendYaml } from '../../../lib/readTranscendYaml';
@@ -17,8 +17,6 @@ import { validateTranscendAuth, listFiles } from '../../../lib/api-keys';
 import { mergeTranscendInputs } from '../../../lib/mergeTranscendInputs';
 import { parseVariablesFromString } from '../../../lib/helpers/parseVariablesFromString';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
-
-const { mapSeries } = Bluebird;
 
 /**
  * Sync configuration to Transcend

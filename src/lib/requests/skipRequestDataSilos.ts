@@ -1,4 +1,4 @@
-import Bluebird from 'bluebird';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {
@@ -11,8 +11,6 @@ import {
 import cliProgress from 'cli-progress';
 import { RequestStatus } from '@transcend-io/privacy-types';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-
-const { map } = Bluebird;
 
 /**
  * Given a data silo ID, mark all open request data silos as skipped

@@ -62,8 +62,8 @@
   "scripts": {
     "start": "./dist/bin/cli.cjs",
     "prebuild": "tsc -p tsconfig.json",
-    "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
     "prepublishOnly": "pnpm lint && pnpm build && pnpm test && pnpm publint",
     "lint": "pnpm run /^lint:/",
     "lint:prettier": "prettier --check . --loglevel=warn",
@@ -76,7 +76,7 @@
     "docgen": "tsx scripts/buildReadmeDocs.ts",
     "genfiles": "pnpm script:transcend-json-schema && pnpm script:pathfinder-json-schema && pnpm docgen"
   },
-  "tsup": {
+  "tsdown": {
     "entry": [
       "src/bin/cli.ts",
       "src/bin/bash-complete.ts",
@@ -97,12 +97,12 @@
     ]
   },
   "dependencies": {
-    "@duckdb/node-api": "1.3.2-alpha.26",
+    "@duckdb/node-api": "1.4.2-r.1",
     "@stricli/auto-complete": "^1.2.0",
     "@stricli/core": "^1.2.0",
     "@transcend-io/airgap.js-types": "^12.14.1",
     "@transcend-io/handlebars-utils": "^1.1.0",
-    "@transcend-io/internationalization": "^2.2.0",
+    "@transcend-io/internationalization": "^2.3.0",
     "@transcend-io/persisted-state": "^1.0.4",
     "@transcend-io/privacy-types": "^4.142.0",
     "@transcend-io/secret-value": "^1.2.1",
@@ -153,9 +153,9 @@
     "@types/yargs-parser": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
+    "date-fns": "^4.1.0",
     "depcheck": "^1.4.3",
     "doctoc": "^2.2.1",
-    "date-fns": "^4.1.0",
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.5.5",
@@ -166,7 +166,7 @@
     "prettier": "^2.8.7",
     "publint": "^0.3.12",
     "shellcheck": "^3.1.0",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.19.0-beta.1",
     "tsx": "^4.20.3",
     "typescript": "^5.0.4",
     "vite-tsconfig-paths": "^5.1.4",
