@@ -18,26 +18,26 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       '@transcend-io/airgap.js-types':
-        specifier: ^12.14.1
-        version: 12.14.1
+        specifier: ^12.16.0
+        version: 12.16.0
       '@transcend-io/handlebars-utils':
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.3.2
+        version: 1.3.2
       '@transcend-io/internationalization':
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: ^2.3.2
+        version: 2.3.2
       '@transcend-io/persisted-state':
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.6
+        version: 1.0.6
       '@transcend-io/privacy-types':
-        specifier: ^4.142.0
-        version: 4.142.0
+        specifier: ^4.152.0
+        version: 4.152.0
       '@transcend-io/secret-value':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.2.3
+        version: 1.2.3
       '@transcend-io/type-utils':
-        specifier: ^1.8.4
-        version: 1.8.4
+        specifier: ^1.8.9
+        version: 1.8.9
       JSONStream:
         specifier: ^1.3.5
         version: 1.3.5
@@ -792,26 +792,26 @@ packages:
   '@textlint/markdown-to-ast@12.6.1':
     resolution: {integrity: sha512-T0HO+VrU9VbLRiEx/kH4+gwGMHNMIGkp0Pok+p0I33saOOLyhfGvwOKQgvt2qkxzQEV2L5MtGB8EnW4r5d3CqQ==}
 
-  '@transcend-io/airgap.js-types@12.14.1':
-    resolution: {integrity: sha512-Y+//ztBNdsJoIhy+W+Xvg1LuCOaGSRfQH3gXm1uG3fqhVnVufyIva9csixo9ZBAAoV0EwW/iO72b3B24PZ7HxA==}
+  '@transcend-io/airgap.js-types@12.16.0':
+    resolution: {integrity: sha512-BNdBF27ka9T3Tr9qj6jJ7kkkioQC5wlq3IjVHgipOfVFjCQx9RX0quH4HsmC+Luu3xam8x6HEjqdbx0KrN4YxA==}
 
-  '@transcend-io/handlebars-utils@1.1.0':
-    resolution: {integrity: sha512-mDbKm9JObd9mioNlEYGa2zfTBqli1KAAM+iRHSqi6s2l7MAYENxjlfvXN5uC97T9/90vfWlxNbHjLpUuQVURaA==}
+  '@transcend-io/handlebars-utils@1.3.2':
+    resolution: {integrity: sha512-DvH+SZvYOr7wsPcbcNiIZXvGSgzZvPMzUkjmS4OY4jiWcBAu7XNiy6saguDZ51NUduUdQv9K8QZ5EhhZqU9NlQ==}
 
-  '@transcend-io/internationalization@2.3.0':
-    resolution: {integrity: sha512-krDnCZ0lLVSq9vV2D9aZEbZm0fg7k9q5uH9tegHJVqonbiYsP9hy1F4fZR0RJlC1a8W9ZuNOr/k0fCTYHYIqgQ==}
+  '@transcend-io/internationalization@2.3.2':
+    resolution: {integrity: sha512-D8nNhcXx08r05vXR49yOHcVK2mVcjQsXEqQT6BB8g5NXjFNNQjyzvap9KXbOUFq9tyrCtt59vvakbpNdcqpdBg==}
 
-  '@transcend-io/persisted-state@1.0.4':
-    resolution: {integrity: sha512-jEDN64pr5Q1fniHMERa2+DKhuHbwdB1zzGdHoWgq4EIEx/ZJQxraiNfYoCpf5hpuiKxtXcIN41SC2/MI6MraoQ==}
+  '@transcend-io/persisted-state@1.0.6':
+    resolution: {integrity: sha512-yqexuEznCnQaHAUjL6ktK+wYi5g5+NFKb4qoezf37uTJzBEP40FhNZTIiMBE1HG0ZgWghqyocAFz0UuVrBq6nw==}
 
-  '@transcend-io/privacy-types@4.142.0':
-    resolution: {integrity: sha512-Q6jV4rauWMXIgKMNeWV9pF4yYMadZZ5eKbg4fVhWReGcnRiS5qCyHcaunklRYt3PGQnbHeCu/iTtou23C9fD3Q==}
+  '@transcend-io/privacy-types@4.152.0':
+    resolution: {integrity: sha512-uY9huO7h4o8Rvo6n1NFGU9+dYb++2iS7ksqNRfLT9Nin6dDAXqeDiCmc+x1XKPndwnFFrzPCnpcHFsqnQrqJGw==}
 
-  '@transcend-io/secret-value@1.2.1':
-    resolution: {integrity: sha512-pb2thX9znGJ9GOm6A2kgIzwEchB3E6Zn1KTLIBJx+T+K7XkqRwQJsQL0vKGiJVmZZ0iB3bLSAABHoWwNAZcFxA==}
+  '@transcend-io/secret-value@1.2.3':
+    resolution: {integrity: sha512-or73sJzWCJ3bvBGelL+LY/Ea/+SEvTTGVt6ZX4K5bYAfepIhNfbLbO92sQZ2O0rTakYEYEWOa35HZ/LP+XcEXQ==}
 
-  '@transcend-io/type-utils@1.8.4':
-    resolution: {integrity: sha512-J1/T+q2Bs5znAyxQpQjD0wzN+h7Wi1xRsqa99uAu3G8VcKb5nRLnaUyY7Ut8N0YU1FHAxNhyXz9MVakYUigWuw==}
+  '@transcend-io/type-utils@1.8.9':
+    resolution: {integrity: sha512-JV+AY69Z3ANws4vQfeQ9Zczu1byBqkHq/h5IpRlfWa5U6CqkqkrHXsyzYd2e7ZzbjcKu4mzNhWq3SUQOGwEugg==}
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -1941,7 +1941,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-agent@3.0.0:
     resolution: {integrity: sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==}
@@ -3982,43 +3982,43 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@transcend-io/airgap.js-types@12.14.1':
+  '@transcend-io/airgap.js-types@12.16.0':
     dependencies:
-      '@transcend-io/type-utils': 1.8.4
+      '@transcend-io/type-utils': 1.8.9
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
 
-  '@transcend-io/handlebars-utils@1.1.0':
+  '@transcend-io/handlebars-utils@1.3.2':
     dependencies:
-      '@transcend-io/type-utils': 1.8.4
+      '@transcend-io/type-utils': 1.8.9
       change-case: 4.1.2
       handlebars: 4.7.8
       lodash: 4.17.21
       pluralize: 8.0.0
 
-  '@transcend-io/internationalization@2.3.0': {}
+  '@transcend-io/internationalization@2.3.2': {}
 
-  '@transcend-io/persisted-state@1.0.4':
+  '@transcend-io/persisted-state@1.0.6':
     dependencies:
-      '@transcend-io/type-utils': 1.8.4
+      '@transcend-io/type-utils': 1.8.9
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
       mkdirp: 1.0.4
 
-  '@transcend-io/privacy-types@4.142.0':
+  '@transcend-io/privacy-types@4.152.0':
     dependencies:
-      '@transcend-io/internationalization': 2.3.0
-      '@transcend-io/type-utils': 1.8.4
+      '@transcend-io/internationalization': 2.3.2
+      '@transcend-io/type-utils': 1.8.9
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
 
-  '@transcend-io/secret-value@1.2.1':
+  '@transcend-io/secret-value@1.2.3':
     dependencies:
-      '@transcend-io/type-utils': 1.8.4
+      '@transcend-io/type-utils': 1.8.9
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
 
-  '@transcend-io/type-utils@1.8.4':
+  '@transcend-io/type-utils@1.8.9':
     dependencies:
       fp-ts: 2.16.10
       io-ts: 2.2.22(fp-ts@2.16.10)
