@@ -330,7 +330,7 @@ const expected: CodePackageInput[] = [
       },
       {
         name: 'Flask',
-        version: '2.2.5',
+        version: '3.1.3',
       },
       {
         name: 'cachetools',
