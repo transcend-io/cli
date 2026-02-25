@@ -1,19 +1,16 @@
 consent-workflow-triggers:
   - name: Erasure on opt-out
     action-type: ERASURE
-    data-subject-type: customer
+    data-subject-type: Customer
     is-silent: true
     allow-unauthenticated: false
     is-active: true
-    data-silo-titles:
-      - Salesforce
-      - HubSpot
     purposes:
       - tracking-type: Advertising
         matching-state: false
   - name: Access on request
     action-type: ACCESS
-    data-subject-type: customer
+    data-subject-type: Customer
     is-silent: false
     allow-unauthenticated: false
     is-active: true

@@ -28,12 +28,16 @@ export async function syncConsentWorkflowTriggers(
 
   let encounteredError = false;
 
+  const needsActions = inputs.some((t) => t['action-type']);
+  const needsSubjects = inputs.some((t) => t['data-subject-type']);
+  const needsPurposes = inputs.some((t) => t.purposes?.length);
+
   const [existingTriggers, actions, dataSubjects, purposes] = await Promise.all(
     [
       fetchAllConsentWorkflowTriggers(client),
-      fetchAllActions(client),
-      fetchAllDataSubjects(client),
-      fetchAllPurposes(client),
+      needsActions ? fetchAllActions(client) : ([] as Action[]),
+      needsSubjects ? fetchAllDataSubjects(client) : ([] as DataSubject[]),
+      needsPurposes ? fetchAllPurposes(client) : ([] as Purpose[]),
     ],
   );
 
@@ -95,9 +99,7 @@ export async function syncConsentWorkflowTriggers(
       const input: Record<string, unknown> = {
         name: trigger.name,
         ...(existingTrigger ? { id: existingTrigger.id } : {}),
-        ...(trigger['trigger-condition'] !== undefined
-          ? { triggerCondition: trigger['trigger-condition'] }
-          : {}),
+        triggerCondition: trigger['trigger-condition'] ?? '{}',
         ...(actionId ? { actionId } : {}),
         ...(dataSubjectId ? { dataSubjectId } : {}),
         ...(trigger['is-silent'] !== undefined
@@ -109,16 +111,41 @@ export async function syncConsentWorkflowTriggers(
         ...(trigger['is-active'] !== undefined
           ? { isActive: trigger['is-active'] }
           : {}),
-        ...(consentWorkflowTriggerPurposes
+        ...(existingTrigger && consentWorkflowTriggerPurposes
           ? { consentWorkflowTriggerPurposes }
           : {}),
       };
 
-      await makeGraphQLRequest(
-        client,
-        CREATE_OR_UPDATE_CONSENT_WORKFLOW_TRIGGER,
-        { input },
-      );
+      const {
+        createOrUpdateConsentWorkflowTrigger: {
+          consentWorkflowTrigger: { id: triggerId },
+        },
+      } = await makeGraphQLRequest<{
+        /** Mutation result */
+        createOrUpdateConsentWorkflowTrigger: {
+          /** Created or updated trigger */
+          consentWorkflowTrigger: {
+            /** Trigger ID */
+            id: string;
+            /** Trigger name */
+            name: string;
+          };
+        };
+      }>(client, CREATE_OR_UPDATE_CONSENT_WORKFLOW_TRIGGER, { input });
+
+      // For newly created triggers, purposes must be attached via a follow-up update
+      if (!existingTrigger && consentWorkflowTriggerPurposes?.length) {
+        await makeGraphQLRequest(
+          client,
+          CREATE_OR_UPDATE_CONSENT_WORKFLOW_TRIGGER,
+          {
+            input: {
+              id: triggerId,
+              consentWorkflowTriggerPurposes,
+            },
+          },
+        );
+      }
 
       logger.info(
         colors.green(

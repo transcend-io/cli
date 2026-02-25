@@ -90,6 +90,8 @@ export const TR_PUSH_RESOURCE_SCOPE_MAP: {
   [TranscendPullResource.SystemDiscovery]: [ScopeName.ManageDataMap],
   [TranscendPullResource.ConsentWorkflowTriggers]: [
     ScopeName.ManageConsentManager,
+    ScopeName.ViewDataSubjectRequestSettings,
+    ScopeName.ViewConsentManager,
   ],
 };
 
