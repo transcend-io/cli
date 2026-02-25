@@ -34,6 +34,7 @@ export async function parsePreferenceIdentifiersFromCsv(
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
+    nonInteractive = false,
   }: {
     /** The current state of the schema metadata */
     schemaState: PersistedState<typeof FileFormatState>;
@@ -43,6 +44,8 @@ export async function parsePreferenceIdentifiersFromCsv(
     allowedIdentifierNames: string[];
     /** The columns in the CSV that should be used as identifiers */
     identifierColumns: string[];
+    /** When true, throw instead of prompting (for worker processes) */
+    nonInteractive?: boolean;
   },
 ): Promise<{
   /** The updated state */
@@ -85,8 +88,8 @@ export async function parsePreferenceIdentifiersFromCsv(
     ).length === 0
   ) {
     throw new Error(
-      'No unique identifier we provided as part of allowedIdentifierNames. Please ensure that at least one of the allowed ' +
-        'identifiers is configured as unique on the preference store.',
+      'No unique identifier was provided. Please ensure that at least one ' +
+        'of the allowed identifiers is configured as unique on the preference store.',
     );
   }
 
@@ -103,6 +106,14 @@ export async function parsePreferenceIdentifiersFromCsv(
       );
       return;
     }
+
+    if (nonInteractive) {
+      throw new Error(
+        `Column "${col}" has no identifier mapping in the config. ` +
+          "Run 'transcend consent configure-preference-upload' to update the config.",
+      );
+    }
+
     // If the column is not mapped, ask the user to map it
     const { identifierName } = await inquirer.prompt<{
       /** Identifier name */
@@ -147,6 +158,10 @@ export async function parsePreferenceIdentifiersFromCsv(
       '", "',
     )}".`;
     logger.warn(colors.yellow(msg));
+
+    if (nonInteractive) {
+      throw new Error(msg);
+    }
 
     // Ask user if they would like to skip rows missing an identifier
     const skip = await inquirerConfirmBoolean({

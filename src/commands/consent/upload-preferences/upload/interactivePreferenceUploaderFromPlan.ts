@@ -42,7 +42,6 @@ export async function interactivePreferenceUploaderFromPlan(
     skipWorkflowTriggers = false,
     skipConflictUpdates = false,
     forceTriggerWorkflows = false,
-    skipMetadata = false,
     uploadLogInterval = 1_000,
     maxChunkSize = 25,
     uploadConcurrency = 20,
@@ -63,8 +62,6 @@ export async function interactivePreferenceUploaderFromPlan(
     skipConflictUpdates?: boolean;
     /** Force triggering workflows for each update (use sparingly) */
     forceTriggerWorkflows?: boolean;
-    /** Skip uploading metadata fields to avoid replacing existing metadata */
-    skipMetadata?: boolean;
     /** Log/persist cadence for progress updates */
     uploadLogInterval?: number;
     /** Max records in a single batch PUT to v1/preferences */
@@ -86,8 +83,7 @@ export async function interactivePreferenceUploaderFromPlan(
       timestampColumn: schema.timestampColumn,
       columnToPurposeName: schema.columnToPurposeName,
       columnToIdentifier: schema.columnToIdentifier,
-      // Skip metadata when flag is set to avoid replacing existing metadata
-      columnToMetadata: skipMetadata ? undefined : schema.columnToMetadata,
+      columnToMetadata: schema.columnToMetadata,
       preferenceTopics,
       purposes,
       partition,

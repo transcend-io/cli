@@ -17,11 +17,17 @@ export const NONE_PREFERENCE_MAP = '[NONE]';
  *
  * @param preferences - List of preferences
  * @param currentState - The current file metadata state for parsing this list
+ * @param options - Options
  * @returns The updated file metadata state
  */
 export async function parsePreferenceFileFormatFromCsv(
   preferences: Record<string, string>[],
   currentState: PersistedState<typeof FileFormatState>,
+  {
+    nonInteractive = false,
+  }: {
+    /** When true, throw instead of prompting */ nonInteractive?: boolean;
+  } = {},
 ): Promise<PersistedState<typeof FileFormatState>> {
   // Determine columns to map
   const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
@@ -34,6 +40,13 @@ export async function parsePreferenceFileFormatFromCsv(
 
   // Determine the timestamp column to work off of
   if (!currentState.getValue('timestampColumn')) {
+    if (nonInteractive) {
+      throw new Error(
+        'No timestamp column configured. ' +
+          "Run 'transcend consent configure-preference-upload' to set it.",
+      );
+    }
+
     const { timestampName } = await inquirer.prompt<{
       /** timestamp name */
       timestampName: string;

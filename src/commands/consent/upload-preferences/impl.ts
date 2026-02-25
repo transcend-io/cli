@@ -2,9 +2,11 @@ import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { logger } from '../../../logger';
 import { join } from 'node:path';
+import { statSync, existsSync } from 'node:fs';
 
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 import { collectCsvFilesOrExit } from '../../../lib/helpers/collectCsvFilesOrExit';
+import { chunkOneCsvFile } from '../../../lib/helpers/chunkOneCsvFile';
 
 import {
   computePoolSize,
@@ -118,10 +120,8 @@ export interface UploadPreferencesCommandFlags {
   uploadLogInterval: number;
   downloadIdentifierConcurrency: number;
   maxRecordsToReceipt: number;
-  allowedIdentifierNames: string[];
-  identifierColumns: string[];
-  columnsToIgnore?: string[];
-  skipMetadata: boolean;
+  regenerate: boolean;
+  chunkSizeMB: number;
   viewerMode: boolean;
 }
 
@@ -151,32 +151,49 @@ export async function uploadPreferences(
     sombraAuth,
     transcendUrl,
     directory,
-    dryRun,
     skipExistingRecordCheck,
     receiptFileDir,
     schemaFilePath,
-    isSilent,
     concurrency,
-    attributes,
-    receiptFilepath,
-    uploadConcurrency,
-    maxChunkSize,
-    rateLimitRetryDelay,
-    uploadLogInterval,
-    downloadIdentifierConcurrency,
-    maxRecordsToReceipt,
-    allowedIdentifierNames,
-    identifierColumns,
-    columnsToIgnore,
-    skipWorkflowTriggers,
-    forceTriggerWorkflows,
-    skipConflictUpdates,
+    regenerate,
+    chunkSizeMB,
     viewerMode,
   } = flags;
 
   /* 1) Validate & find inputs */
-  const files = collectCsvFilesOrExit(directory, this);
+  let files = collectCsvFilesOrExit(directory, this);
   doneInputValidation(this.process.exit);
+
+  /* 1b) Auto-chunk oversized files */
+  if (chunkSizeMB > 0) {
+    const chunkThreshold = chunkSizeMB * 1024 * 1024;
+    const oversized = files.filter((f) => {
+      try {
+        return statSync(f).size > chunkThreshold;
+      } catch {
+        return false;
+      }
+    });
+    if (oversized.length > 0) {
+      logger.info(
+        colors.yellow(
+          `Auto-chunking ${oversized.length} file(s) exceeding ${chunkSizeMB}MB...`,
+        ),
+      );
+      for (const file of oversized) {
+        await chunkOneCsvFile({
+          filePath: file,
+          outputDir: directory,
+          clearOutputDir: false,
+          chunkSizeMB,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onProgress: () => {},
+        });
+      }
+      // Re-collect after chunking (new chunk files will be in the directory)
+      files = collectCsvFilesOrExit(directory, this);
+    }
+  }
 
   logger.info(
     colors.green(
@@ -196,39 +213,40 @@ export async function uploadPreferences(
   const receiptsFolder = computeReceiptsFolder(receiptFileDir, directory);
   const schemaFile = computeSchemaFile(schemaFilePath, directory, files[0]);
 
+  /* 1c) Auto-configure if needed */
+  const configExists = existsSync(schemaFile);
+  if (!configExists || regenerate) {
+    if (!configExists && !regenerate) {
+      logger.error(
+        colors.red(
+          `No config file found at: ${schemaFile}\n` +
+            "Run 'transcend consent configure-preference-upload' to create one, " +
+            'or pass --regenerate to run the interactive setup now.',
+        ),
+      );
+      this.process.exit(1);
+    }
+    if (regenerate) {
+      logger.info(colors.yellow('Running interactive config generation...'));
+      const { configurePreferenceUpload } = await import(
+        '../configure-preference-upload/impl'
+      );
+      await configurePreferenceUpload.call(this, {
+        auth,
+        sombraAuth,
+        transcendUrl,
+        directory,
+        schemaFilePath,
+        partition,
+      });
+    }
+  }
+
   /* 2) Pool size */
   const { poolSize, cpuCount } = computePoolSize(concurrency, files.length);
 
   /* 3) Build shared worker options and queue */
-  const common = buildCommonOpts(
-    {
-      ...flags,
-      // explicit for clarity (even if buildCommonOpts infers these):
-      auth,
-      partition,
-      sombraAuth,
-      transcendUrl,
-      dryRun,
-      skipExistingRecordCheck,
-      skipWorkflowTriggers,
-      forceTriggerWorkflows,
-      skipConflictUpdates,
-      isSilent,
-      attributes,
-      receiptFilepath,
-      uploadConcurrency,
-      maxChunkSize,
-      rateLimitRetryDelay,
-      uploadLogInterval,
-      downloadIdentifierConcurrency,
-      maxRecordsToReceipt,
-      allowedIdentifierNames,
-      identifierColumns,
-      columnsToIgnore,
-    },
-    schemaFile,
-    receiptsFolder,
-  );
+  const common = buildCommonOpts(flags, schemaFile, receiptsFolder);
 
   // FIFO queue: one task per file
   const queue = files.map<UploadPreferencesTask>((filePath) => ({

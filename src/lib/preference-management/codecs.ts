@@ -118,6 +118,8 @@ export const FileFormatState = t.intersection([
     timestampColumn: t.string,
     /** Mapping of CSV column names to metadata keys */
     columnToMetadata: ColumnMetadataMap,
+    /** CSV columns that should be ignored during upload */
+    columnsToIgnore: t.array(t.string),
   }),
 ]);
 
@@ -226,61 +228,17 @@ export type SkippedPreferenceUpdates = t.TypeOf<
 export const RequestUploadReceipts = t.type({
   /** Last time the file was last parsed at */
   lastFetchedAt: t.string,
-  /**
-   * Mapping of primaryKey to the rows in the file that need to be uploaded
-   *
-   * These uploads are overwriting non-existent preferences and are not in
-   * conflict with existing consent preferences.
-   *
-   * Note: If --skipExistingRecordCheck=true is set, there will not be on check
-   * for existing record conflicts in order to speed up the upload.
-   * So this will say the updates were safe when in fact we don't know.
-   * We just let the default consent resolution logic handle it.
-   */
+  /** Safe updates (no conflict with existing preferences) keyed by primaryKey */
   pendingSafeUpdates: PendingSafePreferenceUpdates,
-  /**
-   * Mapping of primaryKey to the rows in the file that need to be uploaded
-   * these records have conflicts with existing consent preferences.
-   * Normally the default consent resolution logic will handle these
-   * conflicts, but these are useful situations in which to investigate
-   * and ensure consent resolution is working as expected.
-   *
-   * Note: If --skipExistingRecordCheck=true is set, there will not be on check
-   * for existing record conflicts in order to speed up the upload. and this will
-   * be under-counted.
-   *
-   * Set to `--skipExistingRecordCheck=false --dryRun=true` to get the list of conflicts.
-   */
+  /** Conflict updates (existing preferences differ) keyed by primaryKey */
   pendingConflictUpdates: PendingWithConflictPreferenceUpdates,
-  /**
-   * Mapping of primaryKey to the rows in the file that can be skipped because
-   * their preferences are already in the store. These records may be skipped
-   * as they could be a duplicate row in the CSV file.
-   *
-   * If  `--skipExistingRecordCheck=false` - then no-ops will be filtered out.
-   */
+  /** Skipped rows (already in store or duplicates) keyed by primaryKey */
   skippedUpdates: SkippedPreferenceUpdates,
-  /**
-   * The set of failing updates
-   * Mapping from primaryKey to the request payload, time upload happened
-   * and error message.
-   */
+  /** Failed uploads keyed by primaryKey */
   failingUpdates: FailingPreferenceUpdates,
-  /**
-   * The set of uploads that were pending at the time that the cache file
-   * was last written to. When using `--dryRun=true` this list will be full.
-   *
-   * When running `--dryRun=false` this set will shrink as updates are processed.
-   */
+  /** Pending uploads at time of last cache write; shrinks as processed */
   pendingUpdates: PreferenceUpdateMap,
-  /**
-   * The updates that were successfully processed
-   * Mapping from primaryKey to the request response.
-   *
-   * This will be empty if `--dryRun=true` is set.
-   * If `--dryRun=false` is set, this will contain
-   * the updates that were successfully processed.
-   */
+  /** Successfully processed uploads keyed by primaryKey */
   successfulUpdates: PreferenceUpdateMap,
 });
 

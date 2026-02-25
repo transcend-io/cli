@@ -22,10 +22,6 @@ export type TaskCommonOpts = Pick<
   | 'dryRun'
   | 'attributes'
   | 'forceTriggerWorkflows'
-  | 'allowedIdentifierNames'
-  | 'identifierColumns'
-  | 'columnsToIgnore'
-  | 'skipMetadata'
 > & {
   schemaFile: string;
   receiptsFolder: string;
@@ -58,15 +54,11 @@ export function buildCommonOpts(
     dryRun,
     attributes,
     forceTriggerWorkflows,
-    allowedIdentifierNames,
-    identifierColumns,
     uploadConcurrency,
     maxChunkSize,
     rateLimitRetryDelay,
     maxRecordsToReceipt,
     uploadLogInterval,
-    columnsToIgnore = [],
-    skipMetadata = false,
   } = flags;
 
   return {
@@ -85,14 +77,10 @@ export function buildCommonOpts(
     dryRun,
     attributes,
     forceTriggerWorkflows,
-    allowedIdentifierNames,
-    identifierColumns,
     uploadConcurrency,
     maxChunkSize,
     rateLimitRetryDelay,
     maxRecordsToReceipt,
     uploadLogInterval,
-    columnsToIgnore,
-    skipMetadata,
   };
 }

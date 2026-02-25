@@ -85,7 +85,16 @@ export async function runChild(): Promise<void> {
             options.sombraAuth,
           );
 
-          // Step 1: Build the upload plan (validation-only)
+          // Derive identifierColumns and columnsToIgnore from config
+          const columnToIdentifier = schema.getColumnToIdentifier();
+          const identifierColumns = Object.keys(columnToIdentifier);
+          const allowedIdentifierNames = [
+            ...new Set(Object.values(columnToIdentifier).map((v) => v.name)),
+          ];
+          const columnsToIgnore =
+            schema.state.getValue('columnsToIgnore') ?? [];
+
+          // Step 1: Build the upload plan (validation-only, non-interactive)
           const plan = await buildInteractiveUploadPreferencePlan({
             sombra,
             client,
@@ -98,11 +107,12 @@ export async function runChild(): Promise<void> {
               options.downloadIdentifierConcurrency,
             skipExistingRecordCheck: options.skipExistingRecordCheck,
             forceTriggerWorkflows: options.forceTriggerWorkflows,
-            allowedIdentifierNames: options.allowedIdentifierNames,
+            allowedIdentifierNames,
             maxRecordsToReceipt: options.maxRecordsToReceipt,
-            identifierColumns: options.identifierColumns,
-            columnsToIgnore: options.columnsToIgnore,
+            identifierColumns,
+            columnsToIgnore,
             attributes: splitCsvToList(options.attributes),
+            nonInteractive: true,
             // Report progress to parent process
             onProgress: ({ successTotal, fileTotal }) => {
               process.send?.({
@@ -125,7 +135,6 @@ export async function runChild(): Promise<void> {
             skipWorkflowTriggers: options.skipWorkflowTriggers,
             skipConflictUpdates: options.skipConflictUpdates,
             forceTriggerWorkflows: options.forceTriggerWorkflows,
-            skipMetadata: options.skipMetadata,
             uploadLogInterval: options.uploadLogInterval,
             maxChunkSize: options.maxChunkSize,
             uploadConcurrency: options.uploadConcurrency,

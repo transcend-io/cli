@@ -19,6 +19,8 @@ export interface PreferenceSchemaInterface {
   getColumnToIdentifier(): ColumnIdentifierMap;
   /** CSV column name -> Metadata key mapping */
   getColumnToMetadata(): ColumnMetadataMap | undefined;
+  /** CSV columns to ignore during upload */
+  getColumnsToIgnore(): string[];
   /** The persisted cache */ // FIXME remove this
   state: PersistedState<typeof FileFormatState>;
 }
@@ -87,6 +89,8 @@ export async function makeSchemaState(
         state.getValue('columnToIdentifier'),
       getColumnToMetadata: (): ColumnMetadataMap | undefined =>
         state.getValue('columnToMetadata'),
+      getColumnsToIgnore: (): string[] =>
+        state.getValue('columnsToIgnore') ?? [],
     };
   } catch (err) {
     throw new Error(

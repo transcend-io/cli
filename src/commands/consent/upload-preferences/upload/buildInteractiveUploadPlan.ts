@@ -76,6 +76,7 @@ export async function buildInteractiveUploadPreferencePlan({
   identifierColumns,
   columnsToIgnore = [],
   attributes = [],
+  nonInteractive = false,
   onProgress,
 }: {
   /** Transcend GraphQL client */
@@ -108,6 +109,8 @@ export async function buildInteractiveUploadPreferencePlan({
   identifierDownloadLogInterval?: number;
   /** Maximum records to write out to the receipt file */
   maxRecordsToReceipt?: number;
+  /** When true, throw instead of prompting (for worker processes) */
+  nonInteractive?: boolean;
   /** on progress callback */
   onProgress?: (info: PreferenceUploadProgress) => void;
 }): Promise<InteractiveUploadPreferencePlan> {
@@ -126,7 +129,7 @@ export async function buildInteractiveUploadPreferencePlan({
   );
 
   // Build clients + reference data (purposes/topics/identifiers)
-  const references = await loadReferenceData(client, forceTriggerWorkflows);
+  const references = await loadReferenceData(client);
 
   // Read in the file
   logger.info(colors.magenta(`Reading in file: "${file}"`));
@@ -151,6 +154,7 @@ export async function buildInteractiveUploadPreferencePlan({
       identifierDownloadLogInterval,
       columnsToIgnore,
       onProgress,
+      nonInteractive,
     },
     schema.state,
   );

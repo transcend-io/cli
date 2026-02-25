@@ -25,6 +25,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     preferenceTopics,
     forceTriggerWorkflows,
     columnsToIgnore,
+    nonInteractive = false,
   }: {
     /** The purpose slugs that are allowed to be updated */
     purposeSlugs: string[];
@@ -34,6 +35,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     forceTriggerWorkflows: boolean;
     /** Columns to ignore in the CSV file */
     columnsToIgnore: string[];
+    /** When true, throw instead of prompting (for worker processes) */
+    nonInteractive?: boolean;
   },
 ): Promise<PersistedState<typeof FileFormatState>> {
   // Determine columns to map
@@ -76,6 +79,13 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         ),
       );
     } else {
+      if (nonInteractive) {
+        throw new Error(
+          `Column "${col}" has no purpose mapping in the config. ` +
+            "Run 'transcend consent configure-preference-upload' to update the config.",
+        );
+      }
+
       const { purposeName } = await inquirer.prompt<{
         /** purpose name */
         purposeName: string;
@@ -106,6 +116,16 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         );
         return;
       }
+
+      if (nonInteractive) {
+        logger.warn(
+          colors.yellow(
+            `Value "${value}" for column "${col}" has no mapping in the config. Skipping.`,
+          ),
+        );
+        return;
+      }
+
       // if preference is null, this column is just for the purpose
       if (purposeMapping.preference === null) {
         const { purposeValue } = await inquirer.prompt<{

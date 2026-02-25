@@ -51,6 +51,7 @@ export async function parsePreferenceManagementCsvWithCache(
     identifierDownloadLogInterval,
     columnsToIgnore,
     onProgress,
+    nonInteractive = false,
   }: {
     /** File to parse */
     file: string;
@@ -80,6 +81,8 @@ export async function parsePreferenceManagementCsvWithCache(
     downloadIdentifierConcurrency: number;
     /** on progress callback */
     onProgress?: (info: PreferenceUploadProgress) => void;
+    /** When true, throw instead of prompting (for worker processes) */
+    nonInteractive?: boolean;
   },
   schemaState: PersistedState<typeof FileFormatState>,
 ): Promise<{
@@ -94,7 +97,9 @@ export async function parsePreferenceManagementCsvWithCache(
   const t0 = new Date().getTime();
 
   // Validate that all timestamps are present in the file
-  await parsePreferenceFileFormatFromCsv(rawPreferences, schemaState);
+  await parsePreferenceFileFormatFromCsv(rawPreferences, schemaState, {
+    nonInteractive,
+  });
 
   // Validate that all identifiers are present and unique
   const result = await parsePreferenceIdentifiersFromCsv(rawPreferences, {
@@ -102,6 +107,7 @@ export async function parsePreferenceManagementCsvWithCache(
     orgIdentifiers,
     allowedIdentifierNames,
     identifierColumns,
+    nonInteractive,
   });
   const { preferences } = result;
 
@@ -111,6 +117,7 @@ export async function parsePreferenceManagementCsvWithCache(
     purposeSlugs,
     forceTriggerWorkflows,
     columnsToIgnore,
+    nonInteractive,
   });
 
   // Grab existing preference store records
