@@ -3,6 +3,7 @@ export * from './codecs';
 export * from './getPreferencesForIdentifiers';
 export * from './parsePreferenceManagementCsv';
 export * from './getPreferenceUpdatesFromRow';
+export * from './getPreferenceMetadataFromRow';
 export * from './parsePreferenceManagementCsv';
 export * from './parsePreferenceIdentifiersFromCsv';
 export * from './parsePreferenceTimestampsFromCsv';
