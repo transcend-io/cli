@@ -1,9 +1,19 @@
-import { uniq, groupBy, difference } from 'lodash-es';
+// groupBy
+import { uniq, keyBy } from 'lodash-es';
 import colors from 'colors';
 import inquirer from 'inquirer';
-import { FileMetadataState } from './codecs';
+import type {
+  FileFormatState,
+  IdentifierMetadataForPreference,
+} from './codecs';
 import { logger } from '../../logger';
 import { inquirerConfirmBoolean } from '../helpers';
+import Bluebird from 'bluebird';
+import type { Identifier } from '../graphql';
+import type { PreferenceStoreIdentifier } from '@transcend-io/privacy-types';
+import type { PersistedState } from '@transcend-io/persisted-state';
+
+const { mapSeries } = Bluebird;
 
 /* eslint-disable no-param-reassign */
 
@@ -14,69 +24,148 @@ import { inquirerConfirmBoolean } from '../helpers';
  * and that all identifiers are unique.
  *
  * @param preferences - List of preferences
- * @param currentState - The current file metadata state for parsing this list
+ * @param options - Options
  * @returns The updated file metadata state
  */
 export async function parsePreferenceIdentifiersFromCsv(
   preferences: Record<string, string>[],
-  currentState: FileMetadataState,
+  {
+    schemaState,
+    orgIdentifiers,
+    allowedIdentifierNames,
+    identifierColumns,
+    nonInteractive = false,
+  }: {
+    /** The current state of the schema metadata */
+    schemaState: PersistedState<typeof FileFormatState>;
+    /** The list of identifiers configured for the org */
+    orgIdentifiers: Identifier[];
+    /** The list of identifier names that are allowed for this upload */
+    allowedIdentifierNames: string[];
+    /** The columns in the CSV that should be used as identifiers */
+    identifierColumns: string[];
+    /** When true, throw instead of prompting (for worker processes) */
+    nonInteractive?: boolean;
+  },
 ): Promise<{
   /** The updated state */
-  currentState: FileMetadataState;
+  schemaState: PersistedState<typeof FileFormatState>;
   /** The updated preferences */
   preferences: Record<string, string>[];
 }> {
+  const columnNames = uniq(
+    preferences.map((x) => Object.keys(x)).flat(),
+  ).filter((col) => identifierColumns.includes(col));
   // Determine columns to map
-  const columnNames = uniq(preferences.map((x) => Object.keys(x)).flat());
+  const orgIdentifiersByName = keyBy(orgIdentifiers, 'name');
+  const filteredOrgIdentifiers = allowedIdentifierNames
+    .map((name) => orgIdentifiersByName[name])
+    .filter(Boolean);
+  if (filteredOrgIdentifiers.length !== allowedIdentifierNames.length) {
+    const missingIdentifiers = allowedIdentifierNames.filter(
+      (name) => !orgIdentifiersByName[name],
+    );
+    throw new Error(
+      `No identifier configuration found for "${missingIdentifiers.join(
+        '","',
+      )}"`,
+    );
+  }
+  if (columnNames.length !== identifierColumns.length) {
+    const missingColumns = identifierColumns.filter(
+      (col) => !columnNames.includes(col),
+    );
+    throw new Error(
+      `The following identifier columns are missing from the CSV: "${missingColumns.join(
+        '","',
+      )}"`,
+    );
+  }
 
-  // Determine the columns that could potentially be used for identifier
-  const remainingColumnsForIdentifier = difference(columnNames, [
-    ...(currentState.identifierColumn ? [currentState.identifierColumn] : []),
-    ...Object.keys(currentState.columnToPurposeName),
-  ]);
+  if (
+    filteredOrgIdentifiers.filter(
+      (identifier) => identifier.isUniqueOnPreferenceStore,
+    ).length === 0
+  ) {
+    throw new Error(
+      'No unique identifier was provided. Please ensure that at least one ' +
+        'of the allowed identifiers is configured as unique on the preference store.',
+    );
+  }
 
-  // Determine the identifier column to work off of
-  if (!currentState.identifierColumn) {
+  // Determine the columns that could potentially be used for identifiers
+  const currentColumnToIdentifier = schemaState.getValue('columnToIdentifier');
+  await mapSeries(identifierColumns, async (col) => {
+    // Map the column to an identifier
+    const identifierMapping = currentColumnToIdentifier[col];
+    if (identifierMapping) {
+      logger.info(
+        colors.magenta(
+          `Column "${col}" is associated with identifier "${identifierMapping.name}"`,
+        ),
+      );
+      return;
+    }
+
+    if (nonInteractive) {
+      throw new Error(
+        `Column "${col}" has no identifier mapping in the config. ` +
+          "Run 'transcend consent configure-preference-upload' to update the config.",
+      );
+    }
+
+    // If the column is not mapped, ask the user to map it
     const { identifierName } = await inquirer.prompt<{
       /** Identifier name */
       identifierName: string;
     }>([
       {
         name: 'identifierName',
-        message:
-          'Choose the column that will be used as the identifier to upload consent preferences by',
+        message: `Choose the identifier name for column "${col}"`,
         type: 'list',
-        default:
-          remainingColumnsForIdentifier.find((col) =>
-            col.toLowerCase().includes('email'),
-          ) || remainingColumnsForIdentifier[0],
-        choices: remainingColumnsForIdentifier,
+        // Default to the first allowed identifier name
+        default: allowedIdentifierNames.find((x) => x.startsWith(col)),
+        choices: allowedIdentifierNames,
       },
     ]);
-    currentState.identifierColumn = identifierName;
-  }
-  logger.info(
-    colors.magenta(
-      `Using identifier column "${currentState.identifierColumn}"`,
-    ),
-  );
+    currentColumnToIdentifier[col] = {
+      name: identifierName,
+      isUniqueOnPreferenceStore:
+        orgIdentifiersByName[identifierName].isUniqueOnPreferenceStore,
+    };
+  });
+  schemaState.setValue(currentColumnToIdentifier, 'columnToIdentifier');
 
-  // Validate that the identifier column is present for all rows and unique
-  const identifierColumnsMissing = preferences
-    .map((pref, ind) => (pref[currentState.identifierColumn!] ? null : [ind]))
+  const uniqueIdentifierColumns = Object.entries(currentColumnToIdentifier)
+    .filter(
+      ([, identifierMapping]) => identifierMapping.isUniqueOnPreferenceStore,
+    )
+    .map(([col]) => col);
+
+  // Validate that the at least 1 unique identifier column is present
+  const uniqueIdentifierMissingIndexes = preferences
+    .map((pref, ind) =>
+      uniqueIdentifierColumns.some((col) => !!pref[col]) ? null : [ind],
+    )
     .filter((x): x is number[] => !!x)
     .flat();
-  if (identifierColumnsMissing.length > 0) {
-    const msg = `The identifier column "${
-      currentState.identifierColumn
-    }" is missing a value for the following rows: ${identifierColumnsMissing.join(
+
+  if (uniqueIdentifierMissingIndexes.length > 0) {
+    const msg = `
+    The following rows ${uniqueIdentifierMissingIndexes.join(
       ', ',
-    )}`;
+    )} do not have any unique identifier values for the columns "${uniqueIdentifierColumns.join(
+      '", "',
+    )}".`;
     logger.warn(colors.yellow(msg));
+
+    if (nonInteractive) {
+      throw new Error(msg);
+    }
 
     // Ask user if they would like to skip rows missing an identifier
     const skip = await inquirerConfirmBoolean({
-      message: 'Would you like to skip rows missing an identifier?',
+      message: 'Would you like to skip rows missing unique identifiers?',
     });
     if (!skip) {
       throw new Error(msg);
@@ -85,54 +174,94 @@ export async function parsePreferenceIdentifiersFromCsv(
     // Filter out rows missing an identifier
     const previous = preferences.length;
     preferences = preferences.filter(
-      (pref) => pref[currentState.identifierColumn!],
+      (pref, index) => !uniqueIdentifierMissingIndexes.includes(index),
     );
     logger.info(
       colors.yellow(
-        `Skipped ${previous - preferences.length} rows missing an identifier`,
+        `Skipped ${
+          previous - preferences.length
+        } rows missing unique identifiers`,
       ),
     );
   }
   logger.info(
     colors.magenta(
-      `The identifier column "${currentState.identifierColumn}" is present for all rows`,
+      `At least one unique identifier column is present for all ${preferences.length} rows.`,
     ),
   );
 
-  // Validate that all identifiers are unique
-  const rowsByUserId = groupBy(preferences, currentState.identifierColumn);
-  const duplicateIdentifiers = Object.entries(rowsByUserId).filter(
-    ([, rows]) => rows.length > 1,
-  );
-  if (duplicateIdentifiers.length > 0) {
-    const msg = `The identifier column "${
-      currentState.identifierColumn
-    }" has duplicate values for the following rows: ${duplicateIdentifiers
-      .slice(0, 10)
-      .map(([userId, rows]) => `${userId} (${rows.length})`)
-      .join('\n')}`;
-    logger.warn(colors.yellow(msg));
-
-    // Ask user if they would like to take the most recent update
-    // for each duplicate identifier
-    const skip = await inquirerConfirmBoolean({
-      message: 'Would you like to automatically take the latest update?',
-    });
-    if (!skip) {
-      throw new Error(msg);
-    }
-    preferences = Object.entries(rowsByUserId)
-      .map(([, rows]) => {
-        const sorted = rows.sort(
-          (a, b) =>
-            new Date(b[currentState.timestampColum!]).getTime() -
-            new Date(a[currentState.timestampColum!]).getTime(),
-        );
-        return sorted[0];
-      })
-      .filter((x) => x);
-  }
-
-  return { currentState, preferences };
+  return { schemaState, preferences };
 }
 /* eslint-enable no-param-reassign */
+
+/**
+ * Helper function to get the identifiers payload from a row
+ *
+ * @param options - Options
+ * @param options.row - The current row from CSV file
+ * @param options.columnToIdentifier - The column to identifier mapping metadata
+ * @returns The updated preferences with identifiers payload
+ */
+export function getPreferenceIdentifiersFromRow({
+  row,
+  columnToIdentifier,
+}: {
+  /** The current row from CSV file */
+  row: Record<string, string>;
+  /** The current file metadata state */
+  columnToIdentifier: FileFormatState['columnToIdentifier'];
+}): PreferenceStoreIdentifier[] {
+  const identifiers = Object.entries(columnToIdentifier)
+    .filter(([col]) => !!row[col])
+    .map(([col, identifierMapping]) => ({
+      name: identifierMapping.name,
+      value: row[col],
+    }));
+  // put email first if it exists
+  // TODO: https://linear.app/transcend/issue/PIK-285/set-precedence-of-unique-identifiers - remove email logic
+  return identifiers.sort(
+    (a, b) =>
+      (a.name === 'email' ? -1 : 0) - (b.name === 'email' ? -1 : 0) ||
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+  );
+}
+
+/**
+ * Helper function to get unique identifier name present in a row
+ *
+ * @param options - Options
+ * @param options.row - The current row from CSV file
+ * @param options.columnToIdentifier - The column to identifier mapping metadata
+ * @returns The unique identifier names present in the row
+ */
+export function getUniquePreferenceIdentifierNamesFromRow({
+  row,
+  columnToIdentifier,
+}: {
+  /** The current row from CSV file */
+  row: Record<string, string>;
+  /** The current file metadata state */
+  columnToIdentifier: FileFormatState['columnToIdentifier'];
+}): (IdentifierMetadataForPreference & {
+  /** Column name */
+  columnName: string;
+  /** Value of the identifier in the row */
+  value: string;
+})[] {
+  // TODO: https://linear.app/transcend/issue/PIK-285/set-precedence-of-unique-identifiers - remove email logic
+  // sort email to the front
+  return Object.entries(columnToIdentifier)
+    .sort(
+      ([, a], [, b]) =>
+        (a.name === 'email' ? -1 : 0) - (b.name === 'email' ? -1 : 0) ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+    )
+    .filter(
+      ([col]) => row[col] && columnToIdentifier[col].isUniqueOnPreferenceStore,
+    )
+    .map(([col, identifier]) => ({
+      ...identifier,
+      columnName: col,
+      value: row[col],
+    }));
+}

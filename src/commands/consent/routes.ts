@@ -1,5 +1,6 @@
 import { buildRouteMap } from '@stricli/core';
 import { buildXdiSyncEndpointCommand } from './build-xdi-sync-endpoint/command';
+import { configurePreferenceUploadCommand } from './configure-preference-upload/command';
 import { pullConsentMetricsCommand } from './pull-consent-metrics/command';
 import { pullConsentPreferencesCommand } from './pull-consent-preferences/command';
 import { updateConsentManagerCommand } from './update-consent-manager/command';
@@ -13,6 +14,7 @@ import { deletePreferenceRecordsCommand } from './delete-preference-records/comm
 export const consentRoutes = buildRouteMap({
   routes: {
     'build-xdi-sync-endpoint': buildXdiSyncEndpointCommand,
+    'configure-preference-upload': configurePreferenceUploadCommand,
     'generate-access-tokens': generateAccessTokensCommand,
     'pull-consent-metrics': pullConsentMetricsCommand,
     'pull-consent-preferences': pullConsentPreferencesCommand,

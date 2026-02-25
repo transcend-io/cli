@@ -9,7 +9,7 @@ const examples = buildExamples<UploadPreferencesCommandFlags>(
         'Upload consent preferences to partition key `4d1c5daa-90b7-4d18-aa40-f86a43d2c726`',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        file: './preferences.csv',
+        directory: './',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
       },
     },
@@ -18,7 +18,7 @@ const examples = buildExamples<UploadPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        file: './preferences.csv',
+        directory: './csvs',
         dryRun: true,
         skipWorkflowTriggers: true,
         skipConflictUpdates: true,
@@ -33,7 +33,7 @@ const examples = buildExamples<UploadPreferencesCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         partition: '4d1c5daa-90b7-4d18-aa40-f86a43d2c726',
-        file: './preferences.csv',
+        directory: './folder',
         transcendUrl: 'https://api.us.transcend.io',
       },
     },

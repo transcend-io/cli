@@ -18,6 +18,7 @@ export const uploadPreferencesCommand = buildCommand({
           ScopeName.ManageStoredPreferences,
           ScopeName.ViewManagedConsentDatabaseAdminApi,
           ScopeName.ViewPreferenceStoreSettings,
+          ScopeName.ViewRequestIdentitySettings,
         ],
       }),
       partition: {
@@ -27,17 +28,10 @@ export const uploadPreferencesCommand = buildCommand({
       },
       sombraAuth: createSombraAuthParameter(),
       transcendUrl: createTranscendUrlParameter(),
-      file: {
-        kind: 'parsed',
-        parse: String,
-        brief: 'Path to the CSV file to load preferences from',
-        optional: true,
-      },
       directory: {
         kind: 'parsed',
         parse: String,
         brief: 'Path to the directory of CSV files to load preferences from',
-        optional: true,
       },
       dryRun: {
         kind: 'boolean',
@@ -54,8 +48,17 @@ export const uploadPreferencesCommand = buildCommand({
       receiptFileDir: {
         kind: 'parsed',
         parse: String,
-        brief: 'Directory path where the response receipts should be saved',
-        default: './receipts',
+        brief:
+          'Directory path where the response receipts should be saved. Defaults to ./receipts if a "file" is provided, or <directory>/../receipts if a "directory" is provided.',
+        optional: true,
+      },
+      schemaFilePath: {
+        kind: 'parsed',
+        parse: String,
+        brief:
+          'The path to where the schema for the file should be saved. If file is provided, it will default to ./<filePrefix>-preference-upload-schema.json ' +
+          'If directory is provided, it will default to <directory>/../preference-upload-schema.json',
+        optional: true,
       },
       skipWorkflowTriggers: {
         kind: 'boolean',
@@ -96,8 +99,85 @@ export const uploadPreferencesCommand = buildCommand({
       concurrency: {
         kind: 'parsed',
         parse: numberParser,
-        brief: 'The concurrency to use when uploading in parallel',
+        brief:
+          'The number of concurrent processes to use to upload the files. When this is not set, it defaults ' +
+          'to the number of CPU cores available on the machine. ' +
+          'e.g. if there are 5 concurrent processes for 15 files, each parallel job would get 3 files to process. ',
+        optional: true,
+      },
+      uploadConcurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of concurrent requests made at any given time by a single process.' +
+          "This is NOT the batch size—it's how many batch *tasks* run in parallel. " +
+          'The number of total concurrent requests is maxed out at concurrency * uploadConcurrency.',
+        default: '75', // FIXME 25
+      },
+      maxChunkSize: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the maximum number of records to put in a single request.' +
+          'The number of total concurrent records being put in at any one time is is maxed out at maxChunkSize * concurrency * uploadConcurrency.',
+        default: '25',
+      },
+      rateLimitRetryDelay: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of milliseconds to wait before retrying a request that was rate limited. ' +
+          'This is only used if the request is rate limited by the Transcend API. ' +
+          'If the request fails for any other reason, it will not be retried. ',
+        default: '3000',
+      },
+      uploadLogInterval: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When uploading preferences to v1/preferences - this is the number of records after which to log progress. ' +
+          'Output will be logged to console and also to the receipt file. ' +
+          'Setting this value lower will allow for you to more easily pick up where you left off. ' +
+          'Setting this value higher can avoid excessive i/o operations slowing down the upload. ' +
+          'Default is a good optimization for most cases.',
+        default: '1000',
+      },
+      downloadIdentifierConcurrency: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When downloading identifiers for the upload - this is the number of concurrent requests to make. ' +
+          'This is only used if the records are not already cached in the preference store. ',
+        default: '30',
+      },
+      maxRecordsToReceipt: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'When writing out successful and pending records to the receipt file - this is the maximum number of records to write out. ' +
+          'This is to avoid the receipt file getting too large for JSON.parse/stringify.',
         default: '10',
+      },
+      regenerate: {
+        kind: 'boolean',
+        brief:
+          'Force re-generation of the schema config file before uploading. ' +
+          'Runs the interactive configure flow even if a config already exists.',
+        default: false,
+      },
+      chunkSizeMB: {
+        kind: 'parsed',
+        parse: numberParser,
+        brief:
+          'Auto-chunk threshold in MB. Any CSV file larger than this will be ' +
+          'split into smaller files before uploading. Set to 0 to disable.',
+        default: '10',
+      },
+      viewerMode: {
+        kind: 'boolean',
+        brief:
+          'Run in non-interactive viewer mode (no attach UI, auto-artifacts)',
+        default: false,
       },
     },
   },
@@ -105,8 +185,19 @@ export const uploadPreferencesCommand = buildCommand({
     brief: 'Upload preference management data to your Preference Store',
     fullDescription: `Upload preference management data to your Preference Store.
 
-This command prompts you to map the shape of the CSV to the shape of the Transcend API. There is no requirement for the shape of the incoming CSV, as the script will handle the mapping process.
+Requires a config file (generated by 'configure-preference-upload') that maps
+CSV columns to identifiers, purposes, and preferences. If no config exists,
+pass --regenerate to run the interactive configure flow first.
 
-The script will also produce a JSON cache file that allows for the mappings to be preserved between runs.`,
+Large files are automatically chunked into smaller pieces (controlled by
+--chunkSizeMB) before uploading.
+
+Parallel preference uploader (Node 22+ ESM/TS)
+-----------------------------------------------------------------------------
+- Spawns a pool of child *processes* (not threads) to run uploads in parallel.
+- Shows a live dashboard in the parent terminal with progress per worker.
+- Creates per-worker log files and (optionally) opens OS terminals to tail them.
+- Uses the same module as both parent and child; the child mode is toggled
+  by the presence of a CLI flag ('--as-child').`,
   },
 });
