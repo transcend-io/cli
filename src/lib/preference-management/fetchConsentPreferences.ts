@@ -79,7 +79,6 @@ export async function fetchConsentPreferences(
           })
           .json(),
       {
-        maxAttempts: 5,
         onRetry: (attempt, _error, message) => {
           logger.warn(
             colors.yellow(
