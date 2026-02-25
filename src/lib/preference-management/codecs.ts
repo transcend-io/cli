@@ -80,22 +80,16 @@ export const ColumnIdentifierMap = t.record(
 /** Override type */
 export type ColumnIdentifierMap = t.TypeOf<typeof ColumnIdentifierMap>;
 
-/**
- * Mapping for a single metadata field.
- * Maps a CSV column to a metadata key in the API.
- */
+/** Mapping of a CSV column to a metadata key in the preference store. */
 export const MetadataMapping = t.type({
-  /** The metadata key name in the API */
+  /** The metadata key name in the preference store */
   key: t.string,
 });
 
 /** Override type */
 export type MetadataMapping = t.TypeOf<typeof MetadataMapping>;
 
-/**
- * Mapping of CSV column names to metadata keys.
- * This is used to map columns in the CSV to metadata fields in the preference store.
- */
+/** Record mapping CSV column names to metadata keys. */
 export const ColumnMetadataMap = t.record(t.string, MetadataMapping);
 
 /** Override type */
