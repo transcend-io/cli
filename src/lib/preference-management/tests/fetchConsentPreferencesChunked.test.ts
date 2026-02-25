@@ -51,7 +51,7 @@ const H = vi.hoisted(() => ({
     AsyncGenerator<PreferenceQueryResponseItem[], void, unknown>
   >,
   makeIter: (pages: PreferenceQueryResponseItem[][]) =>
-    // eslint-disable-next-line wrap-iife
+    // eslint-disable-next-line wrap-iife, func-names
     (async function* () {
       for (const p of pages) yield p;
     })(),

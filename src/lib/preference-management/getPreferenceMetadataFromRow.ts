@@ -15,8 +15,8 @@ export function getPreferenceMetadataFromRow({
   /** Mapping from CSV column name to metadata key */
   columnToMetadata: ColumnMetadataMap;
 }): Array<{
-  /** */ key: string /** */;
-  /** */
+  /** Metadata key name */ key: string;
+  /** Metadata value from the CSV row */
   value: string;
 }> {
   return Object.entries(columnToMetadata)
@@ -32,8 +32,8 @@ export function getPreferenceMetadataFromRow({
       (
         x,
       ): x is {
-        /** */ key: string /** */;
-        /** */
+        /** Metadata key name */ key: string;
+        /** Metadata value from the CSV row */
         value: string;
       } => x !== null,
     );
