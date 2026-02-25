@@ -235,7 +235,9 @@ export function getPreferenceUpdatesFromRow({
         if (mappedValue === undefined && rawValue !== '') {
           throw new Error(
             `No preference mapping found for value "${rawValue}" in column ` +
-              `"${columnName}" (purpose=${purpose}, preference=∅)`,
+              `"${columnName}" (purpose=${purpose}, preference=∅) ${JSON.stringify(
+                row,
+              )}`,
           );
         }
         if (mappedValue === null) {
