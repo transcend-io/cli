@@ -51,6 +51,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+  - [`transcend admin find-exact`](#transcend-admin-find-exact)
   - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
@@ -3435,6 +3436,31 @@ transcend admin chunk-csv \
 
 ```sh
 transcend admin chunk-csv --directory=./working/files
+```
+
+### `transcend admin find-exact`
+
+```txt
+USAGE
+  transcend admin find-exact (--needle value) [--root value] [--exts value] [--noParquet] [--concurrency value] [--maxBytes value]
+  transcend admin find-exact --help
+
+Recursively searches a directory for files that contain the given needle string (case-insensitive).
+
+Supported file types:
+- Text-based files (csv, json, txt, ndjson, log, etc.) are scanned via streaming byte comparison.
+- Parquet files are scanned via DuckDB (must be on PATH unless --noParquet is set).
+
+Outputs one matching file path per line to stdout as hits are found.
+
+FLAGS
+      --needle        The exact string to search for (case-insensitive)
+     [--root]         Root directory to search                                              [default = .]
+     [--exts]         Comma-separated file extensions to search (without leading dots)      [default = csv,json,txt,ndjson,log]
+     [--noParquet]    Skip parquet file scanning (requires duckdb on PATH)                  [default = false]
+     [--concurrency]  Max number of files to scan concurrently                              [default = 16]
+     [--maxBytes]     Stop scanning each file after this many bytes (useful for huge files)
+  -h  --help          Print help information and exit
 ```
 
 ### `transcend admin parquet-to-csv`
