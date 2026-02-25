@@ -1146,5 +1146,33 @@ describe('getPreferenceUpdatesFromRow', () => {
       );
     }
   });
+
+  it('includes the full row in error for unmapped top-level purpose value', () => {
+    const row = { my_col: 'UNKNOWN_VALUE' };
+    try {
+      getPreferenceUpdatesFromRow({
+        row,
+        purposeSlugs: ['Marketing'],
+        preferenceTopics: [],
+        columnToPurposeName: {
+          my_col: {
+            purpose: 'Marketing',
+            preference: null,
+            valueMapping: {
+              Yes: true,
+              No: false,
+            },
+          },
+        },
+      });
+      expect.fail('Should have thrown');
+    } catch (err) {
+      expect(err.message).toContain(
+        'No preference mapping found for value "UNKNOWN_VALUE" in column "my_col"',
+      );
+      expect(err.message).toContain('preference=∅');
+      expect(err.message).toContain(JSON.stringify(row));
+    }
+  });
 });
 /* eslint-enable max-lines */
