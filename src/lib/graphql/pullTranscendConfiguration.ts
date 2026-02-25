@@ -1555,13 +1555,6 @@ export async function pullTranscendConfiguration(
           trigger.dataSilos.length > 0
             ? trigger.dataSilos.map((ds) => ds.title)
             : undefined,
-        purposes:
-          trigger.consentWorkflowTriggerPurposes.length > 0
-            ? trigger.consentWorkflowTriggerPurposes.map((p) => ({
-                'tracking-type': p.purpose.trackingType,
-                'matching-state': p.matchingState,
-              }))
-            : undefined,
       }),
     );
   }

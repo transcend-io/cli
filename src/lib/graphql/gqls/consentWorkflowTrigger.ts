@@ -20,12 +20,6 @@ export const CONSENT_WORKFLOW_TRIGGERS = gql`
         dataSilos {
           title
         }
-        consentWorkflowTriggerPurposes {
-          matchingState
-          purpose {
-            trackingType
-          }
-        }
       }
       totalCount
     }

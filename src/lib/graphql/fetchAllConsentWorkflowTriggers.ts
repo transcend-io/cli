@@ -2,16 +2,6 @@ import { GraphQLClient } from 'graphql-request';
 import { CONSENT_WORKFLOW_TRIGGERS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 
-export interface ConsentWorkflowTriggerPurpose {
-  /** Whether this purpose must match opted-in (true) or opted-out (false) */
-  matchingState: boolean;
-  /** The associated purpose */
-  purpose: {
-    /** Slug of purpose */
-    trackingType: string;
-  };
-}
-
 export interface ConsentWorkflowTrigger {
   /** ID of the trigger */
   id: string;
@@ -42,8 +32,6 @@ export interface ConsentWorkflowTrigger {
     /** Title of data silo */
     title: string;
   }[];
-  /** Purposes and their matching consent states */
-  consentWorkflowTriggerPurposes: ConsentWorkflowTriggerPurpose[];
 }
 
 const PAGE_SIZE = 20;
