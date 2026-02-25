@@ -7,9 +7,9 @@ import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-/** CLI flags accepted by the `find-exact` command. */
-export type FindExactCommandFlags = {
-  /** The exact string to search for */
+/** CLI flags accepted by the `find-text-in-folder` command. */
+export type FindTextInFolderCommandFlags = {
+  /** The text string to search for */
   needle: string;
   /** Root directory to search */
   root: string;
@@ -197,18 +197,18 @@ async function parquetFileHasExactString(
 }
 
 /**
- * Entrypoint for the `admin find-exact` command.
+ * Entrypoint for the `admin find-text-in-folder` command.
  *
- * Recursively searches files under --root for the --needle string, outputting
- * matching file paths. Supports text-based files via streaming byte scan and
- * parquet files via DuckDB.
+ * Searches a folder of files for a given text string. Useful for finding
+ * a needle in a haystack across many large files (multi-GB CSVs, JSON
+ * dumps, log archives). Files are streamed so memory stays flat.
  *
  * @param this - Bound CLI context
  * @param flags - CLI flags for the run
  */
-export async function findExact(
+export async function findTextInFolder(
   this: LocalContext,
-  flags: FindExactCommandFlags,
+  flags: FindTextInFolderCommandFlags,
 ): Promise<void> {
   doneInputValidation(this.process.exit);
 

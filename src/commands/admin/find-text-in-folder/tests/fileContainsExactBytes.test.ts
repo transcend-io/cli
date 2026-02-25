@@ -5,7 +5,7 @@ import os from 'node:os';
 
 import { fileContainsExactBytes } from '../impl';
 
-const TMP = path.join(os.tmpdir(), 'find-exact-tests');
+const TMP = path.join(os.tmpdir(), 'find-text-in-folder-tests');
 
 function tmpFile(name: string, content: string): string {
   fs.mkdirSync(TMP, { recursive: true });

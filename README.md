@@ -51,7 +51,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
-  - [`transcend admin find-exact`](#transcend-admin-find-exact)
+  - [`transcend admin find-text-in-folder`](#transcend-admin-find-text-in-folder)
   - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
@@ -3438,14 +3438,21 @@ transcend admin chunk-csv \
 transcend admin chunk-csv --directory=./working/files
 ```
 
-### `transcend admin find-exact`
+### `transcend admin find-text-in-folder`
 
 ```txt
 USAGE
-  transcend admin find-exact (--needle value) [--root value] [--exts value] [--noParquet] [--concurrency value] [--maxBytes value]
-  transcend admin find-exact --help
+  transcend admin find-text-in-folder (--needle value) [--root value] [--exts value] [--noParquet] [--concurrency value] [--maxBytes value]
+  transcend admin find-text-in-folder --help
 
-Recursively searches a directory for files that contain the given needle string (case-insensitive).
+Searches a folder of files for a given text string (case-insensitive).
+
+Useful for finding a needle in a haystack when you have many large files
+(e.g. multi-GB CSV exports, JSON dumps, log archives) and need to know
+which ones contain a specific value like an email address, ID, or keyword.
+
+Files are streamed so memory stays flat even for very large inputs.
+Concurrency is configurable and files are scanned in parallel.
 
 Supported file types:
 - Text-based files (csv, json, txt, ndjson, log, etc.) are scanned via streaming byte comparison.
@@ -3454,7 +3461,7 @@ Supported file types:
 Outputs one matching file path per line to stdout as hits are found.
 
 FLAGS
-      --needle        The exact string to search for (case-insensitive)
+      --needle        The text string to search for (case-insensitive)
      [--root]         Root directory to search                                              [default = .]
      [--exts]         Comma-separated file extensions to search (without leading dots)      [default = csv,json,txt,ndjson,log]
      [--noParquet]    Skip parquet file scanning (requires duckdb on PATH)                  [default = false]
