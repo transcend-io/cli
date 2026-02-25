@@ -35,6 +35,7 @@ import {
   RiskLogicInput,
   ConsentPurpose,
   type SiloDiscoveryResultInput,
+  type ConsentWorkflowTriggerInput,
 } from '../../codecs';
 import {
   RequestAction,
@@ -95,6 +96,7 @@ import {
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
 import { fetchAllSiloDiscoveryResults } from './fetchAllSiloDiscoveryResults';
+import { fetchAllConsentWorkflowTriggers } from './fetchAllConsentWorkflowTriggers';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -189,6 +191,7 @@ export async function pullTranscendConfiguration(
     assessmentTemplates,
     purposes,
     siloDiscoveryResults,
+    consentWorkflowTriggers,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -348,6 +351,10 @@ export async function pullTranscendConfiguration(
     // Fetch silo discovery results
     resources.includes(TranscendPullResource.SystemDiscovery)
       ? fetchAllSiloDiscoveryResults(client)
+      : [],
+    // Fetch consent workflow triggers
+    resources.includes(TranscendPullResource.ConsentWorkflowTriggers)
+      ? fetchAllConsentWorkflowTriggers(client)
       : [],
   ]);
 
@@ -1526,6 +1533,35 @@ export async function pullTranscendConfiguration(
               : {}),
           }),
         ),
+      }),
+    );
+  }
+
+  // Save consent workflow triggers
+  if (
+    consentWorkflowTriggers.length > 0 &&
+    resources.includes(TranscendPullResource.ConsentWorkflowTriggers)
+  ) {
+    result['consent-workflow-triggers'] = consentWorkflowTriggers.map(
+      (trigger): ConsentWorkflowTriggerInput => ({
+        name: trigger.name,
+        'trigger-condition': trigger.triggerCondition || undefined,
+        'action-type': trigger.action.type,
+        'data-subject-type': trigger.subject.type,
+        'is-silent': trigger.isSilent,
+        'allow-unauthenticated': trigger.allowUnauthenticated,
+        'is-active': trigger.isActive,
+        'data-silo-titles':
+          trigger.dataSilos.length > 0
+            ? trigger.dataSilos.map((ds) => ds.title)
+            : undefined,
+        purposes:
+          trigger.consentWorkflowTriggerPurposes.length > 0
+            ? trigger.consentWorkflowTriggerPurposes.map((p) => ({
+                'tracking-type': p.purpose.trackingType,
+                'matching-state': p.matchingState,
+              }))
+            : undefined,
       }),
     );
   }

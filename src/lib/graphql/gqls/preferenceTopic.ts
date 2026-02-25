@@ -42,3 +42,16 @@ export const PREFERENCE_TOPICS = gql`
     }
   }
 `;
+
+export const CREATE_OR_UPDATE_PREFERENCE_TOPIC = gql`
+  mutation TranscendCliCreateOrUpdatePreferenceTopic(
+    $input: CreateOrUpdatePreferenceTopicInput!
+  ) {
+    createOrUpdatePreferenceTopic(input: $input) {
+      preferenceTopic {
+        id
+        slug
+      }
+    }
+  }
+`;

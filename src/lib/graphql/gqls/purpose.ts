@@ -40,3 +40,27 @@ export const PURPOSES = gql`
     }
   }
 `;
+
+export const CREATE_PURPOSE = gql`
+  mutation TranscendCliCreatePurpose($input: TrackingPurposeCreateInput!) {
+    createPurpose(input: $input) {
+      trackingPurpose {
+        id
+        name
+        trackingType
+      }
+    }
+  }
+`;
+
+export const UPDATE_PURPOSE = gql`
+  mutation TranscendCliUpdatePurpose($input: TrackingPurposeUpdateInput!) {
+    updatePurpose(input: $input) {
+      trackingPurpose {
+        id
+        name
+        trackingType
+      }
+    }
+  }
+`;
