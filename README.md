@@ -719,19 +719,19 @@ USAGE
 Bulk notify a set of privacy requests from the DSR Automation -> Incoming Requests tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.
 
 FLAGS
-      --auth             The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
-      --createdAtBefore  Notify requests that are open but submitted before this time
-     [--createdAtAfter]  Notify requests that are open but submitted after this time
-     [--updatedAtBefore] Notify requests that were last updated before this time
-     [--updatedAtAfter]  Notify requests that were last updated after this time
-     [--actions]         The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--daysLeft]        Only notify requests that have less than this number of days until they are considered expired         [default = 10]
-     [--days]            The number of days to adjust the expiration of the request to                                          [default = 45]
-     [--requestIds]...   Specify the specific request IDs to notify                                                             [separator = ,]
-     [--emailTemplate]   The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
-     [--transcendUrl]    URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
-     [--concurrency]     The concurrency to use when uploading requests in parallel                                             [default = 50]
-  -h  --help             Print help information and exit
+      --auth              The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
+      --createdAtBefore   Notify requests that are open but submitted before this time
+     [--createdAtAfter]   Notify requests that are open but submitted after this time
+     [--updatedAtBefore]  Notify requests that were last updated before this time
+     [--updatedAtAfter]   Notify requests that were last updated after this time
+     [--actions]          The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--daysLeft]         Only notify requests that have less than this number of days until they are considered expired         [default = 10]
+     [--days]             The number of days to adjust the expiration of the request to                                          [default = 45]
+     [--requestIds]...    Specify the specific request IDs to notify                                                             [separator = ,]
+     [--emailTemplate]    The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
+     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
+     [--concurrency]      The concurrency to use when uploading requests in parallel                                             [default = 50]
+  -h  --help              Print help information and exit
 ```
 
 #### Examples
