@@ -33,6 +33,8 @@ export async function markSilentPrivacyRequests({
   ],
   createdAtAfter,
   createdAtBefore,
+  updatedAtBefore,
+  updatedAtAfter,
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -50,6 +52,10 @@ export async function markSilentPrivacyRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<number> {
@@ -70,6 +76,8 @@ export async function markSilentPrivacyRequests({
     statuses,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     isSilent: false,
     requestIds,
   });

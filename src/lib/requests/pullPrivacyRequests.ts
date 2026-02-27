@@ -36,6 +36,8 @@ export async function pullPrivacyRequests({
   createdAtBefore,
   skipRequestIdentifiers = false,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   isTest,
 }: {
   /** Transcend API key authentication */
@@ -56,6 +58,10 @@ export async function pullPrivacyRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Return test requests */
   isTest?: boolean;
   /** Skip fetching request identifier */
@@ -101,6 +107,8 @@ export async function pullPrivacyRequests({
     statuses,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     isTest,
   });
 

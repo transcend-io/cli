@@ -11,6 +11,8 @@ export interface ApproveCommandFlags {
   silentModeBefore?: Date;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   transcendUrl: string;
   concurrency: number;
 }
@@ -24,6 +26,8 @@ export async function approve(
     silentModeBefore,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     transcendUrl,
     concurrency,
   }: ApproveCommandFlags,
@@ -39,5 +43,7 @@ export async function approve(
     silentModeBefore,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
 }
