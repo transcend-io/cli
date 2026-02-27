@@ -10,6 +10,8 @@ export interface MarkSilentCommandFlags {
   requestIds?: string[];
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   transcendUrl: string;
   concurrency: number;
 }
@@ -24,6 +26,8 @@ export async function markSilent(
     requestIds,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     concurrency,
   }: MarkSilentCommandFlags,
 ): Promise<void> {
@@ -38,5 +42,7 @@ export async function markSilent(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
 }

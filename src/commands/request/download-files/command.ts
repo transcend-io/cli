@@ -61,6 +61,18 @@ export const downloadFilesCommand = buildCommand({
         brief: 'Download requests that were submitted after this time',
         optional: true,
       },
+      updatedAtBefore: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Download requests that were last updated before this time',
+        optional: true,
+      },
+      updatedAtAfter: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Download requests that were last updated after this time',
+        optional: true,
+      },
       approveAfterDownload: {
         kind: 'boolean',
         brief:

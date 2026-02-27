@@ -24,11 +24,22 @@ export async function fetchAllRequestIdentifierMetadata(
   client: GraphQLClient,
   {
     requestId,
+    requestIds,
+    updatedAtBefore,
+    updatedAtAfter,
   }: {
     /** ID of request to filter on */
-    requestId: string;
+    requestId?: string;
+    /** IDs of requests to filter on */
+    requestIds?: string[];
+    /** Filter for request identifiers updated before this date */
+    updatedAtBefore?: Date;
+    /** Filter for request identifiers updated after this date */
+    updatedAtAfter?: Date;
   },
 ): Promise<RequestIdentifierMetadata[]> {
+  const resolvedRequestIds =
+    requestIds ?? (requestId ? [requestId] : undefined);
   const requestIdentifiers: RequestIdentifierMetadata[] = [];
   let offset = 0;
 
@@ -46,7 +57,11 @@ export async function fetchAllRequestIdentifierMetadata(
     }>(client, REQUEST_IDENTIFIERS, {
       first: PAGE_SIZE,
       offset,
-      requestIds: [requestId],
+      requestIds: resolvedRequestIds,
+      updatedAtBefore: updatedAtBefore
+        ? updatedAtBefore.toISOString()
+        : undefined,
+      updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
     });
     requestIdentifiers.push(...nodes);
     offset += PAGE_SIZE;

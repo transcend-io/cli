@@ -7,6 +7,8 @@ export interface NotifyAdditionalTimeCommandFlags {
   auth: string;
   createdAtBefore: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   actions?: RequestAction[];
   daysLeft: number;
   days: number;
@@ -23,6 +25,8 @@ export async function notifyAdditionalTime(
     transcendUrl,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     actions,
     daysLeft,
     days,
@@ -44,5 +48,7 @@ export async function notifyAdditionalTime(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
 }

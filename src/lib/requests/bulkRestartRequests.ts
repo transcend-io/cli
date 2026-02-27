@@ -48,6 +48,8 @@ export async function bulkRestartRequests({
   requestStatuses,
   createdAtBefore,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestIds = [],
   createdAt = new Date(),
@@ -88,6 +90,10 @@ export async function bulkRestartRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
 }): Promise<void> {
@@ -120,6 +126,8 @@ export async function bulkRestartRequests({
     statuses: requestStatuses,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
   const requests = allRequests.filter(
     (request) => new Date(request.createdAt) < createdAt,

@@ -29,6 +29,8 @@ export async function approvePrivacyRequests({
   silentModeBefore,
   createdAtAfter,
   createdAtBefore,
+  updatedAtBefore,
+  updatedAtAfter,
   concurrency = 50,
   transcendUrl = DEFAULT_TRANSCEND_API,
 }: {
@@ -46,6 +48,10 @@ export async function approvePrivacyRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
 }): Promise<number> {
@@ -65,8 +71,10 @@ export async function approvePrivacyRequests({
     actions: requestActions,
     statuses: [RequestStatus.Approving],
     createdAtAfter,
-    origins: requestOrigins,
     createdAtBefore,
+    updatedAtBefore,
+    updatedAtAfter,
+    origins: requestOrigins,
   });
 
   // Notify Transcend

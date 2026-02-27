@@ -27,6 +27,8 @@ export async function notifyPrivacyRequestsAdditionalTime({
   days = 45,
   daysLeft = 10,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   emailTemplate = 'Additional Time Needed',
   concurrency = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
@@ -37,6 +39,10 @@ export async function notifyPrivacyRequestsAdditionalTime({
   createdAtBefore: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Email template */
   emailTemplate?: string;
   /** Transcend API key authentication */
@@ -80,6 +86,8 @@ export async function notifyPrivacyRequestsAdditionalTime({
     actions: requestActions,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     isSilent: false,
     isClosed: false,
     requestIds,

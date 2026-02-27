@@ -18,6 +18,8 @@ export interface ExportCommandFlags {
   concurrency: number;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   showTests?: boolean;
   skipRequestIdentifiers?: boolean;
   pageLimit: number;
@@ -38,6 +40,8 @@ export async function _export(
     statuses,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     showTests,
   }: ExportCommandFlags,
 ): Promise<void> {
@@ -53,6 +57,8 @@ export async function _export(
     sombraAuth,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     isTest: showTests,
   });
 
