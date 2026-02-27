@@ -38,7 +38,8 @@ export async function fetchAllRequestIdentifierMetadata(
     updatedAtAfter?: Date;
   },
 ): Promise<RequestIdentifierMetadata[]> {
-  const resolvedRequestIds = requestIds ?? (requestId ? [requestId] : undefined);
+  const resolvedRequestIds =
+    requestIds ?? (requestId ? [requestId] : undefined);
   const requestIdentifiers: RequestIdentifierMetadata[] = [];
   let offset = 0;
 
@@ -60,9 +61,7 @@ export async function fetchAllRequestIdentifierMetadata(
       updatedAtBefore: updatedAtBefore
         ? updatedAtBefore.toISOString()
         : undefined,
-      updatedAtAfter: updatedAtAfter
-        ? updatedAtAfter.toISOString()
-        : undefined,
+      updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
     });
     requestIdentifiers.push(...nodes);
     offset += PAGE_SIZE;
