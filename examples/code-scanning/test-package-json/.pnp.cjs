@@ -727,10 +727,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["dottie", [\
-        ["npm:2.0.6", {\
-          "packageLocation": "./.yarn/cache/dottie-npm-2.0.6-0b47a47557-4c778df9dc.zip/node_modules/dottie/",\
+        ["npm:2.0.7", {\
+          "packageLocation": "./.yarn/cache/dottie-npm-2.0.7-0f39eae59f-0473ffce83.zip/node_modules/dottie/",\
           "packageDependencies": [\
-            ["dottie", "npm:2.0.6"]\
+            ["dottie", "npm:2.0.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1687,7 +1687,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/tedious", null],\
             ["@types/validator", "npm:13.11.9"],\
             ["debug", "virtual:c9e1a4b59e37cb479517edede3bf2093b28c0ca1a9d0e517f3c345075bd1e468980b94b4957e389116607ee7155441dfd7d09e19a4229d5d09bcf06244401590#npm:4.3.4"],\
-            ["dottie", "npm:2.0.6"],\
+            ["dottie", "npm:2.0.7"],\
             ["ibm_db", null],\
             ["inflection", "npm:1.13.4"],\
             ["lodash", "npm:4.17.23"],\
