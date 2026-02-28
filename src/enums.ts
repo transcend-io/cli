@@ -57,6 +57,7 @@ export enum TranscendPullResource {
   AssessmentTemplates = 'assessmentTemplates',
   Purposes = 'purposes',
   SystemDiscovery = 'systemDiscovery',
+  ConsentWorkflowTriggers = 'consentWorkflowTriggers',
 }
 
 /**

@@ -230,6 +230,14 @@ const RESOURCE_DOCUMENTATION: Record<
 (https://app.transcend.io/data-map/data-inventory/silo-discovery)',
     ],
   },
+  [TranscendPullResource.ConsentWorkflowTriggers]: {
+    description:
+      'Consent workflow trigger definitions that automate privacy request workflows based on consent state changes.',
+    markdownLinks: [
+      '[Consent Management -> Consent Workflows]\
+(https://app.transcend.io/consent-manager/consent-workflows)',
+    ],
+  },
 };
 
 /**

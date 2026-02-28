@@ -89,3 +89,6 @@ export * from './syncTemplates';
 export * from './syncVendors';
 export * from './uploadSiloDiscoveryResults';
 export * from './fetchAllSiloDiscoveryResults';
+export * from './fetchAllConsentWorkflowTriggers';
+export * from './syncConsentWorkflowTriggers';
+export * from './syncPurposes';
