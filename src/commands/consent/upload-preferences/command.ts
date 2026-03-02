@@ -171,7 +171,7 @@ export const uploadPreferencesCommand = buildCommand({
         brief:
           'Auto-chunk threshold in MB. Any CSV file larger than this will be ' +
           'split into smaller files before uploading. Set to 0 to disable.',
-        default: '10',
+        default: '11',
       },
       viewerMode: {
         kind: 'boolean',

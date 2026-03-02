@@ -9,6 +9,41 @@ import { PreferenceTopicType } from '@transcend-io/privacy-types';
 import { splitCsvToList } from '../requests';
 import type { PersistedState } from '@transcend-io/persisted-state';
 
+/** Values that clearly mean "no preference recorded" and should map to null. */
+const NULL_VALUES = new Set(['', 'undefined', 'null', 'none', 'n/a', 'na']);
+
+const FALSY_VALUES = new Set([
+  'false',
+  '0',
+  'no',
+  'n',
+  'off',
+  'opt-out',
+  'optout',
+  'opt_out',
+  'unsubscribed',
+]);
+
+/**
+ * Check whether a raw CSV value represents "no data" and should map to null.
+ *
+ * @param value - raw CSV cell value
+ * @returns true when the value should be treated as null (no preference)
+ */
+function looksNull(value: string): boolean {
+  return NULL_VALUES.has(value.trim().toLowerCase());
+}
+
+/**
+ * Infer a sensible Y/n default for a purpose/preference value prompt.
+ *
+ * @param value - raw CSV cell value
+ * @returns true when the value looks like "opted-in"
+ */
+function looksOptedIn(value: string): boolean {
+  return !FALSY_VALUES.has(value.trim().toLowerCase()) && !looksNull(value);
+}
+
 /**
  * Parse out the purpose.enabled and preference values from a CSV file
  *
@@ -48,6 +83,7 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
     ...Object.keys(schemaState.getValue('columnToIdentifier')),
     ...(timestampCol ? [timestampCol] : []),
     ...columnsToIgnore,
+    ...Object.keys(schemaState.getValue('columnToMetadata') ?? {}),
   ]);
   if (otherColumns.length === 0) {
     if (forceTriggerWorkflows) {
@@ -64,10 +100,8 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
 
   // Ensure all columns are accounted for
   await mapSeries(otherColumns, async (col) => {
-    // Determine the unique values to map in this column
-    const uniqueValues = uniq(
-      preferences.filter((x) => (x[col] || '').trim()).map((x) => x[col]),
-    );
+    // Determine the unique values to map in this column (including empty strings)
+    const uniqueValues = uniq(preferences.map((x) => x[col] ?? ''));
 
     // Map the column to a purpose
     const currentPurposeMapping = schemaState.getValue('columnToPurposeName');
@@ -117,29 +151,47 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
         return;
       }
 
-      if (nonInteractive) {
-        logger.warn(
-          colors.yellow(
-            `Value "${value}" for column "${col}" has no mapping in the config. Skipping.`,
+      if (looksNull(value)) {
+        logger.info(
+          colors.magenta(
+            `Value "${
+              value || '(empty)'
+            }" for column "${col}" → null (no preference)`,
           ),
         );
+        purposeMapping.valueMapping[value] = null as unknown as boolean;
         return;
+      }
+
+      if (nonInteractive) {
+        throw new Error(
+          `Value "${value}" for column "${col}" has no mapping in the config. ` +
+            "Run 'transcend consent configure-preference-upload' to update the config.",
+        );
       }
 
       // if preference is null, this column is just for the purpose
       if (purposeMapping.preference === null) {
         const { purposeValue } = await inquirer.prompt<{
-          /** purpose value */
-          purposeValue: boolean;
+          /** The mapped purpose value chosen by the user */
+          purposeValue: string;
         }>([
           {
             name: 'purposeValue',
-            message: `Choose the purpose value for value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-            type: 'confirm',
-            default: value !== 'false',
+            message: `Map value "${value}" for purpose "${purposeMapping.purpose}"`,
+            type: 'list',
+            choices: [
+              { name: 'true  (opted in)', value: 'true' },
+              { name: 'false (opted out)', value: 'false' },
+              { name: 'null  (skip / no preference)', value: 'null' },
+            ],
+            default: looksOptedIn(value) ? 'true' : 'false',
           },
         ]);
-        purposeMapping.valueMapping[value] = purposeValue;
+        purposeMapping.valueMapping[value] =
+          purposeValue === 'null'
+            ? (null as unknown as boolean)
+            : purposeValue === 'true';
       }
 
       // if preference is not null, this column is for a specific preference
@@ -161,37 +213,49 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
 
         if (preferenceTopic.type === PreferenceTopicType.Boolean) {
           const { preferenceValue } = await inquirer.prompt<{
-            /** purpose value */
-            preferenceValue: boolean;
+            /** The mapped boolean preference value chosen by the user */
+            preferenceValue: string;
           }>([
             {
               name: 'preferenceValue',
-              message:
-                // eslint-disable-next-line max-len
-                `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
-              type: 'confirm',
-              default: value !== 'false',
+              message: `Map value "${value}" for preference "${preferenceTopic.slug}" (${purposeMapping.purpose})`,
+              type: 'list',
+              choices: [
+                { name: 'true  (opted in)', value: 'true' },
+                { name: 'false (opted out)', value: 'false' },
+                { name: 'null  (skip / no preference)', value: 'null' },
+              ],
+              default: looksOptedIn(value) ? 'true' : 'false',
             },
           ]);
-          purposeMapping.valueMapping[value] = preferenceValue;
+          purposeMapping.valueMapping[value] =
+            preferenceValue === 'null'
+              ? (null as unknown as boolean)
+              : preferenceValue === 'true';
           return;
         }
 
         if (preferenceTopic.type === PreferenceTopicType.Select) {
+          const choices = [
+            ...preferenceOptions.map((o) => ({ name: o, value: o })),
+            { name: '(null — skip / no preference)', value: '__null__' },
+          ];
           const { preferenceValue } = await inquirer.prompt<{
-            /** purpose value */
-            preferenceValue: boolean;
+            /** The mapped select preference value chosen by the user */
+            preferenceValue: string;
           }>([
             {
               name: 'preferenceValue',
-              // eslint-disable-next-line max-len
-              message: `Choose the preference value for "${preferenceTopic.slug}" value "${value}" associated with purpose "${purposeMapping.purpose}"`,
+              message: `Map value "${value}" for preference "${preferenceTopic.slug}" (${purposeMapping.purpose})`,
               type: 'list',
-              choices: preferenceOptions,
+              choices,
               default: preferenceOptions.find((x) => x === value),
             },
           ]);
-          purposeMapping.valueMapping[value] = preferenceValue;
+          purposeMapping.valueMapping[value] =
+            preferenceValue === '__null__'
+              ? (null as unknown as boolean)
+              : (preferenceValue as unknown as boolean);
           return;
         }
 
@@ -203,20 +267,29 @@ export async function parsePreferenceAndPurposeValuesFromCsv(
             if (purposeMapping.valueMapping[parsedValue] !== undefined) {
               return;
             }
+            const msChoices = [
+              ...preferenceOptions.map((o) => ({ name: o, value: o })),
+              {
+                name: '(null — skip / no preference)',
+                value: '__null__',
+              },
+            ];
             const { preferenceValue } = await inquirer.prompt<{
-              /** purpose value */
-              preferenceValue: boolean;
+              /** The mapped multi-select preference value chosen by the user */
+              preferenceValue: string;
             }>([
               {
                 name: 'preferenceValue',
-                // eslint-disable-next-line max-len
-                message: `Choose the preference value for "${preferenceTopic.slug}" value "${parsedValue}" associated with purpose "${purposeMapping.purpose}"`,
+                message: `Map token "${parsedValue}" for preference "${preferenceTopic.slug}" (${purposeMapping.purpose})`,
                 type: 'list',
-                choices: preferenceOptions,
+                choices: msChoices,
                 default: preferenceOptions.find((x) => x === parsedValue),
               },
             ]);
-            purposeMapping.valueMapping[parsedValue] = preferenceValue;
+            purposeMapping.valueMapping[parsedValue] =
+              preferenceValue === '__null__'
+                ? (null as unknown as boolean)
+                : (preferenceValue as unknown as boolean);
           });
           return;
         }

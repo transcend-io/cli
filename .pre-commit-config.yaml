@@ -40,7 +40,7 @@ repos:
     rev: v2.2.0
     hooks:
       - id: doctoc
-        exclude: (.github)
+        exclude: (.github|\.cursor)
         args: [--title, "\n## Table of Contents", --maxlevel, '3']
   - repo: local
     hooks:

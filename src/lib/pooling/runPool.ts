@@ -208,10 +208,14 @@ export interface RunPoolOptions<
     throughput: {
       /** Convenience mirror of `filesCompleted` for renderers that expect it in this block. */
       successSoFar: number;
-      /** Moving average completions/sec (10s window). */
+      /** Moving average file completions/sec (10s window). */
       r10s: number;
-      /** Moving average completions/sec (60s window). */
+      /** Moving average file completions/sec (60s window). */
       r60s: number;
+      /** Moving average job/record completions/sec (10s window). */
+      jobsR10s: number;
+      /** Moving average job/record completions/sec (60s window). */
+      jobsR60s: number;
     };
     /** True when the pool has fully drained and all workers have exited. */
     final: boolean;
@@ -312,7 +316,11 @@ export async function runPool<
   const workerState = new Map<number, SlotState<TProg>>();
   /** File paths for each worker’s stdout/stderr logs. */
   const slotLogs = new Map<number, WorkerLogPaths | undefined>();
-  /** Completion throughput meter. */ const meter = new RateCounter();
+  /** File-completion throughput meter. */ const meter = new RateCounter();
+  /** Job/record-level throughput meter (fed from progress.processed deltas). */
+  const jobMeter = new RateCounter();
+  /** Last-seen `processed` count per worker slot, used to compute deltas. */
+  const lastProcessed = new Map<number, number>();
   const totalsInit = (hooks.initTotals?.() ?? {}) as TTotals;
 
   let totalsBox = totalsInit;
@@ -351,6 +359,8 @@ export async function runPool<
         successSoFar: completed,
         r10s: meter.rate(10_000),
         r60s: meter.rate(60_000),
+        jobsR10s: jobMeter.rate(10_000),
+        jobsR60s: jobMeter.rate(60_000),
       },
     });
   };
@@ -435,6 +445,16 @@ export async function runPool<
         totalsBox = hooks.onProgress(totalsBox, msg.payload);
         const prev = workerState.get(i)!;
         workerState.set(i, { ...prev, progress: msg.payload });
+
+        // Feed job-level meter from progress.processed deltas
+        const payload = msg.payload as Record<string, unknown>;
+        if (typeof payload?.processed === 'number') {
+          const prevCount = lastProcessed.get(i) ?? 0;
+          const delta = payload.processed - prevCount;
+          if (delta > 0) jobMeter.add(delta);
+          lastProcessed.set(i, payload.processed);
+        }
+
         repaint();
         return;
       }
@@ -458,6 +478,7 @@ export async function runPool<
           progress: undefined,
           lastLevel: ok ? 'ok' : 'error',
         });
+        lastProcessed.delete(i);
 
         // Just try to assign; if none left, shut this child down.
         if (!assign(i) && isIpcOpen(child)) {

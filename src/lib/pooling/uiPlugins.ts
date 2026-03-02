@@ -98,14 +98,22 @@ export function makeHeader<TTotals, TSlot extends ObjByString>(
   ];
 
   if (throughput) {
-    const perHour10 = Math.round(throughput.r10s * 3600).toLocaleString();
-    const perHour60 = Math.round(throughput.r60s * 3600).toLocaleString();
+    const jobsActive = throughput.jobsR10s > 0 || throughput.jobsR60s > 0;
+    const perHour10 = Math.round(
+      (jobsActive ? throughput.jobsR10s : throughput.r10s) * 3600,
+    ).toLocaleString();
+    const perHour60 = Math.round(
+      (jobsActive ? throughput.jobsR60s : throughput.r60s) * 3600,
+    ).toLocaleString();
+    const unit = jobsActive ? 'rec' : 'files';
     const suffix =
       ctx.throughput?.successSoFar != null
         ? `  Newly uploaded: ${fmtNum(ctx.throughput.successSoFar)}`
         : '';
     lines.push(
-      colors.cyan(`Throughput: ${perHour10}/hr (1h: ${perHour60}/hr)${suffix}`),
+      colors.cyan(
+        `Throughput: ${perHour10} ${unit}/hr (1h: ${perHour60} ${unit}/hr)${suffix}`,
+      ),
     );
   }
 

@@ -22,7 +22,7 @@ export const RETRY_PREFERENCE_MSGS: string[] = [
  * Options for retrying preference operations.
  */
 export type RetryOptions = {
-  /** Max attempts including the first try (default 5) */
+  /** Max attempts including the first try (default 12) */
   maxAttempts?: number;
   /** Initial backoff in ms (default 250) */
   baseDelayMs?: number;
@@ -45,7 +45,7 @@ export async function withPreferenceRetry<T>(
   name: string,
   fn: () => Promise<T>,
   {
-    maxAttempts = 5,
+    maxAttempts = 12,
     baseDelayMs = 250,
     isRetryable = (_err, msg) =>
       RETRY_PREFERENCE_MSGS.some((m) => msg.toLowerCase().includes(m)),

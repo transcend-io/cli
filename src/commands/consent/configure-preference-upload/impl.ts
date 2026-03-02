@@ -29,13 +29,43 @@ export interface ConfigurePreferenceUploadFlags {
 }
 
 /**
- * Scan all CSV files in a directory and collect the union of column headers
- * plus all unique values per non-identifier column. Uses streaming so large
- * files don't need to be held in memory.
+ * Scan a single CSV file and collect its column headers plus all unique
+ * values per column. Uses streaming so large files don't need to be held
+ * in memory.
  *
- * @param files - CSV file paths to scan
+ * @param file - CSV file path to scan
  * @returns headers and uniqueValuesByColumn
  */
+async function scanOneFile(file: string): Promise<{
+  headers: Set<string>;
+  uniqueValuesByColumn: Record<string, Set<string>>;
+}> {
+  const headers = new Set<string>();
+  const uniqueValuesByColumn: Record<string, Set<string>> = {};
+
+  await new Promise<void>((resolve, reject) => {
+    const parser = createReadStream(file).pipe(
+      csvParse({ columns: true, skip_empty_lines: true }),
+    );
+    parser.on('data', (row: Record<string, string>) => {
+      for (const [col, val] of Object.entries(row)) {
+        headers.add(col);
+        if (!uniqueValuesByColumn[col]) {
+          uniqueValuesByColumn[col] = new Set();
+        }
+        const trimmed = (val || '').trim();
+        uniqueValuesByColumn[col].add(trimmed);
+      }
+    });
+    parser.on('end', resolve);
+    parser.on('error', reject);
+  });
+
+  return { headers, uniqueValuesByColumn };
+}
+
+const SCAN_CONCURRENCY = 25;
+
 async function scanCsvFiles(files: string[]): Promise<{
   /** Union of all column headers */
   headers: string[];
@@ -43,51 +73,59 @@ async function scanCsvFiles(files: string[]): Promise<{
   uniqueValuesByColumn: Record<string, Set<string>>;
 }> {
   const allHeaders = new Set<string>();
-  const uniqueValuesByColumn: Record<string, Set<string>> = {};
+  const merged: Record<string, Set<string>> = {};
+  let completed = 0;
 
-  for (const file of files) {
-    await new Promise<void>((resolve, reject) => {
-      const parser = createReadStream(file).pipe(
-        csvParse({ columns: true, skip_empty_lines: true }),
-      );
-      parser.on('data', (row: Record<string, string>) => {
-        for (const [col, val] of Object.entries(row)) {
-          allHeaders.add(col);
-          if (!uniqueValuesByColumn[col]) {
-            uniqueValuesByColumn[col] = new Set();
-          }
-          const trimmed = (val || '').trim();
-          if (trimmed) {
-            uniqueValuesByColumn[col].add(trimmed);
-          }
-        }
-      });
-      parser.on('end', resolve);
-      parser.on('error', reject);
-    });
-  }
-
-  return {
-    headers: [...allHeaders],
-    uniqueValuesByColumn,
+  const queue = [...files];
+  const run = async (): Promise<void> => {
+    while (queue.length > 0) {
+      const file = queue.shift()!;
+      const result = await scanOneFile(file);
+      for (const h of result.headers) allHeaders.add(h);
+      for (const [col, vals] of Object.entries(result.uniqueValuesByColumn)) {
+        if (!merged[col]) merged[col] = new Set();
+        for (const v of vals) merged[col].add(v);
+      }
+      completed += 1;
+      if (completed % 25 === 0 || completed === files.length) {
+        logger.info(
+          colors.green(`  Scanned ${completed}/${files.length} files...`),
+        );
+      }
+    }
   };
+
+  const workers = Array.from(
+    { length: Math.min(SCAN_CONCURRENCY, files.length) },
+    () => run(),
+  );
+  await Promise.all(workers);
+
+  return { headers: [...allHeaders], uniqueValuesByColumn: merged };
 }
 
 /**
  * Build synthetic preference rows from the scanned unique values so
  * the existing parse functions see every value at least once.
  *
+ * Row count is driven only by `enumColumns` (purpose/preference columns)
+ * whose unique values actually matter for mapping. High-cardinality
+ * columns like timestamps or emails are filled with a single sample value.
+ *
  * @param headers - all column headers
  * @param uniqueValuesByColumn - unique values per column
- * @returns synthetic rows covering all unique values
+ * @param enumColumns - columns whose full unique values must be represented
+ * @returns synthetic rows covering all unique enum values
  */
 function buildSyntheticRows(
   headers: string[],
   uniqueValuesByColumn: Record<string, Set<string>>,
+  enumColumns: string[] = [],
 ): Record<string, string>[] {
+  const enumSet = new Set(enumColumns);
   const maxRows = Math.max(
     1,
-    ...headers.map((h) => uniqueValuesByColumn[h]?.size ?? 0),
+    ...enumColumns.map((h) => uniqueValuesByColumn[h]?.size ?? 0),
   );
   const rows: Record<string, string>[] = [];
   for (let i = 0; i < maxRows; i += 1) {
@@ -96,7 +134,7 @@ function buildSyntheticRows(
       const vals = uniqueValuesByColumn[h]
         ? [...uniqueValuesByColumn[h]]
         : [''];
-      row[h] = vals[i % vals.length] ?? '';
+      row[h] = enumSet.has(h) ? vals[i % vals.length] ?? '' : vals[0] ?? '';
     }
     rows.push(row);
   }
@@ -107,8 +145,9 @@ function buildSyntheticRows(
  * Interactively configure the column mapping for preference CSV uploads.
  *
  * Scans ALL CSV files in a directory, discovers every header and unique value,
- * then walks the user through mapping identifiers, ignored columns, timestamps,
- * and purpose/preference value mappings. Saves the result as a reusable config.
+ * then walks the user through mapping identifiers, timestamps,
+ * purpose/preference value mappings, and metadata columns.
+ * Saves the result as a reusable config.
  *
  * @param flags - CLI flags
  */
@@ -156,6 +195,7 @@ export async function configurePreferenceUpload(
   const schemaState = new PersistedState(schemaFile, FileFormatState, initial);
 
   // 4) Interactive: select identifier columns
+  logger.info(colors.green('\n[Step 1/6] Identifier column selection...'));
   const existingIdentifierCols = Object.keys(
     schemaState.getValue('columnToIdentifier'),
   );
@@ -205,8 +245,12 @@ export async function configurePreferenceUpload(
     ).cols;
   }
 
-  // 5) Map identifier columns to org identifier names (reuses existing parse logic)
-  // We need a small sample of real rows so the identifier parser can validate.
+  // 5) Map identifier columns to org identifier names
+  logger.info(
+    colors.green(
+      `\n[Step 2/6] Identifier name mapping (validating sample: ${files[0]})...`,
+    ),
+  );
   const sampleRows = readCsv(files[0], t.record(t.string, t.string));
   await parsePreferenceIdentifiersFromCsv(sampleRows, {
     schemaState,
@@ -215,80 +259,139 @@ export async function configurePreferenceUpload(
     identifierColumns,
   });
 
-  // 6) Interactive: select columns to ignore
+  const identifierCols = Object.keys(
+    schemaState.getValue('columnToIdentifier'),
+  );
+
+  // 6) Select timestamp column (only needs column names, not full rows)
+  logger.info(colors.green('\n[Step 3/6] Timestamp column selection...'));
+  const timestampChoices = headers.filter((h) => !identifierCols.includes(h));
+  await parsePreferenceFileFormatFromCsv(
+    [
+      Object.fromEntries(
+        timestampChoices.map((h) => [
+          h,
+          [...(uniqueValuesByColumn[h] ?? [])][0] ?? '',
+        ]),
+      ),
+    ],
+    schemaState,
+  );
+
+  // 7) Select which remaining columns map to purposes/preferences
+  logger.info(
+    colors.green('\n[Step 4/6] Purpose/preference column selection...'),
+  );
+  const timestampCol = schemaState.getValue('timestampColumn');
   const mappedSoFar = [
-    ...Object.keys(schemaState.getValue('columnToIdentifier')),
+    ...identifierCols,
+    ...(timestampCol ? [timestampCol] : []),
   ];
-  const remainingForIgnore = headers.filter((h) => !mappedSoFar.includes(h));
-  const existingIgnored = schemaState.getValue('columnsToIgnore') ?? [];
+  const remainingColumns = headers.filter((h) => !mappedSoFar.includes(h));
 
-  let columnsToIgnore: string[];
-  if (existingIgnored.length > 0) {
-    logger.info(
-      colors.magenta(`Existing ignored columns: ${existingIgnored.join(', ')}`),
-    );
-    const { reuse } = await inquirer.prompt<{ reuse: boolean }>([
-      {
-        name: 'reuse',
-        type: 'confirm',
-        message: `Keep existing ignored columns? (${existingIgnored.join(
-          ', ',
-        )})`,
-        default: true,
-      },
-    ]);
-    columnsToIgnore = reuse
-      ? existingIgnored
-      : (
-          await inquirer.prompt<{ cols: string[] }>([
-            {
-              name: 'cols',
-              type: 'checkbox',
-              message:
-                'Select columns to ignore (will not be mapped to purposes)',
-              choices: remainingForIgnore,
-            },
-          ])
-        ).cols;
-  } else {
-    columnsToIgnore = (
-      await inquirer.prompt<{ cols: string[] }>([
-        {
-          name: 'cols',
-          type: 'checkbox',
-          message: 'Select columns to ignore (will not be mapped to purposes)',
-          choices: remainingForIgnore,
-        },
-      ])
-    ).cols;
-  }
-  schemaState.setValue(columnsToIgnore, 'columnsToIgnore');
+  const { purposeColumns } = await inquirer.prompt<{
+    purposeColumns: string[];
+  }>([
+    {
+      name: 'purposeColumns',
+      type: 'checkbox',
+      message: 'Select columns that map to purposes/preferences',
+      choices: remainingColumns,
+      validate: (v: string[]) =>
+        v.length > 0 || 'Select at least one purpose column',
+    },
+  ]);
 
-  // 7) Build synthetic rows covering all unique values from every file
-  const syntheticRows = buildSyntheticRows(headers, uniqueValuesByColumn);
+  const nonPurposeColumns = remainingColumns.filter(
+    (h) => !purposeColumns.includes(h),
+  );
 
-  // 8) Select timestamp column
-  await parsePreferenceFileFormatFromCsv(syntheticRows, schemaState);
+  // 8) Build synthetic rows driven ONLY by purpose column unique values
+  logger.info(colors.green('\n[Step 5/6] Mapping purpose values...'));
+  const syntheticRows = buildSyntheticRows(
+    headers,
+    uniqueValuesByColumn,
+    purposeColumns,
+  );
+  logger.info(
+    colors.green(
+      `  Built ${syntheticRows.length} synthetic rows ` +
+        `(from ${purposeColumns.length} purpose columns).`,
+    ),
+  );
 
-  // 9) Map remaining columns to purposes/preferences + value mappings
+  // 9) Map purpose columns to org purposes + value mappings
   await parsePreferenceAndPurposeValuesFromCsv(syntheticRows, schemaState, {
     purposeSlugs: purposes.map((p) => p.trackingType),
     preferenceTopics,
     forceTriggerWorkflows: false,
-    columnsToIgnore,
+    columnsToIgnore: nonPurposeColumns,
   });
 
-  // 10) Validate completeness
-  const identifierCols = Object.keys(
-    schemaState.getValue('columnToIdentifier'),
-  );
-  const timestampCol = schemaState.getValue('timestampColumn');
+  // 10) Metadata: select which remaining columns to INCLUDE as metadata
+  logger.info(colors.green('\n[Step 6/6] Metadata column selection...'));
+  if (nonPurposeColumns.length > 0) {
+    logger.info(
+      colors.magenta(
+        '\nRemaining unmapped columns:\n' +
+          `  ${nonPurposeColumns.join(', ')}\n`,
+      ),
+    );
+
+    const { metadataColumns } = await inquirer.prompt<{
+      metadataColumns: string[];
+    }>([
+      {
+        name: 'metadataColumns',
+        type: 'checkbox',
+        message:
+          'Select columns to INCLUDE as metadata ' +
+          '(unselected columns will be ignored)',
+        choices: nonPurposeColumns,
+      },
+    ]);
+
+    const ignored = nonPurposeColumns.filter(
+      (c) => !metadataColumns.includes(c),
+    );
+
+    if (ignored.length > 0) {
+      schemaState.setValue(ignored, 'columnsToIgnore');
+    }
+
+    if (metadataColumns.length > 0) {
+      const columnToMetadata: Record<string, { key: string }> = {};
+      for (const col of metadataColumns) {
+        columnToMetadata[col] = { key: col };
+      }
+      schemaState.setValue(columnToMetadata, 'columnToMetadata');
+    }
+
+    logger.info(
+      colors.green(
+        `  Metadata: ${
+          metadataColumns.length > 0 ? metadataColumns.join(', ') : '(none)'
+        }`,
+      ),
+    );
+    logger.info(
+      colors.green(
+        `  Ignored: ${ignored.length > 0 ? ignored.join(', ') : '(none)'}`,
+      ),
+    );
+  }
+
+  // 11) Validate completeness
   const purposeCols = Object.keys(schemaState.getValue('columnToPurposeName'));
   const ignoredCols = schemaState.getValue('columnsToIgnore') ?? [];
+  const metadataCols = Object.keys(
+    schemaState.getValue('columnToMetadata') ?? {},
+  );
   const allMapped = new Set([
     ...identifierCols,
     ...purposeCols,
     ...ignoredCols,
+    ...metadataCols,
     ...(timestampCol ? [timestampCol] : []),
   ]);
   const unmapped = headers.filter((h) => !allMapped.has(h));
@@ -309,9 +412,10 @@ export async function configurePreferenceUpload(
   logger.info(
     colors.green(
       `  Identifiers: ${identifierCols.join(', ')}\n` +
-        `  Ignored: ${ignoredCols.join(', ') || '(none)'}\n` +
         `  Timestamp: ${timestampCol || '(none)'}\n` +
-        `  Purpose columns: ${purposeCols.join(', ')}`,
+        `  Purpose columns: ${purposeCols.join(', ')}\n` +
+        `  Metadata: ${metadataCols.join(', ') || '(none)'}\n` +
+        `  Ignored: ${ignoredCols.join(', ') || '(none)'}`,
     ),
   );
 }
