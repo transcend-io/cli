@@ -26,6 +26,8 @@ export async function bulkRetryEnrichers({
   requestActions = [],
   createdAtBefore,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestEnricherStatuses = Object.values(RequestEnricherStatus),
   requestIds = [],
@@ -48,6 +50,10 @@ export async function bulkRetryEnrichers({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
 }): Promise<void> {
@@ -69,6 +75,8 @@ export async function bulkRetryEnrichers({
     statuses: [RequestStatus.Enriching],
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     requestIds,
   });
 

@@ -16,10 +16,16 @@ export const REQUEST_IDENTIFIERS = gql`
   query TranscendCliRequestIdentifiers(
     $first: Int!
     $offset: Int!
-    $requestIds: [ID!]!
+    $requestIds: [ID!]
+    $updatedAtBefore: Date
+    $updatedAtAfter: Date
   ) {
     requestIdentifiers(
-      input: { requestIds: $requestIds }
+      input: {
+        requestIds: $requestIds
+        updatedAtBefore: $updatedAtBefore
+        updatedAtAfter: $updatedAtAfter
+      }
       first: $first
       offset: $offset
       useMaster: false

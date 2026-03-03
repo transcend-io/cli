@@ -66,6 +66,18 @@ export const exportCommand = buildCommand({
         brief: 'Pull requests that were submitted after this time',
         optional: true,
       },
+      updatedAtBefore: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Pull requests that were last updated before this time',
+        optional: true,
+      },
+      updatedAtAfter: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Pull requests that were last updated after this time',
+        optional: true,
+      },
       showTests: {
         kind: 'boolean',
         brief:

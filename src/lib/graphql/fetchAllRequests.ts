@@ -126,6 +126,8 @@ export async function fetchAllRequests(
     text,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     isTest,
     isSilent,
     isClosed,
@@ -141,6 +143,10 @@ export async function fetchAllRequests(
     createdAtBefore?: Date;
     /** Filter for requests created after this date */
     createdAtAfter?: Date;
+    /** Filter for requests updated before this date */
+    updatedAtBefore?: Date;
+    /** Filter for requests updated after this date */
+    updatedAtAfter?: Date;
     /** Filter for requests with a specific identifier */
     text?: string;
     /** Return test requests */
@@ -198,6 +204,12 @@ export async function fetchAllRequests(
           : undefined,
         createdAtAfter: createdAtAfter
           ? createdAtAfter.toISOString()
+          : undefined,
+        updatedAtBefore: updatedAtBefore
+          ? updatedAtBefore.toISOString()
+          : undefined,
+        updatedAtAfter: updatedAtAfter
+          ? updatedAtAfter.toISOString()
           : undefined,
       },
     });
