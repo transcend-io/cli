@@ -316,7 +316,8 @@ export async function runPool<
   const workerState = new Map<number, SlotState<TProg>>();
   /** File paths for each worker’s stdout/stderr logs. */
   const slotLogs = new Map<number, WorkerLogPaths | undefined>();
-  /** File-completion throughput meter. */ const meter = new RateCounter();
+  /** File-completion throughput meter. */
+  const meter = new RateCounter();
   /** Job/record-level throughput meter (fed from progress.processed deltas). */
   const jobMeter = new RateCounter();
   /** Last-seen `processed` count per worker slot, used to compute deltas. */
