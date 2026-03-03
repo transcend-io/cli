@@ -74,6 +74,7 @@ export async function uploadChunkWithSplit(
 
     // 2) For retryable statuses, attempt in-place retries without splitting.
     const isSoftRateLimit =
+      // FIXME
       status === 400 &&
       /slow down|please try again shortly|Throughput exceeds the current/i.test(
         msg,

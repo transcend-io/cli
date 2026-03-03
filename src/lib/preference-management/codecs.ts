@@ -95,47 +95,30 @@ export const ColumnMetadataMap = t.record(t.string, MetadataMapping);
 /** Override type */
 export type ColumnMetadataMap = t.TypeOf<typeof ColumnMetadataMap>;
 
-export const FileMetadataState = t.intersection([
+export const FileFormatState = t.intersection([
   t.type({
     /**
      * Definition of how to map each column in the CSV to
      * the relevant purpose and preference definitions in transcend
      */
-    columnToPurposeName: t.record(t.string, PurposeRowMapping),
+    columnToPurposeName: ColumnPurposeMap,
     /** Last time the file was last parsed at */
     lastFetchedAt: t.string,
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * These uploads are overwriting non-existent preferences and are safe
-     */
-    pendingSafeUpdates: t.record(t.string, t.record(t.string, t.string)),
-    /**
-     * Mapping of userId to the rows in the file that need to be uploaded
-     * these records have conflicts with existing consent preferences
-     */
-    pendingConflictUpdates: t.record(
-      t.string,
-      t.type({
-        record: PreferenceQueryResponseItem,
-        row: t.record(t.string, t.string),
-      }),
-    ),
-    /**
-     * Mapping of userId to the rows in the file that can be skipped because
-     * their preferences are already in the store
-     */
-    skippedUpdates: t.record(t.string, t.record(t.string, t.string)),
+    /** The column name that maps to the identifier */
+    columnToIdentifier: ColumnIdentifierMap,
   }),
   t.partial({
-    /** Determine which column name in file maps to consent record identifier to upload on  */
-    identifierColumn: t.string,
     /** Determine which column name in file maps to the timestamp  */
-    timestampColum: t.string,
+    timestampColumn: t.string,
+    /** Mapping of CSV column names to metadata keys */
+    columnToMetadata: ColumnMetadataMap,
+    /** CSV columns that should be ignored during upload */
+    columnsToIgnore: t.array(t.string),
   }),
 ]);
 
 /** Override type */
-export type FileMetadataState = t.TypeOf<typeof FileMetadataState>;
+export type FileFormatState = t.TypeOf<typeof FileFormatState>;
 
 /**
  * This is the type of the receipts that are stored in the file
@@ -236,36 +219,25 @@ export type SkippedPreferenceUpdates = t.TypeOf<
   typeof SkippedPreferenceUpdates
 >;
 
-/** Persist this data between runs of the script */
-export const PreferenceState = t.type({
-  /**
-   * Store a cache of previous files read in
-   */
-  fileMetadata: t.record(t.string, FileMetadataState),
-  /**
-   * The set of successful uploads to Transcend
-   * Mapping from userId to the upload metadata
-   */
-  failingUpdates: t.record(
-    t.string,
-    t.type({
-      /** Time upload ran at */
-      uploadedAt: t.string,
-      /** Attempts to upload that resulted in an error */
-      error: t.string,
-      /** The update body */
-      update: PreferenceUpdateItem,
-    }),
-  ),
-  /**
-   * The set of pending uploads to Transcend
-   * Mapping from userId to the upload metadata
-   */
-  pendingUpdates: t.record(t.string, PreferenceUpdateItem),
+export const RequestUploadReceipts = t.type({
+  /** Last time the file was last parsed at */
+  lastFetchedAt: t.string,
+  /** Safe updates (no conflict with existing preferences) keyed by primaryKey */
+  pendingSafeUpdates: PendingSafePreferenceUpdates,
+  /** Conflict updates (existing preferences differ) keyed by primaryKey */
+  pendingConflictUpdates: PendingWithConflictPreferenceUpdates,
+  /** Skipped rows (already in store or duplicates) keyed by primaryKey */
+  skippedUpdates: SkippedPreferenceUpdates,
+  /** Failed uploads keyed by primaryKey */
+  failingUpdates: FailingPreferenceUpdates,
+  /** Pending uploads at time of last cache write; shrinks as processed */
+  pendingUpdates: PreferenceUpdateMap,
+  /** Successfully processed uploads keyed by primaryKey */
+  successfulUpdates: PreferenceUpdateMap,
 });
 
 /** Override type */
-export type PreferenceState = t.TypeOf<typeof PreferenceState>;
+export type RequestUploadReceipts = t.TypeOf<typeof RequestUploadReceipts>;
 
 export const DeletePreferenceRecordsInput = t.type({
   /** Array of consent preference records to delete */

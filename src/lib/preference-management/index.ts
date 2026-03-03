@@ -1,4 +1,3 @@
-export * from './uploadPreferenceManagementPreferencesInteractive';
 export * from './codecs';
 export * from './getPreferencesForIdentifiers';
 export * from './parsePreferenceManagementCsv';
@@ -6,7 +5,7 @@ export * from './getPreferenceUpdatesFromRow';
 export * from './getPreferenceMetadataFromRow';
 export * from './parsePreferenceManagementCsv';
 export * from './parsePreferenceIdentifiersFromCsv';
-export * from './parsePreferenceTimestampsFromCsv';
+export * from './parsePreferenceFileFormatFromCsv';
 export * from './parsePreferenceAndPurposeValuesFromCsv';
 export * from './checkIfPendingPreferenceUpdatesAreNoOp';
 export * from './checkIfPendingPreferenceUpdatesCauseConflict';

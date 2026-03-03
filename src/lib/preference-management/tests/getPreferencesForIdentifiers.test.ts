@@ -93,6 +93,7 @@ describe('getPreferencesForIdentifiers', () => {
       // Build 250 identifiers -> 3 groups: 100, 100, 50
       const identifiers = Array.from({ length: 250 }, (_, i) => ({
         value: `user-${i + 1}@ex.com`,
+        name: 'email',
       }));
 
       // Fake Got client with post().json() chain that returns a result based on the requested group
@@ -197,6 +198,7 @@ describe('getPreferencesForIdentifiers', () => {
   it('logs progress start and completion when skipLogging=false', async () => {
     const identifiers = Array.from({ length: 5 }, (_, i) => ({
       value: `u${i + 1}`,
+      name: 'test-id',
     }));
 
     const postMock = vi.fn(
