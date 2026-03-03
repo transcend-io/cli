@@ -221,7 +221,6 @@ export function initLogDir(rootDir: string): string {
   const logDir = join(rootDir, 'logs');
   mkdirSync(logDir, { recursive: true });
 
-  // FIXME
   const RESET_MODE =
     (process.env.RESET_LOGS as 'truncate' | 'delete') ?? 'truncate';
   resetWorkerLogs(logDir, RESET_MODE);
@@ -259,17 +258,15 @@ export type ExportStatusMap = {
 /**
  * Return export statuses
  *
- * FIXME what is this for?
- *
- * @param receiptsFolder - Receipts directory
+ * @param logDir - Log directory
  * @returns Export map
  */
-export function buildExportStatus(receiptsFolder: string): ExportStatusMap {
+export function buildExportStatus(logDir: string): ExportStatusMap {
   return {
-    error: { path: join(receiptsFolder, 'combined-errors.log') },
-    warn: { path: join(receiptsFolder, 'combined-warns.log') },
-    info: { path: join(receiptsFolder, 'combined-info.log') },
-    all: { path: join(receiptsFolder, 'combined-all.log') },
-    failuresCsv: { path: join(receiptsFolder, 'failing-updates.csv') },
+    error: { path: join(logDir, 'combined-errors.log') },
+    warn: { path: join(logDir, 'combined-warns.log') },
+    info: { path: join(logDir, 'combined-info.log') },
+    all: { path: join(logDir, 'combined-all.log') },
+    failuresCsv: { path: join(logDir, 'failing-updates.csv') },
   };
 }
