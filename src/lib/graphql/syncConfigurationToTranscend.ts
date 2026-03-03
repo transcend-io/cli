@@ -43,6 +43,8 @@ import { syncDataCategories } from './syncDataCategories';
 import { syncProcessingPurposes } from './syncProcessingPurposes';
 import { syncProcessingActivities } from './syncProcessingActivities';
 import { syncPartitions } from './syncPartitions';
+import { syncConsentWorkflowTriggers } from './syncConsentWorkflowTriggers';
+import { syncPurposes } from './syncPurposes';
 
 const CONCURRENCY = 10;
 
@@ -107,6 +109,8 @@ export async function syncConfigurationToTranscend(
     messages,
     policies,
     partitions,
+    'consent-workflow-triggers': consentWorkflowTriggers,
+    purposes,
   } = input;
 
   const [identifierByName, dataSubjectsByName, apiKeyTitleMap] =
@@ -144,6 +148,21 @@ export async function syncConfigurationToTranscend(
         colors.red(`Failed to sync consent manager! - ${err.message}`),
       );
     }
+  }
+
+  // Sync purposes (and nested preference topics)
+  if (purposes) {
+    const purposesSuccess = await syncPurposes(client, purposes);
+    encounteredError = encounteredError || !purposesSuccess;
+  }
+
+  // Sync consent workflow triggers
+  if (consentWorkflowTriggers) {
+    const consentWorkflowTriggersSuccess = await syncConsentWorkflowTriggers(
+      client,
+      consentWorkflowTriggers,
+    );
+    encounteredError = encounteredError || !consentWorkflowTriggersSuccess;
   }
 
   // Sync prompts
