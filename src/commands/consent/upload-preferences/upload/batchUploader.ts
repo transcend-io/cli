@@ -14,8 +14,6 @@ type Entry = [string, PreferenceUpdateItem];
 export interface BatchUploadPreferenceOptions {
   /** When true - don't trigger workflow runs */
   skipWorkflowTriggers: boolean;
-  /** Always trigger a workflow run regardless of whether a purpose changed */
-  forceTriggerWorkflows: boolean;
 }
 
 export interface BatchUploaderDeps {
