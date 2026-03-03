@@ -118,7 +118,7 @@ describe('withPreferenceRetry', () => {
     expect(H.sleepSpy.mock.calls[1][0]).toBe(250);
   });
 
-  it('defaults to 5 maxAttempts when not specified', async () => {
+  it('defaults to 12 maxAttempts when not specified', async () => {
     const retryMsg = RETRY_PREFERENCE_MSGS[0];
     const fn = vi.fn().mockRejectedValue(new Error(retryMsg));
 
@@ -126,11 +126,11 @@ describe('withPreferenceRetry', () => {
       withPreferenceRetry('Preference Query', fn, {
         baseDelayMs: 10,
       }),
-    ).rejects.toThrow('Preference Query failed after 5 attempt(s):');
+    ).rejects.toThrow('Preference Query failed after 12 attempt(s):');
 
-    expect(fn).toHaveBeenCalledTimes(5);
-    // 4 sleep intervals between 5 attempts
-    expect(H.sleepSpy).toHaveBeenCalledTimes(4);
+    expect(fn).toHaveBeenCalledTimes(12);
+    // 11 sleep intervals between 12 attempts
+    expect(H.sleepSpy).toHaveBeenCalledTimes(11);
   });
 
   it('honors custom isRetryable predicate', async () => {
