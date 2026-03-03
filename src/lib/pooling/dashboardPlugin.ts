@@ -85,10 +85,14 @@ export type CommonCtx<TTotals, TSlotState extends ObjByString> = {
   throughput: {
     /** Cumulative count of successful completions so far. */
     successSoFar: number;
-    /** Recent throughput rate over the last 10 seconds. */
+    /** Recent file-level throughput rate over the last 10 seconds. */
     r10s: number;
-    /** Recent throughput rate over the last 60 seconds. */
+    /** Recent file-level throughput rate over the last 60 seconds. */
     r60s: number;
+    /** Recent job/record-level throughput rate over the last 10 seconds. */
+    jobsR10s: number;
+    /** Recent job/record-level throughput rate over the last 60 seconds. */
+    jobsR60s: number;
   };
 
   /** True when the pool has fully drained and all workers have exited. */
