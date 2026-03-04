@@ -104,7 +104,8 @@ export async function fetchAllRequestIdentifiers(
         .json();
     } catch (err) {
       throw new Error(
-        `Failed to fetch request identifiers: ${err?.response?.body || err?.message
+        `Failed to fetch request identifiers: ${
+          err?.response?.body || err?.message
         }`,
       );
     }
