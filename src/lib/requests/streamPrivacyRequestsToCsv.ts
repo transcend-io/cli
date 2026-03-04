@@ -20,6 +20,13 @@ import {
   ExportedPrivacyRequest,
 } from './formatRequestForCsv';
 
+interface ChunkedDateRange {
+  /** Chunk start */
+  createdAtAfter: Date;
+  /** Chunk end */
+  createdAtBefore: Date;
+}
+
 /**
  * Split a date range into N evenly-spaced chunks.
  *
@@ -32,17 +39,14 @@ function splitDateRange(
   after: Date,
   before: Date,
   chunks: number,
-): {
-  /** Chunk start */ createdAtAfter: Date;
-  /** Chunk end */ createdAtBefore: Date;
-}[] {
-  const /** Range start ms */ start = after.getTime();
-  const /** Range end ms */ end = before.getTime();
-  const /** Ms per chunk */ chunkSize = (end - start) / chunks;
+): ChunkedDateRange[] {
+  const startMs = after.getTime();
+  const endMs = before.getTime();
+  const chunkSize = (endMs - startMs) / chunks;
   return Array.from({ length: chunks }, (_, i) => ({
-    createdAtAfter: new Date(start + chunkSize * i),
+    createdAtAfter: new Date(startMs + chunkSize * i),
     createdAtBefore: new Date(
-      i === chunks - 1 ? end : start + chunkSize * (i + 1),
+      i === chunks - 1 ? endMs : startMs + chunkSize * (i + 1),
     ),
   }));
 }
@@ -119,16 +123,14 @@ export async function streamPrivacyRequestsToCsv({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${
-      dateRange ? ', and' : ''
-    } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${dateRange ? ', and' : ''
+      } after ${createdAtAfter.toISOString()}`;
   }
   logger.info(
     colors.magenta(
-      `${
-        actions.length > 0
-          ? `Pulling requests of type "${actions.join('" , "')}"`
-          : 'Pulling all requests'
+      `${actions.length > 0
+        ? `Pulling requests of type "${actions.join('" , "')}"`
+        : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -223,17 +225,17 @@ export async function streamPrivacyRequestsToCsv({
             const enriched: ExportedPrivacyRequest[] = skipRequestIdentifiers
               ? nodes.map((n) => ({ ...n, requestIdentifiers: [] }))
               : await map(
-                  nodes,
-                  async (n) => ({
-                    ...n,
-                    requestIdentifiers: await fetchAllRequestIdentifiers(
-                      client,
-                      sombra!,
-                      { requestId: n.id, skipSombraCheck: true },
-                    ),
-                  }),
-                  { concurrency: pageLimit },
-                );
+                nodes,
+                async (n) => ({
+                  ...n,
+                  requestIdentifiers: await fetchAllRequestIdentifiers(
+                    client,
+                    sombra!,
+                    { requestId: n.id, skipSombraCheck: true },
+                  ),
+                }),
+                { concurrency: pageLimit },
+              );
 
             const rows: Record<string, string | null | number | boolean>[] =
               enriched.map(formatRequestForCsv);
@@ -255,8 +257,7 @@ export async function streamPrivacyRequestsToCsv({
         const message = err instanceof Error ? err.message : String(err);
         logger.error(
           colors.red(
-            `Chunk ${i} failed (${
-              chunk.createdAtAfter?.toISOString() ?? 'start'
+            `Chunk ${i} failed (${chunk.createdAtAfter?.toISOString() ?? 'start'
             } → ${chunk.createdAtBefore?.toISOString() ?? 'end'}): ${message}`,
           ),
         );
@@ -285,14 +286,13 @@ export async function streamPrivacyRequestsToCsv({
     logger.error(
       colors.red(
         `\n${failedChunks.length} chunk(s) failed. ` +
-          'Re-run with these date ranges to fill the gaps:',
+        'Re-run with these date ranges to fill the gaps:',
       ),
     );
     for (const fc of failedChunks) {
       logger.error(
         colors.red(
-          `  Chunk ${fc.index}: --createdAtAfter=${
-            fc.createdAtAfter?.toISOString() ?? ''
+          `  Chunk ${fc.index}: --createdAtAfter=${fc.createdAtAfter?.toISOString() ?? ''
           } --createdAtBefore=${fc.createdAtBefore?.toISOString() ?? ''}`,
         ),
       );
