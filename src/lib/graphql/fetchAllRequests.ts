@@ -238,7 +238,8 @@ export async function fetchAllRequests(
   // Log completion time
   logger.info(
     colors.green(
-      `Completed fetching of ${requests.length} request in "${totalTime / 1000
+      `Completed fetching of ${requests.length} request in "${
+        totalTime / 1000
       }" seconds.`,
     ),
   );
