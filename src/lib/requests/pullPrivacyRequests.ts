@@ -29,7 +29,10 @@ function splitDateRange(
   after: Date,
   before: Date,
   chunks: number,
-): { /** Chunk start */ createdAtAfter: Date; /** Chunk end */ createdAtBefore: Date }[] {
+): {
+  /** Chunk start */ createdAtAfter: Date;
+  /** Chunk end */ createdAtBefore: Date;
+}[] {
   const /** Range start ms */ start = after.getTime();
   const /** Range end ms */ end = before.getTime();
   const /** Ms per chunk */ chunkSize = (end - start) / chunks;
@@ -121,8 +124,7 @@ export async function pullPrivacyRequests({
   );
 
   // Split into parallel date-range chunks when possible
-  const useChunks =
-    concurrency > 1 && createdAtAfter && createdAtBefore;
+  const useChunks = concurrency > 1 && createdAtAfter && createdAtBefore;
   const chunks = useChunks
     ? splitDateRange(createdAtAfter, createdAtBefore, concurrency)
     : [{ createdAtAfter, createdAtBefore }];

@@ -13,11 +13,7 @@ import {
   fetchRequestsTotalCount,
 } from '../graphql';
 import { logger } from '../../logger';
-import {
-  initCsvFile,
-  appendCsvRowsOrdered,
-  parseFilePath,
-} from '../helpers';
+import { initCsvFile, appendCsvRowsOrdered, parseFilePath } from '../helpers';
 import {
   formatRequestForCsv,
   ExportedPrivacyRequest,
@@ -35,7 +31,10 @@ function splitDateRange(
   after: Date,
   before: Date,
   chunks: number,
-): { /** Chunk start */ createdAtAfter: Date; /** Chunk end */ createdAtBefore: Date }[] {
+): {
+  /** Chunk start */ createdAtAfter: Date;
+  /** Chunk end */ createdAtBefore: Date;
+}[] {
   const /** Range start ms */ start = after.getTime();
   const /** Range end ms */ end = before.getTime();
   const /** Ms per chunk */ chunkSize = (end - start) / chunks;
@@ -155,22 +154,16 @@ export async function streamPrivacyRequestsToCsv({
     createdAtBefore: createdAtBefore
       ? createdAtBefore.toISOString()
       : undefined,
-    createdAtAfter: createdAtAfter
-      ? createdAtAfter.toISOString()
-      : undefined,
+    createdAtAfter: createdAtAfter ? createdAtAfter.toISOString() : undefined,
     updatedAtBefore: updatedAtBefore
       ? updatedAtBefore.toISOString()
       : undefined,
-    updatedAtAfter: updatedAtAfter
-      ? updatedAtAfter.toISOString()
-      : undefined,
+    updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
   };
 
   const t0 = Date.now();
   const totalExpected = await fetchRequestsTotalCount(client, filterBy);
-  logger.info(
-    colors.magenta(`Fetching ${totalExpected} requests`),
-  );
+  logger.info(colors.magenta(`Fetching ${totalExpected} requests`));
 
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -257,9 +250,7 @@ export async function streamPrivacyRequestsToCsv({
           colors.red(
             `Chunk ${i} failed (${
               chunk.createdAtAfter?.toISOString() ?? 'start'
-            } → ${
-              chunk.createdAtBefore?.toISOString() ?? 'end'
-            }): ${message}`,
+            } → ${chunk.createdAtBefore?.toISOString() ?? 'end'}): ${message}`,
           ),
         );
         failedChunks.push({

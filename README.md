@@ -1022,18 +1022,18 @@ Export privacy requests and request identifiers to a CSV file.
 FLAGS
       --auth                                                The Transcend API key. Requires scopes: "View Incoming Requests", "View the Request Compilation"
      [--sombraAuth]                                         The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--actions]                                            The request actions to export                                                                    [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--statuses]                                           The request statuses to export                                                                   [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
-     [--transcendUrl]                                       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                     [default = https://api.transcend.io]
-     [--file]                                               Path to the CSV file where identifiers will be written to                                        [default = ./transcend-request-export.csv]
-     [--concurrency]                                        The concurrency to use when uploading requests in parallel                                       [default = 50]
+     [--actions]                                            The request actions to export                                                                                                 [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--statuses]                                           The request statuses to export                                                                                                [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
+     [--transcendUrl]                                       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                  [default = https://api.transcend.io]
+     [--file]                                               Path to the CSV file where identifiers will be written to                                                                     [default = ./transcend-request-export.csv]
+     [--concurrency]                                        Number of parallel date-range chunks to split the query into. Requires both --createdAtAfter and --createdAtBefore to be set. [default = 1]
      [--skipRequestIdentifiers/--noSkipRequestIdentifiers]  Skip exporting request identifiers
      [--createdAtBefore]                                    Pull requests that were submitted before this time
      [--createdAtAfter]                                     Pull requests that were submitted after this time
      [--updatedAtBefore]                                    Pull requests that were last updated before this time
      [--updatedAtAfter]                                     Pull requests that were last updated after this time
      [--showTests/--noShowTests]                            Filter for test requests or production requests - when not provided, pulls both
-     [--pageLimit]                                          The page limit to use when pulling in pages of requests                                          [default = 100]
+     [--pageLimit]                                          The page limit to use when pulling in pages of requests                                                                       [default = 100]
   -h  --help                                                Print help information and exit
 ```
 
