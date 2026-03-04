@@ -5,13 +5,13 @@ import { gql } from 'graphql-request';
 export const REQUESTS = gql`
   query TranscendCliRequests(
     $first: Int!
-    $offset: Int!
+    $after: String
     $filterBy: RequestFiltersInput!
   ) {
     requests(
       filterBy: $filterBy
       first: $first
-      offset: $offset
+      after: $after
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: id, direction: ASC }
@@ -82,6 +82,10 @@ export const REQUESTS = gql`
         }
       }
       totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
     }
   }
 `;
