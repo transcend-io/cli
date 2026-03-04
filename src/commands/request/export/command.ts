@@ -46,8 +46,10 @@ export const exportCommand = buildCommand({
       concurrency: {
         kind: 'parsed',
         parse: numberParser,
-        brief: 'The concurrency to use when uploading requests in parallel',
-        default: '50',
+        brief:
+          'Number of parallel date-range chunks to split the query into. ' +
+          'Requires both --createdAtAfter and --createdAtBefore to be set.',
+        default: '1',
       },
       skipRequestIdentifiers: {
         kind: 'boolean',

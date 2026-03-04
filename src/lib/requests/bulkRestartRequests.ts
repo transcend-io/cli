@@ -12,6 +12,7 @@ import {
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 import { SuccessfulRequest } from './constants';
@@ -162,6 +163,10 @@ export async function bulkRestartRequests({
     }
   }
 
+  if (copyIdentifiers) {
+    await validateSombraVersion(client);
+  }
+
   // Map over the requests
   let total = 0;
   progressBar.start(requests.length, 0);
@@ -173,6 +178,7 @@ export async function bulkRestartRequests({
         const requestIdentifiers = copyIdentifiers
           ? await fetchAllRequestIdentifiers(client, sombra, {
               requestId: request.id,
+              skipSombraCheck: true,
             })
           : [];
 
