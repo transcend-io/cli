@@ -1075,13 +1075,22 @@ transcend request export --auth="$TRANSCEND_API_KEY" --concurrency=500
 transcend request export --auth="$TRANSCEND_API_KEY" --showTests=false
 ```
 
-**Filter for requests within a date range**
+**Filter for requests created within a date range**
 
 ```sh
 transcend request export \
   --auth="$TRANSCEND_API_KEY" \
   --createdAtBefore=2025-04-05T00:00:00.000Z \
   --createdAtAfter=2025-02-21T00:00:00.000Z
+```
+
+**Filter for requests last updated within a date range**
+
+```sh
+transcend request export \
+  --auth="$TRANSCEND_API_KEY" \
+  --updatedAtBefore=2025-04-05T00:00:00.000Z \
+  --updatedAtAfter=2025-02-21T00:00:00.000Z
 ```
 
 **Write to a specific file location**
