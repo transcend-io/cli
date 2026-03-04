@@ -173,13 +173,13 @@ export async function fetchAllRequests(
 
   // read in requests
   const requests: PrivacyRequest[] = [];
-  let offset = 0;
+  let cursor: string | undefined;
 
   // Paginate
   let shouldContinue = false;
   do {
     const {
-      requests: { nodes, totalCount },
+      requests: { nodes, totalCount, pageInfo },
     } = await makeGraphQLRequest<{
       /** Requests */
       requests: {
@@ -187,10 +187,17 @@ export async function fetchAllRequests(
         nodes: PrivacyRequest[];
         /** Total count */
         totalCount: number;
+        /** Pagination info */
+        pageInfo: {
+          /** Cursor for the last item */
+          endCursor: string | null;
+          /** Whether more pages exist */
+          hasNextPage: boolean;
+        };
       };
     }>(client, REQUESTS, {
       first: PAGE_SIZE,
-      offset,
+      after: cursor,
       filterBy: {
         text,
         type: actions.length > 0 ? actions : undefined,
@@ -213,15 +220,15 @@ export async function fetchAllRequests(
           : undefined,
       },
     });
-    if (offset === 0 && totalCount > PAGE_SIZE) {
+    if (!cursor && totalCount > PAGE_SIZE) {
       logger.info(colors.magenta(`Fetching ${totalCount} requests`));
       progressBar.start(totalCount, 0);
     }
 
     requests.push(...nodes);
-    offset += PAGE_SIZE;
-    progressBar.update(offset);
-    shouldContinue = nodes.length === PAGE_SIZE;
+    cursor = pageInfo.endCursor ?? undefined;
+    progressBar.update(requests.length);
+    shouldContinue = pageInfo.hasNextPage;
   } while (shouldContinue);
 
   progressBar.stop();
