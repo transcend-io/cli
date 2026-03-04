@@ -9,6 +9,7 @@ import {
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 import {
@@ -155,6 +156,11 @@ export async function pullPrivacyRequests({
   );
   const requests = chunkResults.flat();
 
+  // Validate Sombra version once before bulk-fetching identifiers
+  if (!skipRequestIdentifiers) {
+    await validateSombraVersion(client);
+  }
+
   // Fetch the request identifiers for those requests
   const requestsWithRequestIdentifiers = skipRequestIdentifiers
     ? requests.map((request) => ({
@@ -169,6 +175,7 @@ export async function pullPrivacyRequests({
             sombra,
             {
               requestId: request.id,
+              skipSombraCheck: true,
             },
           );
           return {

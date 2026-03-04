@@ -11,6 +11,7 @@ import {
   fetchAllRequestIdentifiers,
   fetchAllRequests,
   fetchRequestsTotalCount,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 import { initCsvFile, appendCsvRowsOrdered, parseFilePath } from '../helpers';
@@ -162,6 +163,12 @@ export async function streamPrivacyRequestsToCsv({
   };
 
   const t0 = Date.now();
+
+  // Validate Sombra version once before bulk-fetching identifiers
+  if (!skipRequestIdentifiers) {
+    await validateSombraVersion(client);
+  }
+
   const totalExpected = await fetchRequestsTotalCount(client, filterBy);
   logger.info(colors.magenta(`Fetching ${totalExpected} requests`));
 
@@ -222,7 +229,7 @@ export async function streamPrivacyRequestsToCsv({
                     requestIdentifiers: await fetchAllRequestIdentifiers(
                       client,
                       sombra!,
-                      { requestId: n.id },
+                      { requestId: n.id, skipSombraCheck: true },
                     ),
                   }),
                   { concurrency: pageLimit },
