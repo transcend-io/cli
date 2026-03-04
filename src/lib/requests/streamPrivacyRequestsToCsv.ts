@@ -1,6 +1,7 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from '../bluebird';
 import colors from 'colors';
+import cliProgress from 'cli-progress';
 import { uniq } from 'lodash-es';
 
 import { DEFAULT_TRANSCEND_API } from '../../constants';
@@ -9,6 +10,7 @@ import {
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  fetchRequestsTotalCount,
 } from '../graphql';
 import { logger } from '../../logger';
 import {
@@ -16,7 +18,10 @@ import {
   appendCsvRowsOrdered,
   parseFilePath,
 } from '../helpers';
-import { formatRequestForCsv } from './formatRequestForCsv';
+import {
+  formatRequestForCsv,
+  ExportedPrivacyRequest,
+} from './formatRequestForCsv';
 
 /**
  * Split a date range into N evenly-spaced chunks.
@@ -142,11 +147,57 @@ export async function streamPrivacyRequestsToCsv({
     );
   }
 
+  // Fetch total count once for the shared progress bar
+  const filterBy = {
+    type: actions.length > 0 ? actions : undefined,
+    status: statuses.length > 0 ? statuses : undefined,
+    isTest,
+    createdAtBefore: createdAtBefore
+      ? createdAtBefore.toISOString()
+      : undefined,
+    createdAtAfter: createdAtAfter
+      ? createdAtAfter.toISOString()
+      : undefined,
+    updatedAtBefore: updatedAtBefore
+      ? updatedAtBefore.toISOString()
+      : undefined,
+    updatedAtAfter: updatedAtAfter
+      ? updatedAtAfter.toISOString()
+      : undefined,
+  };
+
+  const t0 = Date.now();
+  const totalExpected = await fetchRequestsTotalCount(client, filterBy);
+  logger.info(
+    colors.magenta(`Fetching ${totalExpected} requests`),
+  );
+
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
+  progressBar.start(totalExpected, 0);
+
+  let globalFetched = 0;
+
   const { baseName, extension } = parseFilePath(file);
 
   const filePaths = chunks.map((_, i) =>
     chunks.length === 1 ? file : `${baseName}-${i}${extension}`,
   );
+
+  interface FailedChunk {
+    /** Chunk index */
+    index: number;
+    /** Start of failed date range */
+    createdAtAfter?: Date;
+    /** End of failed date range */
+    createdAtBefore?: Date;
+    /** Error message */
+    error: string;
+  }
+
+  const failedChunks: FailedChunk[] = [];
 
   const chunkCounts = await map(
     chunks,
@@ -155,45 +206,69 @@ export async function streamPrivacyRequestsToCsv({
       let headers: string[] | undefined;
       let rowCount = 0;
 
-      await fetchAllRequests(client, {
-        actions,
-        text: identifierSearch,
-        statuses,
-        createdAtBefore: chunk.createdAtBefore,
-        createdAtAfter: chunk.createdAtAfter,
-        updatedAtBefore,
-        updatedAtAfter,
-        isTest,
-        onPage: async (nodes) => {
-          if (nodes.length === 0) return;
+      try {
+        await fetchAllRequests(client, {
+          actions,
+          text: identifierSearch,
+          statuses,
+          createdAtBefore: chunk.createdAtBefore,
+          createdAtAfter: chunk.createdAtAfter,
+          updatedAtBefore,
+          updatedAtAfter,
+          isTest,
+          onPage: async (nodes) => {
+            if (nodes.length === 0) return;
 
-          // Optionally enrich each request with its identifiers
-          const enriched = skipRequestIdentifiers
-            ? nodes.map((n) => ({ ...n, requestIdentifiers: [] }))
-            : await map(
-                nodes,
-                async (n) => ({
-                  ...n,
-                  requestIdentifiers: await fetchAllRequestIdentifiers(
-                    client,
-                    sombra!,
-                    { requestId: n.id },
-                  ),
-                }),
-                { concurrency: pageLimit },
+            // Optionally enrich each request with its identifiers
+            const enriched: ExportedPrivacyRequest[] = skipRequestIdentifiers
+              ? nodes.map((n) => ({ ...n, requestIdentifiers: [] }))
+              : await map(
+                  nodes,
+                  async (n) => ({
+                    ...n,
+                    requestIdentifiers: await fetchAllRequestIdentifiers(
+                      client,
+                      sombra!,
+                      { requestId: n.id },
+                    ),
+                  }),
+                  { concurrency: pageLimit },
+                );
+
+            const rows: Record<string, string | null | number | boolean>[] =
+              enriched.map(formatRequestForCsv);
+
+            if (!headers) {
+              headers = uniq(
+                rows.map((r: Record<string, unknown>) => Object.keys(r)).flat(),
               );
+              initCsvFile(chunkFile, headers);
+            }
 
-          const rows = enriched.map(formatRequestForCsv);
-
-          if (!headers) {
-            headers = uniq(rows.map((r) => Object.keys(r)).flat());
-            initCsvFile(chunkFile, headers);
-          }
-
-          appendCsvRowsOrdered(chunkFile, rows, headers);
-          rowCount += rows.length;
-        },
-      });
+            appendCsvRowsOrdered(chunkFile, rows, headers);
+            rowCount += rows.length;
+            globalFetched += rows.length;
+            progressBar.update(globalFetched);
+          },
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        logger.error(
+          colors.red(
+            `Chunk ${i} failed (${
+              chunk.createdAtAfter?.toISOString() ?? 'start'
+            } → ${
+              chunk.createdAtBefore?.toISOString() ?? 'end'
+            }): ${message}`,
+          ),
+        );
+        failedChunks.push({
+          index: i,
+          createdAtAfter: chunk.createdAtAfter,
+          createdAtBefore: chunk.createdAtBefore,
+          error: message,
+        });
+      }
 
       if (!headers) {
         initCsvFile(chunkFile, []);
@@ -204,11 +279,31 @@ export async function streamPrivacyRequestsToCsv({
     { concurrency: useChunks ? concurrency : 1 },
   );
 
+  progressBar.stop();
   const totalCount = chunkCounts.reduce((a, b) => a + b, 0);
+  const elapsed = (Date.now() - t0) / 1000;
+
+  if (failedChunks.length > 0) {
+    logger.error(
+      colors.red(
+        `\n${failedChunks.length} chunk(s) failed. ` +
+          'Re-run with these date ranges to fill the gaps:',
+      ),
+    );
+    for (const fc of failedChunks) {
+      logger.error(
+        colors.red(
+          `  Chunk ${fc.index}: --createdAtAfter=${
+            fc.createdAtAfter?.toISOString() ?? ''
+          } --createdAtBefore=${fc.createdAtBefore?.toISOString() ?? ''}`,
+        ),
+      );
+    }
+  }
 
   logger.info(
-    colors.magenta(
-      `Streamed ${totalCount} requests to ${filePaths.length} file(s)`,
+    colors.green(
+      `Streamed ${totalCount} requests to ${filePaths.length} file(s) in ${elapsed}s`,
     ),
   );
 

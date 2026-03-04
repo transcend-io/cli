@@ -111,6 +111,30 @@ export type PrivacyRequest = t.TypeOf<typeof PrivacyRequest>;
 const PAGE_SIZE = 100;
 
 /**
+ * Fetch just the total count of requests matching a set of filters.
+ * Useful for setting up a progress bar before streaming pages.
+ *
+ * @param client - GraphQL client
+ * @param filterBy - Filter object (already serialized to ISO strings)
+ * @returns The total count
+ */
+export async function fetchRequestsTotalCount(
+  client: GraphQLClient,
+  filterBy: Record<string, unknown>,
+): Promise<number> {
+  const {
+    requests: { totalCount },
+  } = await makeGraphQLRequest<{
+    /** Requests */
+    requests: {
+      /** Total count */
+      totalCount: number;
+    };
+  }>(client, REQUESTS_COUNT, { filterBy });
+  return totalCount;
+}
+
+/**
  * Fetch all requests matching a set of filters.
  *
  * When `onPage` is provided the function streams pages to the callback
@@ -170,19 +194,7 @@ export async function fetchAllRequests(
     onPage?: (nodes: PrivacyRequest[]) => void | Promise<void>;
   } = {},
 ): Promise<PrivacyRequest[]> {
-  logger.info(colors.magenta('Fetching requests...'));
-
   const streaming = !!onPage;
-
-  // create a new progress bar instance and use shades_classic theme
-  const t0 = new Date().getTime();
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic,
-  );
-
-  const requests: PrivacyRequest[] = [];
-  let fetchedCount = 0;
 
   const filterBy = {
     text,
@@ -202,21 +214,33 @@ export async function fetchAllRequests(
     updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
   };
 
-  // Fetch total count upfront for the progress bar
-  const {
-    requests: { totalCount },
-  } = await makeGraphQLRequest<{
-    /** Requests */
-    requests: {
-      /** Total count */
-      totalCount: number;
-    };
-  }>(client, REQUESTS_COUNT, { filterBy });
+  // When streaming, the caller manages progress/logging — skip count query & bar
+  const t0 = new Date().getTime();
+  const progressBar = new cliProgress.SingleBar(
+    {},
+    cliProgress.Presets.shades_classic,
+  );
 
-  if (totalCount > PAGE_SIZE) {
-    logger.info(colors.magenta(`Fetching ${totalCount} requests`));
-    progressBar.start(totalCount, 0);
+  if (!streaming) {
+    logger.info(colors.magenta('Fetching requests...'));
+    const {
+      requests: { totalCount },
+    } = await makeGraphQLRequest<{
+      /** Requests */
+      requests: {
+        /** Total count */
+        totalCount: number;
+      };
+    }>(client, REQUESTS_COUNT, { filterBy });
+
+    if (totalCount > PAGE_SIZE) {
+      logger.info(colors.magenta(`Fetching ${totalCount} requests`));
+      progressBar.start(totalCount, 0);
+    }
   }
+
+  const requests: PrivacyRequest[] = [];
+  let fetchedCount = 0;
 
   // Paginate through all results
   let cursor: string | undefined;
@@ -251,21 +275,25 @@ export async function fetchAllRequests(
 
     fetchedCount += nodes.length;
     cursor = pageInfo.endCursor ?? undefined;
-    progressBar.update(fetchedCount);
+    if (!streaming) {
+      progressBar.update(fetchedCount);
+    }
     shouldContinue = pageInfo.hasNextPage;
   } while (shouldContinue);
 
-  progressBar.stop();
-  const t1 = new Date().getTime();
-  const totalTime = t1 - t0;
+  if (!streaming) {
+    progressBar.stop();
+    const t1 = new Date().getTime();
+    const totalTime = t1 - t0;
 
-  logger.info(
-    colors.green(
-      `Completed fetching of ${fetchedCount} request in "${
-        totalTime / 1000
-      }" seconds.`,
-    ),
-  );
+    logger.info(
+      colors.green(
+        `Completed fetching of ${fetchedCount} request in "${
+          totalTime / 1000
+        }" seconds.`,
+      ),
+    );
+  }
 
   if (streaming) {
     return [];

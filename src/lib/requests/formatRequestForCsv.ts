@@ -1,5 +1,10 @@
 import { groupBy } from 'lodash-es';
-import type { ExportedPrivacyRequest } from './pullPrivacyRequests';
+import type { PrivacyRequest, RequestIdentifier } from '../graphql';
+
+export interface ExportedPrivacyRequest extends PrivacyRequest {
+  /** Request identifiers */
+  requestIdentifiers: RequestIdentifier[];
+}
 
 /** A single CSV row */
 export type CsvRow = { [k in string]: string | null | number | boolean };

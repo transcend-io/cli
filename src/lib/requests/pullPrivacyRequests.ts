@@ -4,7 +4,6 @@ import colors from 'colors';
 
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
-  PrivacyRequest,
   RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
@@ -12,12 +11,11 @@ import {
   fetchAllRequests,
 } from '../graphql';
 import { logger } from '../../logger';
-import { formatRequestForCsv, CsvRow } from './formatRequestForCsv';
-
-export interface ExportedPrivacyRequest extends PrivacyRequest {
-  /** Request identifiers */
-  requestIdentifiers: RequestIdentifier[];
-}
+import {
+  formatRequestForCsv,
+  CsvRow,
+  ExportedPrivacyRequest,
+} from './formatRequestForCsv';
 
 /**
  * Split a date range into N evenly-spaced chunks.
