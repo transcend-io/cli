@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import colors from 'colors';
-import { REQUESTS } from './gqls';
+import { REQUESTS, REQUESTS_COUNT } from './gqls';
 import * as t from 'io-ts';
 import cliProgress from 'cli-progress';
 import { valuesOf } from '@transcend-io/type-utils';
@@ -173,20 +173,56 @@ export async function fetchAllRequests(
 
   // read in requests
   const requests: PrivacyRequest[] = [];
-  let cursor: string | undefined;
 
-  // Paginate
+  const filterBy = {
+    text,
+    type: actions.length > 0 ? actions : undefined,
+    status: statuses.length > 0 ? statuses : undefined,
+    origin: origins.length > 0 ? origins : undefined,
+    isTest,
+    isSilent,
+    isClosed,
+    createdAtBefore: createdAtBefore
+      ? createdAtBefore.toISOString()
+      : undefined,
+    createdAtAfter: createdAtAfter
+      ? createdAtAfter.toISOString()
+      : undefined,
+    updatedAtBefore: updatedAtBefore
+      ? updatedAtBefore.toISOString()
+      : undefined,
+    updatedAtAfter: updatedAtAfter
+      ? updatedAtAfter.toISOString()
+      : undefined,
+  };
+
+  // Fetch total count upfront for the progress bar
+  const {
+    requests: { totalCount },
+  } = await makeGraphQLRequest<{
+    /** Requests */
+    requests: {
+      /** Total count */
+      totalCount: number;
+    };
+  }>(client, REQUESTS_COUNT, { filterBy });
+
+  if (totalCount > PAGE_SIZE) {
+    logger.info(colors.magenta(`Fetching ${totalCount} requests`));
+    progressBar.start(totalCount, 0);
+  }
+
+  // Paginate through all results
+  let cursor: string | undefined;
   let shouldContinue = false;
   do {
     const {
-      requests: { nodes, totalCount, pageInfo },
+      requests: { nodes, pageInfo },
     } = await makeGraphQLRequest<{
       /** Requests */
       requests: {
         /** List */
         nodes: PrivacyRequest[];
-        /** Total count */
-        totalCount: number;
         /** Pagination info */
         pageInfo: {
           /** Cursor for the last item */
@@ -198,32 +234,8 @@ export async function fetchAllRequests(
     }>(client, REQUESTS, {
       first: PAGE_SIZE,
       after: cursor,
-      filterBy: {
-        text,
-        type: actions.length > 0 ? actions : undefined,
-        status: statuses.length > 0 ? statuses : undefined,
-        origin: origins.length > 0 ? origins : undefined,
-        isTest,
-        isSilent,
-        isClosed,
-        createdAtBefore: createdAtBefore
-          ? createdAtBefore.toISOString()
-          : undefined,
-        createdAtAfter: createdAtAfter
-          ? createdAtAfter.toISOString()
-          : undefined,
-        updatedAtBefore: updatedAtBefore
-          ? updatedAtBefore.toISOString()
-          : undefined,
-        updatedAtAfter: updatedAtAfter
-          ? updatedAtAfter.toISOString()
-          : undefined,
-      },
+      filterBy,
     });
-    if (!cursor && totalCount > PAGE_SIZE) {
-      logger.info(colors.magenta(`Fetching ${totalCount} requests`));
-      progressBar.start(totalCount, 0);
-    }
 
     requests.push(...nodes);
     cursor = pageInfo.endCursor ?? undefined;

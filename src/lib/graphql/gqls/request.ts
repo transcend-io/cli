@@ -2,6 +2,14 @@ import { gql } from 'graphql-request';
 
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true
+export const REQUESTS_COUNT = gql`
+  query TranscendCliRequestsCount($filterBy: RequestFiltersInput!) {
+    requests(filterBy: $filterBy, first: 0, useMaster: false) {
+      totalCount
+    }
+  }
+`;
+
 export const REQUESTS = gql`
   query TranscendCliRequests(
     $first: Int!
@@ -81,7 +89,6 @@ export const REQUESTS = gql`
           }
         }
       }
-      totalCount
       pageInfo {
         endCursor
         hasNextPage
