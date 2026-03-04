@@ -15,7 +15,7 @@ export const REMOVE_REQUEST_IDENTIFIERS = gql`
 export const REQUEST_IDENTIFIERS = gql`
   query TranscendCliRequestIdentifiers(
     $first: Int!
-    $offset: Int!
+    $after: String
     $requestIds: [ID!]
     $updatedAtBefore: Date
     $updatedAtAfter: Date
@@ -23,11 +23,13 @@ export const REQUEST_IDENTIFIERS = gql`
     requestIdentifiers(
       input: {
         requestIds: $requestIds
+      }
+      filterBy: {
         updatedAtBefore: $updatedAtBefore
         updatedAtAfter: $updatedAtAfter
       }
       first: $first
-      offset: $offset
+      after: $after
       useMaster: false
       orderBy: [
         { field: createdAt, direction: ASC }
@@ -40,6 +42,10 @@ export const REQUEST_IDENTIFIERS = gql`
         isVerifiedAtLeastOnce
       }
       totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
     }
   }
 `;
