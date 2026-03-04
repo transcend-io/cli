@@ -108,7 +108,7 @@ export const PrivacyRequest = t.intersection([
 /** Type override */
 export type PrivacyRequest = t.TypeOf<typeof PrivacyRequest>;
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 100;
 
 /**
  * Fetch all requests matching a set of filters
@@ -238,8 +238,7 @@ export async function fetchAllRequests(
   // Log completion time
   logger.info(
     colors.green(
-      `Completed fetching of ${requests.length} request in "${
-        totalTime / 1000
+      `Completed fetching of ${requests.length} request in "${totalTime / 1000
       }" seconds.`,
     ),
   );
