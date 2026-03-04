@@ -111,11 +111,16 @@ export type PrivacyRequest = t.TypeOf<typeof PrivacyRequest>;
 const PAGE_SIZE = 100;
 
 /**
- * Fetch all requests matching a set of filters
+ * Fetch all requests matching a set of filters.
+ *
+ * When `onPage` is provided the function streams pages to the callback
+ * and never accumulates nodes in memory — ideal for very large exports.
+ * Without `onPage` the function returns all nodes in a single array
+ * (existing behaviour, kept for backward compatibility).
  *
  * @param client - GraphQL client
  * @param options - Filter options
- * @returns List of requests
+ * @returns List of requests (empty when using onPage)
  */
 export async function fetchAllRequests(
   client: GraphQLClient,
@@ -132,6 +137,7 @@ export async function fetchAllRequests(
     isSilent,
     isClosed,
     requestIds = [],
+    onPage,
   }: {
     /** Actions to filter on */
     actions?: RequestAction[];
@@ -160,9 +166,13 @@ export async function fetchAllRequests(
      * at runtime while other filters are applied at the GraphQL level.
      */
     requestIds?: string[];
+    /** When provided, called with each page of nodes instead of accumulating in memory */
+    onPage?: (nodes: PrivacyRequest[]) => void | Promise<void>;
   } = {},
 ): Promise<PrivacyRequest[]> {
   logger.info(colors.magenta('Fetching requests...'));
+
+  const streaming = !!onPage;
 
   // create a new progress bar instance and use shades_classic theme
   const t0 = new Date().getTime();
@@ -171,8 +181,8 @@ export async function fetchAllRequests(
     cliProgress.Presets.shades_classic,
   );
 
-  // read in requests
   const requests: PrivacyRequest[] = [];
+  let fetchedCount = 0;
 
   const filterBy = {
     text,
@@ -233,9 +243,15 @@ export async function fetchAllRequests(
       filterBy,
     });
 
-    requests.push(...nodes);
+    if (streaming) {
+      await onPage!(nodes);
+    } else {
+      requests.push(...nodes);
+    }
+
+    fetchedCount += nodes.length;
     cursor = pageInfo.endCursor ?? undefined;
-    progressBar.update(requests.length);
+    progressBar.update(fetchedCount);
     shouldContinue = pageInfo.hasNextPage;
   } while (shouldContinue);
 
@@ -243,14 +259,17 @@ export async function fetchAllRequests(
   const t1 = new Date().getTime();
   const totalTime = t1 - t0;
 
-  // Log completion time
   logger.info(
     colors.green(
-      `Completed fetching of ${requests.length} request in "${
+      `Completed fetching of ${fetchedCount} request in "${
         totalTime / 1000
       }" seconds.`,
     ),
   );
+
+  if (streaming) {
+    return [];
+  }
 
   // Filter down requests by request ID
   let allRequests = requests;
