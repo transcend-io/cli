@@ -88,7 +88,12 @@ export async function fetchAllRequestIdentifiers(
           /** Decrypted identifiers */
           identifiers: RequestIdentifier[];
           /** Pagination info */
-          pageInfo: { endCursor: string | null; hasNextPage: boolean };
+          pageInfo: {
+            /** Cursor for the last item */
+            endCursor: string | null;
+            /** Whether more pages exist */
+            hasNextPage: boolean;
+          };
         }>('v1/request-identifiers', {
           json: {
             first: PAGE_SIZE,
@@ -99,8 +104,7 @@ export async function fetchAllRequestIdentifiers(
         .json();
     } catch (err) {
       throw new Error(
-        `Failed to fetch request identifiers: ${
-          err?.response?.body || err?.message
+        `Failed to fetch request identifiers: ${err?.response?.body || err?.message
         }`,
       );
     }
