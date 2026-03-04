@@ -21,9 +21,7 @@ export const REQUEST_IDENTIFIERS = gql`
     $updatedAtAfter: Date
   ) {
     requestIdentifiers(
-      input: {
-        requestIds: $requestIds
-      }
+      input: { requestIds: $requestIds }
       filterBy: {
         updatedAtBefore: $updatedAtBefore
         updatedAtAfter: $updatedAtAfter
