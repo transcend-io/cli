@@ -11,7 +11,7 @@ export interface RequestIdentifierMetadata {
   isVerifiedAtLeastOnce: boolean;
 }
 
-const PAGE_SIZE = 2000;
+const PAGE_SIZE = 50;
 
 /**
  * Fetch all request identifier metadata for a particular request
@@ -41,29 +41,22 @@ export async function fetchAllRequestIdentifierMetadata(
   const resolvedRequestIds =
     requestIds ?? (requestId ? [requestId] : undefined);
   const requestIdentifiers: RequestIdentifierMetadata[] = [];
-  let cursor: string | undefined;
+  let offset = 0;
 
   // Paginate
   let shouldContinue = false;
   do {
     const {
-      requestIdentifiers: { nodes, pageInfo },
+      requestIdentifiers: { nodes },
     } = await makeGraphQLRequest<{
       /** Request Identifiers */
       requestIdentifiers: {
         /** List */
         nodes: RequestIdentifierMetadata[];
-        /** Pagination info */
-        pageInfo: {
-          /** Cursor for the last item */
-          endCursor: string | null;
-          /** Whether more pages exist */
-          hasNextPage: boolean;
-        };
       };
     }>(client, REQUEST_IDENTIFIERS, {
       first: PAGE_SIZE,
-      after: cursor,
+      offset,
       requestIds: resolvedRequestIds,
       updatedAtBefore: updatedAtBefore
         ? updatedAtBefore.toISOString()
@@ -71,8 +64,8 @@ export async function fetchAllRequestIdentifierMetadata(
       updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
     });
     requestIdentifiers.push(...nodes);
-    cursor = pageInfo.endCursor ?? undefined;
-    shouldContinue = pageInfo.hasNextPage;
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
   return requestIdentifiers;

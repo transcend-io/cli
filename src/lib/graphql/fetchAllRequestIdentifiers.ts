@@ -24,16 +24,10 @@ const RequestIdentifier = t.type({
 /** Type override */
 export type RequestIdentifier = t.TypeOf<typeof RequestIdentifier>;
 
-const PAGE_SIZE = 100;
-
-const PageInfo = t.type({
-  endCursor: t.union([t.string, t.null]),
-  hasNextPage: t.boolean,
-});
+const PAGE_SIZE = 50;
 
 export const RequestIdentifiersResponse = t.type({
   identifiers: t.array(RequestIdentifier),
-  pageInfo: PageInfo,
 });
 
 /**
@@ -51,11 +45,11 @@ export async function fetchAllRequestIdentifiers(
     requestId,
   }: {
     /** ID of request to filter on */
-    requestId?: string;
-  } = {},
+    requestId: string;
+  },
 ): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
-  let cursor: string | undefined;
+  let offset = 0;
   let shouldContinue = false;
 
   // determine sombra version
@@ -87,12 +81,10 @@ export async function fetchAllRequestIdentifiers(
         .post<{
           /** Decrypted identifiers */
           identifiers: RequestIdentifier[];
-          /** Pagination info */
-          pageInfo: { endCursor: string | null; hasNextPage: boolean };
         }>('v1/request-identifiers', {
           json: {
             first: PAGE_SIZE,
-            after: cursor,
+            offset,
             requestId,
           },
         })
@@ -105,15 +97,15 @@ export async function fetchAllRequestIdentifiers(
       );
     }
 
-    const { identifiers: nodes, pageInfo } = decodeCodec(
+    const { identifiers: nodes } = decodeCodec(
       RequestIdentifiersResponse,
       response,
     );
 
     requestIdentifiers.push(...nodes);
 
-    cursor = pageInfo.endCursor ?? undefined;
-    shouldContinue = pageInfo.hasNextPage;
+    offset += PAGE_SIZE;
+    shouldContinue = nodes.length === PAGE_SIZE;
   } while (shouldContinue);
 
   return requestIdentifiers;
