@@ -185,15 +185,11 @@ export async function fetchAllRequests(
     createdAtBefore: createdAtBefore
       ? createdAtBefore.toISOString()
       : undefined,
-    createdAtAfter: createdAtAfter
-      ? createdAtAfter.toISOString()
-      : undefined,
+    createdAtAfter: createdAtAfter ? createdAtAfter.toISOString() : undefined,
     updatedAtBefore: updatedAtBefore
       ? updatedAtBefore.toISOString()
       : undefined,
-    updatedAtAfter: updatedAtAfter
-      ? updatedAtAfter.toISOString()
-      : undefined,
+    updatedAtAfter: updatedAtAfter ? updatedAtAfter.toISOString() : undefined,
   };
 
   // Fetch total count upfront for the progress bar
@@ -250,7 +246,8 @@ export async function fetchAllRequests(
   // Log completion time
   logger.info(
     colors.green(
-      `Completed fetching of ${requests.length} request in "${totalTime / 1000
+      `Completed fetching of ${requests.length} request in "${
+        totalTime / 1000
       }" seconds.`,
     ),
   );
