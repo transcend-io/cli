@@ -100,6 +100,8 @@ export const PrivacyRequest = t.intersection([
   t.partial({
     /** Days remaining until expired */
     daysRemaining: t.union([t.null, t.number]),
+    /** Time when request was successfully completed */
+    successfullyCompletedAt: t.union([t.null, t.string]),
     /** Purpose */
     purpose: RequestPurposeTrigger,
   }),

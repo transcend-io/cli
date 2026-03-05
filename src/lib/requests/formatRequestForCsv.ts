@@ -25,6 +25,7 @@ export function formatRequestForCsv({
   subjectType,
   details,
   createdAt,
+  successfullyCompletedAt,
   country,
   locale,
   origin,
@@ -38,6 +39,7 @@ export function formatRequestForCsv({
   return {
     'Request ID': id,
     'Created At': createdAt,
+    'Successfully Completed At': successfullyCompletedAt || '',
     Email: email,
     'Core Identifier': coreIdentifier,
     'Request Type': type,
