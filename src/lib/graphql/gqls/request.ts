@@ -39,6 +39,7 @@ export const REQUESTS = gql`
         isSilent
         coreIdentifier
         daysRemaining
+        successfullyCompletedAt
         type
         subjectType
         country
