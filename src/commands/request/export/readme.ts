@@ -36,10 +36,15 @@ const examples = buildExamples<ExportCommandFlags>(
       },
     },
     {
-      description: 'Increase the concurrency (defaults to 100)',
+      description:
+        'Speed up large exports with parallel date-range chunks (requires --createdAtAfter and --createdAtBefore)',
       flags: {
         auth: '$TRANSCEND_API_KEY',
-        concurrency: 500,
+        createdAtAfter: getExampleDate('01/01/2023'),
+        createdAtBefore: getExampleDate('01/01/2024'),
+        concurrency: 10,
+        file: './exports/requests.csv',
+        skipRequestIdentifiers: true,
       },
     },
     {
@@ -76,4 +81,14 @@ const examples = buildExamples<ExportCommandFlags>(
 
 export default `#### Examples
 
-${examples}`;
+${examples}
+
+#### Parallel Date-Range Chunking
+
+When exporting a large number of requests, you can use \`--concurrency\` to split the date range
+into parallel chunks that are fetched simultaneously. This requires both \`--createdAtAfter\` and
+\`--createdAtBefore\` to be set. Each chunk writes to its own numbered CSV file (e.g.
+\`export-0.csv\`, \`export-1.csv\`, ...). If any chunk fails, the remaining chunks continue and the
+CLI reports the exact date ranges that need to be retried.
+
+When \`--concurrency=1\` (the default), the entire export is written to a single file.`;
