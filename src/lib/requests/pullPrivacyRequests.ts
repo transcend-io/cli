@@ -7,7 +7,7 @@ import {
   RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
-  fetchAllRequestIdentifiers,
+  fetchRequestIdentifiersBatch,
   fetchAllRequests,
   validateSombraVersion,
 } from '../graphql';
@@ -31,7 +31,6 @@ export async function pullPrivacyRequests({
   actions = [],
   statuses = [],
   identifierSearch,
-  pageLimit = 100,
   concurrency = 1,
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
@@ -134,31 +133,21 @@ export async function pullPrivacyRequests({
   }
 
   // Fetch the request identifiers for those requests
-  const requestsWithRequestIdentifiers = skipRequestIdentifiers
-    ? requests.map((request) => ({
+  let requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
+  if (skipRequestIdentifiers) {
+    requestsWithRequestIdentifiers = requests.map((request) => ({
       ...request,
       requestIdentifiers: [] as RequestIdentifier[],
-    }))
-    : await map(
-      requests,
-      async (request) => {
-        const requestIdentifiers = await fetchAllRequestIdentifiers(
-          client,
-          sombra,
-          {
-            requestId: request.id,
-            skipSombraCheck: true,
-          },
-        );
-        return {
-          ...request,
-          requestIdentifiers,
-        };
-      },
-      {
-        concurrency: pageLimit,
-      },
-    );
+    }));
+  } else {
+    const identifiersByRequest = await fetchRequestIdentifiersBatch(sombra, {
+      requestIds: requests.map((r) => r.id),
+    });
+    requestsWithRequestIdentifiers = requests.map((request) => ({
+      ...request,
+      requestIdentifiers: identifiersByRequest.get(request.id) ?? [],
+    }));
+  }
 
   logger.info(
     colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),

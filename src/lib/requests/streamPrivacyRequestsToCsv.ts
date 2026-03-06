@@ -8,7 +8,7 @@ import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
-  fetchAllRequestIdentifiers,
+  fetchRequestIdentifiersBatch,
   fetchAllRequests,
   fetchRequestsTotalCount,
   validateSombraVersion,
@@ -36,7 +36,6 @@ export async function streamPrivacyRequestsToCsv({
   statuses = [],
   identifierSearch,
   concurrency = 1,
-  pageLimit = 100,
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
   createdAtAfter,
@@ -194,20 +193,23 @@ export async function streamPrivacyRequestsToCsv({
             if (nodes.length === 0) return;
 
             // Optionally enrich each request with its identifiers
-            const enriched: ExportedPrivacyRequest[] = skipRequestIdentifiers
-              ? nodes.map((n) => ({ ...n, requestIdentifiers: [] }))
-              : await map(
-                  nodes,
-                  async (n) => ({
-                    ...n,
-                    requestIdentifiers: await fetchAllRequestIdentifiers(
-                      client,
-                      sombra!,
-                      { requestId: n.id, skipSombraCheck: true },
-                    ),
-                  }),
-                  { concurrency: pageLimit },
-                );
+            let enriched: ExportedPrivacyRequest[];
+            if (skipRequestIdentifiers) {
+              enriched = nodes.map((n) => ({
+                ...n,
+                requestIdentifiers: [],
+              }));
+            } else {
+              const identifiersByRequest =
+                await fetchRequestIdentifiersBatch(sombra!, {
+                  requestIds: nodes.map((n) => n.id),
+                });
+              enriched = nodes.map((n) => ({
+                ...n,
+                requestIdentifiers:
+                  identifiersByRequest.get(n.id) ?? [],
+              }));
+            }
 
             const rows: Record<string, string | null | number | boolean>[] =
               enriched.map(formatRequestForCsv);
