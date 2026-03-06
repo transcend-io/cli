@@ -17,33 +17,7 @@ import {
   CsvRow,
   ExportedPrivacyRequest,
 } from './formatRequestForCsv';
-
-/**
- * Split a date range into N evenly-spaced chunks.
- *
- * @param after - Start of the date range
- * @param before - End of the date range
- * @param chunks - Number of chunks to split into
- * @returns Array of date range bounds
- */
-function splitDateRange(
-  after: Date,
-  before: Date,
-  chunks: number,
-): {
-  /** Chunk start */ createdAtAfter: Date;
-  /** Chunk end */ createdAtBefore: Date;
-}[] {
-  const /** Range start ms */ start = after.getTime();
-  const /** Range end ms */ end = before.getTime();
-  const /** Ms per chunk */ chunkSize = (end - start) / chunks;
-  return Array.from({ length: chunks }, (_, i) => ({
-    createdAtAfter: new Date(start + chunkSize * i),
-    createdAtBefore: new Date(
-      i === chunks - 1 ? end : start + chunkSize * (i + 1),
-    ),
-  }));
-}
+import { splitDateRange } from './splitDateRange';
 
 /**
  * Pull down a list of privacy requests
@@ -110,16 +84,14 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${
-      dateRange ? ', and' : ''
-    } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${dateRange ? ', and' : ''
+      } after ${createdAtAfter.toISOString()}`;
   }
   logger.info(
     colors.magenta(
-      `${
-        actions.length > 0
-          ? `Pulling requests of type "${actions.join('" , "')}"`
-          : 'Pulling all requests'
+      `${actions.length > 0
+        ? `Pulling requests of type "${actions.join('" , "')}"`
+        : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -164,29 +136,29 @@ export async function pullPrivacyRequests({
   // Fetch the request identifiers for those requests
   const requestsWithRequestIdentifiers = skipRequestIdentifiers
     ? requests.map((request) => ({
-        ...request,
-        requestIdentifiers: [] as RequestIdentifier[],
-      }))
+      ...request,
+      requestIdentifiers: [] as RequestIdentifier[],
+    }))
     : await map(
-        requests,
-        async (request) => {
-          const requestIdentifiers = await fetchAllRequestIdentifiers(
-            client,
-            sombra,
-            {
-              requestId: request.id,
-              skipSombraCheck: true,
-            },
-          );
-          return {
-            ...request,
-            requestIdentifiers,
-          };
-        },
-        {
-          concurrency: pageLimit,
-        },
-      );
+      requests,
+      async (request) => {
+        const requestIdentifiers = await fetchAllRequestIdentifiers(
+          client,
+          sombra,
+          {
+            requestId: request.id,
+            skipSombraCheck: true,
+          },
+        );
+        return {
+          ...request,
+          requestIdentifiers,
+        };
+      },
+      {
+        concurrency: pageLimit,
+      },
+    );
 
   logger.info(
     colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),

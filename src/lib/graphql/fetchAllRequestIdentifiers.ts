@@ -90,14 +90,14 @@ export async function fetchAllRequestIdentifiers(
   },
 ): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
-  let offset = 0;
-  let shouldContinue = false;
+  let cursor: string | undefined;
+  let shouldContinue = true;
 
   if (!skipSombraCheck) {
     await validateSombraVersion(client);
   }
 
-  do {
+  while (shouldContinue) {
     let response: unknown;
     try {
       response = await sombra!
@@ -114,7 +114,7 @@ export async function fetchAllRequestIdentifiers(
         }>('v1/request-identifiers', {
           json: {
             first: PAGE_SIZE,
-            after: cursor,
+            after: cursor ?? undefined,
             requestId,
           },
         })
@@ -135,7 +135,7 @@ export async function fetchAllRequestIdentifiers(
 
     cursor = pageInfo.endCursor ?? undefined;
     shouldContinue = pageInfo.hasNextPage;
-  } while (shouldContinue);
+  }
 
   return requestIdentifiers;
 }

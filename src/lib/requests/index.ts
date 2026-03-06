@@ -31,3 +31,4 @@ export * from './pullPrivacyRequests';
 export * from './streamPrivacyRequestsToCsv';
 export * from './skipRequestDataSilos';
 export * from './removeUnverifiedRequestIdentifiers';
+export * from './splitDateRange';
