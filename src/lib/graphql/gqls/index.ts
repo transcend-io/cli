@@ -50,3 +50,4 @@ export * from './processingPurpose';
 export * from './processingActivity';
 export * from './sombraVersion';
 export * from './siloDiscoveryResult';
+export * from './consentWorkflowTrigger';
