@@ -12,7 +12,7 @@
   "dependencies": {
     "dd-trace": "2.45.1",
     "fast-csv": "^4.3.6",
-    "sequelize": "^6.37.3",
+    "sequelize": "^6.37.8",
     "sequelize-mock": "^0.10.2"
   },
   "devDependencies": {
