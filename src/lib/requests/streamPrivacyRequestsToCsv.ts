@@ -193,23 +193,15 @@ export async function streamPrivacyRequestsToCsv({
             if (nodes.length === 0) return;
 
             // Optionally enrich each request with its identifiers
-            let enriched: ExportedPrivacyRequest[];
-            if (skipRequestIdentifiers) {
-              enriched = nodes.map((n) => ({
-                ...n,
-                requestIdentifiers: [],
-              }));
-            } else {
-              const identifiersByRequest =
-                await fetchRequestIdentifiersBatch(sombra!, {
+            const identifiersByRequest = skipRequestIdentifiers
+              ? new Map()
+              : await fetchRequestIdentifiersBatch(sombra!, {
                   requestIds: nodes.map((n) => n.id),
                 });
-              enriched = nodes.map((n) => ({
-                ...n,
-                requestIdentifiers:
-                  identifiersByRequest.get(n.id) ?? [],
-              }));
-            }
+            const enriched: ExportedPrivacyRequest[] = nodes.map((n) => ({
+              ...n,
+              requestIdentifiers: identifiersByRequest.get(n.id) ?? [],
+            }));
 
             const rows: Record<string, string | null | number | boolean>[] =
               enriched.map(formatRequestForCsv);

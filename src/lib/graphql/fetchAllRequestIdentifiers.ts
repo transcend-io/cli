@@ -103,7 +103,7 @@ export async function fetchAllRequestIdentifiers(
   },
 ): Promise<RequestIdentifier[]> {
   const requestIdentifiers: RequestIdentifier[] = [];
-  let cursor: string | undefined;
+  let endCursor: string | undefined;
   let shouldContinue = true;
 
   if (!skipSombraCheck) {
@@ -127,14 +127,15 @@ export async function fetchAllRequestIdentifiers(
         }>('v1/request-identifiers', {
           json: {
             first: PAGE_SIZE,
-            after: cursor ?? undefined,
+            after: endCursor ?? undefined,
             requestId,
           },
         })
         .json();
     } catch (err) {
       throw new Error(
-        `Failed to fetch request identifiers: ${err?.response?.body || err?.message
+        `Failed to fetch request identifiers: ${
+          err?.response?.body || err?.message
         }`,
       );
     }
@@ -146,7 +147,7 @@ export async function fetchAllRequestIdentifiers(
 
     requestIdentifiers.push(...nodes);
 
-    cursor = pageInfo.endCursor ?? undefined;
+    endCursor = pageInfo.endCursor ?? undefined;
     shouldContinue = pageInfo.hasNextPage;
   }
 

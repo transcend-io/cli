@@ -4,7 +4,6 @@ import colors from 'colors';
 
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
-  RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchRequestIdentifiersBatch,
@@ -83,14 +82,16 @@ export async function pullPrivacyRequests({
     dateRange += ` before ${createdAtBefore.toISOString()}`;
   }
   if (createdAtAfter) {
-    dateRange += `${dateRange ? ', and' : ''
-      } after ${createdAtAfter.toISOString()}`;
+    dateRange += `${
+      dateRange ? ', and' : ''
+    } after ${createdAtAfter.toISOString()}`;
   }
   logger.info(
     colors.magenta(
-      `${actions.length > 0
-        ? `Pulling requests of type "${actions.join('" , "')}"`
-        : 'Pulling all requests'
+      `${
+        actions.length > 0
+          ? `Pulling requests of type "${actions.join('" , "')}"`
+          : 'Pulling all requests'
       }${dateRange}`,
     ),
   );
@@ -133,21 +134,16 @@ export async function pullPrivacyRequests({
   }
 
   // Fetch the request identifiers for those requests
-  let requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
-  if (skipRequestIdentifiers) {
-    requestsWithRequestIdentifiers = requests.map((request) => ({
-      ...request,
-      requestIdentifiers: [] as RequestIdentifier[],
-    }));
-  } else {
-    const identifiersByRequest = await fetchRequestIdentifiersBatch(sombra, {
-      requestIds: requests.map((r) => r.id),
-    });
-    requestsWithRequestIdentifiers = requests.map((request) => ({
-      ...request,
-      requestIdentifiers: identifiersByRequest.get(request.id) ?? [],
-    }));
-  }
+  const identifiersByRequest = skipRequestIdentifiers
+    ? new Map()
+    : await fetchRequestIdentifiersBatch(sombra, {
+        requestIds: requests.map((r) => r.id),
+      });
+
+  const requestsWithRequestIdentifiers = requests.map((request) => ({
+    ...request,
+    requestIdentifiers: identifiersByRequest.get(request.id) ?? [],
+  }));
 
   logger.info(
     colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),
