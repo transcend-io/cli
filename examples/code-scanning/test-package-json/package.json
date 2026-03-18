@@ -18,6 +18,5 @@
   "devDependencies": {
     "@types/sequelize": "^4.28.20",
     "typescript": "^5.0.4"
-  },
-  "packageManager": "yarn@3.5.0"
+  }
 }
