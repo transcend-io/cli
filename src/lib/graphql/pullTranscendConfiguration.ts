@@ -34,6 +34,7 @@ import {
   AssessmentSectionQuestionInput,
   RiskLogicInput,
   ConsentPurpose,
+  type ConsentPreferenceTopicOptionValue,
   type SiloDiscoveryResultInput,
   type ConsentWorkflowTriggerInput,
 } from '../../codecs';
@@ -95,6 +96,7 @@ import {
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
+import { fetchAllPreferenceOptionValues } from './fetchAllPreferenceOptionValues';
 import { fetchAllSiloDiscoveryResults } from './fetchAllSiloDiscoveryResults';
 import { fetchAllConsentWorkflowTriggers } from './fetchAllConsentWorkflowTriggers';
 
@@ -190,6 +192,7 @@ export async function pullTranscendConfiguration(
     assessments,
     assessmentTemplates,
     purposes,
+    preferenceOptionValues,
     siloDiscoveryResults,
     consentWorkflowTriggers,
   ] = await Promise.all([
@@ -347,6 +350,10 @@ export async function pullTranscendConfiguration(
     // Fetch purpose and preferences
     resources.includes(TranscendPullResource.Purposes)
       ? fetchAllPurposesAndPreferences(client)
+      : [],
+    // Fetch preference option values
+    resources.includes(TranscendPullResource.PreferenceOptions)
+      ? fetchAllPreferenceOptionValues(client)
       : [],
     // Fetch silo discovery results
     resources.includes(TranscendPullResource.SystemDiscovery)
@@ -1533,6 +1540,19 @@ export async function pullTranscendConfiguration(
               : {}),
           }),
         ),
+      }),
+    );
+  }
+
+  // Save preference options
+  if (
+    preferenceOptionValues.length > 0 &&
+    resources.includes(TranscendPullResource.PreferenceOptions)
+  ) {
+    result['preference-options'] = preferenceOptionValues.map(
+      ({ slug, title }): ConsentPreferenceTopicOptionValue => ({
+        slug,
+        title: title.defaultMessage,
       }),
     );
   }

@@ -2149,6 +2149,10 @@ export const TranscendInput = t.partial({
    * Consent workflow trigger definitions
    */
   'consent-workflow-triggers': t.array(ConsentWorkflowTriggerInput),
+  /**
+   * Preference management options for multi and single selects
+   */
+  'preference-options': t.array(ConsentPreferenceTopicOptionValue),
 });
 
 /** Type override */

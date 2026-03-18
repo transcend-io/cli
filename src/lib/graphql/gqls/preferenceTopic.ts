@@ -43,6 +43,34 @@ export const PREFERENCE_TOPICS = gql`
   }
 `;
 
+export const CREATE_OR_UPDATE_PREFERENCE_OPTION_VALUES = gql`
+  mutation TranscendCliCreateOrUpdatePreferenceOptionValues(
+    $input: CreateOrUpdatePreferenceOptionValuesInput!
+  ) {
+    createOrUpdatePreferenceOptionValues(input: $input) {
+      preferenceOptionValues {
+        id
+        slug
+      }
+    }
+  }
+`;
+
+export const PREFERENCE_OPTION_VALUES = gql`
+  query TranscendCliPreferenceOptionValues($first: Int!, $offset: Int!) {
+    preferenceOptionValues(first: $first, offset: $offset) {
+      nodes {
+        id
+        title {
+          id
+          defaultMessage
+        }
+        slug
+      }
+    }
+  }
+`;
+
 export const CREATE_OR_UPDATE_PREFERENCE_TOPIC = gql`
   mutation TranscendCliCreateOrUpdatePreferenceTopic(
     $input: CreateOrUpdatePreferenceTopicInput!

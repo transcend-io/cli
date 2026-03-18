@@ -44,6 +44,7 @@ import { syncProcessingPurposes } from './syncProcessingPurposes';
 import { syncProcessingActivities } from './syncProcessingActivities';
 import { syncPartitions } from './syncPartitions';
 import { syncConsentWorkflowTriggers } from './syncConsentWorkflowTriggers';
+import { syncPreferenceOptionValues } from './syncPreferenceOptionValues';
 import { syncPurposes } from './syncPurposes';
 
 const CONCURRENCY = 10;
@@ -148,6 +149,15 @@ export async function syncConfigurationToTranscend(
         colors.red(`Failed to sync consent manager! - ${err.message}`),
       );
     }
+  }
+
+  // Sync preference option values (before purposes, since purposes may reference them)
+  if (input['preference-options']) {
+    const preferenceOptionsSuccess = await syncPreferenceOptionValues(
+      client,
+      input['preference-options'],
+    );
+    encounteredError = encounteredError || !preferenceOptionsSuccess;
   }
 
   // Sync purposes (and nested preference topics)

@@ -90,5 +90,7 @@ export * from './syncVendors';
 export * from './uploadSiloDiscoveryResults';
 export * from './fetchAllSiloDiscoveryResults';
 export * from './fetchAllConsentWorkflowTriggers';
+export * from './fetchAllPreferenceOptionValues';
 export * from './syncConsentWorkflowTriggers';
+export * from './syncPreferenceOptionValues';
 export * from './syncPurposes';
