@@ -529,10 +529,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["balanced-match", [\
-        ["npm:1.0.2", {\
-          "packageLocation": "./.yarn/cache/balanced-match-npm-1.0.2-a53c126459-9706c088a2.zip/node_modules/balanced-match/",\
+        ["npm:4.0.4", {\
+          "packageLocation": "./.yarn/cache/balanced-match-npm-4.0.4-fd666b3c7f-fb07bb66a0.zip/node_modules/balanced-match/",\
           "packageDependencies": [\
-            ["balanced-match", "npm:1.0.2"]\
+            ["balanced-match", "npm:4.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -547,11 +547,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["brace-expansion", [\
-        ["npm:2.0.1", {\
-          "packageLocation": "./.yarn/cache/brace-expansion-npm-2.0.1-17aa2616f9-a61e7cd2e8.zip/node_modules/brace-expansion/",\
+        ["npm:5.0.3", {\
+          "packageLocation": "./.yarn/cache/brace-expansion-npm-5.0.3-134cbcf5ff-8fea33ebbf.zip/node_modules/brace-expansion/",\
           "packageDependencies": [\
-            ["brace-expansion", "npm:2.0.1"],\
-            ["balanced-match", "npm:1.0.2"]\
+            ["brace-expansion", "npm:5.0.3"],\
+            ["balanced-match", "npm:4.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -727,10 +727,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["dottie", [\
-        ["npm:2.0.6", {\
-          "packageLocation": "./.yarn/cache/dottie-npm-2.0.6-0b47a47557-4c778df9dc.zip/node_modules/dottie/",\
+        ["npm:2.0.7", {\
+          "packageLocation": "./.yarn/cache/dottie-npm-2.0.7-0f39eae59f-0473ffce83.zip/node_modules/dottie/",\
           "packageDependencies": [\
-            ["dottie", "npm:2.0.6"]\
+            ["dottie", "npm:2.0.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -853,7 +853,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["glob", "npm:10.5.0"],\
             ["foreground-child", "npm:3.1.1"],\
             ["jackspeak", "npm:3.4.3"],\
-            ["minimatch", "npm:9.0.5"],\
+            ["minimatch", "npm:9.0.7"],\
             ["minipass", "npm:7.1.2"],\
             ["package-json-from-dist", "npm:1.0.1"],\
             ["path-scurry", "npm:1.11.1"]\
@@ -1260,11 +1260,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["minimatch", [\
-        ["npm:9.0.5", {\
-          "packageLocation": "./.yarn/cache/minimatch-npm-9.0.5-9aa93d97fa-2c035575ed.zip/node_modules/minimatch/",\
+        ["npm:9.0.7", {\
+          "packageLocation": "./.yarn/cache/minimatch-npm-9.0.7-145dd43fbb-03c871cdf5.zip/node_modules/minimatch/",\
           "packageDependencies": [\
-            ["minimatch", "npm:9.0.5"],\
-            ["brace-expansion", "npm:2.0.1"]\
+            ["minimatch", "npm:9.0.7"],\
+            ["brace-expansion", "npm:5.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1687,7 +1687,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/tedious", null],\
             ["@types/validator", "npm:13.11.9"],\
             ["debug", "virtual:c9e1a4b59e37cb479517edede3bf2093b28c0ca1a9d0e517f3c345075bd1e468980b94b4957e389116607ee7155441dfd7d09e19a4229d5d09bcf06244401590#npm:4.3.4"],\
-            ["dottie", "npm:2.0.6"],\
+            ["dottie", "npm:2.0.7"],\
             ["ibm_db", null],\
             ["inflection", "npm:1.13.4"],\
             ["lodash", "npm:4.17.23"],\

@@ -80,6 +80,21 @@ export const ColumnIdentifierMap = t.record(
 /** Override type */
 export type ColumnIdentifierMap = t.TypeOf<typeof ColumnIdentifierMap>;
 
+/** Mapping of a CSV column to a metadata key in the preference store. */
+export const MetadataMapping = t.type({
+  /** The metadata key name in the preference store */
+  key: t.string,
+});
+
+/** Override type */
+export type MetadataMapping = t.TypeOf<typeof MetadataMapping>;
+
+/** Record mapping CSV column names to metadata keys. */
+export const ColumnMetadataMap = t.record(t.string, MetadataMapping);
+
+/** Override type */
+export type ColumnMetadataMap = t.TypeOf<typeof ColumnMetadataMap>;
+
 export const FileMetadataState = t.intersection([
   t.type({
     /**

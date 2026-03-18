@@ -31,28 +31,15 @@ export const RequestIdentifiersResponse = t.type({
 });
 
 /**
- * Fetch all request identifiers for a particular request
+ * Validate that the Sombra version meets the minimum requirement for
+ * decrypting request identifiers. Call once before bulk-fetching identifiers
+ * to avoid repeating this check on every request.
  *
  * @param client - GraphQL client
- * @param sombra - Sombra client
- * @param options - Options
- * @returns List of request identifiers
  */
-export async function fetchAllRequestIdentifiers(
+export async function validateSombraVersion(
   client: GraphQLClient,
-  sombra: Got,
-  {
-    requestId,
-  }: {
-    /** ID of request to filter on */
-    requestId: string;
-  },
-): Promise<RequestIdentifier[]> {
-  const requestIdentifiers: RequestIdentifier[] = [];
-  let offset = 0;
-  let shouldContinue = false;
-
-  // determine sombra version
+): Promise<void> {
   const {
     organization: {
       sombra: { version },
@@ -66,12 +53,42 @@ export async function fetchAllRequestIdentifiers(
         version: string;
       };
     };
-  }>(client!, SOMBRA_VERSION);
+  }>(client, SOMBRA_VERSION);
 
   if (version && semver.lt(version, MIN_SOMBRA_VERSION_TO_DECRYPT)) {
     throw new Error(
       `Please upgrade Sombra to ${MIN_SOMBRA_VERSION_TO_DECRYPT} or greater to use this command.`,
     );
+  }
+}
+
+/**
+ * Fetch all request identifiers for a particular request
+ *
+ * @param client - GraphQL client
+ * @param sombra - Sombra client
+ * @param options - Options
+ * @returns List of request identifiers
+ */
+export async function fetchAllRequestIdentifiers(
+  client: GraphQLClient,
+  sombra: Got,
+  {
+    requestId,
+    skipSombraCheck = false,
+  }: {
+    /** ID of request to filter on */
+    requestId: string;
+    /** Skip the Sombra version check (caller already validated) */
+    skipSombraCheck?: boolean;
+  },
+): Promise<RequestIdentifier[]> {
+  const requestIdentifiers: RequestIdentifier[] = [];
+  let offset = 0;
+  let shouldContinue = false;
+
+  if (!skipSombraCheck) {
+    await validateSombraVersion(client);
   }
 
   do {

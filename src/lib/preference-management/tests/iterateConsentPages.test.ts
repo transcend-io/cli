@@ -214,7 +214,7 @@ describe('iterateConsentPages', () => {
     expect(H.logger.warn).toHaveBeenCalledTimes(1);
     const msg = H.logger.warn.mock.calls[0][0] as string;
     expect(msg).toContain(
-      'Retry attempt 3 for fetchConsentPreferences due to error: boom',
+      'Retry attempt 3 for iterateConsentPages due to error: boom',
     );
   });
 });

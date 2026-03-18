@@ -13,6 +13,7 @@ import {
   fetchAllRequestEnrichers,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 
@@ -68,6 +69,8 @@ export async function pullManualEnrichmentIdentifiersToCsv({
     statuses: [RequestStatus.Enriching],
   });
 
+  await validateSombraVersion(client);
+
   // Requests to save
   const savedRequests: PrivacyRequestWithIdentifiers[] = [];
 
@@ -92,6 +95,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
           sombra,
           {
             requestId: request.id,
+            skipSombraCheck: true,
           },
         );
         savedRequests.push({

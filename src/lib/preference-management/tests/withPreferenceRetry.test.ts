@@ -21,6 +21,8 @@ vi.mock('../../../logger', () => ({
 
 vi.mock('../../helpers', () => ({
   sleepPromise: H.sleepSpy,
+  extractErrorMessage: (err: unknown) =>
+    err instanceof Error ? err.message : String(err ?? 'Unknown error'),
 }));
 
 // Avoid coloring flake in snapshots; just return the input string
@@ -114,6 +116,21 @@ describe('withPreferenceRetry', () => {
     // Delays: attempt 1 => 100 + 50 = 150; attempt 2 => 200 + 50 = 250
     expect(H.sleepSpy.mock.calls[0][0]).toBe(150);
     expect(H.sleepSpy.mock.calls[1][0]).toBe(250);
+  });
+
+  it('defaults to 12 maxAttempts when not specified', async () => {
+    const retryMsg = RETRY_PREFERENCE_MSGS[0];
+    const fn = vi.fn().mockRejectedValue(new Error(retryMsg));
+
+    await expect(
+      withPreferenceRetry('Preference Query', fn, {
+        baseDelayMs: 10,
+      }),
+    ).rejects.toThrow('Preference Query failed after 12 attempt(s):');
+
+    expect(fn).toHaveBeenCalledTimes(12);
+    // 11 sleep intervals between 12 attempts
+    expect(H.sleepSpy).toHaveBeenCalledTimes(11);
   });
 
   it('honors custom isRetryable predicate', async () => {

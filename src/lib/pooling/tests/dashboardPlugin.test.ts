@@ -98,7 +98,13 @@ function makeCtx(
     filesFailed: 1,
     workerState: new Map<number, never>() as unknown as Map<number, never>,
     totals: {},
-    throughput: { successSoFar: 2, r10s: 1.23, r60s: 0.9 },
+    throughput: {
+      successSoFar: 2,
+      r10s: 1.23,
+      r60s: 0.9,
+      jobsR10s: 0,
+      jobsR60s: 0,
+    },
     final: false,
     exportStatus: { path: '/tmp/out' },
   };

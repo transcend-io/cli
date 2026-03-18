@@ -38,11 +38,10 @@ export async function* iterateConsentPages(
           })
           .json(),
       {
-        maxAttempts: 5,
-        onRetry: (attempt, error, message) => {
+        onRetry: (attempt, _error, message) => {
           logger.warn(
             colors.yellow(
-              `Retry attempt ${attempt} for fetchConsentPreferences due to error: ${message}`,
+              `Retry attempt ${attempt} for iterateConsentPages due to error: ${message}`,
             ),
           );
         },
