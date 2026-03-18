@@ -53,6 +53,18 @@ export const markSilentCommand = buildCommand({
         brief: 'Mark silent requests that were submitted after this time',
         optional: true,
       },
+      updatedAtBefore: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Mark silent requests that were last updated before this time',
+        optional: true,
+      },
+      updatedAtAfter: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Mark silent requests that were last updated after this time',
+        optional: true,
+      },
       transcendUrl: createTranscendUrlParameter(),
       concurrency: {
         kind: 'parsed',

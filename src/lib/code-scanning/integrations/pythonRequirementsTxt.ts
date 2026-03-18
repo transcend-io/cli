@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { listFiles } from '../../api-keys';
-import { dirname, join } from 'path';
+import { dirname, join } from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 
 const REQUIREMENTS_PACKAGE_MATCH = /(.+?)(=+)(.+)/;

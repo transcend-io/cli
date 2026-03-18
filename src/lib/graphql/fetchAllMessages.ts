@@ -1,19 +1,21 @@
 import { GraphQLClient } from 'graphql-request';
 import { MESSAGES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
+import type { LocaleValue } from '@transcend-io/internationalization';
 
 export interface Message {
   /** ID of message */
   id: string;
   /** Default message */
   defaultMessage: string;
+  /** Description */
+  description: string;
   /** React Intl ID */
   targetReactIntlId: string | null;
   /** Disabled locales */
   translations: {
     /** Locale */
-    locale: LanguageKey;
+    locale: LocaleValue;
     /** Value */
     value: string;
   }[];

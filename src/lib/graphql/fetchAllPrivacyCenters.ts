@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import { PRIVACY_CENTER } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { LanguageKey } from '@transcend-io/internationalization';
+import type { LocaleValue } from '@transcend-io/internationalization';
 import { PrivacyCenterThemePartial } from '@transcend-io/privacy-types';
 import { fetchPrivacyCenterUrl } from './fetchPrivacyCenterId';
 
@@ -29,9 +29,9 @@ export interface PrivacyCenter {
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: boolean;
   /** What languages are supported for the privacy center */
-  locales: LanguageKey[];
+  locales: LocaleValue[];
   /** The default locale for the privacy center */
-  defaultLocale: LanguageKey;
+  defaultLocale: LocaleValue;
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: boolean;
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */

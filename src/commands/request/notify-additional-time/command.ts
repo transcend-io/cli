@@ -27,6 +27,18 @@ export const notifyAdditionalTimeCommand = buildCommand({
         brief: 'Notify requests that are open but submitted after this time',
         optional: true,
       },
+      updatedAtBefore: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Notify requests that were last updated before this time',
+        optional: true,
+      },
+      updatedAtAfter: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Notify requests that were last updated after this time',
+        optional: true,
+      },
       actions: {
         kind: 'enum',
         values: Object.values(RequestAction),

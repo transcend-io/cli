@@ -2,8 +2,8 @@ import { buildCommand, numberParser } from '@stricli/core';
 import { ScopeName } from '@transcend-io/privacy-types';
 import {
   createAuthParameter,
-  createConsentUrlParameter,
   createSombraAuthParameter,
+  createTranscendUrlParameter,
 } from '../../../lib/cli/common-parameters';
 
 export const uploadPreferencesCommand = buildCommand({
@@ -26,7 +26,7 @@ export const uploadPreferencesCommand = buildCommand({
         brief: 'The partition key to download consent preferences to',
       },
       sombraAuth: createSombraAuthParameter(),
-      consentUrl: createConsentUrlParameter(),
+      transcendUrl: createTranscendUrlParameter(),
       file: {
         kind: 'parsed',
         parse: String,

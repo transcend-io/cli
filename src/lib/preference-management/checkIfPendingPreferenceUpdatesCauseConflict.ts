@@ -4,6 +4,7 @@ import {
   PreferenceTopicType,
 } from '@transcend-io/privacy-types';
 import { PreferenceTopic } from '../graphql';
+import { logger } from '../../logger';
 
 /**
  * Check if the pending set of updates will result in a change of
@@ -16,6 +17,7 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
   currentConsentRecord,
   pendingUpdates,
   preferenceTopics,
+  log,
 }: {
   /** The current consent record */
   currentConsentRecord: PreferenceQueryResponseItem;
@@ -25,6 +27,8 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
   };
   /** The preference topic configurations */
   preferenceTopics: PreferenceTopic[];
+  /** Whether to log the conflict */
+  log?: boolean;
 }): boolean {
   // Check if any update has conflict
   return !!Object.entries(pendingUpdates).find(
@@ -36,11 +40,22 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
 
       // If no purpose exists, then it is not a conflict
       if (!currentPurpose) {
+        if (log) {
+          logger.warn(
+            `No existing purpose found for ${purposeName} in consent record for ${currentConsentRecord.userId}.`,
+          );
+        }
         return false;
       }
 
       // If purpose.enabled value is off, this is a conflict
       if (currentPurpose.enabled !== enabled) {
+        if (log) {
+          logger.warn(
+            `Purpose ${purposeName} enabled value conflict for user ${currentConsentRecord.userId}. ` +
+              `Pending Value: ${enabled}, Current Value: ${currentPurpose.enabled}`,
+          );
+        }
         return true;
       }
 
@@ -53,6 +68,12 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
 
         // if no topic exists, no conflict
         if (!currentPreference) {
+          if (log) {
+            logger.warn(
+              `No existing preference found for topic ${topic} in purpose ` +
+                `${purposeName} for user ${currentConsentRecord.userId}.`,
+            );
+          }
           return false;
         }
 
@@ -65,13 +86,31 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
         }
 
         // Handle comparison based on type
+        let boolMatch: boolean;
+        let selectMatch: boolean;
         switch (preferenceTopic.type) {
           case PreferenceTopicType.Boolean:
-            return (
-              currentPreference.choice.booleanValue !== choice.booleanValue
-            );
+            boolMatch =
+              currentPreference.choice.booleanValue !== choice.booleanValue;
+            if (log) {
+              logger.warn(
+                `Preference topic ${topic} boolean value conflict for user ` +
+                  `${currentConsentRecord.userId}. Expected: ${choice.booleanValue}, ` +
+                  `Found: ${currentPreference.choice.booleanValue}`,
+              );
+            }
+            return boolMatch;
           case PreferenceTopicType.Select:
-            return currentPreference.choice.selectValue !== choice.selectValue;
+            selectMatch =
+              currentPreference.choice.selectValue !== choice.selectValue;
+            if (log) {
+              logger.warn(
+                `Preference topic ${topic} select value conflict for user ` +
+                  `${currentConsentRecord.userId}. Expected: ${choice.selectValue}, ` +
+                  `Found: ${currentPreference.choice.selectValue}`,
+              );
+            }
+            return selectMatch;
           case PreferenceTopicType.MultiSelect:
             // eslint-disable-next-line no-case-declarations
             const sortedCurrentValues = (
@@ -79,10 +118,20 @@ export function checkIfPendingPreferenceUpdatesCauseConflict({
             ).sort();
             // eslint-disable-next-line no-case-declarations
             const sortedNewValues = (choice.selectValues || []).sort();
-            return (
+            selectMatch =
               sortedCurrentValues.length !== sortedNewValues.length ||
-              !sortedCurrentValues.every((x, i) => x === sortedNewValues[i])
-            );
+              !sortedCurrentValues.every((x, i) => x === sortedNewValues[i]);
+            if (log) {
+              logger.warn(
+                `Preference topic ${topic} multi-select value conflict for user ` +
+                  `${
+                    currentConsentRecord.userId
+                  }. Expected: ${sortedNewValues.join(
+                    ', ',
+                  )}, Found: ${sortedCurrentValues.join(', ')}`,
+              );
+            }
+            return selectMatch;
           default:
             throw new Error(
               `Unknown preference topic type: ${preferenceTopic.type}`,

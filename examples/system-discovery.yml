@@ -1,0 +1,19 @@
+system-discovery:
+  - title: aurora-mysql - test-aurora-db-instance-1 - 207539467107:eu-west-1
+    resourceId: arn:aws:rds:eu-west-1:207539467107:db:test-aurora-db-instance-1
+    suggestedCatalog: Amazon Aurora
+    plugin: Amazon Web Services (AWS)
+    country: IE
+    plaintextContext: |-
+      {
+        "role": "AWSDataSiloDiscoveryPluginDev",
+        "region": "eu-west-1",
+        "username": "",
+        "accountId": "207539467107",
+        "pluginsToAutoEnable": "",
+        "endpoint": "test-aurora-db-instance-1.cjstlfqxusgf.eu-west-1.rds.amazonaws.com",
+        "port": "3306",
+        "driver": "MySQL"
+      }
+    containsSensitiveData: LIKELY
+    status: IGNORED

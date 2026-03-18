@@ -1,7 +1,9 @@
 import got, { Got } from 'got';
+import colors from 'colors';
 import { ORGANIZATION } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import { buildTranscendGraphQLClient } from './buildTranscendGraphQLClient';
+import { logger } from '../../logger';
 
 /**
  * Instantiate an instance of got that is capable of making requests
@@ -30,9 +32,29 @@ export async function createSombraGotInstance(
       };
     };
   }>(client, ORGANIZATION);
+  // Use SOMBRA_URL env var if provided, otherwise fall back to the primary sombra's customerUrl
+  const { customerUrl } = organization.sombra;
+  const sombraToUse = process.env.SOMBRA_URL || customerUrl;
+
+  // Only validate the reverse tunnel URL if we're using the primary sombra (not SOMBRA_URL override)
+  if (
+    !process.env.SOMBRA_URL &&
+    [
+      'https://sombra-reverse-tunnel.transcend.io',
+      'https://sombra-reverse-tunnel.us.transcend.io',
+    ].includes(customerUrl)
+  ) {
+    throw new Error(
+      'It looks like your Sombra customer ingress URL has not been set up. ' +
+        'Please follow the instructions here to configure networking for Sombra: ' +
+        'https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking',
+    );
+  }
+  logger.info(colors.green(`Using sombra: ${sombraToUse}`));
+
   // Create got instance with default values
   return got.extend({
-    prefixUrl: organization.sombra.customerUrl,
+    prefixUrl: sombraToUse,
     headers: {
       Authorization: `Bearer ${transcendApiKey}`,
       ...(sombraApiKey

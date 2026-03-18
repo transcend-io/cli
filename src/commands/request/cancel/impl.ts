@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { cancelPrivacyRequests } from '../../../lib/requests';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface CancelCommandFlags {
+export interface CancelCommandFlags {
   auth: string;
   actions: RequestAction[];
   statuses?: RequestStatus[];
@@ -10,6 +11,8 @@ interface CancelCommandFlags {
   silentModeBefore?: Date;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   cancellationTitle: string;
   transcendUrl: string;
   concurrency: number;
@@ -25,11 +28,15 @@ export async function cancel(
     silentModeBefore,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     cancellationTitle,
     transcendUrl,
     concurrency,
   }: CancelCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await cancelPrivacyRequests({
     transcendUrl,
     requestActions: actions,
@@ -41,5 +48,7 @@ export async function cancel(
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
     createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
+    updatedAtBefore: updatedAtBefore ? new Date(updatedAtBefore) : undefined,
+    updatedAtAfter: updatedAtAfter ? new Date(updatedAtAfter) : undefined,
   });
 }

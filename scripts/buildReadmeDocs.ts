@@ -49,7 +49,7 @@ const newReadme = readme.replace(
 
 fs.writeFileSync('README.md', newReadme);
 
-execSync('doctoc README.md --title "\n## Table of Contents" --maxlevel 5', {
+execSync('doctoc README.md --title "\n## Table of Contents" --maxlevel 3', {
   stdio: 'inherit',
 });
 execSync('prettier --write README.md', { stdio: 'inherit' });
