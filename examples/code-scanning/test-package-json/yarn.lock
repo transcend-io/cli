@@ -242,7 +242,7 @@ __metadata:
     "@types/sequelize": ^4.28.20
     dd-trace: 2.45.1
     fast-csv: ^4.3.6
-    sequelize: ^6.37.3
+    sequelize: ^6.37.8
     sequelize-mock: ^0.10.2
     typescript: ^5.0.4
   languageName: unknown
@@ -1408,9 +1408,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sequelize@npm:^6.37.3":
-  version: 6.37.3
-  resolution: "sequelize@npm:6.37.3"
+"sequelize@npm:^6.37.8":
+  version: 6.37.8
+  resolution: "sequelize@npm:6.37.8"
   dependencies:
     "@types/debug": ^4.1.8
     "@types/validator": ^13.7.17
@@ -1447,7 +1447,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: e7a9343a3bf70d7609b8d312630738e55889b8f3cfbd24e29443f4d71a11697d5a38be81c8f0218d9e49f0c04680d85ced0b5c0a37c60ad85cdb20e72e5aab7d
+  checksum: 8a733c7ee2df11f6bf852a496ee118c3d812d34e7cf3dc94c34bdb26c8fd3ef862a042ce568c7d9d2529676cf43f5e40dd786cad27b88e7518ca8fdb5fd525be
   languageName: node
   linkType: hard
 
