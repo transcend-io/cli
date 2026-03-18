@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import { logger } from '../../../logger';
 import colors from 'colors';
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 import { validateTranscendAuth } from '../../../lib/api-keys';
 import { buildXdiSyncEndpoint as buildXdiSyncEndpointHelper } from '../../../lib/consent-manager';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';

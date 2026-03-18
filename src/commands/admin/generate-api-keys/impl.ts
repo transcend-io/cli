@@ -1,5 +1,5 @@
 import type { LocalContext } from '../../../context';
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 
 import { ScopeName } from '@transcend-io/privacy-types';
 

@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { findAllWithRegex } from '@transcend-io/type-utils';
 import { listFiles } from '../../api-keys';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 import { CodePackageType } from '@transcend-io/privacy-types';
 
 const GEM_PACKAGE_REGEX = /gem *('|")(.+?)('|")(, *('|")(.+?)('|")|)/;

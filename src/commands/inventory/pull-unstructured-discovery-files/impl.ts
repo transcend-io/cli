@@ -2,11 +2,11 @@ import type { LocalContext } from '../../../context';
 import type { UnstructuredSubDataPointRecommendationStatus } from '@transcend-io/privacy-types';
 import colors from 'colors';
 import { uniq } from 'lodash-es';
-import { writeCsv } from '../../../lib/cron';
 import { pullUnstructuredSubDataPointRecommendations } from '../../../lib/data-inventory';
 import { buildTranscendGraphQLClient } from '../../../lib/graphql';
 import { logger } from '../../../logger';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
+import { writeLargeCsv } from '../../../lib/helpers';
 
 export interface PullUnstructuredDiscoveryFilesCommandFlags {
   auth: string;
@@ -67,7 +67,7 @@ export async function pullUnstructuredDiscoveryFiles(
       headers = uniq([...headers, ...Object.keys(result)]);
       return result;
     });
-    writeCsv(file, inputs, headers);
+    await writeLargeCsv(file, inputs, headers);
   } catch (err) {
     logger.error(
       colors.red(

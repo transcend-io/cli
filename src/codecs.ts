@@ -52,6 +52,9 @@ import {
   AssessmentFormTemplateSource,
   UnstructuredSubDataPointRecommendationStatus,
   PreferenceTopicType,
+  Controllership,
+  RetentionType,
+  DataProtectionImpactAssessmentStatus,
 } from '@transcend-io/privacy-types';
 import {
   InitialViewState,
@@ -62,7 +65,7 @@ import {
 import { buildEnabledRouteType } from './lib/helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './lib/helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LOCALE_KEY } from '@transcend-io/internationalization';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -177,7 +180,7 @@ export const EnricherInput = t.intersection([
      */
     'input-identifier': t.string,
     /**
-     * A regular expression that can be used to match on for cancelation
+     * A regular expression that can be used to match on for cancellation
      */
     testRegex: t.string,
     /**
@@ -217,12 +220,16 @@ export type EnricherInput = t.TypeOf<typeof EnricherInput>;
 /**
  * The processing purpose for a field
  */
-export const ProcessingPurposePreviewInput = t.type({
-  /** The parent purpose */
-  purpose: valuesOf(ProcessingPurpose),
-  /** User-defined name for this processing purpose sub category */
-  name: t.string,
-});
+export const ProcessingPurposePreviewInput = t.intersection([
+  t.type({
+    /** The parent purpose */
+    purpose: valuesOf(ProcessingPurpose),
+  }),
+  t.partial({
+    /** User-defined name for this processing purpose sub category */
+    name: t.string,
+  }),
+]);
 
 /** Type override */
 export type ProcessingPurposePreviewInput = t.TypeOf<
@@ -818,6 +825,91 @@ export const BusinessEntityInput = t.intersection([
 /** Type override */
 export type BusinessEntityInput = t.TypeOf<typeof BusinessEntityInput>;
 
+export const RegionInput = t.partial({
+  /** The country */
+  country: valuesOf(IsoCountryCode),
+  /** The country subdivision */
+  countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+});
+
+/** Type override */
+export type RegionInput = t.TypeOf<typeof RegionInput>;
+
+/**
+ * Input to define a processing activity
+ *
+ * @see https://app.transcend.io/data-map/data-inventory/processing-activities
+ */
+export const ProcessingActivityInput = t.intersection([
+  t.type({
+    /** The title of the processing activity */
+    title: t.string,
+  }),
+  t.partial({
+    /** Description of the processing activity */
+    description: t.string,
+    /** Security measure details */
+    securityMeasureDetails: t.string,
+    /**
+     * Controllerships
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
+    controllerships: t.array(valuesOf(Controllership)),
+    /** Storage regions */
+    storageRegions: t.array(RegionInput),
+    /** Transfer regions */
+    transferRegions: t.array(RegionInput),
+    /**
+     * Retention type
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/datapoint.ts
+     */
+    retentionType: valuesOf(RetentionType),
+    /** Retention period in days */
+    retentionPeriod: t.number,
+    /** Data protection impact assessment link */
+    dataProtectionImpactAssessmentLink: t.string,
+    /**
+     * Data protection impact assessment status
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/processingActivity.ts.ts
+     */
+    dataProtectionImpactAssessmentStatus: valuesOf(
+      DataProtectionImpactAssessmentStatus,
+    ),
+    /**
+     * Attribute value and its corresponding attribute key
+     */
+    attributes: t.array(AttributePreview),
+    /** Data silo titles */
+    dataSiloTitles: t.array(t.string),
+    /** Data subject types */
+    dataSubjectTypes: t.array(t.string),
+    /** Team names */
+    teamNames: t.array(t.string),
+    /** Owner emails */
+    ownerEmails: t.array(t.string),
+    /**
+     * The purposes of processing for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    processingSubPurposes: t.array(ProcessingPurposePreviewInput),
+    /**
+     * The categories of personal data for this processing activity
+     *
+     * @see https://github.com/transcend-io/privacy-types/blob/main/src/objects.ts
+     */
+    dataSubCategories: t.array(DataCategoryPreviewInput),
+    /** SaaS category titles */
+    saaSCategories: t.array(t.string),
+  }),
+]);
+
+/** Type override */
+export type ProcessingActivityInput = t.TypeOf<typeof ProcessingActivityInput>;
+
 /**
  * Software development kit inputs
  *
@@ -1017,6 +1109,8 @@ export const IdentifierInput = t.intersection([
     displayDescription: t.string,
     /** The display order for the identifier */
     displayOrder: t.number,
+    /** Whether or not the identifier is unique on the preference store */
+    isUniqueOnPreferenceStore: t.boolean,
   }),
 ]);
 
@@ -1123,12 +1217,7 @@ export const ConsentManageExperienceInput = t.intersection([
     /** Name of experience */
     displayName: t.string,
     /** Region that define this regional experience */
-    regions: t.array(
-      t.partial({
-        countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
-        country: valuesOf(IsoCountryCode),
-      }),
-    ),
+    regions: t.array(RegionInput),
     /** How to handle consent expiry */
     onConsentExpiry: valuesOf(OnConsentExpiry),
     /** Consent expiration lever */
@@ -1248,9 +1337,9 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: t.boolean,
   /** What languages are supported for the privacy center */
-  locales: t.array(valuesOf(LanguageKey)),
+  locales: t.array(valuesOf(LOCALE_KEY)),
   /** The default locale for the privacy center */
-  defaultLocale: valuesOf(LanguageKey),
+  defaultLocale: valuesOf(LOCALE_KEY),
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: t.boolean,
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
@@ -1293,7 +1382,7 @@ export const PolicyInput = t.intersection([
     /** Content of the policy */
     content: t.string,
     /** The languages for which the policy is disabled for */
-    disabledLocales: t.array(valuesOf(LanguageKey)),
+    disabledLocales: t.array(valuesOf(LOCALE_KEY)),
   }),
 ]);
 
@@ -1311,10 +1400,12 @@ export const IntlMessageInput = t.intersection([
   t.partial({
     /** The hard-coded ID that the message refers to in the Privacy Center or Consent Manager UI, null if message is dynamic */
     targetReactIntlId: t.string,
+    /** The description of the message */
+    description: t.string,
     /** The default message to use */
     defaultMessage: t.string,
     /** The translations */
-    translations: t.partial(applyEnum(LanguageKey, () => t.string)),
+    translations: t.partial(applyEnum(LOCALE_KEY, () => t.string)),
   }),
 ]);
 
@@ -1842,6 +1933,41 @@ export const ConsentPurpose = t.intersection([
 /** Type override */
 export type ConsentPurpose = t.TypeOf<typeof ConsentPurpose>;
 
+/**
+ * Input to define a silo discovery results
+ *
+ * @see https://docs.transcend.io/docs/silo-discovery
+ */
+export const SiloDiscoveryResultInput = t.intersection([
+  t.type({
+    /** The unique identifier for the resource */
+    resourceId: t.string,
+    /** The plugin that found this results */
+    plugin: t.string, // Assuming Plugin is a string, replace with appropriate type if necessary
+    /** The suggested catalog for this results */
+    suggestedCatalog: t.string,
+    /** The likelihood that data is sensitive for this results */
+    containsSensitiveData: t.string,
+    /** The status of silo discovery triage */
+    status: t.string,
+  }),
+  t.partial({
+    /** The ISO country code for the AWS Region if applicable */
+    country: valuesOf(IsoCountryCode),
+    /** The ISO country subdivision code for the AWS Region if applicable */
+    countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** The plaintext that we will pass into results */
+    plaintextContext: t.string,
+    /** The custom title of the data silo results */
+    title: t.union([t.string, t.null]),
+  }),
+]);
+
+/** Type override */
+export type SiloDiscoveryResultInput = t.TypeOf<
+  typeof SiloDiscoveryResultInput
+>;
+
 export const TranscendInput = t.partial({
   /**
    * Action items
@@ -1960,9 +2086,17 @@ export const TranscendInput = t.partial({
    */
   assessments: t.array(AssessmentInput),
   /**
+   * Processing activity definitions
+   */
+  'processing-activities': t.array(ProcessingActivityInput),
+  /**
    * Consent and preference management purposes
    */
   purposes: t.array(ConsentPurpose),
+  /**
+   * The full list of silo discovery results
+   */
+  'system-discovery': t.array(SiloDiscoveryResultInput),
 });
 
 /** Type override */

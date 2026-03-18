@@ -2,16 +2,24 @@ import { gql } from 'graphql-request';
 
 // TODO: https://transcend.height.app/T-27909 - enable optimizations
 // isExportCsv: true
+export const REQUESTS_COUNT = gql`
+  query TranscendCliRequestsCount($filterBy: RequestFiltersInput!) {
+    requests(filterBy: $filterBy, first: 0, useMaster: false) {
+      totalCount
+    }
+  }
+`;
+
 export const REQUESTS = gql`
   query TranscendCliRequests(
     $first: Int!
-    $offset: Int!
+    $after: String
     $filterBy: RequestFiltersInput!
   ) {
     requests(
       filterBy: $filterBy
       first: $first
-      offset: $offset
+      after: $after
       orderBy: [
         { field: createdAt, direction: ASC }
         { field: id, direction: ASC }
@@ -31,10 +39,48 @@ export const REQUESTS = gql`
         isSilent
         coreIdentifier
         daysRemaining
+        successfullyCompletedAt
         type
         subjectType
         country
         countrySubDivision
+        purpose {
+          title
+          name
+          consent
+          enrichedPreferences {
+            topic
+            selectValues {
+              id
+              name
+              preferenceOption {
+                id
+                slug
+                title {
+                  defaultMessage
+                }
+              }
+            }
+            selectValue {
+              id
+              name
+            }
+            selectValue {
+              id
+              name
+            }
+            preferenceTopic {
+              title {
+                defaultMessage
+              }
+              id
+              slug
+            }
+            name
+            id
+            booleanValue
+          }
+        }
         attributeValues {
           id
           name
@@ -44,7 +90,10 @@ export const REQUESTS = gql`
           }
         }
       }
-      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
     }
   }
 `;

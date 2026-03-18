@@ -31,6 +31,7 @@ export enum TranscendPullResource {
   Enrichers = 'enrichers',
   DataFlows = 'dataFlows',
   BusinessEntities = 'businessEntities',
+  ProcessingActivities = 'processingActivities',
   Actions = 'actions',
   DataSubjects = 'dataSubjects',
   Identifiers = 'identifiers',
@@ -55,6 +56,7 @@ export enum TranscendPullResource {
   Assessments = 'assessments',
   AssessmentTemplates = 'assessmentTemplates',
   Purposes = 'purposes',
+  SystemDiscovery = 'systemDiscovery',
 }
 
 /**

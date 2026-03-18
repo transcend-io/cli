@@ -1,9 +1,9 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { groupBy, uniq } from 'lodash-es';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
-import { writeCsv } from '../cron/writeCsv';
+import { writeCsv } from '../helpers/writeCsv';
 import {
   PrivacyRequest,
   RequestEnricher,
@@ -13,6 +13,7 @@ import {
   fetchAllRequestEnrichers,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 
@@ -68,6 +69,8 @@ export async function pullManualEnrichmentIdentifiersToCsv({
     statuses: [RequestStatus.Enriching],
   });
 
+  await validateSombraVersion(client);
+
   // Requests to save
   const savedRequests: PrivacyRequestWithIdentifiers[] = [];
 
@@ -92,6 +95,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
           sombra,
           {
             requestId: request.id,
+            skipSombraCheck: true,
           },
         );
         savedRequests.push({
@@ -135,7 +139,7 @@ export async function pullManualEnrichmentIdentifiersToCsv({
 
   // Write out to CSV
   const headers = uniq(data.map((d) => Object.keys(d)).flat());
-  writeCsv(file, data, headers);
+  await writeCsv(file, data, headers);
 
   logger.info(
     colors.green(

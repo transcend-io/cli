@@ -1,17 +1,18 @@
 import { PersistedState } from '@transcend-io/persisted-state';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
-import { map } from '../bluebird-replace';
+import { map } from '../bluebird';
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 import * as t from 'io-ts';
 import { difference } from 'lodash-es';
-import { join } from 'path';
+import { join, resolve } from 'node:path';
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
 import { SuccessfulRequest } from './constants';
@@ -48,6 +49,8 @@ export async function bulkRestartRequests({
   requestStatuses,
   createdAtBefore,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   transcendUrl = DEFAULT_TRANSCEND_API,
   requestIds = [],
   createdAt = new Date(),
@@ -88,6 +91,10 @@ export async function bulkRestartRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Concurrency to upload requests at */
   concurrency?: number;
 }): Promise<void> {
@@ -102,7 +109,7 @@ export async function bulkRestartRequests({
   // Create a new state file to store the requests from this run
   const cacheFile = join(
     requestReceiptFolder,
-    `tr-request-restart-${new Date().toISOString()}`,
+    `tr-request-restart-${new Date().toISOString()}.json`,
   );
   const state = new PersistedState(cacheFile, CachedRequestState, {
     restartedRequests: [],
@@ -114,17 +121,19 @@ export async function bulkRestartRequests({
 
   // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
-
   const allRequests = await fetchAllRequests(client, {
+    requestIds,
     actions: requestActions,
     statuses: requestStatuses,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
   const requests = allRequests.filter(
     (request) => new Date(request.createdAt) < createdAt,
   );
-  logger.info(`Found ${requests.length} requests to process`);
+  logger.info(`Found ${requests.length} requests to restart`);
 
   if (copyIdentifiers) {
     logger.info('copyIdentifiers detected - All Identifiers will be copied.');
@@ -154,6 +163,10 @@ export async function bulkRestartRequests({
     }
   }
 
+  if (copyIdentifiers) {
+    await validateSombraVersion(client);
+  }
+
   // Map over the requests
   let total = 0;
   progressBar.start(requests.length, 0);
@@ -165,6 +178,7 @@ export async function bulkRestartRequests({
         const requestIdentifiers = copyIdentifiers
           ? await fetchAllRequestIdentifiers(client, sombra, {
               requestId: request.id,
+              skipSombraCheck: true,
             })
           : [];
 
@@ -239,7 +253,9 @@ export async function bulkRestartRequests({
     logger.error(
       colors.red(
         `Encountered "${state.getValue('failingRequests').length}" errors. ` +
-          `See "${cacheFile}" to review the error messages and inputs.`,
+          `See "${resolve(
+            cacheFile,
+          )}" to review the error messages and inputs.`,
       ),
     );
     process.exit(1);

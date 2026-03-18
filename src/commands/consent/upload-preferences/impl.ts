@@ -4,16 +4,16 @@ import colors from 'colors';
 import { logger } from '../../../logger';
 import { uploadPreferenceManagementPreferencesInteractive } from '../../../lib/preference-management';
 import { splitCsvToList } from '../../../lib/requests';
-import { readdirSync } from 'fs';
-import { map } from '../../../lib/bluebird-replace';
-import { basename, join } from 'path';
+import { readdirSync } from 'node:fs';
+import { map } from '../../../lib/bluebird';
+import { basename, join } from 'node:path';
 import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
 export interface UploadPreferencesCommandFlags {
   auth: string;
   partition: string;
   sombraAuth?: string;
-  consentUrl: string;
+  transcendUrl: string;
   file?: string;
   directory?: string;
   dryRun: boolean;
@@ -34,7 +34,7 @@ export async function uploadPreferences(
     auth,
     partition,
     sombraAuth,
-    consentUrl,
+    transcendUrl,
     file = '',
     directory,
     dryRun,
@@ -129,7 +129,7 @@ export async function uploadPreferences(
         sombraAuth,
         file: filePath,
         partition,
-        transcendUrl: consentUrl,
+        transcendUrl,
         skipConflictUpdates,
         skipWorkflowTriggers,
         skipExistingRecordCheck,

@@ -1,20 +1,19 @@
 import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
-import { uniq } from 'lodash-es';
-import { map } from '../../../../lib/bluebird-replace';
+import { uniq, chunk } from 'lodash-es';
+import { map } from '../../../../lib/bluebird';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
 } from '../../../../lib/graphql';
 import type { LocalContext } from '../../../../context';
 import {
-  parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
-  writeCsv,
   type CsvFormattedIdentifier,
 } from '../../../../lib/cron';
 import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
+import { parseFilePath, writeLargeCsv } from '../../../../lib/helpers';
 
 export interface PullProfilesCommandFlags {
   file: string;
@@ -79,27 +78,37 @@ export async function pullProfiles(
   let allTargetIdentifiersCount = 0;
   let fileCount = 0;
   // Create onSave callback to handle chunked processing
-  const onSave = async (chunk: CsvFormattedIdentifier[]): Promise<void> => {
+  const onSave = async (
+    chunkToSave: CsvFormattedIdentifier[],
+  ): Promise<void> => {
     // Add to all identifiers
-    allIdentifiersCount += chunk.length;
+    allIdentifiersCount += chunkToSave.length;
 
     // Get unique request IDs from this chunk
-    const requestIds = chunk.map((d) => d.requestId as string);
+    const requestIds = chunkToSave.map((d) => d.requestId as string);
     const uniqueRequestIds = uniq(requestIds);
 
     // Pull down target identifiers for this chunk
+    const chunkedRequestIds = chunk(uniqueRequestIds, pageLimit);
     const results = await map(
-      uniqueRequestIds,
-      async (requestId) => {
-        const results = await fetchRequestFilesForRequest(client, {
-          requestId,
-          dataSiloId: targetDataSiloId,
-        });
+      chunkedRequestIds,
+      async (requestIds) => {
+        logger.info(
+          colors.magenta(
+            `Fetching target identifiers for ${requestIds.length} requests`,
+          ),
+        );
+        const results = await fetchRequestFilesForRequest(
+          client,
+          pageLimit * 2,
+          {
+            requestIds,
+            dataSiloIds: [targetDataSiloId],
+          },
+        );
         return results.map(({ fileName, remoteId }) => {
           if (!remoteId) {
-            throw new Error(
-              `Failed to find remoteId for ${fileName} request: ${requestId}`,
-            );
+            throw new Error(`Failed to find remoteId for ${fileName}`);
           }
           return {
             RecordId: remoteId,
@@ -113,27 +122,28 @@ export async function pullProfiles(
           };
         });
       },
+      // We are grabbing all the request files for the 'pageLimit' # of requests at a time
       {
-        concurrency: 10,
+        concurrency: 1,
       },
     );
 
     allTargetIdentifiersCount += results.flat().length;
 
     // Write the identifiers and target identifiers to CSV
-    const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
+    const headers = uniq(chunkToSave.map((d) => Object.keys(d)).flat());
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     const numberedFileNameTarget = `${baseNameTarget}-${fileCount}${extensionTarget}`;
-    writeCsv(numberedFileName, chunk, headers);
+    await writeLargeCsv(numberedFileName, chunkToSave, headers);
     logger.info(
       colors.green(
-        `Successfully wrote ${chunk.length} identifiers to file "${file}"`,
+        `Successfully wrote ${chunkToSave.length} identifiers to file "${file}"`,
       ),
     );
 
     const targetIdentifiers = results.flat();
     const headers2 = uniq(targetIdentifiers.map((d) => Object.keys(d)).flat());
-    writeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
+    await writeLargeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
     logger.info(
       colors.green(
         `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,

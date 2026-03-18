@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/sequelize", "npm:4.28.20"],\
             ["dd-trace", "npm:2.45.1"],\
             ["fast-csv", "npm:4.3.6"],\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["sequelize-mock", "npm:0.10.2"],\
             ["typescript", "patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=85af82"]\
           ],\
@@ -334,7 +334,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/sequelize", "npm:4.28.20"],\
             ["dd-trace", "npm:2.45.1"],\
             ["fast-csv", "npm:4.3.6"],\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["sequelize-mock", "npm:0.10.2"],\
             ["typescript", "patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=85af82"]\
           ],\
@@ -529,10 +529,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["balanced-match", [\
-        ["npm:1.0.2", {\
-          "packageLocation": "./.yarn/cache/balanced-match-npm-1.0.2-a53c126459-9706c088a2.zip/node_modules/balanced-match/",\
+        ["npm:4.0.4", {\
+          "packageLocation": "./.yarn/cache/balanced-match-npm-4.0.4-fd666b3c7f-fb07bb66a0.zip/node_modules/balanced-match/",\
           "packageDependencies": [\
-            ["balanced-match", "npm:1.0.2"]\
+            ["balanced-match", "npm:4.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -547,11 +547,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["brace-expansion", [\
-        ["npm:2.0.1", {\
-          "packageLocation": "./.yarn/cache/brace-expansion-npm-2.0.1-17aa2616f9-a61e7cd2e8.zip/node_modules/brace-expansion/",\
+        ["npm:5.0.3", {\
+          "packageLocation": "./.yarn/cache/brace-expansion-npm-5.0.3-134cbcf5ff-8fea33ebbf.zip/node_modules/brace-expansion/",\
           "packageDependencies": [\
-            ["brace-expansion", "npm:2.0.1"],\
-            ["balanced-match", "npm:1.0.2"]\
+            ["brace-expansion", "npm:5.0.3"],\
+            ["balanced-match", "npm:4.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -563,7 +563,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cacache", "npm:18.0.2"],\
             ["@npmcli/fs", "npm:3.1.0"],\
             ["fs-minipass", "npm:3.0.3"],\
-            ["glob", "npm:10.3.12"],\
+            ["glob", "npm:10.5.0"],\
             ["lru-cache", "npm:10.2.2"],\
             ["minipass", "npm:7.0.4"],\
             ["minipass-collect", "npm:2.0.1"],\
@@ -727,10 +727,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["dottie", [\
-        ["npm:2.0.6", {\
-          "packageLocation": "./.yarn/cache/dottie-npm-2.0.6-0b47a47557-4c778df9dc.zip/node_modules/dottie/",\
+        ["npm:2.0.7", {\
+          "packageLocation": "./.yarn/cache/dottie-npm-2.0.7-0f39eae59f-0473ffce83.zip/node_modules/dottie/",\
           "packageDependencies": [\
-            ["dottie", "npm:2.0.6"]\
+            ["dottie", "npm:2.0.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -847,15 +847,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.3.12", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.3.12-f2e90133a0-2b0949d636.zip/node_modules/glob/",\
+        ["npm:10.5.0", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.5.0-b569657078-cda96c0748.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.3.12"],\
+            ["glob", "npm:10.5.0"],\
             ["foreground-child", "npm:3.1.1"],\
-            ["jackspeak", "npm:2.3.6"],\
-            ["minimatch", "npm:9.0.4"],\
-            ["minipass", "npm:7.0.4"],\
-            ["path-scurry", "npm:1.10.2"]\
+            ["jackspeak", "npm:3.4.3"],\
+            ["minimatch", "npm:9.0.7"],\
+            ["minipass", "npm:7.1.2"],\
+            ["package-json-from-dist", "npm:1.0.1"],\
+            ["path-scurry", "npm:1.11.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1050,10 +1051,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jackspeak", [\
-        ["npm:2.3.6", {\
-          "packageLocation": "./.yarn/cache/jackspeak-npm-2.3.6-42e1233172-57d43ad11e.zip/node_modules/jackspeak/",\
+        ["npm:3.4.3", {\
+          "packageLocation": "./.yarn/cache/jackspeak-npm-3.4.3-546bfad080-be31027fc7.zip/node_modules/jackspeak/",\
           "packageDependencies": [\
-            ["jackspeak", "npm:2.3.6"],\
+            ["jackspeak", "npm:3.4.3"],\
             ["@isaacs/cliui", "npm:8.0.2"],\
             ["@pkgjs/parseargs", "npm:0.11.0"]\
           ],\
@@ -1088,10 +1089,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["lodash", [\
-        ["npm:4.17.21", {\
-          "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-eb835a2e51.zip/node_modules/lodash/",\
+        ["npm:4.17.23", {\
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.23-50bdb1c01a-7daad39758.zip/node_modules/lodash/",\
           "packageDependencies": [\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.23"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1259,11 +1260,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["minimatch", [\
-        ["npm:9.0.4", {\
-          "packageLocation": "./.yarn/cache/minimatch-npm-9.0.4-7be5a33efc-cf717f597e.zip/node_modules/minimatch/",\
+        ["npm:9.0.7", {\
+          "packageLocation": "./.yarn/cache/minimatch-npm-9.0.7-145dd43fbb-03c871cdf5.zip/node_modules/minimatch/",\
           "packageDependencies": [\
-            ["minimatch", "npm:9.0.4"],\
-            ["brace-expansion", "npm:2.0.1"]\
+            ["minimatch", "npm:9.0.7"],\
+            ["brace-expansion", "npm:5.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1288,6 +1289,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/minipass-npm-7.0.4-eacb4e042e-87585e258b.zip/node_modules/minipass/",\
           "packageDependencies": [\
             ["minipass", "npm:7.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.1.2", {\
+          "packageLocation": "./.yarn/cache/minipass-npm-7.1.2-3a5327d36d-2bfd325b95.zip/node_modules/minipass/",\
+          "packageDependencies": [\
+            ["minipass", "npm:7.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1440,7 +1448,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-gyp", "npm:10.1.0"],\
             ["env-paths", "npm:2.2.1"],\
             ["exponential-backoff", "npm:3.1.1"],\
-            ["glob", "npm:10.3.12"],\
+            ["glob", "npm:10.5.0"],\
             ["graceful-fs", "npm:4.2.11"],\
             ["make-fetch-happen", "npm:13.0.1"],\
             ["nopt", "npm:7.2.0"],\
@@ -1507,6 +1515,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["package-json-from-dist", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/package-json-from-dist-npm-1.0.1-4631a88465-58ee9538f2.zip/node_modules/package-json-from-dist/",\
+          "packageDependencies": [\
+            ["package-json-from-dist", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["path-key", [\
         ["npm:3.1.1", {\
           "packageLocation": "./.yarn/cache/path-key-npm-3.1.1-0e66ea8321-55cd7a9dd4.zip/node_modules/path-key/",\
@@ -1517,10 +1534,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["path-scurry", [\
-        ["npm:1.10.2", {\
-          "packageLocation": "./.yarn/cache/path-scurry-npm-1.10.2-676482c764-6739b4290f.zip/node_modules/path-scurry/",\
+        ["npm:1.11.1", {\
+          "packageLocation": "./.yarn/cache/path-scurry-npm-1.11.1-aaf8c339af-890d5abcd5.zip/node_modules/path-scurry/",\
           "packageDependencies": [\
-            ["path-scurry", "npm:1.10.2"],\
+            ["path-scurry", "npm:1.11.1"],\
             ["lru-cache", "npm:10.2.2"],\
             ["minipass", "npm:7.0.4"]\
           ],\
@@ -1647,17 +1664,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["sequelize", [\
-        ["npm:6.37.3", {\
-          "packageLocation": "./.yarn/cache/sequelize-npm-6.37.3-e2e584f609-e7a9343a3b.zip/node_modules/sequelize/",\
+        ["npm:6.37.8", {\
+          "packageLocation": "./.yarn/cache/sequelize-npm-6.37.8-a61dc791d3-8a733c7ee2.zip/node_modules/sequelize/",\
           "packageDependencies": [\
-            ["sequelize", "npm:6.37.3"]\
+            ["sequelize", "npm:6.37.8"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3", {\
-          "packageLocation": "./.yarn/__virtual__/sequelize-virtual-d5d423249b/0/cache/sequelize-npm-6.37.3-e2e584f609-e7a9343a3b.zip/node_modules/sequelize/",\
+        ["virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8", {\
+          "packageLocation": "./.yarn/__virtual__/sequelize-virtual-4a53dbfb52/0/cache/sequelize-npm-6.37.8-a61dc791d3-8a733c7ee2.zip/node_modules/sequelize/",\
           "packageDependencies": [\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["@types/debug", "npm:4.1.12"],\
             ["@types/ibm_db", null],\
             ["@types/mariadb", null],\
@@ -1670,10 +1687,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/tedious", null],\
             ["@types/validator", "npm:13.11.9"],\
             ["debug", "virtual:c9e1a4b59e37cb479517edede3bf2093b28c0ca1a9d0e517f3c345075bd1e468980b94b4957e389116607ee7155441dfd7d09e19a4229d5d09bcf06244401590#npm:4.3.4"],\
-            ["dottie", "npm:2.0.6"],\
+            ["dottie", "npm:2.0.7"],\
             ["ibm_db", null],\
             ["inflection", "npm:1.13.4"],\
-            ["lodash", "npm:4.17.21"],\
+            ["lodash", "npm:4.17.23"],\
             ["mariadb", null],\
             ["moment", "npm:2.30.1"],\
             ["moment-timezone", "npm:0.5.45"],\
@@ -1690,7 +1707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tedious", null],\
             ["toposort-class", "npm:1.0.1"],\
             ["uuid", "npm:8.3.2"],\
-            ["validator", "npm:13.11.0"],\
+            ["validator", "npm:13.15.23"],\
             ["wkx", "npm:0.5.0"]\
           ],\
           "packagePeers": [\
@@ -1723,7 +1740,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["sequelize-mock", "npm:0.10.2"],\
             ["bluebird", "npm:3.7.2"],\
             ["inflection", "npm:1.13.4"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.23"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1937,10 +1954,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["validator", [\
-        ["npm:13.11.0", {\
-          "packageLocation": "./.yarn/cache/validator-npm-13.11.0-f0143e2784-d1e0c27022.zip/node_modules/validator/",\
+        ["npm:13.15.23", {\
+          "packageLocation": "./.yarn/cache/validator-npm-13.15.23-617cdf95cc-7ac57d4c56.zip/node_modules/validator/",\
           "packageDependencies": [\
-            ["validator", "npm:13.11.0"]\
+            ["validator", "npm:13.15.23"]\
           ],\
           "linkType": "HARD"\
         }]\

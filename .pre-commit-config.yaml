@@ -1,5 +1,7 @@
 # See http://pre-commit.com for more information
 # See http://pre-commit.com/hooks.html for more hooks
+default_language_version:
+  node: 22.18.0
 repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
     # Use the sha / tag you want to point at, this needs
@@ -18,7 +20,7 @@ repos:
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: check-added-large-files
-        exclude: (pnpm-lock.yaml|examples/classifications.yml|transcend-yml-schema-v.*.json)
+        exclude: (pnpm-lock.yaml|examples/classifications.yml|transcend-yml-schema-v.*.json|examples/privacy-center-and-messages.yml)
       - id: check-json
         exclude: (.vscode/|tsconfig.json|.devcontainer/)
       - id: detect-private-key
@@ -38,8 +40,8 @@ repos:
     rev: v2.2.0
     hooks:
       - id: doctoc
-        exclude: (.github)
-        args: [--title, "\n## Table of Contents", --maxlevel, '5']
+        exclude: (.github|\.cursor)
+        args: [--title, "\n## Table of Contents", --maxlevel, '3']
   - repo: local
     hooks:
       - id: eslint

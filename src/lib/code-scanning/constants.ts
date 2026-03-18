@@ -7,6 +7,7 @@ import {
   composerJson,
   pubspec,
   swift,
+  kotlin,
   pythonRequirementsTxt,
 } from './integrations';
 import { CodePackageType } from '@transcend-io/privacy-types';
@@ -37,4 +38,5 @@ export const CODE_SCANNING_CONFIGS: {
   [CodePackageType.Pubspec]: pubspec,
   [CodePackageType.ComposerJson]: composerJson,
   [CodePackageType.Swift]: swift,
+  [CodePackageType.Kotlin]: kotlin,
 };

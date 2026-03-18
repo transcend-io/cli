@@ -1,6 +1,6 @@
-import { map } from '../bluebird-replace';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
+import { map } from '../bluebird';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import colors from 'colors';
 import { logger } from '../../logger';
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
@@ -29,6 +29,8 @@ export async function downloadPrivacyRequestFiles({
   createdAtBefore,
   sombraAuth,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   statuses = [RequestStatus.Approving, RequestStatus.Downloadable],
   concurrency = 5,
   transcendUrl = DEFAULT_TRANSCEND_API,
@@ -50,6 +52,10 @@ export async function downloadPrivacyRequestFiles({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** When true, approve any requests in Transcend that are in status=APPROVING */
@@ -71,6 +77,8 @@ export async function downloadPrivacyRequestFiles({
     actions: [RequestAction.Access],
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     statuses,
     requestIds,
   });

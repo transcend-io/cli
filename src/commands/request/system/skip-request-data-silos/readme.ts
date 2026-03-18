@@ -14,6 +14,7 @@ const examples = buildExamples<SkipRequestDataSilosCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
+        statuses: [RequestStatus.Compiling, RequestStatus.Secondary],
       },
     },
     {
@@ -23,6 +24,7 @@ const examples = buildExamples<SkipRequestDataSilosCommandFlags>(
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
         transcendUrl: 'https://api.us.transcend.io',
+        statuses: [RequestStatus.Compiling, RequestStatus.Secondary],
       },
     },
     {
@@ -38,6 +40,7 @@ const examples = buildExamples<SkipRequestDataSilosCommandFlags>(
       flags: {
         auth: '$TRANSCEND_API_KEY',
         dataSiloId: '70810f2e-cf90-43f6-9776-901a5950599f',
+        statuses: [RequestStatus.Compiling, RequestStatus.Secondary],
         status: RequestDataSiloStatus.Resolved,
       },
     },

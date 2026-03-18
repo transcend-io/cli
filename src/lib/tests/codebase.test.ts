@@ -234,21 +234,63 @@ describe('CLI Command Structure', () => {
   });
 
   describe('Folder structure integrity', () => {
-    test('No extra files in command directories', () => {
-      // For each command, ensure only command.ts, impl.ts, and optionally readme.ts exist
+    test('No unexpected files in command directories', () => {
+      // Required + optional files in leaf command dirs
+      const requiredFiles = ['command.ts', 'impl.ts'];
+      const optionalFiles = [
+        'readme.ts',
+        'helpers.ts',
+        'types.ts',
+        'worker.ts',
+        'constants.ts',
+      ];
+
+      // Allowed subdirectories in leaf command dirs
+      const allowedDirs = [
+        'artifacts',
+        'ui',
+        'upload',
+        'tests',
+        '__mocks__',
+        '__snapshots__',
+      ];
+
       for (const command of allCommands) {
         const commandPath = path.join('src', 'commands', ...command);
-        const files = fs
-          .readdirSync(commandPath)
-          .filter((file) => file !== '.DS_Store');
 
-        // Allow command.ts, impl.ts, and optionally readme.ts
-        const allowedFiles = ['command.ts', 'impl.ts'];
-        if (files.includes('readme.ts')) {
-          allowedFiles.push('readme.ts');
+        const entries = fs
+          .readdirSync(commandPath, { withFileTypes: true })
+          .filter((e) => e.name !== '.DS_Store');
+
+        const fileNames = entries.filter((e) => e.isFile()).map((e) => e.name);
+        const dirNames = entries
+          .filter((e) => e.isDirectory())
+          .map((e) => e.name);
+
+        // 1) Required files must exist
+        for (const req of requiredFiles) {
+          expect(
+            fileNames.includes(req),
+            `${commandPath} is missing required file: ${req}`,
+          ).toBe(true);
         }
 
-        expect(files.sort()).toEqual(allowedFiles.sort());
+        // 2) No unexpected files
+        const allowedFiles = new Set([...requiredFiles, ...optionalFiles]);
+        const unexpectedFiles = fileNames.filter((f) => !allowedFiles.has(f));
+        expect(
+          unexpectedFiles,
+          `${commandPath} has unexpected files: ${unexpectedFiles.join(', ')}`,
+        ).toEqual([]);
+
+        // 3) No unexpected directories
+        const unexpectedDirs = dirNames.filter((d) => !allowedDirs.includes(d));
+        expect(
+          unexpectedDirs,
+          `${commandPath} has unexpected directories: ${unexpectedDirs.join(
+            ', ',
+          )}`,
+        ).toEqual([]);
       }
     });
 

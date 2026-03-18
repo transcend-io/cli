@@ -59,6 +59,18 @@ export const cancelCommand = buildCommand({
         brief: 'Cancel requests that were submitted after this time',
         optional: true,
       },
+      updatedAtBefore: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Cancel requests that were last updated before this time',
+        optional: true,
+      },
+      updatedAtAfter: {
+        kind: 'parsed',
+        parse: dateParser,
+        brief: 'Cancel requests that were last updated after this time',
+        optional: true,
+      },
       cancellationTitle: {
         kind: 'parsed',
         parse: String,

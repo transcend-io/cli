@@ -8,7 +8,7 @@ import { captureLogs } from './helpers/captureLogs';
 import { shellcheck } from 'shellcheck';
 import { mkdtemp, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
-import { join } from 'path';
+import { join } from 'node:path';
 
 /**
  * Gets the example commands. Uses a mock to intercept `buildExampleCommand` from readme.ts files to populate the command lists.
