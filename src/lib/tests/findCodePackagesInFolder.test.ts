@@ -326,7 +326,7 @@ const expected: CodePackageInput[] = [
       },
       {
         name: 'cryptography',
-        version: '41.0.6',
+        version: '46.0.5',
       },
       {
         name: 'Flask',
