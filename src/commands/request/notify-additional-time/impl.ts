@@ -1,11 +1,14 @@
 import type { LocalContext } from '../../../context';
 import { notifyPrivacyRequestsAdditionalTime } from '../../../lib/requests';
 import type { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface NotifyAdditionalTimeCommandFlags {
+export interface NotifyAdditionalTimeCommandFlags {
   auth: string;
   createdAtBefore: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   actions?: RequestAction[];
   daysLeft: number;
   days: number;
@@ -22,6 +25,8 @@ export async function notifyAdditionalTime(
     transcendUrl,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     actions,
     daysLeft,
     days,
@@ -30,6 +35,8 @@ export async function notifyAdditionalTime(
     concurrency,
   }: NotifyAdditionalTimeCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await notifyPrivacyRequestsAdditionalTime({
     transcendUrl,
     requestActions: actions,
@@ -41,5 +48,7 @@ export async function notifyAdditionalTime(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
   });
 }

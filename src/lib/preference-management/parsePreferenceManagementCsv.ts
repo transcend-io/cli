@@ -45,7 +45,7 @@ export async function parsePreferenceManagementCsvWithCache(
     partitionKey: string;
     /** Whether to skip the check for existing records. SHOULD ONLY BE USED FOR INITIAL UPLOAD */
     skipExistingRecordCheck: boolean;
-    /** Wheather to force workflow triggers */
+    /** Whether to force workflow triggers */
     forceTriggerWorkflows: boolean;
   },
   cache: PersistedState<typeof PreferenceState>,
@@ -137,7 +137,7 @@ export async function parsePreferenceManagementCsvWithCache(
     const currentConsentRecord = consentRecordByIdentifier[userId];
     if (forceTriggerWorkflows && !currentConsentRecord) {
       throw new Error(
-        `No existing consent record found for user with id: ${userId}. 
+        `No existing consent record found for user with id: ${userId}.
         When 'forceTriggerWorkflows' is set all the user identifiers should contain a consent record`,
       );
     }

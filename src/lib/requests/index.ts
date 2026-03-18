@@ -26,6 +26,8 @@ export * from './restartPrivacyRequest';
 export * from './skipPreflightJobs';
 export * from './bulkRetryEnrichers';
 export * from './retryRequestDataSilos';
+export * from './formatRequestForCsv';
 export * from './pullPrivacyRequests';
+export * from './streamPrivacyRequestsToCsv';
 export * from './skipRequestDataSilos';
 export * from './removeUnverifiedRequestIdentifiers';

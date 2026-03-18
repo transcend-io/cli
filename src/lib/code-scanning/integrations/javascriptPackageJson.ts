@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { CodeScanningConfig } from '../types';
 import { CodePackageSdk } from '../../../codecs';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 
 export const javascriptPackageJson: CodeScanningConfig = {
   supportedFiles: ['package.json'],

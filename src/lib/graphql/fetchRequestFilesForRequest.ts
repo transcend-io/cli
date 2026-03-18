@@ -1,6 +1,13 @@
 import { GraphQLClient } from 'graphql-request';
-import { REQUEST_FILES } from './gqls';
+import { BULK_REQUEST_FILES } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
+
+export interface RequestFileCursor {
+  /** The ID of the request file */
+  id: string;
+  /** The created at timestamp */
+  createdAt: string;
+}
 
 export interface RequestFile {
   /** The remote ID */
@@ -9,46 +16,64 @@ export interface RequestFile {
   fileName: string;
 }
 
-const PAGE_SIZE = 20;
+export interface RequestFileResponse {
+  /** RequestFiles */
+  bulkRequestFiles: {
+    /** List */
+    nodes: RequestFile[];
+    /** The page info */
+    pageInfo: {
+      /** Whether there is a next page */
+      hasNextPage: boolean;
+      /** The end cursor */
+      endCursor: string;
+    };
+  };
+}
 
 /**
  * Fetch all RequestFiles for a single request
  *
  * @param client - GraphQL client
+ * @param pageSize - How many request files to fetch per API call
  * @param filterBy - Filter by
  * @returns All RequestFiles in the organization
  */
 export async function fetchRequestFilesForRequest(
   client: GraphQLClient,
+  /** How many request files to fetch per API call */
+  pageSize: number,
   filterBy: {
-    /** Filter by request ID */
-    requestId: string;
+    /** Filter by request IDs */
+    requestIds: string[];
     /** Filter by data silo ID */
-    dataSiloId?: string;
+    dataSiloIds: string[];
   },
 ): Promise<RequestFile[]> {
   const requestFiles: RequestFile[] = [];
-  let offset = 0;
+  let cursor: string | null = null;
 
   // Whether to continue looping
   let shouldContinue = false;
   do {
+    const response: RequestFileResponse =
+      await makeGraphQLRequest<RequestFileResponse>(
+        client,
+        BULK_REQUEST_FILES,
+        {
+          filterBy: {
+            ...filterBy,
+          },
+          first: pageSize,
+          after: cursor ?? undefined,
+        },
+      );
     const {
-      requestFiles: { nodes },
-    } = await makeGraphQLRequest<{
-      /** RequestFiles */
-      requestFiles: {
-        /** List */
-        nodes: RequestFile[];
-      };
-    }>(client, REQUEST_FILES, {
-      first: PAGE_SIZE,
-      offset,
-      filterBy,
-    });
+      bulkRequestFiles: { nodes, pageInfo },
+    } = response;
     requestFiles.push(...nodes);
-    offset += PAGE_SIZE;
-    shouldContinue = nodes.length === PAGE_SIZE;
+    shouldContinue = pageInfo.hasNextPage;
+    cursor = pageInfo.endCursor;
   } while (shouldContinue);
 
   return requestFiles.sort((a, b) => a.remoteId.localeCompare(b.remoteId));

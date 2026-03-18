@@ -1,4 +1,4 @@
-import { map } from '../bluebird-replace';
+import { map } from '../bluebird';
 import colors from 'colors';
 import { logger } from '../../logger';
 import {
@@ -75,7 +75,10 @@ export async function markRequestDataSiloIdsCompleted({
           status,
         });
       } catch (err) {
-        if (!err.message.includes('Client error: Request must be active:')) {
+        if (
+          !err.message.includes('Client error: Request must be active:') &&
+          !err.message.includes('Failed to find RequestDataSilo')
+        ) {
           throw err;
         }
       }

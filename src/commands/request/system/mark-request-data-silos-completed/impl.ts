@@ -5,12 +5,13 @@ import * as t from 'io-ts';
 import { logger } from '../../../../logger';
 import { markRequestDataSiloIdsCompleted } from '../../../../lib/cron';
 import { readCsv } from '../../../../lib/requests';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
 
 const RequestIdRow = t.type({
   'Request Id': t.string,
 });
 
-interface MarkRequestDataSilosCompletedCommandFlags {
+export interface MarkRequestDataSilosCompletedCommandFlags {
   auth: string;
   dataSiloId: string;
   file: string;
@@ -26,6 +27,8 @@ export async function markRequestDataSilosCompleted(
     transcendUrl,
   }: MarkRequestDataSilosCompletedCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   logger.info(colors.magenta(`Reading "${file}" from disk`));
   const activeResults = readCsv(file, RequestIdRow);
 

@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { downloadPrivacyRequestFiles } from '../../../lib/requests';
 import { RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface DownloadFilesCommandFlags {
+export interface DownloadFilesCommandFlags {
   auth: string;
   sombraAuth?: string;
   concurrency: number;
@@ -11,6 +12,8 @@ interface DownloadFilesCommandFlags {
   folderPath: string;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   approveAfterDownload: boolean;
   transcendUrl: string;
 }
@@ -26,9 +29,13 @@ export async function downloadFiles(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     approveAfterDownload,
   }: DownloadFilesCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await downloadPrivacyRequestFiles({
     transcendUrl,
     auth,
@@ -38,6 +45,8 @@ export async function downloadFiles(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     approveAfterDownload,
   });
 }

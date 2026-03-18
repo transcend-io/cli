@@ -5,13 +5,13 @@ import { logger } from '../../../../logger';
 import { uniq } from 'lodash-es';
 import {
   CsvFormattedIdentifier,
-  parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
-  writeCsv,
 } from '../../../../lib/cron';
 import { RequestAction } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
+import { parseFilePath, writeLargeCsv } from '../../../../lib/helpers';
 
-interface PullIdentifiersCommandFlags {
+export interface PullIdentifiersCommandFlags {
   file: string;
   transcendUrl: string;
   auth: string;
@@ -55,13 +55,15 @@ export async function pullIdentifiers(
         `Invalid chunk size: "${chunkSize}". Must be a positive integer that is a multiple of ${pageLimit}.`,
       ),
     );
-    process.exit(1);
+    this.process.exit(1);
   }
+
+  doneInputValidation(this.process.exit);
 
   const { baseName, extension } = parseFilePath(file);
   let fileCount = 0;
 
-  const onSave = (chunk: CsvFormattedIdentifier[]): Promise<void> => {
+  const onSave = async (chunk: CsvFormattedIdentifier[]): Promise<void> => {
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     logger.info(
       colors.blue(
@@ -70,7 +72,7 @@ export async function pullIdentifiers(
     );
 
     const headers = uniq(chunk.map((d) => Object.keys(d)).flat());
-    writeCsv(numberedFileName, chunk, headers);
+    await writeLargeCsv(numberedFileName, chunk, headers);
     logger.info(
       colors.green(
         `Successfully wrote ${chunk.length} identifiers to file "${numberedFileName}"`,

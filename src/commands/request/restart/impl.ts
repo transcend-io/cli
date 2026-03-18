@@ -1,8 +1,9 @@
 import type { LocalContext } from '../../../context';
 import { bulkRestartRequests } from '../../../lib/requests';
 import type { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
+import { doneInputValidation } from '../../../lib/cli/done-input-validation';
 
-interface RestartCommandFlags {
+export interface RestartCommandFlags {
   auth: string;
   actions: RequestAction[];
   statuses: RequestStatus[];
@@ -16,6 +17,8 @@ interface RestartCommandFlags {
   silentModeBefore?: Date;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   sendEmailReceipt: boolean;
   copyIdentifiers: boolean;
   skipWaitingPeriod: boolean;
@@ -38,10 +41,14 @@ export async function restart(
     skipWaitingPeriod,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     concurrency,
     transcendUrl,
   }: RestartCommandFlags,
 ): Promise<void> {
+  doneInputValidation(this.process.exit);
+
   await bulkRestartRequests({
     requestReceiptFolder,
     auth,
@@ -57,6 +64,8 @@ export async function restart(
     skipWaitingPeriod,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     concurrency,
     transcendUrl,
   });

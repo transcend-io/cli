@@ -17,6 +17,7 @@ import {
   DatapointInput,
   FieldInput,
   ProcessingPurposeInput,
+  ProcessingActivityInput,
   DataCategoryInput,
   VendorInput,
   AgentFileInput,
@@ -33,11 +34,13 @@ import {
   AssessmentSectionQuestionInput,
   RiskLogicInput,
   ConsentPurpose,
+  type SiloDiscoveryResultInput,
 } from '../../codecs';
 import {
   RequestAction,
   ConsentTrackerStatus,
   ActionItemCode,
+  RetentionType,
 } from '@transcend-io/privacy-types';
 import { GraphQLClient } from 'graphql-request';
 import { flatten, keyBy, mapValues } from 'lodash-es';
@@ -55,6 +58,7 @@ import {
 import { fetchAllEnrichers } from './syncEnrichers';
 import { fetchAllDataFlows } from './fetchAllDataFlows';
 import { fetchAllBusinessEntities } from './fetchAllBusinessEntities';
+import { fetchAllProcessingActivities } from './fetchAllProcessingActivities';
 import { fetchAllActions } from './fetchAllActions';
 import { fetchAllAgents } from './fetchAllAgents';
 import { fetchAllAgentFunctions } from './fetchAllAgentFunctions';
@@ -73,22 +77,24 @@ import { fetchAllCookies } from './fetchAllCookies';
 import { fetchAllTemplates } from './syncTemplates';
 import { fetchAllAttributes } from './fetchAllAttributes';
 import { formatAttributeValues } from './formatAttributeValues';
+import { formatRegions } from './formatRegions';
 import { logger } from '../../logger';
 import colors from 'colors';
 import { TranscendPullResource } from '../../enums';
 import { fetchAllActionItems } from './fetchAllActionItems';
 import { fetchAllTeams } from './fetchAllTeams';
 import { fetchAllActionItemCollections } from './fetchAllActionItemCollections';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LocaleValue } from '@transcend-io/internationalization';
 import { fetchPartitions } from './syncPartitions';
 import { fetchAllAssessments } from './fetchAllAssessments';
 import { fetchAllAssessmentTemplates } from './fetchAllAssessmentTemplates';
 import {
-  AssessmentNestedRule,
   parseAssessmentDisplayLogic,
+  type AssessmentRule,
 } from './parseAssessmentDisplayLogic';
 import { parseAssessmentRiskLogic } from './parseAssessmentRiskLogic';
 import { fetchAllPurposesAndPreferences } from './fetchAllPurposesAndPreferences';
+import { fetchAllSiloDiscoveryResults } from './fetchAllSiloDiscoveryResults';
 
 export const DEFAULT_TRANSCEND_PULL_RESOURCES = [
   TranscendPullResource.DataSilos,
@@ -160,6 +166,7 @@ export async function pullTranscendConfiguration(
     identifiers,
     actions,
     businessEntities,
+    processingActivities,
     consentManager,
     consentManagerExperiences,
     prompts,
@@ -181,6 +188,7 @@ export async function pullTranscendConfiguration(
     assessments,
     assessmentTemplates,
     purposes,
+    siloDiscoveryResults,
   ] = await Promise.all([
     // Grab all data subjects in the organization
     resources.includes(TranscendPullResource.DataSilos) ||
@@ -248,6 +256,10 @@ export async function pullTranscendConfiguration(
     // Fetch business entities
     resources.includes(TranscendPullResource.BusinessEntities)
       ? fetchAllBusinessEntities(client)
+      : [],
+    // Fetch processing activities
+    resources.includes(TranscendPullResource.ProcessingActivities)
+      ? fetchAllProcessingActivities(client)
       : [],
     // Fetch consent manager
     resources.includes(TranscendPullResource.ConsentManager)
@@ -332,6 +344,10 @@ export async function pullTranscendConfiguration(
     // Fetch purpose and preferences
     resources.includes(TranscendPullResource.Purposes)
       ? fetchAllPurposesAndPreferences(client)
+      : [],
+    // Fetch silo discovery results
+    resources.includes(TranscendPullResource.SystemDiscovery)
+      ? fetchAllSiloDiscoveryResults(client)
       : [],
   ]);
 
@@ -521,29 +537,30 @@ export async function pullTranscendConfiguration(
                                 'comparison-operator':
                                   displayLogicParsed.rule.comparisonOperator,
                                 'comparison-operands':
-                                  displayLogicParsed.rule.comparisonOperands,
+                                  // Safely access property with a check
+                                  'comparisonOperands' in
+                                  displayLogicParsed.rule
+                                    ? displayLogicParsed.rule.comparisonOperands
+                                    : undefined,
                               }
                             : undefined,
                           'nested-rule': displayLogicParsed.nestedRule
                             ? {
                                 'logic-operator':
                                   displayLogicParsed.nestedRule.logicOperator,
-                                rules:
-                                  /* eslint-disable @typescript-eslint/no-explicit-any */
-                                  (
-                                    (
-                                      (displayLogicParsed as any)
-                                        .nestedRule as AssessmentNestedRule
-                                    ).rules || []
-                                  ).map((rule) => ({
-                                    'depends-on-question-reference-id':
-                                      rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
-                                      rule.comparisonOperator,
-                                    'comparison-operands':
-                                      rule.comparisonOperands,
-                                  })),
-                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                                rules: (
+                                  displayLogicParsed.nestedRule.rules || []
+                                ).map((rule: AssessmentRule) => ({
+                                  'depends-on-question-reference-id':
+                                    rule.dependsOnQuestionReferenceId,
+                                  'comparison-operator':
+                                    rule.comparisonOperator,
+                                  'comparison-operands':
+                                    // Safely access property on the nested rule
+                                    'comparisonOperands' in rule
+                                      ? rule.comparisonOperands
+                                      : undefined,
+                                })),
                               }
                             : undefined,
                         }
@@ -697,29 +714,30 @@ export async function pullTranscendConfiguration(
                                 'comparison-operator':
                                   displayLogicParsed.rule.comparisonOperator,
                                 'comparison-operands':
-                                  displayLogicParsed.rule.comparisonOperands,
+                                  // Safely access property with a check
+                                  'comparisonOperands' in
+                                  displayLogicParsed.rule
+                                    ? displayLogicParsed.rule.comparisonOperands
+                                    : undefined,
                               }
                             : undefined,
                           'nested-rule': displayLogicParsed.nestedRule
                             ? {
                                 'logic-operator':
                                   displayLogicParsed.nestedRule.logicOperator,
-                                rules:
-                                  /* eslint-disable @typescript-eslint/no-explicit-any */
-                                  (
-                                    (
-                                      (displayLogicParsed as any)
-                                        .nestedRule as AssessmentNestedRule
-                                    ).rules || []
-                                  ).map((rule) => ({
-                                    'depends-on-question-reference-id':
-                                      rule.dependsOnQuestionReferenceId,
-                                    'comparison-operator':
-                                      rule.comparisonOperator,
-                                    'comparison-operands':
-                                      rule.comparisonOperands,
-                                  })),
-                                /* eslint-enable @typescript-eslint/no-explicit-any */
+                                rules: (
+                                  displayLogicParsed.nestedRule.rules || []
+                                ).map((rule: AssessmentRule) => ({
+                                  'depends-on-question-reference-id':
+                                    rule.dependsOnQuestionReferenceId,
+                                  'comparison-operator':
+                                    rule.comparisonOperator,
+                                  'comparison-operands':
+                                    // Safely access property on the nested rule
+                                    'comparisonOperands' in rule
+                                      ? rule.comparisonOperands
+                                      : undefined,
+                                })),
                               }
                             : undefined,
                         }
@@ -765,6 +783,38 @@ export async function pullTranscendConfiguration(
               operand: retentionSchedule.operation,
             }
           : undefined,
+      }),
+    );
+  }
+
+  // Save Silo Discovery Results
+  if (
+    siloDiscoveryResults.length > 0 &&
+    resources.includes(TranscendPullResource.SystemDiscovery)
+  ) {
+    result['system-discovery'] = siloDiscoveryResults.map(
+      ({
+        title,
+        resourceId,
+        suggestedCatalog: { title: suggestedCatalogTitle },
+        plugin: {
+          dataSilo: { title: dataSiloTitle },
+        },
+        country,
+        countrySubDivision,
+        plaintextContext,
+        containsSensitiveData,
+        status,
+      }): SiloDiscoveryResultInput => ({
+        title,
+        resourceId,
+        suggestedCatalog: suggestedCatalogTitle,
+        plugin: dataSiloTitle,
+        country: country || undefined,
+        countrySubDivision: countrySubDivision || undefined,
+        plaintextContext,
+        containsSensitiveData,
+        status,
       }),
     );
   }
@@ -869,14 +919,16 @@ export async function pullTranscendConfiguration(
         id,
         defaultMessage,
         targetReactIntlId,
+        description,
         translations,
       }): IntlMessageInput => ({
         id,
         defaultMessage,
+        description,
         targetReactIntlId: targetReactIntlId || undefined,
         translations: translations.reduce(
           (acc, { locale, value }) => Object.assign(acc, { [locale]: value }),
-          {} as Record<LanguageKey, string>,
+          {} as Record<LocaleValue, string>,
         ),
       }),
     );
@@ -939,6 +991,88 @@ export async function pullTranscendConfiguration(
     );
   }
 
+  // Save processing activities
+  if (
+    processingActivities.length > 0 &&
+    resources.includes(TranscendPullResource.ProcessingActivities)
+  ) {
+    result['processing-activities'] = processingActivities.map(
+      ({
+        title,
+        description,
+        securityMeasureDetails,
+        controllerships,
+        storageRegions,
+        transferRegions,
+        retentionType,
+        retentionPeriod,
+        dataProtectionImpactAssessmentLink,
+        dataProtectionImpactAssessmentStatus,
+        attributeValues,
+        dataSilos,
+        dataSubjects,
+        teams,
+        owners,
+        processingPurposeSubCategories,
+        dataSubCategories,
+        saaSCategories,
+      }): ProcessingActivityInput => ({
+        title,
+        description,
+        securityMeasureDetails: securityMeasureDetails ?? undefined,
+        controllerships:
+          controllerships.length > 0 ? controllerships : undefined,
+        storageRegions:
+          storageRegions.length > 0 ? formatRegions(storageRegions) : undefined,
+        transferRegions:
+          transferRegions.length > 0
+            ? formatRegions(transferRegions)
+            : undefined,
+        retentionType,
+        retentionPeriod:
+          retentionType === RetentionType.StatedPeriod
+            ? retentionPeriod
+            : undefined,
+        dataProtectionImpactAssessmentLink:
+          dataProtectionImpactAssessmentLink ?? undefined,
+        dataProtectionImpactAssessmentStatus,
+        attributes:
+          attributeValues !== undefined && attributeValues.length > 0
+            ? formatAttributeValues(attributeValues)
+            : undefined,
+        dataSiloTitles:
+          dataSilos.length > 0
+            ? dataSilos.map(({ title }) => title)
+            : undefined,
+        dataSubjectTypes:
+          dataSubjects.length > 0
+            ? dataSubjects.map(({ type }) => type)
+            : undefined,
+        teamNames: teams.length > 0 ? teams.map(({ name }) => name) : undefined,
+        ownerEmails:
+          owners.length > 0 ? owners.map(({ email }) => email) : undefined,
+        processingSubPurposes:
+          processingPurposeSubCategories.length > 0
+            ? processingPurposeSubCategories.map(({ name, purpose }) => ({
+                purpose,
+                ...(name ? { name } : {}),
+              }))
+            : undefined,
+        dataSubCategories:
+          dataSubCategories.length > 0
+            ? dataSubCategories.map(({ name, category }) => ({
+                category,
+                ...(name ? { name } : {}),
+              }))
+            : undefined,
+        saaSCategories:
+          saaSCategories.length > 0
+            ? saaSCategories.map(({ title }) => title)
+            : undefined,
+      }),
+    );
+  }
+
   // Save Actions
   if (actions.length > 0 && resources.includes(TranscendPullResource.Actions)) {
     result.actions = actions.map(
@@ -984,6 +1118,7 @@ export async function pullTranscendConfiguration(
         dataSubjects,
         displayDescription,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }): IdentifierInput => ({
         name,
         type,
@@ -1002,6 +1137,7 @@ export async function pullTranscendConfiguration(
         displayTitle: displayTitle?.defaultMessage,
         displayDescription: displayDescription?.defaultMessage,
         displayOrder,
+        isUniqueOnPreferenceStore,
       }),
     );
   }
