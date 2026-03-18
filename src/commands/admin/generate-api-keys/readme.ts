@@ -97,4 +97,19 @@ query {
     }
   }
 }
-\`\`\``;
+\`\`\`
+
+If you wish to manually construct this api-keys.json file instead of using this command, it should look like the following:
+
+\`\`\`json
+[{
+  "organizationName": "Acme Corp",
+  "apiKey": "a9893544734df8eb8c3bc4925926c9b1f5eb54c8c9a5cc936a11622fbd9fb2da",
+  "organizationId": "6a3218db-5703-44eb-8d01-e3ea57ab8e49"
+}, {
+  "organizationName": "Other Org",
+  "apiKey": "bd1d2b6cefeb9233f333271fc4ab14ed96ac71dcbab91fa28c894bb2648d834a",
+  "organizationId": "0dc4b936-61ba-43ea-80bf-86471f8e0052"
+}]
+\`\`\`
+`;

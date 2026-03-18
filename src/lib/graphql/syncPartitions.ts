@@ -2,7 +2,7 @@ import colors from 'colors';
 import { GraphQLClient } from 'graphql-request';
 import { CREATE_CONSENT_PARTITION, CONSENT_PARTITIONS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../bluebird';
 import { difference } from 'lodash-es';
 import { logger } from '../../logger';
 import { PartitionInput } from '../../codecs';

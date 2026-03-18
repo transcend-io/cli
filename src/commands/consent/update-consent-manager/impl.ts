@@ -1,7 +1,7 @@
 import type { LocalContext } from '../../../context';
 import colors from 'colors';
 import { ConsentBundleType } from '@transcend-io/privacy-types';
-import { mapSeries } from 'bluebird';
+import { mapSeries } from '../../../lib/bluebird';
 
 import { logger } from '../../../logger';
 import { updateConsentManagerVersionToLatest } from '../../../lib/consent-manager';

@@ -1,17 +1,62 @@
 import { GraphQLClient } from 'graphql-request';
-import colors from 'colors';
-import cliProgress from 'cli-progress';
 import { REQUEST_DATA_SILOS } from './gqls';
 import { makeGraphQLRequest } from './makeGraphQLRequest';
 import {
   RequestDataSiloStatus,
   RequestStatus,
 } from '@transcend-io/privacy-types';
-import { logger } from '../../logger';
 
 export interface RequestDataSilo {
   /** ID of RequestDataSilo */
   id: string;
+}
+
+export interface RequestDataSiloFilters {
+  /** ID of request to filter on */
+  requestId?: string;
+  /** Data silo ID */
+  dataSiloId?: string;
+  /**
+   * The statuses to filter on
+   */
+  statuses?: RequestDataSiloStatus[];
+  /** The request statuses to filter on */
+  requestStatuses?: RequestStatus[];
+}
+
+/**
+ * Fetch a count of request data silos
+ *
+ * @param client - GraphQL client
+ * @param options - Filter options
+ * @returns List of request identifiers
+ */
+export async function fetchRequestDataSilosCount(
+  client: GraphQLClient,
+  { requestId, dataSiloId, requestStatuses, statuses }: RequestDataSiloFilters,
+): Promise<number> {
+  const {
+    requestDataSilos: { totalCount },
+  } = await makeGraphQLRequest<{
+    /** Request Data Silos */
+    requestDataSilos: {
+      /** List */
+      nodes: RequestDataSilo[];
+      /** Total count */
+      totalCount: number;
+    };
+  }>(client, REQUEST_DATA_SILOS, {
+    first: 1,
+    offset: 0,
+    filterBy: {
+      dataSiloId,
+      requestId,
+      status: statuses,
+      requestStatus: requestStatuses,
+    },
+  });
+
+  return totalCount;
 }
 
 const PAGE_SIZE = 100;
@@ -30,7 +75,8 @@ export async function fetchRequestDataSilos(
     dataSiloId,
     requestStatuses,
     statuses,
-    skipLog = false,
+    limit,
+    onProgress,
   }: {
     /** ID of request to filter on */
     requestId?: string;
@@ -42,17 +88,12 @@ export async function fetchRequestDataSilos(
     statuses?: RequestDataSiloStatus[];
     /** The request statuses to filter on */
     requestStatuses?: RequestStatus[];
-    /** When true, skip logging */
-    skipLog?: boolean;
+    /** Limit on number of requests */
+    limit?: number;
+    /** Handle progress updates */
+    onProgress?: (numUpdated: number) => void;
   },
 ): Promise<RequestDataSilo[]> {
-  // create a new progress bar instance and use shades_classic theme
-  const t0 = new Date().getTime();
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic,
-  );
-
   const requestDataSilos: RequestDataSilo[] = [];
   let offset = 0;
 
@@ -60,7 +101,7 @@ export async function fetchRequestDataSilos(
   let shouldContinue = false;
   do {
     const {
-      requestDataSilos: { nodes, totalCount },
+      requestDataSilos: { nodes },
     } = await makeGraphQLRequest<{
       /** Request Data Silos */
       requestDataSilos: {
@@ -81,30 +122,10 @@ export async function fetchRequestDataSilos(
     });
     requestDataSilos.push(...nodes);
 
-    if (offset === 0 && totalCount > PAGE_SIZE) {
-      logger.info(colors.magenta(`Fetching ${totalCount} requests`));
-      progressBar.start(totalCount, 0);
-    }
-
     offset += PAGE_SIZE;
     shouldContinue = nodes.length === PAGE_SIZE;
-    progressBar.update(offset);
-  } while (shouldContinue);
-
-  progressBar.stop();
-  const t1 = new Date().getTime();
-  const totalTime = t1 - t0;
-
-  // Log completion time
-  if (!skipLog) {
-    logger.info(
-      colors.green(
-        `Completed fetching of ${
-          requestDataSilos.length
-        } request data silos in "${totalTime / 1000}" seconds.`,
-      ),
-    );
-  }
+    onProgress?.(nodes.length);
+  } while (shouldContinue && (!limit || offset < limit));
 
   return requestDataSilos;
 }
@@ -131,7 +152,6 @@ export async function fetchRequestDataSilo(
   const nodes = await fetchRequestDataSilos(client, {
     requestId,
     dataSiloId,
-    skipLog: true,
   });
   if (nodes.length !== 1) {
     throw new Error(

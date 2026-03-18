@@ -2,19 +2,18 @@ import type { RequestAction } from '@transcend-io/privacy-types';
 import { logger } from '../../../../logger';
 import colors from 'colors';
 import { uniq, chunk } from 'lodash-es';
-import { map } from 'bluebird';
+import { map } from '../../../../lib/bluebird';
 import {
   buildTranscendGraphQLClient,
   fetchRequestFilesForRequest,
 } from '../../../../lib/graphql';
 import type { LocalContext } from '../../../../context';
 import {
-  parseFilePath,
   pullChunkedCustomSiloOutstandingIdentifiers,
-  writeCsv,
   type CsvFormattedIdentifier,
 } from '../../../../lib/cron';
 import { doneInputValidation } from '../../../../lib/cli/done-input-validation';
+import { parseFilePath, writeLargeCsv } from '../../../../lib/helpers';
 
 export interface PullProfilesCommandFlags {
   file: string;
@@ -135,7 +134,7 @@ export async function pullProfiles(
     const headers = uniq(chunkToSave.map((d) => Object.keys(d)).flat());
     const numberedFileName = `${baseName}-${fileCount}${extension}`;
     const numberedFileNameTarget = `${baseNameTarget}-${fileCount}${extensionTarget}`;
-    writeCsv(numberedFileName, chunkToSave, headers);
+    await writeLargeCsv(numberedFileName, chunkToSave, headers);
     logger.info(
       colors.green(
         `Successfully wrote ${chunkToSave.length} identifiers to file "${file}"`,
@@ -144,7 +143,7 @@ export async function pullProfiles(
 
     const targetIdentifiers = results.flat();
     const headers2 = uniq(targetIdentifiers.map((d) => Object.keys(d)).flat());
-    writeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
+    await writeLargeCsv(numberedFileNameTarget, targetIdentifiers, headers2);
     logger.info(
       colors.green(
         `Successfully wrote ${targetIdentifiers.length} identifiers to file "${fileTarget}"`,

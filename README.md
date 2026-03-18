@@ -1,108 +1,68 @@
 # Transcend CLI
 
+A command line interface that allows you to programatically interact with the Transcend.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 ## Table of Contents
 
 - [Changelog](#changelog)
-- [Overview](#overview)
 - [Installation](#installation)
 - [transcend.yml](#transcendyml)
 - [Usage](#usage)
   - [`transcend request approve`](#transcend-request-approve)
-    - [Examples](#examples)
   - [`transcend request upload`](#transcend-request-upload)
-    - [Examples](#examples-1)
   - [`transcend request download-files`](#transcend-request-download-files)
-    - [Examples](#examples-2)
   - [`transcend request cancel`](#transcend-request-cancel)
-    - [Examples](#examples-3)
   - [`transcend request restart`](#transcend-request-restart)
-    - [Examples](#examples-4)
   - [`transcend request notify-additional-time`](#transcend-request-notify-additional-time)
-    - [Examples](#examples-5)
   - [`transcend request mark-silent`](#transcend-request-mark-silent)
-    - [Examples](#examples-6)
   - [`transcend request enricher-restart`](#transcend-request-enricher-restart)
-    - [Examples](#examples-7)
   - [`transcend request reject-unverified-identifiers`](#transcend-request-reject-unverified-identifiers)
-    - [Examples](#examples-8)
   - [`transcend request export`](#transcend-request-export)
-    - [Examples](#examples-9)
   - [`transcend request skip-preflight-jobs`](#transcend-request-skip-preflight-jobs)
-    - [Examples](#examples-10)
   - [`transcend request system mark-request-data-silos-completed`](#transcend-request-system-mark-request-data-silos-completed)
-    - [Examples](#examples-11)
   - [`transcend request system retry-request-data-silos`](#transcend-request-system-retry-request-data-silos)
-    - [Examples](#examples-12)
   - [`transcend request system skip-request-data-silos`](#transcend-request-system-skip-request-data-silos)
-    - [Examples](#examples-13)
   - [`transcend request preflight pull-identifiers`](#transcend-request-preflight-pull-identifiers)
-    - [Examples](#examples-14)
   - [`transcend request preflight push-identifiers`](#transcend-request-preflight-push-identifiers)
-    - [Examples](#examples-15)
   - [`transcend request cron pull-identifiers`](#transcend-request-cron-pull-identifiers)
-    - [Examples](#examples-16)
   - [`transcend request cron mark-identifiers-completed`](#transcend-request-cron-mark-identifiers-completed)
-    - [Examples](#examples-17)
   - [`transcend consent build-xdi-sync-endpoint`](#transcend-consent-build-xdi-sync-endpoint)
-    - [Examples](#examples-18)
+  - [`transcend consent generate-access-tokens`](#transcend-consent-generate-access-tokens)
   - [`transcend consent pull-consent-metrics`](#transcend-consent-pull-consent-metrics)
-    - [Examples](#examples-19)
   - [`transcend consent pull-consent-preferences`](#transcend-consent-pull-consent-preferences)
-    - [Examples](#examples-20)
   - [`transcend consent update-consent-manager`](#transcend-consent-update-consent-manager)
-    - [Examples](#examples-21)
   - [`transcend consent upload-consent-preferences`](#transcend-consent-upload-consent-preferences)
-    - [Examples](#examples-22)
   - [`transcend consent upload-cookies-from-csv`](#transcend-consent-upload-cookies-from-csv)
-    - [Examples](#examples-23)
   - [`transcend consent upload-data-flows-from-csv`](#transcend-consent-upload-data-flows-from-csv)
-    - [Examples](#examples-24)
   - [`transcend consent upload-preferences`](#transcend-consent-upload-preferences)
-    - [Examples](#examples-25)
+  - [`transcend consent delete-preference-records`](#transcend-consent-delete-preference-records)
   - [`transcend inventory pull`](#transcend-inventory-pull)
-    - [Scopes](#scopes)
-    - [Examples](#examples-26)
   - [`transcend inventory push`](#transcend-inventory-push)
-    - [Scopes](#scopes-1)
-    - [Examples](#examples-27)
-    - [CI Integration](#ci-integration)
-    - [Dynamic Variables](#dynamic-variables)
   - [`transcend inventory scan-packages`](#transcend-inventory-scan-packages)
-    - [Examples](#examples-28)
   - [`transcend inventory discover-silos`](#transcend-inventory-discover-silos)
-    - [Examples](#examples-29)
   - [`transcend inventory pull-datapoints`](#transcend-inventory-pull-datapoints)
-    - [Examples](#examples-30)
   - [`transcend inventory pull-unstructured-discovery-files`](#transcend-inventory-pull-unstructured-discovery-files)
-    - [Examples](#examples-31)
   - [`transcend inventory derive-data-silos-from-data-flows`](#transcend-inventory-derive-data-silos-from-data-flows)
-    - [Examples](#examples-32)
   - [`transcend inventory derive-data-silos-from-data-flows-cross-instance`](#transcend-inventory-derive-data-silos-from-data-flows-cross-instance)
-    - [Examples](#examples-33)
   - [`transcend inventory consent-manager-service-json-to-yml`](#transcend-inventory-consent-manager-service-json-to-yml)
-    - [Examples](#examples-34)
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
-    - [Examples](#examples-35)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
-    - [Examples](#examples-36)
+  - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+  - [`transcend admin find-text-in-folder`](#transcend-admin-find-text-in-folder)
+  - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
-    - [Authentication](#authentication)
-    - [Examples](#examples-37)
 - [Prompt Manager](#prompt-manager)
 - [Proxy usage](#proxy-usage)
+- [Using non-primary Sombra](#using-non-primary-sombra)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Changelog
 
 To stay up to date on breaking changes to the CLI between major version updates, please refer to [CHANGELOG.md](CHANGELOG.md).
-
-## Overview
-
-A command line interface that allows you to programatically interact with the Transcend.
 
 ## Installation
 
@@ -230,7 +190,7 @@ data-silos:
 
 ```txt
 USAGE
-  transcend request approve (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--origins PRIVACY_CENTER|ADMIN_DASHBOARD|API|SHOPIFY] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--transcendUrl value] [--concurrency value]
+  transcend request approve (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--origins PRIVACY_CENTER|ADMIN_DASHBOARD|API|SHOPIFY] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--transcendUrl value] [--concurrency value]
   transcend request approve --help
 
 Bulk approve a set of privacy requests from the DSR Automation -> Incoming Requests tab.
@@ -242,6 +202,8 @@ FLAGS
      [--silentModeBefore]  Any requests made before this date should be marked as silent mode
      [--createdAtBefore]   Approve requests that were submitted before this time
      [--createdAtAfter]    Approve requests that were submitted after this time
+     [--updatedAtBefore]   Approve requests that were last updated before this time
+     [--updatedAtAfter]    Approve requests that were last updated after this time
      [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                         [default = https://api.transcend.io]
      [--concurrency]       The concurrency to use when uploading requests in parallel                                                                           [default = 50]
   -h  --help               Print help information and exit
@@ -273,7 +235,7 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --origin
 transcend request approve \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --silentModeBefore=2024-05-03T00:00:00.000Z
+  --silentModeBefore=2025-05-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -288,8 +250,8 @@ transcend request approve --auth="$TRANSCEND_API_KEY" --actions=ERASURE --concur
 transcend request approve \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-03T00:00:00.000Z \
-  --createdAtAfter=2024-04-03T00:00:00.000Z
+  --createdAtBefore=2025-05-03T00:00:00.000Z \
+  --createdAtAfter=2025-04-03T00:00:00.000Z
 ```
 
 ### `transcend request upload`
@@ -430,7 +392,7 @@ transcend request upload \
 
 ```txt
 USAGE
-  transcend request download-files (--auth value) [--sombraAuth value] [--concurrency value] [--requestIds value]... [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--folderPath value] [--createdAtBefore value] [--createdAtAfter value] [--approveAfterDownload] [--transcendUrl value]
+  transcend request download-files (--auth value) [--sombraAuth value] [--concurrency value] [--requestIds value]... [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--folderPath value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--approveAfterDownload] [--transcendUrl value]
   transcend request download-files --help
 
 Download the files associated with a Data Subject Access Request (DSAR) from DSR Automation -> Incoming Requests tab.
@@ -444,6 +406,8 @@ FLAGS
      [--folderPath]            The folder to download files to                                                                                                        [default = ./dsr-files]
      [--createdAtBefore]       Download requests that were submitted before this time
      [--createdAtAfter]        Download requests that were submitted after this time
+     [--updatedAtBefore]       Download requests that were last updated before this time
+     [--updatedAtAfter]        Download requests that were last updated after this time
      [--approveAfterDownload]  If the request is in status=APPROVING, approve the request after its downloaded                                                        [default = false]
      [--transcendUrl]          URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                           [default = https://api.transcend.io]
   -h  --help                   Print help information and exit
@@ -496,8 +460,8 @@ transcend request download-files --auth="$TRANSCEND_API_KEY" --concurrency=100
 ```sh
 transcend request download-files \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-05-03T00:00:00.000Z \
-  --createdAtAfter=2024-04-03T00:00:00.000Z
+  --createdAtBefore=2025-05-03T00:00:00.000Z \
+  --createdAtAfter=2025-04-03T00:00:00.000Z
 ```
 
 **Download specific requests**
@@ -512,7 +476,7 @@ transcend request download-files \
 
 ```txt
 USAGE
-  transcend request cancel (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--cancellationTitle value] [--transcendUrl value] [--concurrency value]
+  transcend request cancel (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--cancellationTitle value] [--transcendUrl value] [--concurrency value]
   transcend request cancel --help
 
 Bulk cancel a set of privacy requests from the DSR Automation -> Incoming Requests tab.
@@ -525,6 +489,8 @@ FLAGS
      [--silentModeBefore]   Any requests made before this date should be marked as silent mode for canceling to skip email sending
      [--createdAtBefore]    Cancel requests that were submitted before this time
      [--createdAtAfter]     Cancel requests that were submitted after this time
+     [--updatedAtBefore]    Cancel requests that were last updated before this time
+     [--updatedAtAfter]     Cancel requests that were last updated after this time
      [--cancellationTitle]  The title of the email template that should be sent to the requests upon cancelation                   [default = Request Canceled]
      [--transcendUrl]       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
      [--concurrency]        The concurrency to use when uploading requests in parallel                                             [default = 50]
@@ -563,7 +529,7 @@ transcend request cancel --auth="$TRANSCEND_API_KEY" --actions=ERASURE --cancell
 transcend request cancel \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --silentModeBefore=2024-05-03T00:00:00.000Z
+  --silentModeBefore=2025-05-03T00:00:00.000Z
 ```
 
 **Cancel all open SALE_OPT_OUT, within a specific time frame**
@@ -572,8 +538,8 @@ transcend request cancel \
 transcend request cancel \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-03T00:00:00.000Z \
-  --createdAtAfter=2024-04-03T00:00:00.000Z
+  --createdAtBefore=2025-05-03T00:00:00.000Z \
+  --createdAtAfter=2025-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -596,7 +562,7 @@ transcend request cancel \
 
 ```txt
 USAGE
-  transcend request restart (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) (--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED) [--transcendUrl value] [--requestReceiptFolder value] [--sombraAuth value] [--concurrency value] [--requestIds value]... [--emailIsVerified] [--createdAt value] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--sendEmailReceipt] [--copyIdentifiers] [--skipWaitingPeriod]
+  transcend request restart (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) (--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED) [--transcendUrl value] [--requestReceiptFolder value] [--sombraAuth value] [--concurrency value] [--requestIds value]... [--emailIsVerified] [--createdAt value] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--sendEmailReceipt] [--copyIdentifiers] [--skipWaitingPeriod]
   transcend request restart --help
 
 Bulk update a set of privacy requests based on a set of request filters.
@@ -615,6 +581,8 @@ FLAGS
      [--silentModeBefore]                     Requests older than this date should be marked as silent mode
      [--createdAtBefore]                      Restart requests that were submitted before this time
      [--createdAtAfter]                       Restart requests that were submitted after this time
+     [--updatedAtBefore]                      Restart requests that were last updated before this time
+     [--updatedAtAfter]                       Restart requests that were last updated after this time
      [--sendEmailReceipt]                     Send email receipts to the restarted requests                                                             [default = false]
      [--copyIdentifiers]                      Copy over all enriched identifiers from the initial request                                               [default = false]
      [--skipWaitingPeriod]                    Skip queued state of request and go straight to compiling                                                 [default = false]
@@ -687,7 +655,7 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --createdAt=2024-05-11T00:00:00.000Z
+  --createdAt=2025-05-11T00:00:00.000Z
 ```
 
 **Restart requests and place everything in silent mode submitted before a certain date**
@@ -697,7 +665,7 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --silentModeBefore=2024-12-05T00:00:00.000Z
+  --silentModeBefore=2025-12-05T00:00:00.000Z
 ```
 
 **Restart requests within a specific timeframe**
@@ -707,8 +675,8 @@ transcend request restart \
   --auth="$TRANSCEND_API_KEY" \
   --statuses=COMPILING,ENRICHING \
   --actions=ACCESS,ERASURE \
-  --createdAtBefore=2024-04-05T00:00:00.000Z \
-  --createdAtAfter=2024-02-21T00:00:00.000Z
+  --createdAtBefore=2025-04-05T00:00:00.000Z \
+  --createdAtAfter=2025-02-21T00:00:00.000Z
 ```
 
 **Send email receipts to the restarted requests**
@@ -745,23 +713,25 @@ transcend request restart \
 
 ```txt
 USAGE
-  transcend request notify-additional-time (--auth value) (--createdAtBefore value) [--createdAtAfter value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--daysLeft value] [--days value] [--requestIds value]... [--emailTemplate value] [--transcendUrl value] [--concurrency value]
+  transcend request notify-additional-time (--auth value) (--createdAtBefore value) [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--daysLeft value] [--days value] [--requestIds value]... [--emailTemplate value] [--transcendUrl value] [--concurrency value]
   transcend request notify-additional-time --help
 
 Bulk notify a set of privacy requests from the DSR Automation -> Incoming Requests tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.
 
 FLAGS
-      --auth             The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
-      --createdAtBefore  Notify requests that are open but submitted before this time
-     [--createdAtAfter]  Notify requests that are open but submitted after this time
-     [--actions]         The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--daysLeft]        Only notify requests that have less than this number of days until they are considered expired         [default = 10]
-     [--days]            The number of days to adjust the expiration of the request to                                          [default = 45]
-     [--requestIds]...   Specify the specific request IDs to notify                                                             [separator = ,]
-     [--emailTemplate]   The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
-     [--transcendUrl]    URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
-     [--concurrency]     The concurrency to use when uploading requests in parallel                                             [default = 50]
-  -h  --help             Print help information and exit
+      --auth              The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
+      --createdAtBefore   Notify requests that are open but submitted before this time
+     [--createdAtAfter]   Notify requests that are open but submitted after this time
+     [--updatedAtBefore]  Notify requests that were last updated before this time
+     [--updatedAtAfter]   Notify requests that were last updated after this time
+     [--actions]          The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--daysLeft]         Only notify requests that have less than this number of days until they are considered expired         [default = 10]
+     [--days]             The number of days to adjust the expiration of the request to                                          [default = 45]
+     [--requestIds]...    Specify the specific request IDs to notify                                                             [separator = ,]
+     [--emailTemplate]    The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
+     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
+     [--concurrency]      The concurrency to use when uploading requests in parallel                                             [default = 50]
+  -h  --help              Print help information and exit
 ```
 
 #### Examples
@@ -769,7 +739,7 @@ FLAGS
 **Notify all request types that were made before 01/01/2024**
 
 ```sh
-transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=2024-01-01T00:00:00.000Z
+transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAtBefore=2025-01-01T00:00:00.000Z
 ```
 
 **Notify all request types that were made during a date range**
@@ -777,8 +747,8 @@ transcend request notify-additional-time --auth="$TRANSCEND_API_KEY" --createdAt
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
-  --createdAtAfter=2024-12-15T00:00:00.000Z
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
+  --createdAtAfter=2025-12-15T00:00:00.000Z
 ```
 
 **Notify certain request types**
@@ -786,7 +756,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --actions=SALE_OPT_OUT,ERASURE
 ```
 
@@ -795,7 +765,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -804,7 +774,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --requestIds=c3ae78c9-2768-4666-991a-d2f729503337,342e4bd1-64ea-4af0-a4ad-704b5a07cfe4
 ```
 
@@ -813,7 +783,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --daysLeft=3
 ```
 
@@ -822,7 +792,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --days=30
 ```
 
@@ -831,7 +801,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --emailTemplate="Custom Email Template"
 ```
 
@@ -840,7 +810,7 @@ transcend request notify-additional-time \
 ```sh
 transcend request notify-additional-time \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
   --concurrency=500
 ```
 
@@ -848,7 +818,7 @@ transcend request notify-additional-time \
 
 ```txt
 USAGE
-  transcend request mark-silent (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--transcendUrl value] [--concurrency value]
+  transcend request mark-silent (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--transcendUrl value] [--concurrency value]
   transcend request mark-silent --help
 
 Bulk update a set of privacy requests from the DSR Automation -> Incoming Requests tab to be in silent mode.
@@ -860,6 +830,8 @@ FLAGS
      [--requestIds]...    Specify the specific request IDs to mark silent                                                                                                                  [separator = ,]
      [--createdAtBefore]  Mark silent requests that were submitted before this time
      [--createdAtAfter]   Mark silent requests that were submitted after this time
+     [--updatedAtBefore]  Mark silent requests that were last updated before this time
+     [--updatedAtAfter]   Mark silent requests that were last updated after this time
      [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                     [default = https://api.transcend.io]
      [--concurrency]      The concurrency to use when uploading requests in parallel                                                                                                       [default = 50]
   -h  --help              Print help information and exit
@@ -904,8 +876,8 @@ transcend request mark-silent \
 transcend request mark-silent \
   --auth="$TRANSCEND_API_KEY" \
   --actions=SALE_OPT_OUT \
-  --createdAtBefore=2024-05-03T00:00:00.000Z \
-  --createdAtAfter=2024-04-03T00:00:00.000Z
+  --createdAtBefore=2025-05-03T00:00:00.000Z \
+  --createdAtAfter=2025-04-03T00:00:00.000Z
 ```
 
 **Increase the concurrency (defaults to 50)**
@@ -918,7 +890,7 @@ transcend request mark-silent --auth="$TRANSCEND_API_KEY" --actions=ERASURE --co
 
 ```txt
 USAGE
-  transcend request enricher-restart (--auth value) (--enricherId value) [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--requestEnricherStatuses QUEUED|WAITING|SKIPPED|ERROR|RESOLVED|ACTION_REQUIRED|REMOTE_PROCESSING|WAITING_ON_DEPENDENCIES|POLLING] [--transcendUrl value] [--concurrency value] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value]
+  transcend request enricher-restart (--auth value) (--enricherId value) [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--requestEnricherStatuses QUEUED|WAITING|SKIPPED|ERROR|RESOLVED|ACTION_REQUIRED|REMOTE_PROCESSING|WAITING_ON_DEPENDENCIES|POLLING] [--transcendUrl value] [--concurrency value] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value]
   transcend request enricher-restart --help
 
 Bulk restart a particular enricher across a series of DSRs.
@@ -936,6 +908,8 @@ FLAGS
      [--requestIds]...            Specify the specific request IDs to restart                                  [separator = ,]
      [--createdAtBefore]          Restart requests that were submitted before this time
      [--createdAtAfter]           Restart requests that were submitted after this time
+     [--updatedAtBefore]          Restart requests that were last updated before this time
+     [--updatedAtAfter]           Restart requests that were last updated after this time
   -h  --help                      Print help information and exit
 ```
 
@@ -980,8 +954,8 @@ transcend request enricher-restart \
 transcend request enricher-restart \
   --auth="$TRANSCEND_API_KEY" \
   --enricherId=3be5e898-fea9-4614-84de-88cd5265c557 \
-  --createdAtBefore=2024-04-05T00:00:00.000Z \
-  --createdAtAfter=2024-02-21T00:00:00.000Z
+  --createdAtBefore=2025-04-05T00:00:00.000Z \
+  --createdAtAfter=2025-02-21T00:00:00.000Z
 ```
 
 **Restart requests that are in an error state**
@@ -1040,24 +1014,27 @@ transcend request reject-unverified-identifiers \
 
 ```txt
 USAGE
-  transcend request export (--auth value) [--sombraAuth value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--transcendUrl value] [--file value] [--concurrency value] [--createdAtBefore value] [--createdAtAfter value] [--showTests] [--pageLimit value]
+  transcend request export (--auth value) [--sombraAuth value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--transcendUrl value] [--file value] [--concurrency value] [--skipRequestIdentifiers] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--showTests] [--pageLimit value]
   transcend request export --help
 
 Export privacy requests and request identifiers to a CSV file.
 
 FLAGS
-      --auth                      The Transcend API key. Requires scopes: "View Incoming Requests", "View the Request Compilation"
-     [--sombraAuth]               The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--actions]                  The request actions to export                                                                    [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--statuses]                 The request statuses to export                                                                   [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
-     [--transcendUrl]             URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                     [default = https://api.transcend.io]
-     [--file]                     Path to the CSV file where identifiers will be written to                                        [default = ./transcend-request-export.csv]
-     [--concurrency]              The concurrency to use when uploading requests in parallel                                       [default = 100]
-     [--createdAtBefore]          Pull requests that were submitted before this time
-     [--createdAtAfter]           Pull requests that were submitted after this time
-     [--showTests/--noShowTests]  Filter for test requests or production requests - when not provided, pulls both
-     [--pageLimit]                The page limit to use when pulling in pages of requests                                          [default = 100]
-  -h  --help                      Print help information and exit
+      --auth                                                The Transcend API key. Requires scopes: "View Incoming Requests", "View the Request Compilation"
+     [--sombraAuth]                                         The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--actions]                                            The request actions to export                                                                                                 [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--statuses]                                           The request statuses to export                                                                                                [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
+     [--transcendUrl]                                       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                  [default = https://api.transcend.io]
+     [--file]                                               Path to the CSV file where identifiers will be written to                                                                     [default = ./transcend-request-export.csv]
+     [--concurrency]                                        Number of parallel date-range chunks to split the query into. Requires both --createdAtAfter and --createdAtBefore to be set. [default = 1]
+     [--skipRequestIdentifiers/--noSkipRequestIdentifiers]  Skip exporting request identifiers
+     [--createdAtBefore]                                    Pull requests that were submitted before this time
+     [--createdAtAfter]                                     Pull requests that were submitted after this time
+     [--updatedAtBefore]                                    Pull requests that were last updated before this time
+     [--updatedAtAfter]                                     Pull requests that were last updated after this time
+     [--showTests/--noShowTests]                            Filter for test requests or production requests - when not provided, pulls both
+     [--pageLimit]                                          The page limit to use when pulling in pages of requests                                                                       [default = 100]
+  -h  --help                                                Print help information and exit
 ```
 
 #### Examples
@@ -1086,10 +1063,16 @@ transcend request export --auth="$TRANSCEND_API_KEY" --transcendUrl=https://api.
 transcend request export --auth="$TRANSCEND_API_KEY" --sombraAuth="$SOMBRA_INTERNAL_KEY"
 ```
 
-**Increase the concurrency (defaults to 100)**
+**Speed up large exports with parallel date-range chunks (requires --createdAtAfter and --createdAtBefore)**
 
 ```sh
-transcend request export --auth="$TRANSCEND_API_KEY" --concurrency=500
+transcend request export \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtAfter=2025-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
+  --concurrency=10 \
+  --file=./exports/requests.csv \
+  --skipRequestIdentifiers
 ```
 
 **Filter for production requests only**
@@ -1103,8 +1086,8 @@ transcend request export --auth="$TRANSCEND_API_KEY" --showTests=false
 ```sh
 transcend request export \
   --auth="$TRANSCEND_API_KEY" \
-  --createdAtBefore=2024-04-05T00:00:00.000Z \
-  --createdAtAfter=2024-02-21T00:00:00.000Z
+  --createdAtBefore=2025-04-05T00:00:00.000Z \
+  --createdAtAfter=2025-02-21T00:00:00.000Z
 ```
 
 **Write to a specific file location**
@@ -1112,6 +1095,22 @@ transcend request export \
 ```sh
 transcend request export --auth="$TRANSCEND_API_KEY" --file=./path/to/file.csv
 ```
+
+**Skip fetching request identifiers**
+
+```sh
+transcend request export --auth="$TRANSCEND_API_KEY" --skipRequestIdentifiers
+```
+
+#### Parallel Date-Range Chunking
+
+When exporting a large number of requests, you can use `--concurrency` to split the date range
+into parallel chunks that are fetched simultaneously. This requires both `--createdAtAfter` and
+`--createdAtBefore` to be set. Each chunk writes to its own numbered CSV file (e.g.
+`export-0.csv`, `export-1.csv`, ...). If any chunk fails, the remaining chunks continue and the
+CLI reports the exact date ranges that need to be retried.
+
+When `--concurrency=1` (the default), the entire export is written to a single file.
 
 ### `transcend request skip-preflight-jobs`
 
@@ -1255,7 +1254,8 @@ FLAGS
 ```sh
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
-  --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f
+  --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+  --statuses=COMPILING,SECONDARY
 ```
 
 **Specifying the backend URL, needed for US hosted backend infrastructure**
@@ -1264,7 +1264,8 @@ transcend request system skip-request-data-silos \
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
   --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
-  --transcendUrl=https://api.us.transcend.io
+  --transcendUrl=https://api.us.transcend.io \
+  --statuses=COMPILING,SECONDARY
 ```
 
 **Only mark as completed requests in "removing data" phase**
@@ -1282,6 +1283,7 @@ transcend request system skip-request-data-silos \
 transcend request system skip-request-data-silos \
   --auth="$TRANSCEND_API_KEY" \
   --dataSiloId=70810f2e-cf90-43f6-9776-901a5950599f \
+  --statuses=COMPILING,SECONDARY \
   --status=RESOLVED
 ```
 
@@ -1697,6 +1699,69 @@ transcend consent build-xdi-sync-endpoint \
   --transcendUrl=https://api.us.transcend.io
 ```
 
+### `transcend consent generate-access-tokens`
+
+```txt
+USAGE
+  transcend consent generate-access-tokens (--auth value) (--file value) (--subjectType value) [--emailColumnName value] [--coreIdentifierColumnName value] [--duration value] [--transcendUrl value]
+  transcend consent generate-access-tokens --help
+
+This command allows for the generation of access tokens for users specified in a CSV file.
+
+FLAGS
+      --auth                       The Transcend API key. Requires scopes: "Generate Preference Access Tokens"
+      --file                       Path to the CSV file containing user identifiers to generate access tokens for
+      --subjectType                Slug for the data subject that the user will be logged in as on the Privacy Center. e.g. "customer" or "employee"
+     [--emailColumnName]           Name of the column in the CSV that contains user email addresses                                                                                                                                                                           [default = email]
+     [--coreIdentifierColumnName]  Name of the column in the CSV that contains user core identifiers
+     [--duration]                  How long the access tokens should be valid. Accepts human-friendly values like "2 days", "10h", "90 minutes". A bare number is interpreted as seconds (e.g., "300" = 5 minutes). Powered by the `ms` library: https://github.com/vercel/ms [default = 1y]
+     [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                                                                                               [default = https://api.transcend.io]
+  -h  --help                       Print help information and exit
+```
+
+Learn more about generating access tokens in the Transcend Docs:
+https://docs.transcend.io/docs/articles/preference-management/access-links
+
+#### Examples
+
+**Generate access tokens for users as the "customer" subject type**
+
+```sh
+transcend consent generate-access-tokens --auth="$TRANSCEND_API_KEY" --file=./users.csv --subjectType=customer
+```
+
+**One month (parsed to milliseconds) — e.g. 30d**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./users.csv \
+  --subjectType=customer \
+  --duration=30d
+```
+
+**CSV with custom column names for email/coreIdentifier + a 90-day duration**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./my-users.csv \
+  --subjectType=employee \
+  --emailColumnName=user_email \
+  --coreIdentifierColumnName=crm_id \
+  --duration="90 days"
+```
+
+**Specifying the backend URL (US-hosted backend infrastructure)**
+
+```sh
+transcend consent generate-access-tokens \
+  --auth="$TRANSCEND_API_KEY" \
+  --file=./users.csv \
+  --subjectType=customer \
+  --transcendUrl=https://api.us.transcend.io
+```
+
 ### `transcend consent pull-consent-metrics`
 
 ```txt
@@ -1729,7 +1794,7 @@ FLAGS
 **Pull consent manager metrics for a Transcend account**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2025-01-01T00:00:00.000Z
 ```
 
 **Specifying the backend URL, needed for US hosted backend infrastructure**
@@ -1737,7 +1802,7 @@ transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-01-01T00:00:00.000Z \
+  --start=2025-01-01T00:00:00.000Z \
   --transcendUrl=https://api.us.transcend.io
 ```
 
@@ -1746,8 +1811,8 @@ transcend consent pull-consent-metrics \
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-01-01T00:00:00.000Z \
-  --end=2024-03-01T00:00:00.000Z
+  --start=2025-01-01T00:00:00.000Z \
+  --end=2025-03-01T00:00:00.000Z
 ```
 
 **Save to an explicit folder**
@@ -1755,42 +1820,49 @@ transcend consent pull-consent-metrics \
 ```sh
 transcend consent pull-consent-metrics \
   --auth="$TRANSCEND_API_KEY" \
-  --start=2024-01-01T00:00:00.000Z \
-  --end=2024-03-01T00:00:00.000Z \
+  --start=2025-01-01T00:00:00.000Z \
+  --end=2025-03-01T00:00:00.000Z \
   --folder=./my-folder/
 ```
 
 **Bin data hourly vs daily**
 
 ```sh
-transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2024-01-01T00:00:00.000Z --bin=1h
+transcend consent pull-consent-metrics --auth="$TRANSCEND_API_KEY" --start=2025-01-01T00:00:00.000Z --bin=1h
 ```
 
 ### `transcend consent pull-consent-preferences`
 
 ```txt
 USAGE
-  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--identifiers value]... [--concurrency value]
+  transcend consent pull-consent-preferences (--auth value) (--partition value) [--sombraAuth value] [--file value] [--transcendUrl value] [--timestampBefore value] [--timestampAfter value] [--updatedBefore value] [--updatedAfter value] [--identifiers value]... [--concurrency value] [--shouldChunk] [--exportIdentifiersWithDelimiter value] [--windowConcurrency value] [--maxChunks value] [--maxLookbackDays value]
   transcend consent pull-consent-preferences --help
 
-This command allows for pull of consent preferences from the Managed Consent Database.
+Uses POST /v1/preferences/{partition}/query with cursor-based pagination. Supports filtering by identifiers, collection timestamps, and system.updatedAt.
 
 FLAGS
-      --auth              The Transcend API key. Requires scopes: "View Managed Consent Database Admin API"
-      --partition         The partition key to download consent preferences to
-     [--sombraAuth]       The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--file]             Path to the CSV file to save preferences to                                         [default = ./preferences.csv]
-     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting        [default = https://api.transcend.io]
-     [--timestampBefore]  Filter for consents updated this time
-     [--timestampAfter]   Filter for consents updated after this time
-     [--identifiers]...   Filter for specific identifiers                                                     [separator = ,]
-     [--concurrency]      The concurrency to use when downloading consents in parallel                        [default = 100]
-  -h  --help              Print help information and exit
+      --auth                             The Transcend API key. Requires scopes: "View Managed Consent Database Admin API", "View Identity Verification Settings", "View Preference Store Settings"
+      --partition                        Partition ID to query in the Preference Store
+     [--sombraAuth]                      The Sombra internal key, use for additional authentication when self-hosting Sombra
+     [--file]                            Path to CSV output file                                                                                                                                    [default = ./preferences.csv]
+     [--transcendUrl]                    URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                               [default = https://api.transcend.io]
+     [--timestampBefore]                 Filter: preferences collected before this time (timestampBefore)
+     [--timestampAfter]                  Filter: preferences collected after this time (timestampAfter)
+     [--updatedBefore]                   Filter: preferences updated before this time (system.updatedAt)
+     [--updatedAfter]                    Filter: preferences updated after this time (system.updatedAt)
+     [--identifiers]...                  Filter specific users by identifier(s) as "name:value". If name is omitted, defaults to "email". Multiple values separated by commas.                      [separator = ,]
+     [--concurrency]                     Page size / concurrency used when downloading (1–50 per API). Higher = fewer pages.                                                                        [default = 50]
+     [--shouldChunk/--noShouldChunk]     Whether to download requests in timestamp window chunks.                                                                                                   [default = true]
+     [--exportIdentifiersWithDelimiter]  Delimiter to use when combining multiple identifiers into a single column in the output CSV.                                                               [default = ,]
+     [--windowConcurrency]               When chunking, how many windows to download in parallel (higher = faster, but more load).                                                                  [default = 80]
+     [--maxChunks]                       Maximum number of chunks to download (higher = more data, but more load).                                                                                  [default = 20000]
+     [--maxLookbackDays]                 Maximum lookback period in days for fetching consent preferences.                                                                                          [default = 3650]
+  -h  --help                             Print help information and exit
 ```
 
 #### Examples
 
-**Fetch all consent preferences from partition key**
+**Fetch all consent preferences from a partition**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1798,7 +1870,7 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Fetch all consent preferences from partition key and save to ./consent.csv**
+**Fetch all consent preferences and save to ./consent.csv**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1807,25 +1879,44 @@ transcend consent pull-consent-preferences \
   --file=./consent.csv
 ```
 
-**Filter on consent updates before a date**
+**Filter by consent collection time (timestampBefore)**
 
 ```sh
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampBefore=2024-04-03T00:00:00.000Z
+  --timestampBefore=2025-04-03T00:00:00.000Z
 ```
 
-**Filter on consent updates after a date**
+**Filter by consent collection time (timestampAfter)**
 
 ```sh
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
-  --timestampAfter=2024-04-03T00:00:00.000Z
+  --timestampAfter=2025-04-03T00:00:00.000Z
 ```
 
-**For self-hosted sombras that use an internal key**
+**Filter by last update time (system.updatedAt window)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --updatedAfter=2025-08-26T00:00:00.000Z \
+  --updatedBefore=2025-08-27T00:00:00.000Z
+```
+
+**Filter specific users by identifiers (name:value). Default name=email if omitted.**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --identifiers=email:no-track@example.com,phone:+11234567890,pls-no-track@example.com
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
 
 ```sh
 transcend consent pull-consent-preferences \
@@ -1834,13 +1925,58 @@ transcend consent pull-consent-preferences \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726
 ```
 
-**Specifying the backend URL, needed for US hosted backend infrastructure**
+**Use a specific backend base URL (e.g., US-hosted)**
 
 ```sh
 transcend consent pull-consent-preferences \
   --auth="$TRANSCEND_API_KEY" \
   --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
   --transcendUrl=https://api.us.transcend.io
+```
+
+**Pull data in a single thread, instead of using the default which pulls data in parallel chunks with non-overlapping time windows (for large datasets)**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --shouldChunk=false
+```
+
+**Configure window concurrency for faster parallel downloads**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --windowConcurrency=200
+```
+
+**Limit maximum number of chunks to download**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --maxChunks=1000
+```
+
+**Set maximum lookback period to 30 days**
+
+```sh
+transcend consent pull-consent-preferences \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --maxLookbackDays=30
+```
+
+#### Large Exports
+
+If you are exporting a large number of consent preferences (e.g. 100M+), this command will output a file that may be 50-100GB+ in size.
+If you need to transfer this data, you may want to leverage the following command to break the single CSV into multiple:
+
+```
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
 ```
 
 ### `transcend consent update-consent-manager`
@@ -2146,11 +2282,124 @@ transcend consent upload-preferences \
   --transcendUrl=https://api.us.transcend.io
 ```
 
+### `transcend consent delete-preference-records`
+
+```txt
+USAGE
+  transcend consent delete-preference-records (--auth value) [--sombraAuth value] (--partition value) (--timestamp value) [--file value] [--directory value] [--transcendUrl value] [--maxItemsInChunk value] [--maxConcurrency value] [--fileConcurrency value] [--receiptDirectory value]
+  transcend consent delete-preference-records --help
+
+Uses POST /v1/preferences/{partition}/delete route on sombra to delete consent preference records in bulk from Preference Store based on a CSV file input. Refer to examples/cli-upload-preferences-example.csv for the expected format of the CSV file. The CSV expects the following headers: "name" and "value". The "name" field corresponds to the identifier name as defined on https://app.transcend.io/privacy-requests/identifiers The "value" refers to the actual identifier value for the user whose preference record is being deleted. For Large scale deletions, consider chunking the input CSV into smaller files and using the --directory option to process them concurrently.
+
+FLAGS
+      --auth               The Transcend API key. Requires scopes: "Modify User Stored Preferences"
+     [--sombraAuth]        The Sombra internal key, use for additional authentication when self-hosting Sombra
+      --partition          Partition ID to used to delete preference records from
+      --timestamp          The timestamp when the deletion operation is made. Used for logging purposes.
+     [--file]              Path to the CSV file used to identify preference records to delete
+     [--directory]         Path to the directory of CSV files to load preferences from
+     [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                       [default = https://api.transcend.io]
+     [--maxItemsInChunk]   When chunking, how many items to delete in a single chunk (higher = faster, but more load).                                        [default = 10]
+     [--maxConcurrency]    Number of concurrent requests to make when deleting preference records. (Higher = faster, but more load and rate limiting errors). [default = 10]
+     [--fileConcurrency]   Number of files to process concurrently when deleting preference records from multiple files.                                      [default = 5]
+     [--receiptDirectory]  Directory to write receipts of failed deletions to.                                                                                [default = ./receipts]
+  -h  --help               Print help information and exit
+```
+
+A sample CSV can be found [here](./examples/cli-delete-preference-records-example.csv).
+
+#### Examples
+
+**Delete preference records from preference store using a CSV file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Delete preference records from preference store using multiple CSV files in a directory**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --directory=./preferences-to-delete \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Self-hosted Sombra: include Sombra internal key header**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Use a specific backend base URL (e.g., US-hosted)**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --sombraAuth="$SOMBRA_INTERNAL_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --receiptDirectory=./receipts \
+  --transcendUrl=https://api.us.transcend.io \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of concurrent API calls for a deletion file**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxConcurrency=100 \
+  --fileConcurrency=10 \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum number of files to process concurrently**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --fileConcurrency=10 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
+**Configure maximum items in chunk**
+
+```sh
+transcend consent delete-preference-records \
+  --auth="$TRANSCEND_API_KEY" \
+  --partition=4d1c5daa-90b7-4d18-aa40-f86a43d2c726 \
+  --file=./preferences-to-delete.csv \
+  --maxItemsInChunk=5 \
+  --receiptDirectory=./receipts \
+  --timestamp=2025-08-26T00:00:00.000Z
+```
+
 ### `transcend inventory pull`
 
 ```txt
 USAGE
-  transcend inventory pull (--auth value) [--resources all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
+  transcend inventory pull (--auth value) [--resources all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes|systemDiscovery] [--file value] [--transcendUrl value] [--dataSiloIds value]... [--integrationNames value]... [--trackerStatuses LIVE|NEEDS_REVIEW] [--pageSize value] [--skipDatapoints] [--skipSubDatapoints] [--includeGuessedCategories] [--debug]
   transcend inventory pull --help
 
 Generates a transcend.yml by pulling the configuration from your Transcend instance.
@@ -2164,7 +2413,7 @@ This command can be helpful if you are looking to:
 
 FLAGS
       --auth                       The Transcend API key. The scopes required will vary depending on the operation performed. If in doubt, the Full Admin scope will always work.
-     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes, separator = ,]
+     [--resources]                 The different resource types to pull in. Defaults to dataSilos,enrichers,templates,apiKeys.                                                    [all|apiKeys|customFields|templates|dataSilos|enrichers|dataFlows|businessEntities|processingActivities|actions|dataSubjects|identifiers|cookies|consentManager|partitions|prompts|promptPartials|promptGroups|agents|agentFunctions|agentFiles|vendors|dataCategories|processingPurposes|actionItems|actionItemCollections|teams|privacyCenters|policies|messages|assessments|assessmentTemplates|purposes|systemDiscovery, separator = ,]
      [--file]                      Path to the YAML file to pull into                                                                                                             [default = ./transcend.yml]
      [--transcendUrl]              URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                   [default = https://api.transcend.io]
      [--dataSiloIds]...            The UUIDs of the data silos that should be pulled into the YAML file                                                                           [separator = ,]
@@ -2182,40 +2431,41 @@ FLAGS
 
 The API key permissions for this command vary based on the `resources` argument:
 
-| Resource              | Description                                                                                                                          | Scopes                                               | Link                                                                                                                                                                                                                          |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| apiKeys               | API Key definitions assigned to Data Silos. API keys cannot be created through the CLI, but you can map API key usage to Data Silos. | View API Keys                                        | [Developer Tools -> API keys](https://app.transcend.io/infrastructure/api-keys)                                                                                                                                               |
-| customFields          | Custom field definitions that define extra metadata for each table in the Admin Dashboard.                                           | View Global Attributes                               | [Custom Fields](https://app.transcend.io/infrastructure/attributes)                                                                                                                                                           |
-| templates             | Email templates. Only template titles can be created and mapped to other resources.                                                  | View Email Templates                                 | [DSR Automation -> Email Templates](https://app.transcend.io/privacy-requests/email-templates)                                                                                                                                |
-| dataSilos             | The Data Silo/Integration definitions.                                                                                               | View Data Map, View Data Subject Request Settings    | [Data Inventory -> Data Silos](https://app.transcend.io/data-map/data-inventory/) and [Infrastucture -> Integrations](https://app.transcend.io/infrastructure/integrationsdata-silos)                                         |
-| enrichers             | The Privacy Request enricher configurations.                                                                                         | View Identity Verification Settings                  | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                        |
-| dataFlows             | Consent Manager Data Flow definitions.                                                                                               | View Data Flows                                      | [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)                                                                                                                              |
-| businessEntities      | The business entities in the data inventory.                                                                                         | View Data Inventory                                  | [Data Inventory -> Business Entities](https://app.transcend.io/data-map/data-inventory/business-entities)                                                                                                                     |
-| processingActivities  | The processing activities in the data inventory.                                                                                     | View Data Inventory                                  | [Data Inventory -> Processing Activities](https://app.transcend.io/data-map/data-inventory/processing-activities)                                                                                                             |
-| actions               | The Privacy Request action settings.                                                                                                 | View Data Subject Request Settings                   | [DSR Automation -> Request Settings](https://app.transcend.io/privacy-requests/settings)                                                                                                                                      |
-| dataSubjects          | The Privacy Request data subject settings.                                                                                           | View Data Subject Request Settings                   | [DSR Automation -> Request Settings](https://app.transcend.io/privacy-requests/settings)                                                                                                                                      |
-| identifiers           | The Privacy Request identifier configurations.                                                                                       | View Identity Verification Settings                  | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                        |
-| cookies               | Consent Manager Cookie definitions.                                                                                                  | View Data Flows                                      | [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                                                    |
-| consentManager        | Consent Manager general settings, including domain list.                                                                             | View Consent Manager                                 | [Consent Management -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                                       |
-| partitions            | The partitions in the account (often representative of separate data controllers).                                                   | View Consent Manager                                 | [Consent Management -> Developer Settings -> Advanced Settings](https://app.transcend.io/consent-manager/developer-settings/advanced-settings)                                                                                |
-| prompts               | The Transcend AI prompts                                                                                                             | View Prompts                                         | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                                           |
-| promptPartials        | The Transcend AI prompt partials                                                                                                     | View Prompts                                         | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partialss)                                                                                                                                                      |
-| promptGroups          | The Transcend AI prompt groups                                                                                                       | View Prompts                                         | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                                           |
-| agents                | The agents in the prompt manager.                                                                                                    | View Prompts                                         | [Prompt Manager -> Agents](https://app.transcend.io/prompts/agents)                                                                                                                                                           |
-| agentFunctions        | The agent functions in the prompt manager.                                                                                           | View Prompts                                         | [Prompt Manager -> Agent Functions](https://app.transcend.io/prompts/agent-functions)                                                                                                                                         |
-| agentFiles            | The agent files in the prompt manager.                                                                                               | View Prompts                                         | [Prompt Manager -> Agent Files](https://app.transcend.io/prompts/agent-files)                                                                                                                                                 |
-| vendors               | The vendors in the data inventory.                                                                                                   | View Data Inventory                                  | [Data Inventory -> Vendors](https://app.transcend.io/data-map/data-inventory/vendors)                                                                                                                                         |
-| dataCategories        | The data categories in the data inventory.                                                                                           | View Data Inventory                                  | [Data Inventory -> Data Categories](https://app.transcend.io/data-map/data-inventory/data-categories)                                                                                                                         |
-| processingPurposes    | The processing purposes in the data inventory.                                                                                       | View Data Inventory                                  | [Data Inventory -> Processing Purposes](https://app.transcend.io/data-map/data-inventory/purposes)                                                                                                                            |
-| actionItems           | Onboarding related action items                                                                                                      | View All Action Items                                | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                     |
-| actionItemCollections | Onboarding related action item group names                                                                                           | View All Action Items                                | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                     |
-| teams                 | Team definitions of users and scope groupings                                                                                        | View Scopes                                          | [Administration -> Teams](https://app.transcend.io/admin/teams)                                                                                                                                                               |
-| privacyCenters        | The privacy center configurations.                                                                                                   | View Privacy Center Layout                           | [Privacy Center](https://app.transcend.io/privacy-center/general-settings)                                                                                                                                                    |
-| policies              | The privacy center policies.                                                                                                         | View Policies                                        | [Privacy Center -> Policies](https://app.transcend.io/privacy-center/policies)                                                                                                                                                |
-| messages              | Message definitions used across consent, privacy center, email templates and more.                                                   | View Internationalization Messages                   | [Privacy Center -> Messages](https://app.transcend.io/privacy-center/messages-internationalization), [Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages) |
-| assessments           | Assessment responses.                                                                                                                | View Assessments                                     | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                     |
-| assessmentTemplates   | Assessment template configurations.                                                                                                  | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                |
-| purposes              | Consent purposes and related preference management topics.                                                                           | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                              |
+| Resource                | Key in `transcend.yml`    | Description                                                                                                                                                      | Scopes                                               | Link                                                                                                                                                                                                                                                   |
+| ----------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `apiKeys`               | `api-keys`                | API Key definitions assigned to Data Systems (formerly "Data Silos"). API keys cannot be created through the CLI, but you can map API key usage to Data Systems. | View API Keys                                        | [Developer Tools -> API keys](https://app.transcend.io/infrastructure/api-keys)                                                                                                                                                                        |
+| `customFields`          | `attributes`              | Custom Field definitions that define extra metadata for each table in the Admin Dashboard.                                                                       | View Global Attributes                               | [Custom Fields](https://app.transcend.io/infrastructure/attributes)                                                                                                                                                                                    |
+| `templates`             | `templates`               | Email templates. Only template titles can be created and mapped to other resources.                                                                              | View Email Templates                                 | [DSR Automation -> Email Settings -> Templates](https://app.transcend.io/privacy-requests/email-settings/templates)                                                                                                                                    |
+| `dataSilos`             | `data-silos`              | The Data System (formerly "Data Silo") definitions.                                                                                                              | View Data Map, View Data Subject Request Settings    | [Data Inventory -> Data Systems](https://app.transcend.io/data-map/data-inventory/data-silos)<br>[Infrastructure -> Integrations](https://app.transcend.io/infrastructure/integrations)                                                                |
+| `enrichers`             | `enrichers`               | The Privacy Request enricher configurations.                                                                                                                     | View Identity Verification Settings                  | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                                                 |
+| `dataFlows`             | `data-flows`              | Consent Manager Data Flow definitions.                                                                                                                           | View Data Flows                                      | [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)                                                                                                                                                       |
+| `businessEntities`      | `business-entities`       | The business entities in the Data Inventory.                                                                                                                     | View Data Inventory                                  | [Data Inventory -> Business Entities](https://app.transcend.io/data-map/data-inventory/business-entities)                                                                                                                                              |
+| `processingActivities`  | `processing-activities`   | The processing activities in the Data Inventory.                                                                                                                 | View Data Inventory                                  | [Data Inventory -> Processing Activities](https://app.transcend.io/data-map/data-inventory/processing-activities)                                                                                                                                      |
+| `actions`               | `actions`                 | The privacy request action settings.                                                                                                                             | View Data Subject Request Settings                   | [DSR Automation -> Request Settings -> Data Actions](https://app.transcend.io/privacy-requests/settings/data-actions)                                                                                                                                  |
+| `dataSubjects`          | `data-subjects`           | The privacy request data subject settings.                                                                                                                       | View Data Subject Request Settings                   | [DSR Automation -> Request Settings -> Data Subjects](https://app.transcend.io/privacy-requests/settings/data-subjects)                                                                                                                                |
+| `identifiers`           | `identifiers`             | The privacy request identifier configurations.                                                                                                                   | View Identity Verification Settings                  | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                                                 |
+| `cookies`               | `cookies`                 | Consent Manager Cookie definitions.                                                                                                                              | View Data Flows                                      | [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                                                                             |
+| `consentManager`        | `consent-manager`         | Consent Manager general settings, including domain list.                                                                                                         | View Consent Manager                                 | [Consent Management -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                                                                |
+| `partitions`            | `partitions`              | The partitions in the account (often representative of separate data controllers).                                                                               | View Consent Manager                                 | [Consent Management -> Developer Settings -> Advanced Settings](https://app.transcend.io/consent-manager/developer-settings/advanced-settings)                                                                                                         |
+| `prompts`               | `prompts`                 | The Transcend AI prompts                                                                                                                                         | View Prompts                                         | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                                                                    |
+| `promptPartials`        | `prompt-partials`         | The Transcend AI prompt partials                                                                                                                                 | View Prompts                                         | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partials)                                                                                                                                                                                |
+| `promptGroups`          | `prompt-groups`           | The Transcend AI prompt groups                                                                                                                                   | View Prompts                                         | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                                                                    |
+| `agents`                | `agents`                  | The agents in Pathfinder.                                                                                                                                        | View Pathfinder                                      | [Pathfinder -> Agents](https://app.transcend.io/pathfinder/agents)                                                                                                                                                                                     |
+| `agentFunctions`        | `agent-functions`         | The agent functions in Pathfinder.                                                                                                                               | View Pathfinder                                      | [Pathfinder -> Agent Functions](https://app.transcend.io/pathfinder/agent-functions)                                                                                                                                                                   |
+| `agentFiles`            | `agent-files`             | The agent files in Pathfinder.                                                                                                                                   | View Pathfinder                                      | [Pathfinder -> Agent Files](https://app.transcend.io/pathfinder/agent-files)                                                                                                                                                                           |
+| `vendors`               | `vendors`                 | The vendors in the Data Inventory.                                                                                                                               | View Data Inventory                                  | [Data Inventory -> Vendors](https://app.transcend.io/data-map/data-inventory/vendors)                                                                                                                                                                  |
+| `dataCategories`        | `data-categories`         | The data categories in the Data Inventory.                                                                                                                       | View Data Inventory                                  | [Data Inventory -> Data Categories](https://app.transcend.io/data-map/data-inventory/data-categories)                                                                                                                                                  |
+| `processingPurposes`    | `processing-purposes`     | The processing purposes in the Data Inventory.                                                                                                                   | View Data Inventory                                  | [Data Inventory -> Processing Purposes](https://app.transcend.io/data-map/data-inventory/purposes)                                                                                                                                                     |
+| `actionItems`           | `action-items`            | Onboarding-related action items                                                                                                                                  | View All Action Items                                | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                                              |
+| `actionItemCollections` | `action-item-collections` | Onboarding-related action item group names                                                                                                                       | View All Action Items                                | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                                              |
+| `teams`                 | `teams`                   | Team definitions of users and scope groupings                                                                                                                    | View Scopes                                          | [Administration -> Teams](https://app.transcend.io/admin/teams)                                                                                                                                                                                        |
+| `privacyCenters`        | `privacy-center`          | The Privacy Center settings.                                                                                                                                     | View Privacy Center Layout                           | [Privacy Center](https://app.transcend.io/privacy-center/general-settings)                                                                                                                                                                             |
+| `policies`              | `policies`                | The Privacy Center policies.                                                                                                                                     | View Policies                                        | [Privacy Center -> Policies](https://app.transcend.io/privacy-center/policies)                                                                                                                                                                         |
+| `messages`              | `messages`                | Message definitions used across Consent Management, the Privacy Center, email templates and more.                                                                | View Internationalization Messages                   | [Privacy Center -> Messages & Internationalization](https://app.transcend.io/privacy-center/messages-internationalization)<br>[Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages) |
+| `assessments`           | `assessments`             | Assessment responses.                                                                                                                                            | View Assessments                                     | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                                              |
+| `assessmentTemplates`   | `assessment-templates`    | Assessment template configurations.                                                                                                                              | View Assessments                                     | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                                         |
+| `purposes`              | `purposes`                | Consent purposes and related preference management topics.                                                                                                       | View Consent Manager, View Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                                                       |
+| `systemDiscovery`       | `system-discovery`        | System discovery results                                                                                                                                         | View Data Map                                        | [System Discovery](https://app.transcend.io/data-map/data-inventory/silo-discovery)                                                                                                                                                                    |
 
 #### Examples
 
@@ -2336,6 +2586,12 @@ transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=purposes
 transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=dataSubjects
 ```
 
+**Pull privacy center and internationalized messages (see [this example](./examples/privacy-center-and-messages.yml))**
+
+```sh
+transcend inventory pull --auth="$TRANSCEND_API_KEY" --resources=privacyCenters,messages
+```
+
 **Pull assessments and assessment templates**
 
 ```sh
@@ -2385,7 +2641,43 @@ FLAGS
 
 #### Scopes
 
-The scopes for `transcend inventory push` are the same as the scopes for [`transcend inventory pull`](#transcend-inventory-pull).
+The API key permissions for this command vary based on the resources declared as top-level keys in your [`transcend.yml`](#transcendyml) file:
+
+| Resource                | Key in `transcend.yml`    | Description                                                                                                                                                      | Scopes                                                   | Link                                                                                                                                                                                                                                                   |
+| ----------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `apiKeys`               | `api-keys`                | API Key definitions assigned to Data Systems (formerly "Data Silos"). API keys cannot be created through the CLI, but you can map API key usage to Data Systems. | View API Keys                                            | [Developer Tools -> API keys](https://app.transcend.io/infrastructure/api-keys)                                                                                                                                                                        |
+| `customFields`          | `attributes`              | Custom Field definitions that define extra metadata for each table in the Admin Dashboard.                                                                       | Manage Global Attributes                                 | [Custom Fields](https://app.transcend.io/infrastructure/attributes)                                                                                                                                                                                    |
+| `templates`             | `templates`               | Email templates. Only template titles can be created and mapped to other resources.                                                                              | Manage Email Templates                                   | [DSR Automation -> Email Settings -> Templates](https://app.transcend.io/privacy-requests/email-settings/templates)                                                                                                                                    |
+| `dataSilos`             | `data-silos`              | The Data System (formerly "Data Silo") definitions.                                                                                                              | Manage Data Map, Connect Data Silos                      | [Data Inventory -> Data Systems](https://app.transcend.io/data-map/data-inventory/data-silos)<br>[Infrastructure -> Integrations](https://app.transcend.io/infrastructure/integrations)                                                                |
+| `enrichers`             | `enrichers`               | The Privacy Request enricher configurations.                                                                                                                     | Manage Request Identity Verification                     | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                                                 |
+| `dataFlows`             | `data-flows`              | Consent Manager Data Flow definitions.                                                                                                                           | Manage Data Flows                                        | [Consent Management -> Data Flows](https://app.transcend.io/consent-manager/data-flows/approved)                                                                                                                                                       |
+| `businessEntities`      | `business-entities`       | The business entities in the Data Inventory.                                                                                                                     | Manage Data Inventory                                    | [Data Inventory -> Business Entities](https://app.transcend.io/data-map/data-inventory/business-entities)                                                                                                                                              |
+| `processingActivities`  | `processing-activities`   | The processing activities in the Data Inventory.                                                                                                                 | Manage Data Map                                          | [Data Inventory -> Processing Activities](https://app.transcend.io/data-map/data-inventory/processing-activities)                                                                                                                                      |
+| `actions`               | `actions`                 | The privacy request action settings.                                                                                                                             | Manage Data Subject Request Settings                     | [DSR Automation -> Request Settings -> Data Actions](https://app.transcend.io/privacy-requests/settings/data-actions)                                                                                                                                  |
+| `dataSubjects`          | `data-subjects`           | The privacy request data subject settings.                                                                                                                       | Manage Data Subject Request Settings                     | [DSR Automation -> Request Settings -> Data Subjects](https://app.transcend.io/privacy-requests/settings/data-subjects)                                                                                                                                |
+| `identifiers`           | `identifiers`             | The privacy request identifier configurations.                                                                                                                   | Manage Request Identity Verification                     | [DSR Automation -> Identifiers](https://app.transcend.io/privacy-requests/identifiers)                                                                                                                                                                 |
+| `cookies`               | `cookies`                 | Consent Manager Cookie definitions.                                                                                                                              | Manage Data Flows                                        | [Consent Management -> Cookies](https://app.transcend.io/consent-manager/cookies/approved)                                                                                                                                                             |
+| `consentManager`        | `consent-manager`         | Consent Manager general settings, including domain list.                                                                                                         | Manage Consent Manager Developer Settings                | [Consent Management -> Developer Settings](https://app.transcend.io/consent-manager/developer-settings)                                                                                                                                                |
+| `partitions`            | `partitions`              | The partitions in the account (often representative of separate data controllers).                                                                               | Manage Consent Manager Developer Settings                | [Consent Management -> Developer Settings -> Advanced Settings](https://app.transcend.io/consent-manager/developer-settings/advanced-settings)                                                                                                         |
+| `prompts`               | `prompts`                 | The Transcend AI prompts                                                                                                                                         | Manage Prompts                                           | [Prompt Manager -> Browse](https://app.transcend.io/prompts/browse)                                                                                                                                                                                    |
+| `promptPartials`        | `prompt-partials`         | The Transcend AI prompt partials                                                                                                                                 | Manage Prompts                                           | [Prompt Manager -> Partials](https://app.transcend.io/prompts/partials)                                                                                                                                                                                |
+| `promptGroups`          | `prompt-groups`           | The Transcend AI prompt groups                                                                                                                                   | Manage Prompts                                           | [Prompt Manager -> Groups](https://app.transcend.io/prompts/groups)                                                                                                                                                                                    |
+| `agents`                | `agents`                  | The agents in Pathfinder.                                                                                                                                        | Manage Pathfinder                                        | [Pathfinder -> Agents](https://app.transcend.io/pathfinder/agents)                                                                                                                                                                                     |
+| `agentFunctions`        | `agent-functions`         | The agent functions in Pathfinder.                                                                                                                               | Manage Pathfinder                                        | [Pathfinder -> Agent Functions](https://app.transcend.io/pathfinder/agent-functions)                                                                                                                                                                   |
+| `agentFiles`            | `agent-files`             | The agent files in Pathfinder.                                                                                                                                   | Manage Pathfinder                                        | [Pathfinder -> Agent Files](https://app.transcend.io/pathfinder/agent-files)                                                                                                                                                                           |
+| `vendors`               | `vendors`                 | The vendors in the Data Inventory.                                                                                                                               | Manage Data Inventory                                    | [Data Inventory -> Vendors](https://app.transcend.io/data-map/data-inventory/vendors)                                                                                                                                                                  |
+| `dataCategories`        | `data-categories`         | The data categories in the Data Inventory.                                                                                                                       | Manage Data Inventory                                    | [Data Inventory -> Data Categories](https://app.transcend.io/data-map/data-inventory/data-categories)                                                                                                                                                  |
+| `processingPurposes`    | `processing-purposes`     | The processing purposes in the Data Inventory.                                                                                                                   | Manage Data Inventory                                    | [Data Inventory -> Processing Purposes](https://app.transcend.io/data-map/data-inventory/purposes)                                                                                                                                                     |
+| `actionItems`           | `action-items`            | Onboarding-related action items                                                                                                                                  | Manage All Action Items, View Global Attributes          | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                                              |
+| `actionItemCollections` | `action-item-collections` | Onboarding-related action item group names                                                                                                                       | Manage Action Item Collections                           | [Action Items](https://app.transcend.io/action-items/all)                                                                                                                                                                                              |
+| `teams`                 | `teams`                   | Team definitions of users and scope groupings                                                                                                                    | Manage Access Controls                                   | [Administration -> Teams](https://app.transcend.io/admin/teams)                                                                                                                                                                                        |
+| `privacyCenters`        | `privacy-center`          | The Privacy Center settings.                                                                                                                                     | Manage Privacy Center Layout                             | [Privacy Center](https://app.transcend.io/privacy-center/general-settings)                                                                                                                                                                             |
+| `policies`              | `policies`                | The Privacy Center policies.                                                                                                                                     | Manage Policies                                          | [Privacy Center -> Policies](https://app.transcend.io/privacy-center/policies)                                                                                                                                                                         |
+| `messages`              | `messages`                | Message definitions used across Consent Management, the Privacy Center, email templates and more.                                                                | Manage Internationalization Messages                     | [Privacy Center -> Messages & Internationalization](https://app.transcend.io/privacy-center/messages-internationalization)<br>[Consent Management -> Display Settings -> Messages](https://app.transcend.io/consent-manager/display-settings/messages) |
+| `assessments`           | `assessments`             | Assessment responses.                                                                                                                                            | Manage Assessments                                       | [Assessments -> Assessments](https://app.transcend.io/assessments/groups)                                                                                                                                                                              |
+| `assessmentTemplates`   | `assessment-templates`    | Assessment template configurations.                                                                                                                              | Manage Assessments                                       | [Assessment -> Templates](https://app.transcend.io/assessments/form-templates)                                                                                                                                                                         |
+| `purposes`              | `purposes`                | Consent purposes and related preference management topics.                                                                                                       | Manage Consent Manager, Manage Preference Store Settings | [Consent Management -> Regional Experiences -> Purposes](https://app.transcend.io/consent-manager/regional-experiences/purposes)                                                                                                                       |
+| `systemDiscovery`       | `system-discovery`        | System discovery results                                                                                                                                         | Manage Data Map                                          | [System Discovery](https://app.transcend.io/data-map/data-inventory/silo-discovery)                                                                                                                                                                    |
 
 #### Examples
 
@@ -2992,7 +3284,7 @@ transcend inventory consent-managers-to-business-entities \
 
 ```txt
 USAGE
-  transcend admin generate-api-keys (--email value) (--password value) (--apiKeyTitle value) (--file value) (--scopes View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories) [--deleteExistingApiKey] [--createNewApiKey] [--parentOrganizationId value] [--transcendUrl value]
+  transcend admin generate-api-keys (--email value) (--password value) (--apiKeyTitle value) (--file value) (--scopes View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Manage Assigned Bulk Respond|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories|Generate Preference Access Tokens) [--deleteExistingApiKey] [--createNewApiKey] [--parentOrganizationId value] [--transcendUrl value]
   transcend admin generate-api-keys --help
 
 This command allows for creating API keys across multiple Transcend instances. This is useful for customers that are managing many Transcend instances and need to regularly create, cycle or delete API keys across all of their instances.
@@ -3006,7 +3298,7 @@ FLAGS
       --password                                        The password for your account login
       --apiKeyTitle                                     The title of the API key being generated or destroyed
       --file                                            The file where API keys should be written to
-      --scopes                                          The list of scopes that should be given to the API key                                                        [View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories, separator = ,]
+      --scopes                                          The list of scopes that should be given to the API key                                                        [View Only|Full Admin|Rotate Hosted Sombra keys|Manage Global Attributes|Manage Access Controls|Manage Billing|Manage SSO|Manage API Keys|Manage Organization Information|Manage Email Domains|Manage Data Sub Categories|View Customer Data in Privacy Requests|View Customer Data in Data Mapping|View API Keys|View Audit Events|View SSO|View Scopes|View All Action Items|Manage All Action Items|View Employees|View Email Domains|View Global Attributes|View Legal Hold|Manage Legal Holds|Manage Request Security|Manage Request Compilation|Manage Assigned Privacy Requests|Manage Assigned Bulk Respond|Submit New Data Subject Request|Manage Data Subject Request Settings|Manage Email Templates|Manage Request Identity Verification|Publish Privacy Center|Manage Data Map|Manage Privacy Center Layout|Manage Policies|View Policies|Manage Internationalization Messages|View Internationalization Messages|Request Approval and Communication|View Data Subject Request Settings|View the Request Compilation|View Identity Verification Settings|View Incoming Requests|View Assigned Privacy Requests|View Privacy Center Layout|View Email Templates|Connect Data Silos|Manage Data Inventory|Manage Assigned Data Inventory|Manage Assigned Integrations|View Data Map|View Assigned Integrations|View Assigned Data Inventory|View Data Inventory|Manage Consent Manager|Manage Consent Manager Developer Settings|Manage Consent Manager Display Settings|Deploy Test Consent Manager|Deploy Consent Manager|Manage Assigned Consent Manager|Manage Data Flows|View Data Flows|View Assigned Consent Manager|View Consent Manager|View Assessments|Manage Assessments|View Assigned Assessments|Manage Assigned Assessments|View Pathfinder|Manage Pathfinder|View Contract Scanning|Manage Contract Scanning|View Prompts|Manage Prompts|View Prompt Runs|Manage Prompt Runs|View Code Scanning|Manage Code Scanning|Execute Prompt|View Auditor Runs|Manage Auditor Runs and Schedules|Execute Auditor|Approve Prompts|Manage Action Item Collections|View Managed Consent Database Admin API|Modify User Stored Preferences|Manage Preference Store Settings|View Preference Store Settings|LLM Log Transfer|Manage Workflows|View Data Sub Categories|Generate Preference Access Tokens, separator = ,]
      [--deleteExistingApiKey/--noDeleteExistingApiKey]  When true, if an API key exists with the specified apiKeyTitle, the existing API key is deleted               [default = true]
      [--createNewApiKey/--noCreateNewApiKey]            When true, new API keys will be created. Set to false if you simply want to delete all API keys with a title  [default = true]
      [--parentOrganizationId]                           Filter for only a specific organization by ID, returning all child accounts associated with that organization
@@ -3088,6 +3380,194 @@ query {
     }
   }
 }
+```
+
+If you wish to manually construct this api-keys.json file instead of using this command, it should look like the following:
+
+```json
+[
+  {
+    "organizationName": "Acme Corp",
+    "apiKey": "a9893544734df8eb8c3bc4925926c9b1f5eb54c8c9a5cc936a11622fbd9fb2da",
+    "organizationId": "6a3218db-5703-44eb-8d01-e3ea57ab8e49"
+  },
+  {
+    "organizationName": "Other Org",
+    "apiKey": "bd1d2b6cefeb9233f333271fc4ab14ed96ac71dcbab91fa28c894bb2648d834a",
+    "organizationId": "0dc4b936-61ba-43ea-80bf-86471f8e0052"
+  }
+]
+```
+
+### `transcend admin chunk-csv`
+
+```txt
+USAGE
+  transcend admin chunk-csv (--directory value) [--outputDir value] [--clearOutputDir] [--chunkSizeMB value] [--concurrency value] [--viewerMode]
+  transcend admin chunk-csv --help
+
+Streams every CSV in --directory and writes chunked files of approximately N MB each.
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row-length consistency against the header row; logs periodic progress and memory usage.
+
+FLAGS
+      --directory                           Directory containing CSV files to split (required)
+     [--outputDir]                          Directory to write chunk files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing chunks                           [default = true]
+     [--chunkSizeMB]                        Approximate chunk size in megabytes. Keep well under JS string size limits [default = 10]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)          [default = false]
+  -h  --help                                Print help information and exit
+```
+
+#### Examples
+
+**Chunk a file into smaller CSV files**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks
+```
+
+**Specify chunk size in MB**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --chunkSizeMB=250
+```
+
+**Specify concurrency (pool size)**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --concurrency=4
+```
+
+**Viewer mode - no ability to switch between files**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --viewerMode
+```
+
+**Clear output directory before writing chunks**
+
+```sh
+transcend admin chunk-csv --directory=./working/files --outputDir=./working/chunks --clearOutputDir
+```
+
+**Run with all options**
+
+```sh
+transcend admin chunk-csv \
+  --directory=./working/files \
+  --outputDir=./working/chunks \
+  --chunkSizeMB=100 \
+  --concurrency=2 \
+  --viewerMode=false \
+  --clearOutputDir
+```
+
+**Run with no output directory specified (defaults to input directory)**
+
+```sh
+transcend admin chunk-csv --directory=./working/files
+```
+
+### `transcend admin find-text-in-folder`
+
+```txt
+USAGE
+  transcend admin find-text-in-folder (--needle value) [--root value] [--exts value] [--noParquet] [--concurrency value] [--maxBytes value]
+  transcend admin find-text-in-folder --help
+
+Searches a folder of files for a given text string (case-insensitive).
+
+Useful for finding a needle in a haystack when you have many large files
+(e.g. multi-GB CSV exports, JSON dumps, log archives) and need to know
+which ones contain a specific value like an email address, ID, or keyword.
+
+Files are streamed so memory stays flat even for very large inputs.
+Concurrency is configurable and files are scanned in parallel.
+
+Supported file types:
+- Text-based files (csv, json, txt, ndjson, log, etc.) are scanned via streaming byte comparison.
+- Parquet files are scanned via DuckDB (must be on PATH unless --noParquet is set).
+
+Outputs one matching file path per line to stdout as hits are found.
+
+FLAGS
+      --needle        The text string to search for (case-insensitive)
+     [--root]         Root directory to search                                              [default = .]
+     [--exts]         Comma-separated file extensions to search (without leading dots)      [default = csv,json,txt,ndjson,log]
+     [--noParquet]    Skip parquet file scanning (requires duckdb on PATH)                  [default = false]
+     [--concurrency]  Max number of files to scan concurrently                              [default = 16]
+     [--maxBytes]     Stop scanning each file after this many bytes (useful for huge files)
+  -h  --help          Print help information and exit
+```
+
+### `transcend admin parquet-to-csv`
+
+```txt
+USAGE
+  transcend admin parquet-to-csv (--directory value) [--outputDir value] [--clearOutputDir] [--concurrency value] [--viewerMode]
+  transcend admin parquet-to-csv --help
+
+Streams every .parquet in --directory and writes CSV output files
+- Runs files in parallel across worker processes (configurable via --concurrency).
+- Validates row consistency; logs periodic progress and memory usage.
+
+This is a useful administrative tool for converting Parquet exports to CSV for the purposes
+of uploading DSRs or Consent Preferences. e.g. transcend consent upload-preferences ...
+
+FLAGS
+      --directory                           Directory containing Parquet files to convert (required)
+     [--outputDir]                          Directory to write CSV files (defaults to each input file's directory)
+     [--clearOutputDir/--noClearOutputDir]  Clear the output directory before writing CSVs                         [default = true]
+     [--concurrency]                        Max number of worker processes (defaults based on CPU and file count)
+     [--viewerMode]                         Run in non-interactive viewer mode (no attach UI, auto-artifacts)      [default = false]
+  -h  --help                                Print help information and exit
+```
+
+#### Examples
+
+https://github.com/user-attachments/assets/dc9262ee-0478-4eb7-8cc2-935efc062b18
+
+**Convert all Parquet files in a directory to CSV**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv
+```
+
+**Limit worker pool concurrency**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --concurrency=4
+```
+
+**Viewer mode - non-interactive dashboard**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --viewerMode
+```
+
+**Clear output directory before writing**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet --outputDir=./working/csv --clearOutputDir
+```
+
+**Run with all options**
+
+```sh
+transcend admin parquet-to-csv \
+  --directory=./working/parquet \
+  --outputDir=./working/csv \
+  --concurrency=2 \
+  --viewerMode=false \
+  --clearOutputDir
+```
+
+**Default output directory (writes next to each input file)**
+
+```sh
+transcend admin parquet-to-csv --directory=./working/parquet
 ```
 
 ### `transcend migration sync-ot`
@@ -3306,3 +3786,9 @@ export async function main(): Promise<void> {
 ## Proxy usage
 
 If you are trying to use the CLI inside a corporate firewall and need to send traffic through a proxy, you can do so via the `http_proxy` environment variable,with a command like `http_proxy=http://localhost:5051 transcend inventory pull --auth=$TRANSCEND_API_KEY`.
+
+## Using non-primary Sombra
+
+By default, if a CLI command has to call a Sombra endpoint, the primary Sombra gateway on the account will be used. If the primary Sombra is self hosted, you will need to provide the --sombraAuth variable.
+
+If you want to use a non-primary Sombra, you can specify the environment variable `SOMBRA_URL` e.g. `SOMBRA_URL="https://multi-tenant.sombra.us.transcend.io"` and that Sombra will be used instead.

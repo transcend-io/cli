@@ -11,6 +11,8 @@ export interface CancelCommandFlags {
   silentModeBefore?: Date;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   cancellationTitle: string;
   transcendUrl: string;
   concurrency: number;
@@ -26,6 +28,8 @@ export async function cancel(
     silentModeBefore,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     cancellationTitle,
     transcendUrl,
     concurrency,
@@ -44,5 +48,7 @@ export async function cancel(
     silentModeBefore: silentModeBefore ? new Date(silentModeBefore) : undefined,
     createdAtBefore: createdAtBefore ? new Date(createdAtBefore) : undefined,
     createdAtAfter: createdAtAfter ? new Date(createdAtAfter) : undefined,
+    updatedAtBefore: updatedAtBefore ? new Date(updatedAtBefore) : undefined,
+    updatedAtAfter: updatedAtAfter ? new Date(updatedAtAfter) : undefined,
   });
 }

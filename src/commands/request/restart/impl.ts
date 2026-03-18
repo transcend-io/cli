@@ -17,6 +17,8 @@ export interface RestartCommandFlags {
   silentModeBefore?: Date;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   sendEmailReceipt: boolean;
   copyIdentifiers: boolean;
   skipWaitingPeriod: boolean;
@@ -39,6 +41,8 @@ export async function restart(
     skipWaitingPeriod,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     concurrency,
     transcendUrl,
   }: RestartCommandFlags,
@@ -60,6 +64,8 @@ export async function restart(
     skipWaitingPeriod,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     concurrency,
     transcendUrl,
   });

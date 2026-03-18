@@ -6,3 +6,4 @@ export * from './gemfile';
 export * from './pubspec';
 export * from './composerJson';
 export * from './swift';
+export * from './kotlin';

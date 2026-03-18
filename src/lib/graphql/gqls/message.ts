@@ -5,6 +5,7 @@ export const MESSAGES = gql`
     translatedMessages {
       id
       defaultMessage
+      description
       targetReactIntlId
       translations {
         locale

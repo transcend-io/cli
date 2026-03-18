@@ -9,7 +9,7 @@ const POD_PACKAGE_REGEX = /pod ('|")(.*?)('|")(, ('|")~> (.+?)('|")|)/;
 
 export const cocoaPods: CodeScanningConfig = {
   supportedFiles: ['Podfile'],
-  ignoreDirs: ['Pods'],
+  ignoreDirs: ['Pods', 'Build'],
   scanFunction: (filePath) => {
     const fileContents = readFileSync(filePath, 'utf-8');
 
