@@ -65,7 +65,7 @@ import {
 import { buildEnabledRouteType } from './lib/helpers/buildEnabledRouteType';
 import { buildAIIntegrationType } from './lib/helpers/buildAIIntegrationType';
 import { OpenAIRouteName, PathfinderPolicyName } from './enums';
-import { LanguageKey } from '@transcend-io/internationalization';
+import { LOCALE_KEY } from '@transcend-io/internationalization';
 
 /**
  * Input to define email templates that can be used to communicate to end-users
@@ -180,7 +180,7 @@ export const EnricherInput = t.intersection([
      */
     'input-identifier': t.string,
     /**
-     * A regular expression that can be used to match on for cancelation
+     * A regular expression that can be used to match on for cancellation
      */
     testRegex: t.string,
     /**
@@ -1337,9 +1337,9 @@ export const PrivacyCenterInput = t.partial({
   /** Whether or not to show the marketing preferences page */
   showMarketingPreferences: t.boolean,
   /** What languages are supported for the privacy center */
-  locales: t.array(valuesOf(LanguageKey)),
+  locales: t.array(valuesOf(LOCALE_KEY)),
   /** The default locale for the privacy center */
-  defaultLocale: valuesOf(LanguageKey),
+  defaultLocale: valuesOf(LOCALE_KEY),
   /** Whether or not to prefer the browser default locale */
   preferBrowserDefaultLocale: t.boolean,
   /** The email addresses of the employees within your company that are the go-to individuals for managing this privacy center */
@@ -1382,7 +1382,7 @@ export const PolicyInput = t.intersection([
     /** Content of the policy */
     content: t.string,
     /** The languages for which the policy is disabled for */
-    disabledLocales: t.array(valuesOf(LanguageKey)),
+    disabledLocales: t.array(valuesOf(LOCALE_KEY)),
   }),
 ]);
 
@@ -1400,10 +1400,12 @@ export const IntlMessageInput = t.intersection([
   t.partial({
     /** The hard-coded ID that the message refers to in the Privacy Center or Consent Manager UI, null if message is dynamic */
     targetReactIntlId: t.string,
+    /** The description of the message */
+    description: t.string,
     /** The default message to use */
     defaultMessage: t.string,
     /** The translations */
-    translations: t.partial(applyEnum(LanguageKey, () => t.string)),
+    translations: t.partial(applyEnum(LOCALE_KEY, () => t.string)),
   }),
 ]);
 
@@ -1931,6 +1933,41 @@ export const ConsentPurpose = t.intersection([
 /** Type override */
 export type ConsentPurpose = t.TypeOf<typeof ConsentPurpose>;
 
+/**
+ * Input to define a silo discovery results
+ *
+ * @see https://docs.transcend.io/docs/silo-discovery
+ */
+export const SiloDiscoveryResultInput = t.intersection([
+  t.type({
+    /** The unique identifier for the resource */
+    resourceId: t.string,
+    /** The plugin that found this results */
+    plugin: t.string, // Assuming Plugin is a string, replace with appropriate type if necessary
+    /** The suggested catalog for this results */
+    suggestedCatalog: t.string,
+    /** The likelihood that data is sensitive for this results */
+    containsSensitiveData: t.string,
+    /** The status of silo discovery triage */
+    status: t.string,
+  }),
+  t.partial({
+    /** The ISO country code for the AWS Region if applicable */
+    country: valuesOf(IsoCountryCode),
+    /** The ISO country subdivision code for the AWS Region if applicable */
+    countrySubDivision: valuesOf(IsoCountrySubdivisionCode),
+    /** The plaintext that we will pass into results */
+    plaintextContext: t.string,
+    /** The custom title of the data silo results */
+    title: t.union([t.string, t.null]),
+  }),
+]);
+
+/** Type override */
+export type SiloDiscoveryResultInput = t.TypeOf<
+  typeof SiloDiscoveryResultInput
+>;
+
 export const TranscendInput = t.partial({
   /**
    * Action items
@@ -2056,6 +2093,10 @@ export const TranscendInput = t.partial({
    * Consent and preference management purposes
    */
   purposes: t.array(ConsentPurpose),
+  /**
+   * The full list of silo discovery results
+   */
+  'system-discovery': t.array(SiloDiscoveryResultInput),
 });
 
 /** Type override */

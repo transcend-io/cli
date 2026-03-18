@@ -170,7 +170,8 @@ function estimateTotalJobs(
 }
 
 /**
- * 1-hour *job* throughput = r60s (files/sec) × avgJobsPerFile × 3600.
+ * 1-hour *job* throughput. Prefers the direct job-level rate from the runner
+ * when available, falling back to r60s × avgJobsPerFile.
  *
  * @param ctx - Dashboard context with live totals and throughput.
  * @returns Estimated jobs per hour based on 1-hour throughput.
@@ -178,6 +179,9 @@ function estimateTotalJobs(
 function jobsPerHour1h(
   ctx: CommonCtx<AnyTotals, UploadPreferencesSlotProgress>,
 ): number {
+  const jobsPerSec = ctx.throughput.jobsR60s || 0;
+  if (jobsPerSec > 0) return jobsPerSec * 3600;
+
   const avg = avgJobsPerFile(ctx);
   const filesPerSec1h = ctx.throughput.r60s || 0;
   if (!avg || filesPerSec1h <= 0) return 0;

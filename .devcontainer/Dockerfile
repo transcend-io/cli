@@ -1,5 +1,5 @@
 # [Choice] Node.js version (use -bullseye variants on local arm64/Apple Silicon): 18, 16, 14, 18-bullseye, 16-bullseye, 14-bullseye, 18-buster, 16-buster, 14-buster
-ARG VARIANT=18-bullseye
+ARG VARIANT=22-bullseye
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
 
 USER root
@@ -19,7 +19,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
       tldr \
       tree \
       zsh-autosuggestions \
-    && mkdir -p /root/.local/share && tldr -u
+      python3-pip \
+    && mkdir -p /root/.local/share && tldr -u \
+    && pip install pre-commit
 
 # Ensure the root folder referenced here is accessible to the user that will run the container
 RUN sudo chown root -R /root

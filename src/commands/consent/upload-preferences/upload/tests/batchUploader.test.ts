@@ -87,7 +87,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 3, delayMs: 10, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -136,7 +136,7 @@ describe('uploadChunkWithSplit', () => {
         delayMs: 1,
         shouldRetry: () => true, // retryable by default
       },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn((s?: number) => s === 503),
     };
 
@@ -177,7 +177,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 2, delayMs: 1, shouldRetry: () => true },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn((s?: number) => s === 429),
     };
 
@@ -226,7 +226,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 1, delayMs: 1, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -266,7 +266,7 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 1, delayMs: 1, shouldRetry: () => false },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false),
     };
 
@@ -301,8 +301,47 @@ describe('uploadChunkWithSplit', () => {
     const deps: BatchUploaderDeps = {
       putBatch,
       retryPolicy: { maxAttempts: 2, delayMs: 1, shouldRetry: () => true },
-      options: { skipWorkflowTriggers: false, forceTriggerWorkflows: false },
+      options: { skipWorkflowTriggers: false },
       isRetryableStatus: vi.fn(() => false), // not retryable by status, but soft-rate-limit triggers retry anyway
+    };
+
+    const onSuccess = vi.fn().mockResolvedValue(undefined);
+
+    await uploadChunkWithSplit(entries, deps, {
+      onSuccess,
+      onFailureSingle: vi.fn(),
+      onFailureBatch: vi.fn(),
+    });
+
+    expect(retrySamePromise).toHaveBeenCalledTimes(1);
+    expect(putBatch).toHaveBeenCalledTimes(2);
+    expect(onSuccess).toHaveBeenCalledWith(entries);
+    expect(splitInHalf).not.toHaveBeenCalled();
+  });
+
+  it('treats 400 "Throughput exceeds" as soft-rate-limit → retries in-place', async () => {
+    const entries = [mkEntry('t1'), mkEntry('t2')];
+
+    const throughputErr = {
+      status: 400,
+      message: 'Throughput exceeds the current capacity',
+    };
+
+    const putBatch = vi
+      .fn()
+      .mockRejectedValueOnce(throughputErr)
+      .mockResolvedValueOnce(undefined);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (getErrorStatus as any).mockImplementation((e: any) => e.status);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (extractErrorMessage as any).mockImplementation((e: any) => e.message);
+
+    const deps: BatchUploaderDeps = {
+      putBatch,
+      retryPolicy: { maxAttempts: 2, delayMs: 1, shouldRetry: () => true },
+      options: { skipWorkflowTriggers: false },
+      isRetryableStatus: vi.fn(() => false),
     };
 
     const onSuccess = vi.fn().mockResolvedValue(undefined);

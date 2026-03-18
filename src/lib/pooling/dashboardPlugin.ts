@@ -85,10 +85,14 @@ export type CommonCtx<TTotals, TSlotState extends ObjByString> = {
   throughput: {
     /** Cumulative count of successful completions so far. */
     successSoFar: number;
-    /** Recent throughput rate over the last 10 seconds. */
+    /** Recent file-level throughput rate over the last 10 seconds. */
     r10s: number;
-    /** Recent throughput rate over the last 60 seconds. */
+    /** Recent file-level throughput rate over the last 60 seconds. */
     r60s: number;
+    /** Recent job/record-level throughput rate over the last 10 seconds. */
+    jobsR10s: number;
+    /** Recent job/record-level throughput rate over the last 60 seconds. */
+    jobsR60s: number;
   };
 
   /** True when the pool has fully drained and all workers have exited. */
@@ -142,17 +146,18 @@ export const hotkeysHint = (poolSize: number, final: boolean): string => {
  *
  * @param ctx - Shared context containing pool state, worker state, totals, throughput, etc.
  * @param plugin - The plugin that defines how to render the header, workers, and optional extras.
+ * @param viewerMode - If true, renders in viewer mode (no ability to switch between files).
  */
 export function dashboardPlugin<TTotals, TSlotState extends ObjByString>(
   ctx: CommonCtx<TTotals, TSlotState>,
   plugin: DashboardPlugin<TTotals, TSlotState>,
+  viewerMode = false,
 ): void {
   const frame = [
     ...plugin.renderHeader(ctx),
     '',
     ...plugin.renderWorkers(ctx),
-    '',
-    hotkeysHint(ctx.poolSize, ctx.final),
+    ...(viewerMode ? [] : ['', hotkeysHint(ctx.poolSize, ctx.final)]),
     ...(plugin.renderExtras ? [''].concat(plugin.renderExtras(ctx)) : []),
   ].join('\n');
 
