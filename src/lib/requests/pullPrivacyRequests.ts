@@ -1,22 +1,48 @@
 import { RequestAction, RequestStatus } from '@transcend-io/privacy-types';
 import { map } from '../bluebird';
 import colors from 'colors';
-import { groupBy } from 'lodash-es';
 
 import { DEFAULT_TRANSCEND_API } from '../../constants';
 import {
-  PrivacyRequest,
   RequestIdentifier,
   buildTranscendGraphQLClient,
   createSombraGotInstance,
   fetchAllRequestIdentifiers,
   fetchAllRequests,
+  validateSombraVersion,
 } from '../graphql';
 import { logger } from '../../logger';
+import {
+  formatRequestForCsv,
+  CsvRow,
+  ExportedPrivacyRequest,
+} from './formatRequestForCsv';
 
-export interface ExportedPrivacyRequest extends PrivacyRequest {
-  /** Request identifiers */
-  requestIdentifiers: RequestIdentifier[];
+/**
+ * Split a date range into N evenly-spaced chunks.
+ *
+ * @param after - Start of the date range
+ * @param before - End of the date range
+ * @param chunks - Number of chunks to split into
+ * @returns Array of date range bounds
+ */
+function splitDateRange(
+  after: Date,
+  before: Date,
+  chunks: number,
+): {
+  /** Chunk start */ createdAtAfter: Date;
+  /** Chunk end */ createdAtBefore: Date;
+}[] {
+  const /** Range start ms */ start = after.getTime();
+  const /** Range end ms */ end = before.getTime();
+  const /** Ms per chunk */ chunkSize = (end - start) / chunks;
+  return Array.from({ length: chunks }, (_, i) => ({
+    createdAtAfter: new Date(start + chunkSize * i),
+    createdAtBefore: new Date(
+      i === chunks - 1 ? end : start + chunkSize * (i + 1),
+    ),
+  }));
 }
 
 /**
@@ -32,10 +58,13 @@ export async function pullPrivacyRequests({
   statuses = [],
   identifierSearch,
   pageLimit = 100,
+  concurrency = 1,
   transcendUrl = DEFAULT_TRANSCEND_API,
   createdAtBefore,
   skipRequestIdentifiers = false,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   isTest,
 }: {
   /** Transcend API key authentication */
@@ -52,10 +81,16 @@ export async function pullPrivacyRequests({
   actions?: RequestAction[];
   /** Page limit when fetching requests */
   pageLimit?: number;
+  /** Number of parallel date-range chunks */
+  concurrency?: number;
   /** Filter for requests created before this date */
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** Return test requests */
   isTest?: boolean;
   /** Skip fetching request identifier */
@@ -64,11 +99,8 @@ export async function pullPrivacyRequests({
   /** All request information with attached identifiers */
   requestsWithRequestIdentifiers: ExportedPrivacyRequest[];
   /** Requests that are formatted for CSV */
-  requestsFormattedForCsv: {
-    [k in string]: string | null | number | boolean;
-  }[];
+  requestsFormattedForCsv: CsvRow[];
 }> {
-  // Find all requests made before createdAt that are in a removing data state
   const client = buildTranscendGraphQLClient(transcendUrl, auth);
   const sombra = await createSombraGotInstance(transcendUrl, auth, sombraAuth);
 
@@ -82,8 +114,6 @@ export async function pullPrivacyRequests({
       dateRange ? ', and' : ''
     } after ${createdAtAfter.toISOString()}`;
   }
-
-  // Log out
   logger.info(
     colors.magenta(
       `${
@@ -94,21 +124,48 @@ export async function pullPrivacyRequests({
     ),
   );
 
-  // fetch the requests
-  const requests = await fetchAllRequests(client, {
-    actions,
-    text: identifierSearch,
-    statuses,
-    createdAtBefore,
-    createdAtAfter,
-    isTest,
-  });
+  // Split into parallel date-range chunks when possible
+  const useChunks = concurrency > 1 && createdAtAfter && createdAtBefore;
+  const chunks = useChunks
+    ? splitDateRange(createdAtAfter, createdAtBefore, concurrency)
+    : [{ createdAtAfter, createdAtBefore }];
+
+  if (useChunks) {
+    logger.info(
+      colors.magenta(
+        `Splitting date range into ${concurrency} parallel chunks`,
+      ),
+    );
+  }
+
+  // Fetch requests across all chunks in parallel
+  const chunkResults = await map(
+    chunks,
+    (chunk) =>
+      fetchAllRequests(client, {
+        actions,
+        text: identifierSearch,
+        statuses,
+        createdAtBefore: chunk.createdAtBefore,
+        createdAtAfter: chunk.createdAtAfter,
+        updatedAtBefore,
+        updatedAtAfter,
+        isTest,
+      }),
+    { concurrency: useChunks ? concurrency : 1 },
+  );
+  const requests = chunkResults.flat();
+
+  // Validate Sombra version once before bulk-fetching identifiers
+  if (!skipRequestIdentifiers) {
+    await validateSombraVersion(client);
+  }
 
   // Fetch the request identifiers for those requests
   const requestsWithRequestIdentifiers = skipRequestIdentifiers
     ? requests.map((request) => ({
         ...request,
-        requestIdentifiers: [],
+        requestIdentifiers: [] as RequestIdentifier[],
       }))
     : await map(
         requests,
@@ -118,6 +175,7 @@ export async function pullPrivacyRequests({
             sombra,
             {
               requestId: request.id,
+              skipSombraCheck: true,
             },
           );
           return {
@@ -134,72 +192,7 @@ export async function pullPrivacyRequests({
     colors.magenta(`Pulled ${requestsWithRequestIdentifiers.length} requests`),
   );
 
-  // Write out to CSV
-  const data = requestsWithRequestIdentifiers.map(
-    ({
-      attributeValues,
-      requestIdentifiers,
-      id,
-      email,
-      type,
-      status,
-      subjectType,
-      details,
-      createdAt,
-      country,
-      locale,
-      origin,
-      countrySubDivision,
-      isSilent,
-      isTest,
-      coreIdentifier,
-      purpose,
-      ...request
-    }) => ({
-      'Request ID': id,
-      'Created At': createdAt,
-      Email: email,
-      'Core Identifier': coreIdentifier,
-      'Request Type': type,
-      'Data Subject Type': subjectType,
-      Status: status,
-      Country: country,
-      'Country Sub Division': countrySubDivision,
-      Details: details,
-      Origin: origin,
-      'Silent Mode': isSilent,
-      'Is Test Request': isTest,
-      Language: locale,
-      'Purpose Trigger Name': purpose?.title || purpose?.name || '',
-      'Purpose Trigger Value': purpose?.consent?.toString() || '',
-      ...(purpose?.enrichedPreferences || []).reduce((acc, p) => {
-        const title = p.preferenceTopic?.title.defaultMessage || p.name;
-        return title
-          ? {
-              ...acc,
-              [title]: p.selectValues
-                ? p.selectValues.map((x) => x.name).join(';')
-                : p.selectValue?.name || p.booleanValue,
-            }
-          : acc;
-      }, {}),
-      ...request,
-      ...Object.entries(groupBy(attributeValues, 'attributeKey.name')).reduce(
-        (acc, [name, values]) =>
-          Object.assign(acc, {
-            [name]: values.map(({ name }) => name).join(','),
-          }),
-        {},
-      ),
-      ...Object.entries(groupBy(requestIdentifiers, 'name')).reduce(
-        (acc, [name, values]) =>
-          Object.assign(acc, {
-            [name]: values.map(({ value }) => value).join(','),
-          }),
-        {},
-      ),
-    }),
-  );
+  const data = requestsWithRequestIdentifiers.map(formatRequestForCsv);
 
   return { requestsWithRequestIdentifiers, requestsFormattedForCsv: data };
 }

@@ -75,8 +75,8 @@ async function deletePreferenceRecordsRepository(
           .json(),
       {
         maxAttempts: 3,
-        onRetry: (attempt, err, msg) => {
-          logger.debug(
+        onRetry: (attempt, _err, msg) => {
+          logger.warn(
             colors.yellow(
               `Attempt ${attempt} to delete preference records failed: ${msg}`,
             ),

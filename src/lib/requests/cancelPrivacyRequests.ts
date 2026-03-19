@@ -28,6 +28,8 @@ export async function cancelPrivacyRequests({
   silentModeBefore,
   createdAtBefore,
   createdAtAfter,
+  updatedAtBefore,
+  updatedAtAfter,
   statuses = [
     RequestStatus.Compiling,
     RequestStatus.RequestMade,
@@ -57,6 +59,10 @@ export async function cancelPrivacyRequests({
   createdAtBefore?: Date;
   /** Filter for requests created after this date */
   createdAtAfter?: Date;
+  /** Filter for requests updated before this date */
+  updatedAtBefore?: Date;
+  /** Filter for requests updated after this date */
+  updatedAtAfter?: Date;
   /** API URL for Transcend backend */
   transcendUrl?: string;
   /** The email template to use when canceling the requests */
@@ -96,6 +102,8 @@ export async function cancelPrivacyRequests({
     actions: requestActions,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     statuses,
     requestIds,
   });

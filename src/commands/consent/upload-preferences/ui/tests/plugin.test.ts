@@ -34,7 +34,13 @@ type SlotState<TProg> = {
   progress?: TProg;
 };
 
-type Throughput = { successSoFar: number; r10s: number; r60s: number };
+type Throughput = {
+  successSoFar: number;
+  r10s: number;
+  r60s: number;
+  jobsR10s: number;
+  jobsR60s: number;
+};
 
 type Ctx<TTotals> = {
   title: string;
@@ -67,7 +73,7 @@ function baseCtx<TTotals>(
     filesCompleted: 0,
     filesFailed: 0,
     workerState: new Map(),
-    throughput: { successSoFar: 0, r10s: 0, r60s: 0 },
+    throughput: { successSoFar: 0, r10s: 0, r60s: 0, jobsR10s: 0, jobsR60s: 0 },
     final: false,
     ...over,
   };
@@ -123,7 +129,13 @@ describe('uploadPreferencesPlugin', () => {
       workerState: workers,
       filesCompleted: 5,
       filesFailed: 0,
-      throughput: { successSoFar: 5, r10s: 0, r60s: 0.5 },
+      throughput: {
+        successSoFar: 5,
+        r10s: 0,
+        r60s: 0.5,
+        jobsR10s: 0,
+        jobsR60s: 0,
+      },
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

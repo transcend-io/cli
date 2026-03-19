@@ -51,6 +51,7 @@ A command line interface that allows you to programatically interact with the Tr
   - [`transcend inventory consent-managers-to-business-entities`](#transcend-inventory-consent-managers-to-business-entities)
   - [`transcend admin generate-api-keys`](#transcend-admin-generate-api-keys)
   - [`transcend admin chunk-csv`](#transcend-admin-chunk-csv)
+  - [`transcend admin find-text-in-folder`](#transcend-admin-find-text-in-folder)
   - [`transcend admin parquet-to-csv`](#transcend-admin-parquet-to-csv)
   - [`transcend migration sync-ot`](#transcend-migration-sync-ot)
 - [Prompt Manager](#prompt-manager)
@@ -189,7 +190,7 @@ data-silos:
 
 ```txt
 USAGE
-  transcend request approve (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--origins PRIVACY_CENTER|ADMIN_DASHBOARD|API|SHOPIFY] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--transcendUrl value] [--concurrency value]
+  transcend request approve (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--origins PRIVACY_CENTER|ADMIN_DASHBOARD|API|SHOPIFY] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--transcendUrl value] [--concurrency value]
   transcend request approve --help
 
 Bulk approve a set of privacy requests from the DSR Automation -> Incoming Requests tab.
@@ -201,6 +202,8 @@ FLAGS
      [--silentModeBefore]  Any requests made before this date should be marked as silent mode
      [--createdAtBefore]   Approve requests that were submitted before this time
      [--createdAtAfter]    Approve requests that were submitted after this time
+     [--updatedAtBefore]   Approve requests that were last updated before this time
+     [--updatedAtAfter]    Approve requests that were last updated after this time
      [--transcendUrl]      URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                         [default = https://api.transcend.io]
      [--concurrency]       The concurrency to use when uploading requests in parallel                                                                           [default = 50]
   -h  --help               Print help information and exit
@@ -389,7 +392,7 @@ transcend request upload \
 
 ```txt
 USAGE
-  transcend request download-files (--auth value) [--sombraAuth value] [--concurrency value] [--requestIds value]... [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--folderPath value] [--createdAtBefore value] [--createdAtAfter value] [--approveAfterDownload] [--transcendUrl value]
+  transcend request download-files (--auth value) [--sombraAuth value] [--concurrency value] [--requestIds value]... [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--folderPath value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--approveAfterDownload] [--transcendUrl value]
   transcend request download-files --help
 
 Download the files associated with a Data Subject Access Request (DSAR) from DSR Automation -> Incoming Requests tab.
@@ -403,6 +406,8 @@ FLAGS
      [--folderPath]            The folder to download files to                                                                                                        [default = ./dsr-files]
      [--createdAtBefore]       Download requests that were submitted before this time
      [--createdAtAfter]        Download requests that were submitted after this time
+     [--updatedAtBefore]       Download requests that were last updated before this time
+     [--updatedAtAfter]        Download requests that were last updated after this time
      [--approveAfterDownload]  If the request is in status=APPROVING, approve the request after its downloaded                                                        [default = false]
      [--transcendUrl]          URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                           [default = https://api.transcend.io]
   -h  --help                   Print help information and exit
@@ -471,7 +476,7 @@ transcend request download-files \
 
 ```txt
 USAGE
-  transcend request cancel (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--cancellationTitle value] [--transcendUrl value] [--concurrency value]
+  transcend request cancel (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--cancellationTitle value] [--transcendUrl value] [--concurrency value]
   transcend request cancel --help
 
 Bulk cancel a set of privacy requests from the DSR Automation -> Incoming Requests tab.
@@ -484,6 +489,8 @@ FLAGS
      [--silentModeBefore]   Any requests made before this date should be marked as silent mode for canceling to skip email sending
      [--createdAtBefore]    Cancel requests that were submitted before this time
      [--createdAtAfter]     Cancel requests that were submitted after this time
+     [--updatedAtBefore]    Cancel requests that were last updated before this time
+     [--updatedAtAfter]     Cancel requests that were last updated after this time
      [--cancellationTitle]  The title of the email template that should be sent to the requests upon cancelation                   [default = Request Canceled]
      [--transcendUrl]       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
      [--concurrency]        The concurrency to use when uploading requests in parallel                                             [default = 50]
@@ -555,7 +562,7 @@ transcend request cancel \
 
 ```txt
 USAGE
-  transcend request restart (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) (--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED) [--transcendUrl value] [--requestReceiptFolder value] [--sombraAuth value] [--concurrency value] [--requestIds value]... [--emailIsVerified] [--createdAt value] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--sendEmailReceipt] [--copyIdentifiers] [--skipWaitingPeriod]
+  transcend request restart (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) (--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED) [--transcendUrl value] [--requestReceiptFolder value] [--sombraAuth value] [--concurrency value] [--requestIds value]... [--emailIsVerified] [--createdAt value] [--silentModeBefore value] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--sendEmailReceipt] [--copyIdentifiers] [--skipWaitingPeriod]
   transcend request restart --help
 
 Bulk update a set of privacy requests based on a set of request filters.
@@ -574,6 +581,8 @@ FLAGS
      [--silentModeBefore]                     Requests older than this date should be marked as silent mode
      [--createdAtBefore]                      Restart requests that were submitted before this time
      [--createdAtAfter]                       Restart requests that were submitted after this time
+     [--updatedAtBefore]                      Restart requests that were last updated before this time
+     [--updatedAtAfter]                       Restart requests that were last updated after this time
      [--sendEmailReceipt]                     Send email receipts to the restarted requests                                                             [default = false]
      [--copyIdentifiers]                      Copy over all enriched identifiers from the initial request                                               [default = false]
      [--skipWaitingPeriod]                    Skip queued state of request and go straight to compiling                                                 [default = false]
@@ -704,23 +713,25 @@ transcend request restart \
 
 ```txt
 USAGE
-  transcend request notify-additional-time (--auth value) (--createdAtBefore value) [--createdAtAfter value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--daysLeft value] [--days value] [--requestIds value]... [--emailTemplate value] [--transcendUrl value] [--concurrency value]
+  transcend request notify-additional-time (--auth value) (--createdAtBefore value) [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--daysLeft value] [--days value] [--requestIds value]... [--emailTemplate value] [--transcendUrl value] [--concurrency value]
   transcend request notify-additional-time --help
 
 Bulk notify a set of privacy requests from the DSR Automation -> Incoming Requests tab that more time is needed to complete the request. Note any request in silent mode will not be emailed.
 
 FLAGS
-      --auth             The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
-      --createdAtBefore  Notify requests that are open but submitted before this time
-     [--createdAtAfter]  Notify requests that are open but submitted after this time
-     [--actions]         The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--daysLeft]        Only notify requests that have less than this number of days until they are considered expired         [default = 10]
-     [--days]            The number of days to adjust the expiration of the request to                                          [default = 45]
-     [--requestIds]...   Specify the specific request IDs to notify                                                             [separator = ,]
-     [--emailTemplate]   The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
-     [--transcendUrl]    URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
-     [--concurrency]     The concurrency to use when uploading requests in parallel                                             [default = 50]
-  -h  --help             Print help information and exit
+      --auth              The Transcend API key. Requires scopes: "View Incoming Requests", "Request Approval and Communication"
+      --createdAtBefore   Notify requests that are open but submitted before this time
+     [--createdAtAfter]   Notify requests that are open but submitted after this time
+     [--updatedAtBefore]  Notify requests that were last updated before this time
+     [--updatedAtAfter]   Notify requests that were last updated after this time
+     [--actions]          The request actions to notify                                                                          [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--daysLeft]         Only notify requests that have less than this number of days until they are considered expired         [default = 10]
+     [--days]             The number of days to adjust the expiration of the request to                                          [default = 45]
+     [--requestIds]...    Specify the specific request IDs to notify                                                             [separator = ,]
+     [--emailTemplate]    The title of the email template that should be sent to the requests                                    [default = Additional Time Needed]
+     [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                           [default = https://api.transcend.io]
+     [--concurrency]      The concurrency to use when uploading requests in parallel                                             [default = 50]
+  -h  --help              Print help information and exit
 ```
 
 #### Examples
@@ -807,7 +818,7 @@ transcend request notify-additional-time \
 
 ```txt
 USAGE
-  transcend request mark-silent (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--transcendUrl value] [--concurrency value]
+  transcend request mark-silent (--auth value) (--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD) [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--transcendUrl value] [--concurrency value]
   transcend request mark-silent --help
 
 Bulk update a set of privacy requests from the DSR Automation -> Incoming Requests tab to be in silent mode.
@@ -819,6 +830,8 @@ FLAGS
      [--requestIds]...    Specify the specific request IDs to mark silent                                                                                                                  [separator = ,]
      [--createdAtBefore]  Mark silent requests that were submitted before this time
      [--createdAtAfter]   Mark silent requests that were submitted after this time
+     [--updatedAtBefore]  Mark silent requests that were last updated before this time
+     [--updatedAtAfter]   Mark silent requests that were last updated after this time
      [--transcendUrl]     URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                                                     [default = https://api.transcend.io]
      [--concurrency]      The concurrency to use when uploading requests in parallel                                                                                                       [default = 50]
   -h  --help              Print help information and exit
@@ -877,7 +890,7 @@ transcend request mark-silent --auth="$TRANSCEND_API_KEY" --actions=ERASURE --co
 
 ```txt
 USAGE
-  transcend request enricher-restart (--auth value) (--enricherId value) [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--requestEnricherStatuses QUEUED|WAITING|SKIPPED|ERROR|RESOLVED|ACTION_REQUIRED|REMOTE_PROCESSING|WAITING_ON_DEPENDENCIES|POLLING] [--transcendUrl value] [--concurrency value] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value]
+  transcend request enricher-restart (--auth value) (--enricherId value) [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--requestEnricherStatuses QUEUED|WAITING|SKIPPED|ERROR|RESOLVED|ACTION_REQUIRED|REMOTE_PROCESSING|WAITING_ON_DEPENDENCIES|POLLING] [--transcendUrl value] [--concurrency value] [--requestIds value]... [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value]
   transcend request enricher-restart --help
 
 Bulk restart a particular enricher across a series of DSRs.
@@ -895,6 +908,8 @@ FLAGS
      [--requestIds]...            Specify the specific request IDs to restart                                  [separator = ,]
      [--createdAtBefore]          Restart requests that were submitted before this time
      [--createdAtAfter]           Restart requests that were submitted after this time
+     [--updatedAtBefore]          Restart requests that were last updated before this time
+     [--updatedAtAfter]           Restart requests that were last updated after this time
   -h  --help                      Print help information and exit
 ```
 
@@ -999,7 +1014,7 @@ transcend request reject-unverified-identifiers \
 
 ```txt
 USAGE
-  transcend request export (--auth value) [--sombraAuth value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--transcendUrl value] [--file value] [--concurrency value] [--skipRequestIdentifiers] [--createdAtBefore value] [--createdAtAfter value] [--showTests] [--pageLimit value]
+  transcend request export (--auth value) [--sombraAuth value] [--actions AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD] [--statuses REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED] [--transcendUrl value] [--file value] [--concurrency value] [--skipRequestIdentifiers] [--createdAtBefore value] [--createdAtAfter value] [--updatedAtBefore value] [--updatedAtAfter value] [--showTests] [--pageLimit value]
   transcend request export --help
 
 Export privacy requests and request identifiers to a CSV file.
@@ -1007,16 +1022,18 @@ Export privacy requests and request identifiers to a CSV file.
 FLAGS
       --auth                                                The Transcend API key. Requires scopes: "View Incoming Requests", "View the Request Compilation"
      [--sombraAuth]                                         The Sombra internal key, use for additional authentication when self-hosting Sombra
-     [--actions]                                            The request actions to export                                                                    [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
-     [--statuses]                                           The request statuses to export                                                                   [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
-     [--transcendUrl]                                       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                     [default = https://api.transcend.io]
-     [--file]                                               Path to the CSV file where identifiers will be written to                                        [default = ./transcend-request-export.csv]
-     [--concurrency]                                        The concurrency to use when uploading requests in parallel                                       [default = 50]
+     [--actions]                                            The request actions to export                                                                                                 [AUTOMATED_DECISION_MAKING_OPT_OUT|USE_OF_SENSITIVE_INFORMATION_OPT_OUT|CONTACT_OPT_OUT|SALE_OPT_OUT|TRACKING_OPT_OUT|CUSTOM_OPT_OUT|AUTOMATED_DECISION_MAKING_OPT_IN|USE_OF_SENSITIVE_INFORMATION_OPT_IN|SALE_OPT_IN|TRACKING_OPT_IN|CONTACT_OPT_IN|CUSTOM_OPT_IN|ACCESS|ERASURE|RECTIFICATION|RESTRICTION|BUSINESS_PURPOSE|PLACE_ON_LEGAL_HOLD|REMOVE_FROM_LEGAL_HOLD, separator = ,]
+     [--statuses]                                           The request statuses to export                                                                                                [REQUEST_MADE|FAILED_VERIFICATION|ENRICHING|ON_HOLD|WAITING|COMPILING|APPROVING|DELAYED|COMPLETED|DOWNLOADABLE|VIEW_CATEGORIES|CANCELED|SECONDARY|SECONDARY_COMPLETED|SECONDARY_APPROVING|REVOKED, separator = ,]
+     [--transcendUrl]                                       URL of the Transcend backend. Use https://api.us.transcend.io for US hosting                                                  [default = https://api.transcend.io]
+     [--file]                                               Path to the CSV file where identifiers will be written to                                                                     [default = ./transcend-request-export.csv]
+     [--concurrency]                                        Number of parallel date-range chunks to split the query into. Requires both --createdAtAfter and --createdAtBefore to be set. [default = 1]
      [--skipRequestIdentifiers/--noSkipRequestIdentifiers]  Skip exporting request identifiers
      [--createdAtBefore]                                    Pull requests that were submitted before this time
      [--createdAtAfter]                                     Pull requests that were submitted after this time
+     [--updatedAtBefore]                                    Pull requests that were last updated before this time
+     [--updatedAtAfter]                                     Pull requests that were last updated after this time
      [--showTests/--noShowTests]                            Filter for test requests or production requests - when not provided, pulls both
-     [--pageLimit]                                          The page limit to use when pulling in pages of requests                                          [default = 100]
+     [--pageLimit]                                          The page limit to use when pulling in pages of requests                                                                       [default = 100]
   -h  --help                                                Print help information and exit
 ```
 
@@ -1046,10 +1063,16 @@ transcend request export --auth="$TRANSCEND_API_KEY" --transcendUrl=https://api.
 transcend request export --auth="$TRANSCEND_API_KEY" --sombraAuth="$SOMBRA_INTERNAL_KEY"
 ```
 
-**Increase the concurrency (defaults to 100)**
+**Speed up large exports with parallel date-range chunks (requires --createdAtAfter and --createdAtBefore)**
 
 ```sh
-transcend request export --auth="$TRANSCEND_API_KEY" --concurrency=500
+transcend request export \
+  --auth="$TRANSCEND_API_KEY" \
+  --createdAtAfter=2025-01-01T00:00:00.000Z \
+  --createdAtBefore=2025-01-01T00:00:00.000Z \
+  --concurrency=10 \
+  --file=./exports/requests.csv \
+  --skipRequestIdentifiers
 ```
 
 **Filter for production requests only**
@@ -1078,6 +1101,16 @@ transcend request export --auth="$TRANSCEND_API_KEY" --file=./path/to/file.csv
 ```sh
 transcend request export --auth="$TRANSCEND_API_KEY" --skipRequestIdentifiers
 ```
+
+#### Parallel Date-Range Chunking
+
+When exporting a large number of requests, you can use `--concurrency` to split the date range
+into parallel chunks that are fetched simultaneously. This requires both `--createdAtAfter` and
+`--createdAtBefore` to be set. Each chunk writes to its own numbered CSV file (e.g.
+`export-0.csv`, `export-1.csv`, ...). If any chunk fails, the remaining chunks continue and the
+CLI reports the exact date ranges that need to be retried.
+
+When `--concurrency=1` (the default), the entire export is written to a single file.
 
 ### `transcend request skip-preflight-jobs`
 
@@ -3435,6 +3468,38 @@ transcend admin chunk-csv \
 
 ```sh
 transcend admin chunk-csv --directory=./working/files
+```
+
+### `transcend admin find-text-in-folder`
+
+```txt
+USAGE
+  transcend admin find-text-in-folder (--needle value) [--root value] [--exts value] [--noParquet] [--concurrency value] [--maxBytes value]
+  transcend admin find-text-in-folder --help
+
+Searches a folder of files for a given text string (case-insensitive).
+
+Useful for finding a needle in a haystack when you have many large files
+(e.g. multi-GB CSV exports, JSON dumps, log archives) and need to know
+which ones contain a specific value like an email address, ID, or keyword.
+
+Files are streamed so memory stays flat even for very large inputs.
+Concurrency is configurable and files are scanned in parallel.
+
+Supported file types:
+- Text-based files (csv, json, txt, ndjson, log, etc.) are scanned via streaming byte comparison.
+- Parquet files are scanned via DuckDB (must be on PATH unless --noParquet is set).
+
+Outputs one matching file path per line to stdout as hits are found.
+
+FLAGS
+      --needle        The text string to search for (case-insensitive)
+     [--root]         Root directory to search                                              [default = .]
+     [--exts]         Comma-separated file extensions to search (without leading dots)      [default = csv,json,txt,ndjson,log]
+     [--noParquet]    Skip parquet file scanning (requires duckdb on PATH)                  [default = false]
+     [--concurrency]  Max number of files to scan concurrently                              [default = 16]
+     [--maxBytes]     Stop scanning each file after this many bytes (useful for huge files)
+  -h  --help          Print help information and exit
 ```
 
 ### `transcend admin parquet-to-csv`

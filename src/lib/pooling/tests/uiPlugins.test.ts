@@ -149,15 +149,23 @@ describe('makeHeader', () => {
 
   it('adds throughput line including successSoFar suffix when provided', () => {
     const c = ctx({
-      throughput: { r10s: 0.5, r60s: 0.25, successSoFar: 1234 },
+      throughput: {
+        r10s: 0.5,
+        r60s: 0.25,
+        successSoFar: 1234,
+        jobsR10s: 0,
+        jobsR60s: 0,
+      },
     });
 
     const lines = makeHeader(c);
     expect(lines.length).toBe(4);
     expect(lines[3]).toContain('Throughput:');
-    expect(lines[3]).toContain(`${Math.round(0.5 * 3600).toLocaleString()}/hr`);
     expect(lines[3]).toContain(
-      `1h: ${Math.round(0.25 * 3600).toLocaleString()}/hr`,
+      `${Math.round(0.5 * 3600).toLocaleString()} files/hr`,
+    );
+    expect(lines[3]).toContain(
+      `1h: ${Math.round(0.25 * 3600).toLocaleString()} files/hr`,
     );
     expect(lines[3]).toContain('Newly uploaded: 1,234');
   });

@@ -12,6 +12,8 @@ export interface DownloadFilesCommandFlags {
   folderPath: string;
   createdAtBefore?: Date;
   createdAtAfter?: Date;
+  updatedAtBefore?: Date;
+  updatedAtAfter?: Date;
   approveAfterDownload: boolean;
   transcendUrl: string;
 }
@@ -27,6 +29,8 @@ export async function downloadFiles(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     approveAfterDownload,
   }: DownloadFilesCommandFlags,
 ): Promise<void> {
@@ -41,6 +45,8 @@ export async function downloadFiles(
     concurrency,
     createdAtBefore,
     createdAtAfter,
+    updatedAtBefore,
+    updatedAtAfter,
     approveAfterDownload,
   });
 }
