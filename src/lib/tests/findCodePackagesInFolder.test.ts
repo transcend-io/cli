@@ -272,7 +272,7 @@ const expected: CodePackageInput[] = [
       },
       {
         name: 'sequelize',
-        version: '^6.37.3',
+        version: '^6.37.8',
       },
       {
         name: 'sequelize-mock',
@@ -326,7 +326,7 @@ const expected: CodePackageInput[] = [
       },
       {
         name: 'cryptography',
-        version: '41.0.6',
+        version: '46.0.5',
       },
       {
         name: 'Flask',
