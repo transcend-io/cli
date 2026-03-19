@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/sequelize", "npm:4.28.20"],\
             ["dd-trace", "npm:2.45.1"],\
             ["fast-csv", "npm:4.3.6"],\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["sequelize-mock", "npm:0.10.2"],\
             ["typescript", "patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=85af82"]\
           ],\
@@ -334,7 +334,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/sequelize", "npm:4.28.20"],\
             ["dd-trace", "npm:2.45.1"],\
             ["fast-csv", "npm:4.3.6"],\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["sequelize-mock", "npm:0.10.2"],\
             ["typescript", "patch:typescript@npm%3A5.4.5#~builtin<compat/typescript>::version=5.4.5&hash=85af82"]\
           ],\
@@ -677,7 +677,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["msgpack-lite", "npm:0.1.26"],\
             ["node-abort-controller", "npm:3.1.1"],\
             ["opentracing", "npm:0.14.7"],\
-            ["path-to-regexp", "npm:0.1.8"],\
+            ["path-to-regexp", "npm:0.1.12"],\
             ["protobufjs", "npm:7.2.6"],\
             ["retry", "npm:0.13.1"],\
             ["semver", "npm:7.6.0"]\
@@ -1545,10 +1545,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["path-to-regexp", [\
-        ["npm:0.1.8", {\
-          "packageLocation": "./.yarn/cache/path-to-regexp-npm-0.1.8-b95826a2f4-b2f0fc08dc.zip/node_modules/path-to-regexp/",\
+        ["npm:0.1.12", {\
+          "packageLocation": "./.yarn/cache/path-to-regexp-npm-0.1.12-a9bf1de212-ab237858be.zip/node_modules/path-to-regexp/",\
           "packageDependencies": [\
-            ["path-to-regexp", "npm:0.1.8"]\
+            ["path-to-regexp", "npm:0.1.12"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1664,17 +1664,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["sequelize", [\
-        ["npm:6.37.3", {\
-          "packageLocation": "./.yarn/cache/sequelize-npm-6.37.3-e2e584f609-e7a9343a3b.zip/node_modules/sequelize/",\
+        ["npm:6.37.8", {\
+          "packageLocation": "./.yarn/cache/sequelize-npm-6.37.8-a61dc791d3-8a733c7ee2.zip/node_modules/sequelize/",\
           "packageDependencies": [\
-            ["sequelize", "npm:6.37.3"]\
+            ["sequelize", "npm:6.37.8"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3", {\
-          "packageLocation": "./.yarn/__virtual__/sequelize-virtual-d5d423249b/0/cache/sequelize-npm-6.37.3-e2e584f609-e7a9343a3b.zip/node_modules/sequelize/",\
+        ["virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8", {\
+          "packageLocation": "./.yarn/__virtual__/sequelize-virtual-4a53dbfb52/0/cache/sequelize-npm-6.37.8-a61dc791d3-8a733c7ee2.zip/node_modules/sequelize/",\
           "packageDependencies": [\
-            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.3"],\
+            ["sequelize", "virtual:dac47f8c3c81e80ca7d77ebc19511f16b27a1a3016914fd02c7c22309e4dabc9de8d14a2dfe06363a538aeadf5a52073ff5801b8980cacdd6ff990cd7dd508bf#npm:6.37.8"],\
             ["@types/debug", "npm:4.1.12"],\
             ["@types/ibm_db", null],\
             ["@types/mariadb", null],\
