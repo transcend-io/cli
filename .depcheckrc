@@ -1,1 +1,0 @@
-ignores: ["depcheck", "prettier", "doctoc", "graphql"]
